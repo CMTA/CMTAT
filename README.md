@@ -1,6 +1,6 @@
 # CMTA20 Share Token (draft, request for comments)
 
-The CMTA20 token is a proposed ERC20 extension described as a Solidity smart contract for the Ethereum platform, implementing functionalities required to tokenize a Swiss corporation's equity securities (or "shares"), in accordance with the [Blueprint](http://www.cmta.ch/wp-content/uploads/CMTA-Blueprint-for-the-tokenization-of-shares-of-Swiss-corporations-1.pdf) published by the [Capital Markets and technology association](http://www.cmta.ch/) (CMTA).
+The CMTA20 token is a proposed ERC20 extension described as a Solidity smart contract for the Ethereum platform, implementing functionalities required to tokenize a Swiss corporation's equity securities (or "shares"), in accordance with the [Blueprint]( https://www.cmta.ch/content/52/cmta-blueprint-for-the-tokenization-of-shares-of-swiss-corporations.pdf) published by the [Capital Markets and technology association](http://www.cmta.ch/) (CMTA).
 
 The blueprint document describes the process through which shares that have already been issued pursuant to Swiss corporation law can be "wrapped" into digital tokens, so that the tokens and the underlying shares are tied to each other in a manner that prevents the shares from being transferred without the corresponding tokens and vice-versa.
 
