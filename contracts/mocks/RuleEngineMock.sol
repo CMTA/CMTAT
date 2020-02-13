@@ -37,17 +37,36 @@ contract RuleEngineMock is IRuleEngine {
     return _rules;
   }
 
-  function validateTransfer(
-    address _from, 
-    address _to, 
+  function detectTransferRestriction(
+    address _from,
+    address _to,
     uint256 _amount)
-  external view returns (bool) 
+  public view returns (uint8)
   {
     for (uint256 i = 0; i < _rules.length; i++) {
-      if (!_rules[i].isTransferValid(_from, _to, _amount)) {
-        return false;
+      uint8 restriction = _rules[i].detectTransferRestriction(_from, _to, _amount);
+      if (restriction > 0) {
+        return restriction;
       }
     }
-    return true;
+    return 0;
+  }
+
+  function validateTransfer(
+    address _from,
+    address _to,
+    uint256 _amount)
+  public view returns (bool)
+  {
+    return detectTransferRestriction(_from, _to, _amount) == 0;
+  }
+
+  function messageForTransferRestriction(uint8 _restrictionCode) public view returns (string memory) {
+    for (uint256 i = 0; i < _rules.length; i++) {
+      if (_rules[i].canReturnTransferRestrictionCode(_restrictionCode)) {
+        return _rules[i].messageForTransferRestriction(_restrictionCode);
+      }
+    }
+    return "Unknown restriction code";
   }
 }

@@ -26,8 +26,16 @@ interface IRuleEngine {
   function rules() external view returns(IRule[] memory);
 
   function validateTransfer(
-    address _from, 
-    address _to, 
+    address _from,
+    address _to,
     uint256 _amount)
   external view returns (bool);
+
+  function detectTransferRestriction (
+    address _from,
+    address _to,
+    uint256 _value)
+  external view returns (uint8);
+
+  function messageForTransferRestriction (uint8 _restrictionCode) external view returns (string memory);
 }
