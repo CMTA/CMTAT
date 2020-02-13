@@ -47,17 +47,16 @@
     "eslint-plugin-standard": "^4.0.0",
     "ethereumjs-util": "^6.0.0",
     "ethjs-abi": "^0.2.1",
-    "ganache-cli": "^6.1.0",
+    "ganache-cli": "^6.9.0",
     "openzeppelin-solidity": "^2.2.0",
     "openzeppelin-test-helpers": "^0.3.2",
     "solc": "^0.5.3",
-    "solidity-coverage": "^0.6.2",
+    "solidity-coverage": "^0.7.2",
     "solium": "^1.2.4",
     "truffle": "^5.0.27",
     "truffle-flattener": "^1.2.12",
     "truffle-hdwallet-provider": "0.0.6",
     "web3": "^1.0.0-beta.41"
   },
-
   "dependencies": {}
 }
