@@ -11,7 +11,8 @@ pragma solidity ^0.5.3;
 
 import "./zeppelin/math/SafeMath.sol";
 import "./zeppelin/token/ERC20/ERC20.sol";
-import "./lifecycle/Freezable.sol";
+import "./zeppelin/lifecycle/Pausable.sol";
+import "./zeppelin/ownership/Ownable.sol";
 import "./interface/IIssuable.sol";
 import "./interface/IDestroyable.sol";
 import "./interface/IReassignable.sol";
@@ -35,8 +36,15 @@ import "./interface/IRuleEngine.sol";
  */
 
  
-contract CMTA20 is ERC20, Freezable, IContactable, IIdentifiable, IIssuable, IDestroyable, IReassignable {
+contract CMTA20 is ERC20, Ownable, Pausable, IContactable, IIdentifiable, IIssuable, IDestroyable, IReassignable {
   using SafeMath for uint256;
+
+  /* Constants */
+  uint8 constant TRANSFER_OK = 0;
+  uint8 constant TRANSFER_REJECTED_PAUSED = 1;
+
+  string constant TEXT_TRANSFER_OK = "No restriction";
+  string constant TEXT_TRANSFER_REJECTED_PAUSED = "All transfers paused";
 
   string public name;
   string public symbol;
@@ -130,7 +138,7 @@ contract CMTA20 is ERC20, Freezable, IContactable, IIdentifiable, IIssuable, IDe
   * @param _value uint256 the amount of tokens to be transferred
   */
   function canTransfer(address _from, address _to, uint256 _value) public view returns (bool) {
-    if (frozen) {
+    if (paused()) {
       return false;
     }
     if (address(ruleEngine) != address(0)) {
@@ -140,11 +148,43 @@ contract CMTA20 is ERC20, Freezable, IContactable, IIdentifiable, IIssuable, IDe
   }
 
   /**
+  * @dev check if _value token can be transferred from _from to _to
+  * @param _from address The address which you want to send tokens from
+  * @param _to address The address which you want to transfer to
+  * @param _value uint256 the amount of tokens to be transferred
+  * @return code of the rejection reason
+  */
+  function detectTransferRestriction (address _from, address _to, uint256 _value) public view returns (uint8) {
+    if (paused()) {
+      return TRANSFER_REJECTED_PAUSED;
+    }
+    if (address(ruleEngine) != address(0)) {
+      return ruleEngine.detectTransferRestriction(_from, _to, _value);
+    }
+    return TRANSFER_OK;
+  }
+
+  /**
+  * @dev returns the human readable explaination corresponding to the error code returned by detectTransferRestriction
+  * @param _restrictionCode The error code returned by detectTransferRestriction
+  * @return The human readable explaination corresponding to the error code returned by detectTransferRestriction
+  */
+  function messageForTransferRestriction (uint8 _restrictionCode) external view returns (string memory) {
+    if (_restrictionCode == TRANSFER_OK) {
+      return TEXT_TRANSFER_OK;
+    } else if (_restrictionCode == TRANSFER_REJECTED_PAUSED) {
+      return TEXT_TRANSFER_REJECTED_PAUSED;
+    } else if (address(ruleEngine) != address(0)) {
+      return ruleEngine.messageForTransferRestriction(_restrictionCode);
+    }
+  }
+
+  /**
   * @dev transfer token for a specified address
   * @param _to The address to transfer to.
   * @param _value The amount to be transferred.
   */
-  function transfer(address _to, uint256 _value) public whenNotFrozen returns (bool) {
+  function transfer(address _to, uint256 _value) public whenNotPaused returns (bool) {
     if (address(ruleEngine) != address(0)) {
       require(ruleEngine.validateTransfer(msg.sender, _to, _value), "CM04");
       return super.transfer(_to, _value);
@@ -159,7 +199,7 @@ contract CMTA20 is ERC20, Freezable, IContactable, IIdentifiable, IIssuable, IDe
    * @param _to address The address which you want to transfer to
    * @param _value uint256 the amount of tokens to be transferred
    */
-  function transferFrom(address _from, address _to, uint256 _value) public whenNotFrozen returns (bool) {
+  function transferFrom(address _from, address _to, uint256 _value) public whenNotPaused returns (bool) {
     if (address(ruleEngine) != address(0)) {
       require(ruleEngine.validateTransfer(_from, _to, _value), "CM04");
       return super.transferFrom(_from, _to, _value);
@@ -174,7 +214,7 @@ contract CMTA20 is ERC20, Freezable, IContactable, IIdentifiable, IIssuable, IDe
    * @param _spender The address which will spend the funds.
    * @param _value The amount of tokens to be spent.
    */
-  function approve(address _spender, uint256 _value) public whenNotFrozen returns (bool) {
+  function approve(address _spender, uint256 _value) public whenNotPaused returns (bool) {
     return super.approve(_spender, _value);
   }
 
@@ -184,7 +224,7 @@ contract CMTA20 is ERC20, Freezable, IContactable, IIdentifiable, IIssuable, IDe
    * @param _spender The address which will spend the funds.
    * @param _addedValue The amount of tokens to increase the allowance by.
    */
-  function increaseAllowance(address _spender, uint256 _addedValue) public whenNotFrozen returns (bool)
+  function increaseAllowance(address _spender, uint256 _addedValue) public whenNotPaused returns (bool)
   {
     return super.increaseAllowance(_spender, _addedValue);
   }
@@ -195,7 +235,7 @@ contract CMTA20 is ERC20, Freezable, IContactable, IIdentifiable, IIssuable, IDe
    * @param _spender The address which will spend the funds.
    * @param _subtractedValue The amount of tokens to decrease the allowance by.
    */
-  function decreaseAllowance(address _spender, uint256 _subtractedValue) public whenNotFrozen returns (bool)
+  function decreaseAllowance(address _spender, uint256 _subtractedValue) public whenNotPaused returns (bool)
   {
     return super.decreaseAllowance(_spender, _subtractedValue);
   }
@@ -213,7 +253,7 @@ contract CMTA20 is ERC20, Freezable, IContactable, IIdentifiable, IIssuable, IDe
   * @param original - original address
   * @param replacement - replacement address
     */
-  function reassign(address original, address replacement) external onlyOwner whenNotFrozen {
+  function reassign(address original, address replacement) external onlyOwner whenNotPaused {
     require(original != address(0), "CM01");
     require(replacement != address(0), "CM02");
     require(original != replacement, "CM03");

@@ -154,9 +154,9 @@ contract('CMTA20', function ([_, owner, address1, address2, address3, fakeRuleEn
       await shouldFail.reverting.withMessage(this.cmta20.reassign(address1, address2, { from: address3 }), 'OW01');
     });
 
-    it('reverts when reassigning when contract is frozen', async function () {
-      await this.cmta20.freeze({from: owner});
-      await shouldFail.reverting.withMessage(this.cmta20.reassign(address1, address2, { from: owner }), 'FR01');
+    it('reverts when reassigning when contract is paused', async function () {
+      await this.cmta20.pause({from: owner});
+      await shouldFail.reverting.withMessage(this.cmta20.reassign(address1, address2, { from: owner }), 'Pausable: paused');
     });
 
     it('reverts when reassigning when original is 0x0', async function () {
@@ -255,9 +255,9 @@ contract('CMTA20', function ([_, owner, address1, address2, address3, fakeRuleEn
       expectEvent.inLogs(this.logs, 'Approval', { owner: address1, spender: address3, value: '50'});
     });
 
-    it('reverts when approving when contract is frozen', async function () {
-      await this.cmta20.freeze({from: owner});
-      await shouldFail.reverting.withMessage(this.cmta20.approve(address3, 20, {from: address1}), 'FR01');
+    it('reverts when approving when contract is paused', async function () {
+      await this.cmta20.pause({from: owner});
+      await shouldFail.reverting.withMessage(this.cmta20.approve(address3, 20, {from: address1}), 'Pausable: paused');
     });
   });
 
@@ -271,6 +271,8 @@ contract('CMTA20', function ([_, owner, address1, address2, address3, fakeRuleEn
 
     it('can check if transfer is valid', async function () {
       (await this.cmta20.canTransfer(address1, address2, 11)).should.equal(true);
+      (await this.cmta20.detectTransferRestriction(address1, address2, 11)).should.be.bignumber.equal("0");
+      (await this.cmta20.messageForTransferRestriction(0)).should.equal("No restriction");
     });
 
     it('allows address1 to transfer tokens to address2', async function () {
@@ -286,9 +288,9 @@ contract('CMTA20', function ([_, owner, address1, address2, address3, fakeRuleEn
       await shouldFail.reverting(this.cmta20.transfer(address2, 50, {from: address1}));        
     });
 
-    it('reverts if address1 transfers tokens to address2 when frozen', async function () {
-      await this.cmta20.freeze({from: owner});
-      await shouldFail.reverting.withMessage(this.cmta20.transfer(address2, 10, {from: address1}), 'FR01');     
+    it('reverts if address1 transfers tokens to address2 when paused', async function () {
+      await this.cmta20.pause({from: owner});
+      await shouldFail.reverting.withMessage(this.cmta20.transfer(address2, 10, {from: address1}), 'Pausable: paused');     
     });
 
     it('allows address3 to transfer tokens from address1 to address2 with the right allowance', async function () {
@@ -319,13 +321,15 @@ contract('CMTA20', function ([_, owner, address1, address2, address3, fakeRuleEn
       await shouldFail.reverting(this.cmta20.transferFrom(address1, address2, 50, {from: address3}));        
     });
 
-    it('reverts if address3 transfers tokens from address1 to address2 when frozen', async function () {
+    it('reverts if address3 transfers tokens from address1 to address2 when paused', async function () {
       /* Define allowance */
       await this.cmta20.approve(address3, 20, {from: address1});
 
-      await this.cmta20.freeze({from: owner});
+      await this.cmta20.pause({from: owner});
       (await this.cmta20.canTransfer(address1, address2, 10)).should.equal(false);
-      await shouldFail.reverting.withMessage(this.cmta20.transferFrom(address1, address2, 10, {from: address3}), 'FR01');     
+      (await this.cmta20.detectTransferRestriction(address1, address2, 10)).should.be.bignumber.equal("1");
+      (await this.cmta20.messageForTransferRestriction(1)).should.equal("All transfers paused");
+      await shouldFail.reverting.withMessage(this.cmta20.transferFrom(address1, address2, 10, {from: address3}), 'Pausable: paused');     
     });
 
     context('Transferring with Rule Engine set', function () {
@@ -336,7 +340,11 @@ contract('CMTA20', function ([_, owner, address1, address2, address3, fakeRuleEn
 
       it('can check if transfer is valid', async function () {
         (await this.cmta20.canTransfer(address1, address2, 11)).should.equal(true);
+        (await this.cmta20.detectTransferRestriction(address1, address2, 11)).should.be.bignumber.equal("0");
+        (await this.cmta20.messageForTransferRestriction(0)).should.equal("No restriction");
         (await this.cmta20.canTransfer(address1, address2, 21)).should.equal(false);
+        (await this.cmta20.detectTransferRestriction(address1, address2, 21)).should.be.bignumber.equal("10");
+        (await this.cmta20.messageForTransferRestriction(10)).should.equal("Amount too high");
       });
   
       it('allows address1 to transfer tokens to address2', async function () {
