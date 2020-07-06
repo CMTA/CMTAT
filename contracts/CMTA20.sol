@@ -14,6 +14,7 @@ import "./zeppelin/token/ERC20/ERC20.sol";
 import "./zeppelin/lifecycle/Pausable.sol";
 import "./zeppelin/ownership/Ownable.sol";
 import "./interface/IIssuable.sol";
+import "./interface/IRedeemable.sol";
 import "./interface/IDestroyable.sol";
 import "./interface/IReassignable.sol";
 import "./interface/IIdentifiable.sol";
@@ -36,7 +37,7 @@ import "./interface/IRuleEngine.sol";
  */
 
  
-contract CMTA20 is ERC20, Ownable, Pausable, IContactable, IIdentifiable, IIssuable, IDestroyable, IReassignable {
+contract CMTA20 is ERC20, Ownable, Pausable, IContactable, IIdentifiable, IIssuable, IRedeemable, IDestroyable, IReassignable {
   using SafeMath for uint256;
 
   /* Constants */
