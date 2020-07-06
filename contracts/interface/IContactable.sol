@@ -20,7 +20,6 @@ pragma solidity ^0.5.3;
 
 interface IContactable {
   function contact() external view returns (string memory);
-  function setContact(string calldata _contact) external;
 
   /**
   * Purpose:
