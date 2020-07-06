@@ -61,7 +61,20 @@ contract CMTA20 is ERC20, Ownable, Pausable, IContactable, IIdentifiable, IIssua
     contact = _contact;
   }
 
+  /**
+  * Purpose:
+  * This event is emitted when rule engine is changed
+  *
+  * @param newRuleEngine - new rule engine address
+  */
   event LogRuleEngineSet(address indexed newRuleEngine);
+  /**
+  * Purpose:
+  * This event is emitted when the contact information is changed
+  *
+  * @param contact - new contact information
+  */
+  event LogContactSet(string contact);
 
   /**
   * Purpose
