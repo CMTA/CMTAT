@@ -56,6 +56,34 @@ contract('CMTA20', function ([_, owner, address1, address2, address3, fakeRuleEn
     });
   });
 
+  context('Pausable', function () {
+    it('can be paused by the owner', async function () {
+      ({ logs: this.logs } = await this.cmta20.pause({from: owner}));
+    }); 
+    
+    it('emits a Paused event', function () {
+      expectEvent.inLogs(this.logs, 'Paused', { account: owner });
+    });
+
+    it('reverts when calling from non-owner', async function () {
+      await shouldFail.reverting.withMessage(this.cmta20.pause({ from: address1 }), 'PauserRole: caller does not have the Pauser role');
+    });
+
+    it('can be unpaused by the owner', async function () {
+      await this.cmta20.pause({from: owner});
+      ({ logs: this.logs } = await this.cmta20.unpause({from: owner}));
+    }); 
+    
+    it('emits a Unpaused event', function () {
+      expectEvent.inLogs(this.logs, 'Unpaused', { account: owner });
+    });
+
+    it('reverts when calling from non-owner', async function () {
+      await this.cmta20.pause({from: owner});
+      await shouldFail.reverting.withMessage(this.cmta20.unpause({ from: address1 }), 'PauserRole: caller does not have the Pauser role');
+    });
+  });
+
   context('Identities', function () {
     it('can be set by the shareholder and read from owner', async function () {
       await this.cmta20.setMyIdentity('0x1234567890', {from: address1});
