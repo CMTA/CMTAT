@@ -10,21 +10,22 @@
 pragma solidity ^0.5.3;
 
 /**
- * @title IIssuable
- * @dev IIssuable interface
+ * @title IRedeemable
+ * @dev IRedeemable interface
  *
  * @author Sébastien Krafft - <sebastien.krafft@mtpelerin.com>
  *
  **/
 
 
-interface IIssuable {
-  function issue(uint256 value) external;
+interface IRedeemable {
+  function redeem(uint256 value) external;
+
   /**
   * Purpose:
-  * This event is emitted when new tokens are issued.
+  * This event is emitted when tokens are redeemed.
   *
-  * @param value - amount of newly issued tokens
+  * @param value - amount of redeemed tokens
   */
-  event LogIssued(uint256 value);
+  event LogRedeemed(uint256 value);
 }
