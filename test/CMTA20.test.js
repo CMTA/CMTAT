@@ -1,4 +1,4 @@
-const { expectEvent, shouldFail } = require('openzeppelin-test-helpers');
+const { expectEvent, expectRevert } = require('openzeppelin-test-helpers');
 require('chai/register-should');
 
 const CMTA20 = artifacts.require('CMTA20');
@@ -38,7 +38,7 @@ contract('CMTA20', function ([_, owner, address1, address2, address3, fakeRuleEn
     });
 
     it('reverts when calling from non-owner', async function () {
-      await shouldFail.reverting.withMessage(this.cmta20.setRuleEngine(fakeRuleEngine, { from: address1 }), 'OW01');
+      await expectRevert(this.cmta20.setRuleEngine(fakeRuleEngine, { from: address1 }), 'OW01');
     });
   });
 
@@ -52,7 +52,35 @@ contract('CMTA20', function ([_, owner, address1, address2, address3, fakeRuleEn
     });
 
     it('reverts when calling from non-owner', async function () {
-      await shouldFail.reverting.withMessage(this.cmta20.setContact('admin2@cmta.ch', { from: address1 }), 'OW01');
+      await expectRevert(this.cmta20.setContact('admin2@cmta.ch', { from: address1 }), 'OW01');
+    });
+  });
+
+  context('Pausable', function () {
+    it('can be paused by the owner', async function () {
+      ({ logs: this.logs } = await this.cmta20.pause({from: owner}));
+    }); 
+    
+    it('emits a Paused event', function () {
+      expectEvent.inLogs(this.logs, 'Paused', { account: owner });
+    });
+
+    it('reverts when calling from non-owner', async function () {
+      await expectRevert(this.cmta20.pause({ from: address1 }), 'PauserRole: caller does not have the Pauser role');
+    });
+
+    it('can be unpaused by the owner', async function () {
+      await this.cmta20.pause({from: owner});
+      ({ logs: this.logs } = await this.cmta20.unpause({from: owner}));
+    }); 
+    
+    it('emits a Unpaused event', function () {
+      expectEvent.inLogs(this.logs, 'Unpaused', { account: owner });
+    });
+
+    it('reverts when calling from non-owner', async function () {
+      await this.cmta20.pause({from: owner});
+      await expectRevert(this.cmta20.unpause({ from: address1 }), 'PauserRole: caller does not have the Pauser role');
     });
   });
 
@@ -90,7 +118,7 @@ contract('CMTA20', function ([_, owner, address1, address2, address3, fakeRuleEn
     });
 
     it('reverts when issuing from non-owner', async function () {
-      await shouldFail.reverting.withMessage(this.cmta20.issue(20, { from: address1 }), 'OW01');
+      await expectRevert(this.cmta20.issue(20, { from: address1 }), 'OW01');
     });
   });
 
@@ -122,11 +150,11 @@ contract('CMTA20', function ([_, owner, address1, address2, address3, fakeRuleEn
     });
 
     it('reverts when redeeming from non-owner', async function () {
-      await shouldFail.reverting.withMessage(this.cmta20.redeem(20, { from: address1 }), 'OW01');
+      await expectRevert(this.cmta20.redeem(20, { from: address1 }), 'OW01');
     });
 
     it('reverts when redeeming more than the owner balance', async function () {
-      await shouldFail.reverting.withMessage(this.cmta20.redeem(100, { from: owner }), 'SafeMath: subtraction overflow');
+      await expectRevert(this.cmta20.redeem(100, { from: owner }), 'SafeMath: subtraction overflow');
     });
   });
 
@@ -151,28 +179,28 @@ contract('CMTA20', function ([_, owner, address1, address2, address3, fakeRuleEn
     });
 
     it('reverts when reassigning from non-owner', async function () {
-      await shouldFail.reverting.withMessage(this.cmta20.reassign(address1, address2, { from: address3 }), 'OW01');
+      await expectRevert(this.cmta20.reassign(address1, address2, { from: address3 }), 'OW01');
     });
 
     it('reverts when reassigning when contract is paused', async function () {
       await this.cmta20.pause({from: owner});
-      await shouldFail.reverting.withMessage(this.cmta20.reassign(address1, address2, { from: owner }), 'Pausable: paused');
+      await expectRevert(this.cmta20.reassign(address1, address2, { from: owner }), 'Pausable: paused');
     });
 
     it('reverts when reassigning when original is 0x0', async function () {
-      await shouldFail.reverting.withMessage(this.cmta20.reassign(zero, address2, { from: owner }), 'CM01');
+      await expectRevert(this.cmta20.reassign(zero, address2, { from: owner }), 'CM01');
     });
 
     it('reverts when reassigning when original is 0x0', async function () {
-      await shouldFail.reverting.withMessage(this.cmta20.reassign(address1, zero, { from: owner }), 'CM02');
+      await expectRevert(this.cmta20.reassign(address1, zero, { from: owner }), 'CM02');
     });
 
     it('reverts when reassigning when original is the same as replacement', async function () {
-      await shouldFail.reverting.withMessage(this.cmta20.reassign(address1, address1, { from: owner }), 'CM03');
+      await expectRevert(this.cmta20.reassign(address1, address1, { from: owner }), 'CM03');
     });
 
     it('reverts when reassigning from an original address that holds not tokens', async function () {
-      await shouldFail.reverting.withMessage(this.cmta20.reassign(address3, address1, { from: owner }), 'CM05');
+      await expectRevert(this.cmta20.reassign(address3, address1, { from: owner }), 'CM05');
     });
   });
 
@@ -200,11 +228,11 @@ contract('CMTA20', function ([_, owner, address1, address2, address3, fakeRuleEn
     });
 
     it('reverts when destroying from non-owner', async function () {
-      await shouldFail.reverting.withMessage(this.cmta20.destroy([address1, address2], { from: address3 }), 'OW01');
+      await expectRevert(this.cmta20.destroy([address1, address2], { from: address3 }), 'OW01');
     });
 
     it('reverts when destroying with owner contained in shareholders array', async function () {
-      await shouldFail.reverting.withMessage(this.cmta20.destroy([owner, address1, address2], { from: owner }), 'CM06');
+      await expectRevert(this.cmta20.destroy([owner, address1, address2], { from: owner }), 'CM06');
     });
   });
 
@@ -257,7 +285,7 @@ contract('CMTA20', function ([_, owner, address1, address2, address3, fakeRuleEn
 
     it('reverts when approving when contract is paused', async function () {
       await this.cmta20.pause({from: owner});
-      await shouldFail.reverting.withMessage(this.cmta20.approve(address3, 20, {from: address1}), 'Pausable: paused');
+      await expectRevert(this.cmta20.approve(address3, 20, {from: address1}), 'Pausable: paused');
     });
   });
 
@@ -285,12 +313,12 @@ contract('CMTA20', function ([_, owner, address1, address2, address3, fakeRuleEn
     });
 
     it('reverts if address1 transfers more tokens than he owns to address2', async function () {
-      await shouldFail.reverting(this.cmta20.transfer(address2, 50, {from: address1}));        
+      await expectRevert.unspecified(this.cmta20.transfer(address2, 50, {from: address1}));        
     });
 
     it('reverts if address1 transfers tokens to address2 when paused', async function () {
       await this.cmta20.pause({from: owner});
-      await shouldFail.reverting.withMessage(this.cmta20.transfer(address2, 10, {from: address1}), 'Pausable: paused');     
+      await expectRevert(this.cmta20.transfer(address2, 10, {from: address1}), 'Pausable: paused');     
     });
 
     it('allows address3 to transfer tokens from address1 to address2 with the right allowance', async function () {
@@ -313,12 +341,12 @@ contract('CMTA20', function ([_, owner, address1, address2, address3, fakeRuleEn
       (await this.cmta20.allowance(address1, address3)).should.be.bignumber.equal('20');
 
       /* Transfer */
-      await shouldFail.reverting(this.cmta20.transferFrom(address1, address2, 31, {from: address3}));        
+      await expectRevert.unspecified(this.cmta20.transferFrom(address1, address2, 31, {from: address3}));        
     });
 
     it('reverts if address3 transfers more tokens than address1 owns from address1 to address2', async function () {
       await this.cmta20.approve(address3, 1000, {from: address1});
-      await shouldFail.reverting(this.cmta20.transferFrom(address1, address2, 50, {from: address3}));        
+      await expectRevert.unspecified(this.cmta20.transferFrom(address1, address2, 50, {from: address3}));        
     });
 
     it('reverts if address3 transfers tokens from address1 to address2 when paused', async function () {
@@ -329,7 +357,7 @@ contract('CMTA20', function ([_, owner, address1, address2, address3, fakeRuleEn
       (await this.cmta20.canTransfer(address1, address2, 10)).should.equal(false);
       (await this.cmta20.detectTransferRestriction(address1, address2, 10)).should.be.bignumber.equal("1");
       (await this.cmta20.messageForTransferRestriction(1)).should.equal("All transfers paused");
-      await shouldFail.reverting.withMessage(this.cmta20.transferFrom(address1, address2, 10, {from: address3}), 'Pausable: paused');     
+      await expectRevert(this.cmta20.transferFrom(address1, address2, 10, {from: address3}), 'Pausable: paused');     
     });
 
     context('Transferring with Rule Engine set', function () {
@@ -357,7 +385,7 @@ contract('CMTA20', function ([_, owner, address1, address2, address3, fakeRuleEn
       });
   
       it('reverts if address1 transfers more tokens than rule allows', async function () {
-        await shouldFail.reverting.withMessage(this.cmta20.transfer(address2, 21, {from: address1}), "CM04");        
+        await expectRevert(this.cmta20.transfer(address2, 21, {from: address1}), "CM04");        
       });
 
       it('allows address3 to transfer tokens from address1 to address2 with the right allowance', async function () {
@@ -380,7 +408,7 @@ contract('CMTA20', function ([_, owner, address1, address2, address3, fakeRuleEn
         (await this.cmta20.allowance(address1, address3)).should.be.bignumber.equal('21');
   
         /* Transfer */
-        await shouldFail.reverting.withMessage(this.cmta20.transferFrom(address1, address2, 21, {from: address3}), "CM04");        
+        await expectRevert(this.cmta20.transferFrom(address1, address2, 21, {from: address3}), "CM04");        
       });
     });
   });
