@@ -1,13 +1,27 @@
-# CMTA20 Share Token (draft, request for comments)
+# CMTA20 Share Token
 
 The CMTA20 token is a proposed ERC20 extension described as a Solidity smart contract for the Ethereum platform, implementing functionalities required to tokenize a Swiss corporation's equity securities (or "shares"), in accordance with the [Blueprint]( https://www.cmta.ch/content/52/cmta-blueprint-for-the-tokenization-of-shares-of-swiss-corporations.pdf) published by the [Capital Markets and technology association](http://www.cmta.ch/) (CMTA).
 
 The blueprint document describes the process through which shares that have already been issued pursuant to Swiss corporation law can be "wrapped" into digital tokens, so that the tokens and the underlying shares are tied to each other in a manner that prevents the shares from being transferred without the corresponding tokens and vice-versa.
 
-**IMPORTANT**: This project and the code in the present repository is an example implementation of the CMTA Blueprint requirements to an ERC20 interface extension which is publicly shared as a draft, in order to receive feedback from potential users and from the community at large, regarding aspects such as functionality, security, or interface design. The preferred way to receive comments is through the GitHub issue tracker (therefore making the comments public); private comments can be sent to the CMTA secretariat at [admin@cmta.ch](mail:admin@cmta.ch).
+This repository provides a proposed implementation of CMTA20 in Solidity, as an example implementation of the CMTA Blueprint requirements to an ERC20 interface extension. 
+The `master` branch contains the development towards the next release,
+and may be unstable. 
+Please view our [Releases](https://github.com/CMTA/CMTA20/releases) page
+for a list of stable versions released.
 
-**NOTE**:
-A related project is the [Security Token Standard](https://thesecuritytokenstandard.org/), an initiative driven by Polymath and supported by a number of organizations, which resulted in the creation of the ERC 1400 (Security Token Standard) and ERC 1410 (Partially Fungible Token Standard) tokens. These are ERC 20-compatible tokens which leverage related EIPs (1594, 1643, 1655) in order to create a comprehensive interface for arbitrary asset classes across jurisdictions. In comparison, CMTA20 aims at providing a minimal interface to securely enable the tokenization of shares (equity securities) in accordance with Swiss law, as an example implementation of the tokenisation [blueprint](https://www.cmta.ch/content/52/cmta-blueprint-for-the-tokenization-of-shares-of-swiss-corporations.pdf) published by the CMTA.
+The preferred way to receive comments is through the GitHub issue
+tracker (therefore making the comments public).
+Private comments can be
+sent to the CMTA secretariat at [admin@cmta.ch](mail:admin@cmta.ch).
+
+
+## Contributors
+
+The smart contract was designed by CMTA's Technical Committee, with contributions from [Lenz & Staehelin](https://www.lenzstaehelin.com/), [Mt Pelerin](https://www.mtpelerin.com/) (source code lead author), [Swissquote](https://swissquote.com/), [Taurus Group](https://taurusgroup.ch/), and [Tokenestate](https://tokenestate.io/).
+
+Major changes and releases are subject to the approval of CMTA's Technical Committee members.
+
 
 ## Token architecture
 
@@ -110,9 +124,12 @@ interface IRule {
 }
 ```
 
+## Differences with ERC1400
+
+A related project is the [Security Token Standard](https://thesecuritytokenstandard.org/), an initiative driven by Polymath and supported by a number of organizations, which resulted in the creation of the ERC 1400 (Security Token Standard) and ERC 1410 (Partially Fungible Token Standard) tokens. These are ERC 20-compatible tokens which leverage related EIPs (1594, 1643, 1655) in order to create a comprehensive interface for arbitrary asset classes across jurisdictions. In comparison, CMTA20 aims at providing a minimal interface to securely enable the tokenization of shares (equity securities) in accordance with Swiss law, as an example implementation of the tokenisation [blueprint](https://www.cmta.ch/content/52/cmta-blueprint-for-the-tokenization-of-shares-of-swiss-corporations.pdf) published by the CMTA.
+
 
 ## Intellectual property and contributors
 
 The code is copyright (c) Capital Market and Technology Association, 2018-2019, and is released under [Mozilla Public License 2.0](./LICENSE.md).
 
-The smart contract was designed by CMTA's Technical Committee, with contributions from [Lenz & Staehelin](https://www.lenzstaehelin.com/), [Mt Pelerin](https://www.mtpelerin.com/) (source code lead author), [Swissquote](https://swissquote.com/), [Taurus Group](https://taurusgroup.ch/), and [Tokenestate](https://tokenestate.io/).
