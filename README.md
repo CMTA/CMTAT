@@ -22,16 +22,26 @@ The smart contract was designed by CMTA's Technical Committee, with contribution
 
 Major changes and releases are subject to the approval of CMTA's Technical Committee members.
 
+**TODO: update contributors list**
+
+
+## Deployment
+
+**TODO: describe deployment models**
 
 ## Token architecture
 
+**TODO: adapt wrt IPausable instead of IFreezable**
+
+
 ![architecture](./images/architecture.png "Token architecture")
 
-## Function overview
+## Functionalities overview
 
-The CMTA20 token is an ERC20-compatible token, which extends the ERC20 interface with the following functions:
+The CMTA20 token is ERC20-compatible and extends the [ERC20
+interface](https://eips.ethereum.org/EIPS/eip-20) as follows:
 
-The following functions enable the token issuer (i.e., "owner" of the share token contract) and shareholder to associate data to their address, in a way that the owner can retrieve a shareholder's data:
+The following functions enable the token issuer (the owner of the share token contract) and shareholder to associate data to their address, in a way that the owner can retrieve a shareholder's data:
 
 - `setContact`: Sets the contact point (such as an email address) for shareholders to contact the token issuer. (*only owner*)
   - *Param* `String _contact`: The contact point to be set
@@ -44,7 +54,8 @@ The following functions enable the token issuer (i.e., "owner" of the share toke
   - *Param* `address shareholder`: The address of the potential/actual shareholder
   _ *Returns* the encrypted binary string that represents the identity of a potential/actual shareholder or 0x0 if the identity has not been set
 
-Tokens issuance, supply, and ownership can be managed by the owner thanks to the following functions:
+The following functions allow the owner to manage token issuance,
+supply, and ownership:
 
 - `issue`: Issue new share tokens to the owner address (*only owner*)
   - *Param* `uint256 _amount`: The amount of token to be issued
@@ -69,10 +80,10 @@ Tokens issuance, supply, and ownership can be managed by the owner thanks to the
 
 The token can be frozen (and unfrozen):
 
-- `freeze`: Freeze the token transfers (*only owner*)
+- `pause`: Freeze the token transfers (*only owner*)
   - *Emits* `LogFrozen` event with the freeze time as parameter
 
-- `unfreeze`: Unfreeze the token transfers (*only owner*)
+- `unpause`: Unfreeze the token transfers (*only owner*)
   - *Emits* `LogUnfrozen` event with the unfreeze time as parameter
 
 Ownership of the token can be abandoned or transferred:
@@ -123,6 +134,16 @@ interface IRule {
   external view returns (bool isValid);
 }
 ```
+
+## Security audits
+
+The first release 0.1 is based on a version audited by
+[ChainSecurity](https://chainsecurity.com/).
+
+New releases and new functionalities will be subject to security audits
+as well.
+
+**TODO: update wrt new audit**
 
 ## Differences with ERC1400
 
