@@ -25,9 +25,6 @@ Major changes and releases are subject to the approval of CMTA's Technical Commi
 **TODO: update contributors list**
 
 
-## Deployment
-
-**TODO: describe deployment models**
 
 ## Token architecture
 
@@ -135,6 +132,11 @@ interface IRule {
 }
 ```
 
+## Deployment and testing
+
+**TODO: describe deployment models**
+
+
 ## Security audits
 
 The first release 0.1 is based on a version audited by
@@ -144,6 +146,7 @@ New releases and new functionalities will be subject to security audits
 as well.
 
 **TODO: update wrt new audit**
+
 
 ## Differences with ERC1400
 
