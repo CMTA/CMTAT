@@ -4,26 +4,22 @@ The CMTA20 token is a proposed ERC20 extension described as a Solidity smart con
 
 The blueprint document describes the process through which shares that have already been issued pursuant to Swiss corporation law can be "wrapped" into digital tokens, so that the tokens and the underlying shares are tied to each other in a manner that prevents the shares from being transferred without the corresponding tokens and vice-versa.
 
-This repository provides a proposed implementation of CMTA20 in Solidity, as an example implementation of the CMTA Blueprint requirements to an ERC20 interface extension. 
-The `master` branch contains the development towards the next release,
-and may be unstable. 
-Please view our [Releases](https://github.com/CMTA/CMTA20/releases) page
-for a list of stable versions released.
+This repository provides a reference implementation of CMTA20 in Solidity, fulfilling the CMTA Blueprint requirements. 
 
-The preferred way to receive comments is through the GitHub issue
-tracker (therefore making the comments public).
-Private comments can be
-sent to the CMTA secretariat at [admin@cmta.ch](mail:admin@cmta.ch).
+Please view our [Releases](https://github.com/CMTA/CMTA20/releases) page for a list of stable versions released.
+
+Major changes and releases are subject to the approval of CMTA's Technical Committee members.
+
+The preferred way to receive comments is through the GitHub issue tracker (therefore making the comments public).
+Private comments can be sent to the CMTA secretariat at <a href="mailto:admin@cmta.ch">admin@cmta.ch</a>.
 
 
 ## Contributors
 
 The smart contract was designed by CMTA's Technical Committee, with contributions from [Lenz & Staehelin](https://www.lenzstaehelin.com/), [Mt Pelerin](https://www.mtpelerin.com/) (source code lead author), [Swissquote](https://swissquote.com/), [Taurus Group](https://taurusgroup.ch/), and [Tokenestate](https://tokenestate.io/).
 
-Major changes and releases are subject to the approval of CMTA's Technical Committee members.
 
 **TODO: update contributors list**
-
 
 
 ## Token architecture
@@ -54,19 +50,19 @@ The following functions enable the token issuer (the owner of the share token co
 The following functions allow the owner to manage token issuance,
 supply, and ownership:
 
-- `issue`: Issue new share tokens to the owner address (*only owner*)
-  - *Param* `uint256 _amount`: The amount of token to be issued
+- `issue`: Issue new tokens to the owner address (*only owner*)
+  - *Param* `uint256 _amount`: The amount of tokens to be issued
   - *Emits* `LogIssued` event with the amount of issued tokens as parameter
   - *Emits* `Transfer` event with the 0 address, the owner address and the amount issued as parameters
 
-- `redeem`: Redeem share token from the owner address (*only owner*)
-  - *Param* `uint256 _amount`: The amount of token to be redeemed
+- `redeem`: Redeem tokens from the owner address (*only owner*)
+  - *Param* `uint256 _amount`: The amount of tokens to be redeemed
   - *Emits* `LogRedeemed` event with the amount of redeemed tokens as parameter
   - *Emits* `Transfer` event with the owner address, the 0 address and the amount redeemed as parameters
 
 - `reassign`: Reassign all tokens from original address to replacement address
-  - *Param* `address original`: Original address to retrieve the token from
-  - *Param* `address replacement`: Destination address on which the token will be reassigned
+  - *Param* `address original`: Original address to retrieve the tokens from
+  - *Param* `address replacement`: Destination address on which the tokens will be reassigned
   - *Emits* `Transfer` event with the original address, the replacement address and the amount of tokens to be reassigned as parameters
   - *Emits* `LogReassigned` event with the original address, the replacement address and the amount of tokens reassigned as parameters
 
@@ -77,10 +73,10 @@ supply, and ownership:
 
 The token can be frozen (and unfrozen):
 
-- `pause`: Freeze the token transfers (*only owner*)
+- `pause`: Pause the token transfers (*only owner*)
   - *Emits* `LogFrozen` event with the freeze time as parameter
 
-- `unpause`: Unfreeze the token transfers (*only owner*)
+- `unpause`: Unpause the token transfers (*only owner*)
   - *Emits* `LogUnfrozen` event with the unfreeze time as parameter
 
 Ownership of the token can be abandoned or transferred:
@@ -88,7 +84,7 @@ Ownership of the token can be abandoned or transferred:
 - `renounceOwnership`: Renounce the ownership of the token (*this change cannot be reverted and the token will not be able to be administered anymore*) (*only owner*)
   - *Emits* `OwnershipRenounced` event with the previous owner as parameter
 
-- `transferOwnership:` Transfers the ownership of the token to `_newOwner`. (be absolutely sure that you're in full control of _newOwner associated private key otherwise the token will not be able to be administered anymore) (*only owner*)
+- `transferOwnership:` Transfer the ownership of the token to `_newOwner`. (be absolutely sure that you're in full control of _newOwner associated private key otherwise the token will not be able to be administered anymore) (*only owner*)
   - *Param* `address _newOwner`: the address of the new owner of the token
   - *Emits* `OwnershipTransferred` event with the previous owner and the new owner as parameters
 
@@ -103,9 +99,9 @@ The `canTransfer` function can be used to verify if a transfer is authorized by 
   - *Param* `uint256 _value`: Amount of tokens to be transferred
   - *Returns* `true` if the transfer is possible, false otherwise
 
-Said rules are defined through an (optional) rule engine, set using the `setRuleEngine` method. CMTA does not provide any RuleEngine implementation. It does however provide interfaces `IRuleEngine` and `IRule` to help with the implementation:
+Said rules are defined through an (optional) rule engine, set using the `setRuleEngine` method. CMTA does not provide any `RuleEngine` implementation. It does however provide interfaces `IRuleEngine` and `IRule` to help with the implementation:
 
-- `setRuleEngine`: Sets the optional rule engine address (*only owner*)
+- `setRuleEngine`: Set the optional rule engine address (*only owner*)
   - *Param* `IRuleEngine _ruleEngine`: The rule engine contract address to act as an external validator for transfers
   - *Emits* `LogRuleEngineSet` event with the new rule engine address as parameter
 
@@ -136,8 +132,7 @@ interface IRule {
 
 **TODO: document coding and testing guidelines**
 
-Currently a series of test is run by doing
-
+Currently a [series of tests](test/CMTA20.test.js) is run by doing
 
 ```
 truffle test
@@ -165,7 +160,7 @@ as well.
 A related project is the [Security Token Standard](https://thesecuritytokenstandard.org/), an initiative driven by Polymath and supported by a number of organizations, which resulted in the creation of the ERC 1400 (Security Token Standard) and ERC 1410 (Partially Fungible Token Standard) tokens. These are ERC 20-compatible tokens which leverage related EIPs (1594, 1643, 1655) in order to create a comprehensive interface for arbitrary asset classes across jurisdictions. In comparison, CMTA20 aims at providing a minimal interface to securely enable the tokenization of shares (equity securities) in accordance with Swiss law, as an example implementation of the tokenisation [blueprint](https://www.cmta.ch/content/52/cmta-blueprint-for-the-tokenization-of-shares-of-swiss-corporations.pdf) published by the CMTA.
 
 
-## Intellectual property and contributors
+## Intellectual property
 
 The code is copyright (c) Capital Market and Technology Association, 2018-2019, and is released under [Mozilla Public License 2.0](./LICENSE.md).
 
