@@ -132,7 +132,19 @@ interface IRule {
 }
 ```
 
-## Deployment and testing
+## Coding and testing
+
+**TODO: document coding and testing guidelines**
+
+Currently a series of test is run by doing
+
+
+```
+truffle test
+```
+
+
+## Deployment
 
 **TODO: describe deployment models**
 
