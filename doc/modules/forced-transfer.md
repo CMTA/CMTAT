@@ -12,7 +12,7 @@ CMTA Tokens has to support such functionality and allow authorized users to forc
 
 This section describes use cases for Forced Transfer Module.
 
-### ForceTransfer:ForceTransfer
+### ForceTransfer:EnforceTransfer
 
 An authorized user may transfer tokens owned by an arbitrary token owner to an arbitrary destination address.
 
@@ -22,11 +22,11 @@ This section describes the Ethereum API of Forced Transfer Module.
 
 ### Functions
 
-#### `forcedTransfer(address,address,uint,string)`
+#### `enforceTransfer(address,address,uint,string)`
 
 ##### Signature:
 
-    function forcedTransfer (address owner, address destination, uint amount, string memory reason)
+    function enforceTransfer (address owner, address destination, uint amount, string memory reason)
     public
 
 #### Description:
