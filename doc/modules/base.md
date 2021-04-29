@@ -8,7 +8,7 @@ Base Module provides the functionality that is essential for CMTA Token to be a 
 
 ## Use Cases
 
-This section describes use cases of Base Module.
+This section describes the use cases of Base Module.
 
 ### Base:TotalSupply
 
