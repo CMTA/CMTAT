@@ -60,7 +60,7 @@ Return the total number of tokens currently in circulation.
 
 ##### Description:
 
-Return the total number of tokens currently owned by the given `owner`.
+Return the number of tokens currently owned by the given `owner`.
 
 #### `transfer(address,uint)`
 
