@@ -5,26 +5,26 @@ This document defines Snapshot Module for the CMTA Token specification.
 ## Rationale
 
 Traditional securities such as shares or bonds usually grant their owners certain rights, such as to receive dividend/coupon payments or to vote on shareholder meetings.
-As many securities are quite liquid and large amount of securities may change hands quickly, the list of the security holders eligible for executing certain right is built prior to the time when the right is to be executed.
-The list is make in atomic fashion, i.e. all the holdings are estimated at exactly the same moment of time known in advance, and each security unit is guaranteed to participate in the list exactly once.
-Snapshot Module allows creating atomic snapshots of the token holdings at certain moment of time.
-These snapshots could later be used either on-chain or off-chain for checking who are eligible for executing certain right granted by the token.
+As many securities are quite liquid and large amount of securities may change hands quickly, the list of the security holders eligible for executing certain rights is built prior to the time when the right is to be executed.
+The list is made in an atomic fashion, i.e. all the holdings are estimated at exactly the same moment of time known in advance, and each security unit is guaranteed to participate in the list exactly once.
+The Snapshot Module allows creating atomic snapshots of the token holdings at certain moment of time.
+These snapshots can later be used either on-chain or off-chain for checking who is eligible for executing certain rights granted by the token.
 
 ## Use Cases
 
-This section describes the use cases of Snapshot Module.
+This section describes the use cases of the Snapshot Module.
 
 ### Snapshot:Schedule
 
-For a particular CMTA Token, an authorized user may schedule creation of a snapshot at a certain time moment.  The time of the newly scheduled snapshot cannot be before the time of the latest scheduled, nut not yet created, snapshot.
+For a particular CMTA Token, an authorized user may schedule the creation of a snapshot at a certain time moment.  The time of the newly scheduled snapshot cannot be before the time of the latest scheduled, but not yet created, snapshot.
 
 ### Snapshot:Reschedule
 
-For a particular schedule snapshot, an authorized user may change the time or a scheduled snapshot.  The new time cannot be before the time of the previous scheduled snapshot or after the time of the next scheduled snapshot, i.e. scheduled snapshots cannot be reordered.
+For a particular scheduled snapshot, an authorized user may change the time of a scheduled snapshot.  The new time cannot be before the time of the previous scheduled snapshot or after the time of the next scheduled snapshot, i.e. scheduled snapshots cannot be reordered.
 
 ### Snapshot:Unschedule
 
-For a particular scheduled snapshot, an authorized user may cancel snapshot creation.  The snapshot must be the last scheduled snapshot, and its time must be in the future.
+For a particular scheduled snapshot, an authorized user may cancel a snapshot creation.  The snapshot must be the last scheduled snapshot, and its time must be in the future.
 
 ### Snapshot:Time
 
@@ -36,11 +36,11 @@ For a particular created snapshot, anyone may know the total number of the token
 
 ### Snapshot:BalanceOf
 
-For a particular created snapshot and a particular token holder address, anyone may know the number of tokens owned by the owner of the address at the snapshot creation time.
+For a particular created snapshot and a particular token holder address, anyone may know the number of tokens owned by the address at the snapshot creation time.
 
 ## API for Ethereum
 
-This section describes the Ethereum API of Snapshot Module.
+This section describes the Ethereum API of the Snapshot Module.
 
 ### Functions
 
