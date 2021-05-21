@@ -1,13 +1,26 @@
 # Snapshot Module
 
-This document defines Snapshot Module for the CMTA Token specification.
+This document defines the Snapshot Module for the CMTA Token specification.
 
 ## Rationale
 
-Traditional securities such as shares or bonds usually grant their owners certain rights, such as to receive dividend/coupon payments or to vote on shareholder meetings.
-As many securities are quite liquid and large amount of securities may change hands quickly, the list of the security holders eligible for executing certain rights is built prior to the time when the right is to be executed.
-The list is made in an atomic fashion, i.e. all the holdings are estimated at exactly the same moment of time known in advance, and each security unit is guaranteed to participate in the list exactly once.
-The Snapshot Module allows creating atomic snapshots of the token holdings at certain moment of time.
+In relation to distributions or the exercise of rights attached to the
+securities, it is necessary to determine the number of tokens held at a
+certain point (generally defined in corporate documents as the "record
+date"). The snapshot function gives the issuer the possibility to create
+consistent snapshots of the token balances and to read them on-chain.
+
+As many securities are quite liquid and large amount of securities may
+change hands quickly, the list of the security holders eligible for
+executing certain rights is built prior to the time when the right is to
+be executed.
+
+The list is made in an atomic fashion, i.e. all the holdings are
+estimated at exactly the same moment of time known in advance, and each
+security unit is guaranteed to participate in the list exactly once.
+The Snapshot Module allows creating atomic snapshots of the token
+holdings at certain moment of time.
+
 These snapshots can later be used either on-chain or off-chain for checking who is eligible for executing certain rights granted by the token.
 
 ## Use Cases
