@@ -1,23 +1,15 @@
-# CMTAT Token 
+# CMTA Token 
 
-The CMTA Token (CMTAT) is a framework for ERC20-compliant token
-implementing functionalities required to tokenize securities in
-compliance with the Swiss law.
+The CMTA Token (CMTAT) is a framework enabling the tokenization of
+equity and debt securities in compliance with the Swiss law.
+
 The CMTAT is an open standard from the the [Capital Markets and
 technology association](http://www.cmta.ch/) (CMTA), and the product of
 collaborative work by the leading organizations in the Swiss finance and
 technology ecosystem.
 
-**TODO: add link to the document**
-
-The CMTAT allows the creation of two types of tokens:
-
-* *CMTAT-E*, to tokenize equity shares of Swiss companies, in
-  accordance with the [Blueprint](
-  https://www.cmta.ch/content/52/cmta-blueprint-for-the-tokenization-of-shares-of-swiss-corporations.pdf)
-  **TODO: add links to legal documents**
-
-* *CMTAT-D*, to tokenize debt securities. **TODO: elaborate**
+The present repository provides CMTA's reference implementation of CMTAT
+for Ethereum, as an ERC-20 compatible token.
 
 
 The preferred way to receive comments is through the GitHub issue
@@ -25,44 +17,82 @@ tracker (therefore making the comments public).  Private comments and
 questions can be sent to the CMTA secretariat at <a
 href="mailto:admin@cmta.ch">admin@cmta.ch</a>.
 
-## Contributors
 
-The smart contract was designed by CMTA's Technical Committee, which
-includes members from 
+## Functionalities 
 
-**TODO: member organizations list**
+CMTAT is a framework that enables the tokenization of equity and debt
+instruments.
+CMTAT notably supports:
 
-Furthermore, the design and security of the CMTAT was supported by
-[ABDK](https://abdk.consulting/) leading team in smart contract
-security.
+* Basic mint, burn, and transfer operations
+* Forced transfer and freeze or accounts
+* Distribution of dividends and interest
+* Split of the token into more units 
 
-Major changes and releases are subject to the approval of CMTA's Technical Committee members.
+Furthermore, the present implementation uses standard mechanisms in order to simplify:
 
+* Upgradeability, via deployemnt of the token with a proxy
+* "Gasless" transactions
 
-## Functionalities supported
+Please see CMTAT's [technical documentation](doc/CMTAT.pdf) for a more
+detailed description of CMTAT's functionalities.
 
-**TODO: summarize as bullet points, for equity and debt, link document**
+Please see the [modules documentation](doc/modules) for the
+specification of modules of this reference implementation.
 
 ## Token architecture
 
 **TODO: describe module approach, and the two token types**
 
 
-## How to deploy CMTAT
+## Practical considerations
 
-Please view our [Releases](https://github.com/CMTA/CMTA20/releases) page for a list of stable versions released.
+To use the CMTAT, we recommend that you use the latest version from the
+[Releases](https://github.com/CMTA/CMTAT/releases) page.
 
-**TODO: describe deployment models**
+
+### Token templates
+
+**TODO**
+
+This reference implementation allows the creation of two types of tokens:
+
+* *CMTAT-E*, to tokenize equity instruments.
+
+* *CMTAT-D*, to tokenize debt instruments.
+
+### Running local tests
+
+**TODO**
+
+### Deployment via a proxy
+
+**TODO, with OZ proxing**
+
+### Support for gasless transactions
+
+**TODO, with OpenGSN support**
 
 
 ## Security audits
 
-**TODO**
+**TODO ABDK + report**
 
+
+## Contributors
+
+The CMTAT is developed by a working group of CMTA's Technical Committee
+that includes members from Atpar, Bitcoin Suisse, Blockchain Innovation
+Group, Hypothekarbank Lenz & Staehelin, Metaco, SEBA, Swissquote,
+Sygnum, Taurus, Tezos Foundation.
+
+The design and security of the CMTAT was supported by
+[ABDK](https://abdk.consulting/), leading team in smart contract
+security.
 
 ## Intellectual property
 
 The code is copyright (c) Capital Market and Technology Association,
-2018-2019, and is released under [Mozilla Public License
+2018-2021, and is released under [Mozilla Public License
 2.0](./LICENSE.md).
 
