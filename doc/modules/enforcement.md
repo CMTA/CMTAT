@@ -31,7 +31,7 @@ Only authorized users are allowed to call this function.
 
 ```solidity
     function freeze (address account)
-    public return bool
+    public return (bool)
 ```
 
 #### Description:
@@ -46,7 +46,7 @@ Returns `true` if the address is not yet frozen, `false` otherwise.
 
 ```solidity
     function unfreeze (address account)
-    public return bool
+    public return (bool)
 ```
 
 #### Description:
