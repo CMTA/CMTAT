@@ -122,26 +122,6 @@ Return the number of tokens the given `spender` is currently allowed to transfer
 Transfer the given `amount` of tokens from the given `owner` to the given `destination` address.
 The function returns `true` on success and reverts of error.
 
-#### `pause(account, amount)`
-
-##### Signature:
-
-```solidity
-    function pause ()
-```
-
-##### Description:
-
-#### `unpause()`
-
-##### Signature:
-
-```solidity
-    function unpause ()
-```
-
-##### Description:
-
 ### Events
 
 #### `Transfer(address,address,uint)`
@@ -181,15 +161,3 @@ Emitted when the specified `owner` allowed the specified `spender` to transfer t
 Emitted when the specified `spender` spends the specified `amount` of the tokens owned by the specified `owner` reducing the corresponding allowance.
 
 This event is not defined by ERC-20 and is needed to track allowance changes.
-
-#### `Paused(address)`
-
-##### Signature:
-
-```solidity
-    event Burn (address account)
-```
-
-##### Description:
-
-Emitted when the pause is triggered by a `account`.

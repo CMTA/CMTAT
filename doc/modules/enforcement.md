@@ -58,7 +58,7 @@ Returns `true` if the address was frozen, `false` otherwise.
 
 ### Events
 
-#### `Enforcement(address,address,uint,reason)`
+#### `Enforcement(address,address,uint,string)`
 
 ##### Signature:
 
