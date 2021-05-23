@@ -122,34 +122,6 @@ Return the number of tokens the given `spender` is currently allowed to transfer
 Transfer the given `amount` of tokens from the given `owner` to the given `destination` address.
 The function returns `true` on success and reverts of error.
 
-#### `mint(account, amount)`
-
-##### Signature:
-
-```solidity
-    function mint (address account, uint amount)
-    public returns (bool)
-```
-
-##### Description:
-
-Allows the token owner to mint `amount` tokens to `account`.  
-
-
-#### `burnFrom(account, amount)`
-
-##### Signature:
-
-```solidity
-    function burnFrom (address account, uint amount)
-    public returns (bool)
-```
-
-##### Description:
-
-Allows the token owner to burn `amount` tokens from `account`.  
-
-
 #### `pause(account, amount)`
 
 ##### Signature:
@@ -210,34 +182,6 @@ Emitted when the specified `spender` spends the specified `amount` of the tokens
 
 This event is not defined by ERC-20 and is needed to track allowance changes.
 
-#### `Mint(address,uint)`
-
-##### Signature:
-
-```solidity
-    event Mint (address indexed owner, uint amount)
-```
-
-##### Description:
-
-Emitted when the specified `amount` of new token were created and given to the specified `owner`.
-
-This event is not defined by ERC-20 and is needed to track token creation.
-
-#### `Burn(address,uint)`
-
-##### Signature:
-
-```solidity
-    event Burn (address indexed owner, uint amount)
-```
-
-##### Description:
-
-Emitted when the specified `amount` of tokens owned by the specified `owner` were destroyed.
-
-This event is not defined by ERC-20 and is needed to track token destruction.
-
 #### `Paused(address)`
 
 ##### Signature:
@@ -249,8 +193,3 @@ This event is not defined by ERC-20 and is needed to track token destruction.
 ##### Description:
 
 Emitted when the pause is triggered by a `account`.
-
-
-
-
-
