@@ -1,6 +1,6 @@
-[submodule "newcontracts/openzeppelin-contracts"]
-	path = newcontracts/openzeppelin-contracts
+[submodule "contracts/openzeppelin-contracts"]
+	path = contracts/openzeppelin-contracts
 	url = https://github.com/OpenZeppelin/openzeppelin-contracts
-[submodule "newcontracts/openzeppelin-contracts-upgradeable"]
-	path = newcontracts/openzeppelin-contracts-upgradeable
+[submodule "contracts/openzeppelin-contracts-upgradeable"]
+	path = contracts/openzeppelin-contracts-upgradeable
 	url = https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable
