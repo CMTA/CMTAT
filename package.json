@@ -1,6 +1,6 @@
 {
-  "name": "CMTA20",
-  "version": "0.0.1",
+  "name": "CMTAT",
+  "version": "0.1.0",
   "description": "CMTA smart contracts",
   "files": [
     "contracts",
@@ -19,7 +19,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/CMTA/CMTA20.git"
+    "url": "https://github.com/veorq/CMTAT.git"
   },
   "keywords": [
     "solidity",
@@ -32,9 +32,9 @@
   "author": "Sébastien Krafft <sebastien.krafft@mtpelerin.com>",
   "license": "MPL",
   "bugs": {
-    "url": "https://github.com/CMTA/CMTA20/issues"
+    "url": "https://github.com/veorq/CMTAT/issues"
   },
-  "homepage": "https://github.com/CMTA/CMTA20",
+  "homepage": "https://github.com/veorq/CMTAT",
   "devDependencies": {
     "chai": "^4.2.0",
     "coveralls": "^3.0.2",
