@@ -5,44 +5,38 @@ equity and debt securities in compliance with the Swiss law.
 
 The CMTAT is an open standard from the the [Capital Markets and
 technology association](http://www.cmta.ch/) (CMTA), and the product of
-collaborative work by the leading organizations in the Swiss finance and
+collaborative work by leading organizations in the Swiss finance and
 technology ecosystem.
 
 The present repository provides CMTA's reference implementation of CMTAT
 for Ethereum, as an ERC-20 compatible token.
 
-
 The preferred way to receive comments is through the GitHub issue
-tracker (therefore making the comments public).  Private comments and
-questions can be sent to the CMTA secretariat at <a
-href="mailto:admin@cmta.ch">admin@cmta.ch</a>.
+tracker.  Private comments and questions can be sent to the CMTA secretariat 
+at <a href="mailto:admin@cmta.ch">admin@cmta.ch</a>.
 
 
 ## Functionalities 
 
-CMTAT is a framework that enables the tokenization of equity and debt
+CMTAT is a *framework* that enables the tokenization of equity and debt
 instruments.
-CMTAT notably supports:
+CMTAT notably supports the following core features:
 
 * Basic mint, burn, and transfer operations
-* Forced transfer and freeze or accounts
-* Distribution of dividends and interest
-* Split of the token into more units 
+* Forced transfer by the issuer 
+* Pause of the contract and freeze of specific accounts
 
 Furthermore, the present implementation uses standard mechanisms in order to simplify:
 
+* Distribution of dividends and interest, via snapshots
 * Upgradeability, via deployemnt of the token with a proxy
 * "Gasless" transactions
 
 Please see CMTAT's [technical documentation](doc/CMTAT.pdf) for a more
-detailed description of CMTAT's functionalities.
+detailed description of CMTAT's functionalities. **TODO**
 
 Please see the [modules documentation](doc/modules) for the
 specification of modules of this reference implementation.
-
-## Token architecture
-
-**TODO: describe module approach, and the two token types**
 
 
 ## Practical considerations
@@ -60,6 +54,11 @@ This reference implementation allows the creation of two types of tokens:
 * *CMTAT-E*, to tokenize equity instruments.
 
 * *CMTAT-D*, to tokenize debt instruments.
+
+These pre-defined tokens are provided for convenience.
+One may modify them, by adding, removing, or modifying features, however the core features listed above must remain in place for compliance with the Swiss law.
+If you believe changes are needed, we recommend that you contact CMTA to ensure that said changes would not jeopardize the token's security and legal standing.
+
 
 ### Running local tests
 
@@ -87,7 +86,7 @@ Group, Hypothekarbank Lenz & Staehelin, Metaco, SEBA, Swissquote,
 Sygnum, Taurus, Tezos Foundation.
 
 The design and security of the CMTAT was supported by
-[ABDK](https://abdk.consulting/), leading team in smart contract
+[ABDK](https://abdk.consulting/), a leading team in smart contract
 security.
 
 ## Intellectual property
