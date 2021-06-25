@@ -6,7 +6,7 @@ const CMTAT = artifacts.require('CMTAT');
 contract('BaseModule', function ([_, owner, address1, address2, address3, fakeRuleEngine]) {
   beforeEach(async function () {
     this.cmtat = await CMTAT.new({ from: owner });
-    this.cmtat.initialize('CMTA Token', 'CMTAT', { from: owner });
+    this.cmtat.initialize('CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', { from: owner });
   });
 
   context('Token structure', function () {
@@ -18,6 +18,44 @@ contract('BaseModule', function ([_, owner, address1, address2, address3, fakeRu
     });
     it('is not divisible', async function () {
       (await this.cmtat.decimals()).should.be.bignumber.equal('0');
+    });
+    it('is has a token ID', async function () {
+      (await this.cmtat.tokenId()).should.equal('CMTAT_ISIN');
+    });
+    it('is has terms', async function () {
+      (await this.cmtat.terms()).should.equal('https://cmta.ch');
+    });
+    it('allows the admin to modify the token ID', async function () {
+      (await this.cmtat.tokenId()).should.equal('CMTAT_ISIN');
+      this.cmtat.setTokenId('CMTAT_TOKENID', {from: owner});
+      (await this.cmtat.tokenId()).should.equal('CMTAT_TOKENID');
+    });
+    it('reverts when trying to modify the token ID from non-admin', async function () {
+      (await this.cmtat.tokenId()).should.equal('CMTAT_ISIN');
+      await expectRevert(this.cmtat.setTokenId('CMTAT_TOKENID', {from: address1}), 'CMTAT: must have admin role');
+      (await this.cmtat.tokenId()).should.equal('CMTAT_ISIN');
+    });
+    it('allows the admin to modify the terms', async function () {
+      (await this.cmtat.terms()).should.equal('https://cmta.ch');
+      this.cmtat.setTerms('https://cmta.ch/terms', {from: owner});
+      (await this.cmtat.terms()).should.equal('https://cmta.ch/terms');
+    });
+    it('reverts when trying to modify the terms from non-admin', async function () {
+      (await this.cmtat.terms()).should.equal('https://cmta.ch');
+      await expectRevert(this.cmtat.setTerms('https://cmta.ch/terms', {from: address1}), 'CMTAT: must have admin role');
+      (await this.cmtat.terms()).should.equal('https://cmta.ch');
+    });
+    it('allows the admin to kill the contract', async function () {
+      this.cmtat.kill({from: owner});
+      try {
+        await this.cmtat.terms();
+      } catch (e) {
+        e.message.should.equal("Returned values aren't valid, did it run Out of Gas? You might also see this error if you are not using the correct ABI for the contract you are retrieving data from, requesting data from a block number that does not exist, or querying a node which is not fully synced.");
+      }
+    });
+    it('reverts when trying to kill the contract from non-admin', async function () {
+      await expectRevert(this.cmtat.kill({from: address1}), 'CMTAT: must have admin role');
+      (await this.cmtat.terms()).should.equal('https://cmta.ch');
     });
   });
 

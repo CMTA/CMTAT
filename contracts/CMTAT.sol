@@ -10,13 +10,16 @@ import "./modules/MintModule.sol";
 import "./modules/BurnModule.sol";
 import "./modules/EnforcementModule.sol";
 import "./modules/PauseModule.sol";
+import "./modules/ValidationModule.sol";
+import "./modules/MetaTxModule.sol";
+import "./interfaces/IRuleEngine.sol";
 
-contract CMTAT is Initializable, ContextUpgradeable, BaseModule, AuthorizationModule, PauseModule, MintModule, BurnModule, EnforcementModule {
+contract CMTAT is Initializable, ContextUpgradeable, BaseModule, AuthorizationModule, PauseModule, MintModule, BurnModule, EnforcementModule, ValidationModule, MetaTxModule {
   uint8 constant TRANSFER_OK = 0;
   string constant TEXT_TRANSFER_OK = "No restriction";
 
-  function initialize (string memory name, string memory symbol) public initializer {
-    __CMTAT_init(name, symbol);
+  function initialize (string memory name, string memory symbol, string memory tokenId, string memory terms) public initializer {
+    __CMTAT_init(name, symbol, tokenId, terms);
   }
 
   /**
@@ -25,9 +28,9 @@ contract CMTAT is Initializable, ContextUpgradeable, BaseModule, AuthorizationMo
     *
     * See {ERC20-constructor}.
     */
-  function __CMTAT_init(string memory name, string memory symbol) internal initializer {
+  function __CMTAT_init(string memory name, string memory symbol, string memory tokenId, string memory terms) internal initializer {
     __Context_init_unchained();
-    __Base_init_unchained(0);
+    __Base_init_unchained(0, tokenId, terms);
     __AccessControl_init_unchained();
     __ERC20_init_unchained(name, symbol);
     __Pausable_init_unchained();
@@ -146,14 +149,19 @@ contract CMTAT is Initializable, ContextUpgradeable, BaseModule, AuthorizationMo
   /**
   * @dev ERC1404 check if _value token can be transferred from _from to _to
   * @param from address The address which you want to send tokens from
+  * @param to address The address which you want to transfer to
+  * @param amount uint256 the amount of tokens to be transferred
   * @return code of the rejection reason
   */
-  function detectTransferRestriction (address from, address /* to */, uint256 /* value */) public view returns (uint8) {
+  function detectTransferRestriction (address from, address to, uint256 amount) public view returns (uint8 code) {
     if (paused()) {
       return TRANSFER_REJECTED_PAUSED;
     }
     if (frozen(from)) {
       return TRANSFER_REJECTED_FROZEN;
+    }
+    if (address(ruleEngine) != address(0)) {
+      return _detectTransferRestriction(from, to, amount);
     }
     return TRANSFER_OK;
   }
@@ -161,16 +169,44 @@ contract CMTAT is Initializable, ContextUpgradeable, BaseModule, AuthorizationMo
   /**
   * @dev ERC1404 returns the human readable explaination corresponding to the error code returned by detectTransferRestriction
   * @param restrictionCode The error code returned by detectTransferRestriction
-  * @return The human readable explaination corresponding to the error code returned by detectTransferRestriction
+  * @return message The human readable explaination corresponding to the error code returned by detectTransferRestriction
   */
-  function messageForTransferRestriction (uint8 restrictionCode) external pure returns (string memory) {
+  function messageForTransferRestriction (uint8 restrictionCode) external view returns (string memory message) {
     if (restrictionCode == TRANSFER_OK) {
       return TEXT_TRANSFER_OK;
     } else if (restrictionCode == TRANSFER_REJECTED_PAUSED) {
       return TEXT_TRANSFER_REJECTED_PAUSED;
     } else if (restrictionCode == TRANSFER_REJECTED_FROZEN) {
       return TEXT_TRANSFER_REJECTED_FROZEN;
-    }
+    } else if (address(ruleEngine) != address(0)) {
+      return _messageForTransferRestriction(restrictionCode);
+    } 
+  }
+
+  function setTokenId (string memory tokenId_) public {
+    require(hasRole(DEFAULT_ADMIN_ROLE, _msgSender()), "CMTAT: must have admin role");
+    tokenId = tokenId_;
+  }
+
+  function setTerms (string memory terms_) public {
+    require(hasRole(DEFAULT_ADMIN_ROLE, _msgSender()), "CMTAT: must have admin role");
+    terms = terms_;
+  }
+
+  function kill() public {
+    require(hasRole(DEFAULT_ADMIN_ROLE, _msgSender()), "CMTAT: must have admin role");
+    selfdestruct(payable(_msgSender()));
+  }
+
+  function setRuleEngine(IRuleEngine ruleEngine_) external {
+    require(hasRole(DEFAULT_ADMIN_ROLE, _msgSender()), "CMTAT: must have admin role");
+    ruleEngine = ruleEngine_;
+    emit RuleEngineSet(address(ruleEngine_));
+  }
+
+  function setTrustedForwarder(address trustedForwarder_) public {
+    require(hasRole(DEFAULT_ADMIN_ROLE, _msgSender()), "CMTAT: must have admin role");
+    _trustedForwarder = trustedForwarder_;
   }
 
   function _beforeTokenTransfer(address from, address to, uint256 amount) internal override(ERC20Upgradeable) {
@@ -178,6 +214,18 @@ contract CMTAT is Initializable, ContextUpgradeable, BaseModule, AuthorizationMo
 
     require(!paused(), "CMTAT: token transfer while paused");
     require(!frozen(from), "CMTAT: token transfer while frozen");
+
+    if (address(ruleEngine) != address(0)) {
+      require(_validateTransfer(from, to, amount), "CMTAT: transfer rejected by validation module");
+    }
+  }
+
+  function _msgSender() internal view override(ERC2771ContextUpgradeable, ContextUpgradeable) returns (address sender) {
+    return super._msgSender();
+  }
+
+  function _msgData() internal view override(ERC2771ContextUpgradeable, ContextUpgradeable) returns (bytes calldata) {
+    return super._msgData();
   }
 
   uint256[50] private __gap;

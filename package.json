@@ -58,5 +58,8 @@
     "truffle-hdwallet-provider": "0.0.6",
     "web3": "^1.0.0-beta.41"
   },
-  "dependencies": {}
+  "dependencies": {
+    "eth-sig-util": "^3.0.1",
+    "ethereumjs-wallet": "^1.0.1"
+  }
 }

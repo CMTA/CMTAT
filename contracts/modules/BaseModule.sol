@@ -11,6 +11,8 @@ abstract contract BaseModule is Initializable, ERC20Upgradeable {
 
     /* Variables */
     uint8 private _decimals;
+    string public tokenId;
+    string public terms;
 
     /* Initializers */
     /**
@@ -19,13 +21,17 @@ abstract contract BaseModule is Initializable, ERC20Upgradeable {
      * All two of these values are immutable: they can only be set once during
      * construction.
      */
-    function __Base_init(string memory name_, string memory symbol_, uint8 decimals_) internal initializer {
+    function __Base_init(string memory name_, string memory symbol_, uint8 decimals_, string memory tokenId_, string memory terms_) internal initializer {
         __ERC20_init(name_, symbol_);
         _decimals = decimals_;
+        tokenId = tokenId_;
+        terms = terms_;
     }
 
-    function __Base_init_unchained(uint8 decimals_) internal initializer {
+    function __Base_init_unchained(uint8 decimals_, string memory tokenId_, string memory terms_) internal initializer {
         _decimals = decimals_;
+        tokenId = tokenId_;
+        terms = terms_;
     }
 
     /* Methods */
