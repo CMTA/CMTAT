@@ -1,4 +1,5 @@
 const { expectEvent, expectRevert } = require('openzeppelin-test-helpers');
+const { DEFAULT_ADMIN_ROLE } = require('../utils');
 require('chai/register-should');
 
 const CMTAT = artifacts.require('CMTAT');
@@ -32,7 +33,7 @@ contract('BaseModule', function ([_, owner, address1, address2, address3, fakeRu
     });
     it('reverts when trying to modify the token ID from non-admin', async function () {
       (await this.cmtat.tokenId()).should.equal('CMTAT_ISIN');
-      await expectRevert(this.cmtat.setTokenId('CMTAT_TOKENID', {from: address1}), 'CMTAT: must have admin role');
+      await expectRevert(this.cmtat.setTokenId('CMTAT_TOKENID', {from: address1}), 'AccessControl: account ' + address1.toLowerCase() + ' is missing role ' + DEFAULT_ADMIN_ROLE);
       (await this.cmtat.tokenId()).should.equal('CMTAT_ISIN');
     });
     it('allows the admin to modify the terms', async function () {
@@ -42,7 +43,7 @@ contract('BaseModule', function ([_, owner, address1, address2, address3, fakeRu
     });
     it('reverts when trying to modify the terms from non-admin', async function () {
       (await this.cmtat.terms()).should.equal('https://cmta.ch');
-      await expectRevert(this.cmtat.setTerms('https://cmta.ch/terms', {from: address1}), 'CMTAT: must have admin role');
+      await expectRevert(this.cmtat.setTerms('https://cmta.ch/terms', {from: address1}), 'AccessControl: account ' + address1.toLowerCase() + ' is missing role ' + DEFAULT_ADMIN_ROLE);
       (await this.cmtat.terms()).should.equal('https://cmta.ch');
     });
     it('allows the admin to kill the contract', async function () {
@@ -54,7 +55,7 @@ contract('BaseModule', function ([_, owner, address1, address2, address3, fakeRu
       }
     });
     it('reverts when trying to kill the contract from non-admin', async function () {
-      await expectRevert(this.cmtat.kill({from: address1}), 'CMTAT: must have admin role');
+      await expectRevert(this.cmtat.kill({from: address1}), 'AccessControl: account ' + address1.toLowerCase() + ' is missing role ' + DEFAULT_ADMIN_ROLE);
       (await this.cmtat.terms()).should.equal('https://cmta.ch');
     });
   });

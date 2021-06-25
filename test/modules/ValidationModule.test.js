@@ -1,5 +1,6 @@
 const { expectEvent, expectRevert } = require('openzeppelin-test-helpers');
-const { PAUSER_ROLE } = require('../utils');
+const { DEFAULT_ADMIN_ROLE } = require('../utils');
+
 require('chai/register-should');
 
 const CMTAT = artifacts.require('CMTAT');
@@ -21,7 +22,7 @@ contract('ValidationModule', function ([_, owner, address1, address2, address3, 
     });
 
     it('reverts when calling from non-owner', async function () {
-      await expectRevert(this.cmtat.setRuleEngine(fakeRuleEngine, { from: address1 }), 'CMTAT: must have admin role');
+      await expectRevert(this.cmtat.setRuleEngine(fakeRuleEngine, { from: address1 }), 'AccessControl: account ' + address1.toLowerCase() + ' is missing role ' + DEFAULT_ADMIN_ROLE);
     });
   });
 

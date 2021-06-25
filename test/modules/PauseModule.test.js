@@ -25,7 +25,7 @@ contract('PauseModule', function ([_, owner, address1, address2, address3]) {
     }); 
 
     it('reverts when calling from non-owner', async function () {
-      await expectRevert(this.cmtat.pause({ from: address1 }), 'CMTAT: must have pauser role to pause');
+      await expectRevert(this.cmtat.pause({ from: address1 }), 'AccessControl: account ' + address1.toLowerCase() + ' is missing role ' + PAUSER_ROLE);
     });
 
     it('can be unpaused by the owner', async function () {
@@ -45,7 +45,7 @@ contract('PauseModule', function ([_, owner, address1, address2, address3]) {
 
     it('reverts when calling from non-owner', async function () {
       await this.cmtat.pause({from: owner});
-      await expectRevert(this.cmtat.unpause({ from: address1 }), 'CMTAT: must have pauser role to unpause');
+      await expectRevert(this.cmtat.unpause({ from: address1 }), 'AccessControl: account ' + address1.toLowerCase() + ' is missing role ' + PAUSER_ROLE);
     });
 
     it('reverts if address1 transfers tokens to address2 when paused', async function () {

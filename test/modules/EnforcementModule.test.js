@@ -34,7 +34,7 @@ contract('EnforcementModule', function ([_, owner, address1, address2, address3,
     }); 
 
     it('reverts when trying to enforce transfer from non-enforcer', async function () {
-      await expectRevert(this.cmtat.enforceTransfer(address1, address2, 20, 'Bad guy', { from: address3 }), 'CMTAT: must have enforcer role to enforce transfer');
+      await expectRevert(this.cmtat.enforceTransfer(address1, address2, 20, 'Bad guy', { from: address3 }), 'AccessControl: account ' + address3.toLowerCase() + ' is missing role ' + ENFORCER_ROLE);
     });
   });
 
@@ -80,11 +80,11 @@ contract('EnforcementModule', function ([_, owner, address1, address2, address3,
     });
 
     it('reverts when freezing from non-enforcer', async function () {
-      await expectRevert(this.cmtat.freeze(address1, { from: address3 }), 'CMTAT: must have enforcer role to freeze');
+      await expectRevert(this.cmtat.freeze(address1, { from: address3 }), 'AccessControl: account ' + address3.toLowerCase() + ' is missing role ' + ENFORCER_ROLE);
     });
 
     it('reverts when unfreezing from non-enforcer', async function () {
-      await expectRevert(this.cmtat.unfreeze(address1, { from: address3 }), 'CMTAT: must have enforcer role to unfreeze');
+      await expectRevert(this.cmtat.unfreeze(address1, { from: address3 }), 'AccessControl: account ' + address3.toLowerCase() + ' is missing role ' + ENFORCER_ROLE);
     });
   });
 });

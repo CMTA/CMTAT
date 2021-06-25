@@ -1,6 +1,7 @@
 const { expectEvent, expectRevert } = require('openzeppelin-test-helpers');
 const ethSigUtil = require('eth-sig-util');
 const Wallet = require('ethereumjs-wallet').default;
+const { DEFAULT_ADMIN_ROLE } = require('../utils');
 require('chai/register-should');
 
 const CMTAT = artifacts.require('CMTAT');
@@ -15,7 +16,7 @@ const EIP712Domain = [
   { name: 'verifyingContract', type: 'address' },
 ];
 
-contract('ValidationModule', function ([_, owner, address1, address2, address3, trustedForwarder]) {
+contract('MetaTxModule', function ([_, owner, address1, address2, address3, trustedForwarder]) {
   beforeEach(async function () {
     this.cmtat = await CMTAT.new({ from: owner });
     this.cmtat.initialize('CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', { from: owner });
@@ -29,7 +30,7 @@ contract('ValidationModule', function ([_, owner, address1, address2, address3, 
     }); 
 
     it('reverts when calling from non-owner', async function () {
-      await expectRevert(this.cmtat.setTrustedForwarder(trustedForwarder, { from: address1 }), 'CMTAT: must have admin role');
+      await expectRevert(this.cmtat.setTrustedForwarder(trustedForwarder, { from: address1 }), 'AccessControl: account ' + address1.toLowerCase() + ' is missing role ' + DEFAULT_ADMIN_ROLE);
     });
   });
 

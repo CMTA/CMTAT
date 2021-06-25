@@ -12,9 +12,10 @@ import "./modules/EnforcementModule.sol";
 import "./modules/PauseModule.sol";
 import "./modules/ValidationModule.sol";
 import "./modules/MetaTxModule.sol";
+import "./modules/SnapshotModule.sol";
 import "./interfaces/IRuleEngine.sol";
 
-contract CMTAT is Initializable, ContextUpgradeable, BaseModule, AuthorizationModule, PauseModule, MintModule, BurnModule, EnforcementModule, ValidationModule, MetaTxModule {
+contract CMTAT is Initializable, ContextUpgradeable, BaseModule, AuthorizationModule, PauseModule, MintModule, BurnModule, EnforcementModule, ValidationModule, MetaTxModule, SnapshotModule {
   uint8 constant TRANSFER_OK = 0;
   string constant TEXT_TRANSFER_OK = "No restriction";
 
@@ -35,6 +36,7 @@ contract CMTAT is Initializable, ContextUpgradeable, BaseModule, AuthorizationMo
     __ERC20_init_unchained(name, symbol);
     __Pausable_init_unchained();
     __Enforcement_init_unchained();
+    __Snapshot_init_unchained();
     __CMTAT_init_unchained();
   }
 
@@ -44,6 +46,7 @@ contract CMTAT is Initializable, ContextUpgradeable, BaseModule, AuthorizationMo
     _setupRole(MINTER_ROLE, _msgSender());
     _setupRole(BURNER_ROLE, _msgSender());
     _setupRole(PAUSER_ROLE, _msgSender());
+    _setupRole(SNAPSHOTER_ROLE, _msgSender());
   }
 
   /**
@@ -55,8 +58,7 @@ contract CMTAT is Initializable, ContextUpgradeable, BaseModule, AuthorizationMo
     *
     * - the caller must have the `MINTER_ROLE`.
     */
-  function mint(address to, uint256 amount) public {
-    require(hasRole(MINTER_ROLE, _msgSender()), "CMTAT: must have minter role to mint");
+  function mint(address to, uint256 amount) public onlyRole(MINTER_ROLE) {
     _mint(to, amount);
     emit Mint(to, amount);
   }
@@ -72,8 +74,7 @@ contract CMTAT is Initializable, ContextUpgradeable, BaseModule, AuthorizationMo
     * - the caller must have allowance for ``accounts``'s tokens of at least
     * `amount`.
     */
-  function burnFrom(address account, uint256 amount) public {
-    require(hasRole(BURNER_ROLE, _msgSender()), "CMTAT: must have burner role to burn");
+  function burnFrom(address account, uint256 amount) public onlyRole(BURNER_ROLE) {
     uint256 currentAllowance = allowance(account, _msgSender());
     require(currentAllowance >= amount, "CMTAT: burn amount exceeds allowance");
     unchecked {
@@ -92,8 +93,7 @@ contract CMTAT is Initializable, ContextUpgradeable, BaseModule, AuthorizationMo
     *
     * - the caller must have the `PAUSER_ROLE`.
     */
-  function pause() public {
-    require(hasRole(PAUSER_ROLE, _msgSender()), "CMTAT: must have pauser role to pause");
+  function pause() public onlyRole(PAUSER_ROLE) {
     _pause();
   }
 
@@ -106,8 +106,7 @@ contract CMTAT is Initializable, ContextUpgradeable, BaseModule, AuthorizationMo
     *
     * - the caller must have the `PAUSER_ROLE`.
     */
-  function unpause() public {
-    require(hasRole(PAUSER_ROLE, _msgSender()), "CMTAT: must have pauser role to unpause");
+  function unpause() public onlyRole(PAUSER_ROLE) {
     _unpause();
   }
 
@@ -115,8 +114,7 @@ contract CMTAT is Initializable, ContextUpgradeable, BaseModule, AuthorizationMo
     * @dev Triggers a forced transfer.
     *
     */
-  function enforceTransfer(address owner, address destination, uint amount, string memory reason) public {
-    require(hasRole(ENFORCER_ROLE, _msgSender()), "CMTAT: must have enforcer role to enforce transfer");
+  function enforceTransfer(address owner, address destination, uint amount, string memory reason) public onlyRole(ENFORCER_ROLE) {
     _enforceTransfer(owner, destination, amount, reason);
   }
 
@@ -124,8 +122,7 @@ contract CMTAT is Initializable, ContextUpgradeable, BaseModule, AuthorizationMo
     * @dev Freezes an address.
     *
     */
-  function freeze(address account) public returns (bool) {
-    require(hasRole(ENFORCER_ROLE, _msgSender()), "CMTAT: must have enforcer role to freeze");
+  function freeze(address account) public onlyRole(ENFORCER_ROLE) returns (bool) {
     return _freeze(account);
   }
 
@@ -133,8 +130,7 @@ contract CMTAT is Initializable, ContextUpgradeable, BaseModule, AuthorizationMo
     * @dev Unfreezes an address.
     *
     */
-  function unfreeze(address account) public returns (bool) {
-    require(hasRole(ENFORCER_ROLE, _msgSender()), "CMTAT: must have enforcer role to unfreeze");
+  function unfreeze(address account) public onlyRole(ENFORCER_ROLE) returns (bool) {
     return _unfreeze(account);
   }
 
@@ -183,33 +179,40 @@ contract CMTAT is Initializable, ContextUpgradeable, BaseModule, AuthorizationMo
     } 
   }
 
-  function setTokenId (string memory tokenId_) public {
-    require(hasRole(DEFAULT_ADMIN_ROLE, _msgSender()), "CMTAT: must have admin role");
+  function scheduleSnapshot (uint256 time) public onlyRole(SNAPSHOTER_ROLE) returns (uint256) {
+    return _scheduleSnapshot(time);
+  }
+
+  function rescheduleSnapshot (uint256 oldTime, uint256 newTime) public onlyRole(SNAPSHOTER_ROLE) returns (uint256) {
+    return _rescheduleSnapshot(oldTime, newTime);
+  }
+
+  function unscheduleSnapshot (uint256 time) public onlyRole(SNAPSHOTER_ROLE) returns (uint256) {
+    return _unscheduleSnapshot(time);
+  }
+
+  function setTokenId (string memory tokenId_) public onlyRole(DEFAULT_ADMIN_ROLE) {
     tokenId = tokenId_;
   }
 
-  function setTerms (string memory terms_) public {
-    require(hasRole(DEFAULT_ADMIN_ROLE, _msgSender()), "CMTAT: must have admin role");
+  function setTerms (string memory terms_) public onlyRole(DEFAULT_ADMIN_ROLE) {
     terms = terms_;
   }
 
-  function kill() public {
-    require(hasRole(DEFAULT_ADMIN_ROLE, _msgSender()), "CMTAT: must have admin role");
+  function kill() public onlyRole(DEFAULT_ADMIN_ROLE) {
     selfdestruct(payable(_msgSender()));
   }
 
-  function setRuleEngine(IRuleEngine ruleEngine_) external {
-    require(hasRole(DEFAULT_ADMIN_ROLE, _msgSender()), "CMTAT: must have admin role");
+  function setRuleEngine(IRuleEngine ruleEngine_) external onlyRole(DEFAULT_ADMIN_ROLE) {
     ruleEngine = ruleEngine_;
     emit RuleEngineSet(address(ruleEngine_));
   }
 
-  function setTrustedForwarder(address trustedForwarder_) public {
-    require(hasRole(DEFAULT_ADMIN_ROLE, _msgSender()), "CMTAT: must have admin role");
+  function setTrustedForwarder(address trustedForwarder_) public onlyRole(DEFAULT_ADMIN_ROLE) {
     _trustedForwarder = trustedForwarder_;
   }
 
-  function _beforeTokenTransfer(address from, address to, uint256 amount) internal override(ERC20Upgradeable) {
+  function _beforeTokenTransfer(address from, address to, uint256 amount) internal override(SnapshotModule, ERC20Upgradeable) {
     super._beforeTokenTransfer(from, to, amount);
 
     require(!paused(), "CMTAT: token transfer while paused");

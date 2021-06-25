@@ -52,7 +52,7 @@ contract('BurnModule', function ([_, owner, address1, address2, address3, fakeRu
     });
 
     it('reverts when burning without burner role', async function () {
-      await expectRevert(this.cmtat.burnFrom(address1, 20, { from: address2 }), 'CMTAT: must have burner role to burn');
+      await expectRevert(this.cmtat.burnFrom(address1, 20, { from: address2 }), 'AccessControl: account ' + address2.toLowerCase() + ' is missing role ' + BURNER_ROLE);
     });
   });
 });

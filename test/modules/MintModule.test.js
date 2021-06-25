@@ -49,7 +49,7 @@ contract('MintModule', function ([_, owner, address1, address2, address3, fakeRu
     });
 
     it('reverts when issuing from non-owner', async function () {
-      await expectRevert(this.cmtat.mint(address1, 20, { from: address1 }), 'CMTAT: must have minter role to mint');
+      await expectRevert(this.cmtat.mint(address1, 20, { from: address1 }), 'AccessControl: account ' + address1.toLowerCase() + ' is missing role ' + MINTER_ROLE);
     });
   });
 });
