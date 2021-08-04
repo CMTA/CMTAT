@@ -75,7 +75,10 @@ Please see the OpenZeppelin [Upgrades plugins](https://docs.openzeppelin.com/upg
 
 ### Support for gasless transactions
 
-**TODO, with OpenGSN support**
+The CMTAT supports client-side gasless transactions using the [Gas Station Network](https://docs.opengsn.org/#the-problem) pattern. The contract uses the OpenZeppelin `ERC2771ContextUpgradeable` which allows to get the original client with `_msgSender()` instead of the fee payer given by `msg.sender` while allowing upgrades on the main contract (see *Deployment via a proxy* above).
+
+Please see the OpenGSN [documentation](https://docs.opengsn.org/contracts/#receiving-a-relayed-call) for more details on what is done to support GSN in the contract.
+
 
 
 ## Security audits
