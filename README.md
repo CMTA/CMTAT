@@ -16,11 +16,9 @@ tracker.  Private comments and questions can be sent to the CMTA secretariat
 at <a href="mailto:admin@cmta.ch">admin@cmta.ch</a>.
 
 
-## Functionalities 
+##aFunctionality
 
-CMTAT is a *framework* that enables the tokenization of equity and debt
-instruments.
-CMTAT notably supports the following core features:
+CMTAT supports the following core features:
 
 * Basic mint, burn, and transfer operations
 * Forced transfer by the issuer 
@@ -30,34 +28,24 @@ Furthermore, the present implementation uses standard mechanisms in order to sim
 
 * Distribution of dividends and interest, via snapshots
 * Upgradeability, via deployemnt of the token with a proxy
-* "Gasless" transactions
+* "gasless" transactions
 
 Please see CMTAT's [technical documentation](doc/CMTAT.pdf) for a more
-detailed description of CMTAT's functionalities. **TODO**
-
+detailed description of CMTAT's functionalities. 
 Please see the [modules documentation](doc/modules) for the
 specification of modules of this reference implementation.
 
+This reference implementation allows the issuance and management of
+tokens representing company equity.
+A future version will implement support for debt instruments.
 
-## Practical considerations
+One may modify the token code, by adding, removing, or modifying
+features, however the core features listed in the [technical
+documentation](doc/CMTAT.pdf) must remain in place for compliance with
+the Swiss law.
 
 To use the CMTAT, we recommend that you use the latest version from the
 [Releases](https://github.com/CMTA/CMTAT/releases) page.
-
-
-### Token templates
-
-**TODO**
-
-This reference implementation allows the creation of two types of tokens:
-
-* *CMTAT-E*, to tokenize equity instruments.
-
-* *CMTAT-D*, to tokenize debt instruments.
-
-These pre-defined tokens are provided for convenience.
-One may modify them, by adding, removing, or modifying features, however the core features listed above must remain in place for compliance with the Swiss law.
-If you believe changes are needed, we recommend that you contact CMTA to ensure that said changes would not jeopardize the token's security and legal standing.
 
 
 ### Running local tests
