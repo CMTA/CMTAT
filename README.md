@@ -66,7 +66,12 @@ If you believe changes are needed, we recommend that you contact CMTA to ensure 
 
 ### Deployment via a proxy
 
-**TODO, with OZ proxing**
+The CMTAT supports deployment via a proxy, as it takes the requirements for use with a proxy in consideration.
+Furthermore, by using a proxy, you can also upgrade the contract using a proxy upgrade pattern.
+
+Please see the OpenZeppelin [upgradeable contracts documentation](https://docs.openzeppelin.com/upgrades-plugins/1.x/writing-upgradeable) for more information about the proxy requirements applied to the contract.
+
+Please see the OpenZeppelin [Upgrades plugins](https://docs.openzeppelin.com/upgrades-plugins/1.x/) for more information about upgrades plugins in general.
 
 ### Support for gasless transactions
 
