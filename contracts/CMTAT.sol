@@ -19,8 +19,8 @@ contract CMTAT is Initializable, ContextUpgradeable, BaseModule, AuthorizationMo
   uint8 constant TRANSFER_OK = 0;
   string constant TEXT_TRANSFER_OK = "No restriction";
 
-  function initialize (string memory name, string memory symbol, string memory tokenId, string memory terms) public initializer {
-    __CMTAT_init(name, symbol, tokenId, terms);
+  function initialize (address forwarder, string memory name, string memory symbol, string memory tokenId, string memory terms) public initializer {
+    __CMTAT_init(forwarder, name, symbol, tokenId, terms);
   }
 
   /**
@@ -29,8 +29,8 @@ contract CMTAT is Initializable, ContextUpgradeable, BaseModule, AuthorizationMo
     *
     * See {ERC20-constructor}.
     */
-  function __CMTAT_init(string memory name, string memory symbol, string memory tokenId, string memory terms) internal initializer {
-    __Context_init_unchained();
+  function __CMTAT_init(address forwarder, string memory name, string memory symbol, string memory tokenId, string memory terms) internal initializer {
+    __ERC2771Context_init_unchained(forwarder);
     __Base_init_unchained(0, tokenId, terms);
     __AccessControl_init_unchained();
     __ERC20_init_unchained(name, symbol);
@@ -134,7 +134,7 @@ contract CMTAT is Initializable, ContextUpgradeable, BaseModule, AuthorizationMo
     return _unfreeze(account);
   }
 
-  function decimals() public view virtual override(ERC20Upgradeable, BaseModule) returns (uint8) { 
+  function decimals() public view virtual override(ERC20Upgradeable, BaseModule) returns (uint8) {
     return super.decimals();
   }
 
@@ -176,7 +176,7 @@ contract CMTAT is Initializable, ContextUpgradeable, BaseModule, AuthorizationMo
       return TEXT_TRANSFER_REJECTED_FROZEN;
     } else if (address(ruleEngine) != address(0)) {
       return _messageForTransferRestriction(restrictionCode);
-    } 
+    }
   }
 
   function scheduleSnapshot (uint256 time) public onlyRole(SNAPSHOTER_ROLE) returns (uint256) {
