@@ -16,11 +16,9 @@ tracker.  Private comments and questions can be sent to the CMTA secretariat
 at <a href="mailto:admin@cmta.ch">admin@cmta.ch</a>.
 
 
-## Functionalities 
+## Functionality
 
-CMTAT is a *framework* that enables the tokenization of equity and debt
-instruments.
-CMTAT notably supports the following core features:
+The CMTAT supports the following core features:
 
 * Basic mint, burn, and transfer operations
 * Forced transfer by the issuer 
@@ -30,34 +28,24 @@ Furthermore, the present implementation uses standard mechanisms in order to sim
 
 * Distribution of dividends and interest, via snapshots
 * Upgradeability, via deployemnt of the token with a proxy
-* "Gasless" transactions
+* "gasless" transactions
 
 Please see CMTAT's [technical documentation](doc/CMTAT.pdf) for a more
-detailed description of CMTAT's functionalities. **TODO**
-
+detailed description of CMTAT's functionalities. 
 Please see the [modules documentation](doc/modules) for the
 specification of modules of this reference implementation.
 
+This reference implementation allows the issuance and management of
+tokens representing company equity.
+A future version will implement support for debt instruments.
 
-## Practical considerations
+One may modify the token code, by adding, removing, or modifying
+features, however the core features listed in the [technical
+documentation](doc/CMTAT.pdf) must remain in place for compliance with
+the Swiss law.
 
 To use the CMTAT, we recommend that you use the latest version from the
 [Releases](https://github.com/CMTA/CMTAT/releases) page.
-
-
-### Token templates
-
-**TODO**
-
-This reference implementation allows the creation of two types of tokens:
-
-* *CMTAT-E*, to tokenize equity instruments.
-
-* *CMTAT-D*, to tokenize debt instruments.
-
-These pre-defined tokens are provided for convenience.
-One may modify them, by adding, removing, or modifying features, however the core features listed above must remain in place for compliance with the Swiss law.
-If you believe changes are needed, we recommend that you contact CMTA to ensure that said changes would not jeopardize the token's security and legal standing.
 
 
 ### Running local tests
@@ -66,11 +54,20 @@ If you believe changes are needed, we recommend that you contact CMTA to ensure 
 
 ### Deployment via a proxy
 
-**TODO, with OZ proxing**
+The CMTAT supports deployment via a proxy, as it takes the requirements for use with a proxy in consideration.
+Furthermore, by using a proxy, you can also upgrade the contract using a proxy upgrade pattern.
+
+Please see the OpenZeppelin [upgradeable contracts documentation](https://docs.openzeppelin.com/upgrades-plugins/1.x/writing-upgradeable) for more information about the proxy requirements applied to the contract.
+
+Please see the OpenZeppelin [Upgrades plugins](https://docs.openzeppelin.com/upgrades-plugins/1.x/) for more information about upgrades plugins in general.
+
+Note that the deployment via a proxy is not mandatory, but recommended by CMTA.
 
 ### Support for gasless transactions
 
-**TODO, with OpenGSN support**
+The CMTAT supports client-side gasless transactions using the [Gas Station Network](https://docs.opengsn.org/#the-problem) pattern, the main open standard for transfering fee payment to another account than the transaction issuer. The contract uses the OpenZeppelin contract `ERC2771ContextUpgradeable`, which allows to get the original client with `_msgSender()` instead of the fee payer given by `msg.sender` while allowing upgrades on the main contract (see *Deployment via a proxy* above).
+
+Please see the OpenGSN [documentation](https://docs.opengsn.org/contracts/#receiving-a-relayed-call) for more details on what is done to support GSN in the contract.
 
 
 ## Security audits
