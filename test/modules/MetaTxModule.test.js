@@ -16,17 +16,19 @@ const EIP712Domain = [
   { name: 'verifyingContract', type: 'address' },
 ];
 
-contract('MetaTxModule', function ([_, owner, address1, address2, address3, trustedForwarder]) {
+contract('MetaTxModule', function ([_, owner, address1, address2, address3, trustedForwarder, defaultForwarder]) {
   beforeEach(async function () {
     this.cmtat = await CMTAT.new({ from: owner });
-    this.cmtat.initialize('CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', { from: owner });
+    this.cmtat.initialize(owner, defaultForwarder, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', { from: owner });
   });
 
   context('Owner', function () {
     it('can change the trustedForwarder', async function () {
       (await this.cmtat.isTrustedForwarder(trustedForwarder)).should.equal(false);
+      (await this.cmtat.isTrustedForwarder(defaultForwarder)).should.equal(true);
       await this.cmtat.setTrustedForwarder(trustedForwarder, {from: owner});
       (await this.cmtat.isTrustedForwarder(trustedForwarder)).should.equal(true);
+      (await this.cmtat.isTrustedForwarder(defaultForwarder)).should.equal(false);
     }); 
 
     it('reverts when calling from non-owner', async function () {

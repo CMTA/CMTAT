@@ -19,8 +19,8 @@ contract CMTAT is Initializable, ContextUpgradeable, BaseModule, AuthorizationMo
   uint8 constant TRANSFER_OK = 0;
   string constant TEXT_TRANSFER_OK = "No restriction";
 
-  function initialize (string memory name, string memory symbol, string memory tokenId, string memory terms) public initializer {
-    __CMTAT_init(name, symbol, tokenId, terms);
+  function initialize (address owner, address forwarder, string memory name, string memory symbol, string memory tokenId, string memory terms) public initializer {
+    __CMTAT_init(owner, forwarder, name, symbol, tokenId, terms);
   }
 
   /**
@@ -29,24 +29,25 @@ contract CMTAT is Initializable, ContextUpgradeable, BaseModule, AuthorizationMo
     *
     * See {ERC20-constructor}.
     */
-  function __CMTAT_init(string memory name, string memory symbol, string memory tokenId, string memory terms) internal initializer {
+  function __CMTAT_init(address owner, address forwarder, string memory name, string memory symbol, string memory tokenId, string memory terms) internal initializer {
     __Context_init_unchained();
     __Base_init_unchained(0, tokenId, terms);
     __AccessControl_init_unchained();
     __ERC20_init_unchained(name, symbol);
     __Pausable_init_unchained();
     __Enforcement_init_unchained();
+    __MetaTx_init_unchained(forwarder);
     __Snapshot_init_unchained();
-    __CMTAT_init_unchained();
+    __CMTAT_init_unchained(owner);
   }
 
-  function __CMTAT_init_unchained() internal initializer {
-    _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
-    _setupRole(ENFORCER_ROLE, _msgSender());
-    _setupRole(MINTER_ROLE, _msgSender());
-    _setupRole(BURNER_ROLE, _msgSender());
-    _setupRole(PAUSER_ROLE, _msgSender());
-    _setupRole(SNAPSHOTER_ROLE, _msgSender());
+  function __CMTAT_init_unchained(address owner) internal initializer {
+    _setupRole(DEFAULT_ADMIN_ROLE, owner);
+    _setupRole(ENFORCER_ROLE, owner);
+    _setupRole(MINTER_ROLE, owner);
+    _setupRole(BURNER_ROLE, owner);
+    _setupRole(PAUSER_ROLE, owner);
+    _setupRole(SNAPSHOTER_ROLE, owner);
   }
 
   /**

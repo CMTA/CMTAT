@@ -30,7 +30,7 @@ abstract contract SnapshotModule is Initializable, ContextUpgradeable, ERC20Upgr
 
   uint256[] private _scheduledSnapshots;
 
-  function __ERC20Snapshot_init() internal initializer {
+  function __Snapshot_init() internal initializer {
     __Context_init_unchained();
     __Snapshot_init_unchained();
   }

@@ -7,7 +7,7 @@ const CMTAT = artifacts.require('CMTAT');
 contract('BaseModule', function ([_, owner, address1, address2, address3, fakeRuleEngine]) {
   beforeEach(async function () {
     this.cmtat = await CMTAT.new({ from: owner });
-    this.cmtat.initialize('CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', { from: owner });
+    this.cmtat.initialize(owner, _, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', { from: owner });
   });
 
   context('Token structure', function () {

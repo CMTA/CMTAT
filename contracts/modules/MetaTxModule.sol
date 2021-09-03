@@ -4,9 +4,17 @@ import "../../openzeppelin-contracts-upgradeable/contracts/metatx/ERC2771Context
 
 
 /**
- * @dev Force transfer module.
+ * @dev Meta transaction (gasless) module.
  *
- * Useful for to force transfer of tokens by an authorized user
+ * Useful for to provide UX where the user does not pay gas for token exchange
  */
 abstract contract MetaTxModule is ERC2771ContextUpgradeable {
+  function __MetaTx_init(address forwarder) internal initializer {
+    __Context_init_unchained();
+    __MetaTx_init_unchained(forwarder);
+  }
+
+  function __MetaTx_init_unchained(address forwarder) internal initializer {
+    __ERC2771Context_init_unchained(forwarder);
+  }
 }
