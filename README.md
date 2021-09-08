@@ -49,15 +49,17 @@ To use the CMTAT, we recommend that you use the latest version from the
 
 ### Running local tests
 
-Tests are written in javascript (node package) and run with truffle through the command `truffle test`. For the tests to run correctly, it is best to use the versions as follow :
+Tests are written in JavaScript (Node.js package) and run with Truffle through the command `truffle test`. 
+The test suite could be correctly built and run with the following versions: 
 
-* Node 10.13.0
+* Node.js 10.13.0
 * npm 6.4.1
 * Truffle 5.3.8
 
 Truffle has to be installed globally or used with the `npx` command. Everything else needed is installed through `npm install` with the right versions.
 
-Please see the Truffle [javascript tests documentation](https://www.trufflesuite.com/docs/truffle/testing/writing-tests-in-javascript) for more information about the writing and running of truffle tests.
+Please see the Truffle [javascript tests documentation](https://www.trufflesuite.com/docs/truffle/testing/writing-tests-in-javascript)
+for more information about the writing and running of Truffle tests.
 
 ### Deployment via a proxy
 
