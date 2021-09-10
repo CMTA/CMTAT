@@ -101,18 +101,20 @@ abstract contract SnapshotModule is Initializable, ContextUpgradeable, ERC20Upgr
     super._beforeTokenTransfer(from, to, amount);
 
     _setCurrentSnapshot();
-    if (from == address(0)) {
+    if (from != address(0)) {
+      // for both burn and transfer
+      _updateAccountSnapshot(from);
+      if (to != address(0)) {
+        // transfer
+        _updateAccountSnapshot(to);
+        } else {
+        // burn
+        _updateTotalSupplySnapshot();
+      }
+    } else {
       // mint
       _updateAccountSnapshot(to);
       _updateTotalSupplySnapshot();
-    } else if (to == address(0)) {
-      // burn
-      _updateAccountSnapshot(from);
-      _updateTotalSupplySnapshot();
-    } else {
-      // transfer
-      _updateAccountSnapshot(from);
-      _updateAccountSnapshot(to);
     }
   }
 
