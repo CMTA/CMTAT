@@ -66,10 +66,12 @@ abstract contract BaseModule is Initializable, ERC20Upgradeable {
      * `amount`.
      */
     function transferFrom(address sender, address recipient, uint256 amount) public virtual override returns (bool) {
-        super.transferFrom(sender, recipient, amount);
-        emit Spend(sender, _msgSender(), amount);
+        bool result = super.transferFrom(sender, recipient, amount);
+        if (result == true) {
+            emit Spend(sender, _msgSender(), amount);
+        }
 
-        return true;
+        return result;
     }
 
     /**
@@ -81,7 +83,7 @@ abstract contract BaseModule is Initializable, ERC20Upgradeable {
      */
     function approve(address spender, uint256 amount, uint256 currentAllowance) public virtual returns (bool) {
         require(allowance(_msgSender(), spender) == currentAllowance, "CMTAT: current allowance is not right");
-        _approve(_msgSender(), spender, amount);
+        super.approve(spender, amount);
         return true;
     }
 

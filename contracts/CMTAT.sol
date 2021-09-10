@@ -36,7 +36,8 @@ contract CMTAT is Initializable, ContextUpgradeable, BaseModule, AuthorizationMo
     __ERC20_init_unchained(name, symbol);
     __Pausable_init_unchained();
     __Enforcement_init_unchained();
-    __MetaTx_init_unchained(forwarder);
+    __ERC2771Context_init_unchained(forwarder);
+    __MetaTx_init_unchained();
     __Snapshot_init_unchained();
     __CMTAT_init_unchained(owner);
   }
