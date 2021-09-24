@@ -37,17 +37,17 @@ specification of modules of this reference implementation.
 
 This reference implementation allows the issuance and management of
 tokens representing company equity.
-A future version will implement support for debt instruments.
+A future variant version will implement support for debt instruments.
 
 One may modify the token code, by adding, removing, or modifying
 features, however the core features listed in the [technical
 documentation](doc/CMTAT.pdf) must remain in place for compliance with
 the Swiss law.
 
-To use the CMTAT, we recommend that you use the latest version from the
-[Releases](https://github.com/CMTA/CMTAT/releases) page.
+To use the CMTAT, we recommend that you use the latest audited version,
+from the [Releases](https://github.com/CMTA/CMTAT/releases) page.
 
-### Running local tests
+## Running local tests
 
 Tests are written in JavaScript (Node.js package) and run with Truffle through the command `truffle test`. 
 The test suite could be correctly built and run with the following versions: 
@@ -61,7 +61,7 @@ Truffle has to be installed globally or used with the `npx` command. Everything 
 Please see the Truffle [javascript tests documentation](https://www.trufflesuite.com/docs/truffle/testing/writing-tests-in-javascript)
 for more information about the writing and running of Truffle tests.
 
-### Deployment via a proxy
+## Deployment via a proxy
 
 The CMTAT supports deployment via a proxy, as it takes the requirements for use with a proxy in consideration.
 Furthermore, by using a proxy, you can also upgrade the contract using a proxy upgrade pattern.
@@ -72,7 +72,7 @@ Please see the OpenZeppelin [Upgrades plugins](https://docs.openzeppelin.com/upg
 
 Note that the deployment via a proxy is not mandatory, but recommended by CMTA.
 
-### Support for gasless transactions
+## Support for gasless transactions
 
 The CMTAT supports client-side gasless transactions using the [Gas Station Network](https://docs.opengsn.org/#the-problem) pattern, the main open standard for transfering fee payment to another account than the transaction issuer. The contract uses the OpenZeppelin contract `ERC2771ContextUpgradeable`, which allows to get the original client with `_msgSender()` instead of the fee payer given by `msg.sender` while allowing upgrades on the main contract (see *Deployment via a proxy* above).
 
