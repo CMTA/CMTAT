@@ -81,7 +81,15 @@ Please see the OpenGSN [documentation](https://docs.opengsn.org/contracts/#recei
 
 ## Security audits
 
-**TODO ABDK + report**
+The contracts have been audited by [ABDK
+Consulting](https://www.abdk.consulting/), a globally recognized
+boutique firm specialized in smart contracts' security.
+
+Fixes of security issues discovered by the initial audit were reviewed
+by ABDK and confirmed to be effective, as certified by the [report
+released](doc/audits/ABDK-2021MMDD-v1_0.pdf) on September 10, 2021],
+covering [version 1.0](todo) of the contracts.
+
 
 ## Contributors
 
