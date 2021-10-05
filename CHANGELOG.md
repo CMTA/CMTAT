@@ -2,7 +2,7 @@
 
 Please follow <https://changelog.md/> conventions.
 
-# 0.2 - 20211005
+# 1.0 - 20211005
 
 - Added CMTAT equity token core functionalities 
 - Added support for OpenGSN gasless transactions

@@ -11,10 +11,17 @@ technology ecosystem.
 The present repository provides CMTA's reference implementation of CMTAT
 for Ethereum, as an ERC-20 compatible token.
 
+The CMTAT is developed by a working group of CMTA's Technical Committee
+that includes members from Atpar, Bitcoin Suisse, Blockchain Innovation
+Group, Hypothekarbank Lenz & Staehelin, Metaco, SEBA, Swissquote,
+Sygnum, Taurus, Tezos Foundation.
+The design and security of the CMTAT was supported by
+[ABDK](https://abdk.consulting/), a leading team in smart contract
+security.
+
 The preferred way to receive comments is through the GitHub issue
 tracker.  Private comments and questions can be sent to the CMTA secretariat 
 at <a href="mailto:admin@cmta.ch">admin@cmta.ch</a>.
-
 
 ## Functionality
 
@@ -52,7 +59,7 @@ CMTA will release further documentation describing the CMTAT framework
 in a platform-agnostic way, and coveging legal aspects.
 
 
-## Running local tests
+## Testing
 
 Tests are written in JavaScript (Node.js package) and run with Truffle through the command `truffle test`. 
 The test suite could be correctly built and run with the following versions: 
@@ -69,7 +76,7 @@ Please see the Truffle [JavaScript tests
 documentation](https://www.trufflesuite.com/docs/truffle/testing/writing-tests-in-javascript)
 for more information about the writing and running of Truffle tests.
 
-## Deployment via a proxy
+## Proxying support
 
 The CMTAT supports deployment via a proxy, as it takes the requirements
 for use with a proxy in consideration.  Furthermore, by using a proxy,
@@ -86,7 +93,7 @@ information about upgrades plugins in general.
 
 Note that the deployment via a proxy is not mandatory, but recommended by CMTA.
 
-## Support for gasless transactions
+## Gasless support
 
 The CMTAT supports client-side gasless transactions using the [Gas
 Station Network](https://docs.opengsn.org/#the-problem) pattern, the
@@ -103,8 +110,6 @@ for more details on what is done to support GSN in the contract.
 
 ## Security 
 
-### Audits
-
 The contracts have been audited by [ABDK
 Consulting](https://www.abdk.consulting/), a globally recognized
 firm specialized in smart contracts' security.
@@ -115,27 +120,15 @@ released](doc/audits/ABDK-CMTAT-audit-20210910.pdf) on September 10, 2021],
 covering [version
 c3afd7b](https://github.com/CMTA/CMTAT/tree/c3afd7b4a2ade160c9b581adb7a44896bfc7aaea)
 of the contracts.
-Version [0.2](https://github.com/CMTA/CMTAT/releases) includes
+Version [1.0](https://github.com/CMTA/CMTAT/releases) includes
 additional fixes of minor issues, compared to the version retested.
 
-### Guidelines
 
 As with any token contract, access to the owner key must be adequately
 restricted.
 Likewise, access to the proxy contract must be restricted and
 seggregated from the token contract.
 
-
-## Contributors
-
-The CMTAT is developed by a working group of CMTA's Technical Committee
-that includes members from Atpar, Bitcoin Suisse, Blockchain Innovation
-Group, Hypothekarbank Lenz & Staehelin, Metaco, SEBA, Swissquote,
-Sygnum, Taurus, Tezos Foundation.
-
-The design and security of the CMTAT was supported by
-[ABDK](https://abdk.consulting/), a leading team in smart contract
-security.
 
 ## Intellectual property
 
