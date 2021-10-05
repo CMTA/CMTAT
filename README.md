@@ -115,7 +115,7 @@ released](doc/audits/ABDK-CMTAT-audit-20210910.pdf) on September 10, 2021],
 covering [version
 c3afd7b](https://github.com/CMTA/CMTAT/tree/c3afd7b4a2ade160c9b581adb7a44896bfc7aaea)
 of the contracts.
-Version [0.1](https://github.com/CMTA/CMTAT/releases) includes
+Version [0.2](https://github.com/CMTA/CMTAT/releases) includes
 additional fixes of minor issues, compared to the version retested.
 
 ### Guidelines
