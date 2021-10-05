@@ -120,6 +120,7 @@ Return the number of tokens the given `spender` is currently allowed to transfer
 ##### Description:
 
 Transfer the given `amount` of tokens from the given `owner` to the given `destination` address.
+`sender` and `recipient` cannot be the zero address.
 The function returns `true` on success and reverts of error.
 
 ### Events
