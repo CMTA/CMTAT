@@ -48,7 +48,7 @@ contract CMTAT is Initializable, ContextUpgradeable, BaseModule, AuthorizationMo
     _setupRole(MINTER_ROLE, owner);
     _setupRole(BURNER_ROLE, owner);
     _setupRole(PAUSER_ROLE, owner);
-    _setupRole(SNAPSHOTER_ROLE, owner);
+    _setupRole(SNAPSHOOTER_ROLE, owner);
   }
 
   /**
@@ -179,15 +179,15 @@ contract CMTAT is Initializable, ContextUpgradeable, BaseModule, AuthorizationMo
     } 
   }
 
-  function scheduleSnapshot (uint256 time) public onlyRole(SNAPSHOTER_ROLE) returns (uint256) {
+  function scheduleSnapshot (uint256 time) public onlyRole(SNAPSHOOTER_ROLE) returns (uint256) {
     return _scheduleSnapshot(time);
   }
 
-  function rescheduleSnapshot (uint256 oldTime, uint256 newTime) public onlyRole(SNAPSHOTER_ROLE) returns (uint256) {
+  function rescheduleSnapshot (uint256 oldTime, uint256 newTime) public onlyRole(SNAPSHOOTER_ROLE) returns (uint256) {
     return _rescheduleSnapshot(oldTime, newTime);
   }
 
-  function unscheduleSnapshot (uint256 time) public onlyRole(SNAPSHOTER_ROLE) returns (uint256) {
+  function unscheduleSnapshot (uint256 time) public onlyRole(SNAPSHOOTER_ROLE) returns (uint256) {
     return _unscheduleSnapshot(time);
   }
 

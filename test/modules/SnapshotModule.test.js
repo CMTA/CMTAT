@@ -1,5 +1,5 @@
 const { expectEvent, expectRevert } = require('openzeppelin-test-helpers');
-const { SNAPSHOTER_ROLE } = require('../utils');
+const { SNAPSHOOTER_ROLE } = require('../utils');
 require('chai/register-should');
 
 const CMTAT = artifacts.require('CMTAT');
@@ -32,7 +32,7 @@ contract('SnapshotModule', function ([_, owner, address1, address2, address3, fa
     });
 
     it('reverts when calling from non-owner', async function () {
-      await expectRevert(this.cmtat.scheduleSnapshot(this.snapshotTime, { from: address1 }), 'AccessControl: account ' + address1.toLowerCase() + ' is missing role ' + SNAPSHOTER_ROLE);
+      await expectRevert(this.cmtat.scheduleSnapshot(this.snapshotTime, { from: address1 }), 'AccessControl: account ' + address1.toLowerCase() + ' is missing role ' + SNAPSHOOTER_ROLE);
     });
 
     it('reverts when trying to schedule a snapshot in the past', async function () {
@@ -63,7 +63,7 @@ contract('SnapshotModule', function ([_, owner, address1, address2, address3, fa
   
 
     it('reverts when calling from non-owner', async function () {
-      await expectRevert(this.cmtat.unscheduleSnapshot(this.snapshotTime, { from: address1 }), 'AccessControl: account ' + address1.toLowerCase() + ' is missing role ' + SNAPSHOTER_ROLE);
+      await expectRevert(this.cmtat.unscheduleSnapshot(this.snapshotTime, { from: address1 }), 'AccessControl: account ' + address1.toLowerCase() + ' is missing role ' + SNAPSHOOTER_ROLE);
     });
 
     it('reverts when snapshot is not found', async function () {
@@ -91,7 +91,7 @@ contract('SnapshotModule', function ([_, owner, address1, address2, address3, fa
     }); 
 
     it('reverts when calling from non-owner', async function () {
-      await expectRevert(this.cmtat.rescheduleSnapshot(this.snapshotTime, this.newSnapshotTime, { from: address1 }), 'AccessControl: account ' + address1.toLowerCase() + ' is missing role ' + SNAPSHOTER_ROLE);
+      await expectRevert(this.cmtat.rescheduleSnapshot(this.snapshotTime, this.newSnapshotTime, { from: address1 }), 'AccessControl: account ' + address1.toLowerCase() + ' is missing role ' + SNAPSHOOTER_ROLE);
     });
 
     it('reverts when trying to reschedule a snapshot in the past', async function () {
