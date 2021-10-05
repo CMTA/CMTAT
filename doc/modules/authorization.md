@@ -15,8 +15,10 @@ Authorization Module covers authorization use cases for the CMTA Token specifica
 
 ##### Signature:
 
+```solidity
     function authorize (address user, bytes32 action)
     public
+```
 
 ##### Description:
 
@@ -28,8 +30,10 @@ Only authorized users are allowed to call this function.
 
 ##### Signature:
 
+```solidity
     function unauthorize (address user, bytes32 action)
     public
+```
 
 ##### Description:
 
@@ -40,8 +44,10 @@ Only authorized users are allowed to call this function.
 
 ##### Signature:
 
+```solidity
     function authorized (address user, bytes32 action)
     public view returns (bool)
+```
 
 ##### Description:
 
@@ -53,7 +59,9 @@ Tell, whether the given `user` is currently authorized to perform the given `act
 
 ##### Signature:
 
+```solidity
     event Authorization (address indexed user, bytes32 indexed action)
+```
 
 ##### Description:
 
@@ -63,7 +71,9 @@ Emitted when the specified `user` was authorized to perform the specified `actio
 
 ##### Signature:
 
+```solidity
     event Authorization (address indexed user, bytes32 indexed action)
+```
 
 ##### Description:
 
