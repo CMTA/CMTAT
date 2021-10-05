@@ -215,10 +215,10 @@ contract CMTAT is Initializable, ContextUpgradeable, BaseModule, AuthorizationMo
   }
 
   function _beforeTokenTransfer(address from, address to, uint256 amount) internal override(SnapshotModule, ERC20Upgradeable) {
-    super._beforeTokenTransfer(from, to, amount);
-
     require(!paused(), "CMTAT: token transfer while paused");
     require(!frozen(from), "CMTAT: token transfer while frozen");
+
+    super._beforeTokenTransfer(from, to, amount);
 
     if (address(ruleEngine) != address(0)) {
       require(_validateTransfer(from, to, amount), "CMTAT: transfer rejected by validation module");
