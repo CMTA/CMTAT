@@ -26,7 +26,7 @@ abstract contract SnapshotModule is Initializable, ContextUpgradeable, ERC20Upgr
   mapping(address => Snapshots) private _accountBalanceSnapshots;
   Snapshots private _totalSupplySnapshots;
 
-  uint256 private _currentSnapshot;
+  uint256 private _currentSnapshot = 0;
 
   uint256[] private _scheduledSnapshots;
 
