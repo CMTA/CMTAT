@@ -154,11 +154,9 @@ contract CMTAT is Initializable, ContextUpgradeable, BaseModule, AuthorizationMo
   function detectTransferRestriction (address from, address to, uint256 amount) public view returns (uint8 code) {
     if (paused()) {
       return TRANSFER_REJECTED_PAUSED;
-    }
-    if (frozen(from)) {
+    } else if (frozen(from)) {
       return TRANSFER_REJECTED_FROZEN;
-    }
-    if (address(ruleEngine) != address(0)) {
+    } else if (address(ruleEngine) != address(0)) {
       return _detectTransferRestriction(from, to, amount);
     }
     return TRANSFER_OK;
