@@ -49,34 +49,7 @@ You may modify the token code by adding, removing, or modifying
 features. However, the base, enforcement, and snapshot modules must
 remain in place for compliance with the Swiss law.
 
-## Documentation
-
-Please see the [modules documentation](doc/modules) for the
-specification of modules of this reference implementation (yet to be
-fully aligned with the code).
-
-CMTA will release further documentation describing the CMTAT framework
-in a platform-agnostic way, and coveging legal aspects.
-
-
-## Testing
-
-Tests are written in JavaScript (Node.js package) and run with Truffle through the command `truffle test`. 
-The test suite could be correctly built and run with the following versions: 
-
-* Node.js 10.13.0
-* npm 6.4.1
-* Truffle 5.3.8
-
-Truffle has to be installed globally or used with the `npx` command.
-Everything else needed is installed through `npm install` with the right
-versions.
-
-Please see the Truffle [JavaScript tests
-documentation](https://www.trufflesuite.com/docs/truffle/testing/writing-tests-in-javascript)
-for more information about the writing and running of Truffle tests.
-
-## Proxying support
+### Proxying support
 
 The CMTAT supports deployment via a proxy, as it takes the requirements
 for use with a proxy in consideration.  Furthermore, by using a proxy,
@@ -93,7 +66,7 @@ information about upgrades plugins in general.
 
 Note that the deployment via a proxy is not mandatory, but recommended by CMTA.
 
-## Gasless support
+### Gasless support
 
 The CMTAT supports client-side gasless transactions using the [Gas
 Station Network](https://docs.opengsn.org/#the-problem) pattern, the
@@ -128,6 +101,33 @@ As with any token contract, access to the owner key must be adequately
 restricted.
 Likewise, access to the proxy contract must be restricted and
 seggregated from the token contract.
+
+## Documentation
+
+Please see the [modules documentation](doc/modules) for the
+specification of modules of this reference implementation (yet to be
+fully aligned with the code).
+
+CMTA will release further documentation describing the CMTAT framework
+in a platform-agnostic way, and coveging legal aspects.
+
+## Testing
+
+Tests are written in JavaScript (Node.js package) and run with Truffle through the command `truffle test`. 
+The test suite could be correctly built and run with the following versions: 
+
+* Node.js 10.13.0
+* npm 6.4.1
+* Truffle 5.3.8
+
+Truffle has to be installed globally or used with the `npx` command.
+Everything else needed is installed through `npm install` with the right
+versions.
+
+Please see the Truffle [JavaScript tests
+documentation](https://www.trufflesuite.com/docs/truffle/testing/writing-tests-in-javascript)
+for more information about the writing and running of Truffle tests.
+
 
 
 ## Intellectual property
