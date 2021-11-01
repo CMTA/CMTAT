@@ -20,13 +20,13 @@ This section describes the Ethereum API of Issue Module.
 ##### Signature:
 
 ```solidity
-    function issue (address beneficiary, uint amount)
+    function issue (address to, uint amount)
     public
 ```
 
 ##### Description:
 
-Issue the given `amount` of tokens to the given `beneficiary`.
+Issue the given `amount` of tokens to the given `to` (beneficiary).
 Only authorized users are allowed to call this function.
 
 ### Events

@@ -11,70 +11,70 @@ Authorization Module covers authorization use cases for the CMTA Token specifica
 
 ### Functions
 
-#### `authorize(address,bytes32)`
+#### `grantRole(bytes32,address)`
 
 ##### Signature:
 
 ```solidity
-    function authorize (address user, bytes32 action)
+    function grantRole (bytes32 role, address account)
     public
 ```
 
 ##### Description:
 
-Authorize the given `user` to perform the given `action`.
-Here action is usually a keccak256 hash of the action name and, optionally, the action parameters.
+Grant the given `role` to the given `account`.
+Here the role is a keccak256 hash of the role name.
 Only authorized users are allowed to call this function.
 
-#### `unauthorize(address,bytes32)`
+#### `revokeRole(bytes32,address)`
 
 ##### Signature:
 
 ```solidity
-    function unauthorize (address user, bytes32 action)
+    function revokeRole (bytes32 role, address account)
     public
 ```
 
 ##### Description:
 
-Revoke from the given `user` the authorization to perform the given `action`.
+Revoke from the given `role` from the given `account`.
 Only authorized users are allowed to call this function.
 
-#### `authorized(address,bytes32)`
+#### `hasRole(bytes32,address)`
 
 ##### Signature:
 
 ```solidity
-    function authorized (address user, bytes32 action)
+    function hasRole (bytes32 role, address account)
     public view returns (bool)
 ```
 
 ##### Description:
 
-Tell, whether the given `user` is currently authorized to perform the given `action`.
+Tell, whether the given `account` has the given `role` currently.
 
 ### Events
 
-#### `Authorization(address,bytes32`
+#### `RoleGranted(bytes32,address,address)`
 
 ##### Signature:
 
 ```solidity
-    event Authorization (address indexed user, bytes32 indexed action)
+    event RoleGranted(bytes32 indexed role, address indexed account, address indexed sender)
 ```
 
 ##### Description:
 
-Emitted when the specified `user` was authorized to perform the specified `action`.
+Emitted when the specified `account` was given the specified `role`.
 
-#### `AuthorizationRevocation(address,bytes32`
+#### `RoleRevoked(bytes32,address,address)`
 
 ##### Signature:
 
 ```solidity
-    event Authorization (address indexed user, bytes32 indexed action)
+    event RoleRevoked(bytes32 indexed role, address indexed account, address indexed sender)
 ```
 
 ##### Description:
 
-Emitted when the authorization to perform the specified `action` was revoked from the specified `user`.
+Emitted when the the specified `role` was revoked from the specified `account`.

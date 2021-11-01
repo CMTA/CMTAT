@@ -55,6 +55,18 @@ Re-authorizes `account` to perform transfers if it was frozen.
 Only authorized users are allowed to call this function.
 Returns `true` if the address was frozen, `false` otherwise.
 
+#### `frozen(address)`
+
+##### Signature:
+
+```solidity
+    function frozen (address account)
+    public view returns (bool)
+```
+
+##### Description:
+
+Tell, whether the given `account` is frozen.
 
 ### Events
 
