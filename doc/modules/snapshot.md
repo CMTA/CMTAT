@@ -37,7 +37,7 @@ Only authorized users are allowed to call this function.
 #### Description:
 
 Reschedule the scheduled, but not yet created snapshot with the given `snapshotID` to be created at the given `newTime` specified as a number of seconds since epoch.
-The `newTime` cannot be before the time of the previous scheduled, but not yet created snapshot, or after the time fo the next scheduled snapshot.
+The `newTime` cannot be before the time of the previous scheduled, but not yet created snapshot, or after the time of the next scheduled snapshot.
 The function returns the original `time` the snapshot was scheduled at.
 Only authorized users are allowed to call this function.
 
@@ -53,7 +53,7 @@ Only authorized users are allowed to call this function.
 ##### Description:
 
 Cancel creation of the scheduled, but not yet created snapshot with the given `snapshotID`.
-There should be not other snapshots scheduled after this one.
+There should not be any other snapshots scheduled after this one.
 The function returns the original `time` the snapshot was scheduled at.
 Only authorized users are allowed to call this function.
 
