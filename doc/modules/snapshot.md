@@ -53,7 +53,7 @@ Only authorized users are allowed to call this function.
 ##### Description:
 
 Cancel creation of the scheduled, but not yet created snapshot with the given `time`.
-There should be not other snapshots scheduled after this one.
+There should not be any other snapshots scheduled after this one.
 The function returns the original `time` the snapshot was scheduled at.
 Only authorized users are allowed to call this function.
 
