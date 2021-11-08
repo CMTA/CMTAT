@@ -22,7 +22,7 @@ This section describes the Ethereum API of Issue Module.
 ##### Signature:
 
 ```solidity
-    function issue (address beneficiary, uint amount)
+    function issue (address to, uint amount)
     public
 ```
 

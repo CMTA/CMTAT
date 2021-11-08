@@ -14,13 +14,13 @@ This section describes the Ethereum API of Burn Module.
 ##### Signature:
 
 ```solidity
-    function burnFrom (address owner, uint amount)
+    function burnFrom (address account, uint amount)
     public
 ```
 
 ##### Description:
 
-Redeem the given `amount` of tokens from the given `owner`.
+Redeem the given `amount` of tokens from the given `account`.
 The owner should `approve` the redemption in advance in the same way as `transferFrom` calls are approved.
 Only authorized users are allowed to call this function.
 
@@ -31,9 +31,9 @@ Only authorized users are allowed to call this function.
 ##### Signature:
 
 ```solidity
-    event Burn (address indexed owner, uint amount)`
+    event Burn (address indexed account, uint amount)`
 ```
 
 ##### Description:
 
-Emitted when the specified `amount` of tokens was burnt from the specified `owner`.
+Emitted when the specified `amount` of tokens was burnt from the specified `account`.

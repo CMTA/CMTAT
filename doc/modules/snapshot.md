@@ -22,7 +22,7 @@ This section describes the Ethereum API of the Snapshot Module.
 
 Schedule a snapshot at the given `time` specified as a number of seconds since epoch.
 The `time` cannot be before the time of the latest scheduled, but not yet created snapshot.
-The function returns the ID of the new snapshot.
+The function returns the `time` (as an ID) at which the new snapshot is scheduled.
 Only authorized users are allowed to call this function.
 
 #### `rescheduleSnapshot(uint,uint)`
@@ -30,14 +30,14 @@ Only authorized users are allowed to call this function.
 ##### Signature:
 
 ```solidity
-    function rescheduleSnapshot (uint snapshotID, uint newTime)
+    function rescheduleSnapshot (uint oldTime, uint newTime)
     public returns (uint)
 ```
 
 #### Description:
 
-Reschedule the scheduled, but not yet created snapshot with the given `snapshotID` to be created at the given `newTime` specified as a number of seconds since epoch.
-The `newTime` cannot be before the time of the previous scheduled, but not yet created snapshot, or after the time of the next scheduled snapshot.
+Reschedule the scheduled, but not yet created snapshot with the given `oldTime` to be created at the given `newTime` specified as a number of seconds since epoch.
+The `newTime` cannot be before the time of the previous scheduled, but not yet created snapshot, or after the time fo the next scheduled snapshot.
 The function returns the original `time` the snapshot was scheduled at.
 Only authorized users are allowed to call this function.
 
@@ -46,78 +46,65 @@ Only authorized users are allowed to call this function.
 ##### Signature:
 
 ```solidity
-    function unscheduleSnapshot (uint snapshotID)
+    function unscheduleSnapshot (uint time)
     public returns (uint)
 ```
 
 ##### Description:
 
-Cancel creation of the scheduled, but not yet created snapshot with the given `snapshotID`.
+Cancel creation of the scheduled, but not yet created snapshot with the given `time`.
 There should not be any other snapshots scheduled after this one.
 The function returns the original `time` the snapshot was scheduled at.
 Only authorized users are allowed to call this function.
-
-#### `snapshotTime(uint)`
-
-##### Signature:
-
-```solidity
-    function snapshotTime (uint snapshotID)
-    public view returns (uint)
-```
-
-##### Description:
-
-Return the time for the scheduled, but not yet executed snapshot with the given `snapshotID`.
 
 #### `snapshotTotalSupply(uint)`
 
 ##### Signature:
 
 ```solidity
-    function snapshotTotalSupply (uint snapshotID)
+    function snapshotTotalSupply (uint time)
     public view returns (uint)
 ```
 
 ##### Description:
 
-Return the total number of token in circulation at the time when the snapshot with the given `snapshotID` was created.
+Return the total number of token in circulation at the time when the snapshot with the given `time` was created.
 
 #### `snapshotBalanceOf(uint,address)`
 
 ##### Signature:
 
 ```solidity
-    function snapshotBalanceOf (uint snapshotID, address owner)
+    function snapshotBalanceOf (uint time, address owner)
     public view returns (uint)
 ```
 
 ##### Description:
 
-Return the number of tokens owned by the given `owner` at the time when the snapshot with the given `snapshotID` was created.
+Return the number of tokens owned by the given `owner` at the time when the snapshot with the given `time` was created.
 
 ### Events
 
-#### `SnapshotScheduling(uint,uint)`
+#### `SnapshotSchedule(uint,uint)`
 
 ##### Signature:
 
 ```solidity
-    event SnapshotScheduing (uint indexed snapshotID, uint time)
+    event SnapshotSchedule (uint indexed oldTime, uint indexed newTime)
 ```
 
 ##### Description:
 
-Emitted when the snapshot with the specified `snapshotID` was scheduled or rescheduled at the specified `time`.
+Emitted when the snapshot with the specified `oldTime` was scheduled or rescheduled at the specified `newTime`.
 
 #### `SnapshotUnscheduling(uint)`
 
 ##### Signature:
 
 ```solidity
-    event SnapshotUnscheduing (uint indexed snapshotID)
+    event SnapshotUnschedule (uint indexed time)
 ```
 
 ##### Description:
 
-Emitted when the scheduled snapshot with the specified `snapshotID` was cancelled.
+Emitted when the scheduled snapshot with the specified `time` was cancelled.

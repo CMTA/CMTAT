@@ -14,13 +14,13 @@ This section describes the Ethereum API of the Pause Module.
 ##### Signature:
 
 ```solidity
-    function pause (string memory reason)
+    function pause ()
     public
 ```
 
 ##### Description:
 
-Pause all the token transfers for the given `reason`.
+Pause all the token transfers.
 This function doesn't affect forced transfers, issuance, redemption, and approves.
 Only authorized users are allowed to call this function.
 
@@ -33,17 +33,17 @@ Only authorized users are allowed to call this function.
 
 ### Events
 
-#### `Pause(string)`
+#### `Pause()`
 
 ##### Signature:
 
 ```solidity
-    event Pause (string reason)
+    event Pause ()
 ```
 
 ##### Description:
 
-Emitted when token transfers were frozen for the specified `reason`.
+Emitted when token transfers were paused.
 
 #### `Unpause()`
 
@@ -55,4 +55,4 @@ Emitted when token transfers were frozen for the specified `reason`.
 
 ##### Description:
 
-Emitted when token transfers were unfrozen.
+Emitted when token transfers were unpaused.
