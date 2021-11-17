@@ -6,7 +6,7 @@ This document defines the Validation Module for the CMTA Token specification. Th
 
 This section describes the Ethereum API of the Validation Module.
 
-The rules are defined using an (optional) rule engine, set using the `setRuleEngine` method. The `RuleEngine` implementation is not provided along with thiss implementation but it has to comply with the following interface:
+The rules are defined using an (optional) rule engine, set using the `setRuleEngine` method. The `RuleEngine` implementation is not provided along with this implementation but it has to comply with the following interface:
 
 ```
 interface IRuleEngine {
