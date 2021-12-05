@@ -21,7 +21,7 @@ This section describes the Ethereum API of the Pause Module.
 ##### Description:
 
 Pause all the token transfers.
-This function doesn't affect forced transfers, issuance, redemption, and approves.
+This function doesn't affect issuance, redemption, and approves.
 Only authorized users are allowed to call this function.
 
 #### `unpause()`
