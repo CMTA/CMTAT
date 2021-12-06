@@ -113,14 +113,6 @@ contract CMTAT is Initializable, ContextUpgradeable, BaseModule, AuthorizationMo
   }
 
   /**
-    * @dev Triggers a forced transfer.
-    *
-    */
-  function enforceTransfer(address owner, address destination, uint amount, string memory reason) public onlyRole(ENFORCER_ROLE) {
-    _enforceTransfer(owner, destination, amount, reason);
-  }
-
-  /**
     * @dev Freezes an address.
     *
     */

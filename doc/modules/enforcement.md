@@ -5,23 +5,7 @@ This document defines Enforcement Module for the CMTA Token specification.
 
 ## API for Ethereum
 
-This section describes the Ethereum API of Forced Transfer Module.
-
-### Functions
-
-#### `enforceTransfer(address,address,uint,string)`
-
-##### Signature:
-
-```solidity
-    function enforceTransfer (address owner, address destination, uint amount, string memory reason)
-    public
-```
-
-#### Description:
-
-Forcefully transfer `amount` of tokens from the `owner` to the `destination` address.
-Only authorized users are allowed to call this function.
+This section describes the Ethereum API of the Enforcement Module.
 
 ### Functions
 
@@ -70,17 +54,6 @@ Tell, whether the given `account` is frozen.
 
 ### Events
 
-#### `Enforcement(address,address,uint,string)`
-
-##### Signature:
-
-```solidity
-    event Enforcement (address indexed enforcer, address indexed owner, uint amount, string reason)
-```
-
-##### Description:
-
-Emitted when the specified `enforcer` enforced a transfer of the specified `amount` of tokens from the specified `owner` for the specified `reason`.
 
 #### `Freeze(address,address)`
 
@@ -92,6 +65,8 @@ Emitted when the specified `enforcer` enforced a transfer of the specified `amou
 
 ##### Description:
 
+Emitted when address `owner` is frozen by `enforcer`.
+
 #### `Unfreeze(address,address)`
 
 ##### Signature:
@@ -102,4 +77,4 @@ Emitted when the specified `enforcer` enforced a transfer of the specified `amou
 
 ##### Description:
 
-
+Emitted when address `owner` is unfrozen by `enforcer`.

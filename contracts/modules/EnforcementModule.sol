@@ -5,15 +5,11 @@ import "../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializ
 import "../../openzeppelin-contracts-upgradeable/contracts/token/ERC20/ERC20Upgradeable.sol";
 
 /**
- * @dev Force transfer module.
+ * @dev Enforcement module.
  *
- * Useful for to force transfer of tokens by an authorized user
+ * Allows the issuer to freeze transfers from a given address
  */
 abstract contract EnforcementModule is Initializable, ContextUpgradeable, ERC20Upgradeable {
-    /**
-     * @dev Emitted when a transfer is forced.
-     */
-    event Enforcement (address indexed enforcer, address indexed owner, uint amount, string reason);
 
     /**
      * @dev Emitted when an address is frozen.
@@ -47,16 +43,6 @@ abstract contract EnforcementModule is Initializable, ContextUpgradeable, ERC20U
      */
     function frozen(address account) public view virtual returns (bool) {
         return _frozen[account];
-    }
-
-
-    /**
-     * @dev Triggers a forced transfer.
-     *
-     */
-    function _enforceTransfer(address owner, address destination, uint amount, string memory reason) internal virtual {
-        _transfer(owner, destination, amount);
-        emit Enforcement(_msgSender(), owner, amount, reason);
     }
 
     /**
