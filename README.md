@@ -27,14 +27,15 @@ at <a href="mailto:admin@cmta.ch">admin@cmta.ch</a>.
 The CMTAT supports the following core features:
 
 * Basic mint, burn, and transfer operations
-* Forced transfer by the issuer 
 * Pause of the contract and freeze of specific accounts
 
-Furthermore, the present implementation uses standard mechanisms in order to simplify:
+Furthermore, the present implementation uses standard mechanisms in
+order to support:
 
 * Distribution of dividends and interest, via snapshots
-* Upgradeability, via deployemnt of the token with a proxy
-* "gasless" transactions
+* Upgradeability, via deployment of the token with a proxy
+* "Gasless" transactions
+* Conditional transfers, via a rule engine
 
 This reference implementation allows the issuance and management of
 tokens representing equity securities.
