@@ -19,17 +19,25 @@ contract CMTAT is Initializable, ContextUpgradeable, BaseModule, AuthorizationMo
   uint8 constant TRANSFER_OK = 0;
   string constant TEXT_TRANSFER_OK = "No restriction";
 
-  function initialize (address owner, address forwarder, string memory name, string memory symbol, string memory tokenId, string memory terms) public initializer {
-    __CMTAT_init(owner, forwarder, name, symbol, tokenId, terms);
+  /* Variables */
+  string public guarantor;
+  string public bondHolder;
+  string public maturityDate;
+  uint256 public interestRate;
+  uint256 public parValue;
+  string public interestDetails;
+
+  function initialize (address owner, address forwarder, string memory name, string memory symbol, string memory tokenId, string memory terms, string memory guarantor_, string memory bondHolder_, string memory maturityDate_, uint256 interestRate_, uint256 parValue_, string memory interestDetails_) public initializer {
+    __CMTAT_init(owner, forwarder, name, symbol, tokenId, terms, guarantor_, bondHolder_, maturityDate_, interestRate_, parValue_, interestDetails_);
   }
 
   /**
     * @dev Grants `DEFAULT_ADMIN_ROLE`, `MINTER_ROLE` and `PAUSER_ROLE` to the
-    * account that deploys the contract.
+    * account that deploys the contract and initialise additional variables.
     *
     * See {ERC20-constructor}.
     */
-  function __CMTAT_init(address owner, address forwarder, string memory name, string memory symbol, string memory tokenId, string memory terms) internal initializer {
+  function __CMTAT_init(address owner, address forwarder, string memory name, string memory symbol, string memory tokenId, string memory terms, string memory guarantor_, string memory bondHolder_, string memory maturityDate_, uint256 interestRate_, uint256 parValue_, string memory interestDetails_) internal initializer {
     __Context_init_unchained();
     __Base_init_unchained(0, tokenId, terms);
     __AccessControl_init_unchained();
@@ -40,6 +48,13 @@ contract CMTAT is Initializable, ContextUpgradeable, BaseModule, AuthorizationMo
     __MetaTx_init_unchained();
     __Snapshot_init_unchained();
     __CMTAT_init_unchained(owner);
+
+    guarantor = guarantor_;
+    bondHolder = bondHolder_;
+    maturityDate = maturityDate_;
+    interestRate = interestRate_;
+    parValue = parValue_;
+    interestDetails = interestDetails_;
   }
 
   function __CMTAT_init_unchained(address owner) internal initializer {
@@ -189,6 +204,30 @@ contract CMTAT is Initializable, ContextUpgradeable, BaseModule, AuthorizationMo
 
   function setTerms (string memory terms_) public onlyRole(DEFAULT_ADMIN_ROLE) {
     terms = terms_;
+  }
+
+  function setGuarantor (string memory guarantor_) public onlyRole(DEFAULT_ADMIN_ROLE) {
+    guarantor = guarantor_;
+  }
+
+  function setBondHolder (string memory bondHolder_) public onlyRole(DEFAULT_ADMIN_ROLE) {
+    bondHolder = bondHolder_;
+  }
+
+  function setMaturityDate (string memory maturityDate_) public onlyRole(DEFAULT_ADMIN_ROLE) {
+    maturityDate = maturityDate_;
+  }
+
+  function setInterestRate (uint256 interestRate_) public onlyRole(DEFAULT_ADMIN_ROLE) {
+    interestRate = interestRate_;
+  }
+
+  function setParValue (uint256 parValue_) public onlyRole(DEFAULT_ADMIN_ROLE) {
+    parValue = parValue_;
+  }
+
+  function setInterestDetails (string memory interestDetails_) public onlyRole(DEFAULT_ADMIN_ROLE) {
+    interestDetails = interestDetails_;
   }
 
   function kill() public onlyRole(DEFAULT_ADMIN_ROLE) {
