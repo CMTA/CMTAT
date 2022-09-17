@@ -1,4 +1,4 @@
-const { expectEvent, expectRevert } = require('openzeppelin-test-helpers');
+const { expectEvent, expectRevert } = require('@openzeppelin/test-helpers');
 const { DEFAULT_ADMIN_ROLE } = require('../utils');
 require('chai/register-should');
 
