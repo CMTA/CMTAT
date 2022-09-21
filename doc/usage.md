@@ -11,3 +11,13 @@ Warning : the installation of the specific version 5.3.8 can fail.
 
 The offcial documentation is available here : https://trufflesuite.com/docs/truffle/getting-started/installation/
 
+## Toolchain
+
+**sol2uml** 
+Generate UML for smart contracts
+Link : https://github.com/naddison36/sol2uml
+`
+nvm use 14
+sol2uml ./contracts
+`
+The Node.JS version 14 is the minimal version.
