@@ -1,10 +1,19 @@
+# USage
 # Toolchain
 ## Main
+**Submodule**
+Clone the project with the option `--recurse-submodules` to get the submodules like the library `openzeppelin contracts upgradeable` 
+Example :
+`git clone git@github.com:CMTA/CMTAT.git  --recurse-submodules` 
+
+**NVM**
 To manage several version of node.JS in your computer, you can use the tool `nvm` avaialable here : [https://github.com/nvm-sh/nvm](https://github.com/nvm-sh/nvm)
 
+**Node.JS**
 Installation of Node.JS, version 10.13.0
 `nvm install 10.13.0`
 
+**Truffle**
 Installation of truffle, version 5.3.8 :
 `npm install -g truffle@5.3.8`
 Warning : the installation of the specific version 5.3.8 can fail.
@@ -127,3 +136,5 @@ One of the project libraries is probably written in pyton2. Or the version of py
 * Solution
 You need to install a C compiler on your OS
 See : https://askubuntu.com/questions/237576/no-acceptable-c-compiler-found-in-path
+
+
