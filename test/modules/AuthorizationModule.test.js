@@ -1,4 +1,4 @@
-const { expectEvent, expectRevert } = require('openzeppelin-test-helpers');
+const { expectEvent, expectRevert } = require('@openzeppelin/test-helpers');
 const { PAUSER_ROLE } = require('../utils');
 require('chai/register-should');
 

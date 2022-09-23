@@ -36,6 +36,7 @@
   },
   "homepage": "https://github.com/veorq/CMTAT",
   "devDependencies": {
+    "@openzeppelin/test-helpers": "^0.5.16",
     "chai": "^4.2.0",
     "coveralls": "^3.0.2",
     "dotenv": "^6.1.0",
@@ -49,7 +50,6 @@
     "ethjs-abi": "^0.2.1",
     "ganache-cli": "^6.12.1",
     "openzeppelin-solidity": "^2.2.0",
-    "openzeppelin-test-helpers": "^0.5.1",
     "solc": "^0.7.5",
     "solidity-coverage": "^0.7.13",
     "solium": "^1.2.4",
