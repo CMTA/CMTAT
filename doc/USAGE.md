@@ -1,6 +1,7 @@
-# Toolchain
+# Usage instructions
+
 ## Main
-To manage several version of node.JS in your computer, you can use the tool `nvm` avaialable here : [https://github.com/nvm-sh/nvm](https://github.com/nvm-sh/nvm)
+To manage several version of Node.js on your machine, you can use the tool `nvm` avaialable here : [https://github.com/nvm-sh/nvm](https://github.com/nvm-sh/nvm)
 
 Installation of Node.JS, version 10.13.0
 `nvm install 10.13.0`
