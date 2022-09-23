@@ -1,8 +1,8 @@
 const { expectEvent, expectRevert } = require('@openzeppelin/test-helpers');
-const ethSigUtil = require('eth-sig-util');
+const ethSigUtil = require('@metamask/eth-sig-util');
 const Wallet = require('ethereumjs-wallet').default;
 const { DEFAULT_ADMIN_ROLE } = require('../utils');
-require('chai/register-should');
+const {should} = require('chai').should();
 
 const CMTAT = artifacts.require('CMTAT');
 const MinimalForwarderMock = artifacts.require('MinimalForwarderMock');

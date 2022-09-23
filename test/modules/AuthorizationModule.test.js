@@ -1,7 +1,8 @@
 const { expectEvent, expectRevert } = require('@openzeppelin/test-helpers');
 const { PAUSER_ROLE } = require('../utils');
-require('chai/register-should');
-
+var chai = require('chai')
+  , expect = chai.expect
+  , should = chai.should();
 const CMTAT = artifacts.require('CMTAT');
 
 contract('AuthorizationModule', function ([_, owner, address1, address2, address3, fakeRuleEngine]) {

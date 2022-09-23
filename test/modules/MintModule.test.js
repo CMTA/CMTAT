@@ -1,7 +1,7 @@
 const { expectEvent, expectRevert } = require('@openzeppelin/test-helpers');
 const { ZERO_ADDRESS, MINTER_ROLE } = require('../utils');
+const {should} = require('chai').should();
 
-require('chai/register-should');
 
 const CMTAT = artifacts.require('CMTAT');
 
