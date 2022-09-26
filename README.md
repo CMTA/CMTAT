@@ -130,9 +130,13 @@ in a platform-agnostic way, and coveging legal aspects.
 Tests are written in JavaScript (Node.js package) and run with Truffle through the command `truffle test`. 
 The test suite could be correctly built and run with the following versions: 
 
-* Node.js 10.13.0
-* npm 6.4.1
-* Truffle 5.3.8
+* npm 8.19.2
+* Truffle v5.5.31 (core: 5.5.31)
+* Ganache v7.4.3
+* Solidity - 0.8.4 (solc-js)
+* Node v16.17.0
+* Web3.js v1.7.4
+
 
 Truffle has to be installed globally or used with the `npx` command.
 Everything else needed is installed through `npm install` with the right

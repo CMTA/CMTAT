@@ -7,7 +7,7 @@ const CMTAT = artifacts.require('CMTAT');
 contract('BaseModule', function ([_, owner, address1, address2, address3, fakeRuleEngine]) {
   beforeEach(async function () {
     this.cmtat = await CMTAT.new({ from: owner });
-    this.cmtat.initialize(owner, _, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', { from: owner });
+    await this.cmtat.initialize(owner, _, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', { from: owner });
   });
 
   context('Token structure', function () {
@@ -28,7 +28,7 @@ contract('BaseModule', function ([_, owner, address1, address2, address3, fakeRu
     });
     it('allows the admin to modify the token ID', async function () {
       (await this.cmtat.tokenId()).should.equal('CMTAT_ISIN');
-      this.cmtat.setTokenId('CMTAT_TOKENID', {from: owner});
+      await this.cmtat.setTokenId('CMTAT_TOKENID', {from: owner});
       (await this.cmtat.tokenId()).should.equal('CMTAT_TOKENID');
     });
     it('reverts when trying to modify the token ID from non-admin', async function () {
@@ -38,7 +38,7 @@ contract('BaseModule', function ([_, owner, address1, address2, address3, fakeRu
     });
     it('allows the admin to modify the terms', async function () {
       (await this.cmtat.terms()).should.equal('https://cmta.ch');
-      this.cmtat.setTerms('https://cmta.ch/terms', {from: owner});
+      await this.cmtat.setTerms('https://cmta.ch/terms', {from: owner});
       (await this.cmtat.terms()).should.equal('https://cmta.ch/terms');
     });
     it('reverts when trying to modify the terms from non-admin', async function () {

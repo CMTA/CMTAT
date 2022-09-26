@@ -19,7 +19,7 @@ const EIP712Domain = [
 contract('MetaTxModule', function ([_, owner, address1, address2, address3, trustedForwarder, defaultForwarder]) {
   beforeEach(async function () {
     this.cmtat = await CMTAT.new({ from: owner });
-    this.cmtat.initialize(owner, defaultForwarder, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', { from: owner });
+    await this.cmtat.initialize(owner, defaultForwarder, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', { from: owner });
   });
 
   context('Owner', function () {
@@ -40,7 +40,7 @@ contract('MetaTxModule', function ([_, owner, address1, address2, address3, trus
     beforeEach(async function () {
       this.forwarder = await MinimalForwarderMock.new();
       await this.forwarder.initialize();
-      this.cmtat.setTrustedForwarder(this.forwarder.address, {from: owner});
+      await this.cmtat.setTrustedForwarder(this.forwarder.address, {from: owner});
       this.wallet = Wallet.generate();
       this.sender = web3.utils.toChecksumAddress(this.wallet.getAddressString());
 
@@ -72,18 +72,27 @@ contract('MetaTxModule', function ([_, owner, address1, address2, address3, trus
     });
 
     it('can send a transfer transaction without paying gas', async function () {
-      const data = this.cmtat.contract.methods.transfer(address2, 11).encodeABI();
-
+     const data =  this.cmtat.contract.methods.transfer(address2, 11).encodeABI();
       const req = {
         from: this.sender,
         to: this.cmtat.address,
         value: '0',
         gas: '100000',
         nonce: (await this.forwarder.getNonce(this.sender)).toString(),
-        data,
+        data
       };
 
-      const sign = ethSigUtil.signTypedMessage(this.wallet.getPrivateKey(), { data: { ...this.data, message: req } })
+      //TODO : The test doesn't compile
+      // const sign  = ethSigUtil.signTypedData( {privateKey  : this.wallet.getPrivateKey(), data: { ...this.data, message: req }, version : 'V4'});
+      //const sign = ethSigUtil.personalSign({privateKey  : this.wallet.getPrivateKey(), data: { ...this.data, message: req } })
+      const sign  = ethSigUtil.signTypedData( {privateKey  : this.wallet.getPrivateKey(), data: { 
+        types: this.types,
+        domain: this.domain,
+        primaryType: 'ForwardRequest',
+        message: {
+          ...req
+        }, 
+      }, version : 'V4'});
       const balanceBefore = await web3.eth.getBalance(this.sender);
       await this.forwarder.execute(req, sign);
       (await this.cmtat.balanceOf(this.sender)).should.be.bignumber.equal('20');

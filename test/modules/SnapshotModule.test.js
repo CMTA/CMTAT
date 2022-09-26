@@ -14,7 +14,7 @@ const timeout = function (ms) {
 contract('SnapshotModule', function ([_, owner, address1, address2, address3, fakeRuleEngine]) {
   beforeEach(async function () {
     this.cmtat = await CMTAT.new({ from: owner });
-    this.cmtat.initialize(owner, _, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', { from: owner });
+    await this.cmtat.initialize(owner, _, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', { from: owner });
   });
 
   context('Snapshot scheduling', function () {
@@ -144,7 +144,10 @@ contract('SnapshotModule', function ([_, owner, address1, address2, address3, fa
         (await this.cmtat.snapshotTotalSupply(getUnixTimestamp())).should.be.bignumber.equal('96');
         (await this.cmtat.snapshotBalanceOf(getUnixTimestamp(), address1)).should.be.bignumber.equal('31');
         (await this.cmtat.snapshotBalanceOf(getUnixTimestamp(), address2)).should.be.bignumber.equal('32');
-        await this.cmtat.mint(address1, 20, {from: owner});
+
+        // Gas and gasPrice are fixed arbitrarily
+        await this.cmtat.mint(address1, 20, {from: owner, gas: 5000000, gasPrice: 500000000});
+
         (await this.cmtat.snapshotTotalSupply(this.beforeSnapshotTime)).should.be.bignumber.equal('96');
         (await this.cmtat.snapshotBalanceOf(this.beforeSnapshotTime, address1)).should.be.bignumber.equal('31');
         (await this.cmtat.snapshotBalanceOf(this.beforeSnapshotTime, address2)).should.be.bignumber.equal('32');
@@ -175,7 +178,8 @@ contract('SnapshotModule', function ([_, owner, address1, address2, address3, fa
         (await this.cmtat.snapshotTotalSupply(getUnixTimestamp())).should.be.bignumber.equal('96');
         (await this.cmtat.snapshotBalanceOf(getUnixTimestamp(), address1)).should.be.bignumber.equal('31');
         (await this.cmtat.snapshotBalanceOf(getUnixTimestamp(), address2)).should.be.bignumber.equal('32');
-        await this.cmtat.transfer(address2, 20, {from: address1});
+        // Gas and gasPrice are fixed arbitrarily
+        await this.cmtat.transfer(address2, 20, {from: address1, gas: 5000000, gasPrice: 500000000});
         (await this.cmtat.snapshotTotalSupply(this.beforeSnapshotTime)).should.be.bignumber.equal('96');
         (await this.cmtat.snapshotBalanceOf(this.beforeSnapshotTime, address1)).should.be.bignumber.equal('31');
         (await this.cmtat.snapshotBalanceOf(this.beforeSnapshotTime, address2)).should.be.bignumber.equal('32');
@@ -203,7 +207,8 @@ contract('SnapshotModule', function ([_, owner, address1, address2, address3, fa
         (await this.cmtat.snapshotTotalSupply(getUnixTimestamp())).should.be.bignumber.equal('96');
         (await this.cmtat.snapshotBalanceOf(getUnixTimestamp(), address1)).should.be.bignumber.equal('31');
         (await this.cmtat.snapshotBalanceOf(getUnixTimestamp(), address2)).should.be.bignumber.equal('32');
-        await this.cmtat.transfer(address2, 20, {from: address1});
+        // Gas and gasPrice are fixed arbitrarily
+        await this.cmtat.transfer(address2, 20, {from: address1, gas: 5000000, gasPrice: 500000000});
         (await this.cmtat.snapshotTotalSupply(this.beforeSnapshotTime)).should.be.bignumber.equal('96');
         (await this.cmtat.snapshotBalanceOf(this.beforeSnapshotTime, address1)).should.be.bignumber.equal('31');
         (await this.cmtat.snapshotBalanceOf(this.beforeSnapshotTime, address2)).should.be.bignumber.equal('32');
@@ -219,7 +224,8 @@ contract('SnapshotModule', function ([_, owner, address1, address2, address3, fa
         (await this.cmtat.snapshotTotalSupply(getUnixTimestamp())).should.be.bignumber.equal('96');
         (await this.cmtat.snapshotBalanceOf(getUnixTimestamp(), address1)).should.be.bignumber.equal('31');
         (await this.cmtat.snapshotBalanceOf(getUnixTimestamp(), address2)).should.be.bignumber.equal('32');
-        await this.cmtat.transfer(address2, 20, {from: address1});
+        // Gas and gasPrice are fixed arbitrarily
+        await this.cmtat.transfer(address2, 20, {from: address1, gas: 5000000, gasPrice: 500000000});
         (await this.cmtat.snapshotTotalSupply(this.snapshotTime1)).should.be.bignumber.equal('96');
         (await this.cmtat.snapshotBalanceOf(this.snapshotTime1, address1)).should.be.bignumber.equal('31');
         (await this.cmtat.snapshotBalanceOf(this.snapshotTime1, address2)).should.be.bignumber.equal('32');
@@ -235,7 +241,8 @@ contract('SnapshotModule', function ([_, owner, address1, address2, address3, fa
         (await this.cmtat.snapshotTotalSupply(getUnixTimestamp())).should.be.bignumber.equal('96');
         (await this.cmtat.snapshotBalanceOf(getUnixTimestamp(), address1)).should.be.bignumber.equal('31');
         (await this.cmtat.snapshotBalanceOf(getUnixTimestamp(), address2)).should.be.bignumber.equal('32');
-        await this.cmtat.transfer(address2, 20, {from: address1});
+        // Gas and gasPrice are fixed arbitrarily
+        await this.cmtat.transfer(address2, 20, {from: address1, gas: 5000000, gasPrice: 500000000});
         (await this.cmtat.snapshotTotalSupply(this.snapshotTime1)).should.be.bignumber.equal('96');
         (await this.cmtat.snapshotBalanceOf(this.snapshotTime1, address1)).should.be.bignumber.equal('31');
         (await this.cmtat.snapshotBalanceOf(this.snapshotTime1, address2)).should.be.bignumber.equal('32');
@@ -250,7 +257,8 @@ contract('SnapshotModule', function ([_, owner, address1, address2, address3, fa
         (await this.cmtat.snapshotTotalSupply(getUnixTimestamp())).should.be.bignumber.equal('96');
         (await this.cmtat.snapshotBalanceOf(getUnixTimestamp(), address1)).should.be.bignumber.equal('31');
         (await this.cmtat.snapshotBalanceOf(getUnixTimestamp(), address2)).should.be.bignumber.equal('32');
-        await this.cmtat.transfer(address2, 20, {from: address1});
+        // Gas and gasPrice are fixed arbitrarily
+        await this.cmtat.transfer(address2, 20, {from: address1, gas: 5000000, gasPrice: 500000000});
         (await this.cmtat.snapshotTotalSupply(this.beforeSnapshotTime)).should.be.bignumber.equal('96');
         (await this.cmtat.snapshotBalanceOf(this.beforeSnapshotTime, address1)).should.be.bignumber.equal('31');
         (await this.cmtat.snapshotBalanceOf(this.beforeSnapshotTime, address2)).should.be.bignumber.equal('32');
@@ -259,7 +267,8 @@ contract('SnapshotModule', function ([_, owner, address1, address2, address3, fa
         (await this.cmtat.snapshotBalanceOf(getUnixTimestamp(), address2)).should.be.bignumber.equal('52');
         (await this.cmtat.getNextSnapshots()).length.should.equal(2);
         await timeout(5000);
-        await this.cmtat.transfer(address1, 10, {from: address2});
+        // Gas and gasPrice are fixed arbitrarily
+        await this.cmtat.transfer(address1, 10, {from: address2, gas: 5000000, gasPrice: 500000000});
         (await this.cmtat.snapshotTotalSupply(this.beforeSnapshotTime)).should.be.bignumber.equal('96');
         (await this.cmtat.snapshotBalanceOf(this.beforeSnapshotTime, address1)).should.be.bignumber.equal('31');
         (await this.cmtat.snapshotBalanceOf(this.beforeSnapshotTime, address2)).should.be.bignumber.equal('32');
@@ -274,7 +283,8 @@ contract('SnapshotModule', function ([_, owner, address1, address2, address3, fa
         (await this.cmtat.snapshotBalanceOf(getUnixTimestamp(), address2)).should.be.bignumber.equal('42');
         (await this.cmtat.getNextSnapshots()).length.should.equal(1);
         await timeout(5000);
-        await this.cmtat.transfer(address2, 5, {from: address1});
+        // Gas and gasPrice are fixed arbitrarily
+        await this.cmtat.transfer(address2, 5, {from: address1, gas: 5000000, gasPrice: 500000000});
         (await this.cmtat.snapshotTotalSupply(this.beforeSnapshotTime)).should.be.bignumber.equal('96');
         (await this.cmtat.snapshotBalanceOf(this.beforeSnapshotTime, address1)).should.be.bignumber.equal('31');
         (await this.cmtat.snapshotBalanceOf(this.beforeSnapshotTime, address2)).should.be.bignumber.equal('32');
