@@ -13,13 +13,13 @@
     "lint:sol": "solium -d .",
     "lint:sol:fix": "solium -d . --fix",
     "lint:all": "npm run lint && npm run lint:sol",
-    "lint:all:fix": "npm run lint:fix && npm run lint:sol:fix",
+    "lint:all:fix": "npm run lint:fix && npm rIt would be good if the Rule Engine contract is implemented using the Factory pattern. it will save future deployment gas and make it easier to deploy  new rule engines https://dev.to/jamiescript/design-patterns-in-solidity-1i28#factoryun lint:sol:fix",
     "console": "truffle console",
     "coverage": "npx solidity-coverage"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/veorq/CMTAT.git"
+    "url": "https://github.com/CMTA/CMTAT.git"
   },
   "keywords": [
     "solidity",
@@ -29,12 +29,12 @@
     "security",
     "scai"
   ],
-  "author": "Sébastien Krafft <sebastien.krafft@mtpelerin.com>",
+  "author": "CMTA",
   "license": "MPL",
   "bugs": {
-    "url": "https://github.com/veorq/CMTAT/issues"
+    "url": "https://github.com/CMTA/CMTAT/issues"
   },
-  "homepage": "https://github.com/veorq/CMTAT",
+  "homepage": "https://github.com/CMTA/CMTAT",
   "devDependencies": {
     "@openzeppelin/test-helpers": "^0.5.16",
     "chai": "^4.3.6",
