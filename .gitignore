@@ -2,3 +2,7 @@ node_modules
 build
 coverage
 coverage.json
+foundry/lib
+foundry/out
+foundry/openzeppelin-contracts-upgradeable/
+foundry/cache/

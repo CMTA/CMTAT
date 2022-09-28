@@ -1,11 +1,11 @@
 //SPDX-License-Identifier: MPL-2.0
 
-pragma solidity ^0.8.2;
+pragma solidity ^0.8.17;
 
-import "../../openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradeable.sol";
-import "../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
-import "../../openzeppelin-contracts-upgradeable/contracts/token/ERC20/ERC20Upgradeable.sol";
-import "../../openzeppelin-contracts-upgradeable/contracts/utils/ArraysUpgradeable.sol";
+import "openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradeable.sol";
+import "openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
+import "openzeppelin-contracts-upgradeable/contracts/token/ERC20/ERC20Upgradeable.sol";
+import "openzeppelin-contracts-upgradeable/contracts/utils/ArraysUpgradeable.sol";
 
 /**
  * @dev Snapshot module.
