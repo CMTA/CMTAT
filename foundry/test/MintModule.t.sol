@@ -4,10 +4,7 @@ import "forge-std/Test.sol";
 import "../src/modules/PauseModule.sol";
 import "../src/CMTAT.sol";
 import "openzeppelin-contracts/contracts/utils/Strings.sol";
-  //address constant CHEATCODE_ADDRESS = 0x7cFA93148B0B13d88c1DcE8880bd4e175;
-  /*
 
-  */
 contract MintModuleTest is Test, MintModule, ERC20Upgradeable {
     string constant MINTER_ROLE_HASH  = 
     '0x9f2df0fed2c77648de5860a4cc508cd0818c85b8b8a1ab4ceeef8d981c8956a6';
@@ -89,7 +86,7 @@ contract MintModuleTest is Test, MintModule, ERC20Upgradeable {
     function testCannotIssuingFromNonOwner() public{
         vm.prank(ADDRESS1);
         string memory message = string(abi.encodePacked('AccessControl: account ', 
-        Strings.toHexString(ADDRESS1),' is missing role ', MINTER_ROLE_HASH));
+        vm.toString(ADDRESS1),' is missing role ', MINTER_ROLE_HASH));
         vm.expectRevert(bytes(message));
         CMTAT_CONTRACT.mint(ADDRESS1, 20);
     }

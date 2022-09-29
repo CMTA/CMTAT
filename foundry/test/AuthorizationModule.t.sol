@@ -48,28 +48,28 @@ contract AuthorizationModuleTest is Test, AuthorizationModule, PauseModule {
       emit RoleRevoked(PAUSER_ROLE, ADDRESS1,  OWNER );
       CMTAT_CONTRACT.revokeRole(PAUSER_ROLE, ADDRESS1);
       bool res2 = CMTAT_CONTRACT.hasRole(PAUSER_ROLE, ADDRESS1);
-      assertEq(res2, false);
+      assertFalse(res2);
     }
 
     // reverts when granting from non-owner
     function testCannotGrantFromNonOwner() public {
       bool res1 = CMTAT_CONTRACT.hasRole(PAUSER_ROLE, ADDRESS1);
-      assertEq(res1, false);
+      assertFalse(res1);
       
       string memory message = string(abi.encodePacked('AccessControl: account ', 
-      Strings.toHexString(ADDRESS2),' is missing role ', DEFAULT_ROLE_HASH));
+      vm.toString(ADDRESS2),' is missing role ', DEFAULT_ROLE_HASH));
       vm.expectRevert(bytes(message));
       vm.prank(ADDRESS2);
       CMTAT_CONTRACT.grantRole(PAUSER_ROLE, ADDRESS1);
       
       bool res2 = CMTAT_CONTRACT.hasRole(PAUSER_ROLE, ADDRESS1);
-      assertEq(res2, false);
+      assertFalse(res2);
     }
 
     // reverts when revoking from non-owner
     function testCannotRevokeFromNonOwner() public {
       bool res1 = CMTAT_CONTRACT.hasRole(PAUSER_ROLE, ADDRESS1);
-      assertEq(res1, false);
+      assertFalse(res1);
       
       vm.prank(OWNER);
       CMTAT_CONTRACT.grantRole(PAUSER_ROLE, ADDRESS1);
@@ -78,7 +78,7 @@ contract AuthorizationModuleTest is Test, AuthorizationModule, PauseModule {
       
       vm.prank(ADDRESS2);
       string memory message = string(abi.encodePacked('AccessControl: account ', 
-      Strings.toHexString(ADDRESS2),' is missing role ', DEFAULT_ROLE_HASH));
+      vm.toString(ADDRESS2),' is missing role ', DEFAULT_ROLE_HASH));
       vm.expectRevert(bytes(message));
       CMTAT_CONTRACT.revokeRole(PAUSER_ROLE, ADDRESS1);
       
