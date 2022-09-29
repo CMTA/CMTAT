@@ -17,10 +17,11 @@ contract AuthorizationModuleTest is Test, AuthorizationModule, PauseModule {
     address constant ADDRESS2 = address(3);
     address constant ADDRESS3 = address(4);
  
- function setUp() public {
-     vm.prank(OWNER);
-     CMTAT_CONTRACT = new CMTAT();
-     CMTAT_CONTRACT.initialize(OWNER, ZERO_ADDRESS, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch');
+    function setUp() public {
+     
+      vm.prank(OWNER);
+      CMTAT_CONTRACT = new CMTAT();
+      CMTAT_CONTRACT.initialize(OWNER, ZERO_ADDRESS, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch');
     }
 
 
