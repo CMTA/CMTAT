@@ -4,10 +4,7 @@ import "forge-std/Test.sol";
 import "../src/modules/PauseModule.sol";
 import "openzeppelin-contracts/contracts/utils/Strings.sol";
 import "./HelperContract.sol";
-  //address constant CHEATCODE_ADDRESS = 0x7cFA93148B0B13d88c1DcE8880bd4e175;
-  /*
 
-  */
 contract PauseModuleTest is Test, HelperContract, PauseModule {
 
     function setUp() public {
