@@ -1,29 +1,15 @@
-pragma solidity ^0.8.17;
 
 import "forge-std/Test.sol";
 import "../src/modules/PauseModule.sol";
-import "../src/CMTAT.sol";
 import "openzeppelin-contracts/contracts/utils/Strings.sol";
+import "./HelperContract.sol";
 
-contract BaseModuleTest is Test, BaseModule {
-   string constant MINTER_ROLE_HASH  = 
-    '0x9f2df0fed2c77648de5860a4cc508cd0818c85b8b8a1ab4ceeef8d981c8956a6';
-    string constant DEFAULT_ADMIN_ROLE_HASH  = 
-    '0x0000000000000000000000000000000000000000000000000000000000000000';
-     string constant DEFAULT_ROLE_HASH  = 
-    '0x0000000000000000000000000000000000000000000000000000000000000000';
-    CMTAT CMTAT_CONTRACT;
-    address constant ZERO_ADDRESS = address(0);
-    address constant OWNER = address(1);
-    address constant ADDRESS1 = address(2);
-    address constant ADDRESS2 = address(3);
-    address constant ADDRESS3 = address(4);
- 
+contract BaseModuleTest is Test, HelperContract, BaseModule {
  function setUp() public {
      vm.prank(OWNER);
      CMTAT_CONTRACT = new CMTAT();
      CMTAT_CONTRACT.initialize(OWNER, ZERO_ADDRESS, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch');
-    }
+  }
 
     // has the defined name
     function testDefinedName () public {
@@ -131,22 +117,9 @@ contract BaseModuleTest is Test, BaseModule {
     }
   }
 
- contract AllowanceTest is  Test, BaseModule{
-    //BaseModuleTest baseModuleTestContract = new BaseModuleTest(); 
-   string constant MINTER_ROLE_HASH  = 
-    '0x9f2df0fed2c77648de5860a4cc508cd0818c85b8b8a1ab4ceeef8d981c8956a6';
-    string constant DEFAULT_ADMIN_ROLE_HASH  = 
-    '0x0000000000000000000000000000000000000000000000000000000000000000';
-     string constant DEFAULT_ROLE_HASH  = 
-    '0x0000000000000000000000000000000000000000000000000000000000000000';
-    CMTAT CMTAT_CONTRACT;
-    address constant ZERO_ADDRESS = address(0);
-    address constant OWNER = address(1);
-    address constant ADDRESS1 = address(2);
-    address constant ADDRESS2 = address(3);
-    address constant ADDRESS3 = address(4);
+ contract AllowanceTest is  Test, HelperContract, BaseModule{
     function setUp() public {
-        vm.prank(OWNER);
+     vm.prank(OWNER);
      CMTAT_CONTRACT = new CMTAT();
      CMTAT_CONTRACT.initialize(OWNER, ZERO_ADDRESS, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch');
     }
@@ -272,19 +245,7 @@ contract BaseModuleTest is Test, BaseModule {
     }
   }
 
-   contract TransferTest is Test, BaseModule{
-     string constant MINTER_ROLE_HASH  = 
-    '0x9f2df0fed2c77648de5860a4cc508cd0818c85b8b8a1ab4ceeef8d981c8956a6';
-    string constant DEFAULT_ADMIN_ROLE_HASH  = 
-    '0x0000000000000000000000000000000000000000000000000000000000000000';
-     string constant DEFAULT_ROLE_HASH  = 
-    '0x0000000000000000000000000000000000000000000000000000000000000000';
-    CMTAT CMTAT_CONTRACT;
-    address constant ZERO_ADDRESS = address(0);
-    address constant OWNER = address(1);
-    address constant ADDRESS1 = address(2);
-    address constant ADDRESS2 = address(3);
-    address constant ADDRESS3 = address(4);
+   contract TransferTest is Test, HelperContract, BaseModule{
     
     function setUp() public {
         vm.prank(OWNER);
