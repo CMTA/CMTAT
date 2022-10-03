@@ -4,6 +4,7 @@ import "forge-std/Test.sol";
 import "../src/modules/PauseModule.sol";
 import "openzeppelin-contracts/contracts/utils/Strings.sol";
 import "./HelperContract.sol";
+
 contract AuthorizationModuleTest is Test, HelperContract, AuthorizationModule, PauseModule {
  
     function setUp() public {

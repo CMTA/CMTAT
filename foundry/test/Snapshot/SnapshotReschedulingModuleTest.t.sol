@@ -7,7 +7,7 @@ import "../HelperContract.sol";
     uint256 newSnapshotTime;
     function setUp() public {
       vm.prank(OWNER);
-       vm.warp(100);
+      vm.warp(100);
       CMTAT_CONTRACT = new CMTAT();
       CMTAT_CONTRACT.initialize(OWNER, ZERO_ADDRESS, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch');
     
