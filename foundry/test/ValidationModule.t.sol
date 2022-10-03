@@ -4,61 +4,87 @@ import "forge-std/Test.sol";
 import "../src/modules/PauseModule.sol";
 import "openzeppelin-contracts/contracts/utils/Strings.sol";
 import "./HelperContract.sol";
+import "../src/mocks/RuleEngineMock.sol";
 
-const RuleEngineMock = artifacts.require('RuleEngineMock');
+contract RuleEngineTest is Test, HelperContract, ValidationModule {
+  RuleEngineMock fakeRuleEngine = new RuleEngineMock();
+  uint256 resUint256;
+  function setUp() public {
+    vm.prank(OWNER);
+    CMTAT_CONTRACT = new CMTAT();
+    CMTAT_CONTRACT.initialize(OWNER, ZERO_ADDRESS, 'CMTA Token', 'CMTAT_CONTRACT', 'CMTAT_CONTRACT_ISIN', 'https://cmta.ch');
+  }
 
-contract RuleEngineTest {
-   function setUp() public {
-     vm.prank(OWNER);
-     CMTAT_CONTRACT = new CMTAT();
-     CMTAT_CONTRACT.initialize(OWNER, ZERO_ADDRESS, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch');
-    }
+  // can be changed by the owner
+  function testCanBeChangedByOwner () public {
+    vm.prank(OWNER);
+    vm.expectEmit(true, false, false, false);
+    emit RuleEngineSet(address(fakeRuleEngine));
+    CMTAT_CONTRACT.setRuleEngine(fakeRuleEngine);
+  }
+  
 
-    // can be changed by the owner
-    function () {
-      ({ logs: this.logs } = await this.cmtat.setRuleEngine(fakeRuleEngine, {from: owner}));
-    }); 
-    
-    // emits a RuleEngineSet event
-    function () {
-      expectEvent.inLogs(this.logs, 'RuleEngineSet', { newRuleEngine: fakeRuleEngine });
-    });
+  // reverts when calling from non-owner
+  function testCannotCallByNonOwner () public {
+    vm.prank(ADDRESS1);
+    string memory message = string(abi.encodePacked('AccessControl: account ', 
+    vm.toString(ADDRESS1),' is missing role ', DEFAULT_ADMIN_ROLE_HASH));
+    vm.expectRevert(bytes(message));
+    CMTAT_CONTRACT.setRuleEngine(fakeRuleEngine);
+  }
+}
 
-    // reverts when calling from non-owner
-    function () {
-      await expectRevert(this.cmtat.setRuleEngine(fakeRuleEngine, { from: address1 }), 'AccessControl: account ' + address1.toLowerCase() + ' is missing role ' + DEFAULT_ADMIN_ROLE);
-    });
-  });
+// Transferring with Rule Engine set
+contract RuleEngineSetTest is Test, HelperContract, ValidationModule {
+  RuleEngineMock ruleEngineMock;
+  uint256 resUint256;
+  function setUp() public {
+    vm.prank(OWNER);
+    CMTAT_CONTRACT = new CMTAT();
+    CMTAT_CONTRACT.initialize(OWNER, ZERO_ADDRESS, 'CMTA Token', 'CMTAT_CONTRACT', 'CMTAT_CONTRACT_ISIN', 'https://cmta.ch');
 
-  context('Transferring with Rule Engine set', function () {
-    beforeEach(async function () {
-      this.ruleEngineMock = await RuleEngineMock.new({ from: owner });
-      await this.cmtat.mint(address1, 31, {from: owner});
-      await this.cmtat.mint(address2, 32, {from: owner});
-      await this.cmtat.mint(address3, 33, {from: owner});
-      await this.cmtat.setRuleEngine(this.ruleEngineMock.address, {from: owner});
-    });
+    // Config perso
+    vm.prank(OWNER);
+    ruleEngineMock = new RuleEngineMock();
+    vm.prank(OWNER);
+    CMTAT_CONTRACT.mint(ADDRESS1, 31);
+    vm.prank(OWNER);
+    CMTAT_CONTRACT.mint(ADDRESS2, 32);
+    vm.prank(OWNER);
+    CMTAT_CONTRACT.mint(ADDRESS3, 33);
+    vm.prank(OWNER);
+    CMTAT_CONTRACT.setRuleEngine(ruleEngineMock);
+  }
 
-    // can check if transfer is valid
-    function () {
-      (await this.cmtat.detectTransferRestriction(address1, address2, 11)).should.be.bignumber.equal("0");
-      (await this.cmtat.messageForTransferRestriction(0)).should.equal("No restriction");
-      (await this.cmtat.detectTransferRestriction(address1, address2, 21)).should.be.bignumber.equal("10");
-      (await this.cmtat.messageForTransferRestriction(10)).should.equal("Amount too high");
-    });
+  // can check if transfer is valid
+  function testCanCheckTransferIsValid () public {
+    uint8 res1 = CMTAT_CONTRACT.detectTransferRestriction(ADDRESS1, ADDRESS2, 11);
+    assertEq(res1, 0);
+    string memory message1 = CMTAT_CONTRACT.messageForTransferRestriction(0);
+    assertEq(message1, "No restriction");
+    uint8 res2 = CMTAT_CONTRACT.detectTransferRestriction(ADDRESS1, ADDRESS2, 21);
+    assertEq(res2, 10);
+    string memory message2 = CMTAT_CONTRACT.messageForTransferRestriction(10);
+    assertEq(message2, "Amount too high");
+  }
 
-    // allows address1 to transfer tokens to address2
-    function () {
-      await this.cmtat.transfer(address2, 11, {from: address1}); 
-      (await this.cmtat.balanceOf(address1)).should.be.bignumber.equal('20');
-      (await this.cmtat.balanceOf(address2)).should.be.bignumber.equal('43');
-      (await this.cmtat.balanceOf(address3)).should.be.bignumber.equal('33');        
-    });
+  // allows ADDRESS1 to transfer tokens to ADDRESS2
+  function testAllowTransfer () public {
+    vm.prank(ADDRESS1);
+    CMTAT_CONTRACT.transfer(ADDRESS2, 11);
+    resUint256 = CMTAT_CONTRACT.balanceOf(ADDRESS1);
+    assertEq(resUint256, 20);
+    resUint256 = CMTAT_CONTRACT.balanceOf(ADDRESS2);
+    assertEq(resUint256, 43);
+    resUint256 = CMTAT_CONTRACT.balanceOf(ADDRESS3);
+    assertEq(resUint256, 33);        
+  }
 
-    // reverts if address1 transfers more tokens than rule allows
-    function () {
-      vm.prank(ADDRESS1);
-      await expectRevert(this.cmtat.transfer(address2, 21), 'CMTAT: transfer rejected by validation module');        
-    });
-  });
-});
+  // reverts if ADDRESS1 transfers more tokens than rule allows
+  function testCannotTransferRuleAllows() public {
+    vm.prank(ADDRESS1);
+    vm.expectRevert(bytes('CMTAT: transfer rejected by validation module'));
+    CMTAT_CONTRACT.transfer(ADDRESS2, 21);
+  }
+}
+
