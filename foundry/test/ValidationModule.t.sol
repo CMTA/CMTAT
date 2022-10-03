@@ -12,7 +12,7 @@ contract RuleEngineTest is Test, HelperContract, ValidationModule {
   function setUp() public {
     vm.prank(OWNER);
     CMTAT_CONTRACT = new CMTAT();
-    CMTAT_CONTRACT.initialize(OWNER, ZERO_ADDRESS, 'CMTA Token', 'CMTAT_CONTRACT', 'CMTAT_CONTRACT_ISIN', 'https://cmta.ch');
+    CMTAT_CONTRACT.initialize(OWNER, ZERO_ADDRESS, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch');
   }
 
   // can be changed by the owner
@@ -41,7 +41,7 @@ contract RuleEngineSetTest is Test, HelperContract, ValidationModule {
   function setUp() public {
     vm.prank(OWNER);
     CMTAT_CONTRACT = new CMTAT();
-    CMTAT_CONTRACT.initialize(OWNER, ZERO_ADDRESS, 'CMTA Token', 'CMTAT_CONTRACT', 'CMTAT_CONTRACT_ISIN', 'https://cmta.ch');
+    CMTAT_CONTRACT.initialize(OWNER, ZERO_ADDRESS, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch');
 
     // Config perso
     vm.prank(OWNER);
