@@ -16,7 +16,7 @@ contract BurnModuleTest is Test, HelperContract, BurnModule, ERC20Upgradeable {
 
 
     // can be burnt as the OWNER with allowance
-    function canBeBurntByOwnerWithAllowance () public {
+    function testCanBeBurntByOwnerWithAllowance () public {
         vm.prank(ADDRESS1);
         CMTAT_CONTRACT.approve(OWNER, 50);
         // Burn 20 and check balances and total supply

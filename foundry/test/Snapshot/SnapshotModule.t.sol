@@ -22,7 +22,6 @@ import "../HelperContract.sol";
     }
   }
   contract BeforeAnySnaphotTest is SnapshotingModuleConfig {
-      SnapshotingModuleConfig snapshotingModuleConfig = new SnapshotingModuleConfig();
       function setUp() public {
         SnapshotingModuleConfig.config();
       }
@@ -41,16 +40,18 @@ import "../HelperContract.sol";
   }
     // With one planned snapshot
    contract onePlannedSnapshotTest is  SnapshotingModuleConfig {
-    SnapshotingModuleConfig snapshotingModuleConfig = new SnapshotingModuleConfig();
     uint256 snapshotTime;
     uint256 beforeSnapshotTime;
-    
+    uint256 initBlockTimeStamp = 200;
     function setUp() public {
-        snapshotingModuleConfig.config();
+        SnapshotingModuleConfig.config();
         snapshotTime = block.timestamp + 1;
         beforeSnapshotTime = block.timestamp - 60;
         vm.prank(OWNER);
         CMTAT_CONTRACT.scheduleSnapshot(snapshotTime);
+
+        //Timeout
+         vm.warp(initBlockTimeStamp + 200);
       }
 
       // can mint tokens
@@ -147,20 +148,7 @@ import "../HelperContract.sol";
       uint256 beforeSnapshotTime;
       
       function setUp() public {
-        //Setup config
-        vm.warp(200);
-        vm.prank(OWNER);
-        CMTAT_CONTRACT = new CMTAT();
-        CMTAT_CONTRACT.initialize(OWNER, ZERO_ADDRESS, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch');
-    
-      // Config personal
-        vm.prank(OWNER);
-        CMTAT_CONTRACT.mint(ADDRESS1, 31);
-        vm.prank(OWNER);
-        CMTAT_CONTRACT.mint(ADDRESS2, 32);
-        vm.prank(OWNER);
-        CMTAT_CONTRACT.mint(ADDRESS3, 33);
-
+         SnapshotingModuleConfig.config();
 
         //snapshotingModuleConfig.config();
         snapshotTime1 = block.timestamp + 1;
@@ -173,11 +161,13 @@ import "../HelperContract.sol";
         CMTAT_CONTRACT.scheduleSnapshot(snapshotTime2);
         vm.prank(OWNER);
         CMTAT_CONTRACT.scheduleSnapshot(snapshotTime3);
+        vm.warp(block.timestamp + 3);
         // await timeout(3000);
       }
 
       // can transfer tokens after first snapshot
       function testCanTransferTokensAfterFirstSnapshot () public {
+        
         uint256 resUint256;
         resUint256 = CMTAT_CONTRACT.snapshotTotalSupply(beforeSnapshotTime);
         assertEq(resUint256, 96);
@@ -185,7 +175,6 @@ import "../HelperContract.sol";
         assertEq(resUint256, 31);
         resUint256 = CMTAT_CONTRACT.snapshotBalanceOf(beforeSnapshotTime, ADDRESS2);
         assertEq(resUint256, 32);
-        //assertEq(snapshots.length, 0);
         resUint256 = CMTAT_CONTRACT.snapshotTotalSupply(block.timestamp);
         assertEq(resUint256, 96);
         resUint256 = CMTAT_CONTRACT.snapshotBalanceOf(block.timestamp, ADDRESS1);
@@ -193,14 +182,8 @@ import "../HelperContract.sol";
         resUint256 = CMTAT_CONTRACT.snapshotBalanceOf(block.timestamp, ADDRESS2);
         assertEq(resUint256, 32);
         
-        //console.log("1", CMcaTAT_CONTRACT.snapshotBalanceOf(beforeSnapshotTime, ADDRESS1));
         vm.prank(ADDRESS1);
         CMTAT_CONTRACT.transfer(ADDRESS2, 20);
-        console.log("2",CMTAT_CONTRACT.snapshotBalanceOf(beforeSnapshotTime, ADDRESS1));
-        
-    
-        console.log("bt", block.timestamp - 60);
-        console.log("t", block.timestamp);
         resUint256 = CMTAT_CONTRACT.snapshotTotalSupply(beforeSnapshotTime);
         assertEq(resUint256, 96);
         resUint256 = CMTAT_CONTRACT.snapshotBalanceOf(beforeSnapshotTime, ADDRESS1);
@@ -220,6 +203,8 @@ import "../HelperContract.sol";
 
       // can transfer tokens after second snapshot
       function testCanTransferAfterSecondSnapshot() public {
+        //Timeout
+        vm.warp(snapshotTime2 + 1);
         uint256 resUint256;
         // await timeout(5000);
         resUint256 = CMTAT_CONTRACT.snapshotTotalSupply(block.timestamp);
@@ -249,6 +234,7 @@ import "../HelperContract.sol";
       // can transfer tokens after third snapshot
       function testTransferAfterThirdSnapshot () public {
         uint256 resUint256;
+        vm.warp(snapshotTime3 + 1);
         // await timeout(10000);
         resUint256 = CMTAT_CONTRACT.snapshotTotalSupply(block.timestamp);
         assertEq(resUint256, 96);
@@ -285,6 +271,7 @@ import "../HelperContract.sol";
         resUint256 = CMTAT_CONTRACT.snapshotBalanceOf(block.timestamp, ADDRESS2);
         assertEq(resUint256, 32);
         vm.prank(ADDRESS1);
+        vm.warp(snapshotTime1 + 1);
         CMTAT_CONTRACT.transfer(ADDRESS2, 20);
         resUint256 = CMTAT_CONTRACT.snapshotTotalSupply(beforeSnapshotTime);
         assertEq(resUint256, 96);
@@ -301,7 +288,9 @@ import "../HelperContract.sol";
         snapshots = CMTAT_CONTRACT.getNextSnapshots();
         assertEq(snapshots.length, 2);
         // await timeout(5000);
+        //vm.warp(snapshotTime2 + 1);
         vm.prank(ADDRESS2);
+        vm.warp(snapshotTime2 + 1);
         CMTAT_CONTRACT.transfer(ADDRESS1, 10);
         resUint256 = CMTAT_CONTRACT.snapshotTotalSupply(beforeSnapshotTime);
         assertEq(resUint256, 96);
@@ -329,7 +318,10 @@ import "../HelperContract.sol";
         assertEq(resUint256, 42);
         snapshots = CMTAT_CONTRACT.getNextSnapshots();
         assertEq(snapshots.length, 1);
+
+
         // await timeout(5000);
+        vm.warp(snapshotTime3 + 1);
         vm.prank(ADDRESS1);
         CMTAT_CONTRACT.transfer(ADDRESS2, 5);
         resUint256 = CMTAT_CONTRACT.snapshotTotalSupply(beforeSnapshotTime);
