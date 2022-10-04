@@ -119,35 +119,15 @@ seggregated from the token contract.
 
 ## Documentation
 
-Please see the [doc/modules](doc/modules) for documentation of the
-modules API.
+Please see the directory [documentation](documentation)
+* [doc/modules](documentation/modules) for documentation of the
+modules API. 
+* The file [USAGE.md](documentation/USAGE.md) contains the instructions to install the libraries.
 
-CMTA will release further documentation describing the CMTAT framework
-in a platform-agnostic way, and coveging legal aspects.
-
-## Testing
-
-Tests are written in JavaScript (Node.js package) and run with Truffle through the command `truffle test`. 
-The test suite could be correctly built and run with the following versions: 
-
-* Node.js 10.13.0
-* npm 6.4.1
-* Truffle 5.3.8
-
-Truffle has to be installed globally or used with the `npx` command.
-Everything else needed is installed through `npm install` with the right
-versions.
-
-Please see the Truffle [JavaScript tests
-documentation](https://www.trufflesuite.com/docs/truffle/testing/writing-tests-in-javascript)
-for more information about the writing and running of Truffle tests.
-
-
+CMTA will release further documentation describing the CMTAT framework in a platform-agnostic way, and covering legal aspects.
 
 ## Intellectual property
 
 The code is copyright (c) Capital Market and Technology Association,
 2018-2021, and is released under [Mozilla Public License
 2.0](./LICENSE.md).
-
-

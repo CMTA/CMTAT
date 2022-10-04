@@ -9,7 +9,6 @@ Codename:	focal`
 ## Main Toolchain
 
 The main toolchain is composed of theses libraries. The number after the library name is the version number.
-
 - npm 8.19.2
 - Truffle v5.5.31 (core: 5.5.31)
 - Ganache v7.4.3
@@ -45,3 +44,21 @@ Tests are written in JavaScript (Node.js package) and run with Truffle through t
 Truffle has to be installed globally or used with the npx command. Everything else needed is installed through npm install with the right versions.
 
 Please see the Truffle JavaScript tests documentation for more information about the writing and running of Truffle tests.
+
+
+## Coding rules
+
+### Code Style
+*Javascript*
+The code style for Javascript files is ensured by Eslint.
+If you write code, please run this following command :
+`eslint .,
+eslint . --fix`
+*Solidity*
+The code style for Solidity files is ensured by Ethlint (Solium)
+`solium -d .
+solium -d . --fix`
+
+## Kown bugs
+The coverage with the library *solidity-coverage* does not work anymore.
+See : [website](https://github.com/sc-forks/solidity-coverage/issues/694) 

@@ -31,6 +31,10 @@ Concats solidity files from Truffle projects with all of their dependencies.
 [Website](https://eslint.org/)
 Static analyzer of the code
 
+**eslint-config-standard**
+Shareable configs are designed to work with the extends feature of .eslintrc files.
+[Website](https://github.com/standard/eslint-config-standard)
+
 **eslint-plugin-import**
 [Website](https://github.com/import-js/eslint-plugin-import)
 This plugin intends to support linting of ES2015+ (ES6+) import/export syntax, and prevent issues with misspelling of file paths and import names. 
@@ -47,12 +51,7 @@ Enforce best practices for JavaScript promises.
 [Website](https://github.com/duaraghav8/Ethlint)
 Ethlint analyzes your Solidity code for style & security issues and fixes them.
 
-#### Others
-
-**dotenv**
-[Website](https://www.npmjs.com/package/dotenv)
-Loads environment variables from a .env file 
-
+#### Ethereum / Solidity
 **ethereumjs-util**
 [Website](https://www.npmjs.com/package/ethereumjs-util)
 It contains a collection of utility functions for Ethereum (account, address, signature, ...)
@@ -62,13 +61,26 @@ It contains a collection of utility functions for Ethereum (account, address, si
 Warning : indicated as experimental package on 22.08.2022
 Encode and decode method and event from the smart contract abi.
 
-#### solc
+**Eth-Sig-Util**
+A small collection of ethereum signing functions.
+[Website](https://www.npmjs.com/package/ethereumjs-wallet)
+Warning : 
+- Deprecated in favor of '@metamask/eth-sig-util'. [Website](https://github.com/MetaMask/eth-sig-util)
+- It was not possible to use the new version of the library because the test "MetaTxModule.test.js" doesn't work with this one. The check of the signature fails.
+
+**solc**
 [Website](https://github.com/ethereum/solc-js)
 JavaScript bindings for the Solidity compiler.
 
 **Web3**
 Ethereum JavaScript API
 [Website](https://github.com/web3/web3.js)
+
+#### Others
+
+**dotenv**
+[Website](https://www.npmjs.com/package/dotenv)
+Loads environment variables from a .env file 
 
 ### Production 
 
@@ -78,9 +90,6 @@ This section concerns the packages installed in the section `dependencies` of pa
 A wallet implementation
 [Website](https://www.npmjs.com/package/ethereumjs-wallet)
 
-**@metamask/eth-sig-util**
-It is a collection of Ethereum signing functions.
-[Website](https://github.com/MetaMask/eth-sig-util)
 
 **@openzeppelin/contracts**
 Libraries of smart contracts
@@ -92,7 +101,5 @@ Libraries of smart contracts
 Generate UML for smart contracts
 [Website](https://github.com/naddison36/sol2uml)
 `
-nvm use 14
 sol2uml ./contracts
 `
-The Node.JS version 14 is the minimal version.
