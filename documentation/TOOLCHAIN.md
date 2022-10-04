@@ -1,4 +1,4 @@
-* TOOLCHAIN
+# TOOLCHAIN
 
 ## Node.JS  package
 This part describe the list of libraries present in the file `package.json`.
@@ -9,7 +9,7 @@ This section concerns the packages installed in the section `devDependencies` of
 #### Test
 
 **Chai**
-* [Website](https://www.chaijs.com/)  
+* [Website](https://www.chaijs.com/)
 * Library used for the tests
 
 **Coveralls**
@@ -63,10 +63,10 @@ This section concerns the packages installed in the section `devDependencies` of
 
 **Eth-Sig-Util**
 * [Website](https://www.npmjs.com/package/ethereumjs-wallet)
-* A small collection of ethereum signing functions.
-Warning : 
-- Deprecated in favor of '@metamask/eth-sig-util'. [Website](https://github.com/MetaMask/eth-sig-util)
-- It was not possible to use the new version of the library because the test "MetaTxModule.test.js" doesn't work with this one. The check of the signature fails.
+* A small collection of ethereum signing functions. <br />
+Warning :  <br />
+* Deprecated in favor of '@metamask/eth-sig-util' : [website](https://github.com/MetaMask/eth-sig-util)
+* It was not possible to use the new version of the library because the test "MetaTxModule.test.js" doesn't work with this one. The check of the signature fails.
 
 **solc**
 * [Website](https://github.com/ethereum/solc-js)
@@ -97,8 +97,8 @@ This section concerns the packages installed in the section `dependencies` of pa
 ## UML
 
 **sol2uml** 
-[Website](https://github.com/naddison36/sol2uml)
-Generate UML for smart contracts
+* [Website](https://github.com/naddison36/sol2uml)
+* Generate UML for smart contracts
 
 `
 sol2uml ./contracts
