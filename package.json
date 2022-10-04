@@ -57,7 +57,6 @@
     "web3": "^1.8.0"
   },
   "dependencies": {
-    "@openzeppelin/contracts": "^4.7.3",
     "eth-sig-util": "^3.0.1",
     "ethereumjs-wallet": "^1.0.2"
   }
