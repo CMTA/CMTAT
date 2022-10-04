@@ -40,9 +40,11 @@
     "chai": "^4.3.6",
     "coveralls": "^3.1.1",
     "dotenv": "^6.1.0",
-    "eslint": "^8.23.1",
+    "eslint": "^8.24.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-mocha-no-only": "^1.1.1",
+    "eslint-plugin-n": "^15.3.0",
     "eslint-plugin-node": "^8.0.0",
     "eslint-plugin-promise": "^6.0.1",
     "ethereumjs-util": "^6.2.1",
@@ -55,8 +57,8 @@
     "web3": "^1.8.0"
   },
   "dependencies": {
-    "@metamask/eth-sig-util": "^5.0.0",
     "@openzeppelin/contracts": "^4.7.3",
+    "eth-sig-util": "^3.0.1",
     "ethereumjs-wallet": "^1.0.2"
   }
 }
