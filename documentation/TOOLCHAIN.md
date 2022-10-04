@@ -90,9 +90,10 @@ This section concerns the packages installed in the section `dependencies` of pa
 * [Website](https://www.npmjs.com/package/ethereumjs-wallet)
 * A wallet implementation
 
-**@openzeppelin/contracts**
-* [Website](https://www.openzeppelin.com/contracts)
-* Libraries of smart contracts
+## Submodule
+**OpenZeppelin Contracts Upgradeable**
+* [Website](https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/)
+* Upgradeable variant of OpenZeppelin Contracts, meant for use in upgradeable contracts.
 
 ## UML
 
