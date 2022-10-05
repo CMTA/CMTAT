@@ -11,23 +11,27 @@ import "../../openzeppelin-contracts-upgradeable/contracts/token/ERC20/ERC20Upgr
  *
  * Allows the issuer to freeze transfers from a given address
  */
-abstract contract EnforcementModule is Initializable, ContextUpgradeable, ERC20Upgradeable {
-
+abstract contract EnforcementModule is
+    Initializable,
+    ContextUpgradeable,
+    ERC20Upgradeable
+{
     /**
      * @dev Emitted when an address is frozen.
      */
-    event Freeze (address indexed enforcer, address indexed owner);
+    event Freeze(address indexed enforcer, address indexed owner);
 
     /**
      * @dev Emitted when an address is unfrozen.
      */
-    event Unfreeze (address indexed enforcer, address indexed owner);
+    event Unfreeze(address indexed enforcer, address indexed owner);
 
     mapping(address => bool) private _frozen;
 
     bytes32 public constant ENFORCER_ROLE = keccak256("ENFORCER_ROLE");
     uint8 internal constant TRANSFER_REJECTED_FROZEN = 2;
-    string internal constant TEXT_TRANSFER_REJECTED_FROZEN = "All transfers paused";
+    string internal constant TEXT_TRANSFER_REJECTED_FROZEN =
+        "All transfers paused";
 
     /**
      * @dev Initializes the contract in unpaused state.
@@ -37,10 +41,9 @@ abstract contract EnforcementModule is Initializable, ContextUpgradeable, ERC20U
         __Enforcement_init_unchained();
     }
 
-    function __Enforcement_init_unchained() internal initializer {
-    }
+    function __Enforcement_init_unchained() internal initializer {}
 
-        /**
+    /**
      * @dev Returns true if the contract is paused, and false otherwise.
      */
     function frozen(address account) public view virtual returns (bool) {

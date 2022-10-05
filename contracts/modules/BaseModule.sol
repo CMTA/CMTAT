@@ -6,10 +6,9 @@ pragma solidity ^0.8.17;
 import "../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
 import "../../openzeppelin-contracts-upgradeable/contracts/token/ERC20/ERC20Upgradeable.sol";
 
-
 abstract contract BaseModule is Initializable, ERC20Upgradeable {
     /* Events */
-    event Spend (address indexed owner, address indexed spender, uint amount);
+    event Spend(address indexed owner, address indexed spender, uint256 amount);
 
     /* Variables */
     uint8 private _decimals;
@@ -23,14 +22,24 @@ abstract contract BaseModule is Initializable, ERC20Upgradeable {
      * All two of these values are immutable: they can only be set once during
      * construction.
      */
-    function __Base_init(string memory name_, string memory symbol_, uint8 decimals_, string memory tokenId_, string memory terms_) internal initializer {
+    function __Base_init(
+        string memory name_,
+        string memory symbol_,
+        uint8 decimals_,
+        string memory tokenId_,
+        string memory terms_
+    ) internal initializer {
         __ERC20_init(name_, symbol_);
         _decimals = decimals_;
         tokenId = tokenId_;
         terms = terms_;
     }
 
-    function __Base_init_unchained(uint8 decimals_, string memory tokenId_, string memory terms_) internal initializer {
+    function __Base_init_unchained(
+        uint8 decimals_,
+        string memory tokenId_,
+        string memory terms_
+    ) internal initializer {
         _decimals = decimals_;
         tokenId = tokenId_;
         terms = terms_;
@@ -67,7 +76,11 @@ abstract contract BaseModule is Initializable, ERC20Upgradeable {
      * - the caller must have allowance for ``sender``'s tokens of at least
      * `amount`.
      */
-    function transferFrom(address sender, address recipient, uint256 amount) public virtual override returns (bool) {
+    function transferFrom(
+        address sender,
+        address recipient,
+        uint256 amount
+    ) public virtual override returns (bool) {
         bool result = super.transferFrom(sender, recipient, amount);
         if (result == true) {
             emit Spend(sender, _msgSender(), amount);
@@ -83,8 +96,15 @@ abstract contract BaseModule is Initializable, ERC20Upgradeable {
      *
      * - `spender` cannot be the zero address.
      */
-    function approve(address spender, uint256 amount, uint256 currentAllowance) public virtual returns (bool) {
-        require(allowance(_msgSender(), spender) == currentAllowance, "CMTAT: current allowance is not right");
+    function approve(
+        address spender,
+        uint256 amount,
+        uint256 currentAllowance
+    ) public virtual returns (bool) {
+        require(
+            allowance(_msgSender(), spender) == currentAllowance,
+            "CMTAT: current allowance is not right"
+        );
         super.approve(spender, amount);
         return true;
     }
