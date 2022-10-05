@@ -1,10 +1,10 @@
 # Usage instructions
 
-The different tools have been installed and tested on a computer with the following properties :
-`Distributor ID:	Ubuntu
-Description:	Ubuntu 20.04.5 LTS
-Release:	20.04
-Codename:	focal`
+The different tools have been installed and tested on a computer with the following properties :  
+`Distributor ID:	Ubuntu`  
+`Description:	Ubuntu 20.04.5 LTS`  
+`Release:	20.04`  
+`Codename:	focal`
 
 ## Main Toolchain
 
@@ -19,21 +19,22 @@ The main toolchain is composed of theses libraries. The number after the library
 ## Installation
 
 - Clone the project with the option `--recurse-submodules` to get the submodules like the library `openzeppelin contracts upgradeable`
-Example :
-`git clone git@github.com:CMTA/CMTAT.git  --recurse-submodules`
-Or you can install them later with these following commands:
+Example :  
+`git clone git@github.com:CMTA/CMTAT.git  --recurse-submodules`  
+Or you can install them later with these following commands:  
 `git submodule init
 git submodule update`
 
-- To manage several version of Node.js on your machine, you can use the tool `nvm` available here : [website](https://github.com/nvm-sh/nvm).
-Once the tool is installed, you can by example install the version 16.17.0 of Node.js with the following command : `nvm install 16.17.0`. 
+- To manage several version of Node.js on your machine, you can use the tool `nvm` available here : [website](https://github.com/nvm-sh/nvm).  
+Once the tool is installed, you can by example install the version 16.17.0 of Node.js with the following command :    
+`nvm install 16.17.0`.   
 The version of Node.js to install is indicated in the section *Main Toolchain*
 
-- To install the node modules, run the following command at the root of the project :
+- To install the node modules, run the following command at the root of the project :  
 `npm install`
 
-- Installation global of truffle :
-`npm install -g truffle`
+- Installation global of truffle :  
+`npm install -g truffle`  
 The official documentation is available here : [website](https://trufflesuite.com/docs/truffle/getting-started/installation/)
 
 
@@ -49,16 +50,16 @@ Please see the Truffle JavaScript tests documentation for more information about
 ## Coding rules
 
 ### Code Style
-*Javascript*
+*Javascript*  
 The code style for Javascript files is ensured by Eslint.
-If you write code, please run this following command :
+If you write code, please run this following command :  
 `eslint .,
-eslint . --fix`
-*Solidity*
-The code style for Solidity files is ensured by Ethlint (Solium)
-`solium -d .
-solium -d . --fix`
+eslint . --fix`    
+*Solidity*  
+The code style for Solidity files is ensured by Ethlint (Solium)  
+`solium -d .`  
+`solium -d . --fix`
 
 ## Kown bugs
-The coverage with the library *solidity-coverage* does not work anymore.
+The coverage with the library *solidity-coverage* does not work anymore.  
 See : [website](https://github.com/sc-forks/solidity-coverage/issues/694) 
