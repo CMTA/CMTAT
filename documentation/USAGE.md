@@ -55,13 +55,15 @@ The code style for Javascript files is ensured by Eslint.
 If you write code, please run this following command :  
 ```
 npm run-script lint .
+npm run-script lint:fix . 
 ```
-`npm run-script lint:fix .`    
+   
 *Solidity*  
-The code style for Solidity files is ensured by Ethlint (Solium)  
-`npm run-script lint:sol`  
-`npm run-script lint:sol:fix`
-
+The code style for Solidity files is ensured by Ethlint (Solium)
+```
+npm run-script lint:sol  
+npm run-script lint:sol:fix
+```
 ## Kown bugs
 The coverage with the library *solidity-coverage* does not work anymore.  
 See : [website](https://github.com/sc-forks/solidity-coverage/issues/694) 
