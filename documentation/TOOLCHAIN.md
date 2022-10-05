@@ -91,7 +91,7 @@ This section concerns the packages installed in the section `dependencies` of pa
 * A wallet implementation
 
 ## Submodule
-Warning : submodules are not automatically updated when the host repository is updated.
+Warning : submodules are not automatically updated when the host repository is updated.  
 See [www.atlassian.com - git-submodule](https://www.atlassian.com/git/tutorials/git-submodule)
 
 **OpenZeppelin Contracts Upgradeable**
