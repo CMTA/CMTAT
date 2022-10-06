@@ -33,15 +33,18 @@ contract CMTAT is
     uint8 constant TRANSFER_OK = 0;
     string constant TEXT_TRANSFER_OK = "No restriction";
 
+     constructor(address owner, address forwarder, string memory name, string memory symbol, string memory tokenId, string memory terms) ERC2771ContextUpgradeable(forwarder){
+    __CMTAT_init(owner, name, symbol, tokenId, terms);
+    }
+
     function initialize(
         address owner,
-        address forwarder,
         string memory name,
         string memory symbol,
         string memory tokenId,
         string memory terms
     ) public initializer {
-        __CMTAT_init(owner, forwarder, name, symbol, tokenId, terms);
+        __CMTAT_init(owner, name, symbol, tokenId, terms);
     }
 
     /**
@@ -52,7 +55,6 @@ contract CMTAT is
      */
     function __CMTAT_init(
         address owner,
-        address forwarder,
         string memory name,
         string memory symbol,
         string memory tokenId,
@@ -64,7 +66,6 @@ contract CMTAT is
         __ERC20_init_unchained(name, symbol);
         __Pausable_init_unchained();
         __Enforcement_init_unchained();
-        __ERC2771Context_init_unchained(forwarder);
         __MetaTx_init_unchained();
         __Snapshot_init_unchained();
         __CMTAT_init_unchained(owner);
@@ -279,13 +280,6 @@ contract CMTAT is
     {
         ruleEngine = ruleEngine_;
         emit RuleEngineSet(address(ruleEngine_));
-    }
-
-    function setTrustedForwarder(address trustedForwarder_)
-        public
-        onlyRole(DEFAULT_ADMIN_ROLE)
-    {
-        _trustedForwarder = trustedForwarder_;
     }
 
     function _beforeTokenTransfer(

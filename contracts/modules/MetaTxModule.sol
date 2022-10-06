@@ -11,8 +11,9 @@ import "../../openzeppelin-contracts-upgradeable/contracts/metatx/ERC2771Context
  */
 abstract contract MetaTxModule is ERC2771ContextUpgradeable {
     function __MetaTx_init(address forwarder) internal initializer {
+        //require(forwarder != address(0), "the forwarder can not be null");
         __Context_init_unchained();
-        __ERC2771Context_init_unchained(forwarder);
+        ERC2771ContextUpgradeable(forwarder);
         __MetaTx_init_unchained();
     }
 
