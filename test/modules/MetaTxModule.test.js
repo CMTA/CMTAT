@@ -1,6 +1,6 @@
 const { expectEvent, expectRevert } = require('@openzeppelin/test-helpers')
 // TODO : Update the library
-// const ethSigUtil = require('@metamask/eth-sig-util');
+// const ethSigUtil = require('@metamask/eth-sig-util')
 const ethSigUtil = require('eth-sig-util')
 const Wallet = require('ethereumjs-wallet').default
 const { DEFAULT_ADMIN_ROLE } = require('../utils')
@@ -28,6 +28,7 @@ contract(
   ]) {
     beforeEach(async function () {
       this.trustedForwarder = await MinimalForwarderMock.new()
+      this.trustedForwarder.initialize()
       this.cmtat = await CMTAT.new(owner, this.trustedForwarder.address, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', { from: owner })
     })
 
@@ -78,7 +79,7 @@ contract(
           data
         }
         // TODO : code for the new version of the library, it doesn't compile
-        //const sign = ethSigUtil.signTypedData( {privateKey  : this.wallet.getPrivateKey(), data: { ...this.data, message: req }, version : 'V4'});
+        // const sign = ethSigUtil.signTypedData( {privateKey  : this.wallet.getPrivateKey(), data: { ...this.data, message: req }, version : 'V4'});
         const sign = ethSigUtil.signTypedMessage(this.wallet.getPrivateKey(), {
           data: { ...this.data, message: req }
         })

@@ -33,8 +33,15 @@ contract CMTAT is
     uint8 constant TRANSFER_OK = 0;
     string constant TEXT_TRANSFER_OK = "No restriction";
 
-     constructor(address owner, address forwarder, string memory name, string memory symbol, string memory tokenId, string memory terms) ERC2771ContextUpgradeable(forwarder){
-    __CMTAT_init(owner, name, symbol, tokenId, terms);
+    constructor(
+        address owner,
+        address forwarder,
+        string memory name,
+        string memory symbol,
+        string memory tokenId,
+        string memory terms
+    ) MetaTxModule(forwarder) {
+        __CMTAT_init(owner, name, symbol, tokenId, terms);
     }
 
     function initialize(
@@ -66,7 +73,6 @@ contract CMTAT is
         __ERC20_init_unchained(name, symbol);
         __Pausable_init_unchained();
         __Enforcement_init_unchained();
-        __MetaTx_init_unchained();
         __Snapshot_init_unchained();
         __CMTAT_init_unchained(owner);
     }

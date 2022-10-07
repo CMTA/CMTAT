@@ -10,12 +10,12 @@ import "../../openzeppelin-contracts-upgradeable/contracts/metatx/ERC2771Context
  * Useful for to provide UX where the user does not pay gas for token exchange
  */
 abstract contract MetaTxModule is ERC2771ContextUpgradeable {
-    function __MetaTx_init(address forwarder) internal initializer {
-        //require(forwarder != address(0), "the forwarder can not be null");
-        __Context_init_unchained();
-        ERC2771ContextUpgradeable(forwarder);
-        __MetaTx_init_unchained();
+    /// @custom:oz-upgrades-unsafe-allow constructor
+    constructor(address trustedForwarder)
+        ERC2771ContextUpgradeable(trustedForwarder)
+    {
+        // TODO : Emit an event ?
+        // See : https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/blob/master/contracts/mocks/ERC2771ContextMockUpgradeable.sol
+        // emit Sender(_msgSender());
     }
-
-    function __MetaTx_init_unchained() internal initializer {}
 }

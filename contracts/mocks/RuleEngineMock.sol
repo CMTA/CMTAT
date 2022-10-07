@@ -6,6 +6,7 @@ import "../interfaces/IRule.sol";
 import "../interfaces/IRuleEngine.sol";
 import "./RuleMock.sol";
 
+
 contract RuleEngineMock is IRuleEngine {
     IRule[] internal _rules;
 

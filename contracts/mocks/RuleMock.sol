@@ -4,6 +4,7 @@ pragma solidity ^0.8.17;
 
 import "../interfaces/IRule.sol";
 
+
 contract RuleMock is IRule {
     uint8 constant AMOUNT_TOO_HIGH = 10;
     string constant TEXT_AMOUNT_TOO_HIGH = "Amount too high";
