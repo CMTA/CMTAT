@@ -47,7 +47,7 @@ contract('MetaTxModule', function ([_, owner, address1, address2, address3, trus
       this.domain = {
         name: NAME,
         version: VERSION,
-        chainId: 1,
+        chainId: await web3.eth.getChainId(),
         verifyingContract: this.forwarder.address,
       };
       this.types = {
