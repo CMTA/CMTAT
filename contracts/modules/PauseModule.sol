@@ -15,5 +15,6 @@ import "../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializ
 abstract contract PauseModule is Initializable, PausableUpgradeable {
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     uint8 internal constant TRANSFER_REJECTED_PAUSED = 1;
-    string internal constant TEXT_TRANSFER_REJECTED_PAUSED = "All transfers paused";
+    string internal constant TEXT_TRANSFER_REJECTED_PAUSED =
+        "All transfers paused";
 }
