@@ -1,6 +1,6 @@
 const { expectEvent, expectRevert } = require('@openzeppelin/test-helpers')
 // TODO : Update the library
-// const ethSigUtil = require('@metamask/eth-sig-util');
+// const ethSigUtil = require('@metamask/eth-sig-util')
 const ethSigUtil = require('eth-sig-util')
 const Wallet = require('ethereumjs-wallet').default
 const { DEFAULT_ADMIN_ROLE } = require('../utils')
@@ -24,59 +24,16 @@ contract(
     _,
     owner,
     address1,
-    address2,
-    address3,
-    trustedForwarder,
-    defaultForwarder
+    address2
   ]) {
     beforeEach(async function () {
-      this.cmtat = await CMTAT.new({ from: owner })
-      await this.cmtat.initialize(
-        owner,
-        defaultForwarder,
-        'CMTA Token',
-        'CMTAT',
-        'CMTAT_ISIN',
-        'https://cmta.ch',
-        { from: owner }
-      )
-    })
-
-    context('Owner', function () {
-      it('can change the trustedForwarder', async function () {
-        (await this.cmtat.isTrustedForwarder(trustedForwarder)).should.equal(
-          false
-        );
-        (await this.cmtat.isTrustedForwarder(defaultForwarder)).should.equal(
-          true
-        )
-        await this.cmtat.setTrustedForwarder(trustedForwarder, { from: owner });
-        (await this.cmtat.isTrustedForwarder(trustedForwarder)).should.equal(
-          true
-        );
-        (await this.cmtat.isTrustedForwarder(defaultForwarder)).should.equal(
-          false
-        )
-      })
-
-      it('reverts when calling from non-owner', async function () {
-        await expectRevert(
-          this.cmtat.setTrustedForwarder(trustedForwarder, { from: address1 }),
-          'AccessControl: account ' +
-            address1.toLowerCase() +
-            ' is missing role ' +
-            DEFAULT_ADMIN_ROLE
-        )
-      })
+      this.trustedForwarder = await MinimalForwarderMock.new()
+      this.trustedForwarder.initialize()
+      this.cmtat = await CMTAT.new(owner, this.trustedForwarder.address, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', { from: owner })
     })
 
     context('Transferring without paying gas', function () {
       beforeEach(async function () {
-        this.forwarder = await MinimalForwarderMock.new()
-        await this.forwarder.initialize()
-        await this.cmtat.setTrustedForwarder(this.forwarder.address, {
-          from: owner
-        })
         this.wallet = Wallet.generate()
         this.sender = web3.utils.toChecksumAddress(
           this.wallet.getAddressString()
@@ -86,7 +43,7 @@ contract(
           name: NAME,
           version: VERSION,
           chainId: await web3.eth.getChainId(),
-          verifyingContract: this.forwarder.address
+          verifyingContract: this.trustedForwarder.address
         }
         this.types = {
           EIP712Domain,
@@ -118,16 +75,16 @@ contract(
           to: this.cmtat.address,
           value: '0',
           gas: '100000',
-          nonce: (await this.forwarder.getNonce(this.sender)).toString(),
+          nonce: (await this.trustedForwarder.getNonce(this.sender)).toString(),
           data
         }
         // TODO : code for the new version of the library, it doesn't compile
-        // const sign  = ethSigUtil.signTypedData( {privateKey  : this.wallet.getPrivateKey(), data: { ...this.data, message: req }, version : 'V4'});
+        // const sign = ethSigUtil.signTypedData( {privateKey  : this.wallet.getPrivateKey(), data: { ...this.data, message: req }, version : 'V4'});
         const sign = ethSigUtil.signTypedMessage(this.wallet.getPrivateKey(), {
           data: { ...this.data, message: req }
         })
         const balanceBefore = await web3.eth.getBalance(this.sender)
-        await this.forwarder.execute(req, sign);
+        await this.trustedForwarder.execute(req, sign);
         (await this.cmtat.balanceOf(this.sender)).should.be.bignumber.equal(
           '20'
         );

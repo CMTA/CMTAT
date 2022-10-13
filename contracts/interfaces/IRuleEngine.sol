@@ -4,6 +4,7 @@ pragma solidity ^0.8.17;
 
 import "./IRule.sol";
 
+
 interface IRuleEngine {
     function setRules(IRule[] calldata rules_) external;
 
