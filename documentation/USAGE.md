@@ -28,36 +28,34 @@ To install the node modules required, run the following command at the root of t
 
 `npm install`
 
-If not already installed, install [Truffle](https://trufflesuite.com/docs/truffle/getting-started/installation/) on your system:
+For truffle you can use the installed version in the node modules by using the command `npx`, for example
+`npx truffle`
+We recommand this way to do to have the same version as the one used to test the project.
 
-`npm install -g truffle`  
-
-
-The official documentation is available here : [website](https://trufflesuite.com/docs/truffle/getting-started/installation/)
+It is also possible to install globally truffle :
+(https://trufflesuite.com/docs/truffle/getting-started/installation/) on your system:
+`npm install -g truffle` 
+You can read the official [documentation](https://trufflesuite.com/docs/truffle/getting-started/installation/) for more information.
 
 
 ## Testing
 
 Tests are written in JavaScript and run with Truffle with the command 
 
-`truffle test`
-
-Note Truffle has to be installed globally (`npm -g`) or used with the npx command. Everything else needed is installed through npm install with the right versions.
-
+Package locale : `npx truffle test`
+Installation globable :  `truffle test`
 
 ## Code style guidelines
 
 We use linters to ensure consistent coding style. If you contribute code, please run this following command: 
 
 For JavaScript:
-
 ```
 npm run-script lint .
 npm run-script lint:fix . 
 ```
    
 For Solidity:
-
 ```
 npm run-script lint:sol  
 npm run-script lint:sol:fix
