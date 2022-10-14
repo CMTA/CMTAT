@@ -124,6 +124,9 @@ Please see the directory [documentation](documentation)
 modules API. 
 * The file [USAGE.md](documentation/USAGE.md) contains the instructions to install the libraries.
 
+Please see the [doc/modules](doc/modules) for documentation of the
+modules API.
+
 CMTA will release further documentation describing the CMTAT framework in a platform-agnostic way, and covering legal aspects.
 
 ## Intellectual property

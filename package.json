@@ -8,18 +8,20 @@
   ],
   "scripts": {
     "test": "npx truffle test",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
-    "lint:sol": "solium -d .",
-    "lint:sol:fix": "solium -d . --fix",
-    "lint:all": "npm run lint && npm run lint:sol",
-    "lint:all:fix": "npm run lint:fix && npm run lint:sol:fix",
+    "lint:js": "npx eslint test",
+    "lint:js:fix": "npx eslint test --fix",
+    "lint:sol": "npx solium -d contracts",
+    "lint:sol:fix": "npx solium -d contracts --fix",
+    "lint:all": "npx run lint && npm run lint:sol",
+    "lint:all:fix": "npx run lint:fix && npm run lint:sol:fix",
+    "lint:sol:prettier": "npx prettier --write 'contracts/**/*.sol'",
+    "lint:js:prettier": "npx prettier test",
     "console": "truffle console",
     "coverage": "npx solidity-coverage"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/veorq/CMTAT.git"
+    "url": "https://github.com/CMTA/CMTAT.git"
   },
   "keywords": [
     "solidity",
@@ -29,37 +31,37 @@
     "security",
     "scai"
   ],
-  "author": "Sébastien Krafft <sebastien.krafft@mtpelerin.com>",
+  "author": "CMTA",
   "license": "MPL",
   "bugs": {
-    "url": "https://github.com/veorq/CMTAT/issues"
+    "url": "https://github.com/CMTA/CMTAT/issues"
   },
-  "homepage": "https://github.com/veorq/CMTAT",
+  "homepage": "https://github.com/CMTA/CMTAT",
   "devDependencies": {
-    "chai": "^4.2.0",
-    "coveralls": "^3.0.2",
+    "@openzeppelin/test-helpers": "^0.5.16",
+    "chai": "^4.3.6",
+    "coveralls": "^3.1.1",
     "dotenv": "^6.1.0",
-    "eslint": "^5.13.0",
-    "eslint-config-standard": "^12.0.0",
-    "eslint-plugin-import": "^2.16.0",
+    "eslint": "^8.24.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-mocha-no-only": "^1.1.1",
+    "eslint-plugin-n": "^15.3.0",
     "eslint-plugin-node": "^8.0.0",
-    "eslint-plugin-promise": "^4.0.1",
-    "eslint-plugin-standard": "^4.0.0",
-    "ethereumjs-util": "^6.0.0",
+    "eslint-plugin-promise": "^6.0.1",
+    "ethereumjs-util": "^6.2.1",
     "ethjs-abi": "^0.2.1",
-    "ganache-cli": "^6.12.1",
-    "openzeppelin-solidity": "^2.2.0",
-    "openzeppelin-test-helpers": "^0.5.1",
-    "solc": "^0.7.5",
-    "solidity-coverage": "^0.7.13",
-    "solium": "^1.2.4",
-    "truffle": "^5.1.57",
-    "truffle-flattener": "^1.2.12",
-    "truffle-hdwallet-provider": "0.0.6",
-    "web3": "^1.0.0-beta.41"
+    "ethlint": "^1.2.5",
+    "prettier": "2.7.1",
+    "prettier-plugin-solidity": "^1.0.0-beta.24",
+    "solc": "^0.7.6",
+    "solidity-coverage": "^0.8.2",
+    "truffle": "^5.5.31",
+    "truffle-flattener": "^1.6.0",
+    "web3": "^1.8.0"
   },
   "dependencies": {
     "eth-sig-util": "^3.0.1",
-    "ethereumjs-wallet": "^1.0.1"
+    "ethereumjs-wallet": "^1.0.2"
   }
 }

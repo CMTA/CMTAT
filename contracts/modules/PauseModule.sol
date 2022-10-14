@@ -1,6 +1,6 @@
 //SPDX-License-Identifier: MPL-2.0
 
-pragma solidity ^0.8.2;
+pragma solidity ^0.8.17;
 
 import "../../openzeppelin-contracts-upgradeable/contracts/security/PausableUpgradeable.sol";
 import "../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
@@ -15,5 +15,6 @@ import "../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializ
 abstract contract PauseModule is Initializable, PausableUpgradeable {
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     uint8 internal constant TRANSFER_REJECTED_PAUSED = 1;
-    string internal constant TEXT_TRANSFER_REJECTED_PAUSED = "All transfers paused";
+    string internal constant TEXT_TRANSFER_REJECTED_PAUSED =
+        "All transfers paused";
 }
