@@ -28,7 +28,7 @@ abstract contract BaseModule is Initializable, ERC20Upgradeable {
         uint8 decimals_,
         string memory tokenId_,
         string memory terms_
-    ) internal initializer {
+    ) internal onlyInitializing {
         __ERC20_init(name_, symbol_);
         _decimals = decimals_;
         tokenId = tokenId_;
@@ -39,7 +39,7 @@ abstract contract BaseModule is Initializable, ERC20Upgradeable {
         uint8 decimals_,
         string memory tokenId_,
         string memory terms_
-    ) internal initializer {
+    ) internal onlyInitializing {
         _decimals = decimals_;
         tokenId = tokenId_;
         terms = terms_;

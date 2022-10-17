@@ -28,8 +28,9 @@ contract(
   ]) {
     beforeEach(async function () {
       this.trustedForwarder = await MinimalForwarderMock.new()
+      this.cmtat = await CMTAT.new(this.trustedForwarder.address, { from: owner })
       this.trustedForwarder.initialize()
-      this.cmtat = await CMTAT.new(owner, this.trustedForwarder.address, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', { from: owner })
+      await this.cmtat.initialize(owner, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', { from: owner })
     })
 
     context('Transferring without paying gas', function () {

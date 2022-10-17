@@ -36,12 +36,12 @@ abstract contract EnforcementModule is
     /**
      * @dev Initializes the contract in unpaused state.
      */
-    function __Enforcement_init() internal initializer {
+    function __Enforcement_init() internal onlyInitializing {
         __Context_init_unchained();
         __Enforcement_init_unchained();
     }
 
-    function __Enforcement_init_unchained() internal initializer {}
+    function __Enforcement_init_unchained() internal onlyInitializing {}
 
     /**
      * @dev Returns true if the contract is paused, and false otherwise.

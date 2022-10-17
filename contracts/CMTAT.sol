@@ -34,14 +34,8 @@ contract CMTAT is
     string constant TEXT_TRANSFER_OK = "No restriction";
 
     constructor(
-        address owner,
-        address forwarder,
-        string memory name,
-        string memory symbol,
-        string memory tokenId,
-        string memory terms
+        address forwarder
     ) MetaTxModule(forwarder) {
-        __CMTAT_init(owner, name, symbol, tokenId, terms);
     }
 
     function initialize(
@@ -66,7 +60,7 @@ contract CMTAT is
         string memory symbol,
         string memory tokenId,
         string memory terms
-    ) internal initializer {
+    ) internal onlyInitializing {
         __Context_init_unchained();
         __Base_init_unchained(0, tokenId, terms);
         __AccessControl_init_unchained();
@@ -77,7 +71,7 @@ contract CMTAT is
         __CMTAT_init_unchained(owner);
     }
 
-    function __CMTAT_init_unchained(address owner) internal initializer {
+    function __CMTAT_init_unchained(address owner) internal onlyInitializing {
         _setupRole(DEFAULT_ADMIN_ROLE, owner);
         _setupRole(ENFORCER_ROLE, owner);
         _setupRole(MINTER_ROLE, owner);
