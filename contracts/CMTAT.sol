@@ -33,9 +33,11 @@ contract CMTAT is
     uint8 constant TRANSFER_OK = 0;
     string constant TEXT_TRANSFER_OK = "No restriction";
 
+    /// @custom:oz-upgrades-unsafe-allow constructor
     constructor(
         address forwarder
     ) MetaTxModule(forwarder) {
+        _disableInitializers();
     }
 
     function initialize(
