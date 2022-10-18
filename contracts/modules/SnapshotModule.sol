@@ -32,7 +32,7 @@ abstract contract SnapshotModule is
     mapping(address => Snapshots) private _accountBalanceSnapshots;
     Snapshots private _totalSupplySnapshots;
 
-    uint256 private _currentSnapshot = 0;
+    uint256 private _currentSnapshot;
 
     uint256[] private _scheduledSnapshots;
 
@@ -41,7 +41,9 @@ abstract contract SnapshotModule is
         __Snapshot_init_unchained();
     }
 
-    function __Snapshot_init_unchained() internal onlyInitializing{}
+    function __Snapshot_init_unchained() internal onlyInitializing{
+        _currentSnapshot = 0;
+    }
 
     function _scheduleSnapshot(uint256 time) internal returns (uint256) {
         require(block.timestamp < time, "Snapshot scheduled in the past");
