@@ -3,9 +3,9 @@ const { expectEvent, expectRevert } = require('@openzeppelin/test-helpers')
 // const ethSigUtil = require('@metamask/eth-sig-util')
 const ethSigUtil = require('eth-sig-util')
 const Wallet = require('ethereumjs-wallet').default
-const { DEFAULT_ADMIN_ROLE } = require('../utils')
+const { DEFAULT_ADMIN_ROLE } = require('../../utils')
 const { should } = require('chai').should()
-
+const { deployProxy } = require('@openzeppelin/truffle-upgrades')
 const CMTAT = artifacts.require('CMTAT')
 const MinimalForwarderMock = artifacts.require('MinimalForwarderMock')
 
@@ -28,9 +28,8 @@ contract(
   ]) {
     beforeEach(async function () {
       this.trustedForwarder = await MinimalForwarderMock.new()
-      this.cmtat = await CMTAT.new(this.trustedForwarder.address, { from: owner })
       this.trustedForwarder.initialize()
-      await this.cmtat.initialize(owner, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', { from: owner })
+      this.cmtat = await deployProxy(CMTAT, [owner, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch'], { initializer: 'initialize', constructorArgs: [this.trustedForwarder.address]})
     })
 
     context('Transferring without paying gas', function () {
