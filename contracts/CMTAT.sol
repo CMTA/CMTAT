@@ -33,6 +33,7 @@ contract CMTAT is
     uint8 constant TRANSFER_OK = 0;
     string constant TEXT_TRANSFER_OK = "No restriction";
 
+    /// @custom:oz-upgrades-unsafe-allow constructor
     constructor(
         address forwarder
     ) MetaTxModule(forwarder) {
@@ -270,6 +271,7 @@ contract CMTAT is
         terms = terms_;
     }
 
+    /// @custom:oz-upgrades-unsafe-allow selfdestruct
     function kill() public onlyRole(DEFAULT_ADMIN_ROLE) {
         selfdestruct(payable(_msgSender()));
     }

@@ -4,7 +4,7 @@ const chai = require('chai')
 const expect = chai.expect
 const should = chai.should()
 const CMTAT = artifacts.require('CMTAT')
-
+const { deployProxy } = require('@openzeppelin/truffle-upgrades')
 contract(
   'AuthorizationModule',
   function ([_, owner, address1, address2, address3, fakeRuleEngine]) {
