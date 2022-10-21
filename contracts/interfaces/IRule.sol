@@ -13,14 +13,14 @@ interface IRule {
         address _from,
         address _to,
         uint256 _amount
-    ) external view returns (uint8);
+    ) external view returns (uint256);
 
-    function canReturnTransferRestrictionCode(uint8 _restrictionCode)
+    function canReturnTransferRestrictionCode(uint256 _restrictionCode)
         external
         view
         returns (bool);
 
-    function messageForTransferRestriction(uint8 _restrictionCode)
+    function messageForTransferRestriction(uint256 _restrictionCode)
         external
         view
         returns (string memory);

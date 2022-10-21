@@ -34,9 +34,9 @@ contract RuleEngineMock is IRuleEngine {
         address _from,
         address _to,
         uint256 _amount
-    ) public view override returns (uint8) {
+    ) public view override returns (uint256) {
         for (uint256 i = 0; i < _rules.length; i++) {
-            uint8 restriction = _rules[i].detectTransferRestriction(
+            uint256 restriction = _rules[i].detectTransferRestriction(
                 _from,
                 _to,
                 _amount
@@ -56,7 +56,7 @@ contract RuleEngineMock is IRuleEngine {
         return detectTransferRestriction(_from, _to, _amount) == 0;
     }
 
-    function messageForTransferRestriction(uint8 _restrictionCode)
+    function messageForTransferRestriction(uint256 _restrictionCode)
         public
         view
         override

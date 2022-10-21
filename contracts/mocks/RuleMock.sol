@@ -22,11 +22,11 @@ contract RuleMock is IRule {
         address, /* _from */
         address, /* _to */
         uint256 _amount
-    ) public pure override returns (uint8) {
+    ) public pure override returns (uint256) {
         return _amount < 20 ? 0 : AMOUNT_TOO_HIGH;
     }
 
-    function canReturnTransferRestrictionCode(uint8 _restrictionCode)
+    function canReturnTransferRestrictionCode(uint256 _restrictionCode)
         public
         pure
         override
@@ -35,7 +35,7 @@ contract RuleMock is IRule {
         return _restrictionCode == AMOUNT_TOO_HIGH;
     }
 
-    function messageForTransferRestriction(uint8 _restrictionCode)
+    function messageForTransferRestriction(uint256 _restrictionCode)
         external
         pure
         override

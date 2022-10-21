@@ -206,7 +206,7 @@ contract CMTAT is
         address from,
         address to,
         uint256 amount
-    ) public view returns (uint8 code) {
+    ) public view returns (uint256 code) {
         if (paused()) {
             return TRANSFER_REJECTED_PAUSED;
         } else if (frozen(from)) {

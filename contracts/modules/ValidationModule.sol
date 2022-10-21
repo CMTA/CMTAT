@@ -57,7 +57,7 @@ abstract contract ValidationModule is Initializable, ContextUpgradeable {
         address from,
         address to,
         uint256 amount
-    ) internal view returns (uint8) {
+    ) internal view returns (uint256) {
         return ruleEngine.detectTransferRestriction(from, to, amount);
     }
 

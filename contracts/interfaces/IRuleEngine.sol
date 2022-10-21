@@ -24,9 +24,9 @@ interface IRuleEngine {
         address _from,
         address _to,
         uint256 _value
-    ) external view returns (uint8);
+    ) external view returns (uint256);
 
-    function messageForTransferRestriction(uint8 _restrictionCode)
+    function messageForTransferRestriction(uint256 _restrictionCode)
         external
         view
         returns (string memory);
