@@ -12,16 +12,6 @@ interface IRuleEngine is IERC1404{
     function setRules(IRule[] calldata rules_) external;
 
     /**
-     * @dev add one single rule
-     */
-    function addRule(IRule rule_) external;
-     
-    /**
-     * @dev add several rules
-     */
-    function addRules(IRule[] calldata rules_) external;
-
-    /**
     * @dev return the number of rules
     */
     function ruleLength() external view returns (uint256);
