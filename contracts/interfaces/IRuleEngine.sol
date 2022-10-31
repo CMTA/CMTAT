@@ -13,4 +13,8 @@ interface IRuleEngine is IRuleCommon{
     function rule(uint256 ruleId) external view returns (IRule);
 
     function rules() external view returns (IRule[] memory);
+
+    function addRule(IRule rule_) external;
+     
+    function addRules(IRule[] calldata rules_) external;
 }

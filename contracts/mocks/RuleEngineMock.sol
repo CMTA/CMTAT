@@ -18,6 +18,16 @@ contract RuleEngineMock is IRuleEngine {
         _rules = rules_;
     }
 
+    function addRule(IRule rule_) public override {
+        _rules.push(rule_);
+    }
+
+    function addRules(IRule[] calldata rules_) external override {
+        for(uint i = 0; i < rules_.length; ++i){
+            addRule(rules_[i]);
+        }
+    }
+
     function ruleLength() external view override returns (uint256) {
         return _rules.length;
     }
