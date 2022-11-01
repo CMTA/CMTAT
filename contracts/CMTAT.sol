@@ -32,6 +32,8 @@ contract CMTAT is
 {
     uint8 constant TRANSFER_OK = 0;
     string constant TEXT_TRANSFER_OK = "No restriction";
+    event Term(string indexed newTerm);
+    event TokenId(string indexed newTokenId);
 
     constructor(
         address owner,
@@ -267,6 +269,7 @@ contract CMTAT is
         onlyRole(DEFAULT_ADMIN_ROLE)
     {
         tokenId = tokenId_;
+        emit TokenId(tokenId_);
     }
 
     function setTerms(string memory terms_)
@@ -274,6 +277,7 @@ contract CMTAT is
         onlyRole(DEFAULT_ADMIN_ROLE)
     {
         terms = terms_;
+        emit Term(terms_);
     }
 
     function kill() public onlyRole(DEFAULT_ADMIN_ROLE) {
