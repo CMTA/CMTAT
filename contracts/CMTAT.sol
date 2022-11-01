@@ -241,7 +241,6 @@ contract CMTAT is
     function scheduleSnapshot(uint256 time)
         public
         onlyRole(SNAPSHOOTER_ROLE)
-        returns (uint256)
     {
         _scheduleSnapshot(time);
     }

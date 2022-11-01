@@ -43,13 +43,12 @@ abstract contract SnapshotModule is
 
     function __Snapshot_init_unchained() internal initializer {}
 
-    function _scheduleSnapshot(uint256 time) internal returns (uint256) {
+    function _scheduleSnapshot(uint256 time) internal {
         require(block.timestamp < time, "Snapshot scheduled in the past");
         (bool found, ) = _findScheduledSnapshotIndex(time);
         require(!found, "Snapshot already scheduled for this time");
         _scheduledSnapshots.push(time);
         emit SnapshotSchedule(0, time);
-        return time;
     }
 
     function _rescheduleSnapshot(uint256 oldTime, uint256 newTime)
