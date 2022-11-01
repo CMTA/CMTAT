@@ -54,7 +54,6 @@ abstract contract SnapshotModule is
 
     function _rescheduleSnapshot(uint256 oldTime, uint256 newTime)
         internal
-        returns (uint256)
     {
         require(block.timestamp < oldTime, "Snapshot already done");
         require(block.timestamp < newTime, "Snapshot scheduled in the past");
@@ -68,7 +67,6 @@ abstract contract SnapshotModule is
         _scheduledSnapshots[index] = newTime;
 
         emit SnapshotSchedule(oldTime, newTime);
-        return newTime;
     }
 
     function _unscheduleSnapshot(uint256 time) internal returns (uint256) {

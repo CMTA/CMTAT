@@ -249,9 +249,8 @@ contract CMTAT is
     function rescheduleSnapshot(uint256 oldTime, uint256 newTime)
         public
         onlyRole(SNAPSHOOTER_ROLE)
-        returns (uint256)
     {
-        return _rescheduleSnapshot(oldTime, newTime);
+        _rescheduleSnapshot(oldTime, newTime);
     }
 
     function unscheduleSnapshot(uint256 time)
