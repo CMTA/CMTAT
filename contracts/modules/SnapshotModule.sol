@@ -69,7 +69,7 @@ abstract contract SnapshotModule is
         emit SnapshotSchedule(oldTime, newTime);
     }
 
-    function _unscheduleSnapshot(uint256 time) internal returns (uint256) {
+    function _unscheduleSnapshot(uint256 time) internal {
         require(block.timestamp < time, "Snapshot already done");
         (bool found, uint256 index) = _findScheduledSnapshotIndex(time);
         require(found, "Snapshot not found");
@@ -77,8 +77,6 @@ abstract contract SnapshotModule is
         _removeScheduledItem(index);
 
         emit SnapshotUnschedule(time);
-
-        return time;
     }
 
     function getNextSnapshots() public view returns (uint256[] memory) {
