@@ -29,7 +29,6 @@ abstract contract EnforcementModule is
     mapping(address => bool) private _frozen;
 
     bytes32 public constant ENFORCER_ROLE = keccak256("ENFORCER_ROLE");
-    uint8 internal constant TRANSFER_REJECTED_FROZEN = 2;
     string internal constant TEXT_TRANSFER_REJECTED_FROZEN =
         "All transfers paused";
 
