@@ -208,13 +208,13 @@ contract CMTAT is
         uint256 amount
     ) public view returns (uint8 code) {
         if (paused()) {
-            return uint8 (REJECTED_CODE.TRANSFER_REJECTED_PAUSED);
+            return uint8(REJECTED_CODE.TRANSFER_REJECTED_PAUSED);
         } else if (frozen(from)) {
-            return uint8 (REJECTED_CODE.TRANSFER_REJECTED_FROZEN);
+            return uint8(REJECTED_CODE.TRANSFER_REJECTED_FROZEN);
         } else if (address(ruleEngine) != address(0)) {
             return _detectTransferRestriction(from, to, amount);
         }
-        return uint8 (REJECTED_CODE.TRANSFER_OK);
+        return uint8(REJECTED_CODE.TRANSFER_OK);
     }
 
     /**
@@ -227,11 +227,11 @@ contract CMTAT is
         view
         returns (string memory message)
     {
-        if (restrictionCode == uint8 (REJECTED_CODE.TRANSFER_OK)) {
+        if (restrictionCode == uint8(REJECTED_CODE.TRANSFER_OK)) {
             return TEXT_TRANSFER_OK;
-        } else if (restrictionCode == uint8 (REJECTED_CODE.TRANSFER_REJECTED_PAUSED)) {
+        } else if (restrictionCode == uint8(REJECTED_CODE.TRANSFER_REJECTED_PAUSED)) {
             return TEXT_TRANSFER_REJECTED_PAUSED;
-        } else if (restrictionCode == uint8  (REJECTED_CODE.TRANSFER_REJECTED_FROZEN)) {
+        } else if (restrictionCode == uint8(REJECTED_CODE.TRANSFER_REJECTED_FROZEN)) {
             return TEXT_TRANSFER_REJECTED_FROZEN;
         } else if (address(ruleEngine) != address(0)) {
             return _messageForTransferRestriction(restrictionCode);
