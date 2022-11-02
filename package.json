@@ -17,7 +17,8 @@
     "lint:sol:prettier": "npx prettier --write 'contracts/**/*.sol'",
     "lint:js:prettier": "npx prettier test",
     "console": "truffle console",
-    "coverage": "npx solidity-coverage"
+    "coverage": "npx solidity-coverage",
+    "uml" : "sol2uml class contracts"
   },
   "repository": {
     "type": "git",
@@ -55,6 +56,7 @@
     "ethlint": "^1.2.5",
     "prettier": "2.7.1",
     "prettier-plugin-solidity": "^1.0.0-beta.24",
+    "sol2uml": "^2.2.5",
     "solc": "^0.7.6",
     "solidity-coverage": "^0.8.2",
     "truffle": "^5.5.31",
