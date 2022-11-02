@@ -36,12 +36,12 @@ abstract contract SnapshotModule is
 
     uint256[] private _scheduledSnapshots;
 
-    function __Snapshot_init() internal initializer {
+    function __Snapshot_init() internal onlyInitializing {
         __Context_init_unchained();
         __Snapshot_init_unchained();
     }
 
-    function __Snapshot_init_unchained() internal initializer {}
+    function __Snapshot_init_unchained() internal onlyInitializing{}
 
     function _scheduleSnapshot(uint256 time) internal returns (uint256) {
         require(block.timestamp < time, "Snapshot scheduled in the past");

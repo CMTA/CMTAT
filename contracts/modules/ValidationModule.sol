@@ -22,14 +22,14 @@ abstract contract ValidationModule is Initializable, ContextUpgradeable {
     /**
      * @dev Initializes the contract with rule engine.
      */
-    function __Validation_init(IRuleEngine ruleEngine_) internal initializer {
+    function __Validation_init(IRuleEngine ruleEngine_) internal onlyInitializing {
         __Context_init_unchained();
         __Validation_init_unchained(ruleEngine_);
     }
 
     function __Validation_init_unchained(IRuleEngine ruleEngine_)
         internal
-        initializer
+        onlyInitializing
     {
         if (address(ruleEngine_) != address(0)) {
             ruleEngine = ruleEngine_;
