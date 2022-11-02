@@ -4,12 +4,7 @@ const { should } = require('chai').should()
 
 const CMTAT = artifacts.require('CMTAT')
 
-contract('PauseModule', function ([_, owner, address1, address2, address3]) {
-  beforeEach(async function () {
-    this.cmtat = await CMTAT.new(_, { from: owner })
-    await this.cmtat.initialize(owner, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', { from: owner })
-  })
-
+function PauseModuleCommon (owner, address1, address2, address3) {
   context('Pause', function () {
     it('can be paused by the owner', async function () {
       ({ logs: this.logs } = await this.cmtat.pause({ from: owner }))
@@ -91,4 +86,5 @@ contract('PauseModule', function ([_, owner, address1, address2, address3]) {
       )
     })
   })
-})
+}
+module.exports = PauseModuleCommon
