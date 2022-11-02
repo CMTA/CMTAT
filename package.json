@@ -39,6 +39,7 @@
   "homepage": "https://github.com/CMTA/CMTAT",
   "devDependencies": {
     "@openzeppelin/test-helpers": "^0.5.16",
+    "@openzeppelin/truffle-upgrades": "^1.17.0",
     "chai": "^4.3.6",
     "coveralls": "^3.1.1",
     "dotenv": "^6.1.0",
@@ -61,7 +62,6 @@
     "web3": "^1.8.0"
   },
   "dependencies": {
-    "@openzeppelin/truffle-upgrades": "^1.17.0",
     "eth-sig-util": "^3.0.1",
     "ethereumjs-wallet": "^1.0.2"
   }
