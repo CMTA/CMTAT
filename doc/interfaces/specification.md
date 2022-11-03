@@ -8,4 +8,4 @@ We have added one function to the standard : `isTransferValid`
 
 The following UML describes the different interfaces and their function.
 
-![alt text](/home/ryan/Downloads/CM/CMTAT/doc/interfaces/UML.svg)
+![alt text](./UML.svg)
