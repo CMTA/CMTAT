@@ -30,7 +30,7 @@ abstract contract EnforcementModule is
 
     bytes32 public constant ENFORCER_ROLE = keccak256("ENFORCER_ROLE");
     string internal constant TEXT_TRANSFER_REJECTED_FROZEN =
-        "All transfers paused";
+        "The address is frozen";
 
     /**
      * @dev Initializes the contract in unpaused state.
