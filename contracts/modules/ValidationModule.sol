@@ -42,7 +42,7 @@ abstract contract ValidationModule is Initializable, ContextUpgradeable {
         address to,
         uint256 amount
     ) internal view returns (bool) {
-        return ruleEngine.isTransferValid(from, to, amount);
+        return ruleEngine.validateTransfer(from, to, amount);
     }
 
     function _messageForTransferRestriction(uint8 restrictionCode)

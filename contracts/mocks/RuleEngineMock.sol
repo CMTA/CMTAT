@@ -48,7 +48,7 @@ contract RuleEngineMock is IRuleEngine {
         return 0;
     }
 
-    function isTransferValid(
+    function validateTransfer(
         address _from,
         address _to,
         uint256 _amount
