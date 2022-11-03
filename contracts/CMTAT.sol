@@ -32,6 +32,8 @@ contract CMTAT is
 {
     enum REJECTED_CODE { TRANSFER_OK, TRANSFER_REJECTED_PAUSED, TRANSFER_REJECTED_FROZEN }
     string constant TEXT_TRANSFER_OK = "No restriction";
+    event TermSet(string indexed newTerm);
+    event TokenIdSet(string indexed newTokenId);
 
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor(
@@ -259,6 +261,7 @@ contract CMTAT is
         onlyRole(DEFAULT_ADMIN_ROLE)
     {
         tokenId = tokenId_;
+        emit TokenIdSet(tokenId_);
     }
 
     function setTerms(string memory terms_)
@@ -266,6 +269,7 @@ contract CMTAT is
         onlyRole(DEFAULT_ADMIN_ROLE)
     {
         terms = terms_;
+        emit TermSet(terms_);
     }
 
     /// @custom:oz-upgrades-unsafe-allow selfdestruct
