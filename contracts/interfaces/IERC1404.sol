@@ -22,13 +22,4 @@ interface IERC1404 {
         external
         view
         returns (string memory);
-
-    /**
-     * @dev Returns true if the transfer is valid, and false otherwise.
-     */
-    function isTransferValid(
-        address _from,
-        address _to,
-        uint256 _amount
-    ) external view returns (bool isValid);
 }

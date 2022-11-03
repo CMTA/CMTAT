@@ -4,8 +4,10 @@ pragma solidity ^0.8.17;
 
 import "./IRule.sol";
 import "./IERC1404.sol";
+import "./IRuleCommon.sol";
 
-interface IRuleEngine is IERC1404{
+
+interface IRuleEngine is IERC1404, IRuleCommon{
     /**
     * @dev define the rules, the precedent rules will be overwritten
     */
