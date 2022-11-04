@@ -2,7 +2,7 @@
 
 Please follow <https://changelog.md/> conventions.
 
-## 2.0 - 2022114
+## 2.0 - 20221104
 
 This version is not fully ready to be used with a proxy, see issues [58](https://github.com/CMTA/CMTAT/issues/58) and [66](https://github.com/CMTA/CMTAT/issues/66)
 
@@ -35,7 +35,7 @@ addressing the following findings:
 - CVF-40: defined event for `setTokenId` and `setTerms`
   ([commit](https://github.com/CMTA/CMTAT/commit/d845a97490a02f3f2284060a6a763f266f4f9ae7)).
 - Fix CVF-56: renamed message for the constant
-  `EXT_TRANSFER_REJECTED_FROZEN`
+  `TEXT_TRANSFER_REJECTED_FROZEN`
   ([commit](https://github.com/CMTA/CMTAT/commit/6b16e738b613679876a8f465e78171bd27185060)).
 - CVF-66, CVF-69, CVF-70, CVF-72, which created two new interfaces:
   `IERC1404` and `IERC1404Wrapper`
