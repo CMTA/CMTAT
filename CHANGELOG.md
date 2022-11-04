@@ -13,7 +13,7 @@ This version contains breaking changes with the version 1.0
 - Updated all libraries in package.json, exception for eth-sig-util which has not been updated.
 - Set the `trustedForwarder` as immutable to be compatible with OpenZeppelin ([commit](https://github.com/CMTA/CMTAT/commit/56004748744448dac9faa089ef1e8ab5e8cc6d5c))
 - Each test is performed with and without a proxy
-  ([commit](https://github.com/CMTA/CMTAT/commit/de3596f4c6b32a9f9614b038e6db7ddddadbfb40).
+  ([commit](https://github.com/CMTA/CMTAT/commit/de3596f4c6b32a9f9614b038e6db7ddddadbfb40)).
 - Improved documentation by adding a summary of the audit, a description
   of the access control, an UML diagram of the project.
 
@@ -28,8 +28,10 @@ addressing the following findings:
   CVF-9](https://github.com/CMTA/CMTAT/commit/b8148542b3812f8b0133d971cf82dc854e5fcebc),
   [commit
   CVF-10](https://github.com/CMTA/CMTAT/commit/1ea4a2ddf2215d98d4ea7c4fca5fe1304a6aa517)).
-- CVF-27, 48, 55: use an `enum` to store the restriction code ([commit](https://github.com/CMTA/CMTAT/commit/4a8246dcb16dedcab7380ecc55eb38643355c76e))
-- CVF-40: define event for `setTokenId` and `setTerms` ([commit](https://github.com/CMTA/CMTAT/commit/d845a97490a02f3f2284060a6a763f266f4f9ae7))
+- CVF-27, 48, 55: use an `enum` to store the restriction code
+  ([commit](https://github.com/CMTA/CMTAT/commit/4a8246dcb16dedcab7380ecc55eb38643355c76e)).
+- CVF-40: define event for `setTokenId` and `setTerms`
+  ([commit](https://github.com/CMTA/CMTAT/commit/d845a97490a02f3f2284060a6a763f266f4f9ae7)).
 - Fix CVF-56: rename message for the constant
   `EXT_TRANSFER_REJECTED_FROZEN`
   ([commit](https://github.com/CMTA/CMTAT/commit/6b16e738b613679876a8f465e78171bd27185060)).
