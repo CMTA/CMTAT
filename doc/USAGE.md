@@ -2,9 +2,10 @@
 
 The instructions below have been tested on Ubuntu 20.04.5 LTS.
 
-## Tool and versions
+## Dependencies
 
-The main toolchain is composed of these components, where the versions are the latest ones we tested: 
+The toolchain includes the following components, where the versions
+are the latest ones that we tested: 
 
 - npm 8.19.2
 - Truffle 5.5.31 (core: 5.5.31)
@@ -19,31 +20,39 @@ Clone the git repository, with the option `--recurse-submodules` to fetch the su
 
 `git clone git@github.com:CMTA/CMTAT.git  --recurse-submodules`  
 
-To manage multiple version of Node.js on your machine, you can use [`nvm`](https://github.com/nvm-sh/nvm).  
-Once `nvm` is installed, you can by example install the version 16.17.0 of Node.js with the following command:
+We recommend to install the [Nove Version Manager
+`nvm`](https://github.com/nvm-sh/nvm) to manage multiple versions of
+Node.js on your machine. You can then, for example, install the version
+16.17.0 of Node.js with the following command:
 
 `nvm install 16.17.0`
 
-To install the node modules required, run the following command at the root of the project:
+To install the node modules required by CMTAT, run the following command
+at the root of the project:
 
 `npm install`
 
-For truffle you can use the installed version in the node modules by using the command `npx`, for example
-`npx truffle`
-We recommand this way to do to have the same version as the one used to test the project.
+To use Truffle, the recommended way is to use the version installed as
+part of the node modules, via the `npx` command:
 
-It is also possible to install globally truffle :
-(https://trufflesuite.com/docs/truffle/getting-started/installation/) on your system:
+`npx truffle`
+
+Alternatively, you can install Truffle
+[globally](https://trufflesuite.com/docs/truffle/getting-started/installation/):
+
 `npm install -g truffle` 
-You can read the official [documentation](https://trufflesuite.com/docs/truffle/getting-started/installation/) for more information.
+
+See Truffle's official [documentation](https://trufflesuite.com/docs/truffle/getting-started/installation/) for more information.
 
 
 ## Testing
 
-Tests are written in JavaScript and run with Truffle with the command 
+Tests are written in JavaScript and run with Truffle as follows:
 
-Package locale : `npx truffle test`
-Installation globable :  `truffle test`
+`npx truffle test`
+
+To use the global Truffle install, use instead `truffle test`.
+
 
 ## Code style guidelines
 
@@ -62,4 +71,5 @@ npm run-script lint:sol:fix
 ```
 
 ## Known bugs
+
 The coverage with the library *solidity-coverage* [does not work anymore](https://github.com/sc-forks/solidity-coverage/issues/694).
