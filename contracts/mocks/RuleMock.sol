@@ -10,7 +10,7 @@ contract RuleMock is IRule {
     string constant TEXT_AMOUNT_TOO_HIGH = "Amount too high";
     string constant TEXT_CODE_NOT_FOUND = "Code not found";
 
-    function isTransferValid(
+    function validateTransfer(
         address _from,
         address _to,
         uint256 _amount
