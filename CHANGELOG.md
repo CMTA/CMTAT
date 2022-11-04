@@ -20,7 +20,7 @@ This version contains breaking changes with the version 1.0
 This version also includes improvements suggested by the audit report,
 addressing the following findings:
 
-- CVF 7, 9 and 10: remove useless return value in
+- CVF 7, 9 and 10: removed useless return value in
   `_unscheduleSnapshot`, `_rescheduleSnapshot`, `_scheduleSnapshot`
   ([commit
   CVF-7](https://github.com/CMTA/CMTAT/commit/ff0deee3c7d978ef39ac5eb240f428888b3963d5),
@@ -28,11 +28,11 @@ addressing the following findings:
   CVF-9](https://github.com/CMTA/CMTAT/commit/b8148542b3812f8b0133d971cf82dc854e5fcebc),
   [commit
   CVF-10](https://github.com/CMTA/CMTAT/commit/1ea4a2ddf2215d98d4ea7c4fca5fe1304a6aa517)).
-- CVF-27, 48, 55: use an `enum` to store the restriction code
+- CVF-27, 48, 55: used an `enum` to store the restriction code
   ([commit](https://github.com/CMTA/CMTAT/commit/4a8246dcb16dedcab7380ecc55eb38643355c76e)).
-- CVF-40: define event for `setTokenId` and `setTerms`
+- CVF-40: defined event for `setTokenId` and `setTerms`
   ([commit](https://github.com/CMTA/CMTAT/commit/d845a97490a02f3f2284060a6a763f266f4f9ae7)).
-- Fix CVF-56: rename message for the constant
+- Fix CVF-56: renamed message for the constant
   `EXT_TRANSFER_REJECTED_FROZEN`
   ([commit](https://github.com/CMTA/CMTAT/commit/6b16e738b613679876a8f465e78171bd27185060)).
 - CVF-66, CVF-69, CVF-70, CVF-72, which created two new interfaces:
