@@ -4,6 +4,8 @@ Please follow <https://changelog.md/> conventions.
 
 ## 2.0 - 2022114
 
+This version is not fully ready to be used with a proxy, see issues [58](https://github.com/CMTA/CMTAT/issues/58) and [66](https://github.com/CMTA/CMTAT/issues/66)
+
 This version contains breaking changes with the version 1.0
 
 - Updated OpenZeppelin contracts upgradeable to the version v4.7.3,
