@@ -8,9 +8,7 @@ This version is not fully ready to be used with a proxy, see issues [58](https:/
 
 This version contains breaking changes with the version 1.0
 
-- Updated OpenZeppelin contracts upgradeable to the version v4.7.3,
-  precisely this
-  [commit](https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/tree/7567bcbabead3bae4bfb3d908bf0d0a7cee6809e).
+- Updated OpenZeppelin contracts upgradeable to the version v4.7.3, precisely this [commit](https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/commit/0a2cb9a445c365870ed7a8ab461b12acf3e27d63).
 - Solidity version updated to `^0.8.17`.
 - Updated all libraries in package.json, exception for eth-sig-util which has not been updated.
 - Set the `trustedForwarder` as immutable to be compatible with OpenZeppelin ([commit](https://github.com/CMTA/CMTAT/commit/56004748744448dac9faa089ef1e8ab5e8cc6d5c))
@@ -22,7 +20,7 @@ This version contains breaking changes with the version 1.0
 This version also includes improvements suggested by the audit report,
 addressing the following findings:
 
-- CVF 7, 9 and 10: removed useless return value in
+- CVF-7, CVF-9 and CVF-10: removed useless return value in
   `_unscheduleSnapshot`, `_rescheduleSnapshot`, `_scheduleSnapshot`
   ([commit
   CVF-7](https://github.com/CMTA/CMTAT/commit/ff0deee3c7d978ef39ac5eb240f428888b3963d5),
