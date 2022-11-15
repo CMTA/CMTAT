@@ -13,7 +13,7 @@ import "../../../openzeppelin-contracts-upgradeable/contracts/utils/ArraysUpgrad
  * Useful to take a snapshot of token holder balance and total supply at a specific time
  */
 
-abstract contract SnapshotModule is
+abstract contract SnapshotModuleInternal is
     Initializable,
     ContextUpgradeable,
     ERC20Upgradeable
@@ -28,7 +28,6 @@ abstract contract SnapshotModule is
         uint256[] values;
     }
 
-    bytes32 public constant SNAPSHOOTER_ROLE = keccak256("SNAPSHOOTER_ROLE");
     mapping(address => Snapshots) private _accountBalanceSnapshots;
     Snapshots private _totalSupplySnapshots;
 

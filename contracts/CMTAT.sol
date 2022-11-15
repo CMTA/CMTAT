@@ -14,7 +14,7 @@ import "./modules/wrapper/EnforcementModule.sol";
 import "./modules/wrapper/PauseModule.sol";
 import "./modules/internal/ValidationModuleInternal.sol";
 import "./modules/wrapper/MetaTxModule.sol";
-import "./modules/internal/SnapshotModule.sol";
+import "./modules/wrapper/SnapshotModule.sol";
 import "./interfaces/IRuleEngine.sol";
 
 contract CMTAT is
@@ -27,7 +27,7 @@ contract CMTAT is
     EnforcementModule,
     ValidationModule,
     MetaTxModule,
-    SnapshotModule
+    SnasphotModule
 {
     enum REJECTED_CODE { TRANSFER_OK, TRANSFER_REJECTED_PAUSED, TRANSFER_REJECTED_FROZEN }
     string constant TEXT_TRANSFER_OK = "No restriction";
@@ -141,29 +141,6 @@ contract CMTAT is
         }
     }
 
-    function scheduleSnapshot(uint256 time)
-        public
-        onlyRole(SNAPSHOOTER_ROLE)
-    {
-        _scheduleSnapshot(time);
-    }
-
-    function rescheduleSnapshot(uint256 oldTime, uint256 newTime)
-        public
-        onlyRole(SNAPSHOOTER_ROLE)
-    {
-        _rescheduleSnapshot(oldTime, newTime);
-    }
-
-    function unscheduleSnapshot(uint256 time)
-        public
-        onlyRole(SNAPSHOOTER_ROLE)
-    {
-        _unscheduleSnapshot(time);
-    }
-
-
-
     /// @custom:oz-upgrades-unsafe-allow selfdestruct
     function kill() public onlyRole(DEFAULT_ADMIN_ROLE) {
         selfdestruct(payable(_msgSender()));
@@ -181,7 +158,7 @@ contract CMTAT is
         address from,
         address to,
         uint256 amount
-    ) internal override(SnapshotModule, ERC20Upgradeable) {
+    ) internal override(SnapshotModuleInternal, ERC20Upgradeable) {
         require(!paused(), "CMTAT: token transfer while paused");
         require(!frozen(from), "CMTAT: token transfer while frozen");
 
