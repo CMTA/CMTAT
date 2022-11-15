@@ -5,10 +5,13 @@ pragma solidity ^0.8.17;
 // required OZ imports here
 import "../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
 import "../../openzeppelin-contracts-upgradeable/contracts/token/ERC20/ERC20Upgradeable.sol";
+import "./AuthorizationModule.sol";
 
-abstract contract BaseModule is Initializable, ERC20Upgradeable {
+abstract contract BaseModule is Initializable, ERC20Upgradeable, AuthorizationModule {
     /* Events */
     event Spend(address indexed owner, address indexed spender, uint256 amount);
+    event TermSet(string indexed newTerm);
+    event TokenIdSet(string indexed newTokenId);
 
     /* Variables */
     uint8 private _decimals;
@@ -46,6 +49,21 @@ abstract contract BaseModule is Initializable, ERC20Upgradeable {
     }
 
     /* Methods */
+    function setTokenId(string memory tokenId_)
+        public
+        onlyRole(DEFAULT_ADMIN_ROLE)
+    {
+        tokenId = tokenId_;
+        emit TokenIdSet(tokenId_);
+    }
+
+    function setTerms(string memory terms_)
+        public
+        onlyRole(DEFAULT_ADMIN_ROLE)
+    {
+        terms = terms_;
+        emit TermSet(terms_);
+    }
     /**
      * @dev Returns the number of decimals used to get its user representation.
      * For example, if `decimals` equals `2`, a balance of `505` tokens should
