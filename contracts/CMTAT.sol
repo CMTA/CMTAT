@@ -7,14 +7,14 @@ import "../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializabl
 import "../openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradeable.sol";
 import "./modules/BaseModule.sol";
 import "./modules/AuthorizationModule.sol";
-import "./modules/BurnModule.sol";
-import "./modules/MintModule.sol";
-import "./modules/BurnModule.sol";
-import "./modules/EnforcementModule.sol";
-import "./modules/PauseModule.sol";
-import "./modules/ValidationModule.sol";
-import "./modules/MetaTxModule.sol";
-import "./modules/SnapshotModule.sol";
+import "./modules/wrapper/BurnModule.sol";
+import "./modules/wrapper/MintModule.sol";
+import "./modules/wrapper/BurnModule.sol";
+import "./modules/wrapper/EnforcementModule.sol";
+import "./modules/wrapper/PauseModule.sol";
+import "./modules/internal/ValidationModuleInternal.sol";
+import "./modules/wrapper/MetaTxModule.sol";
+import "./modules/internal/SnapshotModule.sol";
 import "./interfaces/IRuleEngine.sol";
 
 contract CMTAT is
@@ -79,7 +79,6 @@ contract CMTAT is
         _setupRole(PAUSER_ROLE, owner);
         _setupRole(SNAPSHOOTER_ROLE, owner);
     }
-
 
     function decimals()
         public
