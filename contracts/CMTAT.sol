@@ -164,22 +164,28 @@ contract CMTAT is
         }
     }
 
+    /** 
+    @dev This surcharge is not necessary if you do not use the MetaTxModule
+    */
     function _msgSender()
         internal
         view
-        override(ERC2771ContextUpgradeable, ContextUpgradeable)
+        override(MetaTxModule, ContextUpgradeable)
         returns (address sender)
     {
-        return ERC2771ContextUpgradeable._msgSender();
+        return MetaTxModule._msgSender();
     }
 
+    /** 
+    @dev This surcharge is not necessary if you do not use the MetaTxModule
+    */
     function _msgData()
         internal
         view
-        override(ERC2771ContextUpgradeable, ContextUpgradeable)
+        override(MetaTxModule, ContextUpgradeable)
         returns (bytes calldata)
     {
-        return ERC2771ContextUpgradeable._msgData();
+        return MetaTxModule._msgData();
     }
 
     uint256[50] private __gap;
