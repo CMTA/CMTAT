@@ -12,7 +12,7 @@ import "./modules/wrapper/MintModule.sol";
 import "./modules/wrapper/BurnModule.sol";
 import "./modules/wrapper/EnforcementModule.sol";
 import "./modules/wrapper/PauseModule.sol";
-import "./modules/internal/ValidationModuleInternal.sol";
+import "./modules/wrapper/ValidationModule.sol";
 import "./modules/wrapper/MetaTxModule.sol";
 import "./modules/wrapper/SnapshotModule.sol";
 import "./interfaces/IRuleEngine.sol";
@@ -144,14 +144,6 @@ contract CMTAT is
     /// @custom:oz-upgrades-unsafe-allow selfdestruct
     function kill() public onlyRole(DEFAULT_ADMIN_ROLE) {
         selfdestruct(payable(_msgSender()));
-    }
-
-    function setRuleEngine(IRuleEngine ruleEngine_)
-        external
-        onlyRole(DEFAULT_ADMIN_ROLE)
-    {
-        ruleEngine = ruleEngine_;
-        emit RuleEngineSet(address(ruleEngine_));
     }
 
     function _beforeTokenTransfer(

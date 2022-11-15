@@ -11,7 +11,7 @@ import "../../interfaces/IRuleEngine.sol";
  *
  * Useful for to restrict and validate transfers
  */
-abstract contract ValidationModule is Initializable, ContextUpgradeable {
+abstract contract ValidationModuleInternal is Initializable, ContextUpgradeable {
     /**
      * @dev Emitted when a rule engine is set.
      */
