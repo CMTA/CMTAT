@@ -29,9 +29,6 @@ contract CMTAT is
     MetaTxModule,
     SnasphotModule
 {
-    enum REJECTED_CODE { TRANSFER_OK, TRANSFER_REJECTED_PAUSED, TRANSFER_REJECTED_FROZEN }
-    string constant TEXT_TRANSFER_OK = "No restriction";
-   
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor(
         address forwarder
@@ -96,49 +93,6 @@ contract CMTAT is
         uint256 amount
     ) public virtual override(ERC20Upgradeable, BaseModule) returns (bool) {
         return super.transferFrom(sender, recipient, amount);
-    }
-
-    /**
-     * @dev ERC1404 check if _value token can be transferred from _from to _to
-     * @param from address The address which you want to send tokens from
-     * @param to address The address which you want to transfer to
-     * @param amount uint256 the amount of tokens to be transferred
-     * @return code of the rejection reason
-     */
-    function detectTransferRestriction(
-        address from,
-        address to,
-        uint256 amount
-    ) public view returns (uint8 code) {
-        if (paused()) {
-            return uint8(REJECTED_CODE.TRANSFER_REJECTED_PAUSED);
-        } else if (frozen(from)) {
-            return uint8(REJECTED_CODE.TRANSFER_REJECTED_FROZEN);
-        } else if (address(ruleEngine) != address(0)) {
-            return _detectTransferRestriction(from, to, amount);
-        }
-        return uint8(REJECTED_CODE.TRANSFER_OK);
-    }
-
-    /**
-     * @dev ERC1404 returns the human readable explaination corresponding to the error code returned by detectTransferRestriction
-     * @param restrictionCode The error code returned by detectTransferRestriction
-     * @return message The human readable explaination corresponding to the error code returned by detectTransferRestriction
-     */
-    function messageForTransferRestriction(uint8 restrictionCode)
-        external
-        view
-        returns (string memory message)
-    {
-        if (restrictionCode == uint8(REJECTED_CODE.TRANSFER_OK)) {
-            return TEXT_TRANSFER_OK;
-        } else if (restrictionCode == uint8(REJECTED_CODE.TRANSFER_REJECTED_PAUSED)) {
-            return TEXT_TRANSFER_REJECTED_PAUSED;
-        } else if (restrictionCode == uint8(REJECTED_CODE.TRANSFER_REJECTED_FROZEN)) {
-            return TEXT_TRANSFER_REJECTED_FROZEN;
-        } else if (address(ruleEngine) != address(0)) {
-            return _messageForTransferRestriction(restrictionCode);
-        }
     }
 
     /// @custom:oz-upgrades-unsafe-allow selfdestruct
