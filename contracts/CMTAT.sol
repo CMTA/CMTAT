@@ -84,20 +84,6 @@ contract CMTAT is
     }
 
     /**
-     * @dev Creates `amount` new tokens for `to`.
-     *
-     * See {ERC20-_mint}.
-     *
-     * Requirements:
-     *
-     * - the caller must have the `MINTER_ROLE`.
-     */
-    function mint(address to, uint256 amount) public onlyRole(MINTER_ROLE) {
-        _mint(to, amount);
-        emit Mint(to, amount);
-    }
-
-    /**
      * @dev Destroys `amount` tokens from `account`, deducting from the caller's
      * allowance.
      *
