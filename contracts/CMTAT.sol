@@ -156,12 +156,7 @@ contract CMTAT is
 
         super._beforeTokenTransfer(from, to, amount);
 
-        if (address(ruleEngine) != address(0)) {
-            require(
-                _validateTransfer(from, to, amount),
-                "CMTAT: transfer rejected by validation module"
-            );
-        }
+        require(validateTransfer(from, to, amount), "CMTAT: transfer rejected by validation module");
     }
 
     function _msgSender()

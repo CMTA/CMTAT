@@ -20,4 +20,15 @@ abstract contract ValidationModule is ValidationModuleInternal, AuthorizationMod
         ruleEngine = ruleEngine_;
         emit RuleEngineSet(address(ruleEngine_));
     }
+
+     function validateTransfer(
+        address from,
+        address to,
+        uint256 amount
+    ) public view returns (bool) {
+         if (address(ruleEngine) != address(0)) {
+            return _validateTransfer(from, to, amount);    
+        }
+        return true;
+    }
 }
