@@ -170,7 +170,7 @@ contract CMTAT is
         override(ERC2771ContextUpgradeable, ContextUpgradeable)
         returns (address sender)
     {
-        return super._msgSender();
+        return ERC2771ContextUpgradeable._msgSender();
     }
 
     function _msgData()
@@ -179,7 +179,7 @@ contract CMTAT is
         override(ERC2771ContextUpgradeable, ContextUpgradeable)
         returns (bytes calldata)
     {
-        return super._msgData();
+        return ERC2771ContextUpgradeable._msgData();
     }
 
     uint256[50] private __gap;
