@@ -5,6 +5,7 @@ pragma solidity ^0.8.17;
 import "../../openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradeable.sol";
 import "../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
 import "../../openzeppelin-contracts-upgradeable/contracts/token/ERC20/ERC20Upgradeable.sol";
+import "./AuthorizationModule.sol";
 
 /**
  * @dev Enforcement module.
@@ -14,7 +15,8 @@ import "../../openzeppelin-contracts-upgradeable/contracts/token/ERC20/ERC20Upgr
 abstract contract EnforcementModule is
     Initializable,
     ContextUpgradeable,
-    ERC20Upgradeable
+    ERC20Upgradeable,
+    AuthorizationModule
 {
     /**
      * @dev Emitted when an address is frozen.
@@ -47,6 +49,30 @@ abstract contract EnforcementModule is
      */
     function frozen(address account) public view virtual returns (bool) {
         return _frozen[account];
+    }
+
+    /**
+     * @dev Freezes an address.
+     *
+     */
+    function freeze(address account)
+        public
+        onlyRole(ENFORCER_ROLE)
+        returns (bool)
+    {
+        return _freeze(account);
+    }
+
+    /**
+     * @dev Unfreezes an address.
+     *
+     */
+    function unfreeze(address account)
+        public
+        onlyRole(ENFORCER_ROLE)
+        returns (bool)
+    {
+        return _unfreeze(account);
     }
 
     /**

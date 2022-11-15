@@ -80,29 +80,6 @@ contract CMTAT is
         _setupRole(SNAPSHOOTER_ROLE, owner);
     }
 
-    /**
-     * @dev Freezes an address.
-     *
-     */
-    function freeze(address account)
-        public
-        onlyRole(ENFORCER_ROLE)
-        returns (bool)
-    {
-        return _freeze(account);
-    }
-
-    /**
-     * @dev Unfreezes an address.
-     *
-     */
-    function unfreeze(address account)
-        public
-        onlyRole(ENFORCER_ROLE)
-        returns (bool)
-    {
-        return _unfreeze(account);
-    }
 
     function decimals()
         public
