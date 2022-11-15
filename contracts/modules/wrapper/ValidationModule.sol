@@ -8,11 +8,9 @@ import "./PauseModule.sol";
 import "./EnforcementModule.sol";
 
 /**
- * @dev ERC20 token with pausable token transfers, minting and burning.
+ * @dev Validation module.
  *
- * Useful for scenarios such as preventing trades until the end of an evaluation
- * period, or having an emergency switch for freezing all token transfers in the
- * event of a large bug.
+ * Useful for to restrict and validate transfers
  */
 abstract contract ValidationModule is ValidationModuleInternal, PauseModule, EnforcementModule, IERC1404Wrapper {
     enum REJECTED_CODE { TRANSFER_OK, TRANSFER_REJECTED_PAUSED, TRANSFER_REJECTED_FROZEN }
@@ -26,7 +24,7 @@ abstract contract ValidationModule is ValidationModuleInternal, PauseModule, Enf
         emit RuleEngineSet(address(ruleEngine_));
     }
 
-        /**
+    /**
      * @dev ERC1404 check if _value token can be transferred from _from to _to
      * @param from address The address which you want to send tokens from
      * @param to address The address which you want to transfer to
