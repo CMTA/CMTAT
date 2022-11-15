@@ -84,7 +84,7 @@ contract CMTAT is
         override(ERC20Upgradeable, BaseModule)
         returns (uint8)
     {
-        return super.decimals();
+        return BaseModule.decimals();
     }
 
     function transferFrom(
@@ -92,7 +92,7 @@ contract CMTAT is
         address recipient,
         uint256 amount
     ) public virtual override(ERC20Upgradeable, BaseModule) returns (bool) {
-        return super.transferFrom(sender, recipient, amount);
+        return BaseModule.transferFrom(sender, recipient, amount);
     }
 
     /// @custom:oz-upgrades-unsafe-allow selfdestruct
@@ -108,7 +108,7 @@ contract CMTAT is
         require(!paused(), "CMTAT: token transfer while paused");
         require(!frozen(from), "CMTAT: token transfer while frozen");
 
-        super._beforeTokenTransfer(from, to, amount);
+        SnapshotModuleInternal._beforeTokenTransfer(from, to, amount);
 
         require(validateTransfer(from, to, amount), "CMTAT: transfer rejected by validation module");
     }
