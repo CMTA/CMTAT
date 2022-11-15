@@ -2,9 +2,10 @@
 
 pragma solidity ^0.8.17;
 
+import "../../../openzeppelin-contracts-upgradeable/contracts/token/ERC20/ERC20Upgradeable.sol";
 import "../BaseModule.sol";
 
-abstract contract BurnModule is BaseModule {
+abstract contract BurnModule is ERC20Upgradeable, AuthorizationModule {
     bytes32 public constant BURNER_ROLE = keccak256("BURNER_ROLE");
 
     event Burn(address indexed owner, uint256 amount);

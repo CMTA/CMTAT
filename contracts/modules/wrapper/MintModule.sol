@@ -2,9 +2,10 @@
 
 pragma solidity ^0.8.17;
 
+import "../../../openzeppelin-contracts-upgradeable/contracts/token/ERC20/ERC20Upgradeable.sol";
 import "../BaseModule.sol";
 
-abstract contract MintModule is BaseModule{
+abstract contract MintModule is ERC20Upgradeable, AuthorizationModule {
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
 
     event Mint(address indexed beneficiary, uint256 amount);
