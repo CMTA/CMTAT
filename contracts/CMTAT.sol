@@ -84,33 +84,6 @@ contract CMTAT is
     }
 
     /**
-     * @dev Destroys `amount` tokens from `account`, deducting from the caller's
-     * allowance.
-     *
-     * See {ERC20-_burn} and {ERC20-allowance}.
-     *
-     * Requirements:
-     *
-     * - the caller must have allowance for ``accounts``'s tokens of at least
-     * `amount`.
-     */
-    function burnFrom(address account, uint256 amount)
-        public
-        onlyRole(BURNER_ROLE)
-    {
-        uint256 currentAllowance = allowance(account, _msgSender());
-        require(
-            currentAllowance >= amount,
-            "CMTAT: burn amount exceeds allowance"
-        );
-        unchecked {
-            _approve(account, _msgSender(), currentAllowance - amount);
-        }
-        _burn(account, amount);
-        emit Burn(account, amount);
-    }
-
-    /**
      * @dev Pauses all token transfers.
      *
      * See {ERC20Pausable} and {Pausable-_pause}.
