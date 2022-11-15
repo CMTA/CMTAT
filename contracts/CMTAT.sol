@@ -6,7 +6,7 @@ pragma solidity ^0.8.17;
 import "../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
 import "../openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradeable.sol";
 import "./modules/BaseModule.sol";
-import "./modules/AuthorizationModule.sol";
+import "./modules/wrapper/AuthorizationModule.sol";
 import "./modules/wrapper/BurnModule.sol";
 import "./modules/wrapper/MintModule.sol";
 import "./modules/wrapper/BurnModule.sol";

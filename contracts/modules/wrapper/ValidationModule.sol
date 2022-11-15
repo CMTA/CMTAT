@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.17;
 
-import "../AuthorizationModule.sol";
+import "./AuthorizationModule.sol";
 import "../internal/ValidationModuleInternal.sol";
 
 /**
