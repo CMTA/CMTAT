@@ -3,7 +3,6 @@
 pragma solidity ^0.8.17;
 
 import "../../../openzeppelin-contracts-upgradeable/contracts/security/PausableUpgradeable.sol";
-import "../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
 import "./AuthorizationModule.sol";
 
 /**
@@ -13,7 +12,7 @@ import "./AuthorizationModule.sol";
  * period, or having an emergency switch for freezing all token transfers in the
  * event of a large bug.
  */
-abstract contract PauseModule is Initializable, PausableUpgradeable, AuthorizationModule {
+abstract contract PauseModule is PausableUpgradeable, AuthorizationModule {
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     string internal constant TEXT_TRANSFER_REJECTED_PAUSED =
         "All transfers paused";

@@ -3,16 +3,13 @@
 pragma solidity ^0.8.17;
 
 import "../../../openzeppelin-contracts-upgradeable/contracts/security/PausableUpgradeable.sol";
-import "../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
 import "./AuthorizationModule.sol";
 import "../internal/EnforcementModuleInternal.sol";
 
 /**
- * @dev ERC20 token with pausable token transfers, minting and burning.
+ * @dev Enforcement module.
  *
- * Useful for scenarios such as preventing trades until the end of an evaluation
- * period, or having an emergency switch for freezing all token transfers in the
- * event of a large bug.
+ * Allows the issuer to freeze transfers from a given address
  */
 abstract contract EnforcementModule is EnforcementModuleInternal,
     AuthorizationModule {
