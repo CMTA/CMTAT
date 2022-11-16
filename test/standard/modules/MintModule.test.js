@@ -6,7 +6,7 @@ const CMTAT = artifacts.require('CMTAT')
 const MintModuleCommon = require('../../common/MintModuleCommon')
 
 contract(
-  'MintModule',
+  'Standard - MintModule',
   function ([_, owner, address1, address2]) {
     beforeEach(async function () {
       this.cmtat = await CMTAT.new(_, { from: owner })

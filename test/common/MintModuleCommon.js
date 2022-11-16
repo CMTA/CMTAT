@@ -32,6 +32,19 @@ function MintModuleCommon (admin, address1, address2) {
       // Assert
       (await this.cmtat.balanceOf(address2)).should.be.bignumber.equal('50');
       (await this.cmtat.totalSupply()).should.be.bignumber.equal('70')
+
+      // Assert event
+      // emits a Transfer event
+      expectEvent.inLogs(this.logs2, 'Transfer', {
+        from: ZERO_ADDRESS,
+        to: address2,
+        value: '50'
+      })
+      // emits a Mint event
+      expectEvent.inLogs(this.logs2, 'Mint', {
+        beneficiary: address2,
+        amount: '50'
+      })
     })
 
     it('testCanBeMintedByANewMinter', async function () {
@@ -50,31 +63,18 @@ function MintModuleCommon (admin, address1, address2) {
       // Check balances and total supply
       (await this.cmtat.balanceOf(address1)).should.be.bignumber.equal('20');
       (await this.cmtat.totalSupply()).should.be.bignumber.equal('20')
-    })
 
-    // Assert
-    it('emits a Transfer event', function () {
+      // Assert event
+      // emits a Transfer event
       expectEvent.inLogs(this.logs1, 'Transfer', {
         from: ZERO_ADDRESS,
         to: address1,
         value: '20'
       })
-      expectEvent.inLogs(this.logs2, 'Transfer', {
-        from: ZERO_ADDRESS,
-        to: address2,
-        value: '50'
-      })
-    })
-
-    // Assert
-    it('emits a Mint event', function () {
+      // emits a Mint event
       expectEvent.inLogs(this.logs1, 'Mint', {
         beneficiary: address1,
         amount: '20'
-      })
-      expectEvent.inLogs(this.logs2, 'Mint', {
-        beneficiary: address2,
-        amount: '50'
       })
     })
 

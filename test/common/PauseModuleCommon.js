@@ -4,22 +4,44 @@ const { should } = require('chai').should()
 
 const CMTAT = artifacts.require('CMTAT')
 
-function PauseModuleCommon (owner, address1, address2, address3) {
+function PauseModuleCommon (admin, address1, address2, address3) {
   context('Pause', function () {
-    it('can be paused by the owner', async function () {
-      ({ logs: this.logs } = await this.cmtat.pause({ from: owner }))
+    /**
+    The admin is assigned the PAUSER role when the contract is deployed
+    */
+    it('testCanBePausedByAdmin', async function () {
+      // Act
+      ({ logs: this.logs } = await this.cmtat.pause({ from: admin }))
+      
+      // Assert
+      // emits a Paused event
+      expectEvent.inLogs(this.logs, 'Paused', { account: admin })
+      // Transfer is reverted
+      await expectRevert(
+        this.cmtat.transfer(address2, 10, { from: address1 }),
+        'CMTAT: token transfer while paused'
+      )
     })
 
-    it('emits a Paused event', function () {
-      expectEvent.inLogs(this.logs, 'Paused', { account: owner })
+    it('testCanBePausedByPauserRole', async function () {
+      // Arrange
+      await this.cmtat.grantRole(PAUSER_ROLE, address1, { from: admin });
+      
+      // Act
+      ({ logs: this.logs } = await this.cmtat.pause({ from: address1 }))
+      
+      // Assert
+      // emits a Paused event
+      expectEvent.inLogs(this.logs, 'Paused', { account: address1 })
+      // Transfer is reverted
+      await expectRevert(
+        this.cmtat.transfer(address2, 10, { from: address1 }),
+        'CMTAT: token transfer while paused'
+      )
     })
 
-    it('can be paused by the anyone having pauser role', async function () {
-      await this.cmtat.grantRole(PAUSER_ROLE, address1, { from: owner })
-      await this.cmtat.pause({ from: address1 })
-    })
-
-    it('reverts when calling from non-owner', async function () {
+    it('testCannotBePausedByNonPauser', async function () {
+      // Act
       await expectRevert(
         this.cmtat.pause({ from: address1 }),
         'AccessControl: account ' +
@@ -29,23 +51,39 @@ function PauseModuleCommon (owner, address1, address2, address3) {
       )
     })
 
-    it('can be unpaused by the owner', async function () {
-      await this.cmtat.pause({ from: owner });
-      ({ logs: this.logs } = await this.cmtat.unpause({ from: owner }))
+    it('testCanBeUnpausedByAdmin', async function () {
+      // Arrange
+      await this.cmtat.pause({ from: admin });
+      
+      // Act
+      ({ logs: this.logs } = await this.cmtat.unpause({ from: admin }))
+      
+      // Assert
+      // emits a Unpaused event
+      expectEvent.inLogs(this.logs, 'Unpaused', { account: admin })
+      // Transfer works
+      this.cmtat.transfer(address2, 10, { from: address1 })
     })
 
-    it('emits a Unpaused event', function () {
-      expectEvent.inLogs(this.logs, 'Unpaused', { account: owner })
+    it('testCanBeUnpausedByANewPauser', async function () {
+      // Arrange
+      await this.cmtat.pause({ from: admin })
+      await this.cmtat.grantRole(PAUSER_ROLE, address1, { from: admin });
+
+      // Act
+      ({ logs: this.logs } = await this.cmtat.unpause({ from: address1 }))
+
+      // Assert
+      // emits a Unpaused event
+      expectEvent.inLogs(this.logs, 'Unpaused', { account: address1 })
+      // Transfer works
+      this.cmtat.transfer(address2, 10, { from: address1 })
     })
 
-    it('can be paused by the anyone having pauser role', async function () {
-      await this.cmtat.pause({ from: owner })
-      await this.cmtat.grantRole(PAUSER_ROLE, address1, { from: owner })
-      await this.cmtat.unpause({ from: address1 })
-    })
-
-    it('reverts when calling from non-owner', async function () {
-      await this.cmtat.pause({ from: owner })
+    it('testCannotBeUnpausedByNonPauser', async function () {
+      // Arrange
+      await this.cmtat.pause({ from: admin })
+      // Act
       await expectRevert(
         this.cmtat.unpause({ from: address1 }),
         'AccessControl: account ' +
@@ -55,8 +93,11 @@ function PauseModuleCommon (owner, address1, address2, address3) {
       )
     })
 
-    it('reverts if address1 transfers tokens to address2 when paused', async function () {
-      await this.cmtat.pause({ from: owner });
+    // reverts if address1 transfers tokens to address2 when paused
+    it('testCannotTransferTokenWhenPaused_A', async function () {
+      // Act
+      await this.cmtat.pause({ from: admin });
+      // Assert
       (
         await this.cmtat.detectTransferRestriction(address1, address2, 10)
       ).should.be.bignumber.equal('1');
@@ -69,11 +110,16 @@ function PauseModuleCommon (owner, address1, address2, address3) {
       )
     })
 
-    it('reverts if address3 transfers tokens from address1 to address2 when paused', async function () {
+    // reverts if address3 transfers tokens from address1 to address2 when paused
+    it('testCannotTransferTokenWhenPaused_B', async function () {
+      // Arrange
       // Define allowance
       await this.cmtat.approve(address3, 20, { from: address1 })
 
-      await this.cmtat.pause({ from: owner });
+      // Act
+      await this.cmtat.pause({ from: admin });
+
+      // Assert
       (
         await this.cmtat.detectTransferRestriction(address1, address2, 10)
       ).should.be.bignumber.equal('1');
