@@ -20,7 +20,8 @@
     "coverage": "npx solidity-coverage",
     "uml" : "npx sol2uml class contracts",
     "test:pause": "npx truffle test test/standard/modules/PauseModule.test.js test/proxy/modules/PauseModule.test.js", 
-    "test:mint": "npx truffle test test/standard/modules/MintModule.test.js test/proxy/modules/MintModule.test.js" 
+    "test:mint": "npx truffle test test/standard/modules/MintModule.test.js test/proxy/modules/MintModule.test.js",
+    "test:burn": "npx truffle test test/standard/modules/BurnModule.test.js test/proxy/modules/BurnModule.test.js"  
   },
   "repository": {
     "type": "git",

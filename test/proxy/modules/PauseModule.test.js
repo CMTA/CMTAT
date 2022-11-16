@@ -1,6 +1,3 @@
-const { expectEvent, expectRevert } = require('@openzeppelin/test-helpers')
-const { PAUSER_ROLE } = require('../../utils')
-const { should } = require('chai').should()
 const { deployProxy } = require('@openzeppelin/truffle-upgrades')
 const CMTAT = artifacts.require('CMTAT')
 const PauseModuleCommon = require('../../common/PauseModuleCommon')
