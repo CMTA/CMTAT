@@ -10,9 +10,9 @@ are the latest ones that we tested:
 - npm 8.19.2
 - Truffle 5.5.31 (core: 5.5.31)
 - Ganache 7.4.3
-- Solidity 0.8.4 (via solc-js)
+- Solidity 0.8.17 (via solc-js)
 - Node 16.17.0
-- Web3.js 1.7.4
+- Web3.js 1.8.0
 - OpenZeppelin Contracts Upgradeable (submodule) 4.8.0
 
 ## Installation
