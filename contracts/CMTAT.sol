@@ -30,8 +30,10 @@ contract CMTAT is
     MetaTxModule,
     SnapshotModule
 {
-    uint8 constant TRANSFER_OK = 0;
+    enum REJECTED_CODE { TRANSFER_OK, TRANSFER_REJECTED_PAUSED, TRANSFER_REJECTED_FROZEN }
     string constant TEXT_TRANSFER_OK = "No restriction";
+    event TermSet(string indexed newTerm);
+    event TokenIdSet(string indexed newTokenId);
 
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor(
@@ -204,13 +206,13 @@ contract CMTAT is
         uint256 amount
     ) public view returns (uint8 code) {
         if (paused()) {
-            return TRANSFER_REJECTED_PAUSED;
+            return uint8(REJECTED_CODE.TRANSFER_REJECTED_PAUSED);
         } else if (frozen(from)) {
-            return TRANSFER_REJECTED_FROZEN;
+            return uint8(REJECTED_CODE.TRANSFER_REJECTED_FROZEN);
         } else if (address(ruleEngine) != address(0)) {
             return _detectTransferRestriction(from, to, amount);
         }
-        return TRANSFER_OK;
+        return uint8(REJECTED_CODE.TRANSFER_OK);
     }
 
     /**
@@ -223,11 +225,11 @@ contract CMTAT is
         view
         returns (string memory message)
     {
-        if (restrictionCode == TRANSFER_OK) {
+        if (restrictionCode == uint8(REJECTED_CODE.TRANSFER_OK)) {
             return TEXT_TRANSFER_OK;
-        } else if (restrictionCode == TRANSFER_REJECTED_PAUSED) {
+        } else if (restrictionCode == uint8(REJECTED_CODE.TRANSFER_REJECTED_PAUSED)) {
             return TEXT_TRANSFER_REJECTED_PAUSED;
-        } else if (restrictionCode == TRANSFER_REJECTED_FROZEN) {
+        } else if (restrictionCode == uint8(REJECTED_CODE.TRANSFER_REJECTED_FROZEN)) {
             return TEXT_TRANSFER_REJECTED_FROZEN;
         } else if (address(ruleEngine) != address(0)) {
             return _messageForTransferRestriction(restrictionCode);
@@ -237,25 +239,22 @@ contract CMTAT is
     function scheduleSnapshot(uint256 time)
         public
         onlyRole(SNAPSHOOTER_ROLE)
-        returns (uint256)
     {
-        return _scheduleSnapshot(time);
+        _scheduleSnapshot(time);
     }
 
     function rescheduleSnapshot(uint256 oldTime, uint256 newTime)
         public
         onlyRole(SNAPSHOOTER_ROLE)
-        returns (uint256)
     {
-        return _rescheduleSnapshot(oldTime, newTime);
+        _rescheduleSnapshot(oldTime, newTime);
     }
 
     function unscheduleSnapshot(uint256 time)
         public
         onlyRole(SNAPSHOOTER_ROLE)
-        returns (uint256)
     {
-        return _unscheduleSnapshot(time);
+        _unscheduleSnapshot(time);
     }
 
     function setTokenId(string memory tokenId_)
@@ -263,6 +262,7 @@ contract CMTAT is
         onlyRole(DEFAULT_ADMIN_ROLE)
     {
         tokenId = tokenId_;
+        emit TokenIdSet(tokenId_);
     }
 
     function setTerms(string memory terms_)
@@ -270,8 +270,10 @@ contract CMTAT is
         onlyRole(DEFAULT_ADMIN_ROLE)
     {
         terms = terms_;
+        emit TermSet(terms_);
     }
 
+    /// @custom:oz-upgrades-unsafe-allow selfdestruct
     function kill() public onlyRole(DEFAULT_ADMIN_ROLE) {
         selfdestruct(payable(_msgSender()));
     }
