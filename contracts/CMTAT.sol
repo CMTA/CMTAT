@@ -75,12 +75,12 @@ contract CMTAT is
     }
 
     function __CMTAT_init_unchained(address owner) internal onlyInitializing {
-        _setupRole(DEFAULT_ADMIN_ROLE, owner);
-        _setupRole(ENFORCER_ROLE, owner);
-        _setupRole(MINTER_ROLE, owner);
-        _setupRole(BURNER_ROLE, owner);
-        _setupRole(PAUSER_ROLE, owner);
-        _setupRole(SNAPSHOOTER_ROLE, owner);
+        _grantRole(DEFAULT_ADMIN_ROLE, owner);
+        _grantRole(ENFORCER_ROLE, owner);
+        _grantRole(MINTER_ROLE, owner);
+        _grantRole(BURNER_ROLE, owner);
+        _grantRole(PAUSER_ROLE, owner);
+        _grantRole(SNAPSHOOTER_ROLE, owner);
     }
 
     /**
