@@ -13,8 +13,7 @@ import "../../../openzeppelin-contracts-upgradeable/contracts/token/ERC20/ERC20U
  */
 abstract contract EnforcementModuleInternal is
     Initializable,
-    ContextUpgradeable,
-    ERC20Upgradeable
+    ContextUpgradeable
 {
     /**
      * @dev Emitted when an address is frozen.
