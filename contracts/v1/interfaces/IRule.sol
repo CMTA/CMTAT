@@ -1,6 +1,6 @@
 pragma solidity ^0.8.2;
 
-interface IRule {
+interface IRuleV1 {
   function isTransferValid(
     address _from, address _to, uint256 _amount)
   external view returns (bool isValid);

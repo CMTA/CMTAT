@@ -1,6 +1,6 @@
 pragma solidity ^0.8.2;
 
-import "../../openzeppelin-contracts-upgradeable/contracts/metatx/ERC2771ContextUpgradeable.sol";
+import "../../../openzeppelin-contracts-upgradeable/contracts/metatx/ERC2771ContextUpgradeable.sol";
 
 
 /**
@@ -8,7 +8,7 @@ import "../../openzeppelin-contracts-upgradeable/contracts/metatx/ERC2771Context
  *
  * Useful for to provide UX where the user does not pay gas for token exchange
  */
-abstract contract MetaTxModule is ERC2771ContextUpgradeable {
+abstract contract MetaTxModuleV1 is ERC2771ContextUpgradeable {
   function __MetaTx_init(address forwarder) internal initializer {
     __Context_init_unchained();
     __ERC2771Context_init_unchained(forwarder);

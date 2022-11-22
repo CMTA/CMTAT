@@ -1,15 +1,15 @@
 pragma solidity ^0.8.2;
 
-import "../../openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradeable.sol";
-import "../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
-import "../../openzeppelin-contracts-upgradeable/contracts/token/ERC20/ERC20Upgradeable.sol";
+import "../../../openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradeable.sol";
+import "../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
+import "../../../openzeppelin-contracts-upgradeable/contracts/token/ERC20/ERC20Upgradeable.sol";
 
 /**
  * @dev Force transfer module.
  *
  * Useful for to force transfer of tokens by an authorized user
  */
-abstract contract EnforcementModule is Initializable, ContextUpgradeable, ERC20Upgradeable {
+abstract contract EnforcementModuleV1 is Initializable, ContextUpgradeable, ERC20Upgradeable {
     /**
      * @dev Emitted when a transfer is forced.
      */

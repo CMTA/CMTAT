@@ -3,7 +3,7 @@ pragma solidity ^0.8.2;
 import "../interfaces/IRule.sol";
 
 
-contract RuleMock is IRule {
+contract RuleMockV1 is IRuleV1 {
   uint8 constant AMOUNT_TOO_HIGH = 10;
   string constant TEXT_AMOUNT_TOO_HIGH = "Amount too high";
   string constant TEXT_CODE_NOT_FOUND = "Code not found";

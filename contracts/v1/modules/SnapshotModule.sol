@@ -1,9 +1,9 @@
 pragma solidity ^0.8.2;
 
-import "../../openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradeable.sol";
-import "../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
-import "../../openzeppelin-contracts-upgradeable/contracts/token/ERC20/ERC20Upgradeable.sol";
-import "../../openzeppelin-contracts-upgradeable/contracts/utils/ArraysUpgradeable.sol";
+import "../../../openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradeable.sol";
+import "../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
+import "../../../openzeppelin-contracts-upgradeable/contracts/token/ERC20/ERC20Upgradeable.sol";
+import "../../../openzeppelin-contracts-upgradeable/contracts/utils/ArraysUpgradeable.sol";
 
 /**
  * @dev Snapshot module.
@@ -11,7 +11,7 @@ import "../../openzeppelin-contracts-upgradeable/contracts/utils/ArraysUpgradeab
  * Useful to take a snapshot of token holder balance and total supply at a specific time
  */
 
-abstract contract SnapshotModule is Initializable, ContextUpgradeable, ERC20Upgradeable {
+abstract contract SnapshotModuleV1 is Initializable, ContextUpgradeable, ERC20Upgradeable {
   using ArraysUpgradeable for uint256[];
 
   event SnapshotSchedule(uint256 indexed oldTime, uint256 indexed newTime);
@@ -26,7 +26,8 @@ abstract contract SnapshotModule is Initializable, ContextUpgradeable, ERC20Upgr
   mapping(address => Snapshots) private _accountBalanceSnapshots;
   Snapshots private _totalSupplySnapshots;
 
-  uint256 private _currentSnapshot;
+  /// @custom:oz-upgrades-unsafe-allow state-variable-assignment
+  uint256 private _currentSnapshot = 0;
 
   uint256[] private _scheduledSnapshots;
 
@@ -36,7 +37,6 @@ abstract contract SnapshotModule is Initializable, ContextUpgradeable, ERC20Upgr
   }
 
   function __Snapshot_init_unchained() internal initializer {
-     _currentSnapshot = 0;
   }
 
   function _scheduleSnapshot (uint256 time) internal returns (uint256) {

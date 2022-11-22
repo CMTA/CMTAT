@@ -5,14 +5,14 @@ import "../interfaces/IRuleEngine.sol";
 import "./RuleMock.sol";
 
 
-contract RuleEngineMock is IRuleEngine {
-  IRule[] internal _rules;
+contract RuleEngineMockV1 is IRuleEngineV1 {
+  IRuleV1[] internal _rules;
 
   constructor() {
-    _rules.push(new RuleMock());
+    _rules.push(new RuleMockV1());
   }
 
-  function setRules(IRule[] calldata rules_) external override {
+  function setRules(IRuleV1[] calldata rules_) external override {
     _rules = rules_;
   }
 
@@ -20,11 +20,11 @@ contract RuleEngineMock is IRuleEngine {
     return _rules.length;
   }
 
-  function rule(uint256 ruleId) external view override returns (IRule) {
+  function rule(uint256 ruleId) external view override returns (IRuleV1) {
     return _rules[ruleId];
   }
 
-  function rules() external view override returns(IRule[] memory) {
+  function rules() external view override returns(IRuleV1[] memory) {
     return _rules;
   }
 

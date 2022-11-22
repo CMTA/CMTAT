@@ -2,12 +2,12 @@ pragma solidity ^0.8.2;
 
 import "./IRule.sol";
 
-interface IRuleEngine {
+interface IRuleEngineV1 {
 
-  function setRules(IRule[] calldata rules_) external;
+  function setRules(IRuleV1[] calldata rules_) external;
   function ruleLength() external view returns (uint256);
-  function rule(uint256 ruleId) external view returns (IRule);
-  function rules() external view returns(IRule[] memory);
+  function rule(uint256 ruleId) external view returns (IRuleV1);
+  function rules() external view returns(IRuleV1[] memory);
 
   function validateTransfer(
     address _from,

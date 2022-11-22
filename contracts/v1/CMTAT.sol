@@ -1,8 +1,8 @@
 pragma solidity ^0.8.2;
 
 // required OZ imports here
-import "../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
-import "../openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradeable.sol";
+import "../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
+import "../../openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradeable.sol";
 import "./modules/BaseModule.sol";
 import "./modules/AuthorizationModule.sol";
 import "./modules/BurnModule.sol";
@@ -15,17 +15,10 @@ import "./modules/MetaTxModule.sol";
 import "./modules/SnapshotModule.sol";
 import "./interfaces/IRuleEngine.sol";
 
-contract CMTAT is Initializable, ContextUpgradeable, BaseModule, AuthorizationModule, PauseModule, MintModule, BurnModule, EnforcementModule, ValidationModule, MetaTxModule, SnapshotModule {
+contract CMTATV1 is Initializable, ContextUpgradeable, BaseModuleV1, AuthorizationModuleV1, PauseModuleV1, MintModuleV1, BurnModuleV1, EnforcementModuleV1, ValidationModuleV1, MetaTxModuleV1, SnapshotModuleV1 {
   uint8 constant TRANSFER_OK = 0;
   string constant TEXT_TRANSFER_OK = "No restriction";
 
-  /// @custom:oz-upgrades-unsafe-allow constructor
-  constructor(address owner, address forwarder, string memory name, string memory symbol, string memory tokenId, string memory terms){
-    // Initialize the implementation contract
-    // Warning : do not initialize the proxy
-    initialize(owner, forwarder, name, symbol,tokenId, terms);
-  }
-  
   function initialize (address owner, address forwarder, string memory name, string memory symbol, string memory tokenId, string memory terms) public initializer {
     __CMTAT_init(owner, forwarder, name, symbol, tokenId, terms);
   }
@@ -143,11 +136,11 @@ contract CMTAT is Initializable, ContextUpgradeable, BaseModule, AuthorizationMo
     return _unfreeze(account);
   }
 
-  function decimals() public view virtual override(ERC20Upgradeable, BaseModule) returns (uint8) { 
+  function decimals() public view virtual override(ERC20Upgradeable, BaseModuleV1) returns (uint8) { 
     return super.decimals();
   }
 
-  function transferFrom(address sender, address recipient, uint256 amount) public virtual override(ERC20Upgradeable, BaseModule) returns (bool) {
+  function transferFrom(address sender, address recipient, uint256 amount) public virtual override(ERC20Upgradeable, BaseModuleV1) returns (bool) {
     return super.transferFrom(sender, recipient, amount);
   }
 
@@ -206,11 +199,12 @@ contract CMTAT is Initializable, ContextUpgradeable, BaseModule, AuthorizationMo
     terms = terms_;
   }
 
+  /// @custom:oz-upgrades-unsafe-allow selfdestruct
   function kill() public onlyRole(DEFAULT_ADMIN_ROLE) {
-    // selfdestruct(payable(_msgSender()));
+    selfdestruct(payable(_msgSender()));
   }
 
-  function setRuleEngine(IRuleEngine ruleEngine_) external onlyRole(DEFAULT_ADMIN_ROLE) {
+  function setRuleEngine(IRuleEngineV1 ruleEngine_) external onlyRole(DEFAULT_ADMIN_ROLE) {
     ruleEngine = ruleEngine_;
     emit RuleEngineSet(address(ruleEngine_));
   }
@@ -219,7 +213,7 @@ contract CMTAT is Initializable, ContextUpgradeable, BaseModule, AuthorizationMo
     _trustedForwarder = trustedForwarder_;
   }
 
-  function _beforeTokenTransfer(address from, address to, uint256 amount) internal override(SnapshotModule, ERC20Upgradeable) {
+  function _beforeTokenTransfer(address from, address to, uint256 amount) internal override(SnapshotModuleV1, ERC20Upgradeable) {
     require(!paused(), "CMTAT: token transfer while paused");
     require(!frozen(from), "CMTAT: token transfer while frozen");
 

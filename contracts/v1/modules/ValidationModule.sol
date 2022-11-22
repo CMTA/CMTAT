@@ -1,7 +1,7 @@
 pragma solidity ^0.8.2;
 
-import "../../openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradeable.sol";
-import "../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
+import "../../../openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradeable.sol";
+import "../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
 import "../interfaces/IRuleEngine.sol";
 
 
@@ -10,23 +10,23 @@ import "../interfaces/IRuleEngine.sol";
  *
  * Useful for to restrict and validate transfers
  */
-abstract contract ValidationModule is Initializable, ContextUpgradeable {
+abstract contract ValidationModuleV1 is Initializable, ContextUpgradeable {
     /**
      * @dev Emitted when a rule engine is set.
      */
     event RuleEngineSet (address indexed newRuleEngine);
 
-    IRuleEngine public ruleEngine;
+    IRuleEngineV1 public ruleEngine;
 
     /**
      * @dev Initializes the contract with rule engine.
      */
-    function __Validation_init(IRuleEngine ruleEngine_) internal initializer {
+    function __Validation_init(IRuleEngineV1 ruleEngine_) internal initializer {
         __Context_init_unchained();
         __Validation_init_unchained(ruleEngine_);
     }
 
-    function __Validation_init_unchained(IRuleEngine ruleEngine_) internal initializer {
+    function __Validation_init_unchained(IRuleEngineV1 ruleEngine_) internal initializer {
         if (address(ruleEngine_) != address(0)) {
             ruleEngine = ruleEngine_;
             emit RuleEngineSet(address(ruleEngine));

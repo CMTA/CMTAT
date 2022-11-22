@@ -2,14 +2,13 @@ const { expectEvent, expectRevert } = require('@openzeppelin/test-helpers')
 const { should } = require('chai').should()
 
 const { deployProxy, upgradeProxy } = require('@openzeppelin/truffle-upgrades')
-const CMTAT1 = artifacts.require('CMTAT')
+const CMTAT1 = artifacts.require('CMTATV1')
 const CMTAT2 = artifacts.require('CMTAT')
 
 contract('UpgradeableCMTAT - Proxy', function ([_, owner, address1]) {
   it('should increment the balance value', async function () {
     // With the first version of CMTAT
-    this.upgradeableCMTATInstance = await deployProxy(CMTAT1, [owner, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch'], { initializer: 'initialize', constructorArgs: [_] });
-
+    this.upgradeableCMTATInstance = await deployProxy(CMTAT1, [owner, _, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch'], { initializer: 'initialize', constructorArgs: [] });
     (await this.upgradeableCMTATInstance.balanceOf(owner)).should.be.bignumber.equal('0');
 
     // Issue 20 and check balances and total supply
@@ -21,9 +20,7 @@ contract('UpgradeableCMTAT - Proxy', function ([_, owner, address1]) {
 
     // With the new version
     // With the first version of CMTAT
-    // this.upgradeableCMTATV2Instance = await upgradeProxy(this.upgradeableCMTATInstance.address, CMTAT2, [owner, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch']);
-    this.upgradeableCMTATV2Instance = await upgradeProxy(this.upgradeableCMTATInstance.address, CMTAT2, { constructorArgs: [_] });
-
+    this.upgradeableCMTATV2Instance = await upgradeProxy(this.upgradeableCMTATInstance.address, CMTAT2, { constructorArgs: [owner, _, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch'] });
     (await this.upgradeableCMTATV2Instance.balanceOf(address1)).should.be.bignumber.equal('20');
 
     // Issue 20 and check balances and total supply
