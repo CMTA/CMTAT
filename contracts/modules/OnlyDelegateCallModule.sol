@@ -1,6 +1,6 @@
 pragma solidity ^0.8.2;
 
-abstract contract OnlyDelegateCall {
+abstract contract OnlyDelegateCallModule {
     /// @custom:oz-upgrades-unsafe-allow state-variable-immutable state-variable-assignment
     address private immutable self = address(this);
 
