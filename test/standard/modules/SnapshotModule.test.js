@@ -13,7 +13,7 @@ const timeout = function (ms) {
 }
 
 contract(
-  'SnapshotModule',
+  'Standard - SnapshotModule',
   function ([_, owner, address1, address2, address3]) {
     beforeEach(async function () {
       this.cmtat = await CMTAT.new(owner, _, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', { from: owner })

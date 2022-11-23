@@ -4,7 +4,7 @@ const { should } = require('chai').should()
 
 const CMTAT = artifacts.require('CMTAT')
 
-function BaseModuleCommon (owner, address1, address2, address3) {
+function BaseModuleCommon (owner, address1, address2, address3, proxyTest) {
   context('Token structure', function () {
     it('has the defined name', async function () {
       (await this.cmtat.name()).should.equal('CMTA Token')
@@ -54,13 +54,21 @@ function BaseModuleCommon (owner, address1, address2, address3) {
       (await this.cmtat.terms()).should.equal('https://cmta.ch')
     })
     it('allows the admin to kill the contract', async function () {
-      this.cmtat.kill({ from: owner })
-      try {
-        await this.cmtat.terms()
-      } catch (e) {
-        e.message.should.equal(
-          "Returned values aren't valid, did it run Out of Gas? You might also see this error if you are not using the correct ABI for the contract you are retrieving data from, requesting data from a block number that does not exist, or querying a node which is not fully synced."
-        )
+      if (proxyTest) {
+        this.cmtat.kill({ from: owner })
+        try {
+          await this.cmtat.terms()
+        } catch (e) {
+          e.message.should.equal(
+            "Returned values aren't valid, did it run Out of Gas? You might also see this error if you are not using the correct ABI for the contract you are retrieving data from, requesting data from a block number that does not exist, or querying a node which is not fully synced."
+          )
+        }
+      } else {
+        await expectRevert(
+          this.cmtat.kill({ from: owner }),
+          'Direct call to the implementation not allowed'
+        );
+        (await this.cmtat.terms()).should.equal('https://cmta.ch')
       }
     })
     it('reverts when trying to kill the contract from non-admin', async function () {

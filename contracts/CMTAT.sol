@@ -3,6 +3,7 @@ pragma solidity ^0.8.2;
 // required OZ imports here
 import "../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
 import "../openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradeable.sol";
+import "./security/OnlyDelegateCall.sol";
 import "./modules/BaseModule.sol";
 import "./modules/AuthorizationModule.sol";
 import "./modules/BurnModule.sol";
@@ -15,7 +16,7 @@ import "./modules/MetaTxModule.sol";
 import "./modules/SnapshotModule.sol";
 import "./interfaces/IRuleEngine.sol";
 
-contract CMTAT is Initializable, ContextUpgradeable, BaseModule, AuthorizationModule, PauseModule, MintModule, BurnModule, EnforcementModule, ValidationModule, MetaTxModule, SnapshotModule {
+contract CMTAT is Initializable, OnlyDelegateCall, ContextUpgradeable, BaseModule, AuthorizationModule, PauseModule, MintModule, BurnModule, EnforcementModule, ValidationModule, MetaTxModule, SnapshotModule {
   uint8 constant TRANSFER_OK = 0;
   string constant TEXT_TRANSFER_OK = "No restriction";
 
@@ -206,8 +207,12 @@ contract CMTAT is Initializable, ContextUpgradeable, BaseModule, AuthorizationMo
     terms = terms_;
   }
 
-  function kill() public onlyRole(DEFAULT_ADMIN_ROLE) {
-    // selfdestruct(payable(_msgSender()));
+  /*
+  * @dev warning: the call to this function will destroy the Proxy
+  */
+  /// @custom:oz-upgrades-unsafe-allow selfdestruct
+  function kill() public onlyRole(DEFAULT_ADMIN_ROLE) onlyDelegateCall  {
+    selfdestruct(payable(_msgSender()));
   }
 
   function setRuleEngine(IRuleEngine ruleEngine_) external onlyRole(DEFAULT_ADMIN_ROLE) {

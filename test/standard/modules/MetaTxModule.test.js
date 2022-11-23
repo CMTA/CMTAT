@@ -20,7 +20,7 @@ const EIP712Domain = [
 ]
 
 contract(
-  'MetaTxModule',
+  'Standard - MetaTxModule',
   function ([
     _,
     owner,
