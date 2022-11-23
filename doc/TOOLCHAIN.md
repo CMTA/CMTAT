@@ -84,9 +84,11 @@ A wallet implementation
 
 **[OpenZeppelin Contracts Upgradeable](https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/)**
 Upgradeable variant of OpenZeppelin Contracts, meant for use in upgradeable contracts.
+The version of the library used is available in the file [USAGE.md](./USAGE.md)
 
-Warning: submodules are not automatically updated when the host repository is updated.  
-
+Warning: 
+- Submodules are not automatically updated when the host repository is updated.  
+- Only update the module to a specific version, not an intermediary commit.
 
 ## UML
 
