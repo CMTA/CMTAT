@@ -113,22 +113,28 @@ contract CMTAT is
         require(validateTransfer(from, to, amount), "CMTAT: transfer rejected by validation module");
     }
 
+    /** 
+    @dev This surcharge is not necessary if you do not use the MetaTxModule
+    */
     function _msgSender()
         internal
         view
-        override(ERC2771ContextUpgradeable, ContextUpgradeable)
+        override(MetaTxModule, ContextUpgradeable)
         returns (address sender)
     {
-        return super._msgSender();
+        return MetaTxModule._msgSender();
     }
 
+    /** 
+    @dev This surcharge is not necessary if you do not use the MetaTxModule
+    */
     function _msgData()
         internal
         view
-        override(ERC2771ContextUpgradeable, ContextUpgradeable)
+        override(MetaTxModule, ContextUpgradeable)
         returns (bytes calldata)
     {
-        return super._msgData();
+        return MetaTxModule._msgData();
     }
 
     uint256[50] private __gap;

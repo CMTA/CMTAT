@@ -18,4 +18,24 @@ abstract contract MetaTxModule is ERC2771ContextUpgradeable {
         // See : https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/blob/master/contracts/mocks/ERC2771ContextMockUpgradeable.sol
         // emit Sender(_msgSender());
     }
+
+    function _msgSender()
+        internal
+        view
+        override
+        virtual
+        returns (address sender)
+    {
+        return ERC2771ContextUpgradeable._msgSender();
+    }
+
+    function _msgData()
+        internal
+        view
+        override
+        virtual
+        returns (bytes calldata)
+    {
+        return ERC2771ContextUpgradeable._msgData();
+    }
 }
