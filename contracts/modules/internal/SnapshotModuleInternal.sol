@@ -2,10 +2,10 @@
 
 pragma solidity ^0.8.17;
 
-import "../../openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradeable.sol";
-import "../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
-import "../../openzeppelin-contracts-upgradeable/contracts/token/ERC20/ERC20Upgradeable.sol";
-import "../../openzeppelin-contracts-upgradeable/contracts/utils/ArraysUpgradeable.sol";
+import "../../../openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradeable.sol";
+import "../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
+import "../../../openzeppelin-contracts-upgradeable/contracts/token/ERC20/ERC20Upgradeable.sol";
+import "../../../openzeppelin-contracts-upgradeable/contracts/utils/ArraysUpgradeable.sol";
 
 /**
  * @dev Snapshot module.
@@ -13,7 +13,7 @@ import "../../openzeppelin-contracts-upgradeable/contracts/utils/ArraysUpgradeab
  * Useful to take a snapshot of token holder balance and total supply at a specific time
  */
 
-abstract contract SnapshotModule is
+abstract contract SnapshotModuleInternal is
     Initializable,
     ContextUpgradeable,
     ERC20Upgradeable
@@ -28,7 +28,6 @@ abstract contract SnapshotModule is
         uint256[] values;
     }
 
-    bytes32 public constant SNAPSHOOTER_ROLE = keccak256("SNAPSHOOTER_ROLE");
     mapping(address => Snapshots) private _accountBalanceSnapshots;
     Snapshots private _totalSupplySnapshots;
 

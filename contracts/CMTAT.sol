@@ -6,35 +6,32 @@ pragma solidity ^0.8.17;
 import "../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
 import "../openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradeable.sol";
 import "./modules/BaseModule.sol";
-import "./modules/AuthorizationModule.sol";
-import "./modules/BurnModule.sol";
-import "./modules/MintModule.sol";
-import "./modules/BurnModule.sol";
-import "./modules/EnforcementModule.sol";
-import "./modules/PauseModule.sol";
-import "./modules/ValidationModule.sol";
-import "./modules/MetaTxModule.sol";
-import "./modules/SnapshotModule.sol";
+import "./modules/wrapper/AuthorizationModule.sol";
+import "./modules/wrapper/BurnModule.sol";
+import "./modules/wrapper/MintModule.sol";
+import "./modules/wrapper/BurnModule.sol";
+import "./modules/wrapper/EnforcementModule.sol";
+import "./modules/wrapper/PauseModule.sol";
+import "./modules/wrapper/ValidationModule.sol";
+import "./modules/wrapper/MetaTxModule.sol";
+import "./modules/wrapper/SnapshotModule.sol";
 import "./interfaces/IRuleEngine.sol";
 
 contract CMTAT is
     Initializable,
     ContextUpgradeable,
     BaseModule,
-    AuthorizationModule,
     PauseModule,
     MintModule,
     BurnModule,
     EnforcementModule,
     ValidationModule,
     MetaTxModule,
-    SnapshotModule
+    SnasphotModule
 {
     enum REJECTED_CODE { TRANSFER_OK, TRANSFER_REJECTED_PAUSED, TRANSFER_REJECTED_FROZEN }
     string constant TEXT_TRANSFER_OK = "No restriction";
-    event TermSet(string indexed newTerm);
-    event TokenIdSet(string indexed newTokenId);
-
+   
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor(
         address forwarder
@@ -81,97 +78,6 @@ contract CMTAT is
         _grantRole(BURNER_ROLE, owner);
         _grantRole(PAUSER_ROLE, owner);
         _grantRole(SNAPSHOOTER_ROLE, owner);
-    }
-
-    /**
-     * @dev Creates `amount` new tokens for `to`.
-     *
-     * See {ERC20-_mint}.
-     *
-     * Requirements:
-     *
-     * - the caller must have the `MINTER_ROLE`.
-     */
-    function mint(address to, uint256 amount) public onlyRole(MINTER_ROLE) {
-        _mint(to, amount);
-        emit Mint(to, amount);
-    }
-
-    /**
-     * @dev Destroys `amount` tokens from `account`, deducting from the caller's
-     * allowance.
-     *
-     * See {ERC20-_burn} and {ERC20-allowance}.
-     *
-     * Requirements:
-     *
-     * - the caller must have allowance for ``accounts``'s tokens of at least
-     * `amount`.
-     */
-    function burnFrom(address account, uint256 amount)
-        public
-        onlyRole(BURNER_ROLE)
-    {
-        uint256 currentAllowance = allowance(account, _msgSender());
-        require(
-            currentAllowance >= amount,
-            "CMTAT: burn amount exceeds allowance"
-        );
-        unchecked {
-            _approve(account, _msgSender(), currentAllowance - amount);
-        }
-        _burn(account, amount);
-        emit Burn(account, amount);
-    }
-
-    /**
-     * @dev Pauses all token transfers.
-     *
-     * See {ERC20Pausable} and {Pausable-_pause}.
-     *
-     * Requirements:
-     *
-     * - the caller must have the `PAUSER_ROLE`.
-     */
-    function pause() public onlyRole(PAUSER_ROLE) {
-        _pause();
-    }
-
-    /**
-     * @dev Unpauses all token transfers.
-     *
-     * See {ERC20Pausable} and {Pausable-_unpause}.
-     *
-     * Requirements:
-     *
-     * - the caller must have the `PAUSER_ROLE`.
-     */
-    function unpause() public onlyRole(PAUSER_ROLE) {
-        _unpause();
-    }
-
-    /**
-     * @dev Freezes an address.
-     *
-     */
-    function freeze(address account)
-        public
-        onlyRole(ENFORCER_ROLE)
-        returns (bool)
-    {
-        return _freeze(account);
-    }
-
-    /**
-     * @dev Unfreezes an address.
-     *
-     */
-    function unfreeze(address account)
-        public
-        onlyRole(ENFORCER_ROLE)
-        returns (bool)
-    {
-        return _unfreeze(account);
     }
 
     function decimals()
@@ -235,61 +141,16 @@ contract CMTAT is
         }
     }
 
-    function scheduleSnapshot(uint256 time)
-        public
-        onlyRole(SNAPSHOOTER_ROLE)
-    {
-        _scheduleSnapshot(time);
-    }
-
-    function rescheduleSnapshot(uint256 oldTime, uint256 newTime)
-        public
-        onlyRole(SNAPSHOOTER_ROLE)
-    {
-        _rescheduleSnapshot(oldTime, newTime);
-    }
-
-    function unscheduleSnapshot(uint256 time)
-        public
-        onlyRole(SNAPSHOOTER_ROLE)
-    {
-        _unscheduleSnapshot(time);
-    }
-
-    function setTokenId(string memory tokenId_)
-        public
-        onlyRole(DEFAULT_ADMIN_ROLE)
-    {
-        tokenId = tokenId_;
-        emit TokenIdSet(tokenId_);
-    }
-
-    function setTerms(string memory terms_)
-        public
-        onlyRole(DEFAULT_ADMIN_ROLE)
-    {
-        terms = terms_;
-        emit TermSet(terms_);
-    }
-
     /// @custom:oz-upgrades-unsafe-allow selfdestruct
     function kill() public onlyRole(DEFAULT_ADMIN_ROLE) {
         selfdestruct(payable(_msgSender()));
-    }
-
-    function setRuleEngine(IRuleEngine ruleEngine_)
-        external
-        onlyRole(DEFAULT_ADMIN_ROLE)
-    {
-        ruleEngine = ruleEngine_;
-        emit RuleEngineSet(address(ruleEngine_));
     }
 
     function _beforeTokenTransfer(
         address from,
         address to,
         uint256 amount
-    ) internal override(SnapshotModule, ERC20Upgradeable) {
+    ) internal override(SnapshotModuleInternal, ERC20Upgradeable) {
         require(!paused(), "CMTAT: token transfer while paused");
         require(!frozen(from), "CMTAT: token transfer while frozen");
 

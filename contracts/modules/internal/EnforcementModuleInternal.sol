@@ -2,16 +2,16 @@
 
 pragma solidity ^0.8.17;
 
-import "../../openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradeable.sol";
-import "../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
-import "../../openzeppelin-contracts-upgradeable/contracts/token/ERC20/ERC20Upgradeable.sol";
+import "../../../openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradeable.sol";
+import "../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
+import "../../../openzeppelin-contracts-upgradeable/contracts/token/ERC20/ERC20Upgradeable.sol";
 
 /**
  * @dev Enforcement module.
  *
  * Allows the issuer to freeze transfers from a given address
  */
-abstract contract EnforcementModule is
+abstract contract EnforcementModuleInternal is
     Initializable,
     ContextUpgradeable,
     ERC20Upgradeable
@@ -28,9 +28,7 @@ abstract contract EnforcementModule is
 
     mapping(address => bool) private _frozen;
 
-    bytes32 public constant ENFORCER_ROLE = keccak256("ENFORCER_ROLE");
-    string internal constant TEXT_TRANSFER_REJECTED_FROZEN =
-        "The address is frozen";
+
 
     /**
      * @dev Initializes the contract in unpaused state.

@@ -2,16 +2,16 @@
 
 pragma solidity ^0.8.17;
 
-import "../../openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradeable.sol";
-import "../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
-import "../interfaces/IRuleEngine.sol";
+import "../../../openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradeable.sol";
+import "../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
+import "../../interfaces/IRuleEngine.sol";
 
 /**
  * @dev Validation module.
  *
  * Useful for to restrict and validate transfers
  */
-abstract contract ValidationModule is Initializable, ContextUpgradeable {
+abstract contract ValidationModuleInternal is Initializable, ContextUpgradeable {
     /**
      * @dev Emitted when a rule engine is set.
      */

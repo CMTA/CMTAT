@@ -54,7 +54,7 @@ function BaseModuleCommon (owner, address1, address2, address3) {
       (await this.cmtat.terms()).should.equal('https://cmta.ch')
     })
     it('allows the admin to kill the contract', async function () {
-      this.cmtat.kill({ from: owner })
+      await this.cmtat.kill({ from: owner })
       try {
         await this.cmtat.terms()
       } catch (e) {
