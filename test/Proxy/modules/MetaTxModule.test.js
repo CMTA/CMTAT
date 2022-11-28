@@ -29,7 +29,7 @@ contract(
     beforeEach(async function () {
       this.trustedForwarder = await MinimalForwarderMock.new()
       await this.trustedForwarder.initialize()
-      this.cmtat = await deployProxy(CMTAT, [owner, this.trustedForwarder.address, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch'], { initializer: 'initialize', constructorArgs: [owner, this.trustedForwarder.address, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch'] })
+      this.cmtat = await deployProxy(CMTAT, [owner, this.trustedForwarder.address, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch'], { initializer: 'initialize', constructorArgs: [] })
     })
 
     MetaTxModuleCommon(owner, address1)

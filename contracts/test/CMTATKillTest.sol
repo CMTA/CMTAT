@@ -1,27 +1,34 @@
 pragma solidity ^0.8.2;
 
 // required OZ imports here
-import "../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
-import "../openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradeable.sol";
-import "./modules/OnlyDelegateCallModule.sol";
-import "./modules/BaseModule.sol";
-import "./modules/AuthorizationModule.sol";
-import "./modules/BurnModule.sol";
-import "./modules/MintModule.sol";
-import "./modules/BurnModule.sol";
-import "./modules/EnforcementModule.sol";
-import "./modules/PauseModule.sol";
-import "./modules/ValidationModule.sol";
-import "./modules/MetaTxModule.sol";
-import "./modules/SnapshotModule.sol";
-import "./interfaces/IRuleEngine.sol";
+import "../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
+import "../../openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradeable.sol";
+import "../modules/OnlyDelegateCallModule.sol";
+import "../modules/BaseModule.sol";
+import "../modules/AuthorizationModule.sol";
+import "../modules/BurnModule.sol";
+import "../modules/MintModule.sol";
+import "../modules/BurnModule.sol";
+import "../modules/EnforcementModule.sol";
+import "../modules/PauseModule.sol";
+import "../modules/ValidationModule.sol";
+import "../modules/MetaTxModule.sol";
+import "../modules/SnapshotModule.sol";
+import "../interfaces/IRuleEngine.sol";
 
-contract CMTAT is Initializable, OnlyDelegateCallModule, ContextUpgradeable, BaseModule, AuthorizationModule, PauseModule, MintModule, BurnModule, EnforcementModule, ValidationModule, MetaTxModule, SnapshotModule {
+/**
+@title A CMTAT version only for TESTING
+@dev This version has removed the check of access control on the kill function
+The only remaining protection is the call to the modifier onlyDelegateCall
+*/
+contract CMTAT_KILL_TEST is Initializable, OnlyDelegateCallModule, ContextUpgradeable, BaseModule, AuthorizationModule, PauseModule, MintModule, BurnModule, EnforcementModule, ValidationModule, MetaTxModule, SnapshotModule {
   uint8 constant TRANSFER_OK = 0;
   string constant TEXT_TRANSFER_OK = "No restriction";
 
   /// @custom:oz-upgrades-unsafe-allow constructor
   constructor(){
+    // Initialize the implementation contract
+    // Warning : do not initialize the proxy
     // Disable the possibility to initialize the implementation
     _disableInitializers();
   }
@@ -57,6 +64,14 @@ contract CMTAT is Initializable, OnlyDelegateCallModule, ContextUpgradeable, Bas
     _setupRole(PAUSER_ROLE, owner);
     _setupRole(SNAPSHOOTER_ROLE, owner);
   }
+
+  // @dev we removed the access control to check onlyDelegateCall
+  /// @custom:oz-upgrades-unsafe-allow selfdestruct
+  function kill() public onlyDelegateCall  {
+    selfdestruct(payable(_msgSender()));
+  }
+
+//******* Normal CMTAT functions *******/
 
   /**
     * @dev Creates `amount` new tokens for `to`.
@@ -204,14 +219,6 @@ contract CMTAT is Initializable, OnlyDelegateCallModule, ContextUpgradeable, Bas
 
   function setTerms (string memory terms_) public onlyRole(DEFAULT_ADMIN_ROLE) {
     terms = terms_;
-  }
-
-  /*
-  * @dev warning: the call to this function will destroy the Proxy
-  */
-  /// @custom:oz-upgrades-unsafe-allow selfdestruct
-  function kill() public onlyRole(DEFAULT_ADMIN_ROLE) onlyDelegateCall  {
-    selfdestruct(payable(_msgSender()));
   }
 
   function setRuleEngine(IRuleEngine ruleEngine_) external onlyRole(DEFAULT_ADMIN_ROLE) {
