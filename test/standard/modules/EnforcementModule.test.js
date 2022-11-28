@@ -6,12 +6,11 @@ const CMTAT = artifacts.require('CMTAT')
 const EnforcementModuleCommon = require('../../common/EnforcementModuleCommon')
 
 contract(
-  'EnforcementModule',
-  function ([_, owner, address1, address2]) {
+  'Standard - EnforcementModule',
+  function ([_, admin, address1, address2]) {
     beforeEach(async function () {
-      this.cmtat = await CMTAT.new(_, { from: owner })
-      await this.cmtat.initialize(owner, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', { from: owner })
+      this.cmtat = await CMTAT.new(_, false, admin, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', { from: admin })
     })
 
-    EnforcementModuleCommon(owner, address1, address2)
+    EnforcementModuleCommon(admin, address1, address2)
   })

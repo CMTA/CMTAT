@@ -7,6 +7,7 @@ import "../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializ
 import "../../openzeppelin-contracts-upgradeable/contracts/token/ERC20/ERC20Upgradeable.sol";
 import "./wrapper/AuthorizationModule.sol";
 
+
 abstract contract BaseModule is Initializable, ERC20Upgradeable, AuthorizationModule {
     /* Events */
     event Spend(address indexed owner, address indexed spender, uint256 amount);

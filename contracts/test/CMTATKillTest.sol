@@ -3,22 +3,27 @@
 pragma solidity ^0.8.17;
 
 // required OZ imports here
-import "../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
-import "../openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradeable.sol";
-import "./modules/BaseModule.sol";
-import "./modules/wrapper/AuthorizationModule.sol";
-import "./modules/wrapper/BurnModule.sol";
-import "./modules/wrapper/MintModule.sol";
-import "./modules/wrapper/BurnModule.sol";
-import "./modules/wrapper/EnforcementModule.sol";
-import "./modules/wrapper/PauseModule.sol";
-import "./modules/wrapper/ValidationModule.sol";
-import "./modules/wrapper/MetaTxModule.sol";
-import "./modules/wrapper/SnapshotModule.sol";
-import "./modules/security/OnlyDelegateCallModule.sol";
-import "./interfaces/IRuleEngine.sol";
+import "../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
+import "../../openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradeable.sol";
+import "../modules/BaseModule.sol";
+import "../modules/wrapper/AuthorizationModule.sol";
+import "../modules/wrapper/BurnModule.sol";
+import "../modules/wrapper/MintModule.sol";
+import "../modules/wrapper/BurnModule.sol";
+import "../modules/wrapper/EnforcementModule.sol";
+import "../modules/wrapper/PauseModule.sol";
+import "../modules/wrapper/ValidationModule.sol";
+import "../modules/wrapper/MetaTxModule.sol";
+import "../modules/wrapper/SnapshotModule.sol";
+import "../modules/security/OnlyDelegateCallModule.sol";
+import "../interfaces/IRuleEngine.sol";
 
-contract CMTAT is
+/**
+@title A CMTAT version only for TESTING
+@dev This version has removed the check of access control on the kill function
+The only remaining protection is the call to the modifier onlyDelegateCall
+*/
+contract CMTAT_KILL_TEST is
     Initializable,
     ContextUpgradeable,
     BaseModule,
@@ -31,32 +36,40 @@ contract CMTAT is
     SnasphotModule,
     OnlyDelegateCallModule
 {
-     bool public deployedWithProxy;
+    bool usedWithProxy;
 
     /// @custom:oz-upgrades-unsafe-allow constructor
-    constructor(address forwarder, bool deployedWithProxy_, address owner, string memory name, string memory symbol, string memory tokenId, string memory terms
+    constructor(address forwarder, bool usedWithProxy_, address owner, string memory name, string memory symbol, string memory tokenId, string memory terms
     ) MetaTxModule(forwarder) {
-         if(!deployedWithProxy_){
-            // Initialize the contract to avoid front-running
+         if(!usedWithProxy_){
+            // Initialize the implementation contract to avoid front-running
             // Warning : do not initialize the proxy
-            initialize(deployedWithProxy_, owner, name, symbol,tokenId, terms);
+            initialize(usedWithProxy_, owner, name, symbol,tokenId, terms);
          }else{
-            // Initialize the variable for the implementation
-            deployedWithProxy = true;
+            // Initialize the implementation
+            usedWithProxy = true;
             // Disable the possibility to initialize the implementation
             _disableInitializers();
          }   
     }
 
+    // @dev we removed the access control to check onlyDelegateCall
+    /// @custom:oz-upgrades-unsafe-allow selfdestruct
+    function kill() public onlyDelegateCall(usedWithProxy) {
+        selfdestruct(payable(_msgSender()));
+    }
+
+    //******* Normal CMTAT functions *******/
+
     function initialize(
-        bool deployedWithProxy_,
+        bool usedWithProxy_,
         address owner,
         string memory name,
         string memory symbol,
         string memory tokenId,
         string memory terms
     ) public initializer {
-        __CMTAT_init(deployedWithProxy_, owner, name, symbol, tokenId, terms);
+        __CMTAT_init(usedWithProxy_, owner, name, symbol, tokenId, terms);
     }
 
     /**
@@ -66,7 +79,7 @@ contract CMTAT is
      * See {ERC20-constructor}.
      */
     function __CMTAT_init(
-        bool deployedWithProxy_,
+        bool usedWithProxy_,
         address owner,
         string memory name,
         string memory symbol,
@@ -80,12 +93,11 @@ contract CMTAT is
         __Pausable_init_unchained();
         __Enforcement_init_unchained();
         __Snapshot_init_unchained();
-        __CMTAT_init_unchained(deployedWithProxy_, owner);
+        __CMTAT_init_unchained(usedWithProxy_, owner);
     }
 
-
-    function __CMTAT_init_unchained(bool deployedWithProxy_, address owner) internal onlyInitializing {
-        deployedWithProxy = deployedWithProxy_;
+    function __CMTAT_init_unchained(bool usedWithProxy_, address owner) internal onlyInitializing {
+        usedWithProxy = usedWithProxy_;
         _grantRole(DEFAULT_ADMIN_ROLE, owner);
         _grantRole(ENFORCER_ROLE, owner);
         _grantRole(MINTER_ROLE, owner);
@@ -110,11 +122,6 @@ contract CMTAT is
         uint256 amount
     ) public virtual override(ERC20Upgradeable, BaseModule) returns (bool) {
         return BaseModule.transferFrom(sender, recipient, amount);
-    }
-
-    /// @custom:oz-upgrades-unsafe-allow selfdestruct
-    function kill() public onlyRole(DEFAULT_ADMIN_ROLE) onlyDelegateCall(deployedWithProxy) {
-        selfdestruct(payable(_msgSender()));
     }
 
     function _beforeTokenTransfer(
