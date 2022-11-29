@@ -86,7 +86,9 @@ contract CMTAT is
         /* Internal Modules */
         __Enforcement_init_unchained();
         __Snapshot_init_unchained();
-
+        // we set the RuleEngine by calling the setter
+        // __Validation_init_unchained(IRuleEngine ruleEngine_)
+        
         /* Wrapper */
         // AuthorizationModule_init_unchained is called firstly due to inheritance
         __AuthorizationModule_init_unchained();
