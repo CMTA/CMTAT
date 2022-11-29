@@ -10,8 +10,8 @@ abstract contract OnlyDelegateCallModule {
         require(address(this) != self, "Direct call to the implementation not allowed");
     }
 
-    modifier onlyDelegateCall(bool isProxy) {
-        if(isProxy){
+    modifier onlyDelegateCall(bool deployedWithProxy) {
+        if(deployedWithProxy){
             checkDelegateCall();
         }
         _;

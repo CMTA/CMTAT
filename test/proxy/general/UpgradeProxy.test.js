@@ -39,7 +39,6 @@ contract('UpgradeableCMTAT - Proxy', function ([_, admin, address1]) {
     implementationContractAddress1.should.not.be.equal(implementationContractAddress2);
     // keep the storage
     (await this.upgradeableCMTATV2Instance.balanceOf(address1)).should.be.bignumber.equal('20');
-    (await this.upgradeableCMTATV2Instance.balanceOf(address1)).should.be.bignumber.equal('20');
 
     // Issue 20 and check balances and total supply
     ({ logs: this.logs1 } = await this.upgradeableCMTATV2Instance.mint(address1, 20, {
