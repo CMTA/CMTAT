@@ -78,6 +78,8 @@ contract CMTAT is
         // because other modules inherit from these libraries
         __Context_init_unchained();
         __ERC20_init_unchained(name, symbol);
+        // AccessControlUpgradeable inherits from ERC165Upgradeable
+        __ERC165_init_unchained();
         __AccessControl_init_unchained();
         __Pausable_init_unchained();
 
