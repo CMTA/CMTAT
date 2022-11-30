@@ -2,10 +2,10 @@
 
 pragma solidity ^0.8.17;
 
-import "../../../openzeppelin-contracts-upgradeable/contracts/security/PausableUpgradeable.sol";
-import "../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
-import "./AuthorizationModule.sol";
-import "../internal/EnforcementModuleInternal.sol";
+import "../../../../openzeppelin-contracts-upgradeable/contracts/security/PausableUpgradeable.sol";
+import "../../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
+import "../optional/AuthorizationModule.sol";
+import "../../internal/EnforcementModuleInternal.sol";
 
 /**
  * @dev Enforcement module.

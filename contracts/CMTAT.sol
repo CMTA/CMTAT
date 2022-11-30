@@ -5,17 +5,17 @@ pragma solidity ^0.8.17;
 // required OZ imports here
 import "../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
 import "../openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradeable.sol";
-import "./modules/BaseModule.sol";
-import "./modules/wrapper/AuthorizationModule.sol";
-import "./modules/wrapper/BurnModule.sol";
-import "./modules/wrapper/MintModule.sol";
-import "./modules/wrapper/BurnModule.sol";
-import "./modules/wrapper/EnforcementModule.sol";
-import "./modules/wrapper/ERC20Module.sol";
-import "./modules/wrapper/PauseModule.sol";
-import "./modules/wrapper/ValidationModule.sol";
-import "./modules/wrapper/MetaTxModule.sol";
-import "./modules/wrapper/SnapshotModule.sol";
+import "./modules/wrapper/mandatory/BaseModule.sol";
+import "./modules/wrapper/mandatory/BurnModule.sol";
+import "./modules/wrapper/mandatory/MintModule.sol";
+import "./modules/wrapper/mandatory/BurnModule.sol";
+import "./modules/wrapper/mandatory/EnforcementModule.sol";
+import "./modules/wrapper/mandatory/ERC20BaseModule.sol";
+import "./modules/wrapper/mandatory/SnapshotModule.sol";
+import "./modules/wrapper/mandatory/PauseModule.sol";
+import "./modules/wrapper/optional/ValidationModule.sol";
+import "./modules/wrapper/optional/MetaTxModule.sol";
+import "./modules/wrapper/optional/AuthorizationModule.sol";
 import "./modules/security/OnlyDelegateCallModule.sol";
 import "./interfaces/IRuleEngine.sol";
 
@@ -30,10 +30,8 @@ contract CMTAT is
     ValidationModule,
     MetaTxModule,
     SnasphotModule,
-    ERC20Module
+    ERC20BaseModule
 {
-     
-
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor(address forwarder, bool deployedWithProxy_, address owner, string memory name, string memory symbol, string memory tokenId, string memory terms
     ) MetaTxModule(forwarder) {
@@ -125,18 +123,18 @@ contract CMTAT is
         public
         view
         virtual
-        override(ERC20Upgradeable, ERC20Module)
+        override(ERC20Upgradeable, ERC20BaseModule)
         returns (uint8)
     {
-        return ERC20Module.decimals();
+        return ERC20BaseModule.decimals();
     }
 
     function transferFrom(
         address sender,
         address recipient,
         uint256 amount
-    ) public virtual override(ERC20Upgradeable, ERC20Module) returns (bool) {
-        return ERC20Module.transferFrom(sender, recipient, amount);
+    ) public virtual override(ERC20Upgradeable, ERC20BaseModule) returns (bool) {
+        return ERC20BaseModule.transferFrom(sender, recipient, amount);
     }
 
     function _beforeTokenTransfer(
