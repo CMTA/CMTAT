@@ -11,6 +11,7 @@ import "./modules/wrapper/BurnModule.sol";
 import "./modules/wrapper/MintModule.sol";
 import "./modules/wrapper/BurnModule.sol";
 import "./modules/wrapper/EnforcementModule.sol";
+import "./modules/wrapper/ERC20Module.sol";
 import "./modules/wrapper/PauseModule.sol";
 import "./modules/wrapper/ValidationModule.sol";
 import "./modules/wrapper/MetaTxModule.sol";
@@ -29,9 +30,9 @@ contract CMTAT is
     ValidationModule,
     MetaTxModule,
     SnasphotModule,
-    OnlyDelegateCallModule
+    ERC20Module
 {
-     bool public deployedWithProxy;
+     
 
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor(address forwarder, bool deployedWithProxy_, address owner, string memory name, string memory symbol, string memory tokenId, string memory terms
@@ -96,13 +97,14 @@ contract CMTAT is
         __MintModule_init_unchained();
         // EnforcementModule_init_unchained is called before ValidationModule_init_unchained due to inheritance
         __EnforcementModule_init_unchained();
+        __ERC20Module_init_unchained(0);
         // PauseModule_init_unchained is called before ValidationModule_init_unchained due to inheritance
         __PauseModule_init_unchained();
         __ValidationModule_init_unchained();
         __SnasphotModule_init_unchained();
         
         /* Other modules */
-        __Base_init_unchained(0, tokenId, terms);
+        __Base_init_unchained(tokenId, terms);
 
          /* own function */
         __CMTAT_init_unchained(deployedWithProxy_, owner);
@@ -123,23 +125,18 @@ contract CMTAT is
         public
         view
         virtual
-        override(ERC20Upgradeable, BaseModule)
+        override(ERC20Upgradeable, ERC20Module)
         returns (uint8)
     {
-        return BaseModule.decimals();
+        return ERC20Module.decimals();
     }
 
     function transferFrom(
         address sender,
         address recipient,
         uint256 amount
-    ) public virtual override(ERC20Upgradeable, BaseModule) returns (bool) {
-        return BaseModule.transferFrom(sender, recipient, amount);
-    }
-
-    /// @custom:oz-upgrades-unsafe-allow selfdestruct
-    function kill() public onlyRole(DEFAULT_ADMIN_ROLE) onlyDelegateCall(deployedWithProxy) {
-        selfdestruct(payable(_msgSender()));
+    ) public virtual override(ERC20Upgradeable, ERC20Module) returns (bool) {
+        return ERC20Module.transferFrom(sender, recipient, amount);
     }
 
     function _beforeTokenTransfer(

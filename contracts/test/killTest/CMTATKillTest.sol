@@ -3,30 +3,30 @@
 pragma solidity ^0.8.17;
 
 // required OZ imports here
-import "../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
-import "../../openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradeable.sol";
-import "../modules/BaseModule.sol";
-import "../modules/wrapper/AuthorizationModule.sol";
-import "../modules/wrapper/BurnModule.sol";
-import "../modules/wrapper/MintModule.sol";
-import "../modules/wrapper/BurnModule.sol";
-import "../modules/wrapper/EnforcementModule.sol";
-import "../modules/wrapper/PauseModule.sol";
-import "../modules/wrapper/ValidationModule.sol";
-import "../modules/wrapper/MetaTxModule.sol";
-import "../modules/wrapper/SnapshotModule.sol";
-import "../modules/security/OnlyDelegateCallModule.sol";
-import "../interfaces/IRuleEngine.sol";
+import "../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
+import "../../../openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradeable.sol";
+import "./BaseModuleTest.sol";
+import "../../modules/wrapper/AuthorizationModule.sol";
+import "../../modules/wrapper/BurnModule.sol";
+import "../../modules/wrapper/MintModule.sol";
+import "../../modules/wrapper/BurnModule.sol";
+import "../../modules/wrapper/EnforcementModule.sol";
+import "../../modules/wrapper/ERC20Module.sol";
+import "../../modules/wrapper/PauseModule.sol";
+import "../../modules/wrapper/ValidationModule.sol";
+import "../../modules/wrapper/MetaTxModule.sol";
+import "../../modules/wrapper/SnapshotModule.sol";
+import "../../modules/security/OnlyDelegateCallModule.sol";
+import "../../interfaces/IRuleEngine.sol";
 
 /**
 @title A CMTAT version only for TESTING
-@dev This version has removed the check of access control on the kill function
-The only remaining protection is the call to the modifier onlyDelegateCall
+@dev This version inherits from BaseModuleTest instead of BaseModule
 */
 contract CMTAT_KILL_TEST is
     Initializable,
     ContextUpgradeable,
-    BaseModule,
+    BaseModuleTest,
     PauseModule,
     MintModule,
     BurnModule,
@@ -34,17 +34,10 @@ contract CMTAT_KILL_TEST is
     ValidationModule,
     MetaTxModule,
     SnasphotModule,
-    OnlyDelegateCallModule
+    ERC20Module
 {
-    bool deployedWithProxy;
 
-    // @dev we removed the access control to check onlyDelegateCall
-    /// @custom:oz-upgrades-unsafe-allow selfdestruct
-    function kill() public onlyDelegateCall(deployedWithProxy) {
-        selfdestruct(payable(_msgSender()));
-    }
-
-    //******* Normal CMTAT functions *******/
+//******* Code from CMTAT, not modified*******/
 
 /// @custom:oz-upgrades-unsafe-allow constructor
     constructor(address forwarder, bool deployedWithProxy_, address owner, string memory name, string memory symbol, string memory tokenId, string memory terms
@@ -99,7 +92,9 @@ contract CMTAT_KILL_TEST is
         /* Internal Modules */
         __Enforcement_init_unchained();
         __Snapshot_init_unchained();
-
+        // we set the RuleEngine by calling the setter
+        // __Validation_init_unchained(IRuleEngine ruleEngine_)
+        
         /* Wrapper */
         // AuthorizationModule_init_unchained is called firstly due to inheritance
         __AuthorizationModule_init_unchained();
@@ -107,13 +102,14 @@ contract CMTAT_KILL_TEST is
         __MintModule_init_unchained();
         // EnforcementModule_init_unchained is called before ValidationModule_init_unchained due to inheritance
         __EnforcementModule_init_unchained();
+        __ERC20Module_init_unchained(0);
         // PauseModule_init_unchained is called before ValidationModule_init_unchained due to inheritance
         __PauseModule_init_unchained();
         __ValidationModule_init_unchained();
         __SnasphotModule_init_unchained();
         
         /* Other modules */
-        __Base_init_unchained(0, tokenId, terms);
+        __Base_init_unchained(tokenId, terms);
 
          /* own function */
         __CMTAT_init_unchained(deployedWithProxy_, owner);
@@ -134,18 +130,18 @@ contract CMTAT_KILL_TEST is
         public
         view
         virtual
-        override(ERC20Upgradeable, BaseModule)
+        override(ERC20Upgradeable, ERC20Module)
         returns (uint8)
     {
-        return BaseModule.decimals();
+        return ERC20Module.decimals();
     }
 
     function transferFrom(
         address sender,
         address recipient,
         uint256 amount
-    ) public virtual override(ERC20Upgradeable, BaseModule) returns (bool) {
-        return BaseModule.transferFrom(sender, recipient, amount);
+    ) public virtual override(ERC20Upgradeable, ERC20Module) returns (bool) {
+        return ERC20Module.transferFrom(sender, recipient, amount);
     }
 
     function _beforeTokenTransfer(
