@@ -171,7 +171,7 @@ abstract contract SnapshotModuleInternal is
     function _updateSnapshot(Snapshots storage snapshots, uint256 currentValue)
         private
     {
-        uint256 current = _getCurrentSnapshot();
+        uint256 current = _currentSnapshot;
         if (_lastSnapshot(snapshots.ids) < current) {
             snapshots.ids.push(current);
             snapshots.values.push(currentValue);
@@ -184,10 +184,6 @@ abstract contract SnapshotModuleInternal is
             _currentSnapshot = time;
             _clearPastScheduled();
         }
-    }
-
-    function _getCurrentSnapshot() internal view virtual returns (uint256) {
-        return _currentSnapshot;
     }
 
     function _lastSnapshot(uint256[] storage ids)
