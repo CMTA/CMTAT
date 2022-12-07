@@ -9,8 +9,11 @@ We have added one function to the standard : `isTransferValid`
 
 ## Requirement
 **Mint**
-If you set a ruleEngine, be aware of the mint functionality. A mint is a transfer from the 0 address, it comes from the library OpenZeppelin used by the CMTAT. Therefore, if you implement a whitelist system, you must add the zero address in the whitelist to mint token.
-For the moment, it is not planned to change this behavior in the CMTAT because it requires to change the structure of the code and it will reduce the possibilities of the RuleEngine. 
+If you set a ruleEngine, be aware of the mint functionality. A mint is a transfer **from** the 0 address, it comes from the library OpenZeppelin used by the CMTAT. Therefore, if you implement a whitelist system, you have to add the zero address in the whitelist to mint token.
+It is not planned to change this behavior in the CMTAT because it requires to change the structure of the code and it will reduce the possibilities of the RuleEngine. 
+
+**Burn**
+The same principle applies as for the function mint. A  burn is a transfer **to** the 0 address.
 
 ## UML
 The following UML describes the different interfaces and their function.
