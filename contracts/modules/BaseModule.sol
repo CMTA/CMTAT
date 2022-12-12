@@ -33,7 +33,17 @@ abstract contract BaseModule is Initializable, ERC20Upgradeable, AuthorizationMo
         string memory tokenId_,
         string memory terms_
     ) internal onlyInitializing {
+         /* OpenZeppelin */
         __ERC20_init(name_, symbol_);
+         // AccessControlUpgradeable inherits from ERC165Upgradeable
+        __ERC165_init_unchained();
+        // AuthorizationModule inherits from AccessControlUpgradeable
+        __AccessControl_init_unchained();
+
+         /* Wrapper */
+        __AuthorizationModule_init_unchained();
+        
+        /* own function */
         __Base_init_unchained(decimals_, tokenId_, terms_);
     }
 

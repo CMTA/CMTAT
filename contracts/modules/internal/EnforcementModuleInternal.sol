@@ -27,8 +27,6 @@ abstract contract EnforcementModuleInternal is
 
     mapping(address => bool) private _frozen;
 
-
-
     /**
      * @dev Initializes the contract in unpaused state.
      */
@@ -37,7 +35,9 @@ abstract contract EnforcementModuleInternal is
         __Enforcement_init_unchained();
     }
 
-    function __Enforcement_init_unchained() internal onlyInitializing {}
+    function __Enforcement_init_unchained() internal onlyInitializing {
+        // no variable to initialize
+    }
 
     /**
      * @dev Returns true if the contract is paused, and false otherwise.

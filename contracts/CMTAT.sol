@@ -73,24 +73,38 @@ contract CMTAT is
         string memory tokenId,
         string memory terms
     ) internal onlyInitializing {
-        // OpenZeppelin library
-        // We call OZ init functions firstly 
-        // because other modules inherit from these libraries
+        /* OpenZeppelin library */
+        // OZ init_unchained functions are called firstly due to inheritance
         __Context_init_unchained();
         __ERC20_init_unchained(name, symbol);
         // AccessControlUpgradeable inherits from ERC165Upgradeable
         __ERC165_init_unchained();
+        // AuthorizationModule inherits from AccessControlUpgradeable
         __AccessControl_init_unchained();
         __Pausable_init_unchained();
 
-        // Internal Modules
+        /* Internal Modules */
         __Enforcement_init_unchained();
         __Snapshot_init_unchained();
+        // we set the RuleEngine by calling the setter
+        // __Validation_init_unchained(IRuleEngine ruleEngine_)
         
-        // Other modules
+        /* Wrapper */
+        // AuthorizationModule_init_unchained is called firstly due to inheritance
+        __AuthorizationModule_init_unchained();
+        __BurnModule_init_unchained();
+        __MintModule_init_unchained();
+        // EnforcementModule_init_unchained is called before ValidationModule_init_unchained due to inheritance
+        __EnforcementModule_init_unchained();
+        // PauseModule_init_unchained is called before ValidationModule_init_unchained due to inheritance
+        __PauseModule_init_unchained();
+        __ValidationModule_init_unchained();
+        __SnasphotModule_init_unchained();
+        
+        /* Other modules */
         __Base_init_unchained(0, tokenId, terms);
 
-        // CMTAT
+         /* own function */
         __CMTAT_init_unchained(deployedWithProxy_, owner);
     }
 
