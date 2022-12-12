@@ -2,8 +2,8 @@
 
 pragma solidity ^0.8.17;
 
-import "../../../openzeppelin-contracts-upgradeable/contracts/access/AccessControlUpgradeable.sol";
-import "../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
+import "../../../../openzeppelin-contracts-upgradeable/contracts/access/AccessControlUpgradeable.sol";
+import "../../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
 
 abstract contract AuthorizationModule is AccessControlUpgradeable {
     function __AuthorizationModule_init() internal onlyInitializing {

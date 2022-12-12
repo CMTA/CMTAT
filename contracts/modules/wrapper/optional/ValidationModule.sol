@@ -2,11 +2,11 @@
 
 pragma solidity ^0.8.17;
 
-import "../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
+import "../../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
 import "./AuthorizationModule.sol";
-import "../internal/ValidationModuleInternal.sol";
-import "./PauseModule.sol";
-import "./EnforcementModule.sol";
+import "../../internal/ValidationModuleInternal.sol";
+import "../mandatory/PauseModule.sol";
+import "../mandatory/EnforcementModule.sol";
 
 /**
  * @dev Validation module.

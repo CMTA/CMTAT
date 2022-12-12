@@ -3,10 +3,10 @@
 pragma solidity ^0.8.17;
 
 // required OZ imports here
-import "../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
-import "../../../openzeppelin-contracts-upgradeable/contracts/token/ERC20/ERC20Upgradeable.sol";
+import "../../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
+import "../../../../openzeppelin-contracts-upgradeable/contracts/token/ERC20/ERC20Upgradeable.sol";
 
-abstract contract ERC20Module is Initializable, ERC20Upgradeable {
+abstract contract ERC20BaseModule is Initializable, ERC20Upgradeable {
     /* Events */
     event Spend(address indexed owner, address indexed spender, uint256 amount);
 
