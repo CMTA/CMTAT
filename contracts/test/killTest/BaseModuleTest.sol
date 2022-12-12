@@ -3,11 +3,25 @@
 pragma solidity ^0.8.17;
 
 // required OZ imports here
-import "../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
-import "./wrapper/AuthorizationModule.sol";
-import "../modules/security/OnlyDelegateCallModule.sol";
+import "../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
+import "../../modules/wrapper/AuthorizationModule.sol";
+import "../../modules/security/OnlyDelegateCallModule.sol";
 
-abstract contract BaseModule is Initializable, AuthorizationModule, OnlyDelegateCallModule {
+/**
+@title A BaseModule version only for TESTING
+@dev This version has removed the check of access control on the kill function
+The only remaining protection is the call to the modifier onlyDelegateCall
+*/
+abstract contract BaseModuleTest is Initializable, AuthorizationModule, OnlyDelegateCallModule {
+    // @dev we removed the access control to check onlyDelegateCall
+    /// @custom:oz-upgrades-unsafe-allow selfdestruct
+    function kill() public onlyDelegateCall(deployedWithProxy) {
+        selfdestruct(payable(_msgSender()));
+    }
+
+     //******* Code from BaseModule, not modified *******/
+
+
     bool internal deployedWithProxy;
     /* Events */
     event TermSet(string indexed newTerm);
@@ -66,10 +80,7 @@ abstract contract BaseModule is Initializable, AuthorizationModule, OnlyDelegate
         emit TermSet(terms_);
     }
 
-    /// @custom:oz-upgrades-unsafe-allow selfdestruct
-    function kill() public onlyRole(DEFAULT_ADMIN_ROLE) onlyDelegateCall(deployedWithProxy) {
-        selfdestruct(payable(_msgSender()));
-    }
+
 
     uint256[50] private __gap;
 }
