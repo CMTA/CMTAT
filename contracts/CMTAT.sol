@@ -73,13 +73,24 @@ contract CMTAT is
         string memory tokenId,
         string memory terms
     ) internal onlyInitializing {
+        // OpenZeppelin library
+        // We call OZ init functions firstly 
+        // because other modules inherit from these libraries
         __Context_init_unchained();
-        __Base_init_unchained(0, tokenId, terms);
-        __AccessControl_init_unchained();
         __ERC20_init_unchained(name, symbol);
+        // AccessControlUpgradeable inherits from ERC165Upgradeable
+        __ERC165_init_unchained();
+        __AccessControl_init_unchained();
         __Pausable_init_unchained();
+
+        // Internal Modules
         __Enforcement_init_unchained();
         __Snapshot_init_unchained();
+        
+        // Other modules
+        __Base_init_unchained(0, tokenId, terms);
+
+        // CMTAT
         __CMTAT_init_unchained(deployedWithProxy_, owner);
     }
 

@@ -34,9 +34,7 @@ abstract contract BaseModule is Initializable, ERC20Upgradeable, AuthorizationMo
         string memory terms_
     ) internal onlyInitializing {
         __ERC20_init(name_, symbol_);
-        _decimals = decimals_;
-        tokenId = tokenId_;
-        terms = terms_;
+        __Base_init_unchained(decimals_, tokenId_, terms_);
     }
 
     function __Base_init_unchained(

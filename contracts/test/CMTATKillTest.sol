@@ -36,40 +36,40 @@ contract CMTAT_KILL_TEST is
     SnasphotModule,
     OnlyDelegateCallModule
 {
-    bool usedWithProxy;
-
-    /// @custom:oz-upgrades-unsafe-allow constructor
-    constructor(address forwarder, bool usedWithProxy_, address owner, string memory name, string memory symbol, string memory tokenId, string memory terms
-    ) MetaTxModule(forwarder) {
-         if(!usedWithProxy_){
-            // Initialize the implementation contract to avoid front-running
-            // Warning : do not initialize the proxy
-            initialize(usedWithProxy_, owner, name, symbol,tokenId, terms);
-         }else{
-            // Initialize the implementation
-            usedWithProxy = true;
-            // Disable the possibility to initialize the implementation
-            _disableInitializers();
-         }   
-    }
+    bool deployedWithProxy;
 
     // @dev we removed the access control to check onlyDelegateCall
     /// @custom:oz-upgrades-unsafe-allow selfdestruct
-    function kill() public onlyDelegateCall(usedWithProxy) {
+    function kill() public onlyDelegateCall(deployedWithProxy) {
         selfdestruct(payable(_msgSender()));
     }
 
     //******* Normal CMTAT functions *******/
 
+        /// @custom:oz-upgrades-unsafe-allow constructor
+    constructor(address forwarder, bool deployedWithProxy_, address owner, string memory name, string memory symbol, string memory tokenId, string memory terms
+    ) MetaTxModule(forwarder) {
+         if(!deployedWithProxy_){
+            // Initialize the contract to avoid front-running
+            // Warning : do not initialize the proxy
+            initialize(deployedWithProxy_, owner, name, symbol,tokenId, terms);
+         }else{
+            // Initialize the variable for the implementation
+            deployedWithProxy = true;
+            // Disable the possibility to initialize the implementation
+            _disableInitializers();
+         }   
+    }
+
     function initialize(
-        bool usedWithProxy_,
+        bool deployedWithProxy_,
         address owner,
         string memory name,
         string memory symbol,
         string memory tokenId,
         string memory terms
     ) public initializer {
-        __CMTAT_init(usedWithProxy_, owner, name, symbol, tokenId, terms);
+        __CMTAT_init(deployedWithProxy_, owner, name, symbol, tokenId, terms);
     }
 
     /**
@@ -79,25 +79,35 @@ contract CMTAT_KILL_TEST is
      * See {ERC20-constructor}.
      */
     function __CMTAT_init(
-        bool usedWithProxy_,
+        bool deployedWithProxy_,
         address owner,
         string memory name,
         string memory symbol,
         string memory tokenId,
         string memory terms
     ) internal onlyInitializing {
+        // OpenZeppelin library
+        // We call OZ init functions firstly 
+        // because other modules inherit from these libraries
         __Context_init_unchained();
-        __Base_init_unchained(0, tokenId, terms);
-        __AccessControl_init_unchained();
         __ERC20_init_unchained(name, symbol);
+        __AccessControl_init_unchained();
         __Pausable_init_unchained();
+
+        // Internal Modules
         __Enforcement_init_unchained();
         __Snapshot_init_unchained();
-        __CMTAT_init_unchained(usedWithProxy_, owner);
+        
+        // Other modules
+        __Base_init_unchained(0, tokenId, terms);
+
+        // CMTAT
+        __CMTAT_init_unchained(deployedWithProxy_, owner);
     }
 
-    function __CMTAT_init_unchained(bool usedWithProxy_, address owner) internal onlyInitializing {
-        usedWithProxy = usedWithProxy_;
+
+    function __CMTAT_init_unchained(bool deployedWithProxy_, address owner) internal onlyInitializing {
+        deployedWithProxy = deployedWithProxy_;
         _grantRole(DEFAULT_ADMIN_ROLE, owner);
         _grantRole(ENFORCER_ROLE, owner);
         _grantRole(MINTER_ROLE, owner);
