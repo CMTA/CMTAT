@@ -2,32 +2,40 @@ const { expectEvent, expectRevert } = require('@openzeppelin/test-helpers')
 const { DEFAULT_ADMIN_ROLE } = require('../utils')
 const { should } = require('chai').should()
 
-const CMTAT = artifacts.require('CMTAT')
-
 function BaseModuleCommon (owner, address1, address2, address3, proxyTest) {
   context('Token structure', function () {
-    it('has the defined name', async function () {
+    it('testHasTheDefinedName', async function () {
+      // Act + Assert
       (await this.cmtat.name()).should.equal('CMTA Token')
     })
-    it('has the defined symbol', async function () {
+    it('testHasTheDefinedSymbol', async function () {
+      // Act + Assert
       (await this.cmtat.symbol()).should.equal('CMTAT')
     })
-    it('is not divisible', async function () {
+    it('testDecimalsEqual0', async function () {
+      // Act + Assert
       (await this.cmtat.decimals()).should.be.bignumber.equal('0')
     })
-    it('is has a token ID', async function () {
+    it('testHasTheDefinedTokenId', async function () {
+      // Act + Assert
       (await this.cmtat.tokenId()).should.equal('CMTAT_ISIN')
     })
-    it('is has terms', async function () {
+    it('testHasTheDefinedTerms', async function () {
+      // Act + Assert
       (await this.cmtat.terms()).should.equal('https://cmta.ch')
     })
-    it('allows the admin to modify the token ID', async function () {
+    it('testAdminCanChangeTokenId', async function () {
+      // Arrange
       (await this.cmtat.tokenId()).should.equal('CMTAT_ISIN')
+      // Act
       await this.cmtat.setTokenId('CMTAT_TOKENID', { from: owner });
+      // Assert
       (await this.cmtat.tokenId()).should.equal('CMTAT_TOKENID')
     })
-    it('reverts when trying to modify the token ID from non-admin', async function () {
+    it('testCannotNonAdminChangeTokenId', async function () {
+      // Arrange - Assert
       (await this.cmtat.tokenId()).should.equal('CMTAT_ISIN')
+      // Act
       await expectRevert(
         this.cmtat.setTokenId('CMTAT_TOKENID', { from: address1 }),
         'AccessControl: account ' +
@@ -35,15 +43,21 @@ function BaseModuleCommon (owner, address1, address2, address3, proxyTest) {
           ' is missing role ' +
           DEFAULT_ADMIN_ROLE
       );
+      // Assert
       (await this.cmtat.tokenId()).should.equal('CMTAT_ISIN')
     })
-    it('allows the admin to modify the terms', async function () {
+    it('testAdminCanUpdateTerms', async function () {
+      // Arrange - Assert
       (await this.cmtat.terms()).should.equal('https://cmta.ch')
+      // Act
       await this.cmtat.setTerms('https://cmta.ch/terms', { from: owner });
+      // Assert
       (await this.cmtat.terms()).should.equal('https://cmta.ch/terms')
     })
-    it('reverts when trying to modify the terms from non-admin', async function () {
+    it('testCannotNonAdminUpdateTerms', async function () {
+      // Arrange - Assert
       (await this.cmtat.terms()).should.equal('https://cmta.ch')
+      // Act
       await expectRevert(
         this.cmtat.setTerms('https://cmta.ch/terms', { from: address1 }),
         'AccessControl: account ' +
@@ -51,11 +65,16 @@ function BaseModuleCommon (owner, address1, address2, address3, proxyTest) {
           ' is missing role ' +
           DEFAULT_ADMIN_ROLE
       );
+      // Assert
       (await this.cmtat.terms()).should.equal('https://cmta.ch')
     })
-    it('allows the admin to kill the contract', async function () {
+    it('testAdminCanKillContract', async function () {
+      // Arrange - Assert
       await web3.eth.getCode(this.cmtat.address).should.not.equal('0x')
+      // Act
       await this.cmtat.kill({ from: owner });
+      // Assert
+      // TODO: Check if the ethers inside the contract is sent to the right address
       // A destroyed contract has a bytecode size of 0.
       (await web3.eth.getCode(this.cmtat.address)).should.equal('0x')
       try {
@@ -66,7 +85,8 @@ function BaseModuleCommon (owner, address1, address2, address3, proxyTest) {
         )
       }
     })
-    it('reverts when trying to kill the contract from non-admin', async function () {
+    it('testCannotNonAdminKillContract', async function () {
+      // Act
       await expectRevert(
         this.cmtat.kill({ from: address1 }),
         'AccessControl: account ' +
@@ -74,6 +94,7 @@ function BaseModuleCommon (owner, address1, address2, address3, proxyTest) {
           ' is missing role ' +
           DEFAULT_ADMIN_ROLE
       );
+      // Assert
       (await this.cmtat.terms()).should.equal('https://cmta.ch')
       // The contract is not destroyed, so the contract has a bytecode size different from zero.
       await web3.eth.getCode(this.cmtat.address).should.not.equal('0x')
@@ -81,19 +102,21 @@ function BaseModuleCommon (owner, address1, address2, address3, proxyTest) {
   })
 
   context('Allowance', function () {
-    it('allows address1 to define a spending allowance for address3', async function () {
+    // address1 -> address3
+    it('testApproveAllowance', async function () {
+      // Arrange - Assert
       (
         await this.cmtat.allowance(address1, address3)
       ).should.be.bignumber.equal('0');
+      // Act
       ({ logs: this.logs } = await this.cmtat.approve(address3, 20, {
         from: address1
       }));
+      // Assert
       (
         await this.cmtat.allowance(address1, address3)
       ).should.be.bignumber.equal('20')
-    })
-
-    it('emits an Approval event', function () {
+      // emits an Approval event
       expectEvent.inLogs(this.logs, 'Approval', {
         owner: address1,
         spender: address3,
@@ -101,25 +124,26 @@ function BaseModuleCommon (owner, address1, address2, address3, proxyTest) {
       })
     })
 
-    it('allows address1 to increase the allowance for address3', async function () {
+    // ADDRESS1 -> ADDRESS3
+    it('testIncreaseAllowance', async function () {
+      // Arrange
       (
         await this.cmtat.allowance(address1, address3)
       ).should.be.bignumber.equal('0')
       await this.cmtat.approve(address3, 20, { from: address1 });
+      // Arrange - Assert
       (
         await this.cmtat.allowance(address1, address3)
       ).should.be.bignumber.equal('20');
-      ({ logs: this.logs } = await this.cmtat.increaseAllowance(
-        address3,
-        10,
-        { from: address1 }
-      ));
+      // Act
+      ({ logs: this.logs } = await this.cmtat.increaseAllowance(address3, 10, {
+        from: address1
+      }));
+      // Assert
       (
         await this.cmtat.allowance(address1, address3)
       ).should.be.bignumber.equal('30')
-    })
-
-    it('emits an Approval event', function () {
+      // emits an Approval event
       expectEvent.inLogs(this.logs, 'Approval', {
         owner: address1,
         spender: address3,
@@ -127,25 +151,26 @@ function BaseModuleCommon (owner, address1, address2, address3, proxyTest) {
       })
     })
 
-    it('allows address1 to decrease the allowance for address3', async function () {
+    // ADDRESS1 -> ADDRESS3
+    it('testDecreaseAllowance', async function () {
+      // Arrange
       (
         await this.cmtat.allowance(address1, address3)
       ).should.be.bignumber.equal('0')
       await this.cmtat.approve(address3, 20, { from: address1 });
+      // Arrange - Assert
       (
         await this.cmtat.allowance(address1, address3)
       ).should.be.bignumber.equal('20');
-      ({ logs: this.logs } = await this.cmtat.decreaseAllowance(
-        address3,
-        10,
-        { from: address1 }
-      ));
+      // Act
+      ({ logs: this.logs } = await this.cmtat.decreaseAllowance(address3, 10, {
+        from: address1
+      }));
+      // Assert
       (
         await this.cmtat.allowance(address1, address3)
       ).should.be.bignumber.equal('10')
-    })
-
-    it('emits an Approval event', function () {
+      // emits an Approval event
       expectEvent.inLogs(this.logs, 'Approval', {
         owner: address1,
         spender: address3,
@@ -153,23 +178,26 @@ function BaseModuleCommon (owner, address1, address2, address3, proxyTest) {
       })
     })
 
-    it('allows address1 to redefine a spending allowance for address3', async function () {
+    // ADDRESS1 -> ADDRESS3
+    it('testRedefinedAllowanceWithApprove', async function () {
+      // Arrange
       (
         await this.cmtat.allowance(address1, address3)
       ).should.be.bignumber.equal('0')
       await this.cmtat.approve(address3, 20, { from: address1 });
+      // Arrange - Assert
       (
         await this.cmtat.allowance(address1, address3)
       ).should.be.bignumber.equal('20');
+      // Act
       ({ logs: this.logs } = await this.cmtat.approve(address3, 50, {
         from: address1
       }));
+      // Assert
       (
         await this.cmtat.allowance(address1, address3)
       ).should.be.bignumber.equal('50')
-    })
-
-    it('emits an Approval event', function () {
+      // emits an Approval event
       expectEvent.inLogs(this.logs, 'Approval', {
         owner: address1,
         spender: address3,
@@ -177,23 +205,25 @@ function BaseModuleCommon (owner, address1, address2, address3, proxyTest) {
       })
     })
 
-    it('allows address1 to define a spending allowance for address3 taking current allowance in account', async function () {
+    it('testDefinedAllowanceByTakingInAccountTheCurrentAllowance', async function () {
+      // Arrange
       (
         await this.cmtat.allowance(address1, address3)
       ).should.be.bignumber.equal('0')
       await this.cmtat.approve(address3, 20, { from: address1 });
+      // Arrange - Assert
       (
         await this.cmtat.allowance(address1, address3)
       ).should.be.bignumber.equal('20');
+      // Act
       ({ logs: this.logs } = await this.cmtat.methods[
         'approve(address,uint256,uint256)'
       ](address3, 30, 20, { from: address1 }));
+      // Assert
       (
         await this.cmtat.allowance(address1, address3)
       ).should.be.bignumber.equal('30')
-    })
-
-    it('emits an Approval event', function () {
+      // emits an Approval event
       expectEvent.inLogs(this.logs, 'Approval', {
         owner: address1,
         spender: address3,
@@ -201,14 +231,17 @@ function BaseModuleCommon (owner, address1, address2, address3, proxyTest) {
       })
     })
 
-    it('reverts if trying to define a spending allowance for address3 with wrong current allowance', async function () {
+    it('testCannotDefinedAllowanceByTakingInAccountTheWrongCurrentAllowance', async function () {
+      // Arrange
       (
         await this.cmtat.allowance(address1, address3)
       ).should.be.bignumber.equal('0')
       await this.cmtat.approve(address3, 20, { from: address1 });
+      // Arrange - Assert
       (
         await this.cmtat.allowance(address1, address3)
       ).should.be.bignumber.equal('20')
+      // Act
       await expectRevert(
         this.cmtat.methods['approve(address,uint256,uint256)'](
           address3,
@@ -218,6 +251,7 @@ function BaseModuleCommon (owner, address1, address2, address3, proxyTest) {
         ),
         'CMTAT: current allowance is not right'
       );
+      // Assert
       (
         await this.cmtat.allowance(address1, address3)
       ).should.be.bignumber.equal('20')
@@ -231,17 +265,17 @@ function BaseModuleCommon (owner, address1, address2, address3, proxyTest) {
       await this.cmtat.mint(address3, 33, { from: owner })
     })
 
-    it('allows address1 to transfer tokens to address2', async function () {
+    it('testTransferFromOneAccountToAnother', async function () {
+      // Act
       ({ logs: this.logs } = await this.cmtat.transfer(address2, 11, {
         from: address1
       }));
+      // Assert
       (await this.cmtat.balanceOf(address1)).should.be.bignumber.equal('20');
       (await this.cmtat.balanceOf(address2)).should.be.bignumber.equal('43');
       (await this.cmtat.balanceOf(address3)).should.be.bignumber.equal('33');
       (await this.cmtat.totalSupply()).should.be.bignumber.equal('96')
-    })
-
-    it('emits a Transfer event', function () {
+      // emits a Transfer event
       expectEvent.inLogs(this.logs, 'Transfer', {
         from: address1,
         to: address2,
@@ -249,16 +283,21 @@ function BaseModuleCommon (owner, address1, address2, address3, proxyTest) {
       })
     })
 
-    it('reverts if address1 transfers more tokens than he owns to address2', async function () {
-      await expectRevert.unspecified(
-        this.cmtat.transfer(address2, 50, { from: address1 })
+    // ADDRESS1 -> ADDRESS2
+    it('testCannotTransferMoreTokensThanOwn', async function () {
+      // Act
+      await expectRevert(
+        this.cmtat.transfer(address2, 50, { from: address1 }),
+        'ERC20: transfer amount exceeds balance'
       )
     })
 
-    it('allows address3 to transfer tokens from address1 to address2 with the right allowance', async function () {
-      // Define allowance
+    // allows address3 to transfer tokens from address1 to address2 with the right allowance
+    // ADDRESS3 : ADDRESS1 -> ADDRESS2
+    it('tesTransferByAnotherAccountWithTheRightAllowance', async function () {
+      // Arrange
       await this.cmtat.approve(address3, 20, { from: address1 });
-
+      // Act
       // Transfer
       ({ logs: this.logs } = await this.cmtat.transferFrom(
         address1,
@@ -266,21 +305,19 @@ function BaseModuleCommon (owner, address1, address2, address3, proxyTest) {
         11,
         { from: address3 }
       ));
+      // Assert
       (await this.cmtat.balanceOf(address1)).should.be.bignumber.equal('20');
       (await this.cmtat.balanceOf(address2)).should.be.bignumber.equal('43');
       (await this.cmtat.balanceOf(address3)).should.be.bignumber.equal('33');
       (await this.cmtat.totalSupply()).should.be.bignumber.equal('96')
-    })
 
-    it('emits a Transfer event', function () {
+      // emits a Transfer event
       expectEvent.inLogs(this.logs, 'Transfer', {
         from: address1,
         to: address2,
         value: '11'
       })
-    })
-
-    it('emits a Spend event', function () {
+      // emits a Spend event
       expectEvent.inLogs(this.logs, 'Spend', {
         owner: address1,
         spender: address3,
@@ -288,26 +325,34 @@ function BaseModuleCommon (owner, address1, address2, address3, proxyTest) {
       })
     })
 
-    it('reverts if address3 transfers more tokens than the allowance from address1 to address2', async function () {
+    // reverts if address3 transfers more tokens than the allowance from address1 to address2
+    it('testCannotTransferByAnotherAccountWithInsufficientAllowance', async function () {
+      // Arrange
       // Define allowance
       (
         await this.cmtat.allowance(address1, address3)
       ).should.be.bignumber.equal('0')
       await this.cmtat.approve(address3, 20, { from: address1 });
+      // Arrange - Assert
       (
         await this.cmtat.allowance(address1, address3)
       ).should.be.bignumber.equal('20')
-
+      // Act
       // Transfer
-      await expectRevert.unspecified(
-        this.cmtat.transferFrom(address1, address2, 31, { from: address3 })
+      await expectRevert(
+        this.cmtat.transferFrom(address1, address2, 31, { from: address3 }),
+        'ERC20: insufficient allowance'
       )
     })
 
-    it('reverts if address3 transfers more tokens than address1 owns from address1 to address2', async function () {
+    // reverts if address3 transfers more tokens than address1 owns from address1 to address2
+    it('testCannotTransferByAnotherAccountWithInsufficientBalance', async function () {
+      // Arrange
       await this.cmtat.approve(address3, 1000, { from: address1 })
-      await expectRevert.unspecified(
-        this.cmtat.transferFrom(address1, address2, 50, { from: address3 })
+      // Act
+      await expectRevert(
+        this.cmtat.transferFrom(address1, address2, 50, { from: address3 }),
+        'ERC20: transfer amount exceeds balance'
       )
     })
   })
