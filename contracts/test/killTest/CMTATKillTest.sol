@@ -3,26 +3,30 @@
 pragma solidity ^0.8.17;
 
 // required OZ imports here
-import "../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
-import "../openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradeable.sol";
-import "./modules/wrapper/mandatory/BaseModule.sol";
-import "./modules/wrapper/mandatory/BurnModule.sol";
-import "./modules/wrapper/mandatory/MintModule.sol";
-import "./modules/wrapper/mandatory/BurnModule.sol";
-import "./modules/wrapper/mandatory/EnforcementModule.sol";
-import "./modules/wrapper/mandatory/ERC20BaseModule.sol";
-import "./modules/wrapper/mandatory/SnapshotModule.sol";
-import "./modules/wrapper/mandatory/PauseModule.sol";
-import "./modules/wrapper/optional/ValidationModule.sol";
-import "./modules/wrapper/optional/MetaTxModule.sol";
-import "./modules/wrapper/optional/AuthorizationModule.sol";
-import "./modules/security/OnlyDelegateCallModule.sol";
-import "./interfaces/IRuleEngine.sol";
+import "../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
+import "../../../openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradeable.sol";
+import "./BaseModuleTest.sol";
+import "../../modules/wrapper/mandatory/BurnModule.sol";
+import "../../modules/wrapper/mandatory/MintModule.sol";
+import "../../modules/wrapper/mandatory/BurnModule.sol";
+import "../../modules/wrapper/mandatory/EnforcementModule.sol";
+import "../../modules/wrapper/mandatory/ERC20BaseModule.sol";
+import "../../modules/wrapper/mandatory/PauseModule.sol";
+import "../../modules/wrapper/mandatory/SnapshotModule.sol";
+import "../../modules/wrapper/optional/ValidationModule.sol";
+import "../../modules/wrapper/optional/MetaTxModule.sol";
+import "../../modules/wrapper/optional/AuthorizationModule.sol";
+import "../../modules/security/OnlyDelegateCallModule.sol";
+import "../../interfaces/IRuleEngine.sol";
 
-contract CMTAT is
+/**
+@title A CMTAT version only for TESTING
+@dev This version inherits from BaseModuleTest instead of BaseModule
+*/
+contract CMTAT_KILL_TEST is
     Initializable,
     ContextUpgradeable,
-    BaseModule,
+    BaseModuleTest,
     PauseModule,
     MintModule,
     BurnModule,
@@ -32,7 +36,10 @@ contract CMTAT is
     SnasphotModule,
     ERC20BaseModule
 {
-    /// @custom:oz-upgrades-unsafe-allow constructor
+
+//******* Code from CMTAT, not modified*******/
+
+/// @custom:oz-upgrades-unsafe-allow constructor
     constructor(address forwarder, bool deployedWithProxy_, address owner, string memory name, string memory symbol, string memory tokenId, string memory terms
     ) MetaTxModule(forwarder) {
          if(!deployedWithProxy_){

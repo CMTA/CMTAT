@@ -35,8 +35,9 @@ abstract contract SnapshotModuleInternal is
 
     uint256[] private _scheduledSnapshots;
 
-    function __Snapshot_init() internal onlyInitializing {
+    function __Snapshot_init(string memory name_, string memory symbol_) internal onlyInitializing {
         __Context_init_unchained();
+        __ERC20_init(name_, symbol_);
         __Snapshot_init_unchained();
     }
 

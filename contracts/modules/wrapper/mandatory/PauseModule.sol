@@ -2,8 +2,9 @@
 
 pragma solidity ^0.8.17;
 
-import "../../../openzeppelin-contracts-upgradeable/contracts/security/PausableUpgradeable.sol";
-import "./AuthorizationModule.sol";
+import "../../../../openzeppelin-contracts-upgradeable/contracts/security/PausableUpgradeable.sol";
+import "../../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
+import "../optional/AuthorizationModule.sol";
 
 /**
  * @dev ERC20 token with pausable token transfers, minting and burning.
@@ -16,6 +17,26 @@ abstract contract PauseModule is PausableUpgradeable, AuthorizationModule {
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     string internal constant TEXT_TRANSFER_REJECTED_PAUSED =
         "All transfers paused";
+
+    function __PauseModule_init() internal onlyInitializing {
+        /* OpenZeppelin */
+        __Context_init_unchained();
+        __Pausable_init_unchained();
+        // AccessControlUpgradeable inherits from ERC165Upgradeable
+        __ERC165_init_unchained();
+        // AuthorizationModule inherits from AccessControlUpgradeable
+        __AccessControl_init_unchained();
+
+        /* Wrapper */
+        __AuthorizationModule_init_unchained();
+
+        /* own function */
+        __PauseModule_init_unchained();
+    }
+
+    function __PauseModule_init_unchained() internal onlyInitializing {
+        // no variable to initialize
+    }
 
     /**
      * @dev Pauses all token transfers.
@@ -42,4 +63,6 @@ abstract contract PauseModule is PausableUpgradeable, AuthorizationModule {
     function unpause() public onlyRole(PAUSER_ROLE) {
         _unpause();
     }
+
+    uint256[50] private __gap;
 }
