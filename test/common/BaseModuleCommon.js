@@ -4,7 +4,7 @@ const { should } = require('chai').should()
 
 const CMTAT = artifacts.require('CMTAT')
 
-function BaseModuleCommon (owner, address1, address2, address3) {
+function BaseModuleCommon (owner, address1, address2, address3, proxyTest) {
   context('Token structure', function () {
     it('has the defined name', async function () {
       (await this.cmtat.name()).should.equal('CMTA Token')
@@ -54,7 +54,10 @@ function BaseModuleCommon (owner, address1, address2, address3) {
       (await this.cmtat.terms()).should.equal('https://cmta.ch')
     })
     it('allows the admin to kill the contract', async function () {
-      await this.cmtat.kill({ from: owner })
+      await web3.eth.getCode(this.cmtat.address).should.not.equal('0x')
+      await this.cmtat.kill({ from: owner });
+      // A destroyed contract has a bytecode size of 0.
+      (await web3.eth.getCode(this.cmtat.address)).should.equal('0x')
       try {
         await this.cmtat.terms()
       } catch (e) {
@@ -72,6 +75,8 @@ function BaseModuleCommon (owner, address1, address2, address3) {
           DEFAULT_ADMIN_ROLE
       );
       (await this.cmtat.terms()).should.equal('https://cmta.ch')
+      // The contract is not destroyed, so the contract has a bytecode size different from zero.
+      await web3.eth.getCode(this.cmtat.address).should.not.equal('0x')
     })
   })
 

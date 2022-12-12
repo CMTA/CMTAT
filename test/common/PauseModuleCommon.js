@@ -12,7 +12,7 @@ function PauseModuleCommon (admin, address1, address2, address3) {
     it('testCanBePausedByAdmin', async function () {
       // Act
       ({ logs: this.logs } = await this.cmtat.pause({ from: admin }))
-      
+
       // Assert
       // emits a Paused event
       expectEvent.inLogs(this.logs, 'Paused', { account: admin })
@@ -26,10 +26,10 @@ function PauseModuleCommon (admin, address1, address2, address3) {
     it('testCanBePausedByPauserRole', async function () {
       // Arrange
       await this.cmtat.grantRole(PAUSER_ROLE, address1, { from: admin });
-      
+
       // Act
       ({ logs: this.logs } = await this.cmtat.pause({ from: address1 }))
-      
+
       // Assert
       // emits a Paused event
       expectEvent.inLogs(this.logs, 'Paused', { account: address1 })
@@ -54,10 +54,10 @@ function PauseModuleCommon (admin, address1, address2, address3) {
     it('testCanBeUnpausedByAdmin', async function () {
       // Arrange
       await this.cmtat.pause({ from: admin });
-      
+
       // Act
       ({ logs: this.logs } = await this.cmtat.unpause({ from: admin }))
-      
+
       // Assert
       // emits a Unpaused event
       expectEvent.inLogs(this.logs, 'Unpaused', { account: admin })

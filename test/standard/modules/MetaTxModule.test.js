@@ -1,38 +1,20 @@
-const { expectEvent, expectRevert } = require('@openzeppelin/test-helpers')
-// TODO : Update the library
-// const ethSigUtil = require('@metamask/eth-sig-util')
-const ethSigUtil = require('eth-sig-util')
-const Wallet = require('ethereumjs-wallet').default
-const { DEFAULT_ADMIN_ROLE } = require('../../utils')
-const { should } = require('chai').should()
-
 const CMTAT = artifacts.require('CMTAT')
 const MinimalForwarderMock = artifacts.require('MinimalForwarderMock')
 const MetaTxModuleCommon = require('../../common/MetaTxModuleCommon')
 
-const NAME = 'MinimalForwarder'
-const VERSION = '0.0.1'
-const EIP712Domain = [
-  { name: 'name', type: 'string' },
-  { name: 'version', type: 'string' },
-  { name: 'chainId', type: 'uint256' },
-  { name: 'verifyingContract', type: 'address' }
-]
-
 contract(
-  'MetaTxModule',
+  'Standard - MetaTxModule',
   function ([
     _,
-    owner,
+    admin,
     address1
   ]) {
     beforeEach(async function () {
       this.trustedForwarder = await MinimalForwarderMock.new()
-      this.cmtat = await CMTAT.new(this.trustedForwarder.address, { from: owner })
       this.trustedForwarder.initialize()
-      await this.cmtat.initialize(owner, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', { from: owner })
+      this.cmtat = await CMTAT.new(this.trustedForwarder.address, false, admin, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', { from: admin })
     })
 
-    MetaTxModuleCommon(owner, address1)
+    MetaTxModuleCommon(admin, address1)
   }
 )

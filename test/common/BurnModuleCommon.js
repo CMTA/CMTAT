@@ -61,7 +61,7 @@ function BurnModuleCommon (admin, address1, address2) {
       await this.cmtat.grantRole(BURNER_ROLE, address2, { from: admin })
       await this.cmtat.approve(address2, 50, { from: address1 });
       // Act
-     ({ logs: this.logs } = await this.cmtat.burnFrom(address1, 20, { from: address2 }));
+      ({ logs: this.logs } = await this.cmtat.burnFrom(address1, 20, { from: address2 }));
       // Assert
       (await this.cmtat.balanceOf(address1)).should.be.bignumber.equal('30');
       (await this.cmtat.totalSupply()).should.be.bignumber.equal('30')
@@ -76,7 +76,7 @@ function BurnModuleCommon (admin, address1, address2) {
       expectEvent.inLogs(this.logs, 'Burn', {
         owner: address1,
         amount: '20'
-      });
+      })
     })
 
     it('testCannotBeBurntWithoutAllowance', async function () {
