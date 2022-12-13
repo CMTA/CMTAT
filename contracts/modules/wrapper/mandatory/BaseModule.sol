@@ -29,6 +29,7 @@ abstract contract BaseModule is Initializable, AuthorizationModule, OnlyDelegate
         string memory terms_
     ) internal onlyInitializing {
          /* OpenZeppelin */
+        __Context_init_unchained();
          // AccessControlUpgradeable inherits from ERC165Upgradeable
         __ERC165_init_unchained();
         // AuthorizationModule inherits from AccessControlUpgradeable
