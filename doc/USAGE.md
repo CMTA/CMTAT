@@ -54,6 +54,10 @@ Tests are written in JavaScript and run with Truffle as follows:
 
 To use the global Truffle install, use instead `truffle test`.
 
+Please see the Truffle [JavaScript tests
+documentation](https://www.trufflesuite.com/docs/truffle/testing/writing-tests-in-javascript)
+for more information about the writing and running of Truffle tests.
+
 
 ## Code style guidelines
 
@@ -64,7 +68,7 @@ For JavaScript:
 npm run-script lint .
 npm run-script lint:fix . 
 ```
-   
+
 For Solidity:
 ```
 npm run-script lint:sol  
