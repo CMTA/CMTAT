@@ -10,9 +10,9 @@ This version contains breaking changes with the version 2.0.
 
 - BurnModule
 
-  - Replace the function *burnFrom* by the function *forceBurn* to permit the issuer (BURNER_ROLE) to burn tokens
+  - Replace the function *burnFrom* by the function *forceBurn* to permit the issuer (BURNER_ROLE) to burn tokens.
   - The versions CMTAT 1.0 and 2.0 do not strictly respect the CMTAT specification because you can only burn tokens if the BURNER_ROLE has the allowance on the tokens.
-  - CMTAT 2.0 does not strictly respect the CMTAT specification because you can not force transfer or make an equivalent operation (burn tokens, then mint tokens to a new address)
+  - CMTAT 2.0 does not strictly respect the CMTAT specification because you can not force transfer or make an equivalent operation (burn tokens, then mint tokens to a new address).
 - Proxy
   - Add a boolean to indicate if the contract is deployed with or without a proxy. 
   - Add a call to the function *disableInitializers* to prevent the implementation contract from being used.
@@ -29,30 +29,30 @@ Others changes
 - OpenZeppelin
   - Updated OpenZeppelin contracts upgradeable to the version v4.8.0, precisely this [commit](https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/tree/65420cb9c943c32eb7e8c9da60183a413d90067a).
 
-  - Replace *setupRole* (deprecated) by *grantRole* in the function *CMTAT_init_unchained*
+  - Replace *setupRole* (deprecated) by *grantRole* in the function *CMTAT_init_unchained*.
 - Improve the modularity of the architecture
 
-  - Separate internal implementation from wrappers
-  - Separate mandatory and optional modules
-  - Move the BaseModule inside the mandatory directory
+  - Separate internal implementation from wrappers.
+  - Separate mandatory and optional modules.
+  - Move the BaseModule inside the mandatory directory.
   - Separate ERC20 functions from BaseModule by creating a specific module ERC20BaseModule.
-  - Move the functions kill, setTokenId, setTerms from CMTAT.sol to BaseModule
-  - Move the functions pause & unpause to PauseModule
-  - Move the functions freeze & unfreeze to EnforcementModule
-- Improve tests and their documentation of AuthorizationModule, BaseModule, BurnModule, EnforcementModule, MintModule, ValidationModule, .
+  - Move the functions kill, setTokenId, setTerms from CMTAT.sol to BaseModule.
+  - Move the functions pause & unpause to PauseModule.
+  - Move the functions freeze & unfreeze to EnforcementModule.
+- Improve tests and their documentation of AuthorizationModule, BaseModule, BurnModule, EnforcementModule, MintModule and ValidationModule.
 
 This version also includes improvements suggested by the audit report, addressing the following findings:
 
-- CVF-2, CVF-46, CVF-49, CVF-53, CVF-57, CVF-60, CVF-62:  indicate the OpenZeppelin version in the file USAGE.md ([Commit](https://github.com/CMTA/CMTAT/commit/c0e257671144cf87bd33f241b3e208cfc374e45c))
+- CVF-2, CVF-46, CVF-49, CVF-53, CVF-57, CVF-60, CVF-62:  indicate the OpenZeppelin version in the file USAGE.md ([Commit](https://github.com/CMTA/CMTAT/commit/c0e257671144cf87bd33f241b3e208cfc374e45c)).
 
-- CVF-29: perform a call to the *ERC165_init_unchained* ([commit](https://github.com/CMTA/CMTAT/commit/3ade86b3c18857ff87a37e910f8855552d1a1065))
+- CVF-29: perform a call to the *ERC165_init_unchained* ([commit](https://github.com/CMTA/CMTAT/commit/3ade86b3c18857ff87a37e910f8855552d1a1065)).
 
-- CVF-30: call *ERC20_init_unchained* before *Base_init_unchained* ([commit](https://github.com/CMTA/CMTAT/commit/b3a96c917be7386a17bb170e2f9d90fabd3caffb))
-- CVF-35: specify which base contract is called instead of using the keyword *super* ([commit 1](https://github.com/CMTA/CMTAT/commit/38ec85df464fc8162e9214b2d308170d2de2d4fb), [commit 2](https://github.com/CMTA/CMTAT/commit/a6a8ca1bc0b974d0d1d63bc0f42e112d5f243b19))
+- CVF-30: call *ERC20_init_unchained* before *Base_init_unchained* ([commit](https://github.com/CMTA/CMTAT/commit/b3a96c917be7386a17bb170e2f9d90fabd3caffb)).
+- CVF-35: specify which base contract is called instead of using the keyword *super* ([commit 1](https://github.com/CMTA/CMTAT/commit/38ec85df464fc8162e9214b2d308170d2de2d4fb), [commit 2](https://github.com/CMTA/CMTAT/commit/a6a8ca1bc0b974d0d1d63bc0f42e112d5f243b19)).
 
 - CVF-47: define the functions *PauseModule_init* & *PauseModule_init_unchained* ([commit](https://github.com/CMTA/CMTAT/commit/7a2735bec1d1dc1192f48303c8ce21f001747466)).
 - CVF-51: define the functions *Authorization_init* & *Authorization_init_unchained* ([commit](https://github.com/CMTA/CMTAT/commit/7a2735bec1d1dc1192f48303c8ce21f001747466)).
-- CVF 52: move the mint functionality inside the MintModule ([commit](https://github.com/CMTA/CMTAT/commit/1a620f1f0ab29e2d2e1e3c6471c24c882d5c562d))
+- CVF 52: move the mint functionality inside the MintModule ([commit](https://github.com/CMTA/CMTAT/commit/1a620f1f0ab29e2d2e1e3c6471c24c882d5c562d)).
 - CVF-61: second part, define the functions *BurnModule_init* & *BurnModule_init_unchained* ([commit](https://github.com/CMTA/CMTAT/commit/7a2735bec1d1dc1192f48303c8ce21f001747466)).
 
 ## 2.0 - 20221104
