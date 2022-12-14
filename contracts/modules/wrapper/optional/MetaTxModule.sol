@@ -17,9 +17,7 @@ abstract contract MetaTxModule is ERC2771ContextUpgradeable {
     constructor(address trustedForwarder)
         ERC2771ContextUpgradeable(trustedForwarder)
     {
-        // TODO : Emit an event ?
-        // See : https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/blob/master/contracts/mocks/ERC2771ContextMockUpgradeable.sol
-        // emit Sender(_msgSender());
+        // Nothing to do
     }
 
     function _msgSender()
