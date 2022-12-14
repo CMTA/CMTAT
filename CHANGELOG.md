@@ -11,7 +11,7 @@ This version contains breaking changes with the version 2.0.
 - BurnModule
 
   - Replace the function *burnFrom* by the function *forceBurn* to permit the issuer (BURNER_ROLE) to burn tokens.
-  - The versions CMTAT 1.0 and 2.0 do not strictly respect the CMTAT specification because you can only burn tokens if the BURNER_ROLE has the allowance on the tokens.
+  - The versions CMTAT 1.0 and 2.0 do not strictly respect the CMTAT specification because you can only burn tokens if the sender (with the BURNER_ROLE) has the allowance on the tokens.
   - CMTAT 2.0 does not strictly respect the CMTAT specification because you can not force transfer or make an equivalent operation (burn tokens, then mint tokens to a new address).
 - Proxy
   - Add a boolean to indicate if the contract is deployed with or without a proxy. 
@@ -37,8 +37,8 @@ Others changes
   - Move the BaseModule inside the mandatory directory.
   - Separate ERC20 functions from BaseModule by creating a specific module ERC20BaseModule.
   - Move the functions kill, setTokenId, setTerms from CMTAT.sol to BaseModule.
-  - Move the functions pause & unpause to PauseModule.
-  - Move the functions freeze & unfreeze to EnforcementModule.
+  - Move the functions pause & unpause  from CMTAT.sol to PauseModule.
+  - Move the functions freeze & unfreeze from CMTAT.sol to EnforcementModule.
 - Improve tests and their documentation of AuthorizationModule, BaseModule, BurnModule, EnforcementModule, MintModule and ValidationModule.
 
 This version also includes improvements suggested by the audit report, addressing the following findings:

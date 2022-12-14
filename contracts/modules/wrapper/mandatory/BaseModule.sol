@@ -7,7 +7,7 @@ import "../../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Ini
 import "../optional/AuthorizationModule.sol";
 import "../../../modules/security/OnlyDelegateCallModule.sol";
 
-abstract contract BaseModule is Initializable, AuthorizationModule, OnlyDelegateCallModule {
+abstract contract BaseModule is AuthorizationModule, OnlyDelegateCallModule {
     bool internal deployedWithProxy;
     /* Events */
     event TermSet(string indexed newTerm);
