@@ -273,7 +273,6 @@ function SnapshotModuleCommon (owner, address1, address2, address3) {
       })
 
       it('can burn tokens', async function () {
-        await this.cmtat.approve(owner, 50, { from: address1 });
         (
           await this.cmtat.snapshotTotalSupply(getUnixTimestamp())
         ).should.be.bignumber.equal('96');
@@ -282,8 +281,12 @@ function SnapshotModuleCommon (owner, address1, address2, address3) {
         ).should.be.bignumber.equal('31');
         (
           await this.cmtat.snapshotBalanceOf(getUnixTimestamp(), address2)
-        ).should.be.bignumber.equal('32')
-        await this.cmtat.burnFrom(address1, 20, { from: owner });
+        ).should.be.bignumber.equal('32');
+        (await this.cmtat.forceBurn(address1, 20, {
+          from: owner,
+          gas: 5000000,
+          gasPrice: 500000000
+        }));
         (
           await this.cmtat.snapshotTotalSupply(this.beforeSnapshotTime)
         ).should.be.bignumber.equal('96');

@@ -3,20 +3,19 @@ const { PAUSER_ROLE } = require('../utils')
 const chai = require('chai')
 const expect = chai.expect
 const should = chai.should()
-const CMTAT = artifacts.require('CMTAT')
 
 function AuthorizationModuleCommon (owner, address1, address2) {
   context('Authorization', function () {
-    it('can grant role as the owner', async function () {
+    it('testAdminCanGrantRole', async function () {
+      // Act
       ({ logs: this.logs } = await this.cmtat.grantRole(
         PAUSER_ROLE,
         address1,
         { from: owner }
       ));
+      // Assert
       (await this.cmtat.hasRole(PAUSER_ROLE, address1)).should.equal(true)
-    })
-
-    it('emits a RoleGranted event', function () {
+      // emits a RoleGranted event
       expectEvent.inLogs(this.logs, 'RoleGranted', {
         role: PAUSER_ROLE,
         account: address1,
@@ -24,18 +23,20 @@ function AuthorizationModuleCommon (owner, address1, address2) {
       })
     })
 
-    it('can revoke role as the owner', async function () {
+    it('testAdminCanRevokeRole', async function () {
+      // Arrange
       await this.cmtat.grantRole(PAUSER_ROLE, address1, { from: owner });
+      // Arrange - Assert
       (await this.cmtat.hasRole(PAUSER_ROLE, address1)).should.equal(true);
+      // Act
       ({ logs: this.logs } = await this.cmtat.revokeRole(
         PAUSER_ROLE,
         address1,
         { from: owner }
       ));
+      // Assert
       (await this.cmtat.hasRole(PAUSER_ROLE, address1)).should.equal(false)
-    })
-
-    it('emits a RoleRevoked event', function () {
+      // emits a RoleRevoked event
       expectEvent.inLogs(this.logs, 'RoleRevoked', {
         role: PAUSER_ROLE,
         account: address1,
@@ -43,27 +44,34 @@ function AuthorizationModuleCommon (owner, address1, address2) {
       })
     })
 
-    it('reverts when granting from non-owner', async function () {
+    it('testCannotNonAdminGrantRole', async function () {
+      // Arrange - Assert
       (await this.cmtat.hasRole(PAUSER_ROLE, address1)).should.equal(false)
+      // Act
       await expectRevert(
         this.cmtat.grantRole(PAUSER_ROLE, address1, { from: address2 }),
         'AccessControl: account ' +
           address2.toLowerCase() +
           ' is missing role 0x0000000000000000000000000000000000000000000000000000000000000000'
       );
+      // Assert
       (await this.cmtat.hasRole(PAUSER_ROLE, address1)).should.equal(false)
     })
 
-    it('reverts when revoking from non-owner', async function () {
+    it('testCannotNonAdminRevokeRole', async function () {
+      // Arrange
       (await this.cmtat.hasRole(PAUSER_ROLE, address1)).should.equal(false)
       await this.cmtat.grantRole(PAUSER_ROLE, address1, { from: owner });
+      // Arrange - Assert
       (await this.cmtat.hasRole(PAUSER_ROLE, address1)).should.equal(true)
+      // Act
       await expectRevert(
         this.cmtat.revokeRole(PAUSER_ROLE, address1, { from: address2 }),
         'AccessControl: account ' +
           address2.toLowerCase() +
           ' is missing role 0x0000000000000000000000000000000000000000000000000000000000000000'
       );
+      // Assert
       (await this.cmtat.hasRole(PAUSER_ROLE, address1)).should.equal(true)
     })
   })

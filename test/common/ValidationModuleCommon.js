@@ -61,7 +61,7 @@ function ValidationModuleCommon (admin, address1, address2, address3, fakeRuleEn
       // Act + Assert
       (
         await this.cmtat.detectTransferRestriction(address1, address2, 21)
-      ).should.be.bignumber.equal('10');
+      ).should.be.bignumber.equal('10')
     })
 
     it('testCanReturnMessageWithAmountTooHigh', async function () {

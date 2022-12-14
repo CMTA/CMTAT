@@ -1,13 +1,17 @@
 const { deployProxy } = require('@openzeppelin/truffle-upgrades')
 const CMTAT = artifacts.require('CMTAT')
 const MintModuleCommon = require('../../common/MintModuleCommon')
+
 contract(
   'Proxy - MintModule',
-  function ([_, owner, address1, address2, address3, fakeRuleEngine]) {
+  function ([_, admin, address1, address2]) {
     beforeEach(async function () {
-      this.cmtat = await deployProxy(CMTAT, [owner, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch'], { initializer: 'initialize', constructorArgs: [_] })
+      this.cmtat = await deployProxy(CMTAT, [true, admin, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch'], {
+        initializer: 'initialize',
+        constructorArgs: [_, true, admin, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch']
+      })
     })
 
-    MintModuleCommon(owner, address1, address2)
+    MintModuleCommon(admin, address1, address2)
   }
 )

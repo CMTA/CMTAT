@@ -3,20 +3,15 @@
 pragma solidity ^0.8.17;
 
 // required OZ imports here
-import "../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
-import "../../openzeppelin-contracts-upgradeable/contracts/token/ERC20/ERC20Upgradeable.sol";
-import "./wrapper/AuthorizationModule.sol";
+import "../../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
+import "../../../../openzeppelin-contracts-upgradeable/contracts/token/ERC20/ERC20Upgradeable.sol";
 
-abstract contract BaseModule is Initializable, ERC20Upgradeable, AuthorizationModule {
+abstract contract ERC20BaseModule is Initializable, ERC20Upgradeable {
     /* Events */
     event Spend(address indexed owner, address indexed spender, uint256 amount);
-    event TermSet(string indexed newTerm);
-    event TokenIdSet(string indexed newTokenId);
 
     /* Variables */
     uint8 private _decimals;
-    string public tokenId;
-    string public terms;
 
     /* Initializers */
     /**
@@ -25,45 +20,25 @@ abstract contract BaseModule is Initializable, ERC20Upgradeable, AuthorizationMo
      * All two of these values are immutable: they can only be set once during
      * construction.
      */
-    function __Base_init(
+    function __ERC20Module_init(
         string memory name_,
         string memory symbol_,
-        uint8 decimals_,
-        string memory tokenId_,
-        string memory terms_
+        uint8 decimals_
     ) internal onlyInitializing {
+         /* OpenZeppelin */
         __ERC20_init(name_, symbol_);
-        _decimals = decimals_;
-        tokenId = tokenId_;
-        terms = terms_;
+        
+        /* own function */
+        __ERC20Module_init_unchained(decimals_);
     }
 
-    function __Base_init_unchained(
-        uint8 decimals_,
-        string memory tokenId_,
-        string memory terms_
+    function __ERC20Module_init_unchained(
+        uint8 decimals_
     ) internal onlyInitializing {
         _decimals = decimals_;
-        tokenId = tokenId_;
-        terms = terms_;
     }
 
     /* Methods */
-    function setTokenId(string memory tokenId_)
-        public
-        onlyRole(DEFAULT_ADMIN_ROLE)
-    {
-        tokenId = tokenId_;
-        emit TokenIdSet(tokenId_);
-    }
-
-    function setTerms(string memory terms_)
-        public
-        onlyRole(DEFAULT_ADMIN_ROLE)
-    {
-        terms = terms_;
-        emit TermSet(terms_);
-    }
     /**
      * @dev Returns the number of decimals used to get its user representation.
      * For example, if `decimals` equals `2`, a balance of `505` tokens should
