@@ -185,11 +185,15 @@ abstract contract SnapshotModuleInternal is
 
     /**
     @dev See {OpenZeppelin - ERC20Snapshot}
+    @param time where we want a snapshot
+    @param snapshots the struct where are stored the snapshots
+    @return  snapshotExist true if a snapshot is found, false otherwise
+    value 0 if no snapshot, balance value if a snapshot exists
     */
     function _valueAt(uint256 time, Snapshots storage snapshots)
         private
         view
-        returns (bool, uint256)
+        returns (bool snapshotExist, uint256 value)
     {
         // When a valid snapshot is queried, there are three possibilities:
         //  a) The queried value was not modified after the snapshot was taken. Therefore, a snapshot entry was never
