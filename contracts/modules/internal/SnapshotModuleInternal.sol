@@ -11,6 +11,9 @@ import "../../../openzeppelin-contracts-upgradeable/contracts/utils/ArraysUpgrad
  * @dev Snapshot module.
  *
  * Useful to take a snapshot of token holder balance and total supply at a specific time
+ * Inspired by Openzeppelin - ERC20Snapshot but use the time as Id instead of a counter.
+ * Contrary to OpenZeppelin, the function _getCurrentSnapshotId is not available 
+   because overriding this function can break the contract.
  */
 
 abstract contract SnapshotModuleInternal is
@@ -20,19 +23,43 @@ abstract contract SnapshotModuleInternal is
 {
     using ArraysUpgradeable for uint256[];
 
+    /**
+    @notice Emitted when the snapshot with the specified oldTime was scheduled or rescheduled at the specified newTime.
+    */
     event SnapshotSchedule(uint256 indexed oldTime, uint256 indexed newTime);
+    
+    /** 
+    @notice Emitted when the scheduled snapshot with the specified time was cancelled.
+    */ 
     event SnapshotUnschedule(uint256 indexed time);
-
+    
+    /** 
+    @dev See {OpenZeppelin - ERC20Snapshot}
+    Snapshotted values have arrays of ids (time) and the value corresponding to that id.
+    ids is expected to be sorted in ascending order, and to contain no repeated elements 
+    because we use findUpperBound in the function _valueAt
+    */
     struct Snapshots {
         uint256[] ids;
         uint256[] values;
     }
 
+    /**
+    @dev See {OpenZeppelin - ERC20Snapshot}
+    */
     mapping(address => Snapshots) private _accountBalanceSnapshots;
     Snapshots private _totalSupplySnapshots;
 
-    uint256 private _currentSnapshot;
+    /**
+    @dev time instead of a counter for OpenZeppelin
+    */
+    uint256 private _currentSnapshotTime;
 
+    /** 
+    @dev 
+    list of scheduled snapshot (time)
+    this list can be unordered if a schedule snapshot is removed or rescheduled
+    */
     uint256[] private _scheduledSnapshots;
 
     function __Snapshot_init(string memory name_, string memory symbol_) internal onlyInitializing {
@@ -42,9 +69,12 @@ abstract contract SnapshotModuleInternal is
     }
 
     function __Snapshot_init_unchained() internal onlyInitializing{
-        _currentSnapshot = 0;
+        _currentSnapshotTime = 0;
     }
 
+    /** 
+    @dev schedule a snapshot at the specified time
+    */
     function _scheduleSnapshot(uint256 time) internal {
         require(block.timestamp < time, "Snapshot scheduled in the past");
         (bool found, ) = _findScheduledSnapshotIndex(time);
@@ -53,6 +83,9 @@ abstract contract SnapshotModuleInternal is
         emit SnapshotSchedule(0, time);
     }
 
+    /** 
+    @dev reschedule a scheduled snapshot at the specified newTime
+    */
     function _rescheduleSnapshot(uint256 oldTime, uint256 newTime)
         internal
     {
@@ -70,6 +103,9 @@ abstract contract SnapshotModuleInternal is
         emit SnapshotSchedule(oldTime, newTime);
     }
 
+    /**
+    @dev unschedule a scheduled snapshot
+    */
     function _unscheduleSnapshot(uint256 time) internal {
         require(block.timestamp < time, "Snapshot already done");
         (bool found, uint256 index) = _findScheduledSnapshotIndex(time);
@@ -80,10 +116,18 @@ abstract contract SnapshotModuleInternal is
         emit SnapshotUnschedule(time);
     }
 
+    /** 
+    @dev 
+    Get the next scheduled snapshots
+    */
     function getNextSnapshots() public view returns (uint256[] memory) {
         return _scheduledSnapshots;
     }
 
+    /** 
+    @notice Return the number of tokens owned by the given owner at the time when the snapshot with the given time was created.
+    @return value stored in the snapshot, or the actual balance if no snapshot
+    */
     function snapshotBalanceOf(uint256 time, address owner)
         public
         view
@@ -97,17 +141,23 @@ abstract contract SnapshotModuleInternal is
         return snapshotted ? value : balanceOf(owner);
     }
 
+    /**
+    @dev See {OpenZeppelin - ERC20Snapshot}
+    Retrieves the total supply at the specified time.
+    @return value stored in the snapshot, or the actual totalSupply if no snapshot
+    */
     function snapshotTotalSupply(uint256 time) public view returns (uint256) {
         (bool snapshotted, uint256 value) = _valueAt(
             time,
             _totalSupplySnapshots
         );
-
         return snapshotted ? value : totalSupply();
     }
 
-    // Update balance and/or total supply snapshots before the values are modified. This is implemented
-    // in the _beforeTokenTransfer hook, which is executed for _mint, _burn, and _transfer operations.
+    /** 
+    @dev Update balance and/or total supply snapshots before the values are modified. This is implemented
+    in the _beforeTokenTransfer hook, which is executed for _mint, _burn, and _transfer operations.
+    */
     function _beforeTokenTransfer(
         address from,
         address to,
@@ -133,6 +183,9 @@ abstract contract SnapshotModuleInternal is
         }
     }
 
+    /**
+    @dev See {OpenZeppelin - ERC20Snapshot}
+    */
     function _valueAt(uint256 time, Snapshots storage snapshots)
         private
         view
@@ -161,32 +214,52 @@ abstract contract SnapshotModuleInternal is
         }
     }
 
+    /**
+    @dev See {OpenZeppelin - ERC20Snapshot}
+    */
     function _updateAccountSnapshot(address account) private {
         _updateSnapshot(_accountBalanceSnapshots[account], balanceOf(account));
     }
 
+    /**
+    @dev See {OpenZeppelin - ERC20Snapshot}
+    */
     function _updateTotalSupplySnapshot() private {
         _updateSnapshot(_totalSupplySnapshots, totalSupply());
     }
 
+    /** 
+    @dev 
+    Inside a struct Snapshots:
+    - Update the array ids to the current Snapshot time if this one is greater than the snapshot times stored in ids.
+    - Update the value to the corresponding value.
+    */
     function _updateSnapshot(Snapshots storage snapshots, uint256 currentValue)
         private
     {
-        uint256 current = _currentSnapshot;
+        uint256 current = _currentSnapshotTime;
         if (_lastSnapshot(snapshots.ids) < current) {
             snapshots.ids.push(current);
             snapshots.values.push(currentValue);
         }
     }
 
+    /** 
+    @dev
+    Set the currentSnapshotTime by retrieving the most recent snapshot
+    if a snapshot exists, clear all past scheduled snapshot
+    */
     function _setCurrentSnapshot() internal {
-        uint256 time = _findScheduledMostRecentPastSnapshot();
-        if (time > 0) {
-            _currentSnapshot = time;
+        uint256 scheduleSnapshotTime = _findScheduledMostRecentPastSnapshot();
+        if (scheduleSnapshotTime > 0) {
+            _currentSnapshotTime = scheduleSnapshotTime;
             _clearPastScheduled();
         }
     }
 
+    /**
+    @return return the last snapshot time inside a snapshot ids array
+    */
     function _lastSnapshot(uint256[] storage ids)
         private
         view
@@ -199,6 +272,10 @@ abstract contract SnapshotModuleInternal is
         }
     }
 
+    /** 
+    @dev Find the snapshot index at the specific time
+    @return (true, index) if the snapshot exists, (false, 0) otherwise
+    */
     function _findScheduledSnapshotIndex(uint256 time)
         private
         view
@@ -212,6 +289,10 @@ abstract contract SnapshotModuleInternal is
         return (false, 0);
     }
 
+    /** 
+    @dev find the most recent past snapshot
+    The complexity of this function is O(N) because we go through the whole list
+    */
     function _findScheduledMostRecentPastSnapshot()
         private
         view
@@ -230,6 +311,10 @@ abstract contract SnapshotModuleInternal is
         return mostRecent;
     }
 
+    /** 
+    @dev remove all past snapshot by calling the function _removeScheduledItem
+    The complexity of this function is O(N) because we go through the whole list
+    */
     function _clearPastScheduled() private {
         uint256 i = 0;
         while (i < _scheduledSnapshots.length) {
@@ -241,6 +326,12 @@ abstract contract SnapshotModuleInternal is
         }
     }
 
+    /** 
+    @dev remove a snapshot in two steps:
+    - replace the snapshot to remove by the last snapshot
+    - remove the last snapshot
+    This operation leaves potentially the list in an unordered state
+    */
     function _removeScheduledItem(uint256 index) private {
         _scheduledSnapshots[index] = _scheduledSnapshots[
             _scheduledSnapshots.length - 1
