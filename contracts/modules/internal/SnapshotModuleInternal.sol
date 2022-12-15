@@ -340,9 +340,11 @@ abstract contract SnapshotModuleInternal is
     This operation leaves potentially the list in an unordered state
     */
     function _removeScheduledItem(uint256 index) private {
-        _scheduledSnapshots[index] = _scheduledSnapshots[
-            _scheduledSnapshots.length - 1
-        ];
+        if(_scheduledSnapshots[index] != _scheduledSnapshots.length - 1){
+            _scheduledSnapshots[index] = _scheduledSnapshots[
+                _scheduledSnapshots.length - 1
+            ];
+        }
         _scheduledSnapshots.pop();
     }
 
