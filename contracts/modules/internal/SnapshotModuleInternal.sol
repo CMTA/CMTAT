@@ -321,8 +321,11 @@ abstract contract SnapshotModuleInternal is
     */
     function _clearPastScheduled() private {
         uint256 i = 0;
-        while (i < _scheduledSnapshots.length) {
+        uint256 scheduledSnapshotsLength = _scheduledSnapshots.length;
+        while (i < scheduledSnapshotsLength) {
             if (_scheduledSnapshots[i] <= block.timestamp) {
+                // underflow impossible
+                 unchecked { --scheduledSnapshotsLength; }
                 _removeScheduledItem(i);
             } else {
                 i += 1;
