@@ -15,7 +15,7 @@ abstract contract ValidationModuleInternal is Initializable, ContextUpgradeable 
     /**
      * @dev Emitted when a rule engine is set.
      */
-    event RuleEngineSet(address indexed newRuleEngine);
+    event RuleEngineSet(IRuleEngine indexed newRuleEngine);
 
     IRuleEngine public ruleEngine;
 
@@ -33,7 +33,7 @@ abstract contract ValidationModuleInternal is Initializable, ContextUpgradeable 
     {
         if (address(ruleEngine_) != address(0)) {
             ruleEngine = ruleEngine_;
-            emit RuleEngineSet(address(ruleEngine));
+            emit RuleEngineSet(ruleEngine);
         }
     }
 

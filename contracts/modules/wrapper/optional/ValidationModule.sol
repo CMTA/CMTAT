@@ -46,7 +46,7 @@ abstract contract ValidationModule is ValidationModuleInternal, PauseModule, Enf
         onlyRole(DEFAULT_ADMIN_ROLE)
     {
         ruleEngine = ruleEngine_;
-        emit RuleEngineSet(address(ruleEngine_));
+        emit RuleEngineSet(ruleEngine_);
     }
 
     /**
