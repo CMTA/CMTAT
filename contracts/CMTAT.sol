@@ -8,7 +8,6 @@ import "../openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradeable
 import "./modules/wrapper/mandatory/BaseModule.sol";
 import "./modules/wrapper/mandatory/BurnModule.sol";
 import "./modules/wrapper/mandatory/MintModule.sol";
-import "./modules/wrapper/mandatory/BurnModule.sol";
 import "./modules/wrapper/mandatory/EnforcementModule.sol";
 import "./modules/wrapper/mandatory/ERC20BaseModule.sol";
 import "./modules/wrapper/mandatory/SnapshotModule.sol";
@@ -18,7 +17,7 @@ import "./modules/wrapper/optional/MetaTxModule.sol";
 import "./modules/wrapper/optional/AuthorizationModule.sol";
 import "./modules/wrapper/optional/DebtModule.sol";
 import "./modules/security/OnlyDelegateCallModule.sol";
-import "./interfaces/IRuleEngine.sol";
+//import "./interfaces/IRuleEngine.sol";
 
 contract CMTAT is
     Initializable,

@@ -7,7 +7,7 @@ import "../../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Ini
 import "../optional/AuthorizationModule.sol";
 import "../../../modules/security/OnlyDelegateCallModule.sol";
 
-abstract contract BaseModule is Initializable, AuthorizationModule, OnlyDelegateCallModule {
+abstract contract BaseModule is AuthorizationModule, OnlyDelegateCallModule {
     bool internal deployedWithProxy;
     /* Events */
     event TermSet(string indexed newTerm);
@@ -29,6 +29,7 @@ abstract contract BaseModule is Initializable, AuthorizationModule, OnlyDelegate
         string memory terms_
     ) internal onlyInitializing {
          /* OpenZeppelin */
+        __Context_init_unchained();
          // AccessControlUpgradeable inherits from ERC165Upgradeable
         __ERC165_init_unchained();
         // AuthorizationModule inherits from AccessControlUpgradeable
