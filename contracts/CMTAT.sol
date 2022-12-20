@@ -16,6 +16,7 @@ import "./modules/wrapper/mandatory/PauseModule.sol";
 import "./modules/wrapper/optional/ValidationModule.sol";
 import "./modules/wrapper/optional/MetaTxModule.sol";
 import "./modules/wrapper/optional/AuthorizationModule.sol";
+import "./modules/wrapper/optional/DebtModule.sol";
 import "./modules/security/OnlyDelegateCallModule.sol";
 import "./interfaces/IRuleEngine.sol";
 
@@ -30,7 +31,8 @@ contract CMTAT is
     ValidationModule,
     MetaTxModule,
     SnasphotModule,
-    ERC20BaseModule
+    ERC20BaseModule,
+    DebtModule
 {
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor(address forwarder, bool deployedWithProxy_, address owner, string memory name, string memory symbol, string memory tokenId, string memory terms

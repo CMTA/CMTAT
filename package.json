@@ -25,7 +25,8 @@
     "test:validation": "npx truffle test test/standard/modules/ValidationModule.test.js test/proxy/modules/ValidationModule.test.js",
     "test:enforcement": "npx truffle test test/standard/modules/EnforcementModule.test.js test/proxy/modules/EnforcementModule.test.js",
     "test:authorization": "npx truffle test test/standard/modules/AuthorizationModule.test.js test/proxy/modules/AuthorizationModule.test.js",
-    "test:base": "npx truffle test test/standard/modules/BaseModule.test.js test/proxy/modules/BaseModule.test.js"                         
+    "test:base": "npx truffle test test/standard/modules/BaseModule.test.js test/proxy/modules/BaseModule.test.js",
+    "test:debt": "npx truffle test test/standard/modules/DebtModule.test.js test/proxy/modules/DebtModule.test.js"                              
   },
   "repository": {
     "type": "git",
