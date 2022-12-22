@@ -56,6 +56,10 @@ contract RuleEngineMock is IRuleEngine {
         return detectTransferRestriction(_from, _to, _amount) == 0;
     }
 
+    /**
+    @dev
+    For all the rules, each restriction code has to be unique.
+    */
     function messageForTransferRestriction(uint8 _restrictionCode)
         public
         view
