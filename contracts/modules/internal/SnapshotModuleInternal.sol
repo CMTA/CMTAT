@@ -17,8 +17,6 @@ import "../../../openzeppelin-contracts-upgradeable/contracts/utils/ArraysUpgrad
  */
 
 abstract contract SnapshotModuleInternal is
-    Initializable,
-    ContextUpgradeable,
     ERC20Upgradeable
 {
     using ArraysUpgradeable for uint256[];

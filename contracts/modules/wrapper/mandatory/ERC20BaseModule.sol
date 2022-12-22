@@ -6,7 +6,7 @@ pragma solidity ^0.8.17;
 import "../../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
 import "../../../../openzeppelin-contracts-upgradeable/contracts/token/ERC20/ERC20Upgradeable.sol";
 
-abstract contract ERC20BaseModule is Initializable, ERC20Upgradeable {
+abstract contract ERC20BaseModule is ERC20Upgradeable {
     /* Events */
     event Spend(address indexed owner, address indexed spender, uint256 amount);
 
@@ -26,6 +26,7 @@ abstract contract ERC20BaseModule is Initializable, ERC20Upgradeable {
         uint8 decimals_
     ) internal onlyInitializing {
          /* OpenZeppelin */
+        __Context_init_unchained();
         __ERC20_init(name_, symbol_);
         
         /* own function */

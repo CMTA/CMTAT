@@ -125,33 +125,9 @@ modules API.
 CMTA will release further documentation describing the CMTAT framework
 in a platform-agnostic way, and coveging legal aspects.
 
-## Testing
-
-Tests are written in JavaScript (Node.js package) and run with Truffle through the command `truffle test`. 
-The test suite could be correctly built and run with the following versions: 
-
-* npm 8.19.2
-* Truffle v5.5.31 (core: 5.5.31)
-* Ganache v7.4.3
-* Solidity - 0.8.4 (solc-js)
-* Node v16.17.0
-* Web3.js v1.7.4
-
-
-Truffle has to be installed globally or used with the `npx` command.
-Everything else needed is installed through `npm install` with the right
-versions.
-
-Please see the Truffle [JavaScript tests
-documentation](https://www.trufflesuite.com/docs/truffle/testing/writing-tests-in-javascript)
-for more information about the writing and running of Truffle tests.
-
-
-
 ## Intellectual property
 
 The code is copyright (c) Capital Market and Technology Association,
 2018-2021, and is released under [Mozilla Public License
 2.0](./LICENSE.md).
-
 
