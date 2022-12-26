@@ -2,6 +2,9 @@ const { expectEvent, expectRevert } = require('@openzeppelin/test-helpers')
 const { should } = require('chai').should()
 const { ENFORCER_ROLE } = require('../utils')
 
+const reasonFreeze = 'testFreeze'
+const reasonUnfreeze = 'testUnfreeze'
+
 function EnforcementModuleCommon (owner, address1, address2) {
   context('Freeze', function () {
     beforeEach(async function () {
@@ -20,7 +23,9 @@ function EnforcementModuleCommon (owner, address1, address2) {
       // emits a Freeze event
       expectEvent.inLogs(this.logs, 'Freeze', {
         enforcer: owner,
-        owner: address1
+        owner: address1,
+        reasonIndexed: web3.utils.keccak256(reasonFreeze),
+        reason: reasonFreeze
       })
     })
 
@@ -30,13 +35,16 @@ function EnforcementModuleCommon (owner, address1, address2) {
       // Arrange - Assert
       (await this.cmtat.frozen(address1)).should.equal(false);
       // Act
-      ({ logs: this.logs } = await this.cmtat.freeze(address1, { from: address2 }));
+      ({ logs: this.logs } = await this.cmtat.freeze(address1, reasonFreeze, { from: address2 }));
       // Assert
       (await this.cmtat.frozen(address1)).should.equal(true)
+
       // emits a Freeze event
       expectEvent.inLogs(this.logs, 'Freeze', {
         enforcer: address2,
-        owner: address1
+        owner: address1,
+        reasonIndexed: web3.utils.keccak256(reasonFreeze),
+        reason: reasonFreeze
       })
     })
 
@@ -46,14 +54,16 @@ function EnforcementModuleCommon (owner, address1, address2) {
       // Arrange - Assert
       (await this.cmtat.frozen(address1)).should.equal(true);
       // Act
-      ({ logs: this.logs } = await this.cmtat.unfreeze(address1, {
+      ({ logs: this.logs } = await this.cmtat.unfreeze(address1, reasonUnfreeze, {
         from: owner
       }));
       // Assert
       (await this.cmtat.frozen(address1)).should.equal(false)
       expectEvent.inLogs(this.logs, 'Unfreeze', {
         enforcer: owner,
-        owner: address1
+        owner: address1,
+        reasonIndexed: web3.utils.keccak256(reasonUnfreeze),
+        reason: reasonUnfreeze
       })
     })
 
@@ -64,13 +74,15 @@ function EnforcementModuleCommon (owner, address1, address2) {
       // Arrange - Assert
       (await this.cmtat.frozen(address1)).should.equal(true);
       // Act
-      ({ logs: this.logs } = await this.cmtat.unfreeze(address1, { from: address2 }));
+      ({ logs: this.logs } = await this.cmtat.unfreeze(address1, reasonUnfreeze, { from: address2 }));
       // Assert
       (await this.cmtat.frozen(address1)).should.equal(false)
       // emits an Unfreeze event
       expectEvent.inLogs(this.logs, 'Unfreeze', {
         enforcer: address2,
-        owner: address1
+        owner: address1,
+        reasonIndexed: web3.utils.keccak256(reasonUnfreeze),
+        reason: reasonUnfreeze
       })
     })
 
