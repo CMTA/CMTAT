@@ -42,8 +42,9 @@ abstract contract EnforcementModule is EnforcementModuleInternal,
     }
 
     /**
-     * @dev Freezes an address.
-     *
+     * @notice Freezes an address.
+     * @param account the account to freeze
+     * @param reason indicate why the account was frozen. 
      */
     function freeze(address account, string memory reason)
         public
@@ -54,7 +55,10 @@ abstract contract EnforcementModule is EnforcementModuleInternal,
     }
 
     /**
-     * @dev Unfreezes an address.
+     * @notice Unfreezes an address.
+     * @param account the account to unfreeze
+     * @param reason indicate why the account was unfrozen. 
+     *  
      *
      */
     function unfreeze(address account, string memory reason)

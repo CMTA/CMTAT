@@ -16,19 +16,19 @@ abstract contract EnforcementModuleInternal is
     ContextUpgradeable
 {
     /**
-     * @dev Emitted when an address is frozen.
+     * @notice Emitted when an address is frozen.
      */
     event Freeze(address indexed enforcer, address indexed owner, string indexed reasonIndexed, string reason);
 
     /**
-     * @dev Emitted when an address is unfrozen.
+     * @notice Emitted when an address is unfrozen.
      */
     event Unfreeze(address indexed enforcer, address indexed owner, string indexed reasonIndexed, string reason);
 
     mapping(address => bool) private _frozen;
 
     /**
-     * @dev Initializes the contract in unpaused state.
+     * @dev Initializes the contract
      */
     function __Enforcement_init() internal onlyInitializing {
         __Context_init_unchained();
@@ -40,7 +40,7 @@ abstract contract EnforcementModuleInternal is
     }
 
     /**
-     * @dev Returns true if the contract is paused, and false otherwise.
+     * @dev Returns true if the account is frozen, and false otherwise.
      */
     function frozen(address account) public view virtual returns (bool) {
         return _frozen[account];
@@ -48,7 +48,9 @@ abstract contract EnforcementModuleInternal is
 
     /**
      * @dev Freezes an address.
-     *
+     * @param account the account to freeze
+     * @param reason indicate why the account was frozen. 
+     * 
      */
     function _freeze(address account, string memory reason) internal virtual returns (bool) {
         if (_frozen[account]) return false;
@@ -59,12 +61,14 @@ abstract contract EnforcementModuleInternal is
 
     /**
      * @dev Unfreezes an address.
-     *
+     * @param account the account to unfreeze
+     * @param reason indicate why the account was unfrozen. 
      */
     function _unfreeze(address account, string memory reason) internal virtual returns (bool) {
         if (!_frozen[account]) return false;
         _frozen[account] = false;
         emit Unfreeze(_msgSender(), account, reason, reason);
+        
         return true;
     }
 
