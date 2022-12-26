@@ -15,7 +15,7 @@ function EnforcementModuleCommon (owner, address1, address2) {
       // Arrange - Assert
       (await this.cmtat.frozen(address1)).should.equal(false);
       // Act
-      ({ logs: this.logs } = await this.cmtat.freeze(address1, {
+      ({ logs: this.logs } = await this.cmtat.freeze(address1, reasonFreeze, {
         from: owner
       }));
       // Assert
@@ -50,7 +50,7 @@ function EnforcementModuleCommon (owner, address1, address2) {
 
     it('testAdminCanUnfreezeAddress', async function () {
       // Arrange
-      await this.cmtat.freeze(address1, { from: owner });
+      await this.cmtat.freeze(address1, reasonFreeze, { from: owner });
       // Arrange - Assert
       (await this.cmtat.frozen(address1)).should.equal(true);
       // Act
@@ -69,7 +69,7 @@ function EnforcementModuleCommon (owner, address1, address2) {
 
     it('testEnforcerRoleCanUnfreezeAddress', async function () {
       // Arrange
-      await this.cmtat.freeze(address1, { from: owner })
+      await this.cmtat.freeze(address1, reasonFreeze, { from: owner })
       await this.cmtat.grantRole(ENFORCER_ROLE, address2, { from: owner });
       // Arrange - Assert
       (await this.cmtat.frozen(address1)).should.equal(true);
@@ -88,7 +88,7 @@ function EnforcementModuleCommon (owner, address1, address2) {
 
     it('testCannotNonEnforcerFreezeAddress', async function () {
       await expectRevert(
-        this.cmtat.freeze(address1, { from: address2 }),
+        this.cmtat.freeze(address1, reasonFreeze, { from: address2 }),
         'AccessControl: account ' +
             address2.toLowerCase() +
             ' is missing role ' +
@@ -100,10 +100,10 @@ function EnforcementModuleCommon (owner, address1, address2) {
 
     it('testCannotNonEnforcerUnfreezeAddress', async function () {
       // Arrange
-      await this.cmtat.freeze(address1, { from: owner })
+      await this.cmtat.freeze(address1, reasonFreeze, { from: owner })
       // Act
       await expectRevert(
-        this.cmtat.unfreeze(address1, { from: address2 }),
+        this.cmtat.unfreeze(address1, reasonUnfreeze, { from: address2 }),
         'AccessControl: account ' +
             address2.toLowerCase() +
             ' is missing role ' +
