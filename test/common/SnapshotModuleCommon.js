@@ -12,6 +12,95 @@ const timeout = function (ms) {
 }
 
 function SnapshotModuleCommon (owner, address1, address2, address3) {
+  context('Snapshot remove', function () {
+    it('can remove a snapshot with the snapshoter role', async function () {
+      this.snapshotTime = `${getUnixTimestamp() + 60}`;
+      ({ logs: this.logs } = await this.cmtat.scheduleSnapshot(
+        this.snapshotTime,
+        { from: owner }
+      ))
+      let snapshots = await this.cmtat.getNextSnapshots()
+      snapshots.length.should.equal(1)
+      snapshots[0].should.be.bignumber.equal(this.snapshotTime)
+      await this.cmtat.unscheduleSnapshotNotOptimized(this.snapshotTime, { from: owner })
+      snapshots = await this.cmtat.getNextSnapshots()
+      snapshots.length.should.equal(0)
+    })
+    it('can remove a random snapshot with the snapshoter role', async function () {
+      this.snapshotTime1 = `${getUnixTimestamp() + 100}`
+      this.snapshotTime2 = `${getUnixTimestamp() + 600}`
+      this.snapshotTime3 = `${getUnixTimestamp() + 1100}`
+      this.snapshotTime4 = `${getUnixTimestamp() + 11003}`
+      this.snapshotTime5 = `${getUnixTimestamp() + 11004}`
+      await this.cmtat.scheduleSnapshot(this.snapshotTime1, {
+        from: owner
+      })
+      await this.cmtat.scheduleSnapshot(this.snapshotTime2, {
+        from: owner
+      })
+      await this.cmtat.scheduleSnapshot(this.snapshotTime3, {
+        from: owner
+      })
+      await this.cmtat.scheduleSnapshot(this.snapshotTime4, {
+        from: owner
+      })
+      await this.cmtat.scheduleSnapshot(this.snapshotTime5, {
+        from: owner
+      })
+      let snapshots = await this.cmtat.getNextSnapshots()
+      snapshots.length.should.equal(5)
+      await this.cmtat.unscheduleSnapshotNotOptimized(this.snapshotTime3, { from: owner })
+      snapshots = await this.cmtat.getNextSnapshots()
+      snapshots[0].should.be.bignumber.equal(this.snapshotTime1)
+      snapshots[1].should.be.bignumber.equal(this.snapshotTime2)
+      snapshots[2].should.be.bignumber.equal(this.snapshotTime4)
+      snapshots[3].should.be.bignumber.equal(this.snapshotTime5)
+      snapshots.length.should.equal(4)
+    })
+    it('Revert if no snapshot', async function () {
+      this.snapshotTime = `${getUnixTimestamp() + 60}`;
+      let snapshots = await this.cmtat.getNextSnapshots()
+      snapshots.length.should.equal(0)
+      await expectRevert(this.cmtat.unscheduleSnapshotNotOptimized(this.snapshotTime, { from: owner }), 'Snapshot not found')
+      snapshots = await this.cmtat.getNextSnapshots()
+      snapshots.length.should.equal(0)
+    })
+    it('can schedule a snaphot in a random place', async function () {
+      this.snapshotTime1 = `${getUnixTimestamp() + 100}`
+      this.snapshotTime2 = `${getUnixTimestamp() + 600}`
+      this.snapshotTime3 = `${getUnixTimestamp() + 1100}`
+      this.snapshotTime4 = `${getUnixTimestamp() + 11003}`
+      this.snapshotTime5 = `${getUnixTimestamp() + 11004}`
+      this.randomSnapshot = `${getUnixTimestamp() + 700}`
+      await this.cmtat.scheduleSnapshot(this.snapshotTime1, {
+        from: owner
+      })
+      await this.cmtat.scheduleSnapshot(this.snapshotTime2, {
+        from: owner
+      })
+      await this.cmtat.scheduleSnapshot(this.snapshotTime3, {
+        from: owner
+      })
+      await this.cmtat.scheduleSnapshot(this.snapshotTime4, {
+        from: owner
+      })
+      await this.cmtat.scheduleSnapshot(this.snapshotTime5, {
+        from: owner
+      })
+      await this.cmtat.scheduleSnapshotNotOptimized(this.randomSnapshot, {
+        from: owner
+      })
+      let snapshots = await this.cmtat.getNextSnapshots()
+      snapshots.length.should.equal(6)
+      snapshots = await this.cmtat.getNextSnapshots()
+      snapshots[0].should.be.bignumber.equal(this.snapshotTime1)
+      snapshots[1].should.be.bignumber.equal(this.snapshotTime2)
+      snapshots[2].should.be.bignumber.equal(this.randomSnapshot)
+      snapshots[3].should.be.bignumber.equal(this.snapshotTime3)
+      snapshots[4].should.be.bignumber.equal(this.snapshotTime4)
+      snapshots[5].should.be.bignumber.equal(this.snapshotTime5)
+    })
+  })
   context('Snapshot scheduling', function () {
     it('can schedule a snapshot with the snapshoter role', async function () {
       this.snapshotTime = `${getUnixTimestamp() + 60}`;
@@ -54,7 +143,7 @@ function SnapshotModuleCommon (owner, address1, address2, address3) {
       await this.cmtat.scheduleSnapshot(this.snapshotTime, { from: owner })
       await expectRevert(
         this.cmtat.scheduleSnapshot(this.snapshotTime, { from: owner }),
-        'Snapshot already scheduled for this time'
+        'time has to be greater than the last snapshot time'
       )
       const snapshots = await this.cmtat.getNextSnapshots()
       snapshots.length.should.equal(1)
@@ -94,7 +183,7 @@ function SnapshotModuleCommon (owner, address1, address2, address3) {
         this.cmtat.unscheduleSnapshot(`${getUnixTimestamp() + 90}`, {
           from: owner
         }),
-        'Snapshot not found'
+        'Only the last snapshot can be unscheduled'
       )
     })
 
@@ -167,7 +256,7 @@ function SnapshotModuleCommon (owner, address1, address2, address3) {
           this.newSnapshotTime,
           { from: owner }
         ),
-        'Snapshot already scheduled for this time'
+        'Snapshot not found'
       )
       const snapshots = await this.cmtat.getNextSnapshots()
       snapshots.length.should.equal(1)
