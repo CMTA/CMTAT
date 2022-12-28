@@ -82,23 +82,19 @@ abstract contract SnapshotModuleInternal is
         if(_scheduledSnapshots.length > 0) {
             // We check the last snapshot on the list
             require(time > _scheduledSnapshots[_scheduledSnapshots.length -1], "time has to be greater than the last snapshot time");
-
-        
         }
         _scheduledSnapshots.push(time);
         emit SnapshotSchedule(0, time);
     }
 
-        /** 
+    /** 
     @dev schedule a snapshot at the specified time
-    You can only add a snapshot after the last previous
     */
     function _scheduleSnapshotNotOptimized(uint256 time) internal {
         require(time > block.timestamp, "Snapshot scheduled in the past");
         (bool isFound, uint256 index) = _findScheduledSnapshotIndex(time);
         require(index != _scheduledSnapshots.length, "Snapshot not found");
-       
-        //uint256[] memory scheduledSnapshotsTmp = new uint256[](_scheduledSnapshots.length + 1);
+        require(!isFound, "Snapshot already exists");
         uint256 tmp = _scheduledSnapshots[index];
         _scheduledSnapshots[index] = time;
 
@@ -108,20 +104,6 @@ abstract contract SnapshotModuleInternal is
             unchecked {--i;}
         }
         _scheduledSnapshots[index + 1] = tmp;
-        /*while(i < _scheduledSnapshots.length) {
-           _scheduledSnapshots[i] = _scheduledSnapshots[i + 1];
-            unchecked {++i;}
-        }
-        while(i < index) {
-            scheduledSnapshotsTmp[i] = _scheduledSnapshots[i];
-            unchecked {++i;}
-        }
-        scheduledSnapshotsTmp[i] = time;
-        while(i < scheduledSnapshotsTmp.length) {
-            scheduledSnapshotsTmp[i] = _scheduledSnapshots[i - 1];
-            unchecked {++i;}
-        }*/
-        //_scheduledSnapshots = scheduledSnapshotsTmp;
         emit SnapshotSchedule(0, time);
     }
 
@@ -153,14 +135,31 @@ abstract contract SnapshotModuleInternal is
     }
 
     /**
-    @dev unschedule a scheduled snapshot
+    @dev unschedule the last scheduled snapshot
     */
     function _unscheduleSnapshot(uint256 time) internal {
         require(block.timestamp < time, "Snapshot already done");
         require(_scheduledSnapshots.length > 0, "No snapshot scheduled");
-        require(time == _scheduledSnapshots[ _scheduledSnapshots.length - 1], "Only the last snapshot can be unscheduled");
+        // All snapshot time are unique, so we do not check the indice
+        require(time == _scheduledSnapshots[ _scheduledSnapshots.length - 1], 
+        "Only the last snapshot can be unscheduled");
         _scheduledSnapshots.pop();
         emit SnapshotUnschedule(time);
+    }
+
+    /** 
+    @dev unschedule (remove) a snapshot in three steps:
+    - search the snapshot in the list
+    - If found, move all next snapshots one position to the left
+    - Reduce the array size by deleting the last snapshot
+    */
+    function _unscheduleNotOptimized(uint256 time) internal {
+        (bool isFound, uint256 index) = _findScheduledSnapshotIndex(time);
+        require(isFound, "Snapshot not found");
+        for(uint256 i = index; i + 1 < _scheduledSnapshots.length; ++i){
+            _scheduledSnapshots[i] = _scheduledSnapshots[i + 1];
+        }
+        _scheduledSnapshots.pop();
     }
 
     /** 
@@ -169,17 +168,24 @@ abstract contract SnapshotModuleInternal is
     */
     function getNextSnapshots() public view returns (uint256[] memory) {
         uint256[] memory nextScheduledSnapshot = new uint256[](0);
+        // no snapshot were planned
         if(_scheduledSnapshots.length == 0){
-            return nextScheduledSnapshot ;
+            return nextScheduledSnapshot;
         }
-        if(_currentSnapshotTime == 0){
+        (uint256 timeLowerBound, uint256 indexLowerBound) = _findScheduledMostRecentPastSnapshot();
+        // All snapshots are situated in the futur
+        if((timeLowerBound == 0) && (_currentSnapshotTime == 0)){
             return _scheduledSnapshots;
         }
-        uint256 arraySize = _scheduledSnapshots.length - _currentSnapshotIndex - 1;
+        // all snapshots are situated in the past
+        if(indexLowerBound + 1 == _scheduledSnapshots.length){
+            return nextScheduledSnapshot;
+        }
+        // All next snapshots are located after the snapshot specified by indexLowerBound
+        uint256 arraySize = _scheduledSnapshots.length - indexLowerBound - 1;
         nextScheduledSnapshot = new uint256[](arraySize);
-        // We count the number of scheduled snapshot
         for(uint256 i = 0; i < nextScheduledSnapshot.length; ++i){
-            nextScheduledSnapshot[i] = _scheduledSnapshots[_currentSnapshotIndex + 1 + i];
+            nextScheduledSnapshot[i] = _scheduledSnapshots[indexLowerBound + 1 + i];
         }
         return nextScheduledSnapshot;
     }
@@ -331,7 +337,7 @@ abstract contract SnapshotModuleInternal is
     }
 
     /**
-    @return return the last snapshot time inside a snapshot ids array
+    @return the last snapshot time inside a snapshot ids array
     */
     function _lastSnapshot(uint256[] storage ids)
         private
@@ -346,7 +352,7 @@ abstract contract SnapshotModuleInternal is
     }
 
     /** 
-    @dev Find the snapshot index at the specific time
+    @dev Find the snapshot index at the specified time
     @return (true, index) if the snapshot exists, (false, 0) otherwise
     */
     function _findScheduledSnapshotIndex(uint256 time)
@@ -377,35 +383,26 @@ abstract contract SnapshotModuleInternal is
         view
         returns (uint256 time, uint256 index)
     {
-        if (_scheduledSnapshots.length == 0) return (0, _scheduledSnapshots.length);
+        uint256 currentArraySize =  _scheduledSnapshots.length;
+        if (currentArraySize == 0 || 
+            ((_currentSnapshotIndex + 1 == currentArraySize) 
+            && (time != 0))){
+            return (0, currentArraySize);
+        } 
         uint256 mostRecent = 0;
-        uint256 i = _currentSnapshotIndex;
-        index = 0;
-        for (; i < _scheduledSnapshots.length; i++) {
+        index = currentArraySize;
+        for (uint256 i = _currentSnapshotIndex; i < currentArraySize; ++i) {
             if (
-                _scheduledSnapshots[i] <= block.timestamp &&
-                _scheduledSnapshots[i] > mostRecent
+                _scheduledSnapshots[i] <= block.timestamp
             ) {
                 mostRecent = _scheduledSnapshots[i];
                 index = i;
+            }else {
+                // All snapshot are planned in the futur
+                break;
             }
         }
         return (mostRecent, index);
-    }
-
-     /** 
-    @dev remove a snapshot in two steps:
-    - replace the snapshot to remove by the last snapshot
-    - remove the last snapshot
-    This operation leaves potentially the list in an unordered state
-    */
-    function _unscheduleNotOptimized(uint256 time) internal {
-        (bool isFound, uint256 index) = _findScheduledSnapshotIndex(time);
-        require(isFound, "Snapshot not found");
-        for(uint256 i = index; i + 1 < _scheduledSnapshots.length; ++i){
-            _scheduledSnapshots[i] = _scheduledSnapshots[i + 1];
-        }
-        _scheduledSnapshots.pop();
     }
 
     uint256[50] private __gap;
