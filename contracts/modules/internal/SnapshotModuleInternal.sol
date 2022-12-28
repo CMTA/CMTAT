@@ -93,18 +93,22 @@ abstract contract SnapshotModuleInternal is
     function _scheduleSnapshotNotOptimized(uint256 time) internal {
         require(time > block.timestamp, "Snapshot scheduled in the past");
         (bool isFound, uint256 index) = _findScheduledSnapshotIndex(time);
-        require(index != _scheduledSnapshots.length, "Snapshot not found");
+        
         require(!isFound, "Snapshot already exists");
-        uint256 tmp = _scheduledSnapshots[index];
-        _scheduledSnapshots[index] = time;
-
-        _scheduledSnapshots.push(_scheduledSnapshots[_scheduledSnapshots.length - 1]);
-        for(uint256 i = _scheduledSnapshots.length - 2; i > index;) {
-           _scheduledSnapshots[i] = _scheduledSnapshots[i - 1];
-            unchecked {--i;}
+        // if no snaphot, call _scheduleSnapshot instead
+        if(index == _scheduledSnapshots.length) {
+            _scheduleSnapshot(time);
+        }else{
+             uint256 tmp = _scheduledSnapshots[index];
+            _scheduledSnapshots[index] = time;
+            _scheduledSnapshots.push(_scheduledSnapshots[_scheduledSnapshots.length - 1]);
+            for(uint256 i = _scheduledSnapshots.length - 2; i > index;) {
+            _scheduledSnapshots[i] = _scheduledSnapshots[i - 1];
+                unchecked {--i;}
+            }
+            _scheduledSnapshots[index + 1] = tmp;
+            emit SnapshotSchedule(0, time);
         }
-        _scheduledSnapshots[index + 1] = tmp;
-        emit SnapshotSchedule(0, time);
     }
 
     /** 
