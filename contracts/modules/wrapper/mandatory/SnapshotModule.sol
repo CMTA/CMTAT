@@ -80,11 +80,11 @@ abstract contract SnasphotModule is SnapshotModuleInternal, AuthorizationModule 
     Cancel creation of the scheduled snapshot, but not yet created snapshot with the given time. 
     There should not be any other snapshots scheduled after this one. 
     */
-    function unscheduleSnapshot(uint256 time)
+    function unscheduleLastSnapshot(uint256 time)
         public
         onlyRole(SNAPSHOOTER_ROLE)
     {
-        _unscheduleSnapshot(time);
+        _unscheduleLastSnapshot(time);
     }
 
     /*
@@ -96,7 +96,7 @@ abstract contract SnasphotModule is SnapshotModuleInternal, AuthorizationModule 
         public
         onlyRole(SNAPSHOOTER_ROLE)
     {
-        _unscheduleNotOptimized(time);
+        _unscheduleSnapshotNotOptimized(time);
     }
 
     

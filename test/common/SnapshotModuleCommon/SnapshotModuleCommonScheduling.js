@@ -82,7 +82,43 @@ function SnapshotModuleCommonScheduling (owner, address1, address2, address3) {
       snapshots.length.should.equal(3)
       snapshots[0].should.be.bignumber.equal(this.snapshotTime)
     })
-        
+
+    it('can schedule a snaphot in a random place', async function () {
+      this.snapshotTime1 = `${getUnixTimestamp() + 100}`
+      this.snapshotTime2 = `${getUnixTimestamp() + 600}`
+      this.snapshotTime3 = `${getUnixTimestamp() + 1100}`
+      this.snapshotTime4 = `${getUnixTimestamp() + 11003}`
+      this.snapshotTime5 = `${getUnixTimestamp() + 11004}`
+      this.randomSnapshot = `${getUnixTimestamp() + 700}`
+      await this.cmtat.scheduleSnapshot(this.snapshotTime1, {
+        from: owner
+      })
+      await this.cmtat.scheduleSnapshot(this.snapshotTime2, {
+        from: owner
+      })
+      await this.cmtat.scheduleSnapshot(this.snapshotTime3, {
+        from: owner
+      })
+      await this.cmtat.scheduleSnapshot(this.snapshotTime4, {
+        from: owner
+      })
+      await this.cmtat.scheduleSnapshot(this.snapshotTime5, {
+        from: owner
+      })
+      await this.cmtat.scheduleSnapshotNotOptimized(this.randomSnapshot, {
+        from: owner
+      })
+      let snapshots = await this.cmtat.getNextSnapshots()
+      snapshots.length.should.equal(6)
+      snapshots = await this.cmtat.getNextSnapshots()
+      snapshots[0].should.be.bignumber.equal(this.snapshotTime1)
+      snapshots[1].should.be.bignumber.equal(this.snapshotTime2)
+      snapshots[2].should.be.bignumber.equal(this.randomSnapshot)
+      snapshots[3].should.be.bignumber.equal(this.snapshotTime3)
+      snapshots[4].should.be.bignumber.equal(this.snapshotTime4)
+      snapshots[5].should.be.bignumber.equal(this.snapshotTime5)
+    })
+
     it('emits a SnapshotSchedule event', function () {
       expectEvent.inLogs(this.logs, 'SnapshotSchedule', {
         oldTime: '0',

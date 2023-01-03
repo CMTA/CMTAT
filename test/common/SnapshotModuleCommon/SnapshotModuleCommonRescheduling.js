@@ -15,7 +15,7 @@ function SnapshotModuleCommonRescheduling (owner, address1, address2, address3) 
   context('Snapshot rescheduling', function () {
     beforeEach(async function () {
       this.snapshotTime = `${getUnixTimestamp() + 60}`
-      this.newSnapshotTime = `${getUnixTimestamp() + 90}`
+      this.newSnapshotTime = `${getUnixTimestamp() + 200}`
       await this.cmtat.scheduleSnapshot(this.snapshotTime, { from: owner })
     })
     
@@ -32,6 +32,64 @@ function SnapshotModuleCommonRescheduling (owner, address1, address2, address3) 
       const snapshots = await this.cmtat.getNextSnapshots()
       snapshots.length.should.equal(1)
       snapshots[0].should.be.bignumber.equal(this.newSnapshotTime)
+    })
+
+    it('can reschedule a snapshot between a range of snapshot', async function () {
+      this.snapshotMiddleOldTime = this.snapshotTime + 30
+      this.snapshotMiddleNewTime = this.snapshotTime + 40
+      await this.cmtat.scheduleSnapshot(this.snapshotMiddleOldTime, { from: owner })
+      await this.cmtat.scheduleSnapshot(this.snapshotTime + 60, { from: owner })
+      await this.cmtat.scheduleSnapshot(this.snapshotTime + 90, { from: owner });
+      ({ logs: this.logs } = await this.cmtat.rescheduleSnapshot(
+        this.snapshotMiddleOldTime,
+        this.snapshotMiddleNewTime,
+        { from: owner }
+      ))
+      expectEvent.inLogs(this.logs, 'SnapshotSchedule', {
+        oldTime: this.snapshotMiddleOldTime,
+        newTime: this.snapshotMiddleNewTime
+      })
+      const snapshots = await this.cmtat.getNextSnapshots()
+      snapshots.length.should.equal(4)
+      snapshots[1].should.be.bignumber.equal(this.snapshotMiddleNewTime)
+    })
+
+    it('revert if reschedule a snapshot not in the range of snapshot', async function () {
+      this.snapshotMiddleOldTime = this.snapshotTime + 30
+      this.snapshotMiddleNewTime = this.snapshotTime + 61
+      await this.cmtat.scheduleSnapshot(this.snapshotMiddleOldTime, { from: owner })
+      await this.cmtat.scheduleSnapshot(this.snapshotTime + 60, { from: owner })
+      await this.cmtat.scheduleSnapshot(this.snapshotTime + 90, { from: owner })
+      await expectRevert(
+        this.cmtat.rescheduleSnapshot(
+          this.snapshotMiddleOldTime,
+          this.snapshotMiddleNewTime,
+          { from: owner }
+        ),
+        'time has to be less than the next snapshot'
+      )
+      const snapshots = await this.cmtat.getNextSnapshots()
+      snapshots.length.should.equal(4)
+      snapshots[1].should.be.bignumber.equal(this.snapshotMiddleOldTime)
+    })
+
+    it('revert if reschedule a snapshot not in the range of snapshot', async function () {
+      this.snapshotMiddleOldTime = this.snapshotTime + 30
+      this.snapshotMiddleNewTime = this.snapshotTime - 1
+      await this.cmtat.scheduleSnapshot(this.snapshotMiddleOldTime, { from: owner })
+      await this.cmtat.scheduleSnapshot(this.snapshotTime + 60, { from: owner })
+      await this.cmtat.scheduleSnapshot(this.snapshotTime + 90, { from: owner })
+      await expectRevert(
+        this.cmtat.rescheduleSnapshot(
+          this.snapshotMiddleOldTime,
+          this.snapshotMiddleNewTime,
+          { from: owner }
+        ),
+        'time has to be greater than the previous snapshot'
+      )
+      const snapshots = await this.cmtat.getNextSnapshots()
+      snapshots.length.should.equal(4)
+      snapshots[1].should.be.bignumber.equal(this.snapshotMiddleOldTime)
     })
     
     it('reverts when calling from non-owner', async function () {
@@ -86,6 +144,21 @@ function SnapshotModuleCommonRescheduling (owner, address1, address2, address3) 
                 { from: owner }
         ),
         'Snapshot not found'
+      )
+    })
+
+    it('reverts if no snapshot exits', async function () {
+      ({ logs: this.logs } = await this.cmtat.unscheduleLastSnapshot(
+        this.snapshotTime,
+        { from: owner }
+      ))
+      await expectRevert(
+        this.cmtat.rescheduleSnapshot(
+          this.snapshotTime,
+          this.newSnapshotTime,
+          { from: owner }
+        ),
+        'no scheduled snapshot'
       )
     })
     

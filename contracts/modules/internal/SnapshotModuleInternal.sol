@@ -77,6 +77,7 @@ abstract contract SnapshotModuleInternal is
     You can only add a snapshot after the last previous
     */
     function _scheduleSnapshot(uint256 time) internal {
+        // Check the time firstly to avoid an useless read of storage
         require(time > block.timestamp, "Snapshot scheduled in the past");
         
         if(_scheduledSnapshots.length > 0) {
@@ -93,9 +94,9 @@ abstract contract SnapshotModuleInternal is
     function _scheduleSnapshotNotOptimized(uint256 time) internal {
         require(time > block.timestamp, "Snapshot scheduled in the past");
         (bool isFound, uint256 index) = _findScheduledSnapshotIndex(time);
-        
+        // Perfect match
         require(!isFound, "Snapshot already exists");
-        // if no snaphot, call _scheduleSnapshot instead
+        // if no upper bound match found, call _scheduleSnapshot instead
         if(index == _scheduledSnapshots.length) {
             _scheduleSnapshot(time);
         }else{
@@ -117,10 +118,11 @@ abstract contract SnapshotModuleInternal is
     function _rescheduleSnapshot(uint256 oldTime, uint256 newTime)
         internal
     {
+        // Check the time firstly to avoid an useless read of storage
+        require(oldTime > block.timestamp, "Snapshot already done");
+        require(newTime > block.timestamp, "Snapshot scheduled in the past");
         require(_scheduledSnapshots.length > 0, "no scheduled snapshot");
-        require(block.timestamp < oldTime, "Snapshot already done");
-        require(block.timestamp < newTime, "Snapshot scheduled in the past");
-
+        
         (bool foundOld, uint256 index) = _findScheduledSnapshotIndex(oldTime);
         require(foundOld, "Snapshot not found");
 
@@ -141,8 +143,9 @@ abstract contract SnapshotModuleInternal is
     /**
     @dev unschedule the last scheduled snapshot
     */
-    function _unscheduleSnapshot(uint256 time) internal {
-        require(block.timestamp < time, "Snapshot already done");
+    function _unscheduleLastSnapshot(uint256 time) internal {
+        // Check the time firstly to avoid an useless read of storage
+        require(time > block.timestamp, "Snapshot already done");
         require(_scheduledSnapshots.length > 0, "No snapshot scheduled");
         // All snapshot time are unique, so we do not check the indice
         require(time == _scheduledSnapshots[ _scheduledSnapshots.length - 1], 
@@ -152,16 +155,18 @@ abstract contract SnapshotModuleInternal is
     }
 
     /** 
-    @dev unschedule (remove) a snapshot in three steps:
+    @dev unschedule (remove) a scheduled snapshot in three steps:
     - search the snapshot in the list
     - If found, move all next snapshots one position to the left
     - Reduce the array size by deleting the last snapshot
     */
-    function _unscheduleNotOptimized(uint256 time) internal {
+    function _unscheduleSnapshotNotOptimized(uint256 time) internal {
+        require(time > block.timestamp, "Snapshot already done");
         (bool isFound, uint256 index) = _findScheduledSnapshotIndex(time);
         require(isFound, "Snapshot not found");
-        for(uint256 i = index; i + 1 < _scheduledSnapshots.length; ++i){
+        for(uint256 i = index; i + 1 < _scheduledSnapshots.length;){
             _scheduledSnapshots[i] = _scheduledSnapshots[i + 1];
+             unchecked {++i;}
         }
         _scheduledSnapshots.pop();
     }
