@@ -178,23 +178,22 @@ abstract contract SnapshotModuleInternal is
     function getNextSnapshots() public view returns (uint256[] memory) {
         uint256[] memory nextScheduledSnapshot = new uint256[](0);
         // no snapshot were planned
-        if(_scheduledSnapshots.length == 0){
-            return nextScheduledSnapshot;
-        }
-        (uint256 timeLowerBound, uint256 indexLowerBound) = _findScheduledMostRecentPastSnapshot();
-        // All snapshots are situated in the futur
-        if((timeLowerBound == 0) && (_currentSnapshotTime == 0)){
-            return _scheduledSnapshots;
-        }
-        // all snapshots are situated in the past
-        if(indexLowerBound + 1 == _scheduledSnapshots.length){
-            return nextScheduledSnapshot;
-        }
-        // All next snapshots are located after the snapshot specified by indexLowerBound
-        uint256 arraySize = _scheduledSnapshots.length - indexLowerBound - 1;
-        nextScheduledSnapshot = new uint256[](arraySize);
-        for(uint256 i = 0; i < nextScheduledSnapshot.length; ++i){
-            nextScheduledSnapshot[i] = _scheduledSnapshots[indexLowerBound + 1 + i];
+        if(_scheduledSnapshots.length > 0){
+            (uint256 timeLowerBound, uint256 indexLowerBound) = _findScheduledMostRecentPastSnapshot();
+            // All snapshots are situated in the futur
+            if((timeLowerBound == 0) && (_currentSnapshotTime == 0)){
+                return _scheduledSnapshots;
+            } else{
+            // There are snapshots situated in the futur
+                if(indexLowerBound + 1 != _scheduledSnapshots.length){
+                    // All next snapshots are located after the snapshot specified by indexLowerBound
+                    uint256 arraySize = _scheduledSnapshots.length - indexLowerBound - 1;
+                    nextScheduledSnapshot = new uint256[](arraySize);
+                    for(uint256 i = 0; i < nextScheduledSnapshot.length; ++i){
+                        nextScheduledSnapshot[i] = _scheduledSnapshots[indexLowerBound + 1 + i];
+                    }
+                }
+            }
         }
         return nextScheduledSnapshot;
     }
@@ -393,17 +392,19 @@ abstract contract SnapshotModuleInternal is
         returns (uint256 time, uint256 index)
     {
         uint256 currentArraySize =  _scheduledSnapshots.length;
+        // no snapshot or the current snapshot already points on the last snapshot
         if (currentArraySize == 0 || 
             ((_currentSnapshotIndex + 1 == currentArraySize) 
             && (time != 0))){
             return (0, currentArraySize);
-        } 
+        }
         uint256 mostRecent = 0;
         index = currentArraySize;
         for (uint256 i = _currentSnapshotIndex; i < currentArraySize; ++i) {
             if (
                 _scheduledSnapshots[i] <= block.timestamp
             ) {
+
                 mostRecent = _scheduledSnapshots[i];
                 index = i;
             }else {

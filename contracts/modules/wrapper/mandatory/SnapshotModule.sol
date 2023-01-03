@@ -11,7 +11,7 @@ import "../../internal/SnapshotModuleInternal.sol";
  *
  * Useful to take a snapshot of token holder balance and total supply at a specific time
  */
-abstract contract SnasphotModule is SnapshotModuleInternal, AuthorizationModule {
+abstract contract SnapshotModule is SnapshotModuleInternal, AuthorizationModule {
     bytes32 public constant SNAPSHOOTER_ROLE = keccak256("SNAPSHOOTER_ROLE");
 
     function __SnasphotModule_init(string memory name_, string memory symbol_) internal onlyInitializing {

@@ -27,7 +27,7 @@ contract CMTAT is
     EnforcementModule,
     ValidationModule,
     MetaTxModule,
-    SnasphotModule,
+    SnapshotModule,
     ERC20BaseModule
 {
     /// @custom:oz-upgrades-unsafe-allow constructor
