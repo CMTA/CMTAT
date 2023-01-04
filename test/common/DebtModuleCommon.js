@@ -1,5 +1,5 @@
 const { expectEvent, expectRevert } = require('@openzeppelin/test-helpers')
-const { DEFAULT_ADMIN_ROLE } = require('../utils')
+const { DEFAULT_ADMIN_ROLE, DEBT_ROLE } = require('../utils')
 const { should } = require('chai').should()
 
 function BaseModuleCommon (owner, attacker) {
@@ -163,7 +163,7 @@ function BaseModuleCommon (owner, attacker) {
         'AccessControl: account ' +
             attacker.toLowerCase() +
               ' is missing role ' +
-              DEFAULT_ADMIN_ROLE)
+              DEBT_ROLE)
     })
 
     it('testCannotNonAdminSetInterestRate', async function () {
@@ -173,7 +173,7 @@ function BaseModuleCommon (owner, attacker) {
         'AccessControl: account ' +
           attacker.toLowerCase() +
             ' is missing role ' +
-            DEFAULT_ADMIN_ROLE)
+            DEBT_ROLE)
     })
 
     it('testCannotNonAdminSetParValue', async function () {
@@ -183,7 +183,7 @@ function BaseModuleCommon (owner, attacker) {
         'AccessControl: account ' +
           attacker.toLowerCase() +
             ' is missing role ' +
-            DEFAULT_ADMIN_ROLE)
+            DEBT_ROLE)
     })
 
     it('testCannotNonAdminSetGuarantor', async function () {
@@ -193,7 +193,7 @@ function BaseModuleCommon (owner, attacker) {
         'AccessControl: account ' +
           attacker.toLowerCase() +
             ' is missing role ' +
-            DEFAULT_ADMIN_ROLE)
+            DEBT_ROLE)
     })
 
     it('testCannotNonAdminSetBondHolder', async function () {
@@ -203,7 +203,7 @@ function BaseModuleCommon (owner, attacker) {
         'AccessControl: account ' +
           attacker.toLowerCase() +
             ' is missing role ' +
-            DEFAULT_ADMIN_ROLE)
+            DEBT_ROLE)
     })
   })
 
@@ -214,7 +214,7 @@ function BaseModuleCommon (owner, attacker) {
       'AccessControl: account ' +
         attacker.toLowerCase() +
           ' is missing role ' +
-          DEFAULT_ADMIN_ROLE)
+          DEBT_ROLE)
   })
 
   it('testCannotNonAdminSetInterestScheduleFormat', async function () {
@@ -224,7 +224,7 @@ function BaseModuleCommon (owner, attacker) {
       'AccessControl: account ' +
         attacker.toLowerCase() +
           ' is missing role ' +
-          DEFAULT_ADMIN_ROLE)
+          DEBT_ROLE)
   })
 
   it('testCannotNonAdminSetInterestPaymentDate', async function () {
@@ -234,7 +234,7 @@ function BaseModuleCommon (owner, attacker) {
       'AccessControl: account ' +
         attacker.toLowerCase() +
           ' is missing role ' +
-          DEFAULT_ADMIN_ROLE)
+          DEBT_ROLE)
   })
 
   it('testCannotNonAdminSetDayCountConvention', async function () {
@@ -244,7 +244,7 @@ function BaseModuleCommon (owner, attacker) {
       'AccessControl: account ' +
         attacker.toLowerCase() +
           ' is missing role ' +
-          DEFAULT_ADMIN_ROLE)
+          DEBT_ROLE)
   })
 
   it('testCannotNonAdminSetBusinessDayConvention', async function () {
@@ -254,7 +254,7 @@ function BaseModuleCommon (owner, attacker) {
       'AccessControl: account ' +
         attacker.toLowerCase() +
           ' is missing role ' +
-          DEFAULT_ADMIN_ROLE)
+          DEBT_ROLE)
   })
 
   it('testCannotNonAdminSetPublicHolidaysCalendar', async function () {
@@ -264,7 +264,7 @@ function BaseModuleCommon (owner, attacker) {
       'AccessControl: account ' +
         attacker.toLowerCase() +
           ' is missing role ' +
-          DEFAULT_ADMIN_ROLE)
+          DEBT_ROLE)
   })
 }
 module.exports = BaseModuleCommon

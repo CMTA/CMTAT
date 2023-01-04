@@ -118,6 +118,7 @@ contract CMTAT is
         _grantRole(BURNER_ROLE, owner);
         _grantRole(PAUSER_ROLE, owner);
         _grantRole(SNAPSHOOTER_ROLE, owner);
+        _grantRole(DEBT_ROLE, owner);
     }
 
     function decimals()

@@ -8,6 +8,8 @@ import "../../../interfaces/IDebt.sol";
 import "../optional/AuthorizationModule.sol";
 
 abstract contract DebtModule is IDebt,  Initializable, ContextUpgradeable, AuthorizationModule {
+    bytes32 public constant DEBT_ROLE = keccak256("DEBT_ROLE");
+
     Debt public debt;
 
     /* Events */
@@ -40,7 +42,7 @@ abstract contract DebtModule is IDebt,  Initializable, ContextUpgradeable, Autho
     function setDebt(uint256 interestRate_, uint256 parValue_, string memory guarantor_, string memory bondHolder_, 
     string memory maturityDate_, string memory interestScheduleFormat_, string memory interestPaymentDate_, 
     string memory dayCountConvention_, 
-    string memory businessDayConvention_, string memory publicHolidayCalendar_) public {
+    string memory businessDayConvention_, string memory publicHolidayCalendar_) public onlyRole(DEBT_ROLE) {
         // setGuarantor
         debt = 
         (Debt(interestRate_, parValue_, guarantor_, bondHolder_, maturityDate_, interestScheduleFormat_, interestPaymentDate_, 
@@ -57,52 +59,52 @@ abstract contract DebtModule is IDebt,  Initializable, ContextUpgradeable, Autho
         emit PublicHolidaysCalendarSet(publicHolidayCalendar_, publicHolidayCalendar_);
     }
 
-    function setInterestRate (uint256 interestRate_) public onlyRole(DEFAULT_ADMIN_ROLE) {
+    function setInterestRate (uint256 interestRate_) public onlyRole(DEBT_ROLE) {
         debt.interestRate = interestRate_;
         emit InterestRateSet(interestRate_);
     }
 
-    function setParValue (uint256 parValue_) public onlyRole(DEFAULT_ADMIN_ROLE) {
+    function setParValue (uint256 parValue_) public onlyRole(DEBT_ROLE) {
         debt.parValue = parValue_;
         emit ParValueSet(parValue_);
     }
 
-    function setGuarantor (string memory guarantor_) public onlyRole(DEFAULT_ADMIN_ROLE) {
+    function setGuarantor (string memory guarantor_) public onlyRole(DEBT_ROLE) {
         debt.guarantor = guarantor_;
         emit GuarantorSet(guarantor_, guarantor_);
     }
 
-    function setBondHolder (string memory bondHolder_) public onlyRole(DEFAULT_ADMIN_ROLE) {
+    function setBondHolder (string memory bondHolder_) public onlyRole(DEBT_ROLE) {
         debt.bondHolder = bondHolder_;
         emit BondHolderSet(bondHolder_, bondHolder_);
     }
 
-    function setMaturityDate (string memory maturityDate_) public onlyRole(DEFAULT_ADMIN_ROLE) {
+    function setMaturityDate (string memory maturityDate_) public onlyRole(DEBT_ROLE) {
         debt.maturityDate = maturityDate_;
         emit MaturityDateSet(maturityDate_, maturityDate_);
     }
 
-    function setInterestScheduleFormat (string memory interestScheduleFormat_) public onlyRole(DEFAULT_ADMIN_ROLE) {
+    function setInterestScheduleFormat (string memory interestScheduleFormat_) public onlyRole(DEBT_ROLE) {
         debt.interestScheduleFormat = interestScheduleFormat_;
         emit InterestScheduleFormatSet(interestScheduleFormat_, interestScheduleFormat_);
     }
 
-    function setInterestPaymentDate (string memory interestPaymentDate_) public onlyRole(DEFAULT_ADMIN_ROLE) {
+    function setInterestPaymentDate (string memory interestPaymentDate_) public onlyRole(DEBT_ROLE) {
         debt.interestPaymentDate = interestPaymentDate_;
         emit InterestPaymentDateSet(interestPaymentDate_, interestPaymentDate_);
     }
 
-    function setDayCountConvention (string memory dayCountConvention_) public onlyRole(DEFAULT_ADMIN_ROLE) {
+    function setDayCountConvention (string memory dayCountConvention_) public onlyRole(DEBT_ROLE) {
         debt.dayCountConvention = dayCountConvention_;
         emit DayCountConventionSet(dayCountConvention_, dayCountConvention_);
     }
 
-    function setBusinessDayConvention (string memory businessDayConvention_) public onlyRole(DEFAULT_ADMIN_ROLE) {
+    function setBusinessDayConvention (string memory businessDayConvention_) public onlyRole(DEBT_ROLE) {
         debt.businessDayConvention = businessDayConvention_;
         emit BusinessDayConventionSet(businessDayConvention_, businessDayConvention_);
     }
 
-    function setPublicHolidaysCalendar(string memory publicHolidayCalendar_) public onlyRole(DEFAULT_ADMIN_ROLE) {
+    function setPublicHolidaysCalendar(string memory publicHolidayCalendar_) public onlyRole(DEBT_ROLE) {
         debt.publicHolidayCalendar = publicHolidayCalendar_;
         emit PublicHolidaysCalendarSet(publicHolidayCalendar_, publicHolidayCalendar_);
     }
