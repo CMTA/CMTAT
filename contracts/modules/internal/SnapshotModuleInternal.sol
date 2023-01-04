@@ -96,20 +96,18 @@ abstract contract SnapshotModuleInternal is
         (bool isFound, uint256 index) = _findScheduledSnapshotIndex(time);
         // Perfect match
         require(!isFound, "Snapshot already exists");
-        // if no upper bound match found, call _scheduleSnapshot instead
+        // if no upper bound match found, we push the snapshot at the end of the list
         if(index == _scheduledSnapshots.length) {
-            _scheduleSnapshot(time);
+             _scheduledSnapshots.push(time);
         }else{
-             uint256 tmp = _scheduledSnapshots[index];
-            _scheduledSnapshots[index] = time;
             _scheduledSnapshots.push(_scheduledSnapshots[_scheduledSnapshots.length - 1]);
             for(uint256 i = _scheduledSnapshots.length - 2; i > index;) {
             _scheduledSnapshots[i] = _scheduledSnapshots[i - 1];
                 unchecked {--i;}
             }
-            _scheduledSnapshots[index + 1] = tmp;
-            emit SnapshotSchedule(0, time);
+            _scheduledSnapshots[index] = time;
         }
+        emit SnapshotSchedule(0, time);
     }
 
     /** 
@@ -126,7 +124,6 @@ abstract contract SnapshotModuleInternal is
         (bool foundOld, uint256 index) = _findScheduledSnapshotIndex(oldTime);
         require(foundOld, "Snapshot not found");
 
-        // new scheduled time shouldn’t be less than the time of the previous scheduled
         if(index + 1 <  _scheduledSnapshots.length) {
             require(newTime < _scheduledSnapshots[index + 1], "time has to be less than the next snapshot");
         }

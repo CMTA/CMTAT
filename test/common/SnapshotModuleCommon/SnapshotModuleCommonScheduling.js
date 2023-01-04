@@ -63,7 +63,7 @@ function SnapshotModuleCommonScheduling (owner, address1, address2, address3) {
   })
 
   context('Snapshot scheduling NotOptimized', function () {
-    it('can schedule a snapshot with the snapshoter role', async function () {
+    it('can schedule a snapshot in the first place with the snapshoter role', async function () {
       this.snapshotTime = `${getUnixTimestamp() + 600}`;
       ({ logs: this.logs } = await this.cmtat.scheduleSnapshot(
         this.snapshotTime,
