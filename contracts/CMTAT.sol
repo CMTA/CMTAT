@@ -117,6 +117,32 @@ contract CMTAT is
         _grantRole(SNAPSHOOTER_ROLE, owner);
     }
 
+    function transferAdminship(address newAdmin) public onlyRole(DEFAULT_ADMIN_ROLE) {
+        address sender = _msgSender();
+        grantRole(DEFAULT_ADMIN_ROLE, newAdmin);
+        if(hasRole(ENFORCER_ROLE, sender)){
+            grantRole(ENFORCER_ROLE, newAdmin);
+            renounceRole(ENFORCER_ROLE, sender);
+        }
+        if(hasRole(MINTER_ROLE, sender)){
+            grantRole(MINTER_ROLE, newAdmin);
+            renounceRole(MINTER_ROLE, sender);
+        }
+        if(hasRole(BURNER_ROLE, sender)){
+            grantRole(BURNER_ROLE, newAdmin);
+            renounceRole(BURNER_ROLE, sender);
+        }
+        if(hasRole(PAUSER_ROLE, sender)){
+            grantRole(PAUSER_ROLE, newAdmin);
+            renounceRole(PAUSER_ROLE, sender);
+        }
+        if(hasRole(SNAPSHOOTER_ROLE, sender)){
+            grantRole(SNAPSHOOTER_ROLE, newAdmin);
+            renounceRole(SNAPSHOOTER_ROLE, sender);
+        }
+        renounceRole(DEFAULT_ADMIN_ROLE, sender);
+    }
+
     function decimals()
         public
         view
