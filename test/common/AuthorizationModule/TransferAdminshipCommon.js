@@ -1,5 +1,5 @@
 const { expectEvent, expectRevert } = require('@openzeppelin/test-helpers')
-const { DEFAULT_ADMIN_ROLE, MINTER_ROLE, BURNER_ROLE, ENFORCER_ROLE, SNAPSHOOTER_ROLE } = require('../utils')
+const { DEFAULT_ADMIN_ROLE, MINTER_ROLE, BURNER_ROLE, ENFORCER_ROLE, SNAPSHOOTER_ROLE } = require('../../utils')
 const { should } = require('chai').should()
 
 function TransferAdminshipCommon (oldAdmin, newAdmin, attacker) {

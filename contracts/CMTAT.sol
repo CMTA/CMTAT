@@ -14,7 +14,7 @@ import "./modules/wrapper/mandatory/SnapshotModule.sol";
 import "./modules/wrapper/mandatory/PauseModule.sol";
 import "./modules/wrapper/optional/ValidationModule.sol";
 import "./modules/wrapper/optional/MetaTxModule.sol";
-import "./modules/wrapper/optional/AuthorizationModule.sol";
+import "./modules/security/AuthorizationModule.sol";
 import "./interfaces/IRuleEngine.sol";
 
 contract CMTAT is
@@ -88,7 +88,7 @@ contract CMTAT is
         
         /* Wrapper */
         // AuthorizationModule_init_unchained is called firstly due to inheritance
-        __AuthorizationModule_init_unchained();
+        __AuthorizationModule_init_unchained(admin);
         __BurnModule_init_unchained();
         __MintModule_init_unchained();
         // EnforcementModule_init_unchained is called before ValidationModule_init_unchained due to inheritance
@@ -103,56 +103,15 @@ contract CMTAT is
         __Base_init_unchained(tokenId, terms);
 
          /* own function */
-        __CMTAT_init_unchained(deployedWithProxy_, admin);
+        __CMTAT_init_unchained(deployedWithProxy_);
     }
 
 
-    function __CMTAT_init_unchained(bool deployedWithProxy_, address admin) internal onlyInitializing {
+    function __CMTAT_init_unchained(bool deployedWithProxy_) internal onlyInitializing {
         deployedWithProxy = deployedWithProxy_;
-        _grantRole(DEFAULT_ADMIN_ROLE, admin);
-        _grantRole(ENFORCER_ROLE, admin);
-        _grantRole(MINTER_ROLE, admin);
-        _grantRole(BURNER_ROLE, admin);
-        _grantRole(PAUSER_ROLE, admin);
-        _grantRole(SNAPSHOOTER_ROLE, admin);
     }
 
-    /*
-    @notice Transfers adminship from one address to another
-    The newAdmin will have the same roles as the current admin.
-    Warning: make sure the address of newAdmin is correct.
-    By transfering his rights, the former admin loses them all.
-    */
-    function transferAdminship(address newAdmin) public onlyRole(DEFAULT_ADMIN_ROLE) {
-        address sender = _msgSender();
-        grantRole(DEFAULT_ADMIN_ROLE, newAdmin);
-        // EnforcementModule
-        if(hasRole(ENFORCER_ROLE, sender)){
-            grantRole(ENFORCER_ROLE, newAdmin);
-            renounceRole(ENFORCER_ROLE, sender);
-        }
-        // MintModule
-        if(hasRole(MINTER_ROLE, sender)){
-            grantRole(MINTER_ROLE, newAdmin);
-            renounceRole(MINTER_ROLE, sender);
-        }
-        // BurnModule
-        if(hasRole(BURNER_ROLE, sender)){
-            grantRole(BURNER_ROLE, newAdmin);
-            renounceRole(BURNER_ROLE, sender);
-        }
-        // PauseModule
-        if(hasRole(PAUSER_ROLE, sender)){
-            grantRole(PAUSER_ROLE, newAdmin);
-            renounceRole(PAUSER_ROLE, sender);
-        }
-        // SnapshotModule
-        if(hasRole(SNAPSHOOTER_ROLE, sender)){
-            grantRole(SNAPSHOOTER_ROLE, newAdmin);
-            renounceRole(SNAPSHOOTER_ROLE, sender);
-        }
-        renounceRole(DEFAULT_ADMIN_ROLE, sender);
-    }
+
 
     function decimals()
         public

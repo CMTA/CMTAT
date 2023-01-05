@@ -3,7 +3,7 @@
 pragma solidity ^0.8.17;
 
 import "../../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
-import "./AuthorizationModule.sol";
+import "../../security/AuthorizationModule.sol";
 import "../../internal/ValidationModuleInternal.sol";
 import "../mandatory/PauseModule.sol";
 import "../mandatory/EnforcementModule.sol";
@@ -17,7 +17,7 @@ abstract contract ValidationModule is ValidationModuleInternal, PauseModule, Enf
     enum REJECTED_CODE { TRANSFER_OK, TRANSFER_REJECTED_PAUSED, TRANSFER_REJECTED_FROZEN }
     string constant TEXT_TRANSFER_OK = "No restriction";
 
-    function __ValidationModule_init(IRuleEngine ruleEngine_) internal onlyInitializing {
+    function __ValidationModule_init(IRuleEngine ruleEngine_, address admin) internal onlyInitializing {
         /* OpenZeppelin */
         __Context_init_unchained();
         // AccessControlUpgradeable inherits from ERC165Upgradeable
@@ -29,7 +29,7 @@ abstract contract ValidationModule is ValidationModuleInternal, PauseModule, Enf
         __Validation_init_unchained(ruleEngine_);
 
         /* Wrapper */
-        __AuthorizationModule_init_unchained();
+        __AuthorizationModule_init_unchained(admin);
         __PauseModule_init_unchained();
         __EnforcementModule_init_unchained();
 

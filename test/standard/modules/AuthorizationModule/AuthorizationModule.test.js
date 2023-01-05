@@ -1,6 +1,5 @@
 const CMTAT = artifacts.require('CMTAT')
-const AuthorizationModuleCommon = require('../../common/AuthorizationModuleCommon')
-
+const AuthorizationModuleCommon = require('../../../common/AuthorizationModule/AuthorizationModuleCommon')
 contract(
   'Standard - AuthorizationModule',
   function ([_, admin, address1, address2]) {

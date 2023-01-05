@@ -1,5 +1,5 @@
 const CMTAT = artifacts.require('CMTAT')
-const TransferAdminshipCommon = require('../common/TransferAdminshipCommon')
+const TransferAdminshipCommon = require('../../../common/AuthorizationModule/TransferAdminshipCommon')
 
 contract(
   'Standard - TransferAdminship',

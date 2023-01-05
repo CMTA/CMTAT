@@ -15,7 +15,7 @@ import "../../modules/wrapper/mandatory/PauseModule.sol";
 import "../../modules/wrapper/mandatory/SnapshotModule.sol";
 import "../../modules/wrapper/optional/ValidationModule.sol";
 import "../../modules/wrapper/optional/MetaTxModule.sol";
-import "../../modules/wrapper/optional/AuthorizationModule.sol";
+import "../../modules/security/AuthorizationModule.sol";
 import "../../modules/security/OnlyDelegateCallModule.sol";
 import "../../interfaces/IRuleEngine.sol";
 
@@ -39,13 +39,13 @@ contract CMTAT_KILL_TEST is
 
 //******* Code from CMTAT, not modified*******/
 
-/// @custom:oz-upgrades-unsafe-allow constructor
-    constructor(address forwarder, bool deployedWithProxy_, address owner, string memory name, string memory symbol, string memory tokenId, string memory terms
+    /// @custom:oz-upgrades-unsafe-allow constructor
+    constructor(address forwarder, bool deployedWithProxy_, address admin, string memory name, string memory symbol, string memory tokenId, string memory terms
     ) MetaTxModule(forwarder) {
          if(!deployedWithProxy_){
             // Initialize the contract to avoid front-running
             // Warning : do not initialize the proxy
-            initialize(deployedWithProxy_, owner, name, symbol,tokenId, terms);
+            initialize(deployedWithProxy_, admin, name, symbol,tokenId, terms);
          }else{
             // Initialize the variable for the implementation
             deployedWithProxy = true;
@@ -56,13 +56,13 @@ contract CMTAT_KILL_TEST is
 
     function initialize(
         bool deployedWithProxy_,
-        address owner,
+        address admin,
         string memory name,
         string memory symbol,
         string memory tokenId,
         string memory terms
     ) public initializer {
-        __CMTAT_init(deployedWithProxy_, owner, name, symbol, tokenId, terms);
+        __CMTAT_init(deployedWithProxy_, admin, name, symbol, tokenId, terms);
     }
 
     /**
@@ -73,7 +73,7 @@ contract CMTAT_KILL_TEST is
      */
     function __CMTAT_init(
         bool deployedWithProxy_,
-        address owner,
+        address admin,
         string memory name,
         string memory symbol,
         string memory tokenId,
@@ -97,7 +97,7 @@ contract CMTAT_KILL_TEST is
         
         /* Wrapper */
         // AuthorizationModule_init_unchained is called firstly due to inheritance
-        __AuthorizationModule_init_unchained();
+        __AuthorizationModule_init_unchained(admin);
         __BurnModule_init_unchained();
         __MintModule_init_unchained();
         // EnforcementModule_init_unchained is called before ValidationModule_init_unchained due to inheritance
@@ -112,18 +112,12 @@ contract CMTAT_KILL_TEST is
         __Base_init_unchained(tokenId, terms);
 
          /* own function */
-        __CMTAT_init_unchained(deployedWithProxy_, owner);
+        __CMTAT_init_unchained(deployedWithProxy_);
     }
 
 
-    function __CMTAT_init_unchained(bool deployedWithProxy_, address owner) internal onlyInitializing {
+    function __CMTAT_init_unchained(bool deployedWithProxy_) internal onlyInitializing {
         deployedWithProxy = deployedWithProxy_;
-        _grantRole(DEFAULT_ADMIN_ROLE, owner);
-        _grantRole(ENFORCER_ROLE, owner);
-        _grantRole(MINTER_ROLE, owner);
-        _grantRole(BURNER_ROLE, owner);
-        _grantRole(PAUSER_ROLE, owner);
-        _grantRole(SNAPSHOOTER_ROLE, owner);
     }
 
     function decimals()
