@@ -3,9 +3,9 @@
 pragma solidity ^0.8.17;
 
 
-interface IDebt {
-    /* Variables */
-    struct Debt {
+interface IDebtGlobal {
+
+    struct DebtBase {
         uint256 interestRate;
         uint256 parValue;
         string guarantor;
@@ -17,4 +17,11 @@ interface IDebt {
         string businessDayConvention;
         string publicHolidayCalendar;
     }
+
+    struct CreditEvents {
+        bool flagDefault;
+        bool flagRedeemed;
+        uint256 rating;
+    }
+    
 }

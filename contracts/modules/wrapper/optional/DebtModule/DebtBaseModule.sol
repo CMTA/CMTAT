@@ -2,15 +2,15 @@
 
 pragma solidity ^0.8.17;
 
-import "../../../../openzeppelin-contracts-upgradeable/contracts/access/AccessControlUpgradeable.sol";
-import "../../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
-import "../../../interfaces/IDebt.sol";
-import "../optional/AuthorizationModule.sol";
+import "../../../../../openzeppelin-contracts-upgradeable/contracts/access/AccessControlUpgradeable.sol";
+import "../../../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
+import "../../../../interfaces/IDebt.sol";
+import "../../optional/AuthorizationModule.sol";
 
-abstract contract DebtModule is IDebt,  Initializable, ContextUpgradeable, AuthorizationModule {
+abstract contract DebtBaseModule is IDebtGlobal, Initializable, ContextUpgradeable, AuthorizationModule {
     bytes32 public constant DEBT_ROLE = keccak256("DEBT_ROLE");
 
-    Debt public debt;
+    DebtBase public debt;
 
     /* Events */
     event InterestRateSet(uint256 indexed newInterestRate);
@@ -25,7 +25,7 @@ abstract contract DebtModule is IDebt,  Initializable, ContextUpgradeable, Autho
     event PublicHolidaysCalendarSet(string indexed newPublicHolidaysCalendarIndexed, string newPublicHolidaysCalendar);
     
     
-    function __DebtModule_init() internal onlyInitializing {
+    function __DebtBaseModule_init() internal onlyInitializing {
         /* OpenZeppelin */
         __Context_init_unchained();
 
@@ -33,9 +33,12 @@ abstract contract DebtModule is IDebt,  Initializable, ContextUpgradeable, Autho
         __ERC165_init_unchained();
         // AuthorizationModule inherits from AccessControlUpgradeable
         __AccessControl_init_unchained();
+
+        /* own function */
+        __DebtBaseModule_init_unchained();
     }
 
-    function __DebtModule_init_unchained() internal onlyInitializing {
+    function __DebtBaseModule_init_unchained() internal onlyInitializing {
         // no variable to initialize
     }
 
@@ -45,7 +48,7 @@ abstract contract DebtModule is IDebt,  Initializable, ContextUpgradeable, Autho
     string memory businessDayConvention_, string memory publicHolidayCalendar_) public onlyRole(DEBT_ROLE) {
         // setGuarantor
         debt = 
-        (Debt(interestRate_, parValue_, guarantor_, bondHolder_, maturityDate_, interestScheduleFormat_, interestPaymentDate_, 
+        (DebtBase(interestRate_, parValue_, guarantor_, bondHolder_, maturityDate_, interestScheduleFormat_, interestPaymentDate_, 
         dayCountConvention_, businessDayConvention_, publicHolidayCalendar_));
         emit InterestRateSet(interestRate_);
         emit ParValueSet(parValue_);

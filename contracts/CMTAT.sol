@@ -15,7 +15,8 @@ import "./modules/wrapper/mandatory/PauseModule.sol";
 import "./modules/wrapper/optional/ValidationModule.sol";
 import "./modules/wrapper/optional/MetaTxModule.sol";
 import "./modules/wrapper/optional/AuthorizationModule.sol";
-import "./modules/wrapper/optional/DebtModule.sol";
+import "./modules/wrapper/optional/DebtModule/DebtBaseModule.sol";
+import "./modules/wrapper/optional/DebtModule/CreditEvents.sol";
 import "./modules/security/OnlyDelegateCallModule.sol";
 //import "./interfaces/IRuleEngine.sol";
 
@@ -31,7 +32,8 @@ contract CMTAT is
     MetaTxModule,
     SnasphotModule,
     ERC20BaseModule,
-    DebtModule
+    DebtBaseModule,
+    CreditEvents
 {
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor(address forwarder, bool deployedWithProxy_, address owner, string memory name, string memory symbol, string memory tokenId, string memory terms
@@ -104,6 +106,8 @@ contract CMTAT is
         
         /* Other modules */
         __Base_init_unchained(tokenId, terms);
+        __DebtBaseModule_init_unchained();
+        __CreditEvents_init_unchained();
 
          /* own function */
         __CMTAT_init_unchained(deployedWithProxy_, owner);
