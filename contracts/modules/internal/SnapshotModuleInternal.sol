@@ -60,6 +60,9 @@ abstract contract SnapshotModuleInternal is
     */
     uint256[] private _scheduledSnapshots;
 
+    /**
+     * @dev Initializes the contract
+     */
     function __Snapshot_init(string memory name_, string memory symbol_) internal onlyInitializing {
         __Context_init_unchained();
         __ERC20_init(name_, symbol_);
