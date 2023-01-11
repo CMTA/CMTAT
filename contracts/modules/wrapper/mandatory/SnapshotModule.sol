@@ -11,7 +11,7 @@ import "../../internal/SnapshotModuleInternal.sol";
  *
  * Useful to take a snapshot of token holder balance and total supply at a specific time
  */
-abstract contract SnasphotModule is SnapshotModuleInternal, AuthorizationModule {
+abstract contract SnapshotModule is SnapshotModuleInternal, AuthorizationModule {
     bytes32 public constant SNAPSHOOTER_ROLE = keccak256("SNAPSHOOTER_ROLE");
 
     function __SnasphotModule_init(string memory name_, string memory symbol_) internal onlyInitializing {
@@ -51,6 +51,18 @@ abstract contract SnasphotModule is SnapshotModuleInternal, AuthorizationModule 
         _scheduleSnapshot(time);
     }
 
+    /*
+    @notice 
+    Schedule a snapshot at the given time specified as a number of seconds since epoch.
+    The time cannot be before the time of the latest scheduled, but not yet created snapshot.  
+    */
+    function scheduleSnapshotNotOptimized(uint256 time)
+        public
+        onlyRole(SNAPSHOOTER_ROLE)
+    {
+        _scheduleSnapshotNotOptimized(time);
+    }
+
     /* 
     @notice
     Reschedule the scheduled snapshot, but not yet created snapshot with the given oldTime to be created at the given newTime specified as a number of seconds since epoch. 
@@ -68,12 +80,26 @@ abstract contract SnasphotModule is SnapshotModuleInternal, AuthorizationModule 
     Cancel creation of the scheduled snapshot, but not yet created snapshot with the given time. 
     There should not be any other snapshots scheduled after this one. 
     */
-    function unscheduleSnapshot(uint256 time)
+    function unscheduleLastSnapshot(uint256 time)
         public
         onlyRole(SNAPSHOOTER_ROLE)
     {
-        _unscheduleSnapshot(time);
+        _unscheduleLastSnapshot(time);
     }
+
+    /*
+    @notice 
+    Cancel creation of the scheduled snapshot, but not yet created snapshot with the given time. 
+
+    */
+    function unscheduleSnapshotNotOptimized(uint256 time)
+        public
+        onlyRole(SNAPSHOOTER_ROLE)
+    {
+        _unscheduleSnapshotNotOptimized(time);
+    }
+
+    
 
     uint256[50] private __gap;
 }
