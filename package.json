@@ -18,15 +18,15 @@
     "lint:js:prettier": "npx prettier test",
     "console": "truffle console",
     "coverage": "npx solidity-coverage",
-    "uml" : "npx sol2uml class contracts -c",
-    "test:pause": "npx truffle test test/standard/modules/PauseModule.test.js test/proxy/modules/PauseModule.test.js", 
+    "uml": "npx sol2uml class contracts -c",
+    "test:pause": "npx truffle test test/standard/modules/PauseModule.test.js test/proxy/modules/PauseModule.test.js",
     "test:mint": "npx truffle test test/standard/modules/MintModule.test.js test/proxy/modules/MintModule.test.js",
     "test:burn": "npx truffle test test/standard/modules/BurnModule.test.js test/proxy/modules/BurnModule.test.js",
     "test:validation": "npx truffle test test/standard/modules/ValidationModule.test.js test/proxy/modules/ValidationModule.test.js",
     "test:enforcement": "npx truffle test test/standard/modules/EnforcementModule.test.js test/proxy/modules/EnforcementModule.test.js",
     "test:authorization": "npx truffle test test/standard/modules/AuthorizationModule.test.js test/proxy/modules/AuthorizationModule.test.js",
     "test:base": "npx truffle test test/standard/modules/BaseModule.test.js test/proxy/modules/BaseModule.test.js",
-    "test:debt": "npx truffle test test/standard/modules/DebtModule.test.js test/proxy/modules/DebtModule.test.js"                              
+    "test:debt": "npx truffle test test/standard/modules/DebtModule.test.js test/proxy/modules/DebtModule.test.js"
   },
   "repository": {
     "type": "git",
@@ -48,7 +48,7 @@
   "homepage": "https://github.com/CMTA/CMTAT",
   "devDependencies": {
     "@openzeppelin/test-helpers": "^0.5.16",
-    "chai": "^4.3.6",
+    "chai": "^4.3.7",
     "coveralls": "^3.1.1",
     "dotenv": "^6.1.0",
     "eslint": "^8.24.0",
