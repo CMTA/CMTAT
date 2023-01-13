@@ -67,9 +67,9 @@
     "solgraph": "^1.0.2",
     "solidity-coverage": "^0.8.2",
     "surya": "^0.4.6",
-    "truffle": "^5.5.31",
+    "truffle": "^5.7.1",
     "truffle-flattener": "^1.6.0",
-    "web3": "^1.8.0"
+    "web3": "^1.8.1"
   },
   "dependencies": {
     "@openzeppelin/truffle-upgrades": "^1.17.0",
