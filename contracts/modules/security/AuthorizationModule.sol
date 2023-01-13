@@ -47,8 +47,10 @@ abstract contract AuthorizationModule is AccessControlUpgradeable {
     The newAdmin will have the same roles as the current admin.
     Warning: make sure the address of newAdmin is correct.
     By transfering his rights, the former admin loses them all.
+    @param newAdmin address of the new admin
     */
     function transferAdminship(address newAdmin) public onlyRole(DEFAULT_ADMIN_ROLE) {
+        require(newAdmin != address(0), "Address 0 not allowed");
         address sender = _msgSender();
         grantRole(DEFAULT_ADMIN_ROLE, newAdmin);
         // EnforcementModule

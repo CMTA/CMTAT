@@ -1,7 +1,7 @@
 const { expectEvent, expectRevert } = require('@openzeppelin/test-helpers')
 const { DEFAULT_ADMIN_ROLE, MINTER_ROLE, BURNER_ROLE, ENFORCER_ROLE, SNAPSHOOTER_ROLE } = require('../../utils')
 const { should } = require('chai').should()
-
+const { ZERO_ADDRESS } = require('../../utils')
 function TransferAdminshipCommon (oldAdmin, newAdmin, attacker) {
   context('Token structure', function () {
     it('testCanTransferAdminship', async function () {
@@ -20,6 +20,26 @@ function TransferAdminshipCommon (oldAdmin, newAdmin, attacker) {
       (await this.cmtat.hasRole(ENFORCER_ROLE, oldAdmin)).should.equal(false);
       (await this.cmtat.hasRole(SNAPSHOOTER_ROLE, oldAdmin)).should.equal(false);
       (await this.cmtat.hasRole(DEFAULT_ADMIN_ROLE, oldAdmin)).should.equal(false)
+    })
+    it('testCannotTransferAdminshipToTheZeroAddress', async function () {
+      // Act
+      await expectRevert(
+        this.cmtat.transferAdminship(ZERO_ADDRESS, { from: oldAdmin }),
+        'Address 0 not allowed'
+      );
+      // Assert
+      // newAdmin
+      (await this.cmtat.hasRole(MINTER_ROLE, newAdmin)).should.equal(false);
+      (await this.cmtat.hasRole(BURNER_ROLE, newAdmin)).should.equal(false);
+      (await this.cmtat.hasRole(ENFORCER_ROLE, newAdmin)).should.equal(false);
+      (await this.cmtat.hasRole(SNAPSHOOTER_ROLE, newAdmin)).should.equal(false);
+      (await this.cmtat.hasRole(DEFAULT_ADMIN_ROLE, newAdmin)).should.equal(false);
+      // oldAdmin
+      (await this.cmtat.hasRole(MINTER_ROLE, oldAdmin)).should.equal(true);
+      (await this.cmtat.hasRole(BURNER_ROLE, oldAdmin)).should.equal(true);
+      (await this.cmtat.hasRole(ENFORCER_ROLE, oldAdmin)).should.equal(true);
+      (await this.cmtat.hasRole(SNAPSHOOTER_ROLE, oldAdmin)).should.equal(true);
+      (await this.cmtat.hasRole(DEFAULT_ADMIN_ROLE, oldAdmin)).should.equal(true)
     })
     it('testCanTransferAdminshipWithoutMinterRole', async function () {
       // Arrange
