@@ -2,7 +2,7 @@ const { expectEvent, expectRevert } = require('@openzeppelin/test-helpers')
 const { SNAPSHOOTER_ROLE } = require('../../utils')
 const { should } = require('chai').should()
 const CMTAT = artifacts.require('CMTAT')
-const { getUnixTimestamp, timeout } = require('./SnapshotModuleUtils')
+const { getUnixTimestamp, timeout, checkArraySnapshot } = require('./SnapshotModuleUtils/SnapshotModuleUtils')
 
 function SnapshotModuleCommonScheduling (owner, address1, address2, address3) {
   context('Snapshot scheduling', function () {
@@ -104,12 +104,7 @@ function SnapshotModuleCommonScheduling (owner, address1, address2, address3) {
       let snapshots = await this.cmtat.getNextSnapshots()
       snapshots.length.should.equal(6)
       snapshots = await this.cmtat.getNextSnapshots()
-      snapshots[0].should.be.bignumber.equal(this.snapshotTime1)
-      snapshots[1].should.be.bignumber.equal(this.snapshotTime2)
-      snapshots[2].should.be.bignumber.equal(this.randomSnapshot)
-      snapshots[3].should.be.bignumber.equal(this.snapshotTime3)
-      snapshots[4].should.be.bignumber.equal(this.snapshotTime4)
-      snapshots[5].should.be.bignumber.equal(this.snapshotTime5)
+      checkArraySnapshot(snapshots, [this.snapshotTime1, this.snapshotTime2, this.randomSnapshot, this.snapshotTime3, this.snapshotTime4, this.snapshotTime5])
     })
 
     it('emits a SnapshotSchedule event', function () {
@@ -172,8 +167,7 @@ function SnapshotModuleCommonScheduling (owner, address1, address2, address3) {
       )
       const snapshots = await this.cmtat.getNextSnapshots()
       snapshots.length.should.equal(2)
-      snapshots[0].should.be.bignumber.equal(this.firstSnapshotTime)
-      snapshots[1].should.be.bignumber.equal(this.snapshotTime)
+      checkArraySnapshot(snapshots, [this.firstSnapshotTime, this.snapshotTime])
     })
   })
 }

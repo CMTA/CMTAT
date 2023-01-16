@@ -2,7 +2,7 @@ const { expectEvent, expectRevert } = require('@openzeppelin/test-helpers')
 const { SNAPSHOOTER_ROLE } = require('../../utils')
 const { should } = require('chai').should()
 const CMTAT = artifacts.require('CMTAT')
-const { getUnixTimestamp, timeout } = require('./SnapshotModuleUtils')
+const { getUnixTimestamp, timeout, checkArraySnapshot } = require('./SnapshotModuleUtils/SnapshotModuleUtils')
 
 function SnapshotModuleCommonGetNextSnapshot (owner, address1, address2, address3) {
   context('Snapshot scheduling', function () {
@@ -30,11 +30,7 @@ function SnapshotModuleCommonGetNextSnapshot (owner, address1, address2, address
       })
       const snapshots = await this.cmtat.getNextSnapshots()
       snapshots.length.should.equal(5)
-      snapshots[0].should.be.bignumber.equal(this.snapshotTime1)
-      snapshots[1].should.be.bignumber.equal(this.snapshotTime2)
-      snapshots[2].should.be.bignumber.equal(this.snapshotTime3)
-      snapshots[3].should.be.bignumber.equal(this.snapshotTime4)
-      snapshots[4].should.be.bignumber.equal(this.snapshotTime5)
+      checkArraySnapshot(snapshots, [this.snapshotTime1, this.snapshotTime2, this.snapshotTime3, this.snapshotTime4, this.snapshotTime5])
     })
 
     it('return empty array if all snapshots are in the past', async function () {
@@ -73,6 +69,7 @@ function SnapshotModuleCommonGetNextSnapshot (owner, address1, address2, address
       })
       const snapshots = await this.cmtat.getNextSnapshots()
       snapshots.length.should.equal(2)
+      checkArraySnapshot(snapshots, [this.snapshotTime2, this.snapshotTime3])
       snapshots[0].should.be.bignumber.equal(this.snapshotTime2)
       snapshots[1].should.be.bignumber.equal(this.snapshotTime3)
     })

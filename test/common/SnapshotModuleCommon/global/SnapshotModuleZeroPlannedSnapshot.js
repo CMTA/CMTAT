@@ -1,6 +1,6 @@
 const { expectEvent, expectRevert } = require('@openzeppelin/test-helpers')
 const { should } = require('chai').should()
-const { getUnixTimestamp, checkSnapshot } = require('../SnapshotModuleUtils')
+const { getUnixTimestamp, checkSnapshot } = require('../SnapshotModuleUtils/SnapshotModuleUtils')
 
 function SnapshotModuleCommonGlobal (admin, address1, address2, address3) {
   context('zeroPlannedSnapshotTest', function () {

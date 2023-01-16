@@ -2,7 +2,7 @@ const { expectEvent, expectRevert } = require('@openzeppelin/test-helpers')
 const { SNAPSHOOTER_ROLE } = require('../../utils')
 const { should } = require('chai').should()
 const CMTAT = artifacts.require('CMTAT')
-const { getUnixTimestamp, timeout } = require('./SnapshotModuleUtils')
+const { getUnixTimestamp, checkArraySnapshot } = require('./SnapshotModuleUtils/SnapshotModuleUtils')
 
 function SnapshotModuleCommonRescheduling (owner, address1, address2, address3) {
   context('Snapshot rescheduling', function () {
@@ -30,9 +30,11 @@ function SnapshotModuleCommonRescheduling (owner, address1, address2, address3) 
     it('can reschedule a snapshot between a range of snapshot', async function () {
       this.snapshotMiddleOldTime = this.snapshotTime + 30
       this.snapshotMiddleNewTime = this.snapshotTime + 40
+      this.snapshotTime1 = this.snapshotTime + 60
+      this.snapshotTime2 = this.snapshotTime + 90
       await this.cmtat.scheduleSnapshot(this.snapshotMiddleOldTime, { from: owner })
-      await this.cmtat.scheduleSnapshot(this.snapshotTime + 60, { from: owner })
-      await this.cmtat.scheduleSnapshot(this.snapshotTime + 90, { from: owner });
+      await this.cmtat.scheduleSnapshot(this.snapshotTime1, { from: owner })
+      await this.cmtat.scheduleSnapshot(this.snapshotTime2, { from: owner });
       ({ logs: this.logs } = await this.cmtat.rescheduleSnapshot(
         this.snapshotMiddleOldTime,
         this.snapshotMiddleNewTime,
@@ -44,15 +46,17 @@ function SnapshotModuleCommonRescheduling (owner, address1, address2, address3) 
       })
       const snapshots = await this.cmtat.getNextSnapshots()
       snapshots.length.should.equal(4)
-      snapshots[1].should.be.bignumber.equal(this.snapshotMiddleNewTime)
+      checkArraySnapshot(snapshots, [this.snapshotTime, this.snapshotMiddleNewTime, this.snapshotTime1, this.snapshotTime2])
     })
 
     it('revert if reschedule a snapshot not in the range of snapshot', async function () {
       this.snapshotMiddleOldTime = this.snapshotTime + 30
       this.snapshotMiddleNewTime = this.snapshotTime + 61
+      this.snapshotTime1 = this.snapshotTime + 60
+      this.snapshotTime2 = this.snapshotTime + 90
       await this.cmtat.scheduleSnapshot(this.snapshotMiddleOldTime, { from: owner })
-      await this.cmtat.scheduleSnapshot(this.snapshotTime + 60, { from: owner })
-      await this.cmtat.scheduleSnapshot(this.snapshotTime + 90, { from: owner })
+      await this.cmtat.scheduleSnapshot(this.snapshotTime1, { from: owner })
+      await this.cmtat.scheduleSnapshot(this.snapshotTime2, { from: owner })
       await expectRevert(
         this.cmtat.rescheduleSnapshot(
           this.snapshotMiddleOldTime,
@@ -63,15 +67,17 @@ function SnapshotModuleCommonRescheduling (owner, address1, address2, address3) 
       )
       const snapshots = await this.cmtat.getNextSnapshots()
       snapshots.length.should.equal(4)
-      snapshots[1].should.be.bignumber.equal(this.snapshotMiddleOldTime)
+      checkArraySnapshot(snapshots, [this.snapshotTime, this.snapshotMiddleOldTime, this.snapshotTime1, this.snapshotTime2])
     })
 
     it('revert if reschedule a snapshot not in the range of snapshot', async function () {
       this.snapshotMiddleOldTime = this.snapshotTime + 30
       this.snapshotMiddleNewTime = this.snapshotTime - 1
+      this.snapshotTime1 = this.snapshotTime + 60
+      this.snapshotTime2 = this.snapshotTime + 90
       await this.cmtat.scheduleSnapshot(this.snapshotMiddleOldTime, { from: owner })
-      await this.cmtat.scheduleSnapshot(this.snapshotTime + 60, { from: owner })
-      await this.cmtat.scheduleSnapshot(this.snapshotTime + 90, { from: owner })
+      await this.cmtat.scheduleSnapshot(this.snapshotTime1, { from: owner })
+      await this.cmtat.scheduleSnapshot(this.snapshotTime2, { from: owner })
       await expectRevert(
         this.cmtat.rescheduleSnapshot(
           this.snapshotMiddleOldTime,
@@ -82,7 +88,7 @@ function SnapshotModuleCommonRescheduling (owner, address1, address2, address3) 
       )
       const snapshots = await this.cmtat.getNextSnapshots()
       snapshots.length.should.equal(4)
-      snapshots[1].should.be.bignumber.equal(this.snapshotMiddleOldTime)
+      checkArraySnapshot(snapshots, [this.snapshotTime, this.snapshotMiddleOldTime, this.snapshotTime1, this.snapshotTime2])
     })
     
     it('reverts when calling from non-owner', async function () {

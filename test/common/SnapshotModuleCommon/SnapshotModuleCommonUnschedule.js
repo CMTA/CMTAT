@@ -2,7 +2,7 @@ const { expectEvent, expectRevert } = require('@openzeppelin/test-helpers')
 const { SNAPSHOOTER_ROLE } = require('../../utils')
 const { should } = require('chai').should()
 const CMTAT = artifacts.require('CMTAT')
-const { getUnixTimestamp, timeout } = require('./SnapshotModuleUtils')
+const { getUnixTimestamp, checkArraySnapshot } = require('./SnapshotModuleUtils/SnapshotModuleUtils')
 
 function SnapshotModuleCommonUnschedule (owner, address1, address2, address3) {
   context('unscheduleSnapshotNotOptimized', function () {
@@ -44,10 +44,7 @@ function SnapshotModuleCommonUnschedule (owner, address1, address2, address3) {
       snapshots.length.should.equal(5)
       await this.cmtat.unscheduleSnapshotNotOptimized(this.snapshotTime3, { from: owner })
       snapshots = await this.cmtat.getNextSnapshots()
-      snapshots[0].should.be.bignumber.equal(this.snapshotTime1)
-      snapshots[1].should.be.bignumber.equal(this.snapshotTime2)
-      snapshots[2].should.be.bignumber.equal(this.snapshotTime4)
-      snapshots[3].should.be.bignumber.equal(this.snapshotTime5)
+      checkArraySnapshot(snapshots, [this.snapshotTime1, this.snapshotTime2, this.snapshotTime4, this.snapshotTime5])
       snapshots.length.should.equal(4)
     })
     it('Revert if no snapshot', async function () {
@@ -84,7 +81,7 @@ function SnapshotModuleCommonUnschedule (owner, address1, address2, address3) {
         from: owner
       })
       let snapshots = await this.cmtat.getNextSnapshots()
-      snapshots[2].should.be.bignumber.equal(this.randomSnapshot)
+      checkArraySnapshot(snapshots, [this.snapshotTime1, this.snapshotTime2, this.randomSnapshot, this.snapshotTime3, this.snapshotTime4, this.snapshotTime5])
       snapshots.length.should.equal(6)
       await this.cmtat.unscheduleSnapshotNotOptimized(this.randomSnapshot, {
         from: owner
@@ -92,11 +89,7 @@ function SnapshotModuleCommonUnschedule (owner, address1, address2, address3) {
       snapshots = await this.cmtat.getNextSnapshots()
       snapshots.length.should.equal(5)
       snapshots = await this.cmtat.getNextSnapshots()
-      snapshots[0].should.be.bignumber.equal(this.snapshotTime1)
-      snapshots[1].should.be.bignumber.equal(this.snapshotTime2)
-      snapshots[2].should.be.bignumber.equal(this.snapshotTime3)
-      snapshots[3].should.be.bignumber.equal(this.snapshotTime4)
-      snapshots[4].should.be.bignumber.equal(this.snapshotTime5)
+      checkArraySnapshot(snapshots, [this.snapshotTime1, this.snapshotTime2, this.snapshotTime3, this.snapshotTime4, this.snapshotTime5])
     })
     it('can schedule a snaphot after an unschedule', async function () {
       this.snapshotTime1 = `${getUnixTimestamp() + 100}`
@@ -132,11 +125,7 @@ function SnapshotModuleCommonUnschedule (owner, address1, address2, address3) {
       })
       snapshots = await this.cmtat.getNextSnapshots()
       snapshots.length.should.equal(5)
-      snapshots[0].should.be.bignumber.equal(this.snapshotTime1)
-      snapshots[1].should.be.bignumber.equal(this.snapshotTime3)
-      snapshots[2].should.be.bignumber.equal(this.snapshotTime4)
-      snapshots[3].should.be.bignumber.equal(this.snapshotTime5)
-      snapshots[4].should.be.bignumber.equal(this.snapshotTime6)
+      checkArraySnapshot(snapshots, [this.snapshotTime1, this.snapshotTime3, this.snapshotTime4, this.snapshotTime5, this.snapshotTime6])
     })
   })
   context('Snapshot unscheduling', function () {
