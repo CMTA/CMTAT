@@ -4,7 +4,7 @@ pragma solidity ^0.8.17;
 
 // required OZ imports here
 import "../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
-import "../../modules/wrapper/optional/AuthorizationModule.sol";
+import "../../modules/security/AuthorizationModule.sol";
 import "../../modules/security/OnlyDelegateCallModule.sol";
 
 /**
@@ -40,7 +40,8 @@ abstract contract BaseModuleTest is Initializable, AuthorizationModule, OnlyDele
      */
     function __Base_init(
         string memory tokenId_,
-        string memory terms_
+        string memory terms_,
+        address admin
     ) internal onlyInitializing {
          /* OpenZeppelin */
          // AccessControlUpgradeable inherits from ERC165Upgradeable
@@ -49,7 +50,7 @@ abstract contract BaseModuleTest is Initializable, AuthorizationModule, OnlyDele
         __AccessControl_init_unchained();
 
          /* Wrapper */
-        __AuthorizationModule_init_unchained();
+        __AuthorizationModule_init_unchained(admin);
         
         /* own function */
         __Base_init_unchained(tokenId_, terms_);

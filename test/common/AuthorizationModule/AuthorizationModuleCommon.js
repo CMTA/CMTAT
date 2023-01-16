@@ -1,5 +1,5 @@
 const { expectEvent, expectRevert } = require('@openzeppelin/test-helpers')
-const { PAUSER_ROLE } = require('../utils')
+const { PAUSER_ROLE } = require('../../utils')
 const chai = require('chai')
 const expect = chai.expect
 const should = chai.should()

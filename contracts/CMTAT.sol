@@ -14,7 +14,7 @@ import "./modules/wrapper/mandatory/SnapshotModule.sol";
 import "./modules/wrapper/mandatory/PauseModule.sol";
 import "./modules/wrapper/optional/ValidationModule.sol";
 import "./modules/wrapper/optional/MetaTxModule.sol";
-import "./modules/wrapper/optional/AuthorizationModule.sol";
+import "./modules/security/AuthorizationModule.sol";
 import "./interfaces/IRuleEngine.sol";
 
 contract CMTAT is
@@ -31,7 +31,7 @@ contract CMTAT is
     ERC20BaseModule
 {
     /// @custom:oz-upgrades-unsafe-allow constructor
-    constructor(address forwarder, bool deployedWithProxy_, address owner, 
+    constructor(address forwarder, bool deployedWithProxy_, address admin, 
     string memory name, string memory symbol, string memory tokenId, 
     string memory terms,
     IRuleEngine ruleEngine)
@@ -39,7 +39,7 @@ contract CMTAT is
          if(!deployedWithProxy_){
             // Initialize the contract to avoid front-running
             // Warning : do not initialize the proxy
-            initialize(deployedWithProxy_, owner, name, symbol,tokenId, terms, ruleEngine);
+            initialize(deployedWithProxy_, admin, name, symbol,tokenId, terms, ruleEngine);
          }else{
             // Initialize the variable for the implementation
             deployedWithProxy = true;
@@ -50,14 +50,14 @@ contract CMTAT is
 
     function initialize(
         bool deployedWithProxy_,
-        address owner,
+        address admin,
         string memory name,
         string memory symbol,
         string memory tokenId,
         string memory terms,
         IRuleEngine ruleEngine 
     ) public initializer {
-        __CMTAT_init(deployedWithProxy_, owner, name, symbol, tokenId, terms, ruleEngine);
+        __CMTAT_init(deployedWithProxy_, admin, name, symbol, tokenId, terms, ruleEngine);
     }
 
     /**
@@ -68,7 +68,7 @@ contract CMTAT is
      */
     function __CMTAT_init(
         bool deployedWithProxy_,
-        address owner,
+        address admin,
         string memory name,
         string memory symbol,
         string memory tokenId,
@@ -92,7 +92,7 @@ contract CMTAT is
         
         /* Wrapper */
         // AuthorizationModule_init_unchained is called firstly due to inheritance
-        __AuthorizationModule_init_unchained();
+        __AuthorizationModule_init_unchained(admin);
         __BurnModule_init_unchained();
         __MintModule_init_unchained();
         // EnforcementModule_init_unchained is called before ValidationModule_init_unchained due to inheritance
@@ -107,19 +107,15 @@ contract CMTAT is
         __Base_init_unchained(tokenId, terms);
 
          /* own function */
-        __CMTAT_init_unchained(deployedWithProxy_, owner);
+        __CMTAT_init_unchained(deployedWithProxy_);
     }
 
 
-    function __CMTAT_init_unchained(bool deployedWithProxy_, address owner) internal onlyInitializing {
+    function __CMTAT_init_unchained(bool deployedWithProxy_) internal onlyInitializing {
         deployedWithProxy = deployedWithProxy_;
-        _grantRole(DEFAULT_ADMIN_ROLE, owner);
-        _grantRole(ENFORCER_ROLE, owner);
-        _grantRole(MINTER_ROLE, owner);
-        _grantRole(BURNER_ROLE, owner);
-        _grantRole(PAUSER_ROLE, owner);
-        _grantRole(SNAPSHOOTER_ROLE, owner);
     }
+
+
 
     function decimals()
         public

@@ -44,6 +44,23 @@ Alternatively, you can install Truffle
 
 See Truffle's official [documentation](https://trufflesuite.com/docs/truffle/getting-started/installation/) for more information.
 
+## Contract Size
+
+You can get the size of the contract by running the following commands.
+
+- Compile the contracts
+
+```bash
+npx truffle compile
+```
+
+- Run the script
+
+```bash
+npm run-script size
+```
+
+The script calls the plugin `truffle-contract-size`
 
 ## Testing
 
@@ -63,16 +80,28 @@ for more information about the writing and running of Truffle tests.
 We use linters to ensure consistent coding style. If you contribute code, please run this following command: 
 
 For JavaScript:
-```
+```bash
 npm run-script lint .
 npm run-script lint:fix . 
 ```
 
 For Solidity:
-```
+```bash
 npm run-script lint:sol  
 npm run-script lint:sol:fix
 ```
+
+
+
+## UML
+
+You can generate UML for smart contracts by running the following command:
+
+```bash
+npm run-script uml
+```
+
+
 
 ## Known bugs
 

@@ -1,6 +1,6 @@
 const CMTAT = artifacts.require('CMTAT')
-const AuthorizationModuleCommon = require('../../common/AuthorizationModuleCommon')
-const { ZERO_ADDRESS } = require('../../utils')
+const AuthorizationModuleCommon = require('../../../common/AuthorizationModule/AuthorizationModuleCommon')
+const { ZERO_ADDRESS } = require('../../../utils')
 
 contract(
   'Standard - AuthorizationModule',
