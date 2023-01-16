@@ -33,7 +33,7 @@ contract CMTAT_KILL_TEST is
     EnforcementModule,
     ValidationModule,
     MetaTxModule,
-    SnasphotModule,
+    SnapshotModule,
     ERC20BaseModule
 {
 
