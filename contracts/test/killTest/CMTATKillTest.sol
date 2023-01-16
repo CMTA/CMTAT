@@ -33,19 +33,24 @@ contract CMTAT_KILL_TEST is
     EnforcementModule,
     ValidationModule,
     MetaTxModule,
-    SnasphotModule,
+    SnapshotModule,
     ERC20BaseModule
 {
 
 //******* Code from CMTAT, not modified*******/
 
-/// @custom:oz-upgrades-unsafe-allow constructor
-    constructor(address forwarder, bool deployedWithProxy_, address owner, string memory name, string memory symbol, string memory tokenId, string memory terms
-    ) MetaTxModule(forwarder) {
+ /// @custom:oz-upgrades-unsafe-allow constructor
+    constructor(address forwarder, bool deployedWithProxy_, address owner, 
+    string memory name, string memory symbol, string memory tokenId, 
+    string memory terms,
+    IRuleEngine ruleEngine,
+    string memory information, 
+    uint256 flag)
+     MetaTxModule(forwarder) {
          if(!deployedWithProxy_){
             // Initialize the contract to avoid front-running
             // Warning : do not initialize the proxy
-            initialize(deployedWithProxy_, owner, name, symbol,tokenId, terms);
+            initialize(deployedWithProxy_, owner, name, symbol,tokenId, terms, ruleEngine, information, flag);
          }else{
             // Initialize the variable for the implementation
             deployedWithProxy = true;
@@ -55,14 +60,17 @@ contract CMTAT_KILL_TEST is
     }
 
     function initialize(
-        bool deployedWithProxy_,
+        bool deployedWithProxyIrrevocable_,
         address owner,
-        string memory name,
-        string memory symbol,
+        string memory nameIrrevocable,
+        string memory symbolIrrevocable,
         string memory tokenId,
-        string memory terms
+        string memory terms,
+        IRuleEngine ruleEngine,
+        string memory information,
+        uint256 flag
     ) public initializer {
-        __CMTAT_init(deployedWithProxy_, owner, name, symbol, tokenId, terms);
+        __CMTAT_init(deployedWithProxyIrrevocable_, owner, nameIrrevocable, symbolIrrevocable, tokenId, terms, ruleEngine, information, flag);
     }
 
     /**
@@ -72,17 +80,20 @@ contract CMTAT_KILL_TEST is
      * See {ERC20-constructor}.
      */
     function __CMTAT_init(
-        bool deployedWithProxy_,
+        bool deployedWithProxyIrrevocable_,
         address owner,
-        string memory name,
-        string memory symbol,
+        string memory nameIrrevocable,
+        string memory symbolIrrevocable,
         string memory tokenId,
-        string memory terms
+        string memory terms,
+         IRuleEngine ruleEngine,
+        string memory information,
+        uint256 flag
     ) internal onlyInitializing {
         /* OpenZeppelin library */
         // OZ init_unchained functions are called firstly due to inheritance
         __Context_init_unchained();
-        __ERC20_init_unchained(name, symbol);
+        __ERC20_init_unchained(nameIrrevocable, symbolIrrevocable);
         // AccessControlUpgradeable inherits from ERC165Upgradeable
         __ERC165_init_unchained();
         // AuthorizationModule inherits from AccessControlUpgradeable
@@ -92,8 +103,7 @@ contract CMTAT_KILL_TEST is
         /* Internal Modules */
         __Enforcement_init_unchained();
         __Snapshot_init_unchained();
-        // we set the RuleEngine by calling the setter
-        // __Validation_init_unchained(IRuleEngine ruleEngine_)
+        __Validation_init_unchained(ruleEngine);
         
         /* Wrapper */
         // AuthorizationModule_init_unchained is called firstly due to inheritance
@@ -109,15 +119,15 @@ contract CMTAT_KILL_TEST is
         __SnasphotModule_init_unchained();
         
         /* Other modules */
-        __Base_init_unchained(tokenId, terms);
+        __Base_init_unchained(tokenId, terms, information, flag);
 
          /* own function */
-        __CMTAT_init_unchained(deployedWithProxy_, owner);
+        __CMTAT_init_unchained(deployedWithProxyIrrevocable_, owner);
     }
 
 
-    function __CMTAT_init_unchained(bool deployedWithProxy_, address owner) internal onlyInitializing {
-        deployedWithProxy = deployedWithProxy_;
+    function __CMTAT_init_unchained(bool deployedWithProxyIrrevocable_, address owner) internal onlyInitializing {
+        deployedWithProxy = deployedWithProxyIrrevocable_;
         _grantRole(DEFAULT_ADMIN_ROLE, owner);
         _grantRole(ENFORCER_ROLE, owner);
         _grantRole(MINTER_ROLE, owner);

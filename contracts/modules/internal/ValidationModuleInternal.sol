@@ -15,7 +15,7 @@ abstract contract ValidationModuleInternal is Initializable, ContextUpgradeable 
     /**
      * @dev Emitted when a rule engine is set.
      */
-    event RuleEngineSet(address indexed newRuleEngine);
+    event RuleEngineSet(IRuleEngine indexed newRuleEngine);
 
     IRuleEngine public ruleEngine;
 
@@ -33,10 +33,13 @@ abstract contract ValidationModuleInternal is Initializable, ContextUpgradeable 
     {
         if (address(ruleEngine_) != address(0)) {
             ruleEngine = ruleEngine_;
-            emit RuleEngineSet(address(ruleEngine));
+            emit RuleEngineSet(ruleEngine);
         }
     }
 
+    /**
+    @dev before making a call to this function, you have to check if a ruleEngine is set.
+    */
     function _validateTransfer(
         address from,
         address to,
@@ -45,6 +48,9 @@ abstract contract ValidationModuleInternal is Initializable, ContextUpgradeable 
         return ruleEngine.validateTransfer(from, to, amount);
     }
 
+    /**
+    @dev before making a call to this function, you have to check if a ruleEngine is set.
+    */
     function _messageForTransferRestriction(uint8 restrictionCode)
         internal
         view
@@ -53,6 +59,9 @@ abstract contract ValidationModuleInternal is Initializable, ContextUpgradeable 
         return ruleEngine.messageForTransferRestriction(restrictionCode);
     }
 
+    /**
+    @dev before making a call to this function, you have to check if a ruleEngine is set.
+    */
     function _detectTransferRestriction(
         address from,
         address to,

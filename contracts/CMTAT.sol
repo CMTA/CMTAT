@@ -27,17 +27,21 @@ contract CMTAT is
     EnforcementModule,
     ValidationModule,
     MetaTxModule,
-    SnasphotModule,
+    SnapshotModule,
     ERC20BaseModule
 {
     /// @custom:oz-upgrades-unsafe-allow constructor
-    constructor(address forwarderIrrevocable, bool deployedWithProxyIrrevocable_, address owner, string memory nameIrrevocable, string memory symbolIrrevocable, string memory tokenId, string memory terms, 
-    string memory information, uint256 flag
-    ) MetaTxModule(forwarderIrrevocable) {
-         if(!deployedWithProxyIrrevocable_){
+    constructor(address forwarder, bool deployedWithProxy_, address owner, 
+    string memory name, string memory symbol, string memory tokenId, 
+    string memory terms,
+    IRuleEngine ruleEngine,
+    string memory information, 
+    uint256 flag)
+     MetaTxModule(forwarder) {
+         if(!deployedWithProxy_){
             // Initialize the contract to avoid front-running
             // Warning : do not initialize the proxy
-            initialize(deployedWithProxyIrrevocable_, owner, nameIrrevocable, symbolIrrevocable, tokenId, terms, information, flag);
+            initialize(deployedWithProxy_, owner, name, symbol,tokenId, terms, ruleEngine, information, flag);
          }else{
             // Initialize the variable for the implementation
             deployedWithProxy = true;
@@ -53,10 +57,11 @@ contract CMTAT is
         string memory symbolIrrevocable,
         string memory tokenId,
         string memory terms,
+        IRuleEngine ruleEngine,
         string memory information,
         uint256 flag
     ) public initializer {
-        __CMTAT_init(deployedWithProxyIrrevocable_, owner, nameIrrevocable, symbolIrrevocable, tokenId, terms, information, flag);
+        __CMTAT_init(deployedWithProxyIrrevocable_, owner, nameIrrevocable, symbolIrrevocable, tokenId, terms, ruleEngine, information, flag);
     }
 
     /**
@@ -72,6 +77,7 @@ contract CMTAT is
         string memory symbolIrrevocable,
         string memory tokenId,
         string memory terms,
+         IRuleEngine ruleEngine,
         string memory information,
         uint256 flag
     ) internal onlyInitializing {
@@ -88,8 +94,7 @@ contract CMTAT is
         /* Internal Modules */
         __Enforcement_init_unchained();
         __Snapshot_init_unchained();
-        // we set the RuleEngine by calling the setter
-        // __Validation_init_unchained(IRuleEngine ruleEngine_)
+        __Validation_init_unchained(ruleEngine);
         
         /* Wrapper */
         // AuthorizationModule_init_unchained is called firstly due to inheritance
