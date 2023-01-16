@@ -7,11 +7,12 @@ const SnapshotModuleCommonGetNextSnapshot = require('../../common/SnapshotModule
 const SnapshotModuleMultiplePlannedTest = require('../../common/SnapshotModuleCommon/global/SnapshotModuleMultiplePlannedTest')
 const SnapshotModuleOnePlannedSnapshotTest = require('../../common/SnapshotModuleCommon/global/SnapshotModuleOnePlannedSnapshotTest')
 const SnapshotModuleZeroPlannedSnapshotTest = require('../../common/SnapshotModuleCommon/global/SnapshotModuleZeroPlannedSnapshot')
+const { ZERO_ADDRESS } = require('../../utils')
 contract(
   'Standard - SnapshotModule',
   function ([_, admin, address1, address2, address3]) {
     beforeEach(async function () {
-      this.cmtat = await CMTAT.new(_, false, admin, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', { from: admin })
+      this.cmtat = await CMTAT.new(_, false, admin, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', ZERO_ADDRESS, { from: admin })
     })
     SnapshotModuleMultiplePlannedTest(admin, address1, address2, address3)
     SnapshotModuleOnePlannedSnapshotTest(admin, address1, address2, address3)
