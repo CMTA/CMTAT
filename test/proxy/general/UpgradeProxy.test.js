@@ -4,6 +4,7 @@ const { should } = require('chai').should()
 const { deployProxy, upgradeProxy, erc1967 } = require('@openzeppelin/truffle-upgrades')
 const CMTAT1 = artifacts.require('CMTAT')
 const CMTAT2 = artifacts.require('CMTAT')
+const { ZERO_ADDRESS } = require('../../utils')
 
 contract('UpgradeableCMTAT - Proxy', function ([_, admin, address1]) {
   /*
@@ -11,9 +12,9 @@ contract('UpgradeableCMTAT - Proxy', function ([_, admin, address1]) {
   */
   it('testKeepStorageForTokens', async function () {
     // With the first version of CMTAT
-    this.CMTAT_PROXY = await deployProxy(CMTAT1, [true, admin, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch'], {
+    this.CMTAT_PROXY = await deployProxy(CMTAT1, [true, admin, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', ZERO_ADDRESS], {
       initializer: 'initialize',
-      constructorArgs: [_, true, admin, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch']
+      constructorArgs: [_, true, admin, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', ZERO_ADDRESS]
     })
     const implementationContractAddress1 = erc1967.getImplementationAddress(this.CMTAT_PROXY.address, {
       from: admin
@@ -29,7 +30,7 @@ contract('UpgradeableCMTAT - Proxy', function ([_, admin, address1]) {
 
     // Upgrade the proxy with a new implementation contract
     this.upgradeableCMTATV2Instance = await upgradeProxy(this.CMTAT_PROXY.address, CMTAT2, {
-      constructorArgs: [_, true, admin, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch']
+      constructorArgs: [_, true, admin, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', ZERO_ADDRESS]
     })
     // Get the new implementation contract address
     const implementationContractAddress2 = erc1967.getImplementationAddress(this.CMTAT_PROXY.address, {

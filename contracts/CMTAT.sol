@@ -27,16 +27,19 @@ contract CMTAT is
     EnforcementModule,
     ValidationModule,
     MetaTxModule,
-    SnasphotModule,
+    SnapshotModule,
     ERC20BaseModule
 {
     /// @custom:oz-upgrades-unsafe-allow constructor
-    constructor(address forwarder, bool deployedWithProxy_, address admin, string memory name, string memory symbol, string memory tokenId, string memory terms
-    ) MetaTxModule(forwarder) {
+    constructor(address forwarder, bool deployedWithProxy_, address admin, 
+    string memory name, string memory symbol, string memory tokenId, 
+    string memory terms,
+    IRuleEngine ruleEngine)
+     MetaTxModule(forwarder) {
          if(!deployedWithProxy_){
             // Initialize the contract to avoid front-running
             // Warning : do not initialize the proxy
-            initialize(deployedWithProxy_, admin, name, symbol,tokenId, terms);
+            initialize(deployedWithProxy_, admin, name, symbol,tokenId, terms, ruleEngine);
          }else{
             // Initialize the variable for the implementation
             deployedWithProxy = true;
@@ -51,9 +54,10 @@ contract CMTAT is
         string memory name,
         string memory symbol,
         string memory tokenId,
-        string memory terms
+        string memory terms,
+        IRuleEngine ruleEngine 
     ) public initializer {
-        __CMTAT_init(deployedWithProxy_, admin, name, symbol, tokenId, terms);
+        __CMTAT_init(deployedWithProxy_, admin, name, symbol, tokenId, terms, ruleEngine);
     }
 
     /**
@@ -68,7 +72,8 @@ contract CMTAT is
         string memory name,
         string memory symbol,
         string memory tokenId,
-        string memory terms
+        string memory terms,
+        IRuleEngine ruleEngine
     ) internal onlyInitializing {
         /* OpenZeppelin library */
         // OZ init_unchained functions are called firstly due to inheritance
@@ -83,8 +88,7 @@ contract CMTAT is
         /* Internal Modules */
         __Enforcement_init_unchained();
         __Snapshot_init_unchained();
-        // we set the RuleEngine by calling the setter
-        // __Validation_init_unchained(IRuleEngine ruleEngine_)
+        __Validation_init_unchained(ruleEngine);
         
         /* Wrapper */
         // AuthorizationModule_init_unchained is called firstly due to inheritance

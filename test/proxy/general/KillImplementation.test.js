@@ -5,7 +5,7 @@
 */
 const { expectEvent, expectRevert } = require('@openzeppelin/test-helpers')
 const { should } = require('chai').should()
-
+const { ZERO_ADDRESS } = require('../../utils')
 const {
   deployProxy,
   erc1967
@@ -17,7 +17,7 @@ contract('Proxy - Security Test', function ([_, admin]) {
   beforeEach(async function () {
     this.CMTAT_PROXY = await deployProxy(
       CMTAT_KILL_TEST,
-      [true, admin, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch'],
+      [true, admin, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', ZERO_ADDRESS],
       {
         initializer: 'initialize',
         constructorArgs: [
@@ -27,7 +27,8 @@ contract('Proxy - Security Test', function ([_, admin]) {
           'CMTA Token',
           'CMTAT',
           'CMTAT_ISIN',
-          'https://cmta.ch'
+          'https://cmta.ch',
+          ZERO_ADDRESS
         ]
       }
     )
