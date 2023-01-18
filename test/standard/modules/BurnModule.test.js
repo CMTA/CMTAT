@@ -6,7 +6,8 @@ contract(
   'Standard - BurnModule',
   function ([_, admin, address1, address2]) {
     beforeEach(async function () {
-      this.cmtat = await CMTAT.new(_, false, admin, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', ZERO_ADDRESS, { from: admin })
+      this.flag = 5
+      this.cmtat = await CMTAT.new(_, false, admin, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', ZERO_ADDRESS, 'CMTAT_info', this.flag, { from: admin })
     })
 
     BurnModuleCommon(admin, address1, address2)

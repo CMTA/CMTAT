@@ -22,14 +22,18 @@ abstract contract BaseModuleTest is Initializable, AuthorizationModule, OnlyDele
      //******* Code from BaseModule, not modified *******/
 
 
-    bool internal deployedWithProxy;
+       bool internal deployedWithProxy;
     /* Events */
     event TermSet(string indexed newTerm);
     event TokenIdSet(string indexed newTokenId);
+    event InformationSet(string indexed newInformation);
+    event FlagSet(uint256 indexed newFlag);
 
     /* Variables */
     string public tokenId;
     string public terms;
+    string public information;
+    uint256 public flag;
 
     /* Initializers */
     /**
@@ -41,9 +45,12 @@ abstract contract BaseModuleTest is Initializable, AuthorizationModule, OnlyDele
     function __Base_init(
         string memory tokenId_,
         string memory terms_,
+        string memory information_,
+        uint256 flag_,
         address admin
     ) internal onlyInitializing {
          /* OpenZeppelin */
+        __Context_init_unchained();
          // AccessControlUpgradeable inherits from ERC165Upgradeable
         __ERC165_init_unchained();
         // AuthorizationModule inherits from AccessControlUpgradeable
@@ -53,15 +60,19 @@ abstract contract BaseModuleTest is Initializable, AuthorizationModule, OnlyDele
         __AuthorizationModule_init_unchained(admin);
         
         /* own function */
-        __Base_init_unchained(tokenId_, terms_);
+        __Base_init_unchained(tokenId_, terms_, information_, flag_);
     }
 
     function __Base_init_unchained(
         string memory tokenId_,
-        string memory terms_
+        string memory terms_,
+        string memory information_,
+        uint256 flag_
     ) internal onlyInitializing {
         tokenId = tokenId_;
         terms = terms_;
+        information = information_;
+        flag = flag_;
     }
 
     /* Methods */
@@ -81,7 +92,21 @@ abstract contract BaseModuleTest is Initializable, AuthorizationModule, OnlyDele
         emit TermSet(terms_);
     }
 
+    function setInformation(string memory information_)
+        public
+        onlyRole(DEFAULT_ADMIN_ROLE)
+    {
+        information = information_;
+        emit InformationSet(information_);
+    }
 
+    function setFlag(uint256 flag_)
+        public
+        onlyRole(DEFAULT_ADMIN_ROLE)
+    {
+        flag = flag_;
+        emit FlagSet(flag_);
+    }
 
     uint256[50] private __gap;
 }

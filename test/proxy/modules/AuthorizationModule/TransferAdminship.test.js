@@ -7,9 +7,10 @@ contract(
   'Proxy - TransferAdminship',
   function ([_, oldAdmin, newAdmin, attacker]) {
     beforeEach(async function () {
-      this.cmtat = await deployProxy(CMTAT, [true, oldAdmin, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', ZERO_ADDRESS], {
+      this.flag = 5
+      this.cmtat = await deployProxy(CMTAT, [true, oldAdmin, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', ZERO_ADDRESS, 'CMTAT_info', this.flag], {
         initializer: 'initialize',
-        constructorArgs: [_, true, oldAdmin, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', ZERO_ADDRESS]
+        constructorArgs: [_, true, oldAdmin, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', ZERO_ADDRESS, 'CMTAT_info', this.flag]
       })
     })
 

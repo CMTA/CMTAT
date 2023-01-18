@@ -37,17 +37,18 @@ contract CMTAT_KILL_TEST is
     ERC20BaseModule
 {
 
-//******* Code from CMTAT, not modified*******/
-/// @custom:oz-upgrades-unsafe-allow constructor
+    /// @custom:oz-upgrades-unsafe-allow constructor
     constructor(address forwarder, bool deployedWithProxy_, address admin, 
     string memory name, string memory symbol, string memory tokenId, 
     string memory terms,
-    IRuleEngine ruleEngine)
+    IRuleEngine ruleEngine,
+    string memory information, 
+    uint256 flag)
      MetaTxModule(forwarder) {
          if(!deployedWithProxy_){
             // Initialize the contract to avoid front-running
             // Warning : do not initialize the proxy
-            initialize(deployedWithProxy_, admin, name, symbol,tokenId, terms, ruleEngine);
+            initialize(deployedWithProxy_, admin, name, symbol,tokenId, terms, ruleEngine, information, flag);
          }else{
             // Initialize the variable for the implementation
             deployedWithProxy = true;
@@ -57,15 +58,17 @@ contract CMTAT_KILL_TEST is
     }
 
     function initialize(
-        bool deployedWithProxy_,
+        bool deployedWithProxyIrrevocable_,
         address admin,
-        string memory name,
-        string memory symbol,
+        string memory nameIrrevocable,
+        string memory symbolIrrevocable,
         string memory tokenId,
         string memory terms,
-        IRuleEngine ruleEngine 
+        IRuleEngine ruleEngine,
+        string memory information,
+        uint256 flag
     ) public initializer {
-        __CMTAT_init(deployedWithProxy_, admin, name, symbol, tokenId, terms, ruleEngine);
+        __CMTAT_init(deployedWithProxyIrrevocable_, admin, nameIrrevocable, symbolIrrevocable, tokenId, terms, ruleEngine, information, flag);
     }
 
     /**
@@ -75,18 +78,20 @@ contract CMTAT_KILL_TEST is
      * See {ERC20-constructor}.
      */
     function __CMTAT_init(
-        bool deployedWithProxy_,
+        bool deployedWithProxyIrrevocable_,
         address admin,
-        string memory name,
-        string memory symbol,
+        string memory nameIrrevocable,
+        string memory symbolIrrevocable,
         string memory tokenId,
         string memory terms,
-        IRuleEngine ruleEngine
+         IRuleEngine ruleEngine,
+        string memory information,
+        uint256 flag
     ) internal onlyInitializing {
         /* OpenZeppelin library */
         // OZ init_unchained functions are called firstly due to inheritance
         __Context_init_unchained();
-        __ERC20_init_unchained(name, symbol);
+        __ERC20_init_unchained(nameIrrevocable, symbolIrrevocable);
         // AccessControlUpgradeable inherits from ERC165Upgradeable
         __ERC165_init_unchained();
         // AuthorizationModule inherits from AccessControlUpgradeable
@@ -112,15 +117,15 @@ contract CMTAT_KILL_TEST is
         __SnasphotModule_init_unchained();
         
         /* Other modules */
-        __Base_init_unchained(tokenId, terms);
+        __Base_init_unchained(tokenId, terms, information, flag);
 
          /* own function */
-        __CMTAT_init_unchained(deployedWithProxy_);
+        __CMTAT_init_unchained(deployedWithProxyIrrevocable_);
     }
 
 
-    function __CMTAT_init_unchained(bool deployedWithProxy_) internal onlyInitializing {
-        deployedWithProxy = deployedWithProxy_;
+    function __CMTAT_init_unchained(bool deployedWithProxyIrrevocable_) internal onlyInitializing {
+        deployedWithProxy = deployedWithProxyIrrevocable_;
     }
 
     function decimals()

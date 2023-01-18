@@ -10,7 +10,9 @@ contract(
   'Proxy - Security Test',
   function ([_, admin, attacker]) {
     beforeEach(async function () {
-      this.CMTAT_PROXY = await deployProxy(CMTAT1, [true, admin, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', ZERO_ADDRESS], { initializer: 'initialize', constructorArgs: [_, true, admin, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', ZERO_ADDRESS] })
+      this.flag = 5
+      this.CMTAT_PROXY = await deployProxy(CMTAT1, [true, admin, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', ZERO_ADDRESS, 'CMTAT_info', this.flag], { initializer: 'initialize', 
+      constructorArgs: [_, true, admin, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', ZERO_ADDRESS, 'CMTAT_info', this.flag] })
       const implementationContractAddress = await erc1967.getImplementationAddress(this.CMTAT_PROXY.address, { from: admin })
       this.implementationContract = await CMTAT.at(implementationContractAddress)
     })
@@ -19,7 +21,7 @@ contract(
       // Here the argument to indicate if it is deployed with a proxy, set at false by the attacker
       it('testCannotBeTakenControlByAttacker1', async function () {
         await expectRevert(
-          this.implementationContract.initialize(false, attacker, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', ZERO_ADDRESS, { from: attacker }),
+          this.implementationContract.initialize(false, attacker, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', ZERO_ADDRESS, 'CMTAT_info', this.flag, { from: attacker }),
           'Initializable: contract is already initialized'
         )
         await expectRevert(
@@ -33,7 +35,7 @@ contract(
       // Here the argument to indicate if it is deployed with a proxy, set at true by the attacker
       it('testCannotBeTakenControlByAttacker2', async function () {
         await expectRevert(
-          this.implementationContract.initialize(true, attacker, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', ZERO_ADDRESS, { from: attacker }),
+          this.implementationContract.initialize(true, attacker, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', ZERO_ADDRESS, 'CMTAT_info', this.flag, { from: attacker }),
           'Initializable: contract is already initialized'
         )
         await expectRevert(

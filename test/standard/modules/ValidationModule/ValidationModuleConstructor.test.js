@@ -8,8 +8,9 @@ contract(
   'Standard - ValidationModule - Constructor',
   function ([_, admin, address1, address2, address3]) {
     beforeEach(async function () {
+      this.flag = 5
       this.ruleEngineMock = await RuleEngineMock.new({ from: admin })
-      this.cmtat = await CMTAT.new(_, false, admin, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', this.ruleEngineMock.address, { from: admin })
+      this.cmtat = await CMTAT.new(_, false, admin, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', this.ruleEngineMock.address, 'CMTAT_info', this.flag, { from: admin })
       await this.cmtat.mint(address1, ADDRESS1_INITIAL_BALANCE, { from: admin })
       await this.cmtat.mint(address2, ADDRESS2_INITIAL_BALANCE, { from: admin })
       await this.cmtat.mint(address3, ADDRESS3_INITIAL_BALANCE, { from: admin })

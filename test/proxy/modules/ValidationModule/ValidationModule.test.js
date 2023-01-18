@@ -10,10 +10,11 @@ contract(
   'Proxy - ValidationModule',
   function ([_, admin, address1, address2, address3]) {
     beforeEach(async function () {
+      this.flag = 5
       this.ruleEngineMock = await RuleEngineMock.new({ from: admin })
-      this.cmtat = await deployProxy(CMTAT, [true, admin, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', ZERO_ADDRESS], {
+      this.cmtat = await deployProxy(CMTAT, [true, admin, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', ZERO_ADDRESS, 'CMTAT_info', this.flag], {
         initializer: 'initialize',
-        constructorArgs: [_, true, admin, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', ZERO_ADDRESS]
+        constructorArgs: [_, true, admin, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', ZERO_ADDRESS, 'CMTAT_info', this.flag]
       })
       await this.cmtat.mint(address1, ADDRESS1_INITIAL_BALANCE, { from: admin })
       await this.cmtat.mint(address2, ADDRESS2_INITIAL_BALANCE, { from: admin })
