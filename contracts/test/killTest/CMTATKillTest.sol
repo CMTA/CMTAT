@@ -15,6 +15,7 @@ import "../../modules/wrapper/mandatory/PauseModule.sol";
 import "../../modules/wrapper/mandatory/SnapshotModule.sol";
 import "../../modules/wrapper/optional/ValidationModule.sol";
 import "../../modules/wrapper/optional/MetaTxModule.sol";
+import "../../modules/wrapper/optional/DebtModule.sol";
 import "../../modules/security/AuthorizationModule.sol";
 import "../../modules/security/OnlyDelegateCallModule.sol";
 import "../../interfaces/IRuleEngine.sol";
@@ -34,21 +35,22 @@ contract CMTAT_KILL_TEST is
     ValidationModule,
     MetaTxModule,
     SnapshotModule,
-    ERC20BaseModule
+    ERC20BaseModule,
+    DebtModule
 {
 
     /// @custom:oz-upgrades-unsafe-allow constructor
-    constructor(address forwarder, bool deployedWithProxy_, address admin, 
-    string memory name, string memory symbol, string memory tokenId, 
+    constructor(address forwarder, bool deployedWithProxyIrrevocable_, address admin, 
+    string memory nameIrrevocable, string memory symbolIrrevocable, string memory tokenId, 
     string memory terms,
     IRuleEngine ruleEngine,
     string memory information, 
     uint256 flag)
      MetaTxModule(forwarder) {
-         if(!deployedWithProxy_){
+         if(!deployedWithProxyIrrevocable_){
             // Initialize the contract to avoid front-running
             // Warning : do not initialize the proxy
-            initialize(deployedWithProxy_, admin, name, symbol,tokenId, terms, ruleEngine, information, flag);
+            initialize(deployedWithProxyIrrevocable_, admin, nameIrrevocable, symbolIrrevocable,tokenId, terms, ruleEngine, information, flag);
          }else{
             // Initialize the variable for the implementation
             deployedWithProxy = true;
@@ -123,7 +125,6 @@ contract CMTAT_KILL_TEST is
         __CMTAT_init_unchained(deployedWithProxyIrrevocable_);
     }
 
-
     function __CMTAT_init_unchained(bool deployedWithProxyIrrevocable_) internal onlyInitializing {
         deployedWithProxy = deployedWithProxyIrrevocable_;
     }
@@ -182,6 +183,7 @@ contract CMTAT_KILL_TEST is
     {
         return MetaTxModule._msgData();
     }
+
 
     uint256[50] private __gap;
 }
