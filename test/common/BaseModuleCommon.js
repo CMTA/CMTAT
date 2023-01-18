@@ -68,6 +68,49 @@ function BaseModuleCommon (owner, address1, address2, address3, proxyTest) {
       // Assert
       (await this.cmtat.terms()).should.equal('https://cmta.ch')
     })
+    it('testAdminCanUpdateInformation', async function () {
+      // Arrange - Assert
+      (await this.cmtat.information()).should.equal('CMTAT_info')
+      // Act
+      await this.cmtat.setInformation('new info available', { from: owner });
+      // Assert
+      (await this.cmtat.information()).should.equal('new info available')
+    })
+    it('testCannotNonAdminUpdateInformation', async function () {
+      // Arrange - Assert
+      (await this.cmtat.information()).should.equal('CMTAT_info')
+      // Act
+      await expectRevert(
+        this.cmtat.setInformation('new info available', { from: address1 }),
+        'AccessControl: account ' +
+          address1.toLowerCase() +
+          ' is missing role ' +
+          DEFAULT_ADMIN_ROLE
+      );
+      // Assert
+      (await this.cmtat.information()).should.equal('CMTAT_info')
+    })
+    it('testAdminCanUpdateFlag', async function () {
+      // Arrange - Assert
+      (await this.cmtat.flag()).should.be.bignumber.equal(this.flag.toString())
+      // Act
+      await this.cmtat.setFlag(100, { from: owner });
+      // Assert
+      (await this.cmtat.flag()).should.be.bignumber.equal('100')
+    })
+    it('testCannotNonAdminUpdateFlag', async function () {
+      // Arrange - Assert
+      (await this.cmtat.flag()).should.be.bignumber.equal(this.flag.toString())
+      // Act
+      await expectRevert(this.cmtat.setFlag(25, { from: address1 }),
+        'AccessControl: account ' +
+          address1.toLowerCase() +
+          ' is missing role ' +
+          DEFAULT_ADMIN_ROLE
+      );
+      // Assert
+      (await this.cmtat.flag()).should.be.bignumber.equal(this.flag.toString())
+    })
     it('testAdminCanKillContract', async function () {
       // Arrange - Assert
       await web3.eth.getCode(this.cmtat.address).should.not.equal('0x')
