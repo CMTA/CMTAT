@@ -4,7 +4,7 @@ pragma solidity ^0.8.17;
 
 // required OZ imports here
 import "../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
-import "../../modules/wrapper/optional/AuthorizationModule.sol";
+import "../../modules/security/AuthorizationModule.sol";
 import "../../modules/security/OnlyDelegateCallModule.sol";
 
 /**
@@ -46,7 +46,8 @@ abstract contract BaseModuleTest is Initializable, AuthorizationModule, OnlyDele
         string memory tokenId_,
         string memory terms_,
         string memory information_,
-        uint256 flag_
+        uint256 flag_,
+        address admin
     ) internal onlyInitializing {
          /* OpenZeppelin */
         __Context_init_unchained();
@@ -56,7 +57,7 @@ abstract contract BaseModuleTest is Initializable, AuthorizationModule, OnlyDele
         __AccessControl_init_unchained();
 
          /* Wrapper */
-        __AuthorizationModule_init_unchained();
+        __AuthorizationModule_init_unchained(admin);
         
         /* own function */
         __Base_init_unchained(tokenId_, terms_, information_, flag_);

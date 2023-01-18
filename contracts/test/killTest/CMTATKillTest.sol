@@ -15,7 +15,7 @@ import "../../modules/wrapper/mandatory/PauseModule.sol";
 import "../../modules/wrapper/mandatory/SnapshotModule.sol";
 import "../../modules/wrapper/optional/ValidationModule.sol";
 import "../../modules/wrapper/optional/MetaTxModule.sol";
-import "../../modules/wrapper/optional/AuthorizationModule.sol";
+import "../../modules/security/AuthorizationModule.sol";
 import "../../modules/security/OnlyDelegateCallModule.sol";
 import "../../interfaces/IRuleEngine.sol";
 
@@ -37,10 +37,8 @@ contract CMTAT_KILL_TEST is
     ERC20BaseModule
 {
 
-//******* Code from CMTAT, not modified*******/
-
- /// @custom:oz-upgrades-unsafe-allow constructor
-    constructor(address forwarder, bool deployedWithProxy_, address owner, 
+    /// @custom:oz-upgrades-unsafe-allow constructor
+    constructor(address forwarder, bool deployedWithProxy_, address admin, 
     string memory name, string memory symbol, string memory tokenId, 
     string memory terms,
     IRuleEngine ruleEngine,
@@ -50,7 +48,7 @@ contract CMTAT_KILL_TEST is
          if(!deployedWithProxy_){
             // Initialize the contract to avoid front-running
             // Warning : do not initialize the proxy
-            initialize(deployedWithProxy_, owner, name, symbol,tokenId, terms, ruleEngine, information, flag);
+            initialize(deployedWithProxy_, admin, name, symbol,tokenId, terms, ruleEngine, information, flag);
          }else{
             // Initialize the variable for the implementation
             deployedWithProxy = true;
@@ -61,7 +59,7 @@ contract CMTAT_KILL_TEST is
 
     function initialize(
         bool deployedWithProxyIrrevocable_,
-        address owner,
+        address admin,
         string memory nameIrrevocable,
         string memory symbolIrrevocable,
         string memory tokenId,
@@ -70,7 +68,7 @@ contract CMTAT_KILL_TEST is
         string memory information,
         uint256 flag
     ) public initializer {
-        __CMTAT_init(deployedWithProxyIrrevocable_, owner, nameIrrevocable, symbolIrrevocable, tokenId, terms, ruleEngine, information, flag);
+        __CMTAT_init(deployedWithProxyIrrevocable_, admin, nameIrrevocable, symbolIrrevocable, tokenId, terms, ruleEngine, information, flag);
     }
 
     /**
@@ -81,7 +79,7 @@ contract CMTAT_KILL_TEST is
      */
     function __CMTAT_init(
         bool deployedWithProxyIrrevocable_,
-        address owner,
+        address admin,
         string memory nameIrrevocable,
         string memory symbolIrrevocable,
         string memory tokenId,
@@ -107,7 +105,7 @@ contract CMTAT_KILL_TEST is
         
         /* Wrapper */
         // AuthorizationModule_init_unchained is called firstly due to inheritance
-        __AuthorizationModule_init_unchained();
+        __AuthorizationModule_init_unchained(admin);
         __BurnModule_init_unchained();
         __MintModule_init_unchained();
         // EnforcementModule_init_unchained is called before ValidationModule_init_unchained due to inheritance
@@ -122,18 +120,12 @@ contract CMTAT_KILL_TEST is
         __Base_init_unchained(tokenId, terms, information, flag);
 
          /* own function */
-        __CMTAT_init_unchained(deployedWithProxyIrrevocable_, owner);
+        __CMTAT_init_unchained(deployedWithProxyIrrevocable_);
     }
 
 
-    function __CMTAT_init_unchained(bool deployedWithProxyIrrevocable_, address owner) internal onlyInitializing {
+    function __CMTAT_init_unchained(bool deployedWithProxyIrrevocable_) internal onlyInitializing {
         deployedWithProxy = deployedWithProxyIrrevocable_;
-        _grantRole(DEFAULT_ADMIN_ROLE, owner);
-        _grantRole(ENFORCER_ROLE, owner);
-        _grantRole(MINTER_ROLE, owner);
-        _grantRole(BURNER_ROLE, owner);
-        _grantRole(PAUSER_ROLE, owner);
-        _grantRole(SNAPSHOOTER_ROLE, owner);
     }
 
     function decimals()

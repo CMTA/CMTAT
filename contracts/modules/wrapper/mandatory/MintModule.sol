@@ -4,14 +4,12 @@ pragma solidity ^0.8.17;
 
 import "../../../../openzeppelin-contracts-upgradeable/contracts/token/ERC20/ERC20Upgradeable.sol";
 import "../../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
-import "../optional/AuthorizationModule.sol";
+import "../../security/AuthorizationModule.sol";
 
 abstract contract MintModule is ERC20Upgradeable, AuthorizationModule {
-    bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
-
     event Mint(address indexed beneficiary, uint256 amount);
 
-    function __MintModule_init(string memory name_, string memory symbol_) internal onlyInitializing {
+    function __MintModule_init(string memory name_, string memory symbol_, address admin) internal onlyInitializing {
         /* OpenZeppelin */
         __Context_init_unchained();
         __ERC20_init_unchained(name_, symbol_);
@@ -21,7 +19,7 @@ abstract contract MintModule is ERC20Upgradeable, AuthorizationModule {
         __AccessControl_init_unchained();
 
         /* Wrapper */
-        __AuthorizationModule_init_unchained();
+        __AuthorizationModule_init_unchained(admin);
 
         /* own function */
         __MintModule_init_unchained();
