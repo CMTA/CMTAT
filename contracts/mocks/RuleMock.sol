@@ -3,13 +3,9 @@
 pragma solidity ^0.8.17;
 
 import "../interfaces/IRule.sol";
+import "./CodeList.sol";
 
-
-contract RuleMock is IRule {
-    uint8 constant AMOUNT_TOO_HIGH = 10;
-    string constant TEXT_AMOUNT_TOO_HIGH = "Amount too high";
-    string constant TEXT_CODE_NOT_FOUND = "Code not found";
-
+contract RuleMock is IRule, CodeList {
     function validateTransfer(
         address _from,
         address _to,
@@ -18,12 +14,15 @@ contract RuleMock is IRule {
         return detectTransferRestriction(_from, _to, _amount) == 0;
     }
 
+    /**
+    @dev 20 the limit of the maximum amount
+    */
     function detectTransferRestriction(
         address, /* _from */
         address, /* _to */
         uint256 _amount
     ) public pure override returns (uint8) {
-        return _amount < 20 ? 0 : AMOUNT_TOO_HIGH;
+        return _amount < 20 ? NO_ERROR : AMOUNT_TOO_HIGH;
     }
 
     function canReturnTransferRestrictionCode(uint8 _restrictionCode)

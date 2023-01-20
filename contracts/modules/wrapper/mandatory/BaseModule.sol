@@ -4,18 +4,22 @@ pragma solidity ^0.8.17;
 
 // required OZ imports here
 import "../../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
-import "../optional/AuthorizationModule.sol";
+import "../../security/AuthorizationModule.sol";
 import "../../../modules/security/OnlyDelegateCallModule.sol";
 
 abstract contract BaseModule is AuthorizationModule, OnlyDelegateCallModule {
     bool internal deployedWithProxy;
     /* Events */
-    event TermSet(string indexed newTerm);
-    event TokenIdSet(string indexed newTokenId);
+    event TermSet(string indexed newTermIndexed, string newTerm);
+    event TokenIdSet(string indexed newTokenIdIndexed, string newTokenId);
+    event InformationSet(string indexed newInformationIndexed, string newInformation);
+    event FlagSet(uint256 indexed newFlag);
 
     /* Variables */
     string public tokenId;
     string public terms;
+    string public information;
+    uint256 public flag;
 
     /* Initializers */
     /**
@@ -26,7 +30,10 @@ abstract contract BaseModule is AuthorizationModule, OnlyDelegateCallModule {
      */
     function __Base_init(
         string memory tokenId_,
-        string memory terms_
+        string memory terms_,
+        string memory information_,
+        uint256 flag_,
+        address admin
     ) internal onlyInitializing {
          /* OpenZeppelin */
         __Context_init_unchained();
@@ -35,19 +42,24 @@ abstract contract BaseModule is AuthorizationModule, OnlyDelegateCallModule {
         // AuthorizationModule inherits from AccessControlUpgradeable
         __AccessControl_init_unchained();
 
-         /* Wrapper */
-        __AuthorizationModule_init_unchained();
+        /* CMTAT modules */
+        // Security
+        __AuthorizationModule_init_unchained(admin);
         
-        /* own function */
-        __Base_init_unchained(tokenId_, terms_);
+        // own function
+        __Base_init_unchained(tokenId_, terms_, information_, flag_);
     }
 
     function __Base_init_unchained(
         string memory tokenId_,
-        string memory terms_
+        string memory terms_,
+        string memory information_,
+        uint256 flag_
     ) internal onlyInitializing {
         tokenId = tokenId_;
         terms = terms_;
+        information = information_;
+        flag = flag_;
     }
 
     /* Methods */
@@ -56,7 +68,7 @@ abstract contract BaseModule is AuthorizationModule, OnlyDelegateCallModule {
         onlyRole(DEFAULT_ADMIN_ROLE)
     {
         tokenId = tokenId_;
-        emit TokenIdSet(tokenId_);
+        emit TokenIdSet(tokenId_, tokenId_);
     }
 
     function setTerms(string memory terms_)
@@ -64,7 +76,23 @@ abstract contract BaseModule is AuthorizationModule, OnlyDelegateCallModule {
         onlyRole(DEFAULT_ADMIN_ROLE)
     {
         terms = terms_;
-        emit TermSet(terms_);
+        emit TermSet(terms_, terms_);
+    }
+
+    function setInformation(string memory information_)
+        public
+        onlyRole(DEFAULT_ADMIN_ROLE)
+    {
+        information = information_;
+        emit InformationSet(information_, information_);
+    }
+
+    function setFlag(uint256 flag_)
+        public
+        onlyRole(DEFAULT_ADMIN_ROLE)
+    {
+        flag = flag_;
+        emit FlagSet(flag_);
     }
 
     /// @custom:oz-upgrades-unsafe-allow selfdestruct

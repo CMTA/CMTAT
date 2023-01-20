@@ -4,7 +4,7 @@ pragma solidity ^0.8.17;
 
 import "../../../../openzeppelin-contracts-upgradeable/contracts/security/PausableUpgradeable.sol";
 import "../../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
-import "../optional/AuthorizationModule.sol";
+import "../../security/AuthorizationModule.sol";
 
 /**
  * @dev ERC20 token with pausable token transfers, minting and burning.
@@ -14,11 +14,10 @@ import "../optional/AuthorizationModule.sol";
  * event of a large bug.
  */
 abstract contract PauseModule is PausableUpgradeable, AuthorizationModule {
-    bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     string internal constant TEXT_TRANSFER_REJECTED_PAUSED =
         "All transfers paused";
 
-    function __PauseModule_init() internal onlyInitializing {
+    function __PauseModule_init(address admin) internal onlyInitializing {
         /* OpenZeppelin */
         __Context_init_unchained();
         __Pausable_init_unchained();
@@ -27,10 +26,11 @@ abstract contract PauseModule is PausableUpgradeable, AuthorizationModule {
         // AuthorizationModule inherits from AccessControlUpgradeable
         __AccessControl_init_unchained();
 
-        /* Wrapper */
-        __AuthorizationModule_init_unchained();
+        /* CMTAT modules */
+        // Security
+        __AuthorizationModule_init_unchained(admin);
 
-        /* own function */
+        // own function
         __PauseModule_init_unchained();
     }
 
