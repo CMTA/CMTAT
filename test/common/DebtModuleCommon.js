@@ -285,6 +285,16 @@ function BaseModuleCommon (owner, attacker) {
           DEBT_ROLE)
   })
 
+  it('testCannotNonAdminSetBusinessDayConvention', async function () {
+    // Act
+    await expectRevert(
+      this.cmtat.setBusinessDayConvention('Test', { from: attacker }),
+      'AccessControl: account ' +
+        attacker.toLowerCase() +
+          ' is missing role ' +
+          DEBT_ROLE)
+  })
+
   it('testCannotNonAdminSetPublicHolidaysCalendar', async function () {
     // Act
     await expectRevert(
