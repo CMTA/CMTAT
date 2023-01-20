@@ -18,6 +18,8 @@ abstract contract AuthorizationModule is AccessControlUpgradeable {
     bytes32 public constant SNAPSHOOTER_ROLE = keccak256("SNAPSHOOTER_ROLE");
     // DebtModule
     bytes32 public constant DEBT_ROLE = keccak256("DEBT_ROLE");
+    // CreditEvents
+    bytes32 public constant DEBT_CREDIT_EVENT_ROLE = keccak256("DEBT_CREDIT_EVENT_ROLE");
     
     function __AuthorizationModule_init(address admin) internal onlyInitializing {
         /* OpenZeppelin */
@@ -44,6 +46,8 @@ abstract contract AuthorizationModule is AccessControlUpgradeable {
         _grantRole(SNAPSHOOTER_ROLE, admin);
         // DebtModule
         _grantRole(DEBT_ROLE, admin);
+        // CreditEvents 
+        _grantRole(DEBT_CREDIT_EVENT_ROLE, admin);
     }
 
     /*

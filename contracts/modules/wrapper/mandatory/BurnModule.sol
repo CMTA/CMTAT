@@ -18,10 +18,11 @@ abstract contract BurnModule is ERC20Upgradeable, AuthorizationModule {
         // AuthorizationModule inherits from AccessControlUpgradeable
         __AccessControl_init_unchained();
         
-        /* Wrapper */
+        /* CMTAT modules */
+        // Security
         __AuthorizationModule_init_unchained(admin);
 
-        /* own function */
+        // own function 
         __BurnModule_init_unchained();
     }
 
