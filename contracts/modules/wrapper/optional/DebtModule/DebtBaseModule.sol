@@ -22,6 +22,8 @@ abstract contract DebtBaseModule is IDebtGlobal,  Initializable, ContextUpgradea
     event DayCountConventionSet(string indexed newDayCountConventionIndexed, string newDayCountConvention);
     event BusinessDayConventionSet(string indexed newBusinessDayConventionIndexed, string newBusinessDayConvention);
     event PublicHolidaysCalendarSet(string indexed newPublicHolidaysCalendarIndexed, string newPublicHolidaysCalendar);
+    event IssuanceDateSet(string indexed newIssuanceDateIndexed, string newIssuanceDate);
+    event CouponFrequencySet(string indexed newCouponFrequencyIndexed, string newCouponFrequency);
     
     
     function __DebtBaseModule_init(address admin) internal onlyInitializing {
@@ -48,11 +50,11 @@ abstract contract DebtBaseModule is IDebtGlobal,  Initializable, ContextUpgradea
     function setDebt(uint256 interestRate_, uint256 parValue_, string memory guarantor_, string memory bondHolder_, 
     string memory maturityDate_, string memory interestScheduleFormat_, string memory interestPaymentDate_, 
     string memory dayCountConvention_, 
-    string memory businessDayConvention_, string memory publicHolidayCalendar_) public onlyRole(DEBT_ROLE) {
+    string memory businessDayConvention_, string memory publicHolidayCalendar_, string memory issuanceDate_,  string memory couponFrequency_ ) public onlyRole(DEBT_ROLE) {
         // setGuarantor
         debt = 
         (DebtBase(interestRate_, parValue_, guarantor_, bondHolder_, maturityDate_, interestScheduleFormat_, interestPaymentDate_, 
-        dayCountConvention_, businessDayConvention_, publicHolidayCalendar_));
+        dayCountConvention_, businessDayConvention_, publicHolidayCalendar_, issuanceDate_, couponFrequency_));
         emit InterestRateSet(interestRate_);
         emit ParValueSet(parValue_);
         emit GuarantorSet(guarantor_, guarantor_);
@@ -113,6 +115,16 @@ abstract contract DebtBaseModule is IDebtGlobal,  Initializable, ContextUpgradea
     function setPublicHolidaysCalendar(string memory publicHolidayCalendar_) public onlyRole(DEBT_ROLE) {
         debt.publicHolidayCalendar = publicHolidayCalendar_;
         emit PublicHolidaysCalendarSet(publicHolidayCalendar_, publicHolidayCalendar_);
+    }
+
+    function setIssuanceDate(string memory issuanceDate_) public onlyRole(DEBT_ROLE) {
+        debt.issuanceDate = issuanceDate_;
+        emit IssuanceDateSet(issuanceDate_, issuanceDate_);
+    }
+
+    function setCouponFrequency(string memory couponFrequency_) public onlyRole(DEBT_ROLE) {
+        debt.couponFrequency = couponFrequency_;
+        emit CouponFrequencySet(couponFrequency_, couponFrequency_);
     }
 
     uint256[50] private __gap;

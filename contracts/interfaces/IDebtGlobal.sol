@@ -16,6 +16,8 @@ interface IDebtGlobal {
         string dayCountConvention;
         string businessDayConvention;
         string publicHolidayCalendar;
+        string issuanceDate;
+        string couponFrequency;
     }
 
     struct CreditEvents {
