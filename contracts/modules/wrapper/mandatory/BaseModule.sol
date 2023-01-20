@@ -10,9 +10,9 @@ import "../../../modules/security/OnlyDelegateCallModule.sol";
 abstract contract BaseModule is AuthorizationModule, OnlyDelegateCallModule {
     bool internal deployedWithProxy;
     /* Events */
-    event TermSet(string indexed newTerm);
-    event TokenIdSet(string indexed newTokenId);
-    event InformationSet(string indexed newInformation);
+    event TermSet(string indexed newTermIndexed, string newTerm);
+    event TokenIdSet(string indexed newTokenIdIndexed, string newTokenId);
+    event InformationSet(string indexed newInformationIndexed, string newInformation);
     event FlagSet(uint256 indexed newFlag);
 
     /* Variables */
@@ -42,10 +42,11 @@ abstract contract BaseModule is AuthorizationModule, OnlyDelegateCallModule {
         // AuthorizationModule inherits from AccessControlUpgradeable
         __AccessControl_init_unchained();
 
-         /* Wrapper */
+        /* CMTAT modules */
+        // Security
         __AuthorizationModule_init_unchained(admin);
         
-        /* own function */
+        // own function
         __Base_init_unchained(tokenId_, terms_, information_, flag_);
     }
 
@@ -67,7 +68,7 @@ abstract contract BaseModule is AuthorizationModule, OnlyDelegateCallModule {
         onlyRole(DEFAULT_ADMIN_ROLE)
     {
         tokenId = tokenId_;
-        emit TokenIdSet(tokenId_);
+        emit TokenIdSet(tokenId_, tokenId_);
     }
 
     function setTerms(string memory terms_)
@@ -75,7 +76,7 @@ abstract contract BaseModule is AuthorizationModule, OnlyDelegateCallModule {
         onlyRole(DEFAULT_ADMIN_ROLE)
     {
         terms = terms_;
-        emit TermSet(terms_);
+        emit TermSet(terms_, terms_);
     }
 
     function setInformation(string memory information_)
@@ -83,7 +84,7 @@ abstract contract BaseModule is AuthorizationModule, OnlyDelegateCallModule {
         onlyRole(DEFAULT_ADMIN_ROLE)
     {
         information = information_;
-        emit InformationSet(information_);
+        emit InformationSet(information_, information_);
     }
 
     function setFlag(uint256 flag_)

@@ -17,16 +17,20 @@ abstract contract CreditEvents is IDebtGlobal,  Initializable, ContextUpgradeabl
     event FlagRedeemedSet(bool indexed newFlagRedeemed);
     event RatingSet(string indexed newRatingIndexed, string newRating);
     
-    function __CreditEvents_init() internal onlyInitializing {
+    function __CreditEvents_init(address admin) internal onlyInitializing {
         /* OpenZeppelin */
         __Context_init_unchained();
 
-         // AccessControlUpgradeable inherits from ERC165Upgradeable
+        // AccessControlUpgradeable inherits from ERC165Upgradeable
         __ERC165_init_unchained();
         // AuthorizationModule inherits from AccessControlUpgradeable
         __AccessControl_init_unchained();
 
-        /* own function */
+        /* CMTAT modules */
+        // Security
+        __AuthorizationModule_init_unchained(admin);
+
+        // own function
         __CreditEvents_init_unchained();
     }
 
@@ -35,7 +39,6 @@ abstract contract CreditEvents is IDebtGlobal,  Initializable, ContextUpgradeabl
     }
 
     function setCreditEvents(bool flagDefault_, bool flagRedeemed_, string memory rating_) public onlyRole(DEBT_CREDIT_EVENT_ROLE) {
-        // setGuarantor
         creditEvents = 
         (CreditEvents(flagDefault_, flagRedeemed_, rating_));
         emit FlagDefaultSet(flagDefault_);

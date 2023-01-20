@@ -26,13 +26,14 @@ abstract contract EnforcementModule is EnforcementModuleInternal,
         // AuthorizationModule inherits from AccessControlUpgradeable
         __AccessControl_init_unchained();
         
-        /* Internal */
+        /* CMTAT modules */
+        // Internal
         __Enforcement_init_unchained();
         
-        /* Wrapper */
+        // Security
         __AuthorizationModule_init_unchained(admin);
 
-        /* own function */
+        // own function 
         __EnforcementModule_init_unchained();
     }
 

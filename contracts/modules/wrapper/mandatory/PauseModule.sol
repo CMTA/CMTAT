@@ -26,10 +26,11 @@ abstract contract PauseModule is PausableUpgradeable, AuthorizationModule {
         // AuthorizationModule inherits from AccessControlUpgradeable
         __AccessControl_init_unchained();
 
-        /* Wrapper */
+        /* CMTAT modules */
+        // Security
         __AuthorizationModule_init_unchained(admin);
 
-        /* own function */
+        // own function
         __PauseModule_init_unchained();
     }
 

@@ -25,15 +25,18 @@ abstract contract ValidationModule is ValidationModuleInternal, PauseModule, Enf
         __AccessControl_init_unchained();
         __Pausable_init_unchained();
         
-        /* Internal */
+        /* CMTAT modules */
+        // Internal
         __Validation_init_unchained(ruleEngine_);
 
-        /* Wrapper */
+        // Security
         __AuthorizationModule_init_unchained(admin);
+
+        // Wrapper
         __PauseModule_init_unchained();
         __EnforcementModule_init_unchained();
 
-        /* own function */
+        // own function
         __ValidationModule_init_unchained();
     }
 

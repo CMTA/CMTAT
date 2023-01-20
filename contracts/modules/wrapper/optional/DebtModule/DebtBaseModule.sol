@@ -24,7 +24,7 @@ abstract contract DebtBaseModule is IDebtGlobal,  Initializable, ContextUpgradea
     event PublicHolidaysCalendarSet(string indexed newPublicHolidaysCalendarIndexed, string newPublicHolidaysCalendar);
     
     
-    function __DebtBaseModule_init() internal onlyInitializing {
+    function __DebtBaseModule_init(address admin) internal onlyInitializing {
         /* OpenZeppelin */
         __Context_init_unchained();
 
@@ -33,7 +33,11 @@ abstract contract DebtBaseModule is IDebtGlobal,  Initializable, ContextUpgradea
         // AuthorizationModule inherits from AccessControlUpgradeable
         __AccessControl_init_unchained();
 
-        /* own function */
+        /* CMTAT modules */
+        // Security
+        __AuthorizationModule_init_unchained(admin);
+
+        // own function
         __DebtBaseModule_init_unchained();
     }
 
