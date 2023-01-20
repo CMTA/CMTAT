@@ -2,6 +2,31 @@
 
 Please follow <https://changelog.md/> conventions.
 
+## 2.2 - 20230120
+
+This version is not audited
+
+This version contains breaking changes with the version 2.1.
+
+- Add the module Debt ([pull/118](https://github.com/CMTA/CMTAT/pull/118), [pull/141](https://github.com/CMTA/CMTAT/pull/141 ) ) 
+- Add the module CreditEvents ([pull/135](https://github.com/CMTA/CMTAT/pull/135))
+- SnapshotModule: use a sorted array instead of an unsorted array as suggested in the audit report ([pull/123](https://github.com/CMTA/CMTAT/pull/123))
+- baseModule: add field information & flag ([pull/134](https://github.com/CMTA/CMTAT/pull/134))
+- Access Control ([pull/130](https://github.com/CMTA/CMTAT/pull/130)):
+  - Move `AuthorizationModule` from wrapper/optional to security
+  - Move the different calls  of `grantRole`inside of the function  `AuthorizationModule_init_unchained`
+  - Add a function `transferAdminship` in AuthorizationModule
+
+- Improve and update tests of the different modules
+
+This version also includes improvements suggested by the audit report, addressing the following findings:
+
+- SnapshotModule / CVF-3, CVF-8, CVF-13, CVF-17: [pull/123](https://github.com/CMTA/CMTAT/pull/123)
+- CVF-21: change the type of the Event `RuleEngineSet` to `IRuleEngine`
+- CVF-28: call to the `Validation_init_unchained` function in `__CMTAT_init`
+- CVF-54: add the reason parameter in events `Freeze` and `Unfreeze`
+- CVF-24, CVF-25, CVF-26: no change in the code, but a comment was added to explain the requirement.
+
 ## 2.1 - 20221216
 
 This version is not audited

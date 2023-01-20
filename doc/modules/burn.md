@@ -9,19 +9,19 @@ This section describes the Ethereum API of Burn Module.
 
 ### Functions
 
-#### `burnFrom(address,uint)`
+#### `forceBurn(address,uint)`
 
 ##### Signature:
 
 ```solidity
-    function burnFrom (address account, uint amount)
-    public
+function forceBurn(address account, uint256 amount)
+        public
+        onlyRole(BURNER_ROLE)
 ```
 
 ##### Description:
 
 Redeem the given `amount` of tokens from the given `account`.
-The owner should `approve` the redemption in advance in the same way as `transferFrom` calls are approved.
 Only authorized users are allowed to call this function.
 
 ### Events

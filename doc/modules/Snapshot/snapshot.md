@@ -1,13 +1,12 @@
-# Snapshot Module
-
-This document defines the Snapshot Module for the CMTA Token specification.
-
-
-## API for Ethereum
+# Snapshot Module - API for Ethereum
 
 This section describes the Ethereum API of the Snapshot Module.
 
-### Functions
+[TOC]
+
+## Functions
+
+### Setter
 
 #### `scheduleSnapshot(uint)`
 
@@ -15,15 +14,31 @@ This section describes the Ethereum API of the Snapshot Module.
 
 ```solidity
     function scheduleSnapshot (uint time)
-    public returns (uint)
 ```
 
 ##### Description:
 
 Schedule a snapshot at the given `time` specified as a number of seconds since epoch.
-The `time` cannot be before the time of the latest scheduled, but not yet created snapshot.
-The function returns the `time` (as an ID) at which the new snapshot is scheduled.
+
+Time has to be greater that the current time and  the latest scheduled snapshot. There have to be no other already created snapshots at this time.
 Only authorized users are allowed to call this function.
+
+#### `scheduleSnapshotNotOptimized(uint)`
+
+##### Signature:
+
+```solidity
+    function scheduleSnapshotNotOptimized (uint time)
+```
+
+##### Description:
+
+Schedule a snapshot at the given `time` specified as a number of seconds since epoch. 
+
+Time has to be greater that the current time. There have to be no other already created snapshots at this time.
+Only authorized users are allowed to call this function.
+
+This function is not optimized because it moves all snapshots situated before it one position to the right.
 
 #### `rescheduleSnapshot(uint,uint)`
 
@@ -31,31 +46,50 @@ Only authorized users are allowed to call this function.
 
 ```solidity
     function rescheduleSnapshot (uint oldTime, uint newTime)
-    public returns (uint)
 ```
 
-#### Description:
+##### Description:
 
 Reschedule the scheduled, but not yet created snapshot with the given `oldTime` to be created at the given `newTime` specified as a number of seconds since epoch.
-The `newTime` cannot be before the time of the previous scheduled, but not yet created snapshot, or after the time fo the next scheduled snapshot.
+The `newTime` cannot be before the time of the previous scheduled, but not yet created snapshot, or after the time of the next scheduled snapshot.
 The function returns the original `time` the snapshot was scheduled at.
 Only authorized users are allowed to call this function.
 
-#### `unscheduleSnapshot(uint)`
+#### `unscheduleLastSnapshot(uint)`
 
 ##### Signature:
 
 ```solidity
-    function unscheduleSnapshot (uint time)
-    public returns (uint)
+function unscheduleLastSnapshot(uint256 time)
+        public
+        onlyRole(SNAPSHOOTER_ROLE)
 ```
 
 ##### Description:
 
 Cancel creation of the scheduled, but not yet created snapshot with the given `time`.
 There should not be any other snapshots scheduled after this one.
-The function returns the original `time` the snapshot was scheduled at.
 Only authorized users are allowed to call this function.
+
+#### `unscheduleSnapshotNotOptimized(uint)`
+
+##### Signature:
+
+```solidity
+function unscheduleSnapshotNotOptimized(uint256 time)
+        public
+        onlyRole(SNAPSHOOTER_ROLE)
+```
+
+##### Description:
+
+Cancel creation of the scheduled, but not yet created snapshot with the given `time`.
+
+This function is not optimized because it moves all snapshots situated after it one position to the left
+
+Only authorized users are allowed to call this function.
+
+### Getter
 
 #### `snapshotTotalSupply(uint)`
 
@@ -83,7 +117,7 @@ Return the total number of token in circulation at the time when the snapshot wi
 
 Return the number of tokens owned by the given `owner` at the time when the snapshot with the given `time` was created.
 
-### Events
+## Events
 
 #### `SnapshotSchedule(uint,uint)`
 

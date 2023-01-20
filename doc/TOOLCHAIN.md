@@ -90,10 +90,93 @@ Warning:
 - Submodules are not automatically updated when the host repository is updated.  
 - Only update the module to a specific version, not an intermediary commit.
 
-## UML
+
+
+## Generate documentation
 
 **[sol2uml](https://github.com/naddison36/sol2uml)** 
 Generate UML for smart contracts
 `
 sol2uml ./contracts
 `
+
+
+
+### Surya
+
+Link: https://github.com/ConsenSys/surya
+
+### Graph (CFG)
+
+- Full
+
+```bash
+npx surya graph -i contracts/**/*.sol | dot -Tpng > surya_graph_full.png
+```
+
+- Only the CMTAT
+
+```bash
+npx surya graph contracts/CMTAT.sol | dot -Tpng > surya_graph_cmtat.png
+```
+
+
+
+#### Inheritance
+
+- Full 
+
+```bash
+npx surya inheritance contracts/CMTAT.sol -i | dot -Tpng > surya_inheritance_all_dot.png
+```
+
+- Only the CMTAT
+
+```bash
+npx surya inheritance contracts/CMTAT.sol | dot -Tpng > surya_inheritance_cmtat_dot.png
+```
+
+#### Generate report
+
+- Full
+
+```bash
+npx surya mdreport -i surya_report.md contracts/CMTAT.sol  
+```
+
+In the report, the path for the different files are indicated in aboslute. You have to remove the part which correspond to your local filesystem.
+
+- Only the CMTAT
+
+```bash
+npx surya mdreport surya_report.md contracts/CMTAT.sol  
+```
+
+
+
+### Solgraph
+
+Link : https://github.com/raineorshine/solgraph
+
+Generates a [DOT](https://en.wikipedia.org/wiki/DOT_(graph_description_language)) graph that visualizes function control flow of a Solidity contract and highlights potential security vulnerabilities.
+
+Solpgraph is less good that slither because it does not resolve automatically the inheritance
+
+```bash
+npx solgraph contracts/CMTAT.sol > solgraph_CMTAT.dot
+```
+
+
+
+```bash
+dot -Tpng solgraph_CMTAT.dot -o solgraph_dot.png
+```
+
+
+
+
+
+
+
+
+
