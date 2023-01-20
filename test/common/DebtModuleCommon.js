@@ -65,6 +65,7 @@ function BaseModuleCommon (owner, attacker) {
       // Assert
       (await this.cmtat.debt()).guarantor.should.equal('Test')
       expectEvent.inLogs(this.logs, 'GuarantorSet', {
+        newGuarantorIndexed: web3.utils.sha3('Test'),
         newGuarantor: 'Test'
       })
     })
@@ -77,6 +78,7 @@ function BaseModuleCommon (owner, attacker) {
       // Assert
       (await this.cmtat.debt()).bondHolder.should.equal('Test')
       expectEvent.inLogs(this.logs, 'BondHolderSet', {
+        newBondHolderIndexed: web3.utils.sha3('Test'),
         newBondHolder: 'Test'
       })
     })
@@ -89,6 +91,7 @@ function BaseModuleCommon (owner, attacker) {
       // Assert
       (await this.cmtat.debt()).maturityDate.should.equal('Test')
       expectEvent.inLogs(this.logs, 'MaturityDateSet', {
+        newMaturityDateIndexed: web3.utils.sha3('Test'),
         newMaturityDate: 'Test'
       })
     })
@@ -101,6 +104,7 @@ function BaseModuleCommon (owner, attacker) {
       // Assert
       (await this.cmtat.debt()).interestScheduleFormat.should.equal('Test')
       expectEvent.inLogs(this.logs, 'InterestScheduleFormatSet', {
+        newInterestScheduleFormatIndexed: web3.utils.sha3('Test'),
         newInterestScheduleFormat: 'Test'
       })
     })
@@ -113,6 +117,7 @@ function BaseModuleCommon (owner, attacker) {
       // Assert
       (await this.cmtat.debt()).interestPaymentDate.should.equal('Test')
       expectEvent.inLogs(this.logs, 'InterestPaymentDateSet', {
+        newInterestPaymentDateIndexed: web3.utils.sha3('Test'),
         newInterestPaymentDate: 'Test'
       })
     })
@@ -125,6 +130,7 @@ function BaseModuleCommon (owner, attacker) {
       // Assert
       (await this.cmtat.debt()).dayCountConvention.should.equal('Test')
       expectEvent.inLogs(this.logs, 'DayCountConventionSet', {
+        newDayCountConventionIndexed: web3.utils.sha3('Test'),
         newDayCountConvention: 'Test'
       })
     })
@@ -137,6 +143,7 @@ function BaseModuleCommon (owner, attacker) {
       // Assert
       (await this.cmtat.debt()).businessDayConvention.should.equal('Test')
       expectEvent.inLogs(this.logs, 'BusinessDayConventionSet', {
+        newBusinessDayConventionIndexed: web3.utils.sha3('Test'),
         newBusinessDayConvention: 'Test'
       })
     })
@@ -149,6 +156,7 @@ function BaseModuleCommon (owner, attacker) {
       // Assert
       (await this.cmtat.debt()).publicHolidayCalendar.should.equal('Test')
       expectEvent.inLogs(this.logs, 'PublicHolidaysCalendarSet', {
+        newPublicHolidaysCalendarIndexed: web3.utils.sha3('Test'),
         newPublicHolidaysCalendar: 'Test'
       })
     })

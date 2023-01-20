@@ -14,11 +14,10 @@ import "./modules/wrapper/mandatory/SnapshotModule.sol";
 import "./modules/wrapper/mandatory/PauseModule.sol";
 import "./modules/wrapper/optional/ValidationModule.sol";
 import "./modules/wrapper/optional/MetaTxModule.sol";
-import "./modules/wrapper/optional/AuthorizationModule.sol";
 import "./modules/wrapper/optional/DebtModule/DebtBaseModule.sol";
 import "./modules/wrapper/optional/DebtModule/CreditEvents.sol";
-import "./modules/security/OnlyDelegateCallModule.sol";
-//import "./interfaces/IRuleEngine.sol";
+import "./modules/security/AuthorizationModule.sol";
+import "./interfaces/IRuleEngine.sol";
 
 contract CMTAT is
     Initializable,
@@ -30,18 +29,23 @@ contract CMTAT is
     EnforcementModule,
     ValidationModule,
     MetaTxModule,
-    SnasphotModule,
+    SnapshotModule,
     ERC20BaseModule,
     DebtBaseModule,
     CreditEvents
 {
     /// @custom:oz-upgrades-unsafe-allow constructor
-    constructor(address forwarder, bool deployedWithProxy_, address owner, string memory name, string memory symbol, string memory tokenId, string memory terms
-    ) MetaTxModule(forwarder) {
-         if(!deployedWithProxy_){
+    constructor(address forwarder, bool deployedWithProxyIrrevocable_, address admin, 
+    string memory nameIrrevocable, string memory symbolIrrevocable, string memory tokenId, 
+    string memory terms,
+    IRuleEngine ruleEngine,
+    string memory information, 
+    uint256 flag)
+     MetaTxModule(forwarder) {
+         if(!deployedWithProxyIrrevocable_){
             // Initialize the contract to avoid front-running
             // Warning : do not initialize the proxy
-            initialize(deployedWithProxy_, owner, name, symbol,tokenId, terms);
+            initialize(deployedWithProxyIrrevocable_, admin, nameIrrevocable, symbolIrrevocable,tokenId, terms, ruleEngine, information, flag);
          }else{
             // Initialize the variable for the implementation
             deployedWithProxy = true;
@@ -51,14 +55,17 @@ contract CMTAT is
     }
 
     function initialize(
-        bool deployedWithProxy_,
-        address owner,
-        string memory name,
-        string memory symbol,
+        bool deployedWithProxyIrrevocable_,
+        address admin,
+        string memory nameIrrevocable,
+        string memory symbolIrrevocable,
         string memory tokenId,
-        string memory terms
+        string memory terms,
+        IRuleEngine ruleEngine,
+        string memory information,
+        uint256 flag
     ) public initializer {
-        __CMTAT_init(deployedWithProxy_, owner, name, symbol, tokenId, terms);
+        __CMTAT_init(deployedWithProxyIrrevocable_, admin, nameIrrevocable, symbolIrrevocable, tokenId, terms, ruleEngine, information, flag);
     }
 
     /**
@@ -68,17 +75,20 @@ contract CMTAT is
      * See {ERC20-constructor}.
      */
     function __CMTAT_init(
-        bool deployedWithProxy_,
-        address owner,
-        string memory name,
-        string memory symbol,
+        bool deployedWithProxyIrrevocable_,
+        address admin,
+        string memory nameIrrevocable,
+        string memory symbolIrrevocable,
         string memory tokenId,
-        string memory terms
+        string memory terms,
+         IRuleEngine ruleEngine,
+        string memory information,
+        uint256 flag
     ) internal onlyInitializing {
         /* OpenZeppelin library */
         // OZ init_unchained functions are called firstly due to inheritance
         __Context_init_unchained();
-        __ERC20_init_unchained(name, symbol);
+        __ERC20_init_unchained(nameIrrevocable, symbolIrrevocable);
         // AccessControlUpgradeable inherits from ERC165Upgradeable
         __ERC165_init_unchained();
         // AuthorizationModule inherits from AccessControlUpgradeable
@@ -88,12 +98,11 @@ contract CMTAT is
         /* Internal Modules */
         __Enforcement_init_unchained();
         __Snapshot_init_unchained();
-        // we set the RuleEngine by calling the setter
-        // __Validation_init_unchained(IRuleEngine ruleEngine_)
+        __Validation_init_unchained(ruleEngine);
         
         /* Wrapper */
         // AuthorizationModule_init_unchained is called firstly due to inheritance
-        __AuthorizationModule_init_unchained();
+        __AuthorizationModule_init_unchained(admin);
         __BurnModule_init_unchained();
         __MintModule_init_unchained();
         // EnforcementModule_init_unchained is called before ValidationModule_init_unchained due to inheritance
@@ -105,24 +114,16 @@ contract CMTAT is
         __SnasphotModule_init_unchained();
         
         /* Other modules */
-        __Base_init_unchained(tokenId, terms);
         __DebtBaseModule_init_unchained();
         __CreditEvents_init_unchained();
+        __Base_init_unchained(tokenId, terms, information, flag);
 
          /* own function */
-        __CMTAT_init_unchained(deployedWithProxy_, owner);
+        __CMTAT_init_unchained(deployedWithProxyIrrevocable_);
     }
 
-
-    function __CMTAT_init_unchained(bool deployedWithProxy_, address owner) internal onlyInitializing {
-        deployedWithProxy = deployedWithProxy_;
-        _grantRole(DEFAULT_ADMIN_ROLE, owner);
-        _grantRole(ENFORCER_ROLE, owner);
-        _grantRole(MINTER_ROLE, owner);
-        _grantRole(BURNER_ROLE, owner);
-        _grantRole(PAUSER_ROLE, owner);
-        _grantRole(SNAPSHOOTER_ROLE, owner);
-        _grantRole(DEBT_ROLE, owner);
+    function __CMTAT_init_unchained(bool deployedWithProxyIrrevocable_) internal onlyInitializing {
+        deployedWithProxy = deployedWithProxyIrrevocable_;
     }
 
     function decimals()

@@ -4,18 +4,18 @@ pragma solidity ^0.8.17;
 
 import "../../../../../openzeppelin-contracts-upgradeable/contracts/access/AccessControlUpgradeable.sol";
 import "../../../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
-import "../../../../interfaces/IDebt.sol";
-import "../../optional/AuthorizationModule.sol";
+import "../../../../interfaces/IDebtGlobal.sol";
+import "../../../security/AuthorizationModule.sol";
 
 abstract contract CreditEvents is IDebtGlobal,  Initializable, ContextUpgradeable, AuthorizationModule {
-    bytes32 public constant DEBT_CREDIT_EVENT_ROLE = keccak256("DEBT_CREDIT_EVENT_ROLE");
+
 
     CreditEvents public creditEvents;
 
     /* Events */
     event FlagDefaultSet(bool indexed newFlagDefault);
-    event FlagRedeemedSet(bool indexed FlagRedeemed);
-    event RatingSet(uint256 indexed newRating);
+    event FlagRedeemedSet(bool indexed newFlagRedeemed);
+    event RatingSet(string indexed newRatingIndexed, string newRating);
     
     function __CreditEvents_init() internal onlyInitializing {
         /* OpenZeppelin */
@@ -34,13 +34,13 @@ abstract contract CreditEvents is IDebtGlobal,  Initializable, ContextUpgradeabl
         // no variable to initialize
     }
 
-    function setCreditEvent(bool flagDefault_, bool flagRedeemed_, uint256 rating_) public onlyRole("DEBT_CREDIT_EVENT_ROLE") {
+    function setCreditEvents(bool flagDefault_, bool flagRedeemed_, string memory rating_) public onlyRole(DEBT_CREDIT_EVENT_ROLE) {
         // setGuarantor
         creditEvents = 
         (CreditEvents(flagDefault_, flagRedeemed_, rating_));
         emit FlagDefaultSet(flagDefault_);
         emit FlagRedeemedSet(flagRedeemed_ );
-        emit RatingSet(rating_);
+        emit RatingSet(rating_, rating_);
     }
 
 
@@ -56,12 +56,10 @@ abstract contract CreditEvents is IDebtGlobal,  Initializable, ContextUpgradeabl
         emit FlagRedeemedSet(flagRedeemed_ );
     }
 
-    function setRating (uint256 rating_) public onlyRole(DEBT_CREDIT_EVENT_ROLE) {
-        require(rating_  != creditEvents.rating, "Same value");
+    function setRating (string memory rating_) public onlyRole(DEBT_CREDIT_EVENT_ROLE) {
         creditEvents.rating = rating_;
-        emit RatingSet(rating_);
+        emit RatingSet(rating_, rating_);
     }
-
 
     uint256[50] private __gap;
 }

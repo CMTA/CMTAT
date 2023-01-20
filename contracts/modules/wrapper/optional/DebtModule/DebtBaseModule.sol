@@ -4,12 +4,11 @@ pragma solidity ^0.8.17;
 
 import "../../../../../openzeppelin-contracts-upgradeable/contracts/access/AccessControlUpgradeable.sol";
 import "../../../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
-import "../../../../interfaces/IDebt.sol";
-import "../../optional/AuthorizationModule.sol";
+import "../../../../interfaces/IDebtGlobal.sol";
+import "../../../security/AuthorizationModule.sol";
 
-abstract contract DebtBaseModule is IDebtGlobal, Initializable, ContextUpgradeable, AuthorizationModule {
-    bytes32 public constant DEBT_ROLE = keccak256("DEBT_ROLE");
-
+abstract contract DebtBaseModule is IDebtGlobal,  Initializable, ContextUpgradeable, AuthorizationModule {
+    
     DebtBase public debt;
 
     /* Events */

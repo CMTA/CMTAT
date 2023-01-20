@@ -19,14 +19,16 @@
     "console": "truffle console",
     "coverage": "npx solidity-coverage",
     "uml": "npx sol2uml class contracts -c",
+    "size": "npx truffle run contract-size",
     "test:pause": "npx truffle test test/standard/modules/PauseModule.test.js test/proxy/modules/PauseModule.test.js",
     "test:mint": "npx truffle test test/standard/modules/MintModule.test.js test/proxy/modules/MintModule.test.js",
     "test:burn": "npx truffle test test/standard/modules/BurnModule.test.js test/proxy/modules/BurnModule.test.js",
-    "test:validation": "npx truffle test test/standard/modules/ValidationModule.test.js test/proxy/modules/ValidationModule.test.js",
+    "test:validation": "npx truffle test test/standard/modules/ValidationModule/ValidationModule.test.js test/proxy/modules/ValidationModule/ValidationModule.test.js test/standard/modules/ValidationModule/ValidationModuleConstructor.test.js test/proxy/modules/ValidationModule/ValidationModuleConstructor.test.js test/standard/modules/ValidationModule/ValidationModuleSetRuleEngine.test.js test/proxy/modules/ValidationModule/ValidationModuleSetRuleEngine.test.js",
     "test:enforcement": "npx truffle test test/standard/modules/EnforcementModule.test.js test/proxy/modules/EnforcementModule.test.js",
-    "test:authorization": "npx truffle test test/standard/modules/AuthorizationModule.test.js test/proxy/modules/AuthorizationModule.test.js",
+    "test:authorization": "npx truffle test test/standard/modules/AuthorizationModule/AuthorizationModule.test.js test/proxy/modules/AuthorizationModule/AuthorizationModule.test.js test/standard/modules/AuthorizationModule/TransferAdminship.test.js test/proxy/modules/AuthorizationModule/TransferAdminship.test.js",
     "test:base": "npx truffle test test/standard/modules/BaseModule.test.js test/proxy/modules/BaseModule.test.js",
-    "test:debt": "npx truffle test test/standard/modules/DebtModule.test.js test/proxy/modules/DebtModule.test.js"
+    "test:debt": "npx truffle test test/standard/modules/DebtModule.test.js test/proxy/modules/DebtModule.test.js",
+    "test:creditEvents": "npx truffle test test/standard/modules/CreditEventsModule.test.js test/proxy/modules/CreditEventsModule.test.js"
   },
   "repository": {
     "type": "git",
@@ -66,9 +68,10 @@
     "sol2uml": "^2.2.5",
     "solc": "^0.7.6",
     "solidity-coverage": "^0.8.2",
-    "truffle": "^5.5.31",
+    "truffle-contract-size": "^2.0.1",
+    "truffle": "^5.7.1",
     "truffle-flattener": "^1.6.0",
-    "web3": "^1.8.0"
+    "web3": "^1.8.1"
   },
   "dependencies": {
     "@openzeppelin/truffle-upgrades": "^1.17.0",

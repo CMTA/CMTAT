@@ -5,9 +5,9 @@ pragma solidity ^0.8.17;
 import "../interfaces/IRule.sol";
 import "../interfaces/IRuleEngine.sol";
 import "./RuleMock.sol";
+import "./CodeList.sol";
 
-
-contract RuleEngineMock is IRuleEngine {
+contract RuleEngineMock is IRuleEngine, CodeList {
     IRule[] internal _rules;
 
     constructor() {
@@ -35,13 +35,14 @@ contract RuleEngineMock is IRuleEngine {
         address _to,
         uint256 _amount
     ) public view override returns (uint8) {
-        for (uint256 i = 0; i < _rules.length; i++) {
+        uint256 ruleArrayLength =  _rules.length;
+        for (uint256 i = 0; i < ruleArrayLength; ++i) {
             uint8 restriction = _rules[i].detectTransferRestriction(
                 _from,
                 _to,
                 _amount
             );
-            if (restriction > 0) {
+            if (restriction != NO_ERROR) {
                 return restriction;
             }
         }
@@ -56,13 +57,18 @@ contract RuleEngineMock is IRuleEngine {
         return detectTransferRestriction(_from, _to, _amount) == 0;
     }
 
+    /**
+    @dev
+    For all the rules, each restriction code has to be unique.
+    */
     function messageForTransferRestriction(uint8 _restrictionCode)
         public
         view
         override
         returns (string memory)
     {
-        for (uint256 i = 0; i < _rules.length; i++) {
+        uint256 ruleArrayLength = _rules.length;
+        for (uint256 i = 0; i < ruleArrayLength; ++i) {
             if (_rules[i].canReturnTransferRestrictionCode(_restrictionCode)) {
                 return
                     _rules[i].messageForTransferRestriction(_restrictionCode);
