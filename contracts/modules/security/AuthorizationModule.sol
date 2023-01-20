@@ -86,6 +86,18 @@ abstract contract AuthorizationModule is AccessControlUpgradeable {
             grantRole(SNAPSHOOTER_ROLE, newAdmin);
             renounceRole(SNAPSHOOTER_ROLE, sender);
         }
+
+        // DebtModule
+        if(hasRole(DEBT_ROLE, sender)){
+            grantRole(DEBT_ROLE, newAdmin);
+            renounceRole(DEBT_ROLE, sender);
+        }
+
+        // CreditEvents
+        if(hasRole(DEBT_CREDIT_EVENT_ROLE, sender)){
+            grantRole(DEBT_CREDIT_EVENT_ROLE, newAdmin);
+            renounceRole(DEBT_CREDIT_EVENT_ROLE, sender);
+        }
         renounceRole(DEFAULT_ADMIN_ROLE, sender);
     }
 
