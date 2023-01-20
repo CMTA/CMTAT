@@ -211,6 +211,14 @@ function TransferAdminshipCommon (oldAdmin, newAdmin, attacker) {
       (await this.cmtat.hasRole(DEBT_ROLE, oldAdmin)).should.equal(true);
       (await this.cmtat.hasRole(DEBT_CREDIT_EVENT_ROLE, oldAdmin)).should.equal(true)
     })
+
+    it('testCannotTransferAdminshipWithSameAddress', async function () {
+      // Act + Assert
+      await expectRevert(
+        this.cmtat.transferAdminship(oldAdmin, { from: oldAdmin }),
+        'Same address'
+      )
+    })
   })
 }
 module.exports = TransferAdminshipCommon

@@ -60,6 +60,7 @@ abstract contract AuthorizationModule is AccessControlUpgradeable {
     function transferAdminship(address newAdmin) public onlyRole(DEFAULT_ADMIN_ROLE) {
         require(newAdmin != address(0), "Address 0 not allowed");
         address sender = _msgSender();
+        require(sender != newAdmin, "Same address");
         grantRole(DEFAULT_ADMIN_ROLE, newAdmin);
         // EnforcementModule
         if(hasRole(ENFORCER_ROLE, sender)){
