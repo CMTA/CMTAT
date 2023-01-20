@@ -2,6 +2,10 @@
 
 This document defines Authorization Module for the CMTA Token specification.
 
+[TOC]
+
+
+
 ## Rationale
 
 There are many operations that only authorized users are allowed to perform, such as issuing new tokens. Thus we need to manage authorization in a centralized way.
@@ -10,6 +14,8 @@ Authorization Module covers authorization use cases for the CMTA Token specifica
 ## API for Ethereum
 
 ### Functions
+
+Origin: OpenZeppelin
 
 #### `grantRole(bytes32,address)`
 
@@ -28,6 +34,8 @@ Only authorized users are allowed to call this function.
 
 #### `revokeRole(bytes32,address)`
 
+Origin: OpenZeppelin
+
 ##### Signature:
 
 ```solidity
@@ -42,6 +50,8 @@ Only authorized users are allowed to call this function.
 
 #### `hasRole(bytes32,address)`
 
+Origin: OpenZeppelin
+
 ##### Signature:
 
 ```solidity
@@ -52,6 +62,23 @@ Only authorized users are allowed to call this function.
 ##### Description:
 
 Tell, whether the given `account` has the given `role` currently.
+
+#### `hasRole(bytes32,address)`
+
+Origin: OpenZeppelin
+
+##### Signature:
+
+```solidity
+    function hasRole (bytes32 role, address account)
+    public view returns (bool)
+```
+
+##### Description:
+
+Tell, whether the given `account` has the given `role` currently.
+
+
 
 ### Events
 
