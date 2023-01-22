@@ -9,7 +9,11 @@ import "../../security/AuthorizationModule.sol";
 abstract contract MintModule is ERC20Upgradeable, AuthorizationModule {
     event Mint(address indexed beneficiary, uint256 amount);
 
-    function __MintModule_init(string memory name_, string memory symbol_, address admin) internal onlyInitializing {
+    function __MintModule_init(
+        string memory name_,
+        string memory symbol_,
+        address admin
+    ) internal onlyInitializing {
         /* OpenZeppelin */
         __Context_init_unchained();
         __ERC20_init_unchained(name_, symbol_);
@@ -30,7 +34,7 @@ abstract contract MintModule is ERC20Upgradeable, AuthorizationModule {
         // no variable to initialize
     }
 
-     /**
+    /**
      * @dev Creates `amount` new tokens for `to`.
      *
      * See {ERC20-_mint}.

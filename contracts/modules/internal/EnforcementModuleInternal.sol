@@ -18,12 +18,22 @@ abstract contract EnforcementModuleInternal is
     /**
      * @notice Emitted when an address is frozen.
      */
-    event Freeze(address indexed enforcer, address indexed owner, string indexed reasonIndexed, string reason);
+    event Freeze(
+        address indexed enforcer,
+        address indexed owner,
+        string indexed reasonIndexed,
+        string reason
+    );
 
     /**
      * @notice Emitted when an address is unfrozen.
      */
-    event Unfreeze(address indexed enforcer, address indexed owner, string indexed reasonIndexed, string reason);
+    event Unfreeze(
+        address indexed enforcer,
+        address indexed owner,
+        string indexed reasonIndexed,
+        string reason
+    );
 
     mapping(address => bool) private _frozen;
 
@@ -49,10 +59,13 @@ abstract contract EnforcementModuleInternal is
     /**
      * @dev Freezes an address.
      * @param account the account to freeze
-     * @param reason indicate why the account was frozen. 
-     * 
+     * @param reason indicate why the account was frozen.
+     *
      */
-    function _freeze(address account, string memory reason) internal virtual returns (bool) {
+    function _freeze(
+        address account,
+        string memory reason
+    ) internal virtual returns (bool) {
         if (_frozen[account]) return false;
         _frozen[account] = true;
         emit Freeze(_msgSender(), account, reason, reason);
@@ -62,13 +75,16 @@ abstract contract EnforcementModuleInternal is
     /**
      * @dev Unfreezes an address.
      * @param account the account to unfreeze
-     * @param reason indicate why the account was unfrozen. 
+     * @param reason indicate why the account was unfrozen.
      */
-    function _unfreeze(address account, string memory reason) internal virtual returns (bool) {
+    function _unfreeze(
+        address account,
+        string memory reason
+    ) internal virtual returns (bool) {
         if (!_frozen[account]) return false;
         _frozen[account] = false;
         emit Unfreeze(_msgSender(), account, reason, reason);
-        
+
         return true;
     }
 

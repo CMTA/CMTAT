@@ -12,9 +12,10 @@ import "../../internal/EnforcementModuleInternal.sol";
  *
  * Allows the issuer to freeze transfers from a given address
  */
-abstract contract EnforcementModule is EnforcementModuleInternal,
-    AuthorizationModule {
-
+abstract contract EnforcementModule is
+    EnforcementModuleInternal,
+    AuthorizationModule
+{
     string internal constant TEXT_TRANSFER_REJECTED_FROZEN =
         "The address is frozen";
 
@@ -25,15 +26,15 @@ abstract contract EnforcementModule is EnforcementModuleInternal,
         __ERC165_init_unchained();
         // AuthorizationModule inherits from AccessControlUpgradeable
         __AccessControl_init_unchained();
-        
+
         /* CMTAT modules */
         // Internal
         __Enforcement_init_unchained();
-        
+
         // Security
         __AuthorizationModule_init_unchained(admin);
 
-        // own function 
+        // own function
         __EnforcementModule_init_unchained();
     }
 
@@ -44,28 +45,26 @@ abstract contract EnforcementModule is EnforcementModuleInternal,
     /**
      * @notice Freezes an address.
      * @param account the account to freeze
-     * @param reason indicate why the account was frozen. 
+     * @param reason indicate why the account was frozen.
      */
-    function freeze(address account, string memory reason)
-        public
-        onlyRole(ENFORCER_ROLE)
-        returns (bool)
-    {
+    function freeze(
+        address account,
+        string memory reason
+    ) public onlyRole(ENFORCER_ROLE) returns (bool) {
         return _freeze(account, reason);
     }
 
     /**
      * @notice Unfreezes an address.
      * @param account the account to unfreeze
-     * @param reason indicate why the account was unfrozen. 
-     *  
+     * @param reason indicate why the account was unfrozen.
+     *
      *
      */
-    function unfreeze(address account, string memory reason)
-        public
-        onlyRole(ENFORCER_ROLE)
-        returns (bool)
-    {
+    function unfreeze(
+        address account,
+        string memory reason
+    ) public onlyRole(ENFORCER_ROLE) returns (bool) {
         return _unfreeze(account, reason);
     }
 

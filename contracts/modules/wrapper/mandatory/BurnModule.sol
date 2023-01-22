@@ -9,7 +9,11 @@ import "../../security/AuthorizationModule.sol";
 abstract contract BurnModule is ERC20Upgradeable, AuthorizationModule {
     event Burn(address indexed owner, uint256 amount);
 
-    function __BurnModule_init(string memory name_, string memory symbol_, address admin) internal onlyInitializing {
+    function __BurnModule_init(
+        string memory name_,
+        string memory symbol_,
+        address admin
+    ) internal onlyInitializing {
         /* OpenZeppelin */
         __Context_init_unchained();
         __ERC20_init_unchained(name_, symbol_);
@@ -17,12 +21,12 @@ abstract contract BurnModule is ERC20Upgradeable, AuthorizationModule {
         __ERC165_init_unchained();
         // AuthorizationModule inherits from AccessControlUpgradeable
         __AccessControl_init_unchained();
-        
+
         /* CMTAT modules */
         // Security
         __AuthorizationModule_init_unchained(admin);
 
-        // own function 
+        // own function
         __BurnModule_init_unchained();
     }
 
@@ -35,10 +39,10 @@ abstract contract BurnModule is ERC20Upgradeable, AuthorizationModule {
      *
      * See {ERC20-_burn}
      */
-    function forceBurn(address account, uint256 amount)
-        public
-        onlyRole(BURNER_ROLE)
-    {
+    function forceBurn(
+        address account,
+        uint256 amount
+    ) public onlyRole(BURNER_ROLE) {
         _burn(account, amount);
         emit Burn(account, amount);
     }

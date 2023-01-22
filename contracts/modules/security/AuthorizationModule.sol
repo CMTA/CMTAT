@@ -19,21 +19,38 @@ abstract contract AuthorizationModule is AccessControlUpgradeable {
     // DebtModule
     bytes32 public constant DEBT_ROLE = keccak256("DEBT_ROLE");
     // CreditEvents
-    bytes32 public constant DEBT_CREDIT_EVENT_ROLE = keccak256("DEBT_CREDIT_EVENT_ROLE");
-    
-    function __AuthorizationModule_init(address admin) internal onlyInitializing {
+    bytes32 public constant DEBT_CREDIT_EVENT_ROLE =
+        keccak256("DEBT_CREDIT_EVENT_ROLE");
+
+    function __AuthorizationModule_init(
+        address admin
+    ) internal onlyInitializing {
         /* OpenZeppelin */
         __Context_init_unchained();
         // AccessControlUpgradeable inherits from ERC165Upgradeable
         __ERC165_init_unchained();
         __AccessControl_init_unchained();
 
-       /* own function */
+        /* own function */
         __AuthorizationModule_init_unchained(admin);
     }
 
-    function __AuthorizationModule_init_unchained(address admin) internal onlyInitializing {
+    /**
+     * @dev Grants the different roles to the
+     * account that deploys the contract.
+     *
+     */
+    function __AuthorizationModule_init_unchained(
+        address admin
+    ) internal onlyInitializing {
         _grantRole(DEFAULT_ADMIN_ROLE, admin);
+        grantOtherRoletoAdmin(admin);
+    }
+
+    /**
+    @dev you can override this function if you do not want automatically grand the admin with the different roles
+     */
+    function grantOtherRoletoAdmin(address admin) internal virtual {
         // EnforcementModule
         _grantRole(ENFORCER_ROLE, admin);
         // MintModule
@@ -46,7 +63,7 @@ abstract contract AuthorizationModule is AccessControlUpgradeable {
         _grantRole(SNAPSHOOTER_ROLE, admin);
         // DebtModule
         _grantRole(DEBT_ROLE, admin);
-        // CreditEvents 
+        // CreditEvents
         _grantRole(DEBT_CREDIT_EVENT_ROLE, admin);
     }
 
@@ -57,45 +74,47 @@ abstract contract AuthorizationModule is AccessControlUpgradeable {
     By transfering his rights, the former admin loses them all.
     @param newAdmin address of the new admin
     */
-    function transferAdminship(address newAdmin) public onlyRole(DEFAULT_ADMIN_ROLE) {
+    function transferAdminship(
+        address newAdmin
+    ) public onlyRole(DEFAULT_ADMIN_ROLE) {
         require(newAdmin != address(0), "Address 0 not allowed");
         address sender = _msgSender();
         require(sender != newAdmin, "Same address");
         grantRole(DEFAULT_ADMIN_ROLE, newAdmin);
         // EnforcementModule
-        if(hasRole(ENFORCER_ROLE, sender)){
+        if (hasRole(ENFORCER_ROLE, sender)) {
             grantRole(ENFORCER_ROLE, newAdmin);
             renounceRole(ENFORCER_ROLE, sender);
         }
         // MintModule
-        if(hasRole(MINTER_ROLE, sender)){
+        if (hasRole(MINTER_ROLE, sender)) {
             grantRole(MINTER_ROLE, newAdmin);
             renounceRole(MINTER_ROLE, sender);
         }
         // BurnModule
-        if(hasRole(BURNER_ROLE, sender)){
+        if (hasRole(BURNER_ROLE, sender)) {
             grantRole(BURNER_ROLE, newAdmin);
             renounceRole(BURNER_ROLE, sender);
         }
         // PauseModule
-        if(hasRole(PAUSER_ROLE, sender)){
+        if (hasRole(PAUSER_ROLE, sender)) {
             grantRole(PAUSER_ROLE, newAdmin);
             renounceRole(PAUSER_ROLE, sender);
         }
         // SnapshotModule
-        if(hasRole(SNAPSHOOTER_ROLE, sender)){
+        if (hasRole(SNAPSHOOTER_ROLE, sender)) {
             grantRole(SNAPSHOOTER_ROLE, newAdmin);
             renounceRole(SNAPSHOOTER_ROLE, sender);
         }
 
         // DebtModule
-        if(hasRole(DEBT_ROLE, sender)){
+        if (hasRole(DEBT_ROLE, sender)) {
             grantRole(DEBT_ROLE, newAdmin);
             renounceRole(DEBT_ROLE, sender);
         }
 
         // CreditEvents
-        if(hasRole(DEBT_CREDIT_EVENT_ROLE, sender)){
+        if (hasRole(DEBT_CREDIT_EVENT_ROLE, sender)) {
             grantRole(DEBT_CREDIT_EVENT_ROLE, newAdmin);
             renounceRole(DEBT_CREDIT_EVENT_ROLE, sender);
         }

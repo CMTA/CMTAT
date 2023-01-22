@@ -13,18 +13,30 @@ import "../mandatory/EnforcementModule.sol";
  *
  * Useful for to restrict and validate transfers
  */
-abstract contract ValidationModule is ValidationModuleInternal, PauseModule, EnforcementModule, IERC1404Wrapper {
-    enum REJECTED_CODE { TRANSFER_OK, TRANSFER_REJECTED_PAUSED, TRANSFER_REJECTED_FROZEN }
+abstract contract ValidationModule is
+    ValidationModuleInternal,
+    PauseModule,
+    EnforcementModule,
+    IERC1404Wrapper
+{
+    enum REJECTED_CODE {
+        TRANSFER_OK,
+        TRANSFER_REJECTED_PAUSED,
+        TRANSFER_REJECTED_FROZEN
+    }
     string constant TEXT_TRANSFER_OK = "No restriction";
 
-    function __ValidationModule_init(IRuleEngine ruleEngine_, address admin) internal onlyInitializing {
+    function __ValidationModule_init(
+        IRuleEngine ruleEngine_,
+        address admin
+    ) internal onlyInitializing {
         /* OpenZeppelin */
         __Context_init_unchained();
         // AccessControlUpgradeable inherits from ERC165Upgradeable
         __ERC165_init_unchained();
         __AccessControl_init_unchained();
         __Pausable_init_unchained();
-        
+
         /* CMTAT modules */
         // Internal
         __Validation_init_unchained(ruleEngine_);
@@ -44,10 +56,9 @@ abstract contract ValidationModule is ValidationModuleInternal, PauseModule, Enf
         // no variable to initialize
     }
 
-    function setRuleEngine(IRuleEngine ruleEngine_)
-        external
-        onlyRole(DEFAULT_ADMIN_ROLE)
-    {
+    function setRuleEngine(
+        IRuleEngine ruleEngine_
+    ) external onlyRole(DEFAULT_ADMIN_ROLE) {
         ruleEngine = ruleEngine_;
         emit RuleEngineSet(ruleEngine_);
     }
@@ -79,17 +90,18 @@ abstract contract ValidationModule is ValidationModuleInternal, PauseModule, Enf
      * @param restrictionCode The error code returned by detectTransferRestriction
      * @return message The human readable explaination corresponding to the error code returned by detectTransferRestriction
      */
-    function messageForTransferRestriction(uint8 restrictionCode)
-        external
-        view
-        override
-        returns (string memory message)
-    {
+    function messageForTransferRestriction(
+        uint8 restrictionCode
+    ) external view override returns (string memory message) {
         if (restrictionCode == uint8(REJECTED_CODE.TRANSFER_OK)) {
             return TEXT_TRANSFER_OK;
-        } else if (restrictionCode == uint8(REJECTED_CODE.TRANSFER_REJECTED_PAUSED)) {
+        } else if (
+            restrictionCode == uint8(REJECTED_CODE.TRANSFER_REJECTED_PAUSED)
+        ) {
             return TEXT_TRANSFER_REJECTED_PAUSED;
-        } else if (restrictionCode == uint8(REJECTED_CODE.TRANSFER_REJECTED_FROZEN)) {
+        } else if (
+            restrictionCode == uint8(REJECTED_CODE.TRANSFER_REJECTED_FROZEN)
+        ) {
             return TEXT_TRANSFER_REJECTED_FROZEN;
         } else if (address(ruleEngine) != address(0)) {
             return _messageForTransferRestriction(restrictionCode);
@@ -101,8 +113,8 @@ abstract contract ValidationModule is ValidationModuleInternal, PauseModule, Enf
         address to,
         uint256 amount
     ) public view override returns (bool) {
-         if (address(ruleEngine) != address(0)) {
-            return _validateTransfer(from, to, amount);    
+        if (address(ruleEngine) != address(0)) {
+            return _validateTransfer(from, to, amount);
         }
         return true;
     }

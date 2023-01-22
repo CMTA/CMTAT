@@ -18,28 +18,22 @@ contract RuleMock is IRule, CodeList {
     @dev 20 the limit of the maximum amount
     */
     function detectTransferRestriction(
-        address, /* _from */
-        address, /* _to */
+        address /* _from */,
+        address /* _to */,
         uint256 _amount
     ) public pure override returns (uint8) {
         return _amount < 20 ? NO_ERROR : AMOUNT_TOO_HIGH;
     }
 
-    function canReturnTransferRestrictionCode(uint8 _restrictionCode)
-        public
-        pure
-        override
-        returns (bool)
-    {
+    function canReturnTransferRestrictionCode(
+        uint8 _restrictionCode
+    ) public pure override returns (bool) {
         return _restrictionCode == AMOUNT_TOO_HIGH;
     }
 
-    function messageForTransferRestriction(uint8 _restrictionCode)
-        external
-        pure
-        override
-        returns (string memory)
-    {
+    function messageForTransferRestriction(
+        uint8 _restrictionCode
+    ) external pure override returns (string memory) {
         return
             _restrictionCode == AMOUNT_TOO_HIGH
                 ? TEXT_AMOUNT_TOO_HIGH

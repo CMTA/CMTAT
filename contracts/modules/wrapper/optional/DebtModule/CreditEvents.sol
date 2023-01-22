@@ -7,16 +7,19 @@ import "../../../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/
 import "../../../../interfaces/IDebtGlobal.sol";
 import "../../../security/AuthorizationModule.sol";
 
-abstract contract CreditEvents is IDebtGlobal,  Initializable, ContextUpgradeable, AuthorizationModule {
-
-
+abstract contract CreditEvents is
+    IDebtGlobal,
+    Initializable,
+    ContextUpgradeable,
+    AuthorizationModule
+{
     CreditEvents public creditEvents;
 
     /* Events */
     event FlagDefaultSet(bool indexed newFlagDefault);
     event FlagRedeemedSet(bool indexed newFlagRedeemed);
     event RatingSet(string indexed newRatingIndexed, string newRating);
-    
+
     function __CreditEvents_init(address admin) internal onlyInitializing {
         /* OpenZeppelin */
         __Context_init_unchained();
@@ -38,28 +41,36 @@ abstract contract CreditEvents is IDebtGlobal,  Initializable, ContextUpgradeabl
         // no variable to initialize
     }
 
-    function setCreditEvents(bool flagDefault_, bool flagRedeemed_, string memory rating_) public onlyRole(DEBT_CREDIT_EVENT_ROLE) {
-        creditEvents = 
-        (CreditEvents(flagDefault_, flagRedeemed_, rating_));
+    function setCreditEvents(
+        bool flagDefault_,
+        bool flagRedeemed_,
+        string memory rating_
+    ) public onlyRole(DEBT_CREDIT_EVENT_ROLE) {
+        creditEvents = (CreditEvents(flagDefault_, flagRedeemed_, rating_));
         emit FlagDefaultSet(flagDefault_);
-        emit FlagRedeemedSet(flagRedeemed_ );
+        emit FlagRedeemedSet(flagRedeemed_);
         emit RatingSet(rating_, rating_);
     }
 
-
-    function setFlagDefault (bool flagDefault_) public onlyRole(DEBT_CREDIT_EVENT_ROLE) {
+    function setFlagDefault(
+        bool flagDefault_
+    ) public onlyRole(DEBT_CREDIT_EVENT_ROLE) {
         require(flagDefault_ != creditEvents.flagDefault, "Same value");
         creditEvents.flagDefault = flagDefault_;
         emit FlagDefaultSet(flagDefault_);
     }
 
-    function setFlagRedeemed (bool flagRedeemed_) public onlyRole(DEBT_CREDIT_EVENT_ROLE) {
+    function setFlagRedeemed(
+        bool flagRedeemed_
+    ) public onlyRole(DEBT_CREDIT_EVENT_ROLE) {
         require(flagRedeemed_ != creditEvents.flagRedeemed, "Same value");
-        creditEvents.flagRedeemed = flagRedeemed_ ;
-        emit FlagRedeemedSet(flagRedeemed_ );
+        creditEvents.flagRedeemed = flagRedeemed_;
+        emit FlagRedeemedSet(flagRedeemed_);
     }
 
-    function setRating (string memory rating_) public onlyRole(DEBT_CREDIT_EVENT_ROLE) {
+    function setRating(
+        string memory rating_
+    ) public onlyRole(DEBT_CREDIT_EVENT_ROLE) {
         creditEvents.rating = rating_;
         emit RatingSet(rating_, rating_);
     }

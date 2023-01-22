@@ -40,25 +40,39 @@ contract CMTAT_KILL_TEST is
     DebtBaseModule,
     CreditEvents
 {
-
-        /// @custom:oz-upgrades-unsafe-allow constructor
-    constructor(address forwarder, bool deployedWithProxyIrrevocable_, address admin, 
-    string memory nameIrrevocable, string memory symbolIrrevocable, string memory tokenId, 
-    string memory terms,
-    IRuleEngine ruleEngine,
-    string memory information, 
-    uint256 flag)
-     MetaTxModule(forwarder) {
-         if(!deployedWithProxyIrrevocable_){
+    /// @custom:oz-upgrades-unsafe-allow constructor
+    constructor(
+        address forwarder,
+        bool deployedWithProxyIrrevocable_,
+        address admin,
+        string memory nameIrrevocable,
+        string memory symbolIrrevocable,
+        string memory tokenId,
+        string memory terms,
+        IRuleEngine ruleEngine,
+        string memory information,
+        uint256 flag
+    ) MetaTxModule(forwarder) {
+        if (!deployedWithProxyIrrevocable_) {
             // Initialize the contract to avoid front-running
             // Warning : do not initialize the proxy
-            initialize(deployedWithProxyIrrevocable_, admin, nameIrrevocable, symbolIrrevocable,tokenId, terms, ruleEngine, information, flag);
-         }else{
+            initialize(
+                deployedWithProxyIrrevocable_,
+                admin,
+                nameIrrevocable,
+                symbolIrrevocable,
+                tokenId,
+                terms,
+                ruleEngine,
+                information,
+                flag
+            );
+        } else {
             // Initialize the variable for the implementation
             deployedWithProxy = true;
             // Disable the possibility to initialize the implementation
             _disableInitializers();
-         }   
+        }
     }
 
     function initialize(
@@ -72,7 +86,17 @@ contract CMTAT_KILL_TEST is
         string memory information,
         uint256 flag
     ) public initializer {
-        __CMTAT_init(deployedWithProxyIrrevocable_, admin, nameIrrevocable, symbolIrrevocable, tokenId, terms, ruleEngine, information, flag);
+        __CMTAT_init(
+            deployedWithProxyIrrevocable_,
+            admin,
+            nameIrrevocable,
+            symbolIrrevocable,
+            tokenId,
+            terms,
+            ruleEngine,
+            information,
+            flag
+        );
     }
 
     /**
@@ -88,7 +112,7 @@ contract CMTAT_KILL_TEST is
         string memory symbolIrrevocable,
         string memory tokenId,
         string memory terms,
-         IRuleEngine ruleEngine,
+        IRuleEngine ruleEngine,
         string memory information,
         uint256 flag
     ) internal onlyInitializing {
@@ -106,7 +130,7 @@ contract CMTAT_KILL_TEST is
         __Enforcement_init_unchained();
         __Snapshot_init_unchained();
         __Validation_init_unchained(ruleEngine);
-        
+
         /* Wrapper */
         // AuthorizationModule_init_unchained is called firstly due to inheritance
         __AuthorizationModule_init_unchained(admin);
@@ -119,17 +143,19 @@ contract CMTAT_KILL_TEST is
         __PauseModule_init_unchained();
         __ValidationModule_init_unchained();
         __SnasphotModule_init_unchained();
-        
+
         /* Other modules */
         __DebtBaseModule_init_unchained();
         __CreditEvents_init_unchained();
         __Base_init_unchained(tokenId, terms, information, flag);
 
-         /* own function */
+        /* own function */
         __CMTAT_init_unchained(deployedWithProxyIrrevocable_);
     }
 
-    function __CMTAT_init_unchained(bool deployedWithProxyIrrevocable_) internal onlyInitializing {
+    function __CMTAT_init_unchained(
+        bool deployedWithProxyIrrevocable_
+    ) internal onlyInitializing {
         deployedWithProxy = deployedWithProxyIrrevocable_;
     }
 
@@ -147,7 +173,12 @@ contract CMTAT_KILL_TEST is
         address sender,
         address recipient,
         uint256 amount
-    ) public virtual override(ERC20Upgradeable, ERC20BaseModule) returns (bool) {
+    )
+        public
+        virtual
+        override(ERC20Upgradeable, ERC20BaseModule)
+        returns (bool)
+    {
         return ERC20BaseModule.transferFrom(sender, recipient, amount);
     }
 
@@ -161,7 +192,10 @@ contract CMTAT_KILL_TEST is
 
         SnapshotModuleInternal._beforeTokenTransfer(from, to, amount);
 
-        require(validateTransfer(from, to, amount), "CMTAT: transfer rejected by validation module");
+        require(
+            validateTransfer(from, to, amount),
+            "CMTAT: transfer rejected by validation module"
+        );
     }
 
     /** 
