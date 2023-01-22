@@ -2,13 +2,13 @@
 
 Please follow <https://changelog.md/> conventions.
 
-## 2.2 - 20230120
+## 2.2 - 20230122
 
 This version is not audited
 
 This version contains breaking changes with the version 2.1.
 
-- Add the module Debt ([pull/118](https://github.com/CMTA/CMTAT/pull/118), [pull/141](https://github.com/CMTA/CMTAT/pull/141 ) ) 
+- Add the module Debt ([pull/118](https://github.com/CMTA/CMTAT/pull/118), [pull/141](https://github.com/CMTA/CMTAT/pull/141) ) 
 - Add the module CreditEvents ([pull/135](https://github.com/CMTA/CMTAT/pull/135))
 - SnapshotModule: use a sorted array instead of an unsorted array as suggested in the audit report ([pull/123](https://github.com/CMTA/CMTAT/pull/123))
 - baseModule: add field information & flag ([pull/134](https://github.com/CMTA/CMTAT/pull/134))
