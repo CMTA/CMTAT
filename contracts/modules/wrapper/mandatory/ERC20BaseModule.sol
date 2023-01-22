@@ -25,10 +25,10 @@ abstract contract ERC20BaseModule is ERC20Upgradeable {
         string memory symbol_,
         uint8 decimals_
     ) internal onlyInitializing {
-         /* OpenZeppelin */
+        /* OpenZeppelin */
         __Context_init_unchained();
         __ERC20_init(name_, symbol_);
-        
+
         /* own function */
         __ERC20Module_init_unchained(decimals_);
     }
@@ -41,7 +41,8 @@ abstract contract ERC20BaseModule is ERC20Upgradeable {
 
     /* Methods */
     /**
-     * @dev Returns the number of decimals used to get its user representation.
+     * @notice Returns the number of decimals used to get its user representation.
+     * @dev
      * For example, if `decimals` equals `2`, a balance of `505` tokens should
      * be displayed to a user as `5,05` (`505 / 10 ** 2`).
      *

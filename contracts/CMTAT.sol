@@ -34,26 +34,59 @@ contract CMTAT is
     DebtBaseModule,
     CreditEvents
 {
+    /** 
+    @notice create the contract
+    @param forwarderIrrevocable address of the forwarder, required for the gasless support
+    @param deployedWithProxyIrrevocable_ true if the contract is deployed with a proxy, false otherwise
+    @param admin address of the admin of contract (Access Control)
+    @param nameIrrevocable name of the token
+    @param symbolIrrevocable name of the symbol
+    @param tokenId name of the tokenId
+    @param terms terms associated with the token
+    @param ruleEngine address of the ruleEngine to apply rules to transfers
+    @param information additional information to describe the token
+    @param flag add information under the form of bit(0, 1)
+    */
     /// @custom:oz-upgrades-unsafe-allow constructor
-    constructor(address forwarder, bool deployedWithProxyIrrevocable_, address admin, 
-    string memory nameIrrevocable, string memory symbolIrrevocable, string memory tokenId, 
-    string memory terms,
-    IRuleEngine ruleEngine,
-    string memory information, 
-    uint256 flag)
-     MetaTxModule(forwarder) {
-         if(!deployedWithProxyIrrevocable_){
+    constructor(
+        address forwarderIrrevocable,
+        bool deployedWithProxyIrrevocable_,
+        address admin,
+        string memory nameIrrevocable,
+        string memory symbolIrrevocable,
+        string memory tokenId,
+        string memory terms,
+        IRuleEngine ruleEngine,
+        string memory information,
+        uint256 flag
+    ) MetaTxModule(forwarderIrrevocable) {
+        if (!deployedWithProxyIrrevocable_) {
             // Initialize the contract to avoid front-running
             // Warning : do not initialize the proxy
-            initialize(deployedWithProxyIrrevocable_, admin, nameIrrevocable, symbolIrrevocable,tokenId, terms, ruleEngine, information, flag);
-         }else{
+            initialize(
+                deployedWithProxyIrrevocable_,
+                admin,
+                nameIrrevocable,
+                symbolIrrevocable,
+                tokenId,
+                terms,
+                ruleEngine,
+                information,
+                flag
+            );
+        } else {
             // Initialize the variable for the implementation
             deployedWithProxy = true;
             // Disable the possibility to initialize the implementation
             _disableInitializers();
-         }   
+        }
     }
 
+    /**
+    @notice 
+    initialize the proxy contract
+    The calls to this function will revert if the contract was deployed without a proxy
+    */
     function initialize(
         bool deployedWithProxyIrrevocable_,
         address admin,
@@ -65,15 +98,22 @@ contract CMTAT is
         string memory information,
         uint256 flag
     ) public initializer {
-        __CMTAT_init(deployedWithProxyIrrevocable_, admin, nameIrrevocable, symbolIrrevocable, tokenId, terms, ruleEngine, information, flag);
+        __CMTAT_init(
+            deployedWithProxyIrrevocable_,
+            admin,
+            nameIrrevocable,
+            symbolIrrevocable,
+            tokenId,
+            terms,
+            ruleEngine,
+            information,
+            flag
+        );
     }
 
     /**
-     * @dev Grants `DEFAULT_ADMIN_ROLE`, `MINTER_ROLE` and `PAUSER_ROLE` to the
-     * account that deploys the contract.
-     *
-     * See {ERC20-constructor}.
-     */
+    @dev calls the different initialize functions from the different modules
+    */
     function __CMTAT_init(
         bool deployedWithProxyIrrevocable_,
         address admin,
@@ -81,7 +121,7 @@ contract CMTAT is
         string memory symbolIrrevocable,
         string memory tokenId,
         string memory terms,
-         IRuleEngine ruleEngine,
+        IRuleEngine ruleEngine,
         string memory information,
         uint256 flag
     ) internal onlyInitializing {
@@ -99,7 +139,7 @@ contract CMTAT is
         __Enforcement_init_unchained();
         __Snapshot_init_unchained();
         __Validation_init_unchained(ruleEngine);
-        
+
         /* Wrapper */
         // AuthorizationModule_init_unchained is called firstly due to inheritance
         __AuthorizationModule_init_unchained(admin);
@@ -112,20 +152,28 @@ contract CMTAT is
         __PauseModule_init_unchained();
         __ValidationModule_init_unchained();
         __SnasphotModule_init_unchained();
-        
+
         /* Other modules */
         __DebtBaseModule_init_unchained();
         __CreditEvents_init_unchained();
         __Base_init_unchained(tokenId, terms, information, flag);
 
-         /* own function */
+        /* own function */
         __CMTAT_init_unchained(deployedWithProxyIrrevocable_);
     }
 
-    function __CMTAT_init_unchained(bool deployedWithProxyIrrevocable_) internal onlyInitializing {
+    /**
+    @param deployedWithProxyIrrevocable_ true if the contract is deployed with a proxy, false otherwise
+    */
+    function __CMTAT_init_unchained(
+        bool deployedWithProxyIrrevocable_
+    ) internal onlyInitializing {
         deployedWithProxy = deployedWithProxyIrrevocable_;
     }
 
+    /**
+    @notice Returns the number of decimals used to get its user representation.
+    */
     function decimals()
         public
         view
@@ -140,7 +188,12 @@ contract CMTAT is
         address sender,
         address recipient,
         uint256 amount
-    ) public virtual override(ERC20Upgradeable, ERC20BaseModule) returns (bool) {
+    )
+        public
+        virtual
+        override(ERC20Upgradeable, ERC20BaseModule)
+        returns (bool)
+    {
         return ERC20BaseModule.transferFrom(sender, recipient, amount);
     }
 
@@ -154,7 +207,10 @@ contract CMTAT is
 
         SnapshotModuleInternal._beforeTokenTransfer(from, to, amount);
 
-        require(validateTransfer(from, to, amount), "CMTAT: transfer rejected by validation module");
+        require(
+            validateTransfer(from, to, amount),
+            "CMTAT: transfer rejected by validation module"
+        );
     }
 
     /** 

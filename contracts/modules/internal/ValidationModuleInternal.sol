@@ -11,7 +11,10 @@ import "../../interfaces/IRuleEngine.sol";
  *
  * Useful for to restrict and validate transfers
  */
-abstract contract ValidationModuleInternal is Initializable, ContextUpgradeable {
+abstract contract ValidationModuleInternal is
+    Initializable,
+    ContextUpgradeable
+{
     /**
      * @dev Emitted when a rule engine is set.
      */
@@ -22,15 +25,16 @@ abstract contract ValidationModuleInternal is Initializable, ContextUpgradeable 
     /**
      * @dev Initializes the contract with rule engine.
      */
-    function __Validation_init(IRuleEngine ruleEngine_) internal onlyInitializing {
+    function __Validation_init(
+        IRuleEngine ruleEngine_
+    ) internal onlyInitializing {
         __Context_init_unchained();
         __Validation_init_unchained(ruleEngine_);
     }
 
-    function __Validation_init_unchained(IRuleEngine ruleEngine_)
-        internal
-        onlyInitializing
-    {
+    function __Validation_init_unchained(
+        IRuleEngine ruleEngine_
+    ) internal onlyInitializing {
         if (address(ruleEngine_) != address(0)) {
             ruleEngine = ruleEngine_;
             emit RuleEngineSet(ruleEngine);
@@ -51,11 +55,9 @@ abstract contract ValidationModuleInternal is Initializable, ContextUpgradeable 
     /**
     @dev before making a call to this function, you have to check if a ruleEngine is set.
     */
-    function _messageForTransferRestriction(uint8 restrictionCode)
-        internal
-        view
-        returns (string memory)
-    {
+    function _messageForTransferRestriction(
+        uint8 restrictionCode
+    ) internal view returns (string memory) {
         return ruleEngine.messageForTransferRestriction(restrictionCode);
     }
 

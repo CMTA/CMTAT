@@ -2,9 +2,7 @@
 
 pragma solidity ^0.8.17;
 
-
 interface IDebtGlobal {
-
     struct DebtBase {
         uint256 interestRate;
         uint256 parValue;
@@ -25,5 +23,4 @@ interface IDebtGlobal {
         bool flagRedeemed;
         string rating;
     }
-    
 }

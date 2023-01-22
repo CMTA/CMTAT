@@ -14,17 +14,17 @@ import "../../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Ini
  */
 abstract contract MetaTxModule is ERC2771ContextUpgradeable {
     /// @custom:oz-upgrades-unsafe-allow constructor
-    constructor(address trustedForwarder)
-        ERC2771ContextUpgradeable(trustedForwarder)
-    {
+    constructor(
+        address trustedForwarder
+    ) ERC2771ContextUpgradeable(trustedForwarder) {
         // Nothing to do
     }
 
     function _msgSender()
         internal
         view
-        override
         virtual
+        override
         returns (address sender)
     {
         return ERC2771ContextUpgradeable._msgSender();
@@ -33,8 +33,8 @@ abstract contract MetaTxModule is ERC2771ContextUpgradeable {
     function _msgData()
         internal
         view
-        override
         virtual
+        override
         returns (bytes calldata)
     {
         return ERC2771ContextUpgradeable._msgData();

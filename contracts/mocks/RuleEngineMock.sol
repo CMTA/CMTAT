@@ -35,7 +35,7 @@ contract RuleEngineMock is IRuleEngine, CodeList {
         address _to,
         uint256 _amount
     ) public view override returns (uint8) {
-        uint256 ruleArrayLength =  _rules.length;
+        uint256 ruleArrayLength = _rules.length;
         for (uint256 i = 0; i < ruleArrayLength; ++i) {
             uint8 restriction = _rules[i].detectTransferRestriction(
                 _from,
@@ -61,12 +61,9 @@ contract RuleEngineMock is IRuleEngine, CodeList {
     @dev
     For all the rules, each restriction code has to be unique.
     */
-    function messageForTransferRestriction(uint8 _restrictionCode)
-        public
-        view
-        override
-        returns (string memory)
-    {
+    function messageForTransferRestriction(
+        uint8 _restrictionCode
+    ) public view override returns (string memory) {
         uint256 ruleArrayLength = _rules.length;
         for (uint256 i = 0; i < ruleArrayLength; ++i) {
             if (_rules[i].canReturnTransferRestrictionCode(_restrictionCode)) {

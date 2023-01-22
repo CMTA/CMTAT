@@ -12,17 +12,20 @@ import "../../modules/security/OnlyDelegateCallModule.sol";
 @dev This version has removed the check of access control on the kill function
 The only remaining protection is the call to the modifier onlyDelegateCall
 */
-abstract contract BaseModuleTest is Initializable, AuthorizationModule, OnlyDelegateCallModule {
+abstract contract BaseModuleTest is
+    Initializable,
+    AuthorizationModule,
+    OnlyDelegateCallModule
+{
     // @dev we removed the access control to check onlyDelegateCall
     /// @custom:oz-upgrades-unsafe-allow selfdestruct
     function kill() public onlyDelegateCall(deployedWithProxy) {
         selfdestruct(payable(_msgSender()));
     }
 
-     //******* Code from BaseModule, not modified *******/
+    //******* Code from BaseModule, not modified *******/
 
-
-       bool internal deployedWithProxy;
+    bool internal deployedWithProxy;
     /* Events */
     event TermSet(string indexed newTerm);
     event TokenIdSet(string indexed newTokenId);
@@ -49,16 +52,16 @@ abstract contract BaseModuleTest is Initializable, AuthorizationModule, OnlyDele
         uint256 flag_,
         address admin
     ) internal onlyInitializing {
-         /* OpenZeppelin */
+        /* OpenZeppelin */
         __Context_init_unchained();
-         // AccessControlUpgradeable inherits from ERC165Upgradeable
+        // AccessControlUpgradeable inherits from ERC165Upgradeable
         __ERC165_init_unchained();
         // AuthorizationModule inherits from AccessControlUpgradeable
         __AccessControl_init_unchained();
 
-         /* Wrapper */
+        /* Wrapper */
         __AuthorizationModule_init_unchained(admin);
-        
+
         /* own function */
         __Base_init_unchained(tokenId_, terms_, information_, flag_);
     }
@@ -76,34 +79,28 @@ abstract contract BaseModuleTest is Initializable, AuthorizationModule, OnlyDele
     }
 
     /* Methods */
-    function setTokenId(string memory tokenId_)
-        public
-        onlyRole(DEFAULT_ADMIN_ROLE)
-    {
+    function setTokenId(
+        string memory tokenId_
+    ) public onlyRole(DEFAULT_ADMIN_ROLE) {
         tokenId = tokenId_;
         emit TokenIdSet(tokenId_);
     }
 
-    function setTerms(string memory terms_)
-        public
-        onlyRole(DEFAULT_ADMIN_ROLE)
-    {
+    function setTerms(
+        string memory terms_
+    ) public onlyRole(DEFAULT_ADMIN_ROLE) {
         terms = terms_;
         emit TermSet(terms_);
     }
 
-    function setInformation(string memory information_)
-        public
-        onlyRole(DEFAULT_ADMIN_ROLE)
-    {
+    function setInformation(
+        string memory information_
+    ) public onlyRole(DEFAULT_ADMIN_ROLE) {
         information = information_;
         emit InformationSet(information_);
     }
 
-    function setFlag(uint256 flag_)
-        public
-        onlyRole(DEFAULT_ADMIN_ROLE)
-    {
+    function setFlag(uint256 flag_) public onlyRole(DEFAULT_ADMIN_ROLE) {
         flag = flag_;
         emit FlagSet(flag_);
     }

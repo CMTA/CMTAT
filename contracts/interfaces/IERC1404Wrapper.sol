@@ -4,7 +4,6 @@ pragma solidity ^0.8.17;
 
 import "./IERC1404.sol";
 
-
 interface IERC1404Wrapper is IERC1404 {
     /**
      * @dev Returns true if the transfer is valid, and false otherwise.

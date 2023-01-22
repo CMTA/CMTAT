@@ -12,7 +12,10 @@ abstract contract BaseModule is AuthorizationModule, OnlyDelegateCallModule {
     /* Events */
     event TermSet(string indexed newTermIndexed, string newTerm);
     event TokenIdSet(string indexed newTokenIdIndexed, string newTokenId);
-    event InformationSet(string indexed newInformationIndexed, string newInformation);
+    event InformationSet(
+        string indexed newInformationIndexed,
+        string newInformation
+    );
     event FlagSet(uint256 indexed newFlag);
 
     /* Variables */
@@ -35,9 +38,9 @@ abstract contract BaseModule is AuthorizationModule, OnlyDelegateCallModule {
         uint256 flag_,
         address admin
     ) internal onlyInitializing {
-         /* OpenZeppelin */
+        /* OpenZeppelin */
         __Context_init_unchained();
-         // AccessControlUpgradeable inherits from ERC165Upgradeable
+        // AccessControlUpgradeable inherits from ERC165Upgradeable
         __ERC165_init_unchained();
         // AuthorizationModule inherits from AccessControlUpgradeable
         __AccessControl_init_unchained();
@@ -45,7 +48,7 @@ abstract contract BaseModule is AuthorizationModule, OnlyDelegateCallModule {
         /* CMTAT modules */
         // Security
         __AuthorizationModule_init_unchained(admin);
-        
+
         // own function
         __Base_init_unchained(tokenId_, terms_, information_, flag_);
     }
@@ -63,40 +66,42 @@ abstract contract BaseModule is AuthorizationModule, OnlyDelegateCallModule {
     }
 
     /* Methods */
-    function setTokenId(string memory tokenId_)
-        public
-        onlyRole(DEFAULT_ADMIN_ROLE)
-    {
+    function setTokenId(
+        string memory tokenId_
+    ) public onlyRole(DEFAULT_ADMIN_ROLE) {
         tokenId = tokenId_;
         emit TokenIdSet(tokenId_, tokenId_);
     }
 
-    function setTerms(string memory terms_)
-        public
-        onlyRole(DEFAULT_ADMIN_ROLE)
-    {
+    function setTerms(
+        string memory terms_
+    ) public onlyRole(DEFAULT_ADMIN_ROLE) {
         terms = terms_;
         emit TermSet(terms_, terms_);
     }
 
-    function setInformation(string memory information_)
-        public
-        onlyRole(DEFAULT_ADMIN_ROLE)
-    {
+    function setInformation(
+        string memory information_
+    ) public onlyRole(DEFAULT_ADMIN_ROLE) {
         information = information_;
         emit InformationSet(information_, information_);
     }
 
-    function setFlag(uint256 flag_)
-        public
-        onlyRole(DEFAULT_ADMIN_ROLE)
-    {
+    function setFlag(uint256 flag_) public onlyRole(DEFAULT_ADMIN_ROLE) {
         flag = flag_;
         emit FlagSet(flag_);
     }
 
+    /**
+    @notice destroys the contract and send the remaining ethers in the contract to the sender
+    Warning: the operation is irreversible, be careful
+    */
     /// @custom:oz-upgrades-unsafe-allow selfdestruct
-    function kill() public onlyRole(DEFAULT_ADMIN_ROLE) onlyDelegateCall(deployedWithProxy) {
+    function kill()
+        public
+        onlyRole(DEFAULT_ADMIN_ROLE)
+        onlyDelegateCall(deployedWithProxy)
+    {
         selfdestruct(payable(_msgSender()));
     }
 
