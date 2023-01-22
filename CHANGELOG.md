@@ -8,6 +8,12 @@ This version is not audited
 
 This version contains breaking changes with the version 2.1.
 
+**OpenZeppelin**
+
+Updated OpenZeppelin contracts upgradeable to the version v4.8.1, precisely this [commit](https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/commit/7ec6d2a3117eb3487a5f9029203e80ceb89bd984).
+
+**Modules**
+
 - Add the module Debt ([pull/118](https://github.com/CMTA/CMTAT/pull/118), [pull/141](https://github.com/CMTA/CMTAT/pull/141) ) 
 - Add the module CreditEvents ([pull/135](https://github.com/CMTA/CMTAT/pull/135))
 - SnapshotModule: use a sorted array instead of an unsorted array as suggested in the audit report ([pull/123](https://github.com/CMTA/CMTAT/pull/123))
@@ -18,6 +24,8 @@ This version contains breaking changes with the version 2.1.
   - Add a function `transferAdminship` in AuthorizationModule
 
 - Improve and update tests of the different modules
+
+**Audit report**
 
 This version also includes improvements suggested by the audit report, addressing the following findings:
 
