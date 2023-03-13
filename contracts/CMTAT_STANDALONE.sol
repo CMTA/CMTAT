@@ -7,7 +7,7 @@ import "./modules/CMTAT_BASE.sol";
 contract CMTAT_STANDALONE is CMTAT_BASE
 {
     /** 
-    @notice create the contract
+    @notice Contract version for standalone deployment
     @param forwarderIrrevocable address of the forwarder, required for the gasless support
     @param admin address of the admin of contract (Access Control)
     @param nameIrrevocable name of the token
