@@ -1,4 +1,4 @@
-const CMTAT = artifacts.require('CMTAT')
+const CMTAT = artifacts.require('CMTAT_PROXY')
 const { deployProxy } = require('@openzeppelin/truffle-upgrades')
 const ValidationModuleCommon = require('../../../common/ValidationModule/ValidationModuleSetRuleEngineCommon')
 const { ZERO_ADDRESS } = require('../../../utils')
@@ -14,7 +14,7 @@ contract(
       this.ruleEngineMock = await RuleEngineMock.new({ from: admin })
       this.cmtat = await deployProxy(CMTAT, [true, admin, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', ZERO_ADDRESS, 'CMTAT_info', this.flag], {
         initializer: 'initialize',
-        constructorArgs: [_, true, admin, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', ZERO_ADDRESS, 'CMTAT_info', this.flag]
+        constructorArgs: [_]
       })
       await this.cmtat.mint(address1, ADDRESS1_INITIAL_BALANCE, { from: admin })
       await this.cmtat.mint(address2, ADDRESS2_INITIAL_BALANCE, { from: admin })

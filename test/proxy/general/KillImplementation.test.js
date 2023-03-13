@@ -22,16 +22,7 @@ contract('Proxy - Security Test', function ([_, admin]) {
       {
         initializer: 'initialize',
         constructorArgs: [
-          _,
-          true,
-          admin,
-          'CMTA Token',
-          'CMTAT',
-          'CMTAT_ISIN',
-          'https://cmta.ch',
-          ZERO_ADDRESS,
-          'CMTAT_info',
-          this.flag
+          _
         ]
       }
     )

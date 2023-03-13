@@ -2,8 +2,6 @@ const { expectEvent, expectRevert } = require('@openzeppelin/test-helpers')
 const { PAUSER_ROLE } = require('../utils')
 const { should } = require('chai').should()
 
-const CMTAT = artifacts.require('CMTAT')
-
 function PauseModuleCommon (admin, address1, address2, address3) {
   context('Pause', function () {
     /**

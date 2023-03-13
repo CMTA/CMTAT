@@ -40,41 +40,25 @@ contract CMTAT_KILL_TEST is
     DebtBaseModule,
     CreditEvents
 {
+    /** 
+    @notice create the contract
+    @param forwarderIrrevocable address of the forwarder, required for the gasless support
+    */
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor(
-        address forwarder,
-        bool deployedWithProxyIrrevocable_,
-        address admin,
-        string memory nameIrrevocable,
-        string memory symbolIrrevocable,
-        string memory tokenId,
-        string memory terms,
-        IRuleEngine ruleEngine,
-        string memory information,
-        uint256 flag
-    ) MetaTxModule(forwarder) {
-        if (!deployedWithProxyIrrevocable_) {
-            // Initialize the contract to avoid front-running
-            // Warning : do not initialize the proxy
-            initialize(
-                deployedWithProxyIrrevocable_,
-                admin,
-                nameIrrevocable,
-                symbolIrrevocable,
-                tokenId,
-                terms,
-                ruleEngine,
-                information,
-                flag
-            );
-        } else {
-            // Initialize the variable for the implementation
-            deployedWithProxy = true;
-            // Disable the possibility to initialize the implementation
-            _disableInitializers();
-        }
+        address forwarderIrrevocable
+    ) MetaTxModule(forwarderIrrevocable) {
+        // Initialize the variable for the implementation
+        deployedWithProxy = true;
+        // Disable the possibility to initialize the implementation
+        _disableInitializers();
     }
 
+/**
+    @notice 
+    initialize the proxy contract
+    The calls to this function will revert if the contract was deployed without a proxy
+    */
     function initialize(
         bool deployedWithProxyIrrevocable_,
         address admin,
@@ -100,11 +84,8 @@ contract CMTAT_KILL_TEST is
     }
 
     /**
-     * @dev Grants `DEFAULT_ADMIN_ROLE`, `MINTER_ROLE` and `PAUSER_ROLE` to the
-     * account that deploys the contract.
-     *
-     * See {ERC20-constructor}.
-     */
+    @dev calls the different initialize functions from the different modules
+    */
     function __CMTAT_init(
         bool deployedWithProxyIrrevocable_,
         address admin,
@@ -153,12 +134,18 @@ contract CMTAT_KILL_TEST is
         __CMTAT_init_unchained(deployedWithProxyIrrevocable_);
     }
 
+    /**
+    @param deployedWithProxyIrrevocable_ true if the contract is deployed with a proxy, false otherwise
+    */
     function __CMTAT_init_unchained(
         bool deployedWithProxyIrrevocable_
     ) internal onlyInitializing {
         deployedWithProxy = deployedWithProxyIrrevocable_;
     }
 
+    /**
+    @notice Returns the number of decimals used to get its user representation.
+    */
     function decimals()
         public
         view

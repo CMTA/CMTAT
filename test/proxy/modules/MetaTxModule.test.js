@@ -1,5 +1,5 @@
 const { deployProxy } = require('@openzeppelin/truffle-upgrades')
-const CMTAT = artifacts.require('CMTAT')
+const CMTAT = artifacts.require('CMTAT_PROXY')
 const MinimalForwarderMock = artifacts.require('MinimalForwarderMock')
 const MetaTxModuleCommon = require('../../common/MetaTxModuleCommon')
 const { ZERO_ADDRESS } = require('../../utils')
@@ -17,7 +17,7 @@ contract(
       await this.trustedForwarder.initialize()
       this.cmtat = await deployProxy(CMTAT, [true, owner, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', ZERO_ADDRESS, 'CMTAT_info', this.flag], {
         initializer: 'initialize',
-        constructorArgs: [this.trustedForwarder.address, true, owner, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', ZERO_ADDRESS, 'CMTAT_info', this.flag]
+        constructorArgs: [this.trustedForwarder.address]
       })
     })
 

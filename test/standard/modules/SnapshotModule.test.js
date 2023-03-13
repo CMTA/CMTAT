@@ -1,4 +1,4 @@
-const CMTAT = artifacts.require('CMTAT')
+const CMTAT = artifacts.require('CMTAT_STANDALONE')
 const SnapshotModuleCommonGlobal = require('../../common/SnapshotModuleCommon/global/SnapshotModuleMultiplePlannedTest')
 const SnapshotModuleCommonRescheduling = require('../../common/SnapshotModuleCommon/SnapshotModuleCommonRescheduling')
 const SnapshotModuleCommonScheduling = require('../../common/SnapshotModuleCommon/SnapshotModuleCommonScheduling')
@@ -13,7 +13,7 @@ contract(
   function ([_, admin, address1, address2, address3, randomDeployer]) {
     beforeEach(async function () {
       this.flag = 5
-      this.cmtat = await CMTAT.new(_, false, admin, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', ZERO_ADDRESS, 'CMTAT_info', this.flag, { from: randomDeployer })
+      this.cmtat = await CMTAT.new(_, admin, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', ZERO_ADDRESS, 'CMTAT_info', this.flag, { from: randomDeployer })
     })
     SnapshotModuleMultiplePlannedTest(admin, address1, address2, address3)
     SnapshotModuleOnePlannedSnapshotTest(admin, address1, address2, address3)
