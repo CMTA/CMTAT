@@ -5,6 +5,9 @@ pragma solidity ^0.8.17;
 import "./IERC1404.sol";
 
 interface IERC1404Wrapper is IERC1404 {
+    /* 
+    @dev leave the code 4-9 free/unused for further additions in your ruleEngine implementation
+    */
     enum REJECTED_CODE_BASE {
         TRANSFER_OK,
         TRANSFER_REJECTED_PAUSED,

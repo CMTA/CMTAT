@@ -52,6 +52,9 @@ abstract contract ValidationModule is
         // no variable to initialize
     }
 
+    /*
+    @notice set a RuleEngine
+    */
     function setRuleEngine(
         IRuleEngine ruleEngine_
     ) external onlyRole(DEFAULT_ADMIN_ROLE) {
