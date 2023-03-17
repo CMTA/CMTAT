@@ -42,11 +42,11 @@ contract RuleEngineMock is IRuleEngine, CodeList {
                 _to,
                 _amount
             );
-            if (restriction != NO_ERROR) {
+            if (restriction != uint8(REJECTED_CODE_BASE.TRANSFER_OK)) {
                 return restriction;
             }
         }
-        return 0;
+        return uint8(REJECTED_CODE_BASE.TRANSFER_OK);
     }
 
     function validateTransfer(

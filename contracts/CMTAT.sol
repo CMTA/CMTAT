@@ -202,16 +202,9 @@ contract CMTAT is
         address to,
         uint256 amount
     ) internal override(SnapshotModuleInternal, ERC20Upgradeable) {
-        require(!paused(), "CMTAT: token transfer while paused");
-        require(!frozen(from), "CMTAT: token transfer while FROM is frozen");
-        require(!frozen(to), "CMTAT: token transfer while TO is frozen");
-
+        require(ValidationModule.validateTransfer(from, to, amount), "CMTAT: transfer rejected by validation module");
+        // We call the SnapshotModule only if the transfer is valid
         SnapshotModuleInternal._beforeTokenTransfer(from, to, amount);
-
-        require(
-            validateTransfer(from, to, amount),
-            "CMTAT: transfer rejected by validation module"
-        );
     }
 
     /** 

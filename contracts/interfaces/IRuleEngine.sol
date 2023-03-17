@@ -6,6 +6,7 @@ import "./IRule.sol";
 import "./IERC1404Wrapper.sol";
 
 interface IRuleEngine is IERC1404Wrapper {
+
     /**
      * @dev define the rules, the precedent rules will be overwritten
      */

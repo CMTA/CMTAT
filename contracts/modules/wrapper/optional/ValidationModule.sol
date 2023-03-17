@@ -19,12 +19,6 @@ abstract contract ValidationModule is
     EnforcementModule,
     IERC1404Wrapper
 {
-    enum REJECTED_CODE {
-        TRANSFER_OK,
-        TRANSFER_REJECTED_PAUSED,
-        TRANSFER_REJECTED_FROM_FROZEN,
-        TRANSFER_REJECTED_TO_FROZEN
-    }
     string constant TEXT_TRANSFER_OK = "No restriction";
     string constant TEXT_UNKNOWN_CODE = "Unknown code";
 
@@ -78,16 +72,16 @@ abstract contract ValidationModule is
         uint256 amount
     ) public view override returns (uint8 code) {
         if (paused()) {
-            return uint8(REJECTED_CODE.TRANSFER_REJECTED_PAUSED);
+            return uint8(REJECTED_CODE_BASE.TRANSFER_REJECTED_PAUSED);
         } else if (frozen(from)) {
-            return uint8(REJECTED_CODE.TRANSFER_REJECTED_FROM_FROZEN);
+            return uint8(REJECTED_CODE_BASE.TRANSFER_REJECTED_FROM_FROZEN);
         } else if (frozen(to)){
-            return uint8(REJECTED_CODE.TRANSFER_REJECTED_TO_FROZEN);
+            return uint8(REJECTED_CODE_BASE.TRANSFER_REJECTED_TO_FROZEN);
         }
         else if (address(ruleEngine) != address(0)) {
             return _detectTransferRestriction(from, to, amount);
         }
-        return uint8(REJECTED_CODE.TRANSFER_OK);
+        return uint8(REJECTED_CODE_BASE.TRANSFER_OK);
     }
 
     /**
@@ -98,22 +92,26 @@ abstract contract ValidationModule is
     function messageForTransferRestriction(
         uint8 restrictionCode
     ) external view override returns (string memory message) {
-        if (restrictionCode == uint8(REJECTED_CODE.TRANSFER_OK)) {
+        if (restrictionCode == uint8(REJECTED_CODE_BASE.TRANSFER_OK)) {
             return TEXT_TRANSFER_OK;
-        } else if (
-            restrictionCode == uint8(REJECTED_CODE.TRANSFER_REJECTED_PAUSED)
-        ) {
-            return TEXT_TRANSFER_REJECTED_PAUSED;
-        }  else if (restrictionCode == uint8(REJECTED_CODE.TRANSFER_REJECTED_FROM_FROZEN)){
-             return TEXT_TRANSFER_REJECTED_FROM_FROZEN;
         } 
         else if (
-            restrictionCode == uint8(REJECTED_CODE.TRANSFER_REJECTED_TO_FROZEN)
+            restrictionCode == uint8(REJECTED_CODE_BASE.TRANSFER_REJECTED_PAUSED)
+        ) {
+            return TEXT_TRANSFER_REJECTED_PAUSED;
+        }  
+        else if (restrictionCode == uint8(REJECTED_CODE_BASE.TRANSFER_REJECTED_FROM_FROZEN)){
+            return TEXT_TRANSFER_REJECTED_FROM_FROZEN;
+        } 
+        else if (
+            restrictionCode == uint8(REJECTED_CODE_BASE.TRANSFER_REJECTED_TO_FROZEN)
         ) {
             return TEXT_TRANSFER_REJECTED_TO_FROZEN;
-        } else if (address(ruleEngine) != address(0)) {
+        } 
+        else if (address(ruleEngine) != address(0)) {
             return _messageForTransferRestriction(restrictionCode);
-        } else {
+        } 
+        else {
             return TEXT_UNKNOWN_CODE;
         }
     }
@@ -123,6 +121,9 @@ abstract contract ValidationModule is
         address to,
         uint256 amount
     ) public view override returns (bool) {
+        if(paused() || frozen(from) || frozen(to)){
+            return false;
+        }
         if (address(ruleEngine) != address(0)) {
             return _validateTransfer(from, to, amount);
         }

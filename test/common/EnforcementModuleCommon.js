@@ -1,6 +1,6 @@
 const { expectEvent, expectRevert } = require('@openzeppelin/test-helpers')
 const { should } = require('chai').should()
-const { ENFORCER_ROLE } = require('../utils')
+const { ENFORCER_ROLE, CMTAT_TRANSFER_REJECT } = require('../utils')
 
 const reasonFreeze = 'testFreeze'
 const reasonUnfreeze = 'testUnfreeze'
@@ -145,7 +145,7 @@ function EnforcementModuleCommon (owner, address1, address2, address3) {
       )
       await expectRevert(
         this.cmtat.transfer(address2, 10, { from: address1 }),
-        'CMTAT: token transfer while FROM is frozen'
+        CMTAT_TRANSFER_REJECT
       )
     })
 
@@ -166,7 +166,7 @@ function EnforcementModuleCommon (owner, address1, address2, address3) {
       )
       await expectRevert(
         this.cmtat.transferFrom(address3, address2, 10, { from: address1 }),
-        'CMTAT: token transfer while TO is frozen'
+        CMTAT_TRANSFER_REJECT
       )
     })
   })
