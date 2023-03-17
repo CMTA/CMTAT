@@ -26,6 +26,7 @@ abstract contract ValidationModule is
         TRANSFER_REJECTED_TO_FROZEN
     }
     string constant TEXT_TRANSFER_OK = "No restriction";
+    string constant TEXT_UNKNOWN_CODE = "Unknown code";
 
     function __ValidationModule_init(
         IRuleEngine ruleEngine_,
@@ -112,6 +113,8 @@ abstract contract ValidationModule is
             return TEXT_TRANSFER_REJECTED_TO_FROZEN;
         } else if (address(ruleEngine) != address(0)) {
             return _messageForTransferRestriction(restrictionCode);
+        } else {
+            return TEXT_UNKNOWN_CODE;
         }
     }
 

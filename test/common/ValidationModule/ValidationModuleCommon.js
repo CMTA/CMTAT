@@ -44,6 +44,13 @@ function ValidationModuleCommon (admin, address1, address2, address3, address1In
       )
     })
 
+    it('testCanReturnMessageWithUnknownRestrictionCode', async function () {
+      // Act + Assert
+      (await this.cmtat.messageForTransferRestriction(254)).should.equal(
+        'Unknown restriction code'
+      )
+    })
+
     // ADDRESS1 may transfer tokens to ADDRESS2
     it('testCanTransferAllowedByRule', async function () {
       const AMOUNT_TO_TRANSFER = 11
