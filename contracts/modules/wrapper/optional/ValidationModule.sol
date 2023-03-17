@@ -22,7 +22,8 @@ abstract contract ValidationModule is
     enum REJECTED_CODE {
         TRANSFER_OK,
         TRANSFER_REJECTED_PAUSED,
-        TRANSFER_REJECTED_FROZEN
+        TRANSFER_REJECTED_FROM_FROZEN,
+        TRANSFER_REJECTED_TO_FROZEN
     }
     string constant TEXT_TRANSFER_OK = "No restriction";
 
@@ -78,8 +79,11 @@ abstract contract ValidationModule is
         if (paused()) {
             return uint8(REJECTED_CODE.TRANSFER_REJECTED_PAUSED);
         } else if (frozen(from)) {
-            return uint8(REJECTED_CODE.TRANSFER_REJECTED_FROZEN);
-        } else if (address(ruleEngine) != address(0)) {
+            return uint8(REJECTED_CODE.TRANSFER_REJECTED_FROM_FROZEN);
+        } else if (frozen(to)){
+            return uint8(REJECTED_CODE.TRANSFER_REJECTED_TO_FROZEN);
+        }
+        else if (address(ruleEngine) != address(0)) {
             return _detectTransferRestriction(from, to, amount);
         }
         return uint8(REJECTED_CODE.TRANSFER_OK);
@@ -99,10 +103,13 @@ abstract contract ValidationModule is
             restrictionCode == uint8(REJECTED_CODE.TRANSFER_REJECTED_PAUSED)
         ) {
             return TEXT_TRANSFER_REJECTED_PAUSED;
-        } else if (
-            restrictionCode == uint8(REJECTED_CODE.TRANSFER_REJECTED_FROZEN)
+        }  else if (restrictionCode == uint8(REJECTED_CODE.TRANSFER_REJECTED_FROM_FROZEN)){
+             return TEXT_TRANSFER_REJECTED_FROM_FROZEN;
+        } 
+        else if (
+            restrictionCode == uint8(REJECTED_CODE.TRANSFER_REJECTED_TO_FROZEN)
         ) {
-            return TEXT_TRANSFER_REJECTED_FROZEN;
+            return TEXT_TRANSFER_REJECTED_TO_FROZEN;
         } else if (address(ruleEngine) != address(0)) {
             return _messageForTransferRestriction(restrictionCode);
         }

@@ -203,7 +203,8 @@ contract CMTAT is
         uint256 amount
     ) internal override(SnapshotModuleInternal, ERC20Upgradeable) {
         require(!paused(), "CMTAT: token transfer while paused");
-        require(!frozen(from), "CMTAT: token transfer while frozen");
+        require(!frozen(from), "CMTAT: token transfer while FROM is frozen");
+        require(!frozen(to), "CMTAT: token transfer while TO is frozen");
 
         SnapshotModuleInternal._beforeTokenTransfer(from, to, amount);
 
