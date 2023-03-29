@@ -19,6 +19,9 @@ interface IDebtGlobal {
     }
 
     struct CreditEvents {
+        // flagDefault binary: 01
+        // flagRedeemed binary: 10
+        uint256 flag;
         bool flagDefault;
         bool flagRedeemed;
         string rating;
