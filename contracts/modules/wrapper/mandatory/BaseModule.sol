@@ -66,6 +66,9 @@ abstract contract BaseModule is AuthorizationModule, OnlyDelegateCallModule {
     }
 
     /* Methods */
+    /*
+    @notice the terms will be changed even if the new value is the same as the current one
+    */
     function setTokenId(
         string memory tokenId_
     ) public onlyRole(DEFAULT_ADMIN_ROLE) {
@@ -73,6 +76,9 @@ abstract contract BaseModule is AuthorizationModule, OnlyDelegateCallModule {
         emit TokenId(tokenId_, tokenId_);
     }
 
+    /*
+    @notice the terms will be changed even if the new value is the same as the current one
+    */
     function setTerms(
         string memory terms_
     ) public onlyRole(DEFAULT_ADMIN_ROLE) {
@@ -80,6 +86,9 @@ abstract contract BaseModule is AuthorizationModule, OnlyDelegateCallModule {
         emit Term(terms_, terms_);
     }
 
+    /*
+    @notice the terms will be changed even if the new value is the same as the current one
+    */
     function setInformation(
         string memory information_
     ) public onlyRole(DEFAULT_ADMIN_ROLE) {
@@ -87,7 +96,9 @@ abstract contract BaseModule is AuthorizationModule, OnlyDelegateCallModule {
         emit Information(information_, information_);
     }
 
+
     function setFlag(uint256 flag_) public onlyRole(DEFAULT_ADMIN_ROLE) {
+        require(flag != flag_, "Same value");
         flag = flag_;
         emit Flag(flag_);
     }
