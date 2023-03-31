@@ -77,6 +77,10 @@ abstract contract DebtBaseModule is
         // no variable to initialize
     }
 
+    /*
+    @notice Set all attributes of debt
+    The values of all attributes will be changed even if the new values are the same as the current ones
+    */
     function setDebt(
         uint256 interestRate_,
         uint256 parValue_,
@@ -130,7 +134,7 @@ abstract contract DebtBaseModule is
     }
 
     /*
-    @notice the call will be reverted if the new value of interestRate is the same as the current one
+    @notice The call will be reverted if the new value of interestRate is the same as the current one
     */
     function setInterestRate(uint256 interestRate_) public onlyRole(DEBT_ROLE) {
         require(debt.interestRate != interestRate_, "Same value");
@@ -139,7 +143,7 @@ abstract contract DebtBaseModule is
     }
 
     /*
-    @notice the call will be reverted if the new value of parValue is the same as the current one
+    @notice The call will be reverted if the new value of parValue is the same as the current one
     */
     function setParValue(uint256 parValue_) public onlyRole(DEBT_ROLE) {
         require(debt.parValue != parValue_, "Same value");
@@ -148,7 +152,7 @@ abstract contract DebtBaseModule is
     }
 
     /*
-    @notice the Guarantor will be changed even if the new value is the same as the current one
+    @notice The Guarantor will be changed even if the new value is the same as the current one
     */
     function setGuarantor(string memory guarantor_) public onlyRole(DEBT_ROLE) {
         debt.guarantor = guarantor_;
@@ -156,7 +160,7 @@ abstract contract DebtBaseModule is
     }
 
     /*
-    @notice the bonHolder will be changed even if the new value is the same as the current one
+    @notice The bonHolder will be changed even if the new value is the same as the current one
     */
     function setBondHolder(
         string memory bondHolder_
@@ -166,7 +170,7 @@ abstract contract DebtBaseModule is
     }
 
     /*
-    @notice the maturityDate will be changed even if the new value is the same as the current one
+    @notice The maturityDate will be changed even if the new value is the same as the current one
     */
     function setMaturityDate(
         string memory maturityDate_
@@ -176,7 +180,7 @@ abstract contract DebtBaseModule is
     }
 
     /*
-    @notice the interestScheduleFormat will be changed even if the new value is the same as the current one
+    @notice The interestScheduleFormat will be changed even if the new value is the same as the current one
     */
     function setInterestScheduleFormat(
         string memory interestScheduleFormat_
@@ -189,7 +193,7 @@ abstract contract DebtBaseModule is
     }
 
     /*
-    @notice the interestPaymentDate will be changed even if the new value is the same as the current one
+    @notice The interestPaymentDate will be changed even if the new value is the same as the current one
     */
     function setInterestPaymentDate(
         string memory interestPaymentDate_
@@ -199,7 +203,7 @@ abstract contract DebtBaseModule is
     }
 
     /*
-    @notice the dayCountConvention will be changed even if the new value is the same as the current one
+    @notice The dayCountConvention will be changed even if the new value is the same as the current one
     */
     function setDayCountConvention(
         string memory dayCountConvention_
@@ -209,7 +213,7 @@ abstract contract DebtBaseModule is
     }
 
     /*
-    @notice the businessDayConvention will be changed even if the new value is the same as the current one
+    @notice The businessDayConvention will be changed even if the new value is the same as the current one
     */
     function setBusinessDayConvention(
         string memory businessDayConvention_
@@ -222,7 +226,7 @@ abstract contract DebtBaseModule is
     }
 
     /*
-    @notice the publicHolidayCalendar will be changed even if the new value is the same as the current one
+    @notice The publicHolidayCalendar will be changed even if the new value is the same as the current one
     */
     function setPublicHolidaysCalendar(
         string memory publicHolidayCalendar_
@@ -235,7 +239,7 @@ abstract contract DebtBaseModule is
     }
 
     /*
-    @notice the issuanceDate will be changed even if the new value is the same as the current one
+    @notice The issuanceDate will be changed even if the new value is the same as the current one
     */
     function setIssuanceDate(
         string memory issuanceDate_
@@ -245,7 +249,7 @@ abstract contract DebtBaseModule is
     }
 
     /*
-    @notice the couponFrequency will be changed even if the new value is the same as the current one
+    @notice The couponFrequency will be changed even if the new value is the same as the current one
     */
     function setCouponFrequency(
         string memory couponFrequency_
