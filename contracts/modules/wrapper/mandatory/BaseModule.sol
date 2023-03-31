@@ -96,7 +96,9 @@ abstract contract BaseModule is AuthorizationModule, OnlyDelegateCallModule {
         emit Information(information_, information_);
     }
 
-
+    /*
+    @notice the call will be reverted if the new value of flag is the same as the current one
+    */
     function setFlag(uint256 flag_) public onlyRole(DEFAULT_ADMIN_ROLE) {
         require(flag != flag_, "Same value");
         flag = flag_;
