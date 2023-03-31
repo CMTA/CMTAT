@@ -16,8 +16,9 @@ abstract contract CreditEvents is
     CreditEvents public creditEvents;
 
     /* Events */
-    event FlagDefaultSet(bool indexed newFlagDefault);
-    event FlagRedeemedSet(bool indexed newFlagRedeemed);
+    event creditEventFlag(uint256 indexed newFlag);
+    event FlagDefaultSet(uint256 indexed newFlagDefault);
+    event FlagRedeemedSet(uint256 indexed newFlagRedeemed);
     event RatingSet(string indexed newRatingIndexed, string newRating);
 
     function __CreditEvents_init(address admin) internal onlyInitializing {
@@ -42,30 +43,38 @@ abstract contract CreditEvents is
     }
 
     function setCreditEvents(
-        bool flagDefault_,
-        bool flagRedeemed_,
+        uint256 flag_,
         string memory rating_
     ) public onlyRole(DEBT_CREDIT_EVENT_ROLE) {
-        creditEvents = (CreditEvents(flagDefault_, flagRedeemed_, rating_));
-        emit FlagDefaultSet(flagDefault_);
-        emit FlagRedeemedSet(flagRedeemed_);
+        creditEvents = (CreditEvents(flag_, rating_));
+        emit FlagDefaultSet(flag_ & uint256(CREDIT_EVENT_FLAG.FLAG_DEFAULT));
+        emit FlagRedeemedSet(flag_ & uint256(CREDIT_EVENT_FLAG.FLAG_REDEEMED));
         emit RatingSet(rating_, rating_);
+    }
+    
+    function readCreditFlag(uint256 indexFromRight) external returns (bool) {
+        return (creditEvents.flag & (1 << indexFromRight)) > 0;
+    }
+
+    function modifyBit(uint256 number, uint256 position, uint256 binary) internal returns (uint256){
+        uint256 mask = 1 << position;
+        return (( number & mask) | (binary << position));
     }
 
     function setFlagDefault(
         bool flagDefault_
     ) public onlyRole(DEBT_CREDIT_EVENT_ROLE) {
-        require(flagDefault_ != creditEvents.flagDefault, "Same value");
-        creditEvents.flagDefault = flagDefault_;
-        emit FlagDefaultSet(flagDefault_);
+        require(uint256((creditEvents.flag & uint256(CREDIT_EVENT_FLAG.FLAG_DEFAULT))) != flagDefault_ , "Same value");
+        creditEvents.flag = modifyBit (creditEvents.flag, CREDIT_EVENT_FLAG.FLAG_DEFAULT, flagDefault_);
+        emit FlagDefaultSet(uint256(flagDefault_));
     }
 
     function setFlagRedeemed(
         bool flagRedeemed_
     ) public onlyRole(DEBT_CREDIT_EVENT_ROLE) {
-        require(flagRedeemed_ != creditEvents.flagRedeemed, "Same value");
-        creditEvents.flagRedeemed = flagRedeemed_;
-        emit FlagRedeemedSet(flagRedeemed_);
+        require((creditEvents.flag & uint256(CREDIT_EVENT_FLAG.FLAG_REDEEMED)) != flagRedeemed_ , "Same value");
+        creditEvents.flag = modifyBit (creditEvents.flag, CREDIT_EVENT_FLAG.FLAG_REDEEMED, flagRedeemed_);
+        emit FlagRedeemedSet(uint256(flagRedeemed_));
     }
 
     function setRating(
