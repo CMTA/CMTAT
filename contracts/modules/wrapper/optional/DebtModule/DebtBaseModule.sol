@@ -16,8 +16,8 @@ abstract contract DebtBaseModule is
     DebtBase public debt;
 
     /* Events */
-    event InterestRate(uint256 indexed newInterestRate);
-    event ParValue(uint256 indexed newParValue);
+    event InterestRate(uint256 newInterestRate);
+    event ParValue(uint256 newParValue);
     event Guarantor(string indexed newGuarantorIndexed, string newGuarantor);
     event BondHolder(
         string indexed newBondHolderIndexed,
