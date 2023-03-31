@@ -56,9 +56,13 @@ abstract contract ValidationModule is
         // no variable to initialize
     }
 
+    /*
+    @notice The call will be reverted if the new value of ruleEngine is the same as the current one
+    */
     function setRuleEngine(
         IRuleEngine ruleEngine_
     ) external onlyRole(DEFAULT_ADMIN_ROLE) {
+        require(ruleEngine != ruleEngine_, "Same value");
         ruleEngine = ruleEngine_;
         emit RuleEngine(ruleEngine_);
     }
