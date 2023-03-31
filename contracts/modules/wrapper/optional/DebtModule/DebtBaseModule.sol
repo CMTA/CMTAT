@@ -16,42 +16,42 @@ abstract contract DebtBaseModule is
     DebtBase public debt;
 
     /* Events */
-    event InterestRateSet(uint256 indexed newInterestRate);
-    event ParValueSet(uint256 indexed newParValue);
-    event GuarantorSet(string indexed newGuarantorIndexed, string newGuarantor);
-    event BondHolderSet(
+    event InterestRate(uint256 indexed newInterestRate);
+    event ParValue(uint256 indexed newParValue);
+    event Guarantor(string indexed newGuarantorIndexed, string newGuarantor);
+    event BondHolder(
         string indexed newBondHolderIndexed,
         string newBondHolder
     );
-    event MaturityDateSet(
+    event MaturityDate(
         string indexed newMaturityDateIndexed,
         string newMaturityDate
     );
-    event InterestScheduleFormatSet(
+    event InterestScheduleFormat(
         string indexed newInterestScheduleFormatIndexed,
         string newInterestScheduleFormat
     );
-    event InterestPaymentDateSet(
+    event InterestPaymentDate(
         string indexed newInterestPaymentDateIndexed,
         string newInterestPaymentDate
     );
-    event DayCountConventionSet(
+    event DayCountConvention(
         string indexed newDayCountConventionIndexed,
         string newDayCountConvention
     );
-    event BusinessDayConventionSet(
+    event BusinessDayConvention(
         string indexed newBusinessDayConventionIndexed,
         string newBusinessDayConvention
     );
-    event PublicHolidaysCalendarSet(
+    event PublicHolidaysCalendar(
         string indexed newPublicHolidaysCalendarIndexed,
         string newPublicHolidaysCalendar
     );
-    event IssuanceDateSet(
+    event IssuanceDate(
         string indexed newIssuanceDateIndexed,
         string newIssuanceDate
     );
-    event CouponFrequencySet(
+    event CouponFrequency(
         string indexed newCouponFrequencyIndexed,
         string newCouponFrequency
     );
@@ -108,22 +108,22 @@ abstract contract DebtBaseModule is
                 couponFrequency_
             )
         );
-        emit InterestRateSet(interestRate_);
-        emit ParValueSet(parValue_);
-        emit GuarantorSet(guarantor_, guarantor_);
-        emit BondHolderSet(bondHolder_, bondHolder_);
-        emit MaturityDateSet(maturityDate_, maturityDate_);
-        emit InterestScheduleFormatSet(
+        emit InterestRate(interestRate_);
+        emit ParValue(parValue_);
+        emit Guarantor(guarantor_, guarantor_);
+        emit BondHolder(bondHolder_, bondHolder_);
+        emit MaturityDate(maturityDate_, maturityDate_);
+        emit InterestScheduleFormat(
             interestScheduleFormat_,
             interestScheduleFormat_
         );
-        emit InterestPaymentDateSet(interestPaymentDate_, interestPaymentDate_);
-        emit DayCountConventionSet(dayCountConvention_, dayCountConvention_);
-        emit BusinessDayConventionSet(
+        emit InterestPaymentDate(interestPaymentDate_, interestPaymentDate_);
+        emit DayCountConvention(dayCountConvention_, dayCountConvention_);
+        emit BusinessDayConvention(
             businessDayConvention_,
             businessDayConvention_
         );
-        emit PublicHolidaysCalendarSet(
+        emit PublicHolidaysCalendar(
             publicHolidayCalendar_,
             publicHolidayCalendar_
         );
@@ -131,38 +131,38 @@ abstract contract DebtBaseModule is
 
     function setInterestRate(uint256 interestRate_) public onlyRole(DEBT_ROLE) {
         debt.interestRate = interestRate_;
-        emit InterestRateSet(interestRate_);
+        emit InterestRate(interestRate_);
     }
 
     function setParValue(uint256 parValue_) public onlyRole(DEBT_ROLE) {
         debt.parValue = parValue_;
-        emit ParValueSet(parValue_);
+        emit ParValue(parValue_);
     }
 
     function setGuarantor(string memory guarantor_) public onlyRole(DEBT_ROLE) {
         debt.guarantor = guarantor_;
-        emit GuarantorSet(guarantor_, guarantor_);
+        emit Guarantor(guarantor_, guarantor_);
     }
 
     function setBondHolder(
         string memory bondHolder_
     ) public onlyRole(DEBT_ROLE) {
         debt.bondHolder = bondHolder_;
-        emit BondHolderSet(bondHolder_, bondHolder_);
+        emit BondHolder(bondHolder_, bondHolder_);
     }
 
     function setMaturityDate(
         string memory maturityDate_
     ) public onlyRole(DEBT_ROLE) {
         debt.maturityDate = maturityDate_;
-        emit MaturityDateSet(maturityDate_, maturityDate_);
+        emit MaturityDate(maturityDate_, maturityDate_);
     }
 
     function setInterestScheduleFormat(
         string memory interestScheduleFormat_
     ) public onlyRole(DEBT_ROLE) {
         debt.interestScheduleFormat = interestScheduleFormat_;
-        emit InterestScheduleFormatSet(
+        emit InterestScheduleFormat(
             interestScheduleFormat_,
             interestScheduleFormat_
         );
@@ -172,21 +172,21 @@ abstract contract DebtBaseModule is
         string memory interestPaymentDate_
     ) public onlyRole(DEBT_ROLE) {
         debt.interestPaymentDate = interestPaymentDate_;
-        emit InterestPaymentDateSet(interestPaymentDate_, interestPaymentDate_);
+        emit InterestPaymentDate(interestPaymentDate_, interestPaymentDate_);
     }
 
     function setDayCountConvention(
         string memory dayCountConvention_
     ) public onlyRole(DEBT_ROLE) {
         debt.dayCountConvention = dayCountConvention_;
-        emit DayCountConventionSet(dayCountConvention_, dayCountConvention_);
+        emit DayCountConvention(dayCountConvention_, dayCountConvention_);
     }
 
     function setBusinessDayConvention(
         string memory businessDayConvention_
     ) public onlyRole(DEBT_ROLE) {
         debt.businessDayConvention = businessDayConvention_;
-        emit BusinessDayConventionSet(
+        emit BusinessDayConvention(
             businessDayConvention_,
             businessDayConvention_
         );
@@ -196,7 +196,7 @@ abstract contract DebtBaseModule is
         string memory publicHolidayCalendar_
     ) public onlyRole(DEBT_ROLE) {
         debt.publicHolidayCalendar = publicHolidayCalendar_;
-        emit PublicHolidaysCalendarSet(
+        emit PublicHolidaysCalendar(
             publicHolidayCalendar_,
             publicHolidayCalendar_
         );
@@ -206,14 +206,14 @@ abstract contract DebtBaseModule is
         string memory issuanceDate_
     ) public onlyRole(DEBT_ROLE) {
         debt.issuanceDate = issuanceDate_;
-        emit IssuanceDateSet(issuanceDate_, issuanceDate_);
+        emit IssuanceDate(issuanceDate_, issuanceDate_);
     }
 
     function setCouponFrequency(
         string memory couponFrequency_
     ) public onlyRole(DEBT_ROLE) {
         debt.couponFrequency = couponFrequency_;
-        emit CouponFrequencySet(couponFrequency_, couponFrequency_);
+        emit CouponFrequency(couponFrequency_, couponFrequency_);
     }
 
     uint256[50] private __gap;
