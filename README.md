@@ -66,6 +66,13 @@ longer wishes to have its shares issued in the form of ledger securities. The "k
 Such a functionality can be performed via that `kill()` function. A new token contract may then be deployed via the proxy.
 Alternatively, if interactions with the "killed contract" are still necessary, it may be paused (and never unpaused).
 
+## SnpashotModule
+
+This module was not audited during the audit made by ABDK and it is no longer imported by default inside the CMTAT.
+
+If you want to add this module, you have to uncomment the specific lines "SnapshotModule" inside the file `CMTAT.sol`.
+
+Be warned that this module may possibly contain security flaws.
 
 ## Security 
 
