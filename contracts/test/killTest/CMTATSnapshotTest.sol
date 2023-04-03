@@ -3,23 +3,25 @@
 pragma solidity ^0.8.17;
 
 // required OZ imports here
-import "../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
-import "../openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradeable.sol";
-import "./modules/wrapper/mandatory/BaseModule.sol";
-import "./modules/wrapper/mandatory/BurnModule.sol";
-import "./modules/wrapper/mandatory/MintModule.sol";
-import "./modules/wrapper/mandatory/EnforcementModule.sol";
-import "./modules/wrapper/mandatory/ERC20BaseModule.sol";
-import "./modules/wrapper/mandatory/SnapshotModule.sol";
-import "./modules/wrapper/mandatory/PauseModule.sol";
-import "./modules/wrapper/optional/ValidationModule.sol";
-import "./modules/wrapper/optional/MetaTxModule.sol";
-import "./modules/wrapper/optional/DebtModule/DebtBaseModule.sol";
-import "./modules/wrapper/optional/DebtModule/CreditEvents.sol";
-import "./modules/security/AuthorizationModule.sol";
-import "./interfaces/IRuleEngine.sol";
+import "../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
+import "../../../openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradeable.sol";
+import "../../modules/wrapper/mandatory/BaseModule.sol";
+import "../../modules/wrapper/mandatory/BurnModule.sol";
+import "../../modules/wrapper/mandatory/MintModule.sol";
+import "../../modules/wrapper/mandatory/BurnModule.sol";
+import "../../modules/wrapper/mandatory/EnforcementModule.sol";
+import "../../modules/wrapper/mandatory/ERC20BaseModule.sol";
+import "../../modules/wrapper/mandatory/PauseModule.sol";
+import "../../modules/wrapper/mandatory/SnapshotModule.sol";
+import "../../modules/wrapper/optional/ValidationModule.sol";
+import "../../modules/wrapper/optional/MetaTxModule.sol";
+import "../../modules/wrapper/optional/DebtModule/DebtBaseModule.sol";
+import "../../modules/wrapper/optional/DebtModule/CreditEvents.sol";
+import "../../modules/security/AuthorizationModule.sol";
+import "../../modules/security/OnlyDelegateCallModule.sol";
+import "../../interfaces/IRuleEngine.sol";
 
-contract CMTAT is
+contract CMTATSnapshotTest is
     Initializable,
     ContextUpgradeable,
     BaseModule,
@@ -29,6 +31,7 @@ contract CMTAT is
     EnforcementModule,
     ValidationModule,
     MetaTxModule,
+    SnapshotModule,
     ERC20BaseModule,
     DebtBaseModule,
     CreditEvents
@@ -136,11 +139,8 @@ contract CMTAT is
 
         /* Internal Modules */
         __Enforcement_init_unchained();
-        /*
-        SnapshotModule:
-        Add this call in case you add the SnapshotModule
+        // SnapshotModule
         __Snapshot_init_unchained();
-        */
         __Validation_init_unchained(ruleEngine);
 
         /* Wrapper */
@@ -154,12 +154,8 @@ contract CMTAT is
         // PauseModule_init_unchained is called before ValidationModule_init_unchained due to inheritance
         __PauseModule_init_unchained();
         __ValidationModule_init_unchained();
-
-        /*
-        SnapshotModule:
-        Add this call in case you add the SnapshotModule
+        // SnapshotModule
         __SnasphotModule_init_unchained();
-        */
 
         /* Other modules */
         __DebtBaseModule_init_unchained();
@@ -205,26 +201,16 @@ contract CMTAT is
         return ERC20BaseModule.transferFrom(sender, recipient, amount);
     }
 
-    /*
-    @dev 
-    SnapshotModule:
-    - override SnapshotModuleInternal if you add the SnapshotModule
-    e.g. override(SnapshotModuleInternal, ERC20Upgradeable)
-    - remove the keyword view
-    */
     function _beforeTokenTransfer(
         address from,
         address to,
         uint256 amount
-    ) internal override(ERC20Upgradeable) view {
+    ) internal override(SnapshotModuleInternal, ERC20Upgradeable) {
         require(!paused(), "CMTAT: token transfer while paused");
         require(!frozen(from), "CMTAT: token transfer while frozen");
 
-        /*
-        SnapshotModule:
-        Add this call in case you add the SnapshotModule
+        // SnapshotModule
         SnapshotModuleInternal._beforeTokenTransfer(from, to, amount);
-        */
 
         require(
             validateTransfer(from, to, amount),
