@@ -3,28 +3,28 @@
 pragma solidity ^0.8.17;
 
 // required OZ imports here
-import "../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
-import "../../openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradeable.sol";
+import "../../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
+import "../../../../openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradeable.sol";
 
-import "./wrapper/mandatory/BaseModule.sol";
-import "./wrapper/mandatory/BurnModule.sol";
-import "./wrapper/mandatory/MintModule.sol";
-import "./wrapper/mandatory/EnforcementModule.sol";
-import "./wrapper/mandatory/ERC20BaseModule.sol";
+import "../../../modules/wrapper/mandatory/BaseModule.sol";
+import "../../../modules/wrapper/mandatory/BurnModule.sol";
+import "../../../modules/wrapper/mandatory/MintModule.sol";
+import "../../../modules/wrapper/mandatory/EnforcementModule.sol";
+import "../../../modules/wrapper/mandatory/ERC20BaseModule.sol";
 /*
 SnapshotModule:
 Add this import in case you add the SnapshotModule
-import "./wrapper/optional/SnapshotModule.sol";
 */
-import "./wrapper/mandatory/PauseModule.sol";
-import "./wrapper/optional/ValidationModule.sol";
-import "./wrapper/optional/MetaTxModule.sol";
-import "./wrapper/optional/DebtModule/DebtBaseModule.sol";
-import "./wrapper/optional/DebtModule/CreditEvents.sol";
-import "./security/AuthorizationModule.sol";
-import "../interfaces/IRuleEngine.sol";
+import "../../../modules/wrapper/optional/SnapshotModule.sol";
+import "../../../modules/wrapper/mandatory/PauseModule.sol";
+import "../../../modules/wrapper/optional/ValidationModule.sol";
+import "../../../modules/wrapper/optional/MetaTxModule.sol";
+import "../../../modules/wrapper/optional/DebtModule/DebtBaseModule.sol";
+import "../../../modules/wrapper/optional/DebtModule/CreditEvents.sol";
+import "../../../modules/security/AuthorizationModule.sol";
+import "../../../interfaces/IRuleEngine.sol";
 
-abstract contract CMTAT_BASE is
+abstract contract CMTAT_BASE_SnapshotTest is
     Initializable,
     ContextUpgradeable,
     BaseModule,
@@ -35,7 +35,7 @@ abstract contract CMTAT_BASE is
     ValidationModule,
     MetaTxModule,
     ERC20BaseModule,
-    // SnapshotModule,
+    SnapshotModule,
     DebtBaseModule,
     CreditEvents
 {
@@ -97,8 +97,9 @@ abstract contract CMTAT_BASE is
         /*
         SnapshotModule:
         Add this call in case you add the SnapshotModule
-        __Snapshot_init_unchained();
         */
+        __Snapshot_init_unchained();
+
         __Validation_init_unchained(ruleEngine);
 
         /* Wrapper */
@@ -116,8 +117,8 @@ abstract contract CMTAT_BASE is
         /*
         SnapshotModule:
         Add this call in case you add the SnapshotModule
-        __SnasphotModule_init_unchained();
         */
+        __SnasphotModule_init_unchained();
 
         /* Other modules */
         __DebtBaseModule_init_unchained();
@@ -174,14 +175,14 @@ abstract contract CMTAT_BASE is
         address from,
         address to,
         uint256 amount
-    ) internal override(ERC20Upgradeable) view {
+    ) internal override(SnapshotModuleInternal, ERC20Upgradeable) {
         require(ValidationModule.validateTransfer(from, to, amount), "CMTAT: transfer rejected by validation module");
         // We call the SnapshotModule only if the transfer is valid
         /*
         SnapshotModule:
         Add this call in case you add the SnapshotModule
-        SnapshotModuleInternal._beforeTokenTransfer(from, to, amount);
         */
+        SnapshotModuleInternal._beforeTokenTransfer(from, to, amount);
     }
 
     /** 

@@ -1,4 +1,4 @@
-const CMTAT = artifacts.require('CMTAT_PROXY')
+const CMTAT = artifacts.require('CMTATSnapshotProxyTest')
 const { deployProxy } = require('@openzeppelin/truffle-upgrades')
 const SnapshotModuleCommonGlobal = require('../../common/SnapshotModuleCommon/global/SnapshotModuleMultiplePlannedTest')
 const SnapshotModuleCommonRescheduling = require('../../common/SnapshotModuleCommon/SnapshotModuleCommonRescheduling')

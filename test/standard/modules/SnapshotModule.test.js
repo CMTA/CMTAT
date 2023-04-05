@@ -1,4 +1,4 @@
-const CMTAT = artifacts.require('CMTAT_STANDALONE')
+const CMTAT = artifacts.require('CMTATSnapshotStandaloneTest')
 const SnapshotModuleCommonGlobal = require('../../common/SnapshotModuleCommon/global/SnapshotModuleMultiplePlannedTest')
 const SnapshotModuleCommonRescheduling = require('../../common/SnapshotModuleCommon/SnapshotModuleCommonRescheduling')
 const SnapshotModuleCommonScheduling = require('../../common/SnapshotModuleCommon/SnapshotModuleCommonScheduling')
