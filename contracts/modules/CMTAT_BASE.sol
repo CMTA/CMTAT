@@ -45,7 +45,6 @@ abstract contract CMTAT_BASE is
     The calls to this function will revert if the contract was deployed without a proxy
     */
     function initialize(
-        bool deployedWithProxyIrrevocable_,
         address admin,
         string memory nameIrrevocable,
         string memory symbolIrrevocable,
@@ -56,7 +55,6 @@ abstract contract CMTAT_BASE is
         uint256 flag
     ) public initializer {
         __CMTAT_init(
-            deployedWithProxyIrrevocable_,
             admin,
             nameIrrevocable,
             symbolIrrevocable,
@@ -72,7 +70,6 @@ abstract contract CMTAT_BASE is
     @dev calls the different initialize functions from the different modules
     */
     function __CMTAT_init(
-        bool deployedWithProxyIrrevocable_,
         address admin,
         string memory nameIrrevocable,
         string memory symbolIrrevocable,
@@ -125,16 +122,12 @@ abstract contract CMTAT_BASE is
         __Base_init_unchained(tokenId, terms, information, flag);
 
         /* own function */
-        __CMTAT_init_unchained(deployedWithProxyIrrevocable_);
+        __CMTAT_init_unchained();
     }
 
-    /**
-    @param deployedWithProxyIrrevocable_ true if the contract is deployed with a proxy, false otherwise
-    */
     function __CMTAT_init_unchained(
-        bool deployedWithProxyIrrevocable_
     ) internal onlyInitializing {
-        deployedWithProxy = deployedWithProxyIrrevocable_;
+       // no variable to initialize
     }
 
     /**

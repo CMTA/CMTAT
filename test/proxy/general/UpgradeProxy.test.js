@@ -13,7 +13,7 @@ contract('UpgradeableCMTAT - Proxy', function ([_, admin, address1]) {
   it('testKeepStorageForTokens', async function () {
     this.flag = 5
     // With the first version of CMTAT
-    this.CMTAT_PROXY = await deployProxy(CMTAT1, [true, admin, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', ZERO_ADDRESS, 'CMTAT_info', this.flag], {
+    this.CMTAT_PROXY = await deployProxy(CMTAT1, [admin, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', ZERO_ADDRESS, 'CMTAT_info', this.flag], {
       initializer: 'initialize',
       constructorArgs: [_]
     })

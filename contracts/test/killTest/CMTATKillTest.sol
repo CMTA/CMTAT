@@ -12,7 +12,7 @@ import "../../modules/wrapper/mandatory/BurnModule.sol";
 import "../../modules/wrapper/mandatory/EnforcementModule.sol";
 import "../../modules/wrapper/mandatory/ERC20BaseModule.sol";
 import "../../modules/wrapper/mandatory/PauseModule.sol";
-import "../../modules/wrapper/optional/SnapshotModule.sol";
+// import "../../modules/wrapper/optional/SnapshotModule.sol";
 import "../../modules/wrapper/optional/ValidationModule.sol";
 import "../../modules/wrapper/optional/MetaTxModule.sol";
 import "../../modules/wrapper/optional/DebtModule/DebtBaseModule.sol";
@@ -35,13 +35,14 @@ contract CMTAT_KILL_TEST is
     EnforcementModule,
     ValidationModule,
     MetaTxModule,
-    SnapshotModule,
+    //SnapshotModule,
     ERC20BaseModule,
     DebtBaseModule,
     CreditEvents
 {
+    // CMTAT_PROXY constructor
     /** 
-    @notice create the contract
+    @notice Contract version for the deployment with a proxy
     @param forwarderIrrevocable address of the forwarder, required for the gasless support
     */
     /// @custom:oz-upgrades-unsafe-allow constructor
@@ -54,13 +55,13 @@ contract CMTAT_KILL_TEST is
         _disableInitializers();
     }
 
-/**
+
+    /**
     @notice 
     initialize the proxy contract
     The calls to this function will revert if the contract was deployed without a proxy
     */
     function initialize(
-        bool deployedWithProxyIrrevocable_,
         address admin,
         string memory nameIrrevocable,
         string memory symbolIrrevocable,
@@ -71,7 +72,6 @@ contract CMTAT_KILL_TEST is
         uint256 flag
     ) public initializer {
         __CMTAT_init(
-            deployedWithProxyIrrevocable_,
             admin,
             nameIrrevocable,
             symbolIrrevocable,
@@ -87,7 +87,6 @@ contract CMTAT_KILL_TEST is
     @dev calls the different initialize functions from the different modules
     */
     function __CMTAT_init(
-        bool deployedWithProxyIrrevocable_,
         address admin,
         string memory nameIrrevocable,
         string memory symbolIrrevocable,
@@ -109,7 +108,11 @@ contract CMTAT_KILL_TEST is
 
         /* Internal Modules */
         __Enforcement_init_unchained();
+        /*
+        SnapshotModule:
+        Add this call in case you add the SnapshotModule
         __Snapshot_init_unchained();
+        */
         __Validation_init_unchained(ruleEngine);
 
         /* Wrapper */
@@ -123,7 +126,12 @@ contract CMTAT_KILL_TEST is
         // PauseModule_init_unchained is called before ValidationModule_init_unchained due to inheritance
         __PauseModule_init_unchained();
         __ValidationModule_init_unchained();
+
+        /*
+        SnapshotModule:
+        Add this call in case you add the SnapshotModule
         __SnasphotModule_init_unchained();
+        */
 
         /* Other modules */
         __DebtBaseModule_init_unchained();
@@ -131,16 +139,12 @@ contract CMTAT_KILL_TEST is
         __Base_init_unchained(tokenId, terms, information, flag);
 
         /* own function */
-        __CMTAT_init_unchained(deployedWithProxyIrrevocable_);
+        __CMTAT_init_unchained();
     }
 
-    /**
-    @param deployedWithProxyIrrevocable_ true if the contract is deployed with a proxy, false otherwise
-    */
     function __CMTAT_init_unchained(
-        bool deployedWithProxyIrrevocable_
     ) internal onlyInitializing {
-        deployedWithProxy = deployedWithProxyIrrevocable_;
+       // no variable to initialize
     }
 
     /**
@@ -169,20 +173,25 @@ contract CMTAT_KILL_TEST is
         return ERC20BaseModule.transferFrom(sender, recipient, amount);
     }
 
+    /*
+    @dev 
+    SnapshotModule:
+    - override SnapshotModuleInternal if you add the SnapshotModule
+    e.g. override(SnapshotModuleInternal, ERC20Upgradeable)
+    - remove the keyword view
+    */
     function _beforeTokenTransfer(
         address from,
         address to,
         uint256 amount
-    ) internal override(SnapshotModuleInternal, ERC20Upgradeable) {
-        require(!paused(), "CMTAT: token transfer while paused");
-        require(!frozen(from), "CMTAT: token transfer while frozen");
-
+    ) internal override(ERC20Upgradeable) view {
+        require(ValidationModule.validateTransfer(from, to, amount), "CMTAT: transfer rejected by validation module");
+        // We call the SnapshotModule only if the transfer is valid
+        /*
+        SnapshotModule:
+        Add this call in case you add the SnapshotModule
         SnapshotModuleInternal._beforeTokenTransfer(from, to, amount);
-
-        require(
-            validateTransfer(from, to, amount),
-            "CMTAT: transfer rejected by validation module"
-        );
+        */
     }
 
     /** 

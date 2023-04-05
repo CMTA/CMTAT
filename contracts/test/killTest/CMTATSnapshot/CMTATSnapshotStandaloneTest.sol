@@ -6,7 +6,7 @@ import "./CMTAT_BASE_SnapshotTest.sol";
 
 contract CMTATSnapshotStandaloneTest is CMTAT_BASE_SnapshotTest
 {
-    /** 
+        /** 
     @notice Contract version for standalone deployment
     @param forwarderIrrevocable address of the forwarder, required for the gasless support
     @param admin address of the admin of contract (Access Control)
@@ -33,7 +33,6 @@ contract CMTATSnapshotStandaloneTest is CMTAT_BASE_SnapshotTest
         // Initialize the contract to avoid front-running
         // Warning : do not initialize the proxy
         initialize(
-            false,
             admin,
             nameIrrevocable,
             symbolIrrevocable,
@@ -44,6 +43,6 @@ contract CMTATSnapshotStandaloneTest is CMTAT_BASE_SnapshotTest
             flag
         );
     }
-
+    
     // No storage gap because the contract is deployed in standalone mode
 }

@@ -1,5 +1,6 @@
 const { expectRevert } = require('@openzeppelin/test-helpers')
-const CMTAT = artifacts.require('CMTAT')
+const CMTAT_STANDALONE = artifacts.require('CMTAT_STANDALONE')
+const CMTAT_PROXY = artifacts.require('CMTAT_PROXY')
 const { deployProxy } = require('@openzeppelin/truffle-upgrades')
 const { ZERO_ADDRESS } = require('../utils')
 contract(
@@ -9,16 +10,16 @@ contract(
       this.flag = 5
 
       // Act + Assert
-      await expectRevert(deployProxy(CMTAT, [true, ZERO_ADDRESS, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', ZERO_ADDRESS, 'CMTAT_info', this.flag], {
+      await expectRevert(deployProxy(CMTAT_PROXY, [ZERO_ADDRESS, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', ZERO_ADDRESS, 'CMTAT_info', this.flag], {
         initializer: 'initialize',
-        constructorArgs: [_, true, ZERO_ADDRESS, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', ZERO_ADDRESS, 'CMTAT_info', this.flag]
+        constructorArgs: [_]
       }), 'Address 0 not allowed')
     })
     it('testCannotDeployStandaloneWithAdminSetToAddressZero', async function () {
       this.flag = 5
 
       // Act + Assert
-      await expectRevert(CMTAT.new(_, false, ZERO_ADDRESS, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', ZERO_ADDRESS, 'CMTAT_info', this.flag, { from: admin }), 'Address 0 not allowed')
+      await expectRevert(CMTAT_STANDALONE.new(_, ZERO_ADDRESS, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', ZERO_ADDRESS, 'CMTAT_info', this.flag, { from: admin }), 'Address 0 not allowed')
     })
   }
 )

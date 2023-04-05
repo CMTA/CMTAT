@@ -33,7 +33,6 @@ contract CMTAT_STANDALONE is CMTAT_BASE
         // Initialize the contract to avoid front-running
         // Warning : do not initialize the proxy
         initialize(
-            false,
             admin,
             nameIrrevocable,
             symbolIrrevocable,

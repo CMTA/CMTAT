@@ -39,13 +39,13 @@ abstract contract CMTAT_BASE_SnapshotTest is
     DebtBaseModule,
     CreditEvents
 {
+    
     /**
     @notice 
     initialize the proxy contract
     The calls to this function will revert if the contract was deployed without a proxy
     */
     function initialize(
-        bool deployedWithProxyIrrevocable_,
         address admin,
         string memory nameIrrevocable,
         string memory symbolIrrevocable,
@@ -56,7 +56,6 @@ abstract contract CMTAT_BASE_SnapshotTest is
         uint256 flag
     ) public initializer {
         __CMTAT_init(
-            deployedWithProxyIrrevocable_,
             admin,
             nameIrrevocable,
             symbolIrrevocable,
@@ -73,7 +72,6 @@ abstract contract CMTAT_BASE_SnapshotTest is
     @param admin the address has to be different from 0, check made in AuthorizationModule
     */
     function __CMTAT_init(
-        bool deployedWithProxyIrrevocable_,
         address admin,
         string memory nameIrrevocable,
         string memory symbolIrrevocable,
@@ -127,16 +125,12 @@ abstract contract CMTAT_BASE_SnapshotTest is
         __Base_init_unchained(tokenId, terms, information, flag);
 
         /* own function */
-        __CMTAT_init_unchained(deployedWithProxyIrrevocable_);
+        __CMTAT_init_unchained();
     }
 
-    /**
-    @param deployedWithProxyIrrevocable_ true if the contract is deployed with a proxy, false otherwise
-    */
     function __CMTAT_init_unchained(
-        bool deployedWithProxyIrrevocable_
     ) internal onlyInitializing {
-        deployedWithProxy = deployedWithProxyIrrevocable_;
+       // no variable to initialize
     }
 
     /**
