@@ -5,7 +5,7 @@ pragma solidity ^0.8.17;
 // required OZ imports here
 import "../../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
 import "../../security/AuthorizationModule.sol";
-import "../../../modules/security/OnlyDelegateCallModule.sol";
+import "../../security/OnlyDelegateCallModule.sol";
 
 abstract contract BaseModule is AuthorizationModule, OnlyDelegateCallModule {
     bool internal deployedWithProxy;
