@@ -2,9 +2,9 @@
 
 pragma solidity ^0.8.0;
 
-import "./IERC1404.sol";
+import "./IEIP1404.sol";
 
-interface IERC1404Wrapper is IERC1404 {
+interface IEIP1404Wrapper is IEIP1404 {
     /* 
     @dev leave the code 4-9 free/unused for further additions in your ruleEngine implementation
     */
