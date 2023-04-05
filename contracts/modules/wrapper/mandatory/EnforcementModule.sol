@@ -16,8 +16,11 @@ abstract contract EnforcementModule is
     EnforcementModuleInternal,
     AuthorizationModule
 {
-    string internal constant TEXT_TRANSFER_REJECTED_FROZEN =
-        "The address is frozen";
+    string internal constant TEXT_TRANSFER_REJECTED_FROM_FROZEN =
+        "The address FROM is frozen";
+
+    string internal constant TEXT_TRANSFER_REJECTED_TO_FROZEN =
+        "The address TO is frozen";
 
     function __EnforcementModule_init(address admin) internal onlyInitializing {
         /* OpenZeppelin */
