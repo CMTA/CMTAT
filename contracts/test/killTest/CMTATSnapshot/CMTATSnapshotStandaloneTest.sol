@@ -26,7 +26,7 @@ contract CMTATSnapshotStandaloneTest is CMTAT_BASE_SnapshotTest
         string memory symbolIrrevocable,
         string memory tokenId,
         string memory terms,
-        IRuleEngine ruleEngine,
+        IERC1404Wrapper ruleEngine,
         string memory information,
         uint256 flag
     ) MetaTxModule(forwarderIrrevocable) {
@@ -43,6 +43,6 @@ contract CMTATSnapshotStandaloneTest is CMTAT_BASE_SnapshotTest
             flag
         );
     }
-    
+
     // No storage gap because the contract is deployed in standalone mode
 }

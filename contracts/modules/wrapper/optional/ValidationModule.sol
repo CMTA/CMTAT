@@ -23,7 +23,7 @@ abstract contract ValidationModule is
     string constant TEXT_UNKNOWN_CODE = "Unknown code";
 
     function __ValidationModule_init(
-        IRuleEngine ruleEngine_,
+        IERC1404Wrapper ruleEngine_,
         address admin
     ) internal onlyInitializing {
         /* OpenZeppelin */
@@ -57,7 +57,7 @@ abstract contract ValidationModule is
     @param ruleEngine_ the call will be reverted if the new value of ruleEngine is the same as the current one
     */
     function setRuleEngine(
-        IRuleEngine ruleEngine_
+        IERC1404Wrapper ruleEngine_
     ) external onlyRole(DEFAULT_ADMIN_ROLE) {
         require(ruleEngine != ruleEngine_, "Same value");
         ruleEngine = ruleEngine_;

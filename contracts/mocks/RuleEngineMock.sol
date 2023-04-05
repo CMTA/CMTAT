@@ -2,8 +2,8 @@
 
 pragma solidity ^0.8.17;
 
-import "../interfaces/IRule.sol";
-import "../interfaces/IRuleEngine.sol";
+import "./interfaces/IRule.sol";
+import "./interfaces/IRuleEngine.sol";
 import "./RuleMock.sol";
 import "./CodeList.sol";
 
