@@ -49,6 +49,15 @@ function BaseModuleCommon (owner, attacker) {
       })
     })
 
+    it('testAdminCanNotSetInterestRateWithTheSameValue', async function () {
+      // Arrange
+      (await this.cmtat.debt()).interestRate.should.be.bignumber.equal('0')
+      // Act + Assert
+      await expectRevert(this.cmtat.setInterestRate(0, { from: owner }),
+        'Same value'
+      )
+    })
+
     it('testAdminCanSetParValue', async function () {
       // Arrange
       (await this.cmtat.debt()).parValue.should.be.bignumber.equal('0');
@@ -59,6 +68,15 @@ function BaseModuleCommon (owner, attacker) {
       expectEvent.inLogs(this.logs, 'ParValue', {
         newParValue: '7'
       })
+    })
+
+    it('testAdminCanNotSetParValueWithTheSameValue', async function () {
+      // Arrange
+      (await this.cmtat.debt()).parValue.should.be.bignumber.equal('0')
+      // Act + Assert
+      await expectRevert(this.cmtat.setParValue(0, { from: owner }),
+        'Same value'
+      )
     })
 
     it('testAdminCanSetGuarantor', async function () {

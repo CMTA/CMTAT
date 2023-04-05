@@ -101,6 +101,14 @@ function BaseModuleCommon (owner, address1, address2, address3, proxyTest) {
         newFlag: '100'
       })
     })
+    it('testAdminCanNotUpdateFlagWithTheSameValue', async function () {
+      // Arrange - Assert
+      (await this.cmtat.flag()).should.be.bignumber.equal(this.flag.toString());
+      // Act
+      await expectRevert(this.cmtat.setFlag(this.flag.toString(), { from: owner }),
+        'Same value'
+      )
+    })
     it('testCannotNonAdminUpdateFlag', async function () {
       // Arrange - Assert
       (await this.cmtat.flag()).should.be.bignumber.equal(this.flag.toString())

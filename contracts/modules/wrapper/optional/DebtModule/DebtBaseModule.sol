@@ -77,6 +77,10 @@ abstract contract DebtBaseModule is
         // no variable to initialize
     }
 
+    /*
+    @notice Set all attributes of debt
+    The values of all attributes will be changed even if the new values are the same as the current ones
+    */
     function setDebt(
         uint256 interestRate_,
         uint256 parValue_,
@@ -129,21 +133,35 @@ abstract contract DebtBaseModule is
         );
     }
 
+    /*
+    @notice The call will be reverted if the new value of interestRate is the same as the current one
+    */
     function setInterestRate(uint256 interestRate_) public onlyRole(DEBT_ROLE) {
+        require(debt.interestRate != interestRate_, "Same value");
         debt.interestRate = interestRate_;
         emit InterestRate(interestRate_);
     }
 
+    /*
+    @notice The call will be reverted if the new value of parValue is the same as the current one
+    */
     function setParValue(uint256 parValue_) public onlyRole(DEBT_ROLE) {
+        require(debt.parValue != parValue_, "Same value");
         debt.parValue = parValue_;
         emit ParValue(parValue_);
     }
 
+    /*
+    @notice The Guarantor will be changed even if the new value is the same as the current one
+    */
     function setGuarantor(string memory guarantor_) public onlyRole(DEBT_ROLE) {
         debt.guarantor = guarantor_;
         emit Guarantor(guarantor_, guarantor_);
     }
 
+    /*
+    @notice The bonHolder will be changed even if the new value is the same as the current one
+    */
     function setBondHolder(
         string memory bondHolder_
     ) public onlyRole(DEBT_ROLE) {
@@ -151,6 +169,9 @@ abstract contract DebtBaseModule is
         emit BondHolder(bondHolder_, bondHolder_);
     }
 
+    /*
+    @notice The maturityDate will be changed even if the new value is the same as the current one
+    */
     function setMaturityDate(
         string memory maturityDate_
     ) public onlyRole(DEBT_ROLE) {
@@ -158,6 +179,9 @@ abstract contract DebtBaseModule is
         emit MaturityDate(maturityDate_, maturityDate_);
     }
 
+    /*
+    @notice The interestScheduleFormat will be changed even if the new value is the same as the current one
+    */
     function setInterestScheduleFormat(
         string memory interestScheduleFormat_
     ) public onlyRole(DEBT_ROLE) {
@@ -168,6 +192,9 @@ abstract contract DebtBaseModule is
         );
     }
 
+    /*
+    @notice The interestPaymentDate will be changed even if the new value is the same as the current one
+    */
     function setInterestPaymentDate(
         string memory interestPaymentDate_
     ) public onlyRole(DEBT_ROLE) {
@@ -175,6 +202,9 @@ abstract contract DebtBaseModule is
         emit InterestPaymentDate(interestPaymentDate_, interestPaymentDate_);
     }
 
+    /*
+    @notice The dayCountConvention will be changed even if the new value is the same as the current one
+    */
     function setDayCountConvention(
         string memory dayCountConvention_
     ) public onlyRole(DEBT_ROLE) {
@@ -182,6 +212,9 @@ abstract contract DebtBaseModule is
         emit DayCountConvention(dayCountConvention_, dayCountConvention_);
     }
 
+    /*
+    @notice The businessDayConvention will be changed even if the new value is the same as the current one
+    */
     function setBusinessDayConvention(
         string memory businessDayConvention_
     ) public onlyRole(DEBT_ROLE) {
@@ -192,6 +225,9 @@ abstract contract DebtBaseModule is
         );
     }
 
+    /*
+    @notice The publicHolidayCalendar will be changed even if the new value is the same as the current one
+    */
     function setPublicHolidaysCalendar(
         string memory publicHolidayCalendar_
     ) public onlyRole(DEBT_ROLE) {
@@ -202,6 +238,9 @@ abstract contract DebtBaseModule is
         );
     }
 
+    /*
+    @notice The issuanceDate will be changed even if the new value is the same as the current one
+    */
     function setIssuanceDate(
         string memory issuanceDate_
     ) public onlyRole(DEBT_ROLE) {
@@ -209,6 +248,9 @@ abstract contract DebtBaseModule is
         emit IssuanceDate(issuanceDate_, issuanceDate_);
     }
 
+    /*
+    @notice The couponFrequency will be changed even if the new value is the same as the current one
+    */
     function setCouponFrequency(
         string memory couponFrequency_
     ) public onlyRole(DEBT_ROLE) {
