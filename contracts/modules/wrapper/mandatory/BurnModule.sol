@@ -7,7 +7,7 @@ import "../../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Ini
 import "../../security/AuthorizationModule.sol";
 
 abstract contract BurnModule is ERC20Upgradeable, AuthorizationModule {
-    event Burn(address indexed owner, uint256 amount);
+    event Burn(address indexed owner, uint256 amount, string reason);
 
     function __BurnModule_init(
         string memory name_,
@@ -41,10 +41,11 @@ abstract contract BurnModule is ERC20Upgradeable, AuthorizationModule {
      */
     function forceBurn(
         address account,
-        uint256 amount
+        uint256 amount, 
+        string memory reason
     ) public onlyRole(BURNER_ROLE) {
         _burn(account, amount);
-        emit Burn(account, amount);
+        emit Burn(account, amount, reason);
     }
 
     uint256[50] private __gap;
