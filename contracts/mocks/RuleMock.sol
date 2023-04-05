@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.17;
 
-import "../interfaces/IRule.sol";
+import "./interfaces/IRule.sol";
 import "./CodeList.sol";
 
 contract RuleMock is IRule, CodeList {

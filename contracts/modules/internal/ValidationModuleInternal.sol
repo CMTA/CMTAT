@@ -4,7 +4,7 @@ pragma solidity ^0.8.17;
 
 import "../../../openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradeable.sol";
 import "../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
-import "../../interfaces/IRuleEngine.sol";
+import "../../interfaces/IERC1404Wrapper.sol";
 
 /**
  * @dev Validation module.
@@ -18,22 +18,22 @@ abstract contract ValidationModuleInternal is
     /**
      * @dev Emitted when a rule engine is set.
      */
-    event RuleEngine(IRuleEngine indexed newRuleEngine);
+    event RuleEngine(IERC1404Wrapper indexed newRuleEngine);
 
-    IRuleEngine public ruleEngine;
+    IERC1404Wrapper public ruleEngine;
 
     /**
      * @dev Initializes the contract with rule engine.
      */
     function __Validation_init(
-        IRuleEngine ruleEngine_
+        IERC1404Wrapper ruleEngine_
     ) internal onlyInitializing {
         __Context_init_unchained();
         __Validation_init_unchained(ruleEngine_);
     }
 
     function __Validation_init_unchained(
-        IRuleEngine ruleEngine_
+        IERC1404Wrapper ruleEngine_
     ) internal onlyInitializing {
         if (address(ruleEngine_) != address(0)) {
             ruleEngine = ruleEngine_;

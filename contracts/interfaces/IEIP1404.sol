@@ -1,10 +1,10 @@
 //SPDX-License-Identifier: MPL-2.0
 
-pragma solidity ^0.8.17;
+pragma solidity ^0.8.0;
 
-interface IERC1404 {
+interface IEIP1404 {
     /**
-     * @dev See ERC-1404
+     * @dev See ERC/EIP-1404
      *
      */
     function detectTransferRestriction(
@@ -14,7 +14,7 @@ interface IERC1404 {
     ) external view returns (uint8);
 
     /**
-     * @dev See ERC-1404
+     * @dev See ERC/EIP-1404
      *
      */
     function messageForTransferRestriction(

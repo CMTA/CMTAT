@@ -22,7 +22,7 @@ import "./wrapper/optional/MetaTxModule.sol";
 import "./wrapper/optional/DebtModule/DebtBaseModule.sol";
 import "./wrapper/optional/DebtModule/CreditEvents.sol";
 import "./security/AuthorizationModule.sol";
-import "../interfaces/IRuleEngine.sol";
+import "../interfaces/IERC1404Wrapper.sol";
 
 abstract contract CMTAT_BASE is
     Initializable,
@@ -50,7 +50,7 @@ abstract contract CMTAT_BASE is
         string memory symbolIrrevocable,
         string memory tokenId,
         string memory terms,
-        IRuleEngine ruleEngine,
+        IERC1404Wrapper ruleEngine,
         string memory information,
         uint256 flag
     ) public initializer {
@@ -75,7 +75,7 @@ abstract contract CMTAT_BASE is
         string memory symbolIrrevocable,
         string memory tokenId,
         string memory terms,
-        IRuleEngine ruleEngine,
+        IERC1404Wrapper ruleEngine,
         string memory information,
         uint256 flag
     ) internal onlyInitializing {

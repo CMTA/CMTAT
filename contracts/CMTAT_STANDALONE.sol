@@ -26,7 +26,7 @@ contract CMTAT_STANDALONE is CMTAT_BASE
         string memory symbolIrrevocable,
         string memory tokenId,
         string memory terms,
-        IRuleEngine ruleEngine,
+        IERC1404Wrapper ruleEngine,
         string memory information,
         uint256 flag
     ) MetaTxModule(forwarderIrrevocable) {

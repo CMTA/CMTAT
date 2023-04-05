@@ -2,8 +2,8 @@
 
 pragma solidity ^0.8.17;
 
-import "../interfaces/IRule.sol";
-import "../interfaces/IRuleEngine.sol";
+import "./interfaces/IRule.sol";
+import "./interfaces/IRuleEngine.sol";
 import "./RuleMock.sol";
 import "./CodeList.sol";
 
@@ -18,7 +18,7 @@ contract RuleEngineMock is IRuleEngine, CodeList {
         _rules = rules_;
     }
 
-    function ruleLength() external view override returns (uint256) {
+    function rulesCount() external view override returns (uint256) {
         return _rules.length;
     }
 
