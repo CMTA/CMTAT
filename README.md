@@ -35,12 +35,18 @@ To use the CMTAT, we recommend that you use the latest audited version, from the
 
 You may modify the token code by adding, removing, or modifying features. However, the base, enforcement, and snapshot modules must remain in place for compliance with Swiss law.
 
-### Proxying support
+### Deployment mode (Standalone / With A Proxy)
+
+#### Standalone
+
+If you want to deploy without a proxy, in standalone mode, you need to use the contract version `CMTAT_STANDALONE`
+
+#### With A Proxy
 
 The CMTAT supports deployment via a proxy contract.  Furthermore, using a proxy permits to upgrade the contract, using a standard proxy upgrade
 pattern.
 
-At deployment, the parameter  `deployedWithProxyIrrevocable_` inside the  CMTAT contract constructor has to be set at true
+The contract version to use as an implementation is the `CMTAT_PROXY`.
 
 Please see the OpenZeppelin [upgradeable contracts documentation](https://docs.openzeppelin.com/upgrades-plugins/1.x/writing-upgradeable) for more information about the proxy requirements applied to the contract.
 

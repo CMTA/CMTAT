@@ -3,23 +3,23 @@
 pragma solidity ^0.8.17;
 
 // required OZ imports here
-import "../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
-import "../openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradeable.sol";
-import "./modules/wrapper/mandatory/BaseModule.sol";
-import "./modules/wrapper/mandatory/BurnModule.sol";
-import "./modules/wrapper/mandatory/MintModule.sol";
-import "./modules/wrapper/mandatory/EnforcementModule.sol";
-import "./modules/wrapper/mandatory/ERC20BaseModule.sol";
-import "./modules/wrapper/mandatory/SnapshotModule.sol";
-import "./modules/wrapper/mandatory/PauseModule.sol";
-import "./modules/wrapper/optional/ValidationModule.sol";
-import "./modules/wrapper/optional/MetaTxModule.sol";
-import "./modules/wrapper/optional/DebtModule/DebtBaseModule.sol";
-import "./modules/wrapper/optional/DebtModule/CreditEvents.sol";
-import "./modules/security/AuthorizationModule.sol";
-import "./interfaces/IRuleEngine.sol";
+import "../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
+import "../../openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradeable.sol";
+import "./wrapper/mandatory/BaseModule.sol";
+import "./wrapper/mandatory/BurnModule.sol";
+import "./wrapper/mandatory/MintModule.sol";
+import "./wrapper/mandatory/EnforcementModule.sol";
+import "./wrapper/mandatory/ERC20BaseModule.sol";
+import "./wrapper/mandatory/SnapshotModule.sol";
+import "./wrapper/mandatory/PauseModule.sol";
+import "./wrapper/optional/ValidationModule.sol";
+import "./wrapper/optional/MetaTxModule.sol";
+import "./wrapper/optional/DebtModule/DebtBaseModule.sol";
+import "./wrapper/optional/DebtModule/CreditEvents.sol";
+import "./security/AuthorizationModule.sol";
+import "../interfaces/IRuleEngine.sol";
 
-contract CMTAT is
+abstract contract CMTAT_BASE is
     Initializable,
     ContextUpgradeable,
     BaseModule,
@@ -34,54 +34,6 @@ contract CMTAT is
     DebtBaseModule,
     CreditEvents
 {
-    /** 
-    @notice create the contract
-    @param forwarderIrrevocable address of the forwarder, required for the gasless support
-    @param deployedWithProxyIrrevocable_ true if the contract is deployed with a proxy, false otherwise
-    @param admin address of the admin of contract (Access Control)
-    @param nameIrrevocable name of the token
-    @param symbolIrrevocable name of the symbol
-    @param tokenId name of the tokenId
-    @param terms terms associated with the token
-    @param ruleEngine address of the ruleEngine to apply rules to transfers
-    @param information additional information to describe the token
-    @param flag add information under the form of bit(0, 1)
-    */
-    /// @custom:oz-upgrades-unsafe-allow constructor
-    constructor(
-        address forwarderIrrevocable,
-        bool deployedWithProxyIrrevocable_,
-        address admin,
-        string memory nameIrrevocable,
-        string memory symbolIrrevocable,
-        string memory tokenId,
-        string memory terms,
-        IRuleEngine ruleEngine,
-        string memory information,
-        uint256 flag
-    ) MetaTxModule(forwarderIrrevocable) {
-        if (!deployedWithProxyIrrevocable_) {
-            // Initialize the contract to avoid front-running
-            // Warning : do not initialize the proxy
-            initialize(
-                deployedWithProxyIrrevocable_,
-                admin,
-                nameIrrevocable,
-                symbolIrrevocable,
-                tokenId,
-                terms,
-                ruleEngine,
-                information,
-                flag
-            );
-        } else {
-            // Initialize the variable for the implementation
-            deployedWithProxy = true;
-            // Disable the possibility to initialize the implementation
-            _disableInitializers();
-        }
-    }
-
     /**
     @notice 
     initialize the proxy contract

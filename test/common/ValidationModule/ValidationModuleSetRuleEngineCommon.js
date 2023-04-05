@@ -2,9 +2,6 @@ const { expectEvent, expectRevert } = require('@openzeppelin/test-helpers')
 const { DEFAULT_ADMIN_ROLE } = require('../../utils')
 const { should } = require('chai').should()
 
-const CMTAT = artifacts.require('CMTAT')
-const RuleEngineMock = artifacts.require('RuleEngineMock')
-
 function ValidationModuleSetRuleEngineCommon (admin, address1, ruleEngine) {
   context('RuleEngineSetTest', function () {
     it('testCanBeSetByAdmin', async function () {
