@@ -70,6 +70,7 @@ abstract contract CMTAT_BASE_SnapshotTest is
 
     /**
     @dev calls the different initialize functions from the different modules
+    @param admin the address has to be different from 0, check made in AuthorizationModule
     */
     function __CMTAT_init(
         bool deployedWithProxyIrrevocable_,

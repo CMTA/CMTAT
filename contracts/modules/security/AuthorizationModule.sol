@@ -43,6 +43,7 @@ abstract contract AuthorizationModule is AccessControlUpgradeable {
     function __AuthorizationModule_init_unchained(
         address admin
     ) internal onlyInitializing {
+        require(admin != address(0), "Address 0 not allowed");
         _grantRole(DEFAULT_ADMIN_ROLE, admin);
     }
     /*
