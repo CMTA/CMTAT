@@ -59,7 +59,7 @@ abstract contract ValidationModule is
         IRuleEngine ruleEngine_
     ) external onlyRole(DEFAULT_ADMIN_ROLE) {
         ruleEngine = ruleEngine_;
-        emit RuleEngineSet(ruleEngine_);
+        emit RuleEngine(ruleEngine_);
     }
 
     /**

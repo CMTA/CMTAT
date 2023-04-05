@@ -18,7 +18,7 @@ abstract contract ValidationModuleInternal is
     /**
      * @dev Emitted when a rule engine is set.
      */
-    event RuleEngineSet(IRuleEngine indexed newRuleEngine);
+    event RuleEngine(IRuleEngine indexed newRuleEngine);
 
     IRuleEngine public ruleEngine;
 
@@ -37,7 +37,7 @@ abstract contract ValidationModuleInternal is
     ) internal onlyInitializing {
         if (address(ruleEngine_) != address(0)) {
             ruleEngine = ruleEngine_;
-            emit RuleEngineSet(ruleEngine);
+            emit RuleEngine(ruleEngine);
         }
     }
 

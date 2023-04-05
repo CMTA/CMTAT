@@ -26,7 +26,7 @@ function CreditEventsModuleCommon (owner, attacker) {
       ({ logs: this.logs } = await this.cmtat.setFlagDefault(true, { from: owner }));
       // Assert
       (await this.cmtat.creditEvents()).flagDefault.should.equal(true)
-      expectEvent.inLogs(this.logs, 'FlagDefaultSet', {
+      expectEvent.inLogs(this.logs, 'FlagDefault', {
         newFlagDefault: true
       })
     })
@@ -38,7 +38,7 @@ function CreditEventsModuleCommon (owner, attacker) {
       ({ logs: this.logs } = await this.cmtat.setFlagRedeemed(true, { from: owner }));
       // Assert
       (await this.cmtat.creditEvents()).flagRedeemed.should.equal(true)
-      expectEvent.inLogs(this.logs, 'FlagRedeemedSet', {
+      expectEvent.inLogs(this.logs, 'FlagRedeemed', {
         newFlagRedeemed: true
       })
     })
@@ -50,7 +50,7 @@ function CreditEventsModuleCommon (owner, attacker) {
       ({ logs: this.logs } = await this.cmtat.setRating('B++', { from: owner }));
       // Assert
       (await this.cmtat.creditEvents()).rating.should.equal('B++')
-      expectEvent.inLogs(this.logs, 'RatingSet', {
+      expectEvent.inLogs(this.logs, 'Rating', {
         newRatingIndexed: web3.utils.sha3('B++'),
         newRating: 'B++'
       })

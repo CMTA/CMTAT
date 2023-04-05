@@ -16,9 +16,9 @@ abstract contract CreditEvents is
     CreditEvents public creditEvents;
 
     /* Events */
-    event FlagDefaultSet(bool indexed newFlagDefault);
-    event FlagRedeemedSet(bool indexed newFlagRedeemed);
-    event RatingSet(string indexed newRatingIndexed, string newRating);
+    event FlagDefault(bool indexed newFlagDefault);
+    event FlagRedeemed(bool indexed newFlagRedeemed);
+    event Rating(string indexed newRatingIndexed, string newRating);
 
     function __CreditEvents_init(address admin) internal onlyInitializing {
         /* OpenZeppelin */
@@ -47,9 +47,9 @@ abstract contract CreditEvents is
         string memory rating_
     ) public onlyRole(DEBT_CREDIT_EVENT_ROLE) {
         creditEvents = (CreditEvents(flagDefault_, flagRedeemed_, rating_));
-        emit FlagDefaultSet(flagDefault_);
-        emit FlagRedeemedSet(flagRedeemed_);
-        emit RatingSet(rating_, rating_);
+        emit FlagDefault(flagDefault_);
+        emit FlagRedeemed(flagRedeemed_);
+        emit Rating(rating_, rating_);
     }
 
     function setFlagDefault(
@@ -57,7 +57,7 @@ abstract contract CreditEvents is
     ) public onlyRole(DEBT_CREDIT_EVENT_ROLE) {
         require(flagDefault_ != creditEvents.flagDefault, "Same value");
         creditEvents.flagDefault = flagDefault_;
-        emit FlagDefaultSet(flagDefault_);
+        emit FlagDefault(flagDefault_);
     }
 
     function setFlagRedeemed(
@@ -65,14 +65,14 @@ abstract contract CreditEvents is
     ) public onlyRole(DEBT_CREDIT_EVENT_ROLE) {
         require(flagRedeemed_ != creditEvents.flagRedeemed, "Same value");
         creditEvents.flagRedeemed = flagRedeemed_;
-        emit FlagRedeemedSet(flagRedeemed_);
+        emit FlagRedeemed(flagRedeemed_);
     }
 
     function setRating(
         string memory rating_
     ) public onlyRole(DEBT_CREDIT_EVENT_ROLE) {
         creditEvents.rating = rating_;
-        emit RatingSet(rating_, rating_);
+        emit Rating(rating_, rating_);
     }
 
     uint256[50] private __gap;

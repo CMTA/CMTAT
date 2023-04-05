@@ -11,7 +11,7 @@ function ValidationModuleSetRuleEngineCommon (admin, address1, ruleEngine) {
       }))
       // Assert
       // emits a RuleEngineSet event
-      expectEvent.inLogs(this.logs, 'RuleEngineSet', {
+      expectEvent.inLogs(this.logs, 'RuleEngine', {
         newRuleEngine: ruleEngine
       })
     })
