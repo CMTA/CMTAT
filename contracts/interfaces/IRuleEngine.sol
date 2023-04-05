@@ -1,6 +1,6 @@
 //SPDX-License-Identifier: MPL-2.0
 
-pragma solidity ^0.8.17;
+pragma solidity ^0.8.0;
 
 import "./IRule.sol";
 import "./IERC1404Wrapper.sol";
@@ -15,7 +15,7 @@ interface IRuleEngine is IERC1404Wrapper {
     /**
      * @dev return the number of rules
      */
-    function ruleLength() external view returns (uint256);
+    function rulesCount() external view returns (uint256);
 
     /**
      * @dev return the rule at the index specified by ruleId

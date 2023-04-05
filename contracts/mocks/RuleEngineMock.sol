@@ -18,7 +18,7 @@ contract RuleEngineMock is IRuleEngine, CodeList {
         _rules = rules_;
     }
 
-    function ruleLength() external view override returns (uint256) {
+    function rulesCount() external view override returns (uint256) {
         return _rules.length;
     }
 
