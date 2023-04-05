@@ -83,8 +83,9 @@ abstract contract ValidationModule is
         }
         else if (address(ruleEngine) != address(0)) {
             return _detectTransferRestriction(from, to, amount);
+        } else{
+            return uint8(REJECTED_CODE_BASE.TRANSFER_OK);
         }
-        return uint8(REJECTED_CODE_BASE.TRANSFER_OK);
     }
 
     /**
