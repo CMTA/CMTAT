@@ -2,9 +2,6 @@ const { expectEvent, expectRevert } = require('@openzeppelin/test-helpers')
 const { DEFAULT_ADMIN_ROLE } = require('../../utils')
 const { should } = require('chai').should()
 
-const CMTAT = artifacts.require('CMTAT')
-const RuleEngineMock = artifacts.require('RuleEngineMock')
-
 function ValidationModuleSetRuleEngineCommon (admin, address1, ruleEngine) {
   context('RuleEngineSetTest', function () {
     it('testCanBeSetByAdmin', async function () {
@@ -14,9 +11,16 @@ function ValidationModuleSetRuleEngineCommon (admin, address1, ruleEngine) {
       }))
       // Assert
       // emits a RuleEngineSet event
-      expectEvent.inLogs(this.logs, 'RuleEngineSet', {
+      expectEvent.inLogs(this.logs, 'RuleEngine', {
         newRuleEngine: ruleEngine
       })
+    })
+
+    it('testCanNotBeSetByAdminWithTheSameValue', async function () {
+      // Act
+      await expectRevert(this.cmtat.setRuleEngine(await this.cmtat.ruleEngine(), { from: admin }),
+        'Same value'
+      )
     })
 
     it('testCannotBeSetByNonAdmin', async function () {

@@ -19,7 +19,7 @@ function BaseModuleCommon (owner, address1, address2, address3, proxyTest) {
       ({ logs: this.logs } = await this.cmtat.setTokenId('CMTAT_TOKENID', { from: owner }));
       // Assert
       (await this.cmtat.tokenId()).should.equal('CMTAT_TOKENID')
-      expectEvent.inLogs(this.logs, 'TokenIdSet', {
+      expectEvent.inLogs(this.logs, 'TokenId', {
         newTokenIdIndexed: web3.utils.sha3('CMTAT_TOKENID'),
         newTokenId: 'CMTAT_TOKENID'
       })
@@ -45,7 +45,7 @@ function BaseModuleCommon (owner, address1, address2, address3, proxyTest) {
       ({ logs: this.logs } = await this.cmtat.setTerms('https://cmta.ch/terms', { from: owner }));
       // Assert
       (await this.cmtat.terms()).should.equal('https://cmta.ch/terms')
-      expectEvent.inLogs(this.logs, 'TermSet', {
+      expectEvent.inLogs(this.logs, 'Term', {
         newTermIndexed: web3.utils.sha3('https://cmta.ch/terms'),
         newTerm: 'https://cmta.ch/terms'
       })
@@ -71,7 +71,7 @@ function BaseModuleCommon (owner, address1, address2, address3, proxyTest) {
       ({ logs: this.logs } = await this.cmtat.setInformation('new info available', { from: owner }));
       // Assert
       (await this.cmtat.information()).should.equal('new info available')
-      expectEvent.inLogs(this.logs, 'InformationSet', {
+      expectEvent.inLogs(this.logs, 'Information', {
         newInformationIndexed: web3.utils.sha3('new info available'),
         newInformation: 'new info available'
       })
@@ -97,9 +97,17 @@ function BaseModuleCommon (owner, address1, address2, address3, proxyTest) {
       ({ logs: this.logs } = await this.cmtat.setFlag(100, { from: owner }));
       // Assert
       (await this.cmtat.flag()).should.be.bignumber.equal('100')
-      expectEvent.inLogs(this.logs, 'FlagSet', {
+      expectEvent.inLogs(this.logs, 'Flag', {
         newFlag: '100'
       })
+    })
+    it('testAdminCanNotUpdateFlagWithTheSameValue', async function () {
+      // Arrange - Assert
+      (await this.cmtat.flag()).should.be.bignumber.equal(this.flag.toString());
+      // Act
+      await expectRevert(this.cmtat.setFlag(this.flag.toString(), { from: owner }),
+        'Same value'
+      )
     })
     it('testCannotNonAdminUpdateFlag', async function () {
       // Arrange - Assert

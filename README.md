@@ -35,12 +35,18 @@ To use the CMTAT, we recommend that you use the latest audited version, from the
 
 You may modify the token code by adding, removing, or modifying features. However, the base, enforcement, and snapshot modules must remain in place for compliance with Swiss law.
 
-### Proxying support
+### Deployment mode (Standalone / With A Proxy)
+
+#### Standalone
+
+If you want to deploy without a proxy, in standalone mode, you need to use the contract version `CMTAT_STANDALONE`
+
+#### With A Proxy
 
 The CMTAT supports deployment via a proxy contract.  Furthermore, using a proxy permits to upgrade the contract, using a standard proxy upgrade
 pattern.
 
-At deployment, the parameter  `deployedWithProxyIrrevocable_` inside the  CMTAT contract constructor has to be set at true
+The contract version to use as an implementation is the `CMTAT_PROXY`.
 
 Please see the OpenZeppelin [upgradeable contracts documentation](https://docs.openzeppelin.com/upgrades-plugins/1.x/writing-upgradeable) for more information about the proxy requirements applied to the contract.
 
@@ -66,6 +72,13 @@ longer wishes to have its shares issued in the form of ledger securities. The "k
 Such a functionality can be performed via that `kill()` function. A new token contract may then be deployed via the proxy.
 Alternatively, if interactions with the "killed contract" are still necessary, it may be paused (and never unpaused).
 
+## SnpashotModule
+
+This module was not audited during the audit made by ABDK and it is no longer imported by default inside the CMTAT.
+
+If you want to add this module, you have to uncomment the specific lines "SnapshotModule" inside the file `CMTAT.sol`.
+
+Be warned that this module may possibly contain security flaws.
 
 ## Security 
 

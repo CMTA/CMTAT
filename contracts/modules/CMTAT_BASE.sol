@@ -3,23 +3,28 @@
 pragma solidity ^0.8.17;
 
 // required OZ imports here
-import "../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
-import "../openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradeable.sol";
-import "./modules/wrapper/mandatory/BaseModule.sol";
-import "./modules/wrapper/mandatory/BurnModule.sol";
-import "./modules/wrapper/mandatory/MintModule.sol";
-import "./modules/wrapper/mandatory/EnforcementModule.sol";
-import "./modules/wrapper/mandatory/ERC20BaseModule.sol";
-import "./modules/wrapper/mandatory/SnapshotModule.sol";
-import "./modules/wrapper/mandatory/PauseModule.sol";
-import "./modules/wrapper/optional/ValidationModule.sol";
-import "./modules/wrapper/optional/MetaTxModule.sol";
-import "./modules/wrapper/optional/DebtModule/DebtBaseModule.sol";
-import "./modules/wrapper/optional/DebtModule/CreditEvents.sol";
-import "./modules/security/AuthorizationModule.sol";
-import "./interfaces/IRuleEngine.sol";
+import "../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
+import "../../openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradeable.sol";
 
-contract CMTAT is
+import "./wrapper/mandatory/BaseModule.sol";
+import "./wrapper/mandatory/BurnModule.sol";
+import "./wrapper/mandatory/MintModule.sol";
+import "./wrapper/mandatory/EnforcementModule.sol";
+import "./wrapper/mandatory/ERC20BaseModule.sol";
+/*
+SnapshotModule:
+Add this import in case you add the SnapshotModule
+import "./wrapper/optional/SnapshotModule.sol";
+*/
+import "./wrapper/mandatory/PauseModule.sol";
+import "./wrapper/optional/ValidationModule.sol";
+import "./wrapper/optional/MetaTxModule.sol";
+import "./wrapper/optional/DebtModule/DebtBaseModule.sol";
+import "./wrapper/optional/DebtModule/CreditEvents.sol";
+import "./security/AuthorizationModule.sol";
+import "../interfaces/IERC1404Wrapper.sol";
+
+abstract contract CMTAT_BASE is
     Initializable,
     ContextUpgradeable,
     BaseModule,
@@ -29,77 +34,27 @@ contract CMTAT is
     EnforcementModule,
     ValidationModule,
     MetaTxModule,
-    SnapshotModule,
     ERC20BaseModule,
+    // SnapshotModule,
     DebtBaseModule,
     CreditEvents
 {
-    /** 
-    @notice create the contract
-    @param forwarderIrrevocable address of the forwarder, required for the gasless support
-    @param deployedWithProxyIrrevocable_ true if the contract is deployed with a proxy, false otherwise
-    @param admin address of the admin of contract (Access Control)
-    @param nameIrrevocable name of the token
-    @param symbolIrrevocable name of the symbol
-    @param tokenId name of the tokenId
-    @param terms terms associated with the token
-    @param ruleEngine address of the ruleEngine to apply rules to transfers
-    @param information additional information to describe the token
-    @param flag add information under the form of bit(0, 1)
-    */
-    /// @custom:oz-upgrades-unsafe-allow constructor
-    constructor(
-        address forwarderIrrevocable,
-        bool deployedWithProxyIrrevocable_,
-        address admin,
-        string memory nameIrrevocable,
-        string memory symbolIrrevocable,
-        string memory tokenId,
-        string memory terms,
-        IRuleEngine ruleEngine,
-        string memory information,
-        uint256 flag
-    ) MetaTxModule(forwarderIrrevocable) {
-        if (!deployedWithProxyIrrevocable_) {
-            // Initialize the contract to avoid front-running
-            // Warning : do not initialize the proxy
-            initialize(
-                deployedWithProxyIrrevocable_,
-                admin,
-                nameIrrevocable,
-                symbolIrrevocable,
-                tokenId,
-                terms,
-                ruleEngine,
-                information,
-                flag
-            );
-        } else {
-            // Initialize the variable for the implementation
-            deployedWithProxy = true;
-            // Disable the possibility to initialize the implementation
-            _disableInitializers();
-        }
-    }
-
     /**
     @notice 
     initialize the proxy contract
     The calls to this function will revert if the contract was deployed without a proxy
     */
     function initialize(
-        bool deployedWithProxyIrrevocable_,
         address admin,
         string memory nameIrrevocable,
         string memory symbolIrrevocable,
         string memory tokenId,
         string memory terms,
-        IRuleEngine ruleEngine,
+        IERC1404Wrapper ruleEngine,
         string memory information,
         uint256 flag
     ) public initializer {
         __CMTAT_init(
-            deployedWithProxyIrrevocable_,
             admin,
             nameIrrevocable,
             symbolIrrevocable,
@@ -115,13 +70,12 @@ contract CMTAT is
     @dev calls the different initialize functions from the different modules
     */
     function __CMTAT_init(
-        bool deployedWithProxyIrrevocable_,
         address admin,
         string memory nameIrrevocable,
         string memory symbolIrrevocable,
         string memory tokenId,
         string memory terms,
-        IRuleEngine ruleEngine,
+        IERC1404Wrapper ruleEngine,
         string memory information,
         uint256 flag
     ) internal onlyInitializing {
@@ -137,7 +91,11 @@ contract CMTAT is
 
         /* Internal Modules */
         __Enforcement_init_unchained();
+        /*
+        SnapshotModule:
+        Add this call in case you add the SnapshotModule
         __Snapshot_init_unchained();
+        */
         __Validation_init_unchained(ruleEngine);
 
         /* Wrapper */
@@ -151,7 +109,12 @@ contract CMTAT is
         // PauseModule_init_unchained is called before ValidationModule_init_unchained due to inheritance
         __PauseModule_init_unchained();
         __ValidationModule_init_unchained();
+
+        /*
+        SnapshotModule:
+        Add this call in case you add the SnapshotModule
         __SnasphotModule_init_unchained();
+        */
 
         /* Other modules */
         __DebtBaseModule_init_unchained();
@@ -159,16 +122,12 @@ contract CMTAT is
         __Base_init_unchained(tokenId, terms, information, flag);
 
         /* own function */
-        __CMTAT_init_unchained(deployedWithProxyIrrevocable_);
+        __CMTAT_init_unchained();
     }
 
-    /**
-    @param deployedWithProxyIrrevocable_ true if the contract is deployed with a proxy, false otherwise
-    */
     function __CMTAT_init_unchained(
-        bool deployedWithProxyIrrevocable_
     ) internal onlyInitializing {
-        deployedWithProxy = deployedWithProxyIrrevocable_;
+       // no variable to initialize
     }
 
     /**
@@ -197,20 +156,25 @@ contract CMTAT is
         return ERC20BaseModule.transferFrom(sender, recipient, amount);
     }
 
+    /*
+    @dev 
+    SnapshotModule:
+    - override SnapshotModuleInternal if you add the SnapshotModule
+    e.g. override(SnapshotModuleInternal, ERC20Upgradeable)
+    - remove the keyword view
+    */
     function _beforeTokenTransfer(
         address from,
         address to,
         uint256 amount
-    ) internal override(SnapshotModuleInternal, ERC20Upgradeable) {
-        require(!paused(), "CMTAT: token transfer while paused");
-        require(!frozen(from), "CMTAT: token transfer while frozen");
-
+    ) internal override(ERC20Upgradeable) view {
+        require(ValidationModule.validateTransfer(from, to, amount), "CMTAT: transfer rejected by validation module");
+        // We call the SnapshotModule only if the transfer is valid
+        /*
+        SnapshotModule:
+        Add this call in case you add the SnapshotModule
         SnapshotModuleInternal._beforeTokenTransfer(from, to, amount);
-
-        require(
-            validateTransfer(from, to, amount),
-            "CMTAT: transfer rejected by validation module"
-        );
+        */
     }
 
     /** 

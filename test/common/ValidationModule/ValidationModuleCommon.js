@@ -1,9 +1,9 @@
 const { expectEvent, expectRevert } = require('@openzeppelin/test-helpers')
 const { should } = require('chai').should()
 
-const CMTAT = artifacts.require('CMTAT')
 const RuleEngineMock = artifacts.require('RuleEngineMock')
 const { RULE_MOCK_AMOUNT_MAX, ZERO_ADDRESS } = require('../../utils')
+
 function ValidationModuleCommon (admin, address1, address2, address3, address1InitialBalance, address2InitialBalance, address3InitialBalance) {
   // Transferring with Rule Engine set
   context('RuleEngineTransferTest', function () {
@@ -41,6 +41,13 @@ function ValidationModuleCommon (admin, address1, address2, address3, address1In
       // Act + Assert
       (await this.cmtat.messageForTransferRestriction(10)).should.equal(
         'Amount too high'
+      )
+    })
+
+    it('testCanReturnMessageWithUnknownRestrictionCode', async function () {
+      // Act + Assert
+      (await this.cmtat.messageForTransferRestriction(254)).should.equal(
+        'Unknown restriction code'
       )
     })
 

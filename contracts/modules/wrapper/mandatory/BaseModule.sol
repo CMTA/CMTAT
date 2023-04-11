@@ -5,18 +5,18 @@ pragma solidity ^0.8.17;
 // required OZ imports here
 import "../../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
 import "../../security/AuthorizationModule.sol";
-import "../../../modules/security/OnlyDelegateCallModule.sol";
+import "../../security/OnlyDelegateCallModule.sol";
 
 abstract contract BaseModule is AuthorizationModule, OnlyDelegateCallModule {
     bool internal deployedWithProxy;
     /* Events */
-    event TermSet(string indexed newTermIndexed, string newTerm);
-    event TokenIdSet(string indexed newTokenIdIndexed, string newTokenId);
-    event InformationSet(
+    event Term(string indexed newTermIndexed, string newTerm);
+    event TokenId(string indexed newTokenIdIndexed, string newTokenId);
+    event Information(
         string indexed newInformationIndexed,
         string newInformation
     );
-    event FlagSet(uint256 indexed newFlag);
+    event Flag(uint256 indexed newFlag);
 
     /* Variables */
     string public tokenId;
@@ -66,30 +66,43 @@ abstract contract BaseModule is AuthorizationModule, OnlyDelegateCallModule {
     }
 
     /* Methods */
+    /*
+    @notice the tokenId will be changed even if the new value is the same as the current one
+    */
     function setTokenId(
         string memory tokenId_
     ) public onlyRole(DEFAULT_ADMIN_ROLE) {
         tokenId = tokenId_;
-        emit TokenIdSet(tokenId_, tokenId_);
+        emit TokenId(tokenId_, tokenId_);
     }
 
+    /*
+    @notice The terms will be changed even if the new value is the same as the current one
+    */
     function setTerms(
         string memory terms_
     ) public onlyRole(DEFAULT_ADMIN_ROLE) {
         terms = terms_;
-        emit TermSet(terms_, terms_);
+        emit Term(terms_, terms_);
     }
 
+    /*
+    @notice The information will be changed even if the new value is the same as the current one
+    */
     function setInformation(
         string memory information_
     ) public onlyRole(DEFAULT_ADMIN_ROLE) {
         information = information_;
-        emit InformationSet(information_, information_);
+        emit Information(information_, information_);
     }
 
+    /*
+    @notice The call will be reverted if the new value of flag is the same as the current one
+    */
     function setFlag(uint256 flag_) public onlyRole(DEFAULT_ADMIN_ROLE) {
+        require(flag != flag_, "Same value");
         flag = flag_;
-        emit FlagSet(flag_);
+        emit Flag(flag_);
     }
 
     /**

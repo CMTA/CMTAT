@@ -2,6 +2,7 @@ const { expectEvent, expectRevert } = require('@openzeppelin/test-helpers')
 const { SNAPSHOOTER_ROLE } = require('../../../utils')
 const { should } = require('chai').should()
 const { getUnixTimestamp, timeout, checkSnapshot } = require('../SnapshotModuleUtils/SnapshotModuleUtils')
+const reason = 'BURN_TEST'
 
 function SnapshotModuleOnePlannedSnapshotTest (admin, address1, address2, address3) {
   const ADDRESSES = [address1, address2, address3]
@@ -53,7 +54,7 @@ function SnapshotModuleOnePlannedSnapshotTest (admin, address1, address2, addres
       await checkSnapshot.call(this, getUnixTimestamp(), TOTAL_SUPPLY_INITIAL_MINT, ADDRESSES, [ADDRESS1_INITIAL_MINT, ADDRESS2_INITIAL_MINT, ADDRESS3_INITIAL_MINT]);
 
       // Act
-      (await this.cmtat.forceBurn(address1, BURN_AMOUNT, {
+      (await this.cmtat.forceBurn(address1, BURN_AMOUNT, reason, {
         from: admin,
         gas: 5000000,
         gasPrice: 500000000

@@ -1,7 +1,6 @@
 const { expectEvent, expectRevert } = require('@openzeppelin/test-helpers')
 const { SNAPSHOOTER_ROLE } = require('../../utils')
 const { should } = require('chai').should()
-const CMTAT = artifacts.require('CMTAT')
 const { getUnixTimestamp, timeout, checkArraySnapshot } = require('./SnapshotModuleUtils/SnapshotModuleUtils')
 
 function SnapshotModuleCommonGetNextSnapshot (owner, address1, address2, address3) {

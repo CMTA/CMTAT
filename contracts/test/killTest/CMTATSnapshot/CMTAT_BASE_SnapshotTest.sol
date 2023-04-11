@@ -3,59 +3,43 @@
 pragma solidity ^0.8.17;
 
 // required OZ imports here
-import "../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
-import "../../../openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradeable.sol";
-import "./BaseModuleTest.sol";
-import "../../modules/wrapper/mandatory/BurnModule.sol";
-import "../../modules/wrapper/mandatory/MintModule.sol";
-import "../../modules/wrapper/mandatory/BurnModule.sol";
-import "../../modules/wrapper/mandatory/EnforcementModule.sol";
-import "../../modules/wrapper/mandatory/ERC20BaseModule.sol";
-import "../../modules/wrapper/mandatory/PauseModule.sol";
-// import "../../modules/wrapper/optional/SnapshotModule.sol";
-import "../../modules/wrapper/optional/ValidationModule.sol";
-import "../../modules/wrapper/optional/MetaTxModule.sol";
-import "../../modules/wrapper/optional/DebtModule/DebtBaseModule.sol";
-import "../../modules/wrapper/optional/DebtModule/CreditEvents.sol";
-import "../../modules/security/AuthorizationModule.sol";
-import "../../modules/security/OnlyDelegateCallModule.sol";
-import "../../interfaces/IERC1404Wrapper.sol";
+import "../../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
+import "../../../../openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradeable.sol";
 
-/**
-@title A CMTAT version only for TESTING
-@dev This version inherits from BaseModuleTest instead of BaseModule
+import "../../../modules/wrapper/mandatory/BaseModule.sol";
+import "../../../modules/wrapper/mandatory/BurnModule.sol";
+import "../../../modules/wrapper/mandatory/MintModule.sol";
+import "../../../modules/wrapper/mandatory/EnforcementModule.sol";
+import "../../../modules/wrapper/mandatory/ERC20BaseModule.sol";
+/*
+SnapshotModule:
+Add this import in case you add the SnapshotModule
 */
-contract CMTAT_KILL_TEST is
+import "../../../modules/wrapper/optional/SnapshotModule.sol";
+import "../../../modules/wrapper/mandatory/PauseModule.sol";
+import "../../../modules/wrapper/optional/ValidationModule.sol";
+import "../../../modules/wrapper/optional/MetaTxModule.sol";
+import "../../../modules/wrapper/optional/DebtModule/DebtBaseModule.sol";
+import "../../../modules/wrapper/optional/DebtModule/CreditEvents.sol";
+import "../../../modules/security/AuthorizationModule.sol";
+import "../../../interfaces/IERC1404Wrapper.sol";
+
+abstract contract CMTAT_BASE_SnapshotTest is
     Initializable,
     ContextUpgradeable,
-    BaseModuleTest,
+    BaseModule,
     PauseModule,
     MintModule,
     BurnModule,
     EnforcementModule,
     ValidationModule,
     MetaTxModule,
-    //SnapshotModule,
     ERC20BaseModule,
+    SnapshotModule,
     DebtBaseModule,
     CreditEvents
 {
-    // CMTAT_PROXY constructor
-    /** 
-    @notice Contract version for the deployment with a proxy
-    @param forwarderIrrevocable address of the forwarder, required for the gasless support
-    */
-    /// @custom:oz-upgrades-unsafe-allow constructor
-    constructor(
-        address forwarderIrrevocable
-    ) MetaTxModule(forwarderIrrevocable) {
-        // Initialize the variable for the implementation
-        deployedWithProxy = true;
-        // Disable the possibility to initialize the implementation
-        _disableInitializers();
-    }
-
-
+    
     /**
     @notice 
     initialize the proxy contract
@@ -85,6 +69,7 @@ contract CMTAT_KILL_TEST is
 
     /**
     @dev calls the different initialize functions from the different modules
+    @param admin the address has to be different from 0, check made in AuthorizationModule
     */
     function __CMTAT_init(
         address admin,
@@ -111,8 +96,9 @@ contract CMTAT_KILL_TEST is
         /*
         SnapshotModule:
         Add this call in case you add the SnapshotModule
-        __Snapshot_init_unchained();
         */
+        __Snapshot_init_unchained();
+
         __Validation_init_unchained(ruleEngine);
 
         /* Wrapper */
@@ -130,8 +116,8 @@ contract CMTAT_KILL_TEST is
         /*
         SnapshotModule:
         Add this call in case you add the SnapshotModule
-        __SnasphotModule_init_unchained();
         */
+        __SnasphotModule_init_unchained();
 
         /* Other modules */
         __DebtBaseModule_init_unchained();
@@ -184,14 +170,14 @@ contract CMTAT_KILL_TEST is
         address from,
         address to,
         uint256 amount
-    ) internal override(ERC20Upgradeable) view {
+    ) internal override(SnapshotModuleInternal, ERC20Upgradeable) {
         require(ValidationModule.validateTransfer(from, to, amount), "CMTAT: transfer rejected by validation module");
         // We call the SnapshotModule only if the transfer is valid
         /*
         SnapshotModule:
         Add this call in case you add the SnapshotModule
-        SnapshotModuleInternal._beforeTokenTransfer(from, to, amount);
         */
+        SnapshotModuleInternal._beforeTokenTransfer(from, to, amount);
     }
 
     /** 

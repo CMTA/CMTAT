@@ -3,7 +3,6 @@
 pragma solidity ^0.8.17;
 
 abstract contract CodeList {
-    uint8 constant NO_ERROR = 0;
     // Used by RuleMock.sol
     uint8 constant AMOUNT_TOO_HIGH = 10;
     string constant TEXT_AMOUNT_TOO_HIGH = "Amount too high";

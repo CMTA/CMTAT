@@ -1,8 +1,6 @@
 const { expectEvent, expectRevert } = require('@openzeppelin/test-helpers')
-const { PAUSER_ROLE } = require('../utils')
+const { PAUSER_ROLE, CMTAT_TRANSFER_REJECT } = require('../utils')
 const { should } = require('chai').should()
-
-const CMTAT = artifacts.require('CMTAT')
 
 function PauseModuleCommon (admin, address1, address2, address3) {
   context('Pause', function () {
@@ -19,7 +17,7 @@ function PauseModuleCommon (admin, address1, address2, address3) {
       // Transfer is reverted
       await expectRevert(
         this.cmtat.transfer(address2, 10, { from: address1 }),
-        'CMTAT: token transfer while paused'
+        CMTAT_TRANSFER_REJECT
       )
     })
 
@@ -36,7 +34,7 @@ function PauseModuleCommon (admin, address1, address2, address3) {
       // Transfer is reverted
       await expectRevert(
         this.cmtat.transfer(address2, 10, { from: address1 }),
-        'CMTAT: token transfer while paused'
+        CMTAT_TRANSFER_REJECT
       )
     })
 
@@ -106,7 +104,7 @@ function PauseModuleCommon (admin, address1, address2, address3) {
       )
       await expectRevert(
         this.cmtat.transfer(address2, 10, { from: address1 }),
-        'CMTAT: token transfer while paused'
+        CMTAT_TRANSFER_REJECT
       )
     })
 
@@ -128,7 +126,7 @@ function PauseModuleCommon (admin, address1, address2, address3) {
       )
       await expectRevert(
         this.cmtat.transferFrom(address1, address2, 10, { from: address3 }),
-        'CMTAT: token transfer while paused'
+        CMTAT_TRANSFER_REJECT
       )
     })
   })

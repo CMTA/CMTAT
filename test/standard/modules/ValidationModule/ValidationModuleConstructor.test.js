@@ -1,4 +1,4 @@
-const CMTAT = artifacts.require('CMTAT')
+const CMTAT = artifacts.require('CMTAT_STANDALONE')
 const ValidationModuleCommon = require('../../../common/ValidationModule/ValidationModuleCommon')
 const RuleEngineMock = artifacts.require('RuleEngineMock')
 const ADDRESS1_INITIAL_BALANCE = 17
@@ -10,7 +10,7 @@ contract(
     beforeEach(async function () {
       this.flag = 5
       this.ruleEngineMock = await RuleEngineMock.new({ from: admin })
-      this.cmtat = await CMTAT.new(_, false, admin, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', this.ruleEngineMock.address, 'CMTAT_info', this.flag, { from: randomDeployer })
+      this.cmtat = await CMTAT.new(_, admin, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', this.ruleEngineMock.address, 'CMTAT_info', this.flag, { from: randomDeployer })
       await this.cmtat.mint(address1, ADDRESS1_INITIAL_BALANCE, { from: admin })
       await this.cmtat.mint(address2, ADDRESS2_INITIAL_BALANCE, { from: admin })
       await this.cmtat.mint(address3, ADDRESS3_INITIAL_BALANCE, { from: admin })

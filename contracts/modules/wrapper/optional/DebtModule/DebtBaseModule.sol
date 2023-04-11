@@ -16,42 +16,42 @@ abstract contract DebtBaseModule is
     DebtBase public debt;
 
     /* Events */
-    event InterestRateSet(uint256 indexed newInterestRate);
-    event ParValueSet(uint256 indexed newParValue);
-    event GuarantorSet(string indexed newGuarantorIndexed, string newGuarantor);
-    event BondHolderSet(
+    event InterestRate(uint256 newInterestRate);
+    event ParValue(uint256 newParValue);
+    event Guarantor(string indexed newGuarantorIndexed, string newGuarantor);
+    event BondHolder(
         string indexed newBondHolderIndexed,
         string newBondHolder
     );
-    event MaturityDateSet(
+    event MaturityDate(
         string indexed newMaturityDateIndexed,
         string newMaturityDate
     );
-    event InterestScheduleFormatSet(
+    event InterestScheduleFormat(
         string indexed newInterestScheduleFormatIndexed,
         string newInterestScheduleFormat
     );
-    event InterestPaymentDateSet(
+    event InterestPaymentDate(
         string indexed newInterestPaymentDateIndexed,
         string newInterestPaymentDate
     );
-    event DayCountConventionSet(
+    event DayCountConvention(
         string indexed newDayCountConventionIndexed,
         string newDayCountConvention
     );
-    event BusinessDayConventionSet(
+    event BusinessDayConvention(
         string indexed newBusinessDayConventionIndexed,
         string newBusinessDayConvention
     );
-    event PublicHolidaysCalendarSet(
+    event PublicHolidaysCalendar(
         string indexed newPublicHolidaysCalendarIndexed,
         string newPublicHolidaysCalendar
     );
-    event IssuanceDateSet(
+    event IssuanceDate(
         string indexed newIssuanceDateIndexed,
         string newIssuanceDate
     );
-    event CouponFrequencySet(
+    event CouponFrequency(
         string indexed newCouponFrequencyIndexed,
         string newCouponFrequency
     );
@@ -77,6 +77,10 @@ abstract contract DebtBaseModule is
         // no variable to initialize
     }
 
+    /*
+    @notice Set all attributes of debt
+    The values of all attributes will be changed even if the new values are the same as the current ones
+    */
     function setDebt(
         uint256 interestRate_,
         uint256 parValue_,
@@ -108,112 +112,150 @@ abstract contract DebtBaseModule is
                 couponFrequency_
             )
         );
-        emit InterestRateSet(interestRate_);
-        emit ParValueSet(parValue_);
-        emit GuarantorSet(guarantor_, guarantor_);
-        emit BondHolderSet(bondHolder_, bondHolder_);
-        emit MaturityDateSet(maturityDate_, maturityDate_);
-        emit InterestScheduleFormatSet(
+        emit InterestRate(interestRate_);
+        emit ParValue(parValue_);
+        emit Guarantor(guarantor_, guarantor_);
+        emit BondHolder(bondHolder_, bondHolder_);
+        emit MaturityDate(maturityDate_, maturityDate_);
+        emit InterestScheduleFormat(
             interestScheduleFormat_,
             interestScheduleFormat_
         );
-        emit InterestPaymentDateSet(interestPaymentDate_, interestPaymentDate_);
-        emit DayCountConventionSet(dayCountConvention_, dayCountConvention_);
-        emit BusinessDayConventionSet(
+        emit InterestPaymentDate(interestPaymentDate_, interestPaymentDate_);
+        emit DayCountConvention(dayCountConvention_, dayCountConvention_);
+        emit BusinessDayConvention(
             businessDayConvention_,
             businessDayConvention_
         );
-        emit PublicHolidaysCalendarSet(
+        emit PublicHolidaysCalendar(
             publicHolidayCalendar_,
             publicHolidayCalendar_
         );
     }
 
+    /*
+    @notice The call will be reverted if the new value of interestRate is the same as the current one
+    */
     function setInterestRate(uint256 interestRate_) public onlyRole(DEBT_ROLE) {
+        require(debt.interestRate != interestRate_, "Same value");
         debt.interestRate = interestRate_;
-        emit InterestRateSet(interestRate_);
+        emit InterestRate(interestRate_);
     }
 
+    /*
+    @notice The call will be reverted if the new value of parValue is the same as the current one
+    */
     function setParValue(uint256 parValue_) public onlyRole(DEBT_ROLE) {
+        require(debt.parValue != parValue_, "Same value");
         debt.parValue = parValue_;
-        emit ParValueSet(parValue_);
+        emit ParValue(parValue_);
     }
 
+    /*
+    @notice The Guarantor will be changed even if the new value is the same as the current one
+    */
     function setGuarantor(string memory guarantor_) public onlyRole(DEBT_ROLE) {
         debt.guarantor = guarantor_;
-        emit GuarantorSet(guarantor_, guarantor_);
+        emit Guarantor(guarantor_, guarantor_);
     }
 
+    /*
+    @notice The bonHolder will be changed even if the new value is the same as the current one
+    */
     function setBondHolder(
         string memory bondHolder_
     ) public onlyRole(DEBT_ROLE) {
         debt.bondHolder = bondHolder_;
-        emit BondHolderSet(bondHolder_, bondHolder_);
+        emit BondHolder(bondHolder_, bondHolder_);
     }
 
+    /*
+    @notice The maturityDate will be changed even if the new value is the same as the current one
+    */
     function setMaturityDate(
         string memory maturityDate_
     ) public onlyRole(DEBT_ROLE) {
         debt.maturityDate = maturityDate_;
-        emit MaturityDateSet(maturityDate_, maturityDate_);
+        emit MaturityDate(maturityDate_, maturityDate_);
     }
 
+    /*
+    @notice The interestScheduleFormat will be changed even if the new value is the same as the current one
+    */
     function setInterestScheduleFormat(
         string memory interestScheduleFormat_
     ) public onlyRole(DEBT_ROLE) {
         debt.interestScheduleFormat = interestScheduleFormat_;
-        emit InterestScheduleFormatSet(
+        emit InterestScheduleFormat(
             interestScheduleFormat_,
             interestScheduleFormat_
         );
     }
 
+    /*
+    @notice The interestPaymentDate will be changed even if the new value is the same as the current one
+    */
     function setInterestPaymentDate(
         string memory interestPaymentDate_
     ) public onlyRole(DEBT_ROLE) {
         debt.interestPaymentDate = interestPaymentDate_;
-        emit InterestPaymentDateSet(interestPaymentDate_, interestPaymentDate_);
+        emit InterestPaymentDate(interestPaymentDate_, interestPaymentDate_);
     }
 
+    /*
+    @notice The dayCountConvention will be changed even if the new value is the same as the current one
+    */
     function setDayCountConvention(
         string memory dayCountConvention_
     ) public onlyRole(DEBT_ROLE) {
         debt.dayCountConvention = dayCountConvention_;
-        emit DayCountConventionSet(dayCountConvention_, dayCountConvention_);
+        emit DayCountConvention(dayCountConvention_, dayCountConvention_);
     }
 
+    /*
+    @notice The businessDayConvention will be changed even if the new value is the same as the current one
+    */
     function setBusinessDayConvention(
         string memory businessDayConvention_
     ) public onlyRole(DEBT_ROLE) {
         debt.businessDayConvention = businessDayConvention_;
-        emit BusinessDayConventionSet(
+        emit BusinessDayConvention(
             businessDayConvention_,
             businessDayConvention_
         );
     }
 
+    /*
+    @notice The publicHolidayCalendar will be changed even if the new value is the same as the current one
+    */
     function setPublicHolidaysCalendar(
         string memory publicHolidayCalendar_
     ) public onlyRole(DEBT_ROLE) {
         debt.publicHolidayCalendar = publicHolidayCalendar_;
-        emit PublicHolidaysCalendarSet(
+        emit PublicHolidaysCalendar(
             publicHolidayCalendar_,
             publicHolidayCalendar_
         );
     }
 
+    /*
+    @notice The issuanceDate will be changed even if the new value is the same as the current one
+    */
     function setIssuanceDate(
         string memory issuanceDate_
     ) public onlyRole(DEBT_ROLE) {
         debt.issuanceDate = issuanceDate_;
-        emit IssuanceDateSet(issuanceDate_, issuanceDate_);
+        emit IssuanceDate(issuanceDate_, issuanceDate_);
     }
 
+    /*
+    @notice The couponFrequency will be changed even if the new value is the same as the current one
+    */
     function setCouponFrequency(
         string memory couponFrequency_
     ) public onlyRole(DEBT_ROLE) {
         debt.couponFrequency = couponFrequency_;
-        emit CouponFrequencySet(couponFrequency_, couponFrequency_);
+        emit CouponFrequency(couponFrequency_, couponFrequency_);
     }
 
     uint256[50] private __gap;

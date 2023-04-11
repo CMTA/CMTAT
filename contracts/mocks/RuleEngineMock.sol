@@ -2,8 +2,8 @@
 
 pragma solidity ^0.8.17;
 
-import "../interfaces/IRule.sol";
-import "../interfaces/IRuleEngine.sol";
+import "./interfaces/IRule.sol";
+import "./interfaces/IRuleEngine.sol";
 import "./RuleMock.sol";
 import "./CodeList.sol";
 
@@ -42,11 +42,11 @@ contract RuleEngineMock is IRuleEngine, CodeList {
                 _to,
                 _amount
             );
-            if (restriction != NO_ERROR) {
+            if (restriction != uint8(REJECTED_CODE_BASE.TRANSFER_OK)) {
                 return restriction;
             }
         }
-        return 0;
+        return uint8(REJECTED_CODE_BASE.TRANSFER_OK);
     }
 
     function validateTransfer(
