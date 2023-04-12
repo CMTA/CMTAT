@@ -26,7 +26,7 @@ contract CMTATSnapshotStandaloneTest is CMTAT_BASE_SnapshotTest
         string memory symbolIrrevocable,
         string memory tokenId,
         string memory terms,
-        IERC1404Wrapper ruleEngine,
+        IEIP1404Wrapper ruleEngine,
         string memory information,
         uint256 flag
     ) MetaTxModule(forwarderIrrevocable) {

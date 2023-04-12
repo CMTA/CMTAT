@@ -2,6 +2,9 @@
 
 pragma solidity ^0.8.0;
 
+/*
+@dev Contrary to the EIP-1404, this interface does not inherit from the ERC20 interface
+*/
 interface IEIP1404 {
     /**
      * @dev See ERC/EIP-1404
