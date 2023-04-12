@@ -38,7 +38,7 @@ contract CMTAT_KILL_TEST is
     //SnapshotModule,
     ERC20BaseModule,
     DebtBaseModule,
-    CreditEvents
+    CreditEventsModule
 {
     // CMTAT_PROXY constructor
     /** 

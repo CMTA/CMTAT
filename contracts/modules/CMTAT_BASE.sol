@@ -37,7 +37,7 @@ abstract contract CMTAT_BASE is
     ERC20BaseModule,
     // SnapshotModule,
     DebtBaseModule,
-    CreditEvents
+    CreditEventsModule
 {
     /**
     @notice 
