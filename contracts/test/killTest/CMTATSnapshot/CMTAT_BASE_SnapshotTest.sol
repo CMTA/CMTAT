@@ -37,7 +37,7 @@ abstract contract CMTAT_BASE_SnapshotTest is
     ERC20BaseModule,
     SnapshotModule,
     DebtBaseModule,
-    CreditEvents
+    CreditEventsModule
 {
     
     /**

@@ -7,7 +7,7 @@ import "../../../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/
 import "../../../../interfaces/IDebtGlobal.sol";
 import "../../../security/AuthorizationModule.sol";
 
-abstract contract CreditEvents is
+abstract contract CreditEventsModule is
     IDebtGlobal,
     Initializable,
     ContextUpgradeable,
