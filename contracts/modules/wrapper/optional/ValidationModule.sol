@@ -17,13 +17,13 @@ abstract contract ValidationModule is
     ValidationModuleInternal,
     PauseModule,
     EnforcementModule,
-    IERC1404Wrapper
+    IEIP1404Wrapper
 {
     string constant TEXT_TRANSFER_OK = "No restriction";
     string constant TEXT_UNKNOWN_CODE = "Unknown code";
 
     function __ValidationModule_init(
-        IERC1404Wrapper ruleEngine_,
+        IEIP1404Wrapper ruleEngine_,
         address admin
     ) internal onlyInitializing {
         /* OpenZeppelin */
@@ -57,7 +57,7 @@ abstract contract ValidationModule is
     @param ruleEngine_ the call will be reverted if the new value of ruleEngine is the same as the current one
     */
     function setRuleEngine(
-        IERC1404Wrapper ruleEngine_
+        IEIP1404Wrapper ruleEngine_
     ) external onlyRole(DEFAULT_ADMIN_ROLE) {
         require(ruleEngine != ruleEngine_, "Same value");
         ruleEngine = ruleEngine_;

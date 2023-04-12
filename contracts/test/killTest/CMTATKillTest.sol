@@ -16,10 +16,10 @@ import "../../modules/wrapper/mandatory/PauseModule.sol";
 import "../../modules/wrapper/optional/ValidationModule.sol";
 import "../../modules/wrapper/optional/MetaTxModule.sol";
 import "../../modules/wrapper/optional/DebtModule/DebtBaseModule.sol";
-import "../../modules/wrapper/optional/DebtModule/CreditEvents.sol";
+import "../../modules/wrapper/optional/DebtModule/CreditEventsModule.sol";
 import "../../modules/security/AuthorizationModule.sol";
 import "../../modules/security/OnlyDelegateCallModule.sol";
-import "../../interfaces/IERC1404Wrapper.sol";
+import "../../interfaces/IEIP1404Wrapper.sol";
 
 /**
 @title A CMTAT version only for TESTING
@@ -67,7 +67,7 @@ contract CMTAT_KILL_TEST is
         string memory symbolIrrevocable,
         string memory tokenId,
         string memory terms,
-        IERC1404Wrapper ruleEngine,
+        IEIP1404Wrapper ruleEngine,
         string memory information,
         uint256 flag
     ) public initializer {
@@ -92,7 +92,7 @@ contract CMTAT_KILL_TEST is
         string memory symbolIrrevocable,
         string memory tokenId,
         string memory terms,
-        IERC1404Wrapper ruleEngine,
+        IEIP1404Wrapper ruleEngine,
         string memory information,
         uint256 flag
     ) internal onlyInitializing {
