@@ -3,7 +3,7 @@
 pragma solidity ^0.8.0;
 
 import "./IRule.sol";
-import "../../interfaces/IEIP1404Wrapper.sol";
+import "../../../interfaces/IEIP1404/IEIP1404Wrapper.sol";
 
 interface IRuleEngine is IEIP1404Wrapper {
 
