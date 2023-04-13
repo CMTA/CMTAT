@@ -19,7 +19,7 @@ import "../../modules/wrapper/optional/DebtModule/DebtBaseModule.sol";
 import "../../modules/wrapper/optional/DebtModule/CreditEventsModule.sol";
 import "../../modules/security/AuthorizationModule.sol";
 import "../../modules/security/OnlyDelegateCallModule.sol";
-import "../../interfaces/IEIP1404Wrapper.sol";
+import "../../interfaces/IEIP1404/IEIP1404Wrapper.sol";
 
 /**
 @title A CMTAT version only for TESTING

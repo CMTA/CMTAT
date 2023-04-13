@@ -22,7 +22,7 @@ import "./wrapper/optional/MetaTxModule.sol";
 import "./wrapper/optional/DebtModule/DebtBaseModule.sol";
 import "./wrapper/optional/DebtModule/CreditEventsModule.sol";
 import "./security/AuthorizationModule.sol";
-import "../interfaces/IEIP1404Wrapper.sol";
+import "../interfaces/IEIP1404/IEIP1404Wrapper.sol";
 
 abstract contract CMTAT_BASE is
     Initializable,

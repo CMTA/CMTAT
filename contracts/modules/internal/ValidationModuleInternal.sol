@@ -4,7 +4,7 @@ pragma solidity ^0.8.17;
 
 import "../../../openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradeable.sol";
 import "../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
-import "../../interfaces/IEIP1404Wrapper.sol";
+import "../../interfaces/IEIP1404/IEIP1404Wrapper.sol";
 
 /**
  * @dev Validation module.
