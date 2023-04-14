@@ -101,8 +101,34 @@ You can generate UML for smart contracts by running the following command:
 npm run-script uml
 ```
 
+Warning:
 
+From the version 2.3, this command is not working and generates the following error
 
-## Known bugs
+> Failed to convert dot to SVG. Error: lost 31 26 edge
 
-The coverage with the library *solidity-coverage* [does not work anymore](https://github.com/sc-forks/solidity-coverage/issues/694).
+### Alternative
+
+- Run a Plantuml server on your local machine, see
+
+https://github.com/plantuml/plantuml-server
+
+- Use plantuml inside VScode to generate an uml
+
+This feature is directly available if you install the vscode extension https://marketplace.visualstudio.com/items?itemName=tintinweb.solidity-visual-auditor
+
+![solidity-visual-auditor-uml](./general/Schema/solidity-visual-auditor-uml.png)
+
+## Coverage
+
+```
+npm run-script coverage
+```
+
+Warning:
+
+- `solidity-coverage` is no longer a shell command and does not work with Truffle
+
+You have to use it with Hardhat to run this plugin.
+
+- The coverage with the library *solidity-coverage* [does not work anymore](https://github.com/sc-forks/solidity-coverage/issues/694).

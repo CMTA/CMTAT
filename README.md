@@ -61,7 +61,7 @@ Station Network](https://docs.opengsn.org/#the-problem) (GSN) pattern, the main 
 
 At deployment, the parameter  `forwarder` inside the  CMTAT contract constructor has to be set  with the defined address of the forwarder. Please note that the forwarder can not be changed after deployment, and with a proxy architecture, its value is stored inside the implementation contract bytecode instead of the storage of the proxy.
 
-Please see the OpenGSN[documentation](https://docs.opengsn.org/contracts/#receiving-a-relayed-call) for more details on what is done to support GSN in the contract.
+Please see the OpenGSN [documentation](https://docs.opengsn.org/contracts/#receiving-a-relayed-call) for more details on what is done to support GSN in the contract.
 
 ## Kill switch
 
@@ -72,11 +72,29 @@ longer wishes to have its shares issued in the form of ledger securities. The "k
 Such a functionality can be performed via that `kill()` function. A new token contract may then be deployed via the proxy.
 Alternatively, if interactions with the "killed contract" are still necessary, it may be paused (and never unpaused).
 
-## SnpashotModule
+
+
+## Modules
+
+| Name | Documentation | File |      |      |
+| ---- | ------------- | ---- | ---- | ---- |
+|      |               |      |      |      |
+|      |               |      |      |      |
+|      |               |      |      |      |
+|      |               |      |      |      |
+|      |               |      |      |      |
+|      |               |      |      |      |
+|      |               |      |      |      |
+|      |               |      |      |      |
+|      |               |      |      |      |
+
+
+
+### SnpashotModule
 
 This module was not audited during the audit made by ABDK and it is no longer imported by default inside the CMTAT.
 
-If you want to add this module, you have to uncomment the specific lines "SnapshotModule" inside the file `CMTAT.sol`.
+If you want to add this module, you have to uncomment the specific lines "SnapshotModule" inside the file `CMTAT_BASE.sol`.
 
 Be warned that this module may possibly contain security flaws.
 
@@ -85,7 +103,7 @@ Be warned that this module may possibly contain security flaws.
 The contracts have been audited by [ABDKConsulting](https://www.abdk.consulting/), a globally recognized firm specialized in smart contracts' security.
 
 Fixes of security issues discovered by the initial audit were reviewed by ABDK and confirmed to be effective, as certified by the [report
-released](doc/audits/ABDK-CMTAT-audit-20210910.pdf) on September 10, 2021], covering [version c3afd7b](https://github.com/CMTA/CMTAT/tree/c3afd7b4a2ade160c9b581adb7a44896bfc7aaea) of the contracts.
+released](doc/audits/ABDK-CMTAT-audit-20210910.pdf) on September 10, 2021, covering [version c3afd7b](https://github.com/CMTA/CMTAT/tree/c3afd7b4a2ade160c9b581adb7a44896bfc7aaea) of the contracts.
 Version [1.0](https://github.com/CMTA/CMTAT/releases) includes additional fixes of minor issues, compared to the version retested.
 
 As with any token contract, access to the owner key must be adequately restricted.
