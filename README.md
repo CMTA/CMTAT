@@ -76,17 +76,35 @@ Alternatively, if interactions with the "killed contract" are still necessary, i
 
 ## Modules
 
-| Name | Documentation | File |      |      |
-| ---- | ------------- | ---- | ---- | ---- |
-|      |               |      |      |      |
-|      |               |      |      |      |
-|      |               |      |      |      |
-|      |               |      |      |      |
-|      |               |      |      |      |
-|      |               |      |      |      |
-|      |               |      |      |      |
-|      |               |      |      |      |
-|      |               |      |      |      |
+Here the list of the differents modules with the links towards the documentation and the main file.
+
+### Mandatory
+
+| Name              | Documentation                                                | Main File                                                    |      |      |
+| ----------------- | ------------------------------------------------------------ | ------------------------------------------------------------ | ---- | ---- |
+| BaseModule        | [base.md](doc/modules/presentation/mandatory/base.md)        | [BaseModule.sol](./contracts/modules/wrapper/mandatory/BaseModule.sol) |      |      |
+| BurnModule        | [burn.md](doc/modules/presentation/mandatory/base.md)        | [BurnModule.sol](./contracts/modules/wrapper/mandatory/BurnModule.sol) |      |      |
+| EnforcementModule | [enforcement.md](doc/modules/presentation/mandatory/base.md) | [EnforcementModule.sol](./contracts/modules/wrapper/mandatory/EnforcementModule.sol) |      |      |
+| ERC20BaseModule   | [erc20base.md](doc/modules/presentation/mandatory/base.md)   | [ERC20BaseModule.sol](./contracts/modules/wrapper/mandatory/ERC20BaseModule.sol) |      |      |
+| MintModule        | [mint.md](doc/modules/presentation/mandatory/base.md)        | [MintModule.sol](./contracts/modules/wrapper/mandatory/MintModule.sol) |      |      |
+| PauseModule       | [pause.md](doc/modules/presentation/mandatory/base.md)       | [PauseModule.sol](./contracts/modules/wrapper/mandatory/PauseModule.sol) |      |      |
+
+### Optional
+
+| Name              | Documentation                                                | Main File                                                    |      |      |
+| ----------------- | ------------------------------------------------------------ | ------------------------------------------------------------ | ---- | ---- |
+| MetaTxModule      | [metatx.md](doc/modules/presentation/optional/metatx.md)     | [MetaTxModule.sol](./contracts/modules/wrapper/optional/MetaTxModule.sol) |      |      |
+| SnapshotModule    | [snapshot.md](doc/modules/presentation/optional/snapshot.md) | [SnapshotModule.sol](./contracts/modules/wrapper/optional/SnapshotModule.sol]) |      |      |
+| ValidationModule  | [validation.md](doc/modules/presentation/optional/validation.md) | [ValidationModule.sol](./contracts/modules/wrapper/optional/SnapshotModule.sol]) |      |      |
+| creditEventModule | [creditEvent.md](doc/modules/presentation/optional/Debt/creditEvent.md) | [creditEventModule.sol](./contracts/modules/wrapper/optional/creditEventModule.sol]) |      |      |
+| DebtBaseModule    | [debtBase.md](doc/modules/presentation/optional/Debt/debtBase.md) | [DebtBaseModule.sol](./contracts/modules/wrapper/optional/DebtBaseModule.sol]) |      |      |
+
+### Security
+
+| Name                   | Documentation                                                | File                                                         |      |      |
+| ---------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ | ---- | ---- |
+| AuthorizationModule    | [authorization.md](./doc/modules/presentation/security/authorization.md) | [AuthorizationModule.sol](./contracts/modules/security/AuthorizationModule.sol) |      |      |
+| OnlyDelegateCallModule | [OnlyDelegateCallModule.md](./doc/modules/presentation/security/OnlyDelegateCallModule.md) | [OnlyDelegateCallModule.sol](./contracts/modules/security/OnlyDelegateCallModule.sol) |      |      |
 
 
 
@@ -100,7 +118,11 @@ Be warned that this module may possibly contain security flaws.
 
 ## Security 
 
+### Audit
+
 The contracts have been audited by [ABDKConsulting](https://www.abdk.consulting/), a globally recognized firm specialized in smart contracts' security.
+
+#### First Audit - September 10, 2021
 
 Fixes of security issues discovered by the initial audit were reviewed by ABDK and confirmed to be effective, as certified by the [report
 released](doc/audits/ABDK-CMTAT-audit-20210910.pdf) on September 10, 2021, covering [version c3afd7b](https://github.com/CMTA/CMTAT/tree/c3afd7b4a2ade160c9b581adb7a44896bfc7aaea) of the contracts.
@@ -108,6 +130,16 @@ Version [1.0](https://github.com/CMTA/CMTAT/releases) includes additional fixes 
 
 As with any token contract, access to the owner key must be adequately restricted.
 Likewise, access to the proxy contract must be restricted and seggregated from the token contract.
+
+#### Second Audit
+
+The second audit was performed by ABDK on the version 2.2
+
+The release 2.3 contains the different fixes and improvements related to this audit.
+
+### Module
+
+
 
 ## Documentation
 
