@@ -103,7 +103,7 @@ function BaseModuleCommon (owner, address1, address2, address3, proxyTest) {
     })
     it('testAdminCanNotUpdateFlagWithTheSameValue', async function () {
       // Arrange - Assert
-      (await this.cmtat.flag()).should.be.bignumber.equal(this.flag.toString());
+      (await this.cmtat.flag()).should.be.bignumber.equal(this.flag.toString())
       // Act
       await expectRevert(this.cmtat.setFlag(this.flag.toString(), { from: owner }),
         'Same value'

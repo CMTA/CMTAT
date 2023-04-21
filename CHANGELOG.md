@@ -8,23 +8,21 @@ The release 2.3 contains mainly the different fixes and improvements related to 
 
 **General modifications**
 
-- The interfaces ERC1404 & ERC1404Wrapper were renamed in IEIP1404 & EIP1404Wrapper since the proposition of standard ERC/EIP 1404 have never been approved.
+- The interfaces ERC1404 & ERC1404Wrapper were renamed in IEIP1404 & EIP1404Wrapper since the proposition of standard ERC/EIP 1404 have never been approved ([pull/166](https://github.com/CMTA/CMTAT/pull/166)).
 
-- The RuleEngine to be used with the CMTAT has to implement the interface IEIP1404Wrapper
+- The RuleEngine to be used with the CMTAT has to implement the interface IEIP1404Wrapper ([pull/166](https://github.com/CMTA/CMTAT/pull/166))
 
 It is no longer necessary to implement the interface RuleEngine, which was moved inside the mock directory
 
-- When a contract is deployed, the admin address put in parameter has to be different from zero.
-
-
+- When a contract is deployed, the admin address put in parameter has to be different from zero ([pull/162](https://github.com/CMTA/CMTAT/pull/162)).
 
 **Audit report**
 
 This version also includes improvements suggested by the audit report, addressing the following findings:
 
-- CMTAT deployement
+- CMTAT deployement ([pull/152](https://github.com/CMTA/CMTAT/pull/152)).
 
-CVF-2: Create two main contracts: one for a deployment with a proxy, and one for a standalone deployment ([pull/152](https://github.com/CMTA/CMTAT/pull/152)).
+CVF-2: Create two main contracts: one for a deployment with a proxy, and one for a standalone deployment 
 
 - ValidationModule & EnforcementModule ([pull/153](https://github.com/CMTA/CMTAT/pull/153))
 

@@ -26,7 +26,7 @@ The DEFAULT_ADMIN_ROLE has automatically all the roles.
 
 This behavior is implemented by overriding the function `hasRole` from OpenZeppelin
 
-![RBAC-diagram](../../../general/accessControl/RBAC-diagram.svg)
+![RBAC-diagram](../../schema/accessControl/RBAC-diagram.svg)
 
 ### UML
 

@@ -10,7 +10,7 @@ function SnapshotModuleCommonRescheduling (owner, address1, address2, address3) 
       this.newSnapshotTime = `${getUnixTimestamp() + 200}`
       await this.cmtat.scheduleSnapshot(this.snapshotTime, { from: owner })
     })
-    
+
     it('can reschedule a snapshot with the snapshoter role and emits a SnapshotSchedule event', async function () {
       ({ logs: this.logs } = await this.cmtat.rescheduleSnapshot(
         this.snapshotTime,
@@ -89,7 +89,7 @@ function SnapshotModuleCommonRescheduling (owner, address1, address2, address3) 
       snapshots.length.should.equal(4)
       checkArraySnapshot(snapshots, [this.snapshotTime, this.snapshotMiddleOldTime, this.snapshotTime1, this.snapshotTime2])
     })
-    
+
     it('reverts when calling from non-owner', async function () {
       await expectRevert(
         this.cmtat.rescheduleSnapshot(
@@ -103,7 +103,7 @@ function SnapshotModuleCommonRescheduling (owner, address1, address2, address3) 
                 SNAPSHOOTER_ROLE
       )
     })
-    
+
     it('reverts when trying to reschedule a snapshot in the past', async function () {
       await expectRevert(
         this.cmtat.rescheduleSnapshot(
@@ -114,7 +114,7 @@ function SnapshotModuleCommonRescheduling (owner, address1, address2, address3) 
         'Snapshot scheduled in the past'
       )
     })
-    
+
     it('reverts when trying to schedule a snapshot with the same time twice', async function () {
       await this.cmtat.rescheduleSnapshot(
         this.snapshotTime,
@@ -133,7 +133,7 @@ function SnapshotModuleCommonRescheduling (owner, address1, address2, address3) 
       snapshots.length.should.equal(1)
       snapshots[0].should.be.bignumber.equal(this.newSnapshotTime)
     })
-    
+
     it('reverts when snapshot is not found', async function () {
       await expectRevert(
         this.cmtat.rescheduleSnapshot(
@@ -159,7 +159,7 @@ function SnapshotModuleCommonRescheduling (owner, address1, address2, address3) 
         'no scheduled snapshot'
       )
     })
-    
+
     it('reverts when snapshot has been processed', async function () {
       await expectRevert(
         this.cmtat.rescheduleSnapshot(

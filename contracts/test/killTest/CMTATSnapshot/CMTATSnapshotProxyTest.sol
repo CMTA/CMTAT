@@ -4,6 +4,7 @@ pragma solidity ^0.8.17;
 
 import "./CMTAT_BASE_SnapshotTest.sol";
 
+
 contract CMTATSnapshotProxyTest is CMTAT_BASE_SnapshotTest
 {
     /** 

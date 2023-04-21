@@ -132,8 +132,8 @@ function EnforcementModuleCommon (owner, address1, address2, address3) {
       (await this.cmtat.frozen(address1)).should.equal(true)
     })
 
-     // reverts if address1 transfers tokens to address2 when paused
-     it('testCannotTransferTokenWhenFromIsFrozen', async function () {
+    // reverts if address1 transfers tokens to address2 when paused
+    it('testCannotTransferTokenWhenFromIsFrozen', async function () {
       // Act
       await this.cmtat.freeze(address1, reasonFreeze, { from: owner });
       // Assert

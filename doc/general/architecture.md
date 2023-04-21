@@ -1,12 +1,20 @@
-Architectreu
+# Architecture
+
+This documents presents an overview of the CMTAT architecture.
 
 [TOC]
 
+## Introduction
 
+There is two mains contracts for deployment: CMTAT_PROXY or CMTAT_STANDALONE in order to deploy the CMTAT with or without a proxy depending of your preference.
 
+These two mains contract inherits from the same base contract CMTAT_BASE which inherits of the different modules.
 
+The main schema describing the architecture can be found here: [architecture.pdf](schema/drawio/architecture.pdf) 
 
 ## Schema
+
+This section presents the different schema
 
 ### Inheritance
 

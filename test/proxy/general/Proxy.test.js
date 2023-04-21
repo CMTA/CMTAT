@@ -11,8 +11,10 @@ contract(
   function ([_, admin, attacker]) {
     beforeEach(async function () {
       this.flag = 5
-      this.CMTAT_PROXY = await deployProxy(CMTAT1, [admin, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', ZERO_ADDRESS, 'CMTAT_info', this.flag], { initializer: 'initialize', 
-      constructorArgs: [_] })
+      this.CMTAT_PROXY = await deployProxy(CMTAT1, [admin, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', ZERO_ADDRESS, 'CMTAT_info', this.flag], {
+        initializer: 'initialize',
+        constructorArgs: [_]
+      })
       const implementationContractAddress = await erc1967.getImplementationAddress(this.CMTAT_PROXY.address, { from: admin })
       this.implementationContract = await CMTAT.at(implementationContractAddress)
     })

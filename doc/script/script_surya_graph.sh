@@ -3,7 +3,7 @@ cd '../../'
 DIR=$(pwd)
 DIR_OUT=${DIR}/out/surya_graph
 if ! [ -d "$DIR_OUT" ]; then
-    mkdir ./out/surya_graph
+    mkdir -p ./out/surya_graph
 fi
 cd './contracts'
 DIR=$(pwd)

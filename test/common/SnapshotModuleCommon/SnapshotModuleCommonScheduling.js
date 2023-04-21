@@ -15,14 +15,14 @@ function SnapshotModuleCommonScheduling (owner, address1, address2, address3) {
       snapshots.length.should.equal(1)
       snapshots[0].should.be.bignumber.equal(this.snapshotTime)
     })
-        
+
     it('emits a SnapshotSchedule event', function () {
       expectEvent.inLogs(this.logs, 'SnapshotSchedule', {
         oldTime: '0',
         newTime: this.snapshotTime
       })
     })
-        
+
     it('reverts when calling from non-owner', async function () {
       await expectRevert(
         this.cmtat.scheduleSnapshot(this.snapshotTime, { from: address1 }),
@@ -32,7 +32,7 @@ function SnapshotModuleCommonScheduling (owner, address1, address2, address3) {
                     SNAPSHOOTER_ROLE
       )
     })
-        
+
     it('reverts when trying to schedule a snapshot in the past', async function () {
       await expectRevert(
         this.cmtat.scheduleSnapshot(`${getUnixTimestamp() - 60}`, {
@@ -40,8 +40,8 @@ function SnapshotModuleCommonScheduling (owner, address1, address2, address3) {
         }),
         'Snapshot scheduled in the past'
       )
-    })      
-    
+    })
+
     it('reverts when trying to schedule a snapshot with the same time twice', async function () {
       await this.cmtat.scheduleSnapshot(this.snapshotTime, { from: owner })
       await expectRevert(
@@ -121,14 +121,14 @@ function SnapshotModuleCommonScheduling (owner, address1, address2, address3) {
       const snapshots = await this.cmtat.getNextSnapshots()
       snapshots.length.should.equal(1)
     })
-        
+
     it('emits a SnapshotSchedule event', function () {
       expectEvent.inLogs(this.logs, 'SnapshotSchedule', {
         oldTime: '0',
         newTime: this.snapshotTime
       })
     })
-        
+
     it('reverts when calling from non-owner', async function () {
       await expectRevert(
         this.cmtat.scheduleSnapshotNotOptimized(this.snapshotTime, { from: address1 }),
@@ -138,7 +138,7 @@ function SnapshotModuleCommonScheduling (owner, address1, address2, address3) {
                     SNAPSHOOTER_ROLE
       )
     })
-        
+
     it('reverts when trying to schedule a snapshot in the past', async function () {
       await expectRevert(
         this.cmtat.scheduleSnapshotNotOptimized(`${getUnixTimestamp() - 60}`, {
@@ -146,8 +146,8 @@ function SnapshotModuleCommonScheduling (owner, address1, address2, address3) {
         }),
         'Snapshot scheduled in the past'
       )
-    })      
-    
+    })
+
     it('reverts when trying to schedule a snapshot with the same time twice', async function () {
       this.firstSnapshotTime = `${getUnixTimestamp() + 400}`;
       ({ logs: this.logs } = await this.cmtat.scheduleSnapshot(
