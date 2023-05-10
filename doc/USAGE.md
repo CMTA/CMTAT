@@ -14,6 +14,8 @@ are the latest ones that we tested:
 - Web3.js 1.9.0
 - OpenZeppelin Contracts Upgradeable (submodule) 4.8.1
 
+Although present in the dependencies, Hardhat is not included in the toolchain since the project was mainly build with and for Truffle.
+
 ## Installation
 
 Clone the git repository, with the option `--recurse-submodules` to fetch the submodules:
@@ -26,6 +28,8 @@ To install the node modules required by CMTAT, run the following command at the 
 
 `npm install`
 
+### Truffle
+
 To use Truffle, the recommended way is to use the version installed as
 part of the node modules, via the `npx` command:
 
@@ -36,6 +40,16 @@ Alternatively, you can install Truffle [globally](https://trufflesuite.com/docs/
 `npm install -g truffle` 
 
 See Truffle's official [documentation](https://trufflesuite.com/docs/truffle/getting-started/installation/) for more information.
+
+### Hardhat
+
+Same principle as Truffle
+
+```
+npx hardhat
+```
+
+
 
 ## Contract Size
 
@@ -64,6 +78,10 @@ Tests are written in JavaScript and run with Truffle as follows:
 To use the global Truffle install, use instead `truffle test`.
 
 Please see the Truffle [JavaScript tests documentation](https://www.trufflesuite.com/docs/truffle/testing/writing-tests-in-javascript) for more information about the writing and running of Truffle tests.
+
+If you try to run the tests with Hardhat, the tests related to the proxy and the SnapshotModule will not work.
+
+
 
 
 ## Code style guidelines

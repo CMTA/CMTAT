@@ -9,3 +9,5 @@ out
 #drawio
 *.bkp
 *.dtmp
+artifacts
+cache

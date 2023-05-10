@@ -3,26 +3,26 @@
 pragma solidity ^0.8.17;
 
 // required OZ imports here
-import "../../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
-import "../../../../openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradeable.sol";
+import "../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
+import "../../../openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradeable.sol";
 
-import "../../../modules/wrapper/mandatory/BaseModule.sol";
-import "../../../modules/wrapper/mandatory/BurnModule.sol";
-import "../../../modules/wrapper/mandatory/MintModule.sol";
-import "../../../modules/wrapper/mandatory/EnforcementModule.sol";
-import "../../../modules/wrapper/mandatory/ERC20BaseModule.sol";
+import "../../modules/wrapper/mandatory/BaseModule.sol";
+import "../../modules/wrapper/mandatory/BurnModule.sol";
+import "../../modules/wrapper/mandatory/MintModule.sol";
+import "../../modules/wrapper/mandatory/EnforcementModule.sol";
+import "../../modules/wrapper/mandatory/ERC20BaseModule.sol";
 /*
 SnapshotModule:
 Add this import in case you add the SnapshotModule
 */
-import "../../../modules/wrapper/optional/SnapshotModule.sol";
-import "../../../modules/wrapper/mandatory/PauseModule.sol";
-import "../../../modules/wrapper/optional/ValidationModule.sol";
-import "../../../modules/wrapper/optional/MetaTxModule.sol";
-import "../../../modules/wrapper/optional/DebtModule/DebtBaseModule.sol";
-import "../../../modules/wrapper/optional/DebtModule/CreditEventsModule.sol";
-import "../../../modules/security/AuthorizationModule.sol";
-import "../../../interfaces/IEIP1404/IEIP1404Wrapper.sol";
+import "../../modules/wrapper/optional/SnapshotModule.sol";
+import "../../modules/wrapper/mandatory/PauseModule.sol";
+import "../../modules/wrapper/optional/ValidationModule.sol";
+import "../../modules/wrapper/optional/MetaTxModule.sol";
+import "../../modules/wrapper/optional/DebtModule/DebtBaseModule.sol";
+import "../../modules/wrapper/optional/DebtModule/CreditEventsModule.sol";
+import "../../modules/security/AuthorizationModule.sol";
+import "../../interfaces/IEIP1404/IEIP1404Wrapper.sol";
 
 abstract contract CMTAT_BASE_SnapshotTest is
     Initializable,

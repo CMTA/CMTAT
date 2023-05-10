@@ -28,6 +28,16 @@ A development environment, testing framework and asset pipeline for blockchains 
 **[Truffle Flattener](https://www.npmjs.com/package/truffle-flattener)**
 Concats solidity files from Truffle projects with all of their dependencies.
 
+#### Nomiclabs - Hardhat
+
+[hardhat-truffle5](https://hardhat.org/hardhat-runner/plugins/nomiclabs-hardhat-truffle5)
+
+[Hardhat](https://hardhat.org/) plugin for integration with TruffleContract from Truffle 5. This allows tests and scripts written for Truffle to work with Hardhat.
+
+[hardhat-web3](https://hardhat.org/hardhat-runner/plugins/nomiclabs-hardhat-web3)
+
+This plugin integrates [Web3.js](https://github.com/ethereum/web3.js) `1.x` into [Hardhat](https://hardhat.org/).
+
 #### Linter
 
 **[eslint](https://eslint.org/)**
@@ -71,6 +81,26 @@ JavaScript bindings for the Solidity compiler.
 
 **[Web3](https://github.com/web3/web3.js)**
 Ethereum JavaScript API.
+
+#### Documentation
+
+**[sol2uml](https://github.com/naddison36/sol2uml)**
+
+Generate UML for smart contracts
+
+**[solidity-coverage](https://github.com/sc-forks/solidity-coverage/)**
+
+Code coverage for Solidity smart-contracts
+
+**[solidity-docgen](https://github.com/OpenZeppelin/solidity-docgen)**
+
+Program that extracts documentation for a Solidity project.
+
+**[Surya](https://github.com/ConsenSys/surya)**
+
+Utility tool for smart contract systems.
+
+#### solidity-coverage
 
 #### Others
 
@@ -137,21 +167,17 @@ To generate documentation with surya, you can call the three bash scripts in doc
 | Generate inheritance | script_surya_inheritance.sh | npx surya inheritance contracts/modules/CMTAT_BASE.sol -i <br />npx surya inheritance contracts/modules/CMTAT_BASE.sol |
 | Generate report      | script_surya_report.sh      | npx surya mdreport -i surya_report.md contracts/modules/CMTAT_BASE.sol <br />npx surya mdreport surya_report.md contracts/modules/CMTAT_BASE.sol |
 
-In the report, the path for the different files are indicated in aboslute. You have to remove the part which correspond to your local filesystem.
+In the report, the path for the different files are indicated in absolute. You have to remove the part which correspond to your local filesystem.
 
 
 
-## Coverage
+### [Coverage](https://github.com/sc-forks/solidity-coverage/)
+
+Code coverage for Solidity smart-contracts, installed as a hardhat plugin
 
 ```
 npm run-script coverage
 ```
 
-Warning:
 
-- `solidity-coverage` is no longer a shell command and does not work with Truffle
-
-You have to use it with Hardhat to run this plugin.
-
-- The coverage with the library *solidity-coverage* [does not work anymore](https://github.com/sc-forks/solidity-coverage/issues/694).
 

@@ -211,7 +211,7 @@ function BaseModuleCommon (owner, address1, address2, address3, proxyTest) {
 
     // allows address3 to transfer tokens from address1 to address2 with the right allowance
     // ADDRESS3 : ADDRESS1 -> ADDRESS2
-    it('tesTransferByAnotherAccountWithTheRightAllowance', async function () {
+    it('testTransferByAnotherAccountWithTheRightAllowance', async function () {
       // Arrange
       await this.cmtat.approve(address3, 20, { from: address1 });
       // Act
