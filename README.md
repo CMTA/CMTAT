@@ -26,7 +26,6 @@ The CMTAT supports the following core features:
 Furthermore, the present implementation uses standard mechanisms in
 order to support:
 
-* Distribution of dividends and interest, via snapshots
 * Upgradeability, via deployment of the token with a proxy
 * "Gasless" transactions
 * Conditional transfers, via a rule engine
@@ -36,7 +35,7 @@ It can however also be used for other forms of financial instruments such as deb
 
 To use the CMTAT, we recommend that you use the latest audited version, from the [Releases](https://github.com/CMTA/CMTAT/releases) page.
 
-You may modify the token code by adding, removing, or modifying features. However, the base, enforcement, and snapshot modules must remain in place for compliance with Swiss law.
+You may modify the token code by adding, removing, or modifying features. However, the base, enforcement must remain in place for compliance with Swiss law.
 
 ### Deployment mode (Standalone / With A Proxy)
 
