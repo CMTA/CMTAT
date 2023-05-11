@@ -80,12 +80,11 @@ abstract contract ValidationModule is
             return uint8(REJECTED_CODE_BASE.TRANSFER_REJECTED_PAUSED);
         } else if (frozen(from)) {
             return uint8(REJECTED_CODE_BASE.TRANSFER_REJECTED_FROM_FROZEN);
-        } else if (frozen(to)){
+        } else if (frozen(to)) {
             return uint8(REJECTED_CODE_BASE.TRANSFER_REJECTED_TO_FROZEN);
-        }
-        else if (address(ruleEngine) != address(0)) {
+        } else if (address(ruleEngine) != address(0)) {
             return _detectTransferRestriction(from, to, amount);
-        } else{
+        } else {
             return uint8(REJECTED_CODE_BASE.TRANSFER_OK);
         }
     }
@@ -100,24 +99,24 @@ abstract contract ValidationModule is
     ) external view override returns (string memory message) {
         if (restrictionCode == uint8(REJECTED_CODE_BASE.TRANSFER_OK)) {
             return TEXT_TRANSFER_OK;
-        } 
-        else if (
-            restrictionCode == uint8(REJECTED_CODE_BASE.TRANSFER_REJECTED_PAUSED)
+        } else if (
+            restrictionCode ==
+            uint8(REJECTED_CODE_BASE.TRANSFER_REJECTED_PAUSED)
         ) {
             return TEXT_TRANSFER_REJECTED_PAUSED;
-        }  
-        else if (restrictionCode == uint8(REJECTED_CODE_BASE.TRANSFER_REJECTED_FROM_FROZEN)){
+        } else if (
+            restrictionCode ==
+            uint8(REJECTED_CODE_BASE.TRANSFER_REJECTED_FROM_FROZEN)
+        ) {
             return TEXT_TRANSFER_REJECTED_FROM_FROZEN;
-        } 
-        else if (
-            restrictionCode == uint8(REJECTED_CODE_BASE.TRANSFER_REJECTED_TO_FROZEN)
+        } else if (
+            restrictionCode ==
+            uint8(REJECTED_CODE_BASE.TRANSFER_REJECTED_TO_FROZEN)
         ) {
             return TEXT_TRANSFER_REJECTED_TO_FROZEN;
-        } 
-        else if (address(ruleEngine) != address(0)) {
+        } else if (address(ruleEngine) != address(0)) {
             return _messageForTransferRestriction(restrictionCode);
-        } 
-        else {
+        } else {
             return TEXT_UNKNOWN_CODE;
         }
     }
@@ -127,7 +126,7 @@ abstract contract ValidationModule is
         address to,
         uint256 amount
     ) public view override returns (bool) {
-        if(paused() || frozen(from) || frozen(to)){
+        if (paused() || frozen(from) || frozen(to)) {
             return false;
         }
         if (address(ruleEngine) != address(0)) {

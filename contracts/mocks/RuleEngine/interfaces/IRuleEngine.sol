@@ -6,7 +6,6 @@ import "./IRule.sol";
 import "../../../interfaces/IEIP1404/IEIP1404Wrapper.sol";
 
 interface IRuleEngine is IEIP1404Wrapper {
-
     /**
      * @dev define the rules, the precedent rules will be overwritten
      */

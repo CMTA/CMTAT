@@ -14,7 +14,7 @@ interface IEIP1404Wrapper is IEIP1404 {
         TRANSFER_REJECTED_FROM_FROZEN,
         TRANSFER_REJECTED_TO_FROZEN
     }
-    
+
     /**
      * @dev Returns true if the transfer is valid, and false otherwise.
      */

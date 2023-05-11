@@ -46,17 +46,20 @@ abstract contract AuthorizationModule is AccessControlUpgradeable {
         require(admin != address(0), "Address 0 not allowed");
         _grantRole(DEFAULT_ADMIN_ROLE, admin);
     }
+
     /*
-    * @dev Returns `true` if `account` has been granted `role`.
+     * @dev Returns `true` if `account` has been granted `role`.
      */
-    function hasRole(bytes32 role, address account) public view virtual override returns (bool) {
+    function hasRole(
+        bytes32 role,
+        address account
+    ) public view virtual override returns (bool) {
         // The Default Admin has all roles
-        if(AccessControlUpgradeable.hasRole(DEFAULT_ADMIN_ROLE, account)){
+        if (AccessControlUpgradeable.hasRole(DEFAULT_ADMIN_ROLE, account)) {
             return true;
         }
         return AccessControlUpgradeable.hasRole(role, account);
     }
-
 
     uint256[50] private __gap;
 }

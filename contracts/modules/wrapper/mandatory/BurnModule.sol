@@ -41,7 +41,7 @@ abstract contract BurnModule is ERC20Upgradeable, AuthorizationModule {
      */
     function forceBurn(
         address account,
-        uint256 amount, 
+        uint256 amount,
         string memory reason
     ) public onlyRole(BURNER_ROLE) {
         _burn(account, amount);

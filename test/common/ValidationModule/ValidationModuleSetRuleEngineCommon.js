@@ -40,7 +40,6 @@ function ValidationModuleSetRuleEngineCommon (admin, address1, ruleEngine) {
         'Unknown code'
       )
     })
-
   })
 }
 module.exports = ValidationModuleSetRuleEngineCommon

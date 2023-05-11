@@ -5,7 +5,6 @@ pragma solidity ^0.8.17;
 import "./interfaces/IRule.sol";
 import "./CodeList.sol";
 
-
 /*
 @title a mock for testing, not suitable for production
 */
@@ -26,7 +25,10 @@ contract RuleMock is IRule, CodeList {
         address /* _to */,
         uint256 _amount
     ) public pure override returns (uint8) {
-        return _amount < 20 ? uint8(REJECTED_CODE_BASE.TRANSFER_OK) : AMOUNT_TOO_HIGH;
+        return
+            _amount < 20
+                ? uint8(REJECTED_CODE_BASE.TRANSFER_OK)
+                : AMOUNT_TOO_HIGH;
     }
 
     function canReturnTransferRestrictionCode(
