@@ -12,7 +12,7 @@ function CreditEventsModuleCommon (owner, attacker) {
 
       // Act
       await this.cmtat.setCreditEvents(true, true, 'B++', { from: owner });
-      
+
       // Assert
       (await this.cmtat.creditEvents()).flagDefault.should.equal(true);
       (await this.cmtat.creditEvents()).flagRedeemed.should.equal(true);

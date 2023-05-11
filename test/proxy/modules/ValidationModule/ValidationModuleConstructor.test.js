@@ -1,6 +1,6 @@
 const CMTAT = artifacts.require('CMTAT_PROXY')
 const { deployProxy } = require('@openzeppelin/truffle-upgrades')
-const ValidationModuleCommon = require('../../../common/ValidationModule/ValidationModuleSetRuleEngineCommon')
+const ValidationModuleCommon = require('../../../common/ValidationModule/ValidationModuleCommon')
 const RuleEngineMock = artifacts.require('RuleEngineMock')
 const ADDRESS1_INITIAL_BALANCE = 17
 const ADDRESS2_INITIAL_BALANCE = 18

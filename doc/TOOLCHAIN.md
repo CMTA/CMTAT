@@ -1,5 +1,9 @@
 # TOOLCHAIN
 
+[TOC]
+
+
+
 ## Node.JS  package
 
 This part describe the list of libraries present in the file `package.json`.
@@ -23,6 +27,16 @@ A development environment, testing framework and asset pipeline for blockchains 
 
 **[Truffle Flattener](https://www.npmjs.com/package/truffle-flattener)**
 Concats solidity files from Truffle projects with all of their dependencies.
+
+#### Nomiclabs - Hardhat
+
+[hardhat-truffle5](https://hardhat.org/hardhat-runner/plugins/nomiclabs-hardhat-truffle5)
+
+[Hardhat](https://hardhat.org/) plugin for integration with TruffleContract from Truffle 5. This allows tests and scripts written for Truffle to work with Hardhat.
+
+[hardhat-web3](https://hardhat.org/hardhat-runner/plugins/nomiclabs-hardhat-web3)
+
+This plugin integrates [Web3.js](https://github.com/ethereum/web3.js) `1.x` into [Hardhat](https://hardhat.org/).
 
 #### Linter
 
@@ -68,6 +82,26 @@ JavaScript bindings for the Solidity compiler.
 **[Web3](https://github.com/web3/web3.js)**
 Ethereum JavaScript API.
 
+#### Documentation
+
+**[sol2uml](https://github.com/naddison36/sol2uml)**
+
+Generate UML for smart contracts
+
+**[solidity-coverage](https://github.com/sc-forks/solidity-coverage/)**
+
+Code coverage for Solidity smart-contracts
+
+**[solidity-docgen](https://github.com/OpenZeppelin/solidity-docgen)**
+
+Program that extracts documentation for a Solidity project.
+
+**[Surya](https://github.com/ConsenSys/surya)**
+
+Utility tool for smart contract systems.
+
+#### solidity-coverage
+
 #### Others
 
 **[dotenv](https://www.npmjs.com/package/dotenv)**
@@ -94,89 +128,56 @@ Warning:
 
 ## Generate documentation
 
-**[sol2uml](https://github.com/naddison36/sol2uml)** 
+### [sol2uml](https://github.com/naddison36/sol2uml)
+
 Generate UML for smart contracts
-`
-sol2uml ./contracts
-`
 
-
-
-### Surya
-
-Link: https://github.com/ConsenSys/surya
-
-### Graph (CFG)
-
-- Full
+You can generate UML for smart contracts by running the following command:
 
 ```bash
-npx surya graph -i contracts/**/*.sol | dot -Tpng > surya_graph_full.png
+npm run-script uml
 ```
 
-- Only the CMTAT
+Warning:
 
-```bash
-npx surya graph contracts/CMTAT.sol | dot -Tpng > surya_graph_cmtat.png
+From the version 2.3, this command is not working and generates the following error
+
+> Failed to convert dot to SVG. Error: lost 31 26 edge
+
+
+
+| Description                                                  | Command                                |
+| ------------------------------------------------------------ | -------------------------------------- |
+| Generate UML for the interfaces EIP1404                      | `npm run-script uml-i-eip1404`         |
+| Generate UML for the contracts CMTAT_STANDALONE, CMTAT_PROXY && CMTAT_BASE | `npm run-script uml-partial`           |
+| Generate UML for mandatory modules                           | `npm run-script uml-modules-mandatory` |
+| Generate UML for optional modules                            | `npm run-script uml-modules-optional`  |
+| Generate UML for security modules                            | `npm run-script uml-modules-security`  |
+| Generate UML for mocks                                       | `npm run-script uml-mocks`             |
+
+
+
+### [Surya](https://github.com/ConsenSys/surya)
+
+To generate documentation with surya, you can call the three bash scripts in doc/script
+
+| Task                 | Script                      | Command exemple                                              |
+| -------------------- | --------------------------- | ------------------------------------------------------------ |
+| Generate graph       | script_surya_graph.sh       | npx surya graph -i contracts/**/*.sol <br />npx surya graph contracts/modules/CMTAT_BASE.sol |
+| Generate inheritance | script_surya_inheritance.sh | npx surya inheritance contracts/modules/CMTAT_BASE.sol -i <br />npx surya inheritance contracts/modules/CMTAT_BASE.sol |
+| Generate report      | script_surya_report.sh      | npx surya mdreport -i surya_report.md contracts/modules/CMTAT_BASE.sol <br />npx surya mdreport surya_report.md contracts/modules/CMTAT_BASE.sol |
+
+In the report, the path for the different files are indicated in absolute. You have to remove the part which correspond to your local filesystem.
+
+
+
+### [Coverage](https://github.com/sc-forks/solidity-coverage/)
+
+Code coverage for Solidity smart-contracts, installed as a hardhat plugin
+
 ```
-
-
-
-#### Inheritance
-
-- Full 
-
-```bash
-npx surya inheritance contracts/CMTAT.sol -i | dot -Tpng > surya_inheritance_all_dot.png
+npm run-script coverage
 ```
-
-- Only the CMTAT
-
-```bash
-npx surya inheritance contracts/CMTAT.sol | dot -Tpng > surya_inheritance_cmtat_dot.png
-```
-
-#### Generate report
-
-- Full
-
-```bash
-npx surya mdreport -i surya_report.md contracts/CMTAT.sol  
-```
-
-In the report, the path for the different files are indicated in aboslute. You have to remove the part which correspond to your local filesystem.
-
-- Only the CMTAT
-
-```bash
-npx surya mdreport surya_report.md contracts/CMTAT.sol  
-```
-
-
-
-### Solgraph
-
-Link : https://github.com/raineorshine/solgraph
-
-Generates a [DOT](https://en.wikipedia.org/wiki/DOT_(graph_description_language)) graph that visualizes function control flow of a Solidity contract and highlights potential security vulnerabilities.
-
-Solpgraph is less good that slither because it does not resolve automatically the inheritance
-
-```bash
-npx solgraph contracts/CMTAT.sol > solgraph_CMTAT.dot
-```
-
-
-
-```bash
-dot -Tpng solgraph_CMTAT.dot -o solgraph_dot.png
-```
-
-
-
-
-
-
 
 
 

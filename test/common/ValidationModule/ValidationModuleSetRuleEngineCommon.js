@@ -33,6 +33,14 @@ function ValidationModuleSetRuleEngineCommon (admin, address1, ruleEngine) {
             DEFAULT_ADMIN_ROLE
       )
     })
+
+    it('testCanReturnMessageWithNoRuleEngine&UnknownRestrictionCode', async function () {
+      // Act + Assert
+      (await this.cmtat.messageForTransferRestriction(254)).should.equal(
+        'Unknown code'
+      )
+    })
+
   })
 }
 module.exports = ValidationModuleSetRuleEngineCommon

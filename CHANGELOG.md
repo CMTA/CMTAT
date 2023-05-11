@@ -2,6 +2,58 @@
 
 Please follow <https://changelog.md/> conventions.
 
+## 2.3
+
+The release 2.3 contains mainly the different fixes and improvements related to the audit performed on the version 2.
+
+**General modifications**
+
+- The interfaces ERC1404 & ERC1404Wrapper were renamed in IEIP1404 & EIP1404Wrapper since the proposition of standard ERC/EIP 1404 have never been approved ([pull/166](https://github.com/CMTA/CMTAT/pull/166)).
+
+- The RuleEngine to be used with the CMTAT has to implement the interface IEIP1404Wrapper ([pull/166](https://github.com/CMTA/CMTAT/pull/166))
+
+It is no longer necessary to implement the interface RuleEngine, which was moved inside the mock directory
+
+- When a contract is deployed, the admin address put in parameter has to be different from zero ([pull/162](https://github.com/CMTA/CMTAT/pull/162)).
+
+**Audit report**
+
+This version also includes improvements suggested by the audit report, addressing the following findings:
+
+- CMTAT deployement ([pull/152](https://github.com/CMTA/CMTAT/pull/152)).
+
+CVF-2: Create two main contracts: one for a deployment with a proxy, and one for a standalone deployment 
+
+- ValidationModule & EnforcementModule ([pull/153](https://github.com/CMTA/CMTAT/pull/153))
+
+CVF-1: The control was made in CMTAT.sol. We have moved this inside the ValidationModule
+
+CVF-3 :  return a defined error message if the rule engine is not set.
+
+ CVF-20: defined two different messages to indicate which address is frozen
+
+ CVF-29:  defined a list of valid restriction code in ERC1404Wrapper
+
+- Access Control ([pull/154](https://github.com/CMTA/CMTAT/pull/154))
+
+CVF-10: override the function hasRole to give all roles to the default admin
+
+CVF-11: remove the function transferContractControl
+
+- Burn ([pull/155](https://github.com/CMTA/CMTAT/pull/155))
+
+CVF-5: add a reason argument in the function + event as recommended
+
+**Other**
+
+CVF-4, CVF-13, CVF-18,  CVF-23: CVF related to events ([pull/159](https://github.com/CMTA/CMTAT/pull/159))
+
+CVF-14: ValidationModule: Move the return statement inside the else branch as recommended ([pull/157](https://github.com/CMTA/CMTAT/pull/157))
+
+CVF-16, CVF-17, CVF-19, CVF-22, CVF-25: related to events [(pull/158)](https://github.com/CMTA/CMTAT/pull/158)
+
+CVF-21: remove the redundant part in the path ([pull/156](https://github.com/CMTA/CMTAT/pull/156))
+
 ## 2.2 - 20230122
 
 This version is not audited
@@ -31,9 +83,9 @@ This version also includes improvements suggested by the audit report, addressin
 
 - SnapshotModule / CVF-3, CVF-8, CVF-13, CVF-17: [pull/123](https://github.com/CMTA/CMTAT/pull/123)
 - CVF-21: change the type of the Event `RuleEngineSet` to `IRuleEngine`
+- CVF-24, CVF-25, CVF-26: no change in the code, but a comment was added to explain the requirement.
 - CVF-28: call to the `Validation_init_unchained` function in `__CMTAT_init`
 - CVF-54: add the reason parameter in events `Freeze` and `Unfreeze`
-- CVF-24, CVF-25, CVF-26: no change in the code, but a comment was added to explain the requirement.
 
 ## 2.1 - 20221216
 

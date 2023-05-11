@@ -4,6 +4,10 @@ coverage
 coverage.json
 /.openzeppelin
 .vscode/
+#PlantUML
+out
 #drawio
 *.bkp
 *.dtmp
+artifacts
+cache
