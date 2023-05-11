@@ -8,6 +8,7 @@ import "../../security/AuthorizationModule.sol";
 import "../../security/OnlyDelegateCallModule.sol";
 
 abstract contract BaseModule is AuthorizationModule, OnlyDelegateCallModule {
+    // to initialize inside the implementation constructor when deployed with a Proxy
     bool internal deployedWithProxy;
     /* Events */
     event Term(string indexed newTermIndexed, string newTerm);

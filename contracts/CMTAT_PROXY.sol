@@ -4,9 +4,7 @@ pragma solidity ^0.8.17;
 
 import "./modules/CMTAT_BASE.sol";
 
-
-contract CMTAT_PROXY is CMTAT_BASE
-{
+contract CMTAT_PROXY is CMTAT_BASE {
     /** 
     @notice Contract version for the deployment with a proxy
     @param forwarderIrrevocable address of the forwarder, required for the gasless support

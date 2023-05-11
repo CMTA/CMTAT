@@ -175,9 +175,17 @@ In the report, the path for the different files are indicated in absolute. You h
 
 Code coverage for Solidity smart-contracts, installed as a hardhat plugin
 
-```
+```bash
 npm run-script coverage
 ```
 
 
+
+### [Slither](https://github.com/crytic/slither)
+
+Slither is a Solidity static analysis framework written in Python3
+
+```bash
+ slither .  --checklist --filter-paths "openzeppelin-contracts-upgradeable|test" > slither-report.md
+```
 

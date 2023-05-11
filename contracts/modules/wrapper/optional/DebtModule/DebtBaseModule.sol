@@ -19,10 +19,7 @@ abstract contract DebtBaseModule is
     event InterestRate(uint256 newInterestRate);
     event ParValue(uint256 newParValue);
     event Guarantor(string indexed newGuarantorIndexed, string newGuarantor);
-    event BondHolder(
-        string indexed newBondHolderIndexed,
-        string newBondHolder
-    );
+    event BondHolder(string indexed newBondHolderIndexed, string newBondHolder);
     event MaturityDate(
         string indexed newMaturityDateIndexed,
         string newMaturityDate

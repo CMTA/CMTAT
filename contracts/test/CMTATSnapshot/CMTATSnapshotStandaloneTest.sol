@@ -4,10 +4,8 @@ pragma solidity ^0.8.17;
 
 import "./CMTAT_BASE_SnapshotTest.sol";
 
-
-contract CMTATSnapshotStandaloneTest is CMTAT_BASE_SnapshotTest
-{
-        /** 
+contract CMTATSnapshotStandaloneTest is CMTAT_BASE_SnapshotTest {
+    /** 
     @notice Contract version for standalone deployment
     @param forwarderIrrevocable address of the forwarder, required for the gasless support
     @param admin address of the admin of contract (Access Control)

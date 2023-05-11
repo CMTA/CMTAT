@@ -39,7 +39,6 @@ abstract contract CMTAT_BASE_SnapshotTest is
     DebtBaseModule,
     CreditEventsModule
 {
-    
     /**
     @notice 
     initialize the proxy contract
@@ -128,9 +127,8 @@ abstract contract CMTAT_BASE_SnapshotTest is
         __CMTAT_init_unchained();
     }
 
-    function __CMTAT_init_unchained(
-    ) internal onlyInitializing {
-       // no variable to initialize
+    function __CMTAT_init_unchained() internal onlyInitializing {
+        // no variable to initialize
     }
 
     /**
@@ -171,7 +169,10 @@ abstract contract CMTAT_BASE_SnapshotTest is
         address to,
         uint256 amount
     ) internal override(SnapshotModuleInternal, ERC20Upgradeable) {
-        require(ValidationModule.validateTransfer(from, to, amount), "CMTAT: transfer rejected by validation module");
+        require(
+            ValidationModule.validateTransfer(from, to, amount),
+            "CMTAT: transfer rejected by validation module"
+        );
         // We call the SnapshotModule only if the transfer is valid
         /*
         SnapshotModule:

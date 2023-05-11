@@ -7,11 +7,10 @@ import "./interfaces/IRuleEngine.sol";
 import "./RuleMock.sol";
 import "./CodeList.sol";
 
-
 /*
 @title a mock for testing, not suitable for production
 */
-contract RuleEngineMock is IRuleEngine, CodeList {
+contract RuleEngineMock is IRuleEngine {
     IRule[] internal _rules;
 
     constructor() {

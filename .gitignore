@@ -11,3 +11,5 @@ out
 *.dtmp
 artifacts
 cache
+#manticore
+mcore_*

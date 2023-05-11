@@ -72,12 +72,11 @@ Please see the OpenGSN [documentation](https://docs.opengsn.org/contracts/#recei
 >
 > See https://eips.ethereum.org/EIPS/eip-6780 & https://github.com/ethereum/execution-specs/blob/master/network-upgrades/mainnet-upgrades/cancun.md
 
-A "kill switch" is a necessary function to allow the issuer to carry out certain corporate actions (e.g., share splits, reverse splits,
-and mergers), which involve cancelling all existing tokens and replacing them by new ones, and can also be used if the issuer decides that it no
-longer wishes to have its shares issued in the form of ledger securities. The "kill switch" function affects all tokens issued.
+A "kill switch" is a necessary function to allow the issuer to carry out certain corporate actions (e.g., share splits, reverse splits, and mergers), which involve cancelling all existing tokens and replacing them by new ones, and can also be used if the issuer decides that it no longer wishes to have its shares issued in the form of ledger securities. The "kill switch" function affects all tokens issued.
 
-Such a functionality can be performed via that `kill()` function. A new token contract may then be deployed via the proxy.
-Alternatively, if interactions with the "killed contract" are still necessary, it may be paused (and never unpaused).
+Such a functionality can be performed via that `kill()` function. A new token contract may then be deployed.
+
+Alternatively, if interactions with the "contract" are still necessary, it may be paused (and never unpaused).
 
 
 

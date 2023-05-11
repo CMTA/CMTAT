@@ -4,9 +4,7 @@ pragma solidity ^0.8.17;
 
 import "./CMTAT_BASE_SnapshotTest.sol";
 
-
-contract CMTATSnapshotProxyTest is CMTAT_BASE_SnapshotTest
-{
+contract CMTATSnapshotProxyTest is CMTAT_BASE_SnapshotTest {
     /** 
     @notice Contract version for the deployment with a proxy
     @param forwarderIrrevocable address of the forwarder, required for the gasless support

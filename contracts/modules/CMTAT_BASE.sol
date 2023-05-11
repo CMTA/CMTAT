@@ -48,21 +48,21 @@ abstract contract CMTAT_BASE is
         address admin,
         string memory nameIrrevocable,
         string memory symbolIrrevocable,
-        string memory tokenId,
-        string memory terms,
-        IEIP1404Wrapper ruleEngine,
-        string memory information,
-        uint256 flag
+        string memory tokenId_,
+        string memory terms_,
+        IEIP1404Wrapper ruleEngine_,
+        string memory information_,
+        uint256 flag_
     ) public initializer {
         __CMTAT_init(
             admin,
             nameIrrevocable,
             symbolIrrevocable,
-            tokenId,
-            terms,
-            ruleEngine,
-            information,
-            flag
+            tokenId_,
+            terms_,
+            ruleEngine_,
+            information_,
+            flag_
         );
     }
 
@@ -73,11 +73,11 @@ abstract contract CMTAT_BASE is
         address admin,
         string memory nameIrrevocable,
         string memory symbolIrrevocable,
-        string memory tokenId,
-        string memory terms,
-        IEIP1404Wrapper ruleEngine,
-        string memory information,
-        uint256 flag
+        string memory tokenId_,
+        string memory terms_,
+        IEIP1404Wrapper ruleEngine_,
+        string memory information_,
+        uint256 flag_
     ) internal onlyInitializing {
         /* OpenZeppelin library */
         // OZ init_unchained functions are called firstly due to inheritance
@@ -96,7 +96,7 @@ abstract contract CMTAT_BASE is
         Add this call in case you add the SnapshotModule
         __Snapshot_init_unchained();
         */
-        __Validation_init_unchained(ruleEngine);
+        __Validation_init_unchained(ruleEngine_);
 
         /* Wrapper */
         // AuthorizationModule_init_unchained is called firstly due to inheritance
@@ -119,15 +119,14 @@ abstract contract CMTAT_BASE is
         /* Other modules */
         __DebtBaseModule_init_unchained();
         __CreditEvents_init_unchained();
-        __Base_init_unchained(tokenId, terms, information, flag);
+        __Base_init_unchained(tokenId_, terms_, information_, flag_);
 
         /* own function */
         __CMTAT_init_unchained();
     }
 
-    function __CMTAT_init_unchained(
-    ) internal onlyInitializing {
-       // no variable to initialize
+    function __CMTAT_init_unchained() internal onlyInitializing {
+        // no variable to initialize
     }
 
     /**
@@ -167,8 +166,11 @@ abstract contract CMTAT_BASE is
         address from,
         address to,
         uint256 amount
-    ) internal override(ERC20Upgradeable) view {
-        require(ValidationModule.validateTransfer(from, to, amount), "CMTAT: transfer rejected by validation module");
+    ) internal view override(ERC20Upgradeable) {
+        require(
+            ValidationModule.validateTransfer(from, to, amount),
+            "CMTAT: transfer rejected by validation module"
+        );
         // We call the SnapshotModule only if the transfer is valid
         /*
         SnapshotModule:
