@@ -16,6 +16,8 @@ The preferred way to receive comments is through the GitHub issue tracker.  Priv
 
 ## Functionality
 
+### General Overview
+
 The CMTAT supports the following core features:
 
 * Basic mint, burn, and transfer operations
@@ -64,7 +66,7 @@ Please see the OpenGSN [documentation](https://docs.opengsn.org/contracts/#recei
 
 ### Kill switch
 
-> This functionality uses the opcode SELFDESTRUCT which the propriety of destroying the contract (= deletion of any storage keys or code) will be remove with the Cancun Upgrade, an upgrade of the Ethereum network.
+> This functionality uses the opcode SELFDESTRUCT which the property of destroying the contract (= deletion of any storage keys or code) will be remove with the Cancun Upgrade, an upgrade of the Ethereum network.
 >
 > Therefore, when the Ethereum Network will integrate this upgrade, this functionality will no longer be available.
 >
@@ -145,7 +147,7 @@ Fixes of security issues discovered by the initial audit were reviewed by ABDK a
 released](doc/audits/ABDK-CMTAT-audit-20210910.pdf) on September 10, 2021, covering [version c3afd7b](https://github.com/CMTA/CMTAT/tree/c3afd7b4a2ade160c9b581adb7a44896bfc7aaea) of the contracts.
 Version [1.0](https://github.com/CMTA/CMTAT/releases) includes additional fixes of minor issues, compared to the version retested.
 
-#### Second Audit
+#### Second Audit - March, 2023
 
 The second audit was performed by ABDK on the version 2.2.
 
@@ -155,6 +157,11 @@ The release 2.3 contains the different fixes and improvements related to this au
 
 You will find the report performed with [Slither](https://github.com/crytic/slither) here: [slither-report.md](doc/audits/tools/slither-report.md) 
 
+### Test
+
+- You will find a summary of all automatic tests here [test.pdf](doc/general/test/test.pdf) 
+- A code coverage is available here [index.html](doc/general/test/coverage/index.html) 
+
 ### Remarks
 
 As with any token contract, access to the owner key must be adequately restricted.
@@ -162,11 +169,17 @@ Likewise, access to the proxy contract must be restricted and seggregated from t
 
 ## Documentation
 
-Please see the [doc/modules](doc/modules) for documentation of the modules API.
+Here a summary of the main documentation
+
+| Document                          | Link/Files                                                 |
+| --------------------------------- | ---------------------------------------------------------- |
+| Documentation of the modules API. | [doc/modules](doc/modules)                                 |
+| Documentation on the toolchain    | [doc/TOOLCHAIN.md](doc/TOOLCHAIN.md)                       |
+| How to use the project            | [doc/USAGE.md](doc/USAGE.md)                               |
+| Project architecture              | [doc/general/architecture.md](doc/general/architecture.md) |
 
 CMTA will release further documentation describing the CMTAT framework in a platform-agnostic way, and coveging legal aspects.
 
 ## Intellectual property
 
-The code is copyright (c) Capital Market and Technology Association, 2018-2023, and is released under [Mozilla Public License
-2.0](./LICENSE.md).
+The code is copyright (c) Capital Market and Technology Association, 2018-2023, and is released under [Mozilla Public License 2.0](./LICENSE.md).
