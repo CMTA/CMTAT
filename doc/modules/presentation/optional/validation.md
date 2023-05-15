@@ -4,6 +4,10 @@ This document defines the Validation Module for the CMTA Token specification. Th
 
 [TOC]
 
+## Rationale
+
+> Issuers may decide to implement legal restrictions to the transfer of the tokenized instruments, to limit the scope of persons or entities who may hold the relevant instruments. 
+
 ## Schema
 
 ### Inheritance
@@ -100,11 +104,11 @@ The rules are defined using an (optional) rule engine, set using the `setRuleEng
 
 #### `setRuleEngine(address)`
 
-##### Signature:
+##### Definition:
 
 ```solidity
-    function setRuleEngine(address ruleEngine)
-    public
+function setRuleEngine(IEIP1404Wrapper ruleEngine_) 
+external onlyRole(DEFAULT_ADMIN_ROLE)
 ```
 
 ##### Description:
@@ -114,12 +118,12 @@ Only authorized users are allowed to call this function.
 
 ### Events
 
-#### `RuleEngineSet(address)`
+#### `RuleEngine(address)`
 
-##### Signature:
+##### Definition:
 
 ```solidity
-    event RuleEngineSet (address indexed newRuleEngine)
+event RuleEngine(IEIP1404Wrapper indexed newRuleEngine)
 ```
 
 ##### Description:

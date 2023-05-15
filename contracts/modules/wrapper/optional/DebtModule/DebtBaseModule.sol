@@ -78,56 +78,53 @@ abstract contract DebtBaseModule is
     @notice Set all attributes of debt
     The values of all attributes will be changed even if the new values are the same as the current ones
     */
-    function setDebt(
-        uint256 interestRate_,
-        uint256 parValue_,
-        string memory guarantor_,
-        string memory bondHolder_,
-        string memory maturityDate_,
-        string memory interestScheduleFormat_,
-        string memory interestPaymentDate_,
-        string memory dayCountConvention_,
-        string memory businessDayConvention_,
-        string memory publicHolidayCalendar_,
-        string memory issuanceDate_,
-        string memory couponFrequency_
-    ) public onlyRole(DEBT_ROLE) {
+    function setDebt(DebtBase memory debt_) public onlyRole(DEBT_ROLE) {
         // setGuarantor
         debt = (
             DebtBase(
-                interestRate_,
-                parValue_,
-                guarantor_,
-                bondHolder_,
-                maturityDate_,
-                interestScheduleFormat_,
-                interestPaymentDate_,
-                dayCountConvention_,
-                businessDayConvention_,
-                publicHolidayCalendar_,
-                issuanceDate_,
-                couponFrequency_
+                debt_.interestRate,
+                debt_.parValue,
+                debt_.guarantor,
+                debt_.bondHolder,
+                debt_.maturityDate,
+                debt_.interestScheduleFormat,
+                debt_.interestPaymentDate,
+                debt_.dayCountConvention,
+                debt_.businessDayConvention,
+                debt_.publicHolidaysCalendar,
+                debt_.issuanceDate,
+                debt_.couponFrequency
             )
         );
-        emit InterestRate(interestRate_);
-        emit ParValue(parValue_);
-        emit Guarantor(guarantor_, guarantor_);
-        emit BondHolder(bondHolder_, bondHolder_);
-        emit MaturityDate(maturityDate_, maturityDate_);
+        emit InterestRate(debt_.interestRate);
+        emit ParValue(debt_.parValue);
+        emit Guarantor(debt_.guarantor, debt_.guarantor);
+        emit BondHolder(debt_.bondHolder, debt_.bondHolder);
+        emit MaturityDate(debt_.maturityDate, debt_.maturityDate);
         emit InterestScheduleFormat(
-            interestScheduleFormat_,
-            interestScheduleFormat_
+            debt_.interestScheduleFormat,
+            debt_.interestScheduleFormat
         );
-        emit InterestPaymentDate(interestPaymentDate_, interestPaymentDate_);
-        emit DayCountConvention(dayCountConvention_, dayCountConvention_);
+        emit InterestPaymentDate(
+            debt_.interestPaymentDate,
+            debt_.interestPaymentDate
+        );
+        emit DayCountConvention(
+            debt_.dayCountConvention,
+            debt_.dayCountConvention
+        );
         emit BusinessDayConvention(
-            businessDayConvention_,
-            businessDayConvention_
+            debt_.businessDayConvention,
+            debt_.businessDayConvention
         );
         emit PublicHolidaysCalendar(
-            publicHolidayCalendar_,
-            publicHolidayCalendar_
+            debt_.publicHolidaysCalendar,
+            debt_.publicHolidaysCalendar
         );
+
+        emit IssuanceDate(debt_.issuanceDate, debt_.issuanceDate);
+
+        emit CouponFrequency(debt_.couponFrequency, debt_.couponFrequency);
     }
 
     /*
@@ -226,12 +223,12 @@ abstract contract DebtBaseModule is
     @notice The publicHolidayCalendar will be changed even if the new value is the same as the current one
     */
     function setPublicHolidaysCalendar(
-        string memory publicHolidayCalendar_
+        string memory publicHolidaysCalendar_
     ) public onlyRole(DEBT_ROLE) {
-        debt.publicHolidayCalendar = publicHolidayCalendar_;
+        debt.publicHolidaysCalendar = publicHolidaysCalendar_;
         emit PublicHolidaysCalendar(
-            publicHolidayCalendar_,
-            publicHolidayCalendar_
+            publicHolidaysCalendar_,
+            publicHolidaysCalendar_
         );
     }
 

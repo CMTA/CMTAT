@@ -69,8 +69,9 @@ Origin: OpenZeppelin (ERC20Upgradeable)
 ##### Definition:
 
 ```solidity
-    function totalSupply ()
-    public view returns (uint)
+function totalSupply() 
+external view 
+returns (uint256)
 ```
 
 ##### Description:
@@ -84,23 +85,25 @@ Origin: OpenZeppelin (ERC20Upgradeable)
 ##### Definition:
 
 ```solidity
-    function balanceOf (address owner)
-    public view returns (uint)
+function balanceOf(address account) 
+external view 
+returns (uint256)
 ```
 
 ##### Description:
 
 Return the number of tokens currently owned by the given `owner`.
 
-#### `transfer(address,uint)`
+#### `transfer(address,uint256)`
 
 Origin: OpenZeppelin (ERC20Upgradeable)
 
 ##### Definition:
 
 ```solidity
-    function transfer (address destination, uint amount)
-    public returns (bool)
+function transfer(address to, uint256 amount) 
+external 
+returns (bool)
 ```
 
 ##### Description:
@@ -108,21 +111,38 @@ Origin: OpenZeppelin (ERC20Upgradeable)
 Transfer the given `amount` of tokens from the caller to the given `destination` address.
 The function returns `true` on success and reverts on error.
 
-#### `approve(address,uint)`
+#### `approve(address,uint256)`
 
 Origin: OpenZeppelin (ERC20Upgradeable)
 
 ##### Definition:
 
 ```solidity
-    function approve (address spender, uint amount)
-    public returns (bool)
+function approve(address spender, uint256 amount) 
+external 
+returns (bool)
 ```
 
 ##### Description:
 
 Allow the given `spender` to transfer at most the given `amount` of tokens from the caller.
 The function returns `true` on success and reverts of error.
+
+#### `allowance(address,address)`
+
+Origin: OpenZeppelin (ERC20Upgradeable)
+
+##### Definition:
+
+```solidity
+function allowance(address owner, address spender) 
+external view 
+returns (uint256)
+```
+
+##### Description:
+
+Return the number of tokens the given `spender` is currently allowed to transfer from the given `owner`.
 
 #### `approve(address,uint256,uint256)`
 
@@ -154,20 +174,7 @@ So, Bob got 210 tokens in total, while Alice never means to allow him to transfe
 
 In order to mitigate this kind of attack, Alice at step 3 calls `approve (bob, 110, 100)`.  Such call could only succeed if the allowance is still 100, i.e. Bob's attempt to front run the transaction will make Alice's transaction to fail.
 
-#### `allowance(address,address)`
-
-##### Definition:
-
-```solidity
-    function allowance (address owner, address spender)
-    public view returns (uint)
-```
-
-##### Description:
-
-Return the number of tokens the given `spender` is currently allowed to transfer from the given `owner`.
-
-#### `transferFrom(address,address,uint)`
+#### `transferFrom(address,address,uint256)`
 
 ##### Definition:
 
@@ -185,36 +192,40 @@ The function returns `true` on success and reverts of error.
 
 ### Events
 
-#### `Transfer(address,address,uint)`
+#### `Transfer(address,address,uint256)`
+
+Origin: OpenZeppelin (ERC20Upgradeable)
 
 ##### Definition:
 
 ```solidity
-    event Transfer (address indexed origin, address indexed destination, uint amount)
+event Transfer(address indexed from, address indexed to, uint256 value)
 ```
 
 ##### Description:
 
 Emitted when the specified `amount` of tokens was transferred from the specified `origin` address to the specified `destination` address.
 
-#### `Approval(address,address,uint)`
+#### `Approval(address,address,uint256)`
+
+Origin: OpenZeppelin (ERC20Upgradeable)
 
 ##### Definition:
 
 ```solidity
-    event Approval (address indexed owner, address indexed spender, uint amount)
+event Approval(address indexed owner, address indexed spender, uint256 value)
 ```
 
 ##### Description:
 
 Emitted when the specified `owner` allowed the specified `spender` to transfer the specified `amount` of tokens.
 
-#### `Spend(address,address,uint)`
+#### `Spend(address,address,uint256)`
 
 ##### Definition:
 
 ```solidity
-    event Spend (address indexed owner, address indexed spender, uint amount)
+event Spend (address indexed owner, address indexed spender, uint256 amount)
 ```
 
 ##### Description:

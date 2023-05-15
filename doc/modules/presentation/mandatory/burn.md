@@ -6,6 +6,10 @@ This document defines Burn Module for the CMTA Token specification.
 
 
 
+## Rationale
+
+> This function allows the issuer to destroy specific tokens that are recorded on a distributed ledger address. This function is meant to be used if the issuer cancels tokenized shares (e.g. if it reduces its share capital, if it has decided to have the shares in a different form (e.g. “simple” uncertificated securities within the meaning of Article 973c CO or paper certificates), or to comply with a court order requiring the cancellation of tokens pursuant to Article 973h CO).
+
 ## Schema
 
 ### Inheritance

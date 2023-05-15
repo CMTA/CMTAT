@@ -6,11 +6,9 @@ This document defines the module OnlyDelegateCallModule.
 
 ## Rationale
 
-When a contract is deployed with a proxy, insure that some functions (e.g. delegatecall and selfdestruct) can only be triggered through proxies and not on the implementation contract itself.
-
-Reference: [docs.openzeppelin.com - delegatecall-selfdestruct](https://docs.openzeppelin.com/upgrades-plugins/1.x/faq#delegatecall-selfdestruct)
-
-
+> When a contract is deployed with a proxy, insure that some functions (e.g. delegatecall and selfdestruct) can only be triggered through proxies and not on the implementation contract itself.
+>
+> Reference: [docs.openzeppelin.com - delegatecall-selfdestruct](https://docs.openzeppelin.com/upgrades-plugins/1.x/faq#delegatecall-selfdestruct)
 
 ## Schema
 

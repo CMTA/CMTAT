@@ -6,7 +6,12 @@ This document defines Base Module for the CMTA Token specification.
 
 ## Rationale
 
-The Base Module sets forth the basic functionalities a token must have to comply with the CMTAT framework, for tokens representing equity securities as well as tokens representing and debt securities. 
+> The Base Module sets forth the basic functionalities a token must have to comply with the CMTAT framework, for tokens representing equity securities as well as tokens representing and debt securities. Here a quick list :
+>
+> - Terms of tokenization
+> - Token ID (ISIN or other identifier) 
+> - Others fields to allow the issuer to add additional information: information, flag
+> - The "killswitch" function
 
 ## Schema
 
@@ -64,10 +69,11 @@ The Base Module sets forth the basic functionalities a token must have to comply
 
 #### `setTokenId(string)`
 
-##### Definiton:
+##### Definition:
 
 ```solidity
-function setTokenId(string memory tokenId_) public
+function setTokenId(string memory tokenId_) 
+public
 ```
 
 ##### Description:
@@ -134,7 +140,7 @@ Destroys the contract, send the remaining ethers to msg.sender
 
 #### `Term(string)`
 
-##### Definiton:
+##### Definition:
 
 ```solidity
 event Term(string indexed newTermIndexed, string newTerm)
@@ -144,9 +150,9 @@ event Term(string indexed newTermIndexed, string newTerm)
 
 Emitted when the variable `terms` is set to `newTerm`.
 
-#### `tokenId`
+#### `tokenId(string,string`
 
-##### Definiton:
+##### Definition:
 
 ```solidity
 event TokenId(string indexed newTokenIdIndexed, string newTokenId)
@@ -158,7 +164,7 @@ Emitted when `tokenId` is set to `newTokenId`.
 
 #### `Information(string,string)`
 
-##### Definiton:
+##### Definition:
 
 ```solidity
 event Information(string indexed newInformationIndexed, string newInformation)
@@ -170,7 +176,7 @@ Emitted when the variable `information` is set to `newInformation`.
 
 #### `Flag(uint256)`
 
-##### Definiton:
+##### Definition:
 
 ```solidity
 event Flag(uint256 indexed newFlag)
