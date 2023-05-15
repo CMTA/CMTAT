@@ -141,24 +141,25 @@ The contracts have been audited by [ABDKConsulting](https://www.abdk.consulting/
 
 #### First Audit - September 10, 2021
 
-Fixes of security issues discovered by the initial audit were reviewed by ABDK and confirmed to be effective, as certified by the [report
-released](doc/audits/ABDK-CMTAT-audit-20210910.pdf) on September 10, 2021, covering [version c3afd7b](https://github.com/CMTA/CMTAT/tree/c3afd7b4a2ade160c9b581adb7a44896bfc7aaea) of the contracts.
+Fixes of security issues discovered by the initial audit were reviewed by ABDK and confirmed to be effective, as certified by the [report released](doc/audits/ABDK-CMTAT-audit-20210910.pdf) on September 10, 2021, covering [version c3afd7b](https://github.com/CMTA/CMTAT/tree/c3afd7b4a2ade160c9b581adb7a44896bfc7aaea) of the contracts.
 Version [1.0](https://github.com/CMTA/CMTAT/releases) includes additional fixes of minor issues, compared to the version retested.
 
 #### Second Audit - March, 2023
 
-The second audit was performed by ABDK on the version 2.2.
+The second audit was performed by ABDK on the version [2.2](https://github.com/CMTA/CMTAT/releases/tag/2.2).
 
 The release 2.3 contains the different fixes and improvements related to this audit.
 
+The temporary report is available in the file [Taurus. Audit 3.1. Collected Issues.ods](doc/audits/Taurus. Audit 3.1. Collected Issues.ods). 
+
 ### Tools
 
-You will find the report performed with [Slither](https://github.com/crytic/slither) here: [slither-report.md](doc/audits/tools/slither-report.md) 
+You will find the report performed with [Slither](https://github.com/crytic/slither) in the file [slither-report.md](doc/audits/tools/slither-report.md) 
 
 ### Test
 
-- You will find a summary of all automatic tests here [test.pdf](doc/general/test/test.pdf) 
-- A code coverage is available here [index.html](doc/general/test/coverage/index.html) 
+- You will find a summary of all automatic tests in the file [test.pdf](doc/general/test/test.pdf) 
+- A code coverage is available in the file [index.html](doc/general/test/coverage/index.html) 
 
 ### Remarks
 
