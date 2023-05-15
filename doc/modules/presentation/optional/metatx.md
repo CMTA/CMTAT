@@ -4,6 +4,10 @@ This document defines the MetaTx Module for the CMTA Token specification. The go
 
 [TOC]
 
+## Rationale
+
+> Support for transaction fee transfer, also known as "gasless transactions" in the Ethereum context.
+
 ## Schema
 
 ### Inheritance
@@ -66,7 +70,8 @@ Origin: OpenZeppelin
 
 ```solidity
 function isTrustedForwarder(address forwarder) 
-public view virtual returns (bool) 
+public view virtual 
+returns (bool) 
 ```
 
 ##### Description:

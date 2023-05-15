@@ -12,6 +12,14 @@ Warning:
 
 [TOC]
 
+## Rationale
+
+> In relation to distributions or the exercise of rights attached to tokenized securities, it is necessary to determine the number of tokens held by certain users at a certain point in time to allow issuers to carry out certain corporate actions such as dividend or interest payments. 
+>
+> Such moments are generally referred to in practice as the "record date" or the "record time" (i.e. the time that is relevant to determine the eligibility of security holders for the relevant corporate action). 
+>
+> The snapshot functions to determine the number of tokens recorded on the various ledger addresses at a specific point in time and to use that information to carry out transactions on-chain.
+
 ## Schema
 
 ### Inheritance
@@ -120,12 +128,13 @@ This section describes the Ethereum API of the Snapshot Module.
 
 #### Setter
 
-##### `scheduleSnapshot(uint)`
+##### `scheduleSnapshot(uint256)`
 
-###### Signature:
+###### Definition:
 
 ```solidity
-    function scheduleSnapshot (uint time)
+function scheduleSnapshot(uint256 time) 
+public onlyRole(SNAPSHOOTER_ROLE)
 ```
 
 ###### Description:
@@ -135,12 +144,13 @@ Schedule a snapshot at the given `time` specified as a number of seconds since e
 Time has to be greater that the current time and  the latest scheduled snapshot. There have to be no other already created snapshots at this time.
 Only authorized users are allowed to call this function.
 
-##### `scheduleSnapshotNotOptimized(uint)`
+##### `scheduleSnapshotNotOptimized(uint256)`
 
-###### Signature:
+###### Definition:
 
 ```solidity
-    function scheduleSnapshotNotOptimized (uint time)
+function scheduleSnapshotNotOptimized(uint256 time) 
+public onlyRole(SNAPSHOOTER_ROLE)
 ```
 
 ###### Description:
@@ -152,12 +162,13 @@ Only authorized users are allowed to call this function.
 
 This function is not optimized because it moves all snapshots situated before it one position to the right.
 
-##### `rescheduleSnapshot(uint,uint)`
+##### `rescheduleSnapshot(uint256,uint256)`
 
-###### Signature:
+###### Definition:
 
 ```solidity
-    function rescheduleSnapshot (uint oldTime, uint newTime)
+function rescheduleSnapshot(uint256 oldTime,uint256 newTime) 
+public onlyRole(SNAPSHOOTER_ROLE)
 ```
 
 ###### Description:
@@ -169,12 +180,11 @@ Only authorized users are allowed to call this function.
 
 ##### `unscheduleLastSnapshot(uint)`
 
-###### Signature:
+###### Definition:
 
 ```solidity
-function unscheduleLastSnapshot(uint256 time)
-        public
-        onlyRole(SNAPSHOOTER_ROLE)
+function unscheduleLastSnapshot(uint256 time) 
+public onlyRole(SNAPSHOOTER_ROLE)
 ```
 
 ###### Description:
@@ -183,14 +193,13 @@ Cancel creation of the scheduled, but not yet created snapshot with the given `t
 There should not be any other snapshots scheduled after this one.
 Only authorized users are allowed to call this function.
 
-##### `unscheduleSnapshotNotOptimized(uint)`
+##### `unscheduleSnapshotNotOptimized(uint256)`
 
-###### Signature:
+###### Definition:
 
 ```solidity
-function unscheduleSnapshotNotOptimized(uint256 time)
-        public
-        onlyRole(SNAPSHOOTER_ROLE)
+function unscheduleSnapshotNotOptimized(uint256 time) 
+public onlyRole(SNAPSHOOTER_ROLE)
 ```
 
 ###### Description:
@@ -203,26 +212,56 @@ Only authorized users are allowed to call this function.
 
 #### Getter
 
-##### `snapshotTotalSupply(uint)`
+##### `getNextSnapshots()`
 
-###### Signature:
+###### Definition:
 
 ```solidity
-    function snapshotTotalSupply (uint time)
-    public view returns (uint)
+function getNextSnapshots() 
+public view 
+returns (uint256[] memory)
+```
+
+###### Description:
+
+Return the next scheduled snapshots
+
+##### `getAllSnapshots()`
+
+###### Definition:
+
+```solidity
+function getAllSnapshots() 
+public view 
+returns (uint256[] memory)
+```
+
+###### Description:
+
+Return all snapshots (past and future)
+
+##### `snapshotTotalSupply(uint256)`
+
+###### Definition:
+
+```solidity
+function snapshotTotalSupply(uint256 time) 
+public view 
+returns (uint256)
 ```
 
 ###### Description:
 
 Return the total number of token in circulation at the time when the snapshot with the given `time` was created.
 
-##### `snapshotBalanceOf(uint,address)`
+##### `snapshotBalanceOf(uint256,address)`
 
-###### Signature:
+###### Definition:
 
 ```solidity
-    function snapshotBalanceOf (uint time, address owner)
-    public view returns (uint)
+function snapshotBalanceOf(uint256 time,address owner) 
+public view 
+returns (uint256)
 ```
 
 ###### Description:
@@ -231,24 +270,24 @@ Return the number of tokens owned by the given `owner` at the time when the snap
 
 ### Events
 
-#### `SnapshotSchedule(uint,uint)`
+#### `SnapshotSchedule(uint256,uint256)`
 
-##### Signature:
+##### Definition:
 
 ```solidity
-    event SnapshotSchedule (uint indexed oldTime, uint indexed newTime)
+ event SnapshotSchedule(uint256 indexed oldTime, uint256 indexed newTime)
 ```
 
 ##### Description:
 
 Emitted when the snapshot with the specified `oldTime` was scheduled or rescheduled at the specified `newTime`.
 
-#### `SnapshotUnscheduling(uint)`
+#### `SnapshotUnschedule(uint256)`
 
-##### Signature:
+##### Definition:
 
 ```solidity
-    event SnapshotUnschedule (uint indexed time)
+event SnapshotUnschedule(uint256 indexed time)
 ```
 
 ##### Description:

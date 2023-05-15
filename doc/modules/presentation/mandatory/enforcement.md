@@ -4,6 +4,10 @@ This document defines Enforcement Module for the CMTA Token specification.
 
 [TOC]
 
+## Rationale
+
+> The issuer (or a third party appointed by it) must be in a position to freeze tokens on specific distributed ledger addresses (as opposed to pausing the whole smart contract) to prevent the transfer of tokens that have been earmarked for transfer to a third party (e.g. between the execution of a transaction on a trading platform and the settlement of the trade in the distributed ledger).
+
 ## Schema
 
 ### Inheritance
@@ -150,7 +154,7 @@ Tell, whether the given `account` is frozen.
 ##### Definition:
 
 ```solidity
-    event Freeze (address indexed enforcer, address indexed owner)
+event Freeze (address indexed enforcer, address indexed owner)
 ```
 
 ##### Description:
@@ -162,7 +166,7 @@ Emitted when address `owner` is frozen by `enforcer`.
 ##### Definition:
 
 ```solidity
-    event Unfreeze (address indexed enforcer, address indexed owner)
+event Unfreeze (address indexed enforcer, address indexed owner)
 ```
 
 ##### Description:

@@ -4,6 +4,10 @@ This document defines Debt Module for the CMTA Token specification.
 
 [TOC]
 
+## Rationale
+
+> A number of events may occur during the lifetime of a debt instrument. Contrary to corporate actions, some of these events typically involve third parties (e.g. a bond agent or a rating agency). The issuer may in such cases wish to delegate the relevant functions to the relevant third parties. 
+
 ## Schema
 
 ### Inheritance
@@ -28,14 +32,11 @@ This section describes the Ethereum API of CreditEvents Module.
 
 #### `setCreditEvents(bool,bool,string)`
 
-##### Signature:
+##### Definition:
 
 ```solidity
-    function setCreditEvents(
-        bool flagDefault_,
-        bool flagRedeemed_,
-        string memory rating_
-    ) public onlyRole(DEBT_CREDIT_EVENT_ROLE)
+function setCreditEvents(bool flagDefault_,bool flagRedeemed_,string memory rating_) 
+public onlyRole(DEBT_CREDIT_EVENT_ROLE)
 ```
 
 ##### Description:
@@ -45,12 +46,11 @@ Only authorized users are allowed to call this function.
 
 #### `setFlagDefault(bool flagDefault_)`
 
-##### Signature:
+##### Definition:
 
 ```solidity
-    function setFlagDefault(
-        bool flagDefault_
-    ) public onlyRole(DEBT_CREDIT_EVENT_ROLE)
+function setFlagDefault(bool flagDefault_) 
+public onlyRole(DEBT_CREDIT_EVENT_ROLE)
 ```
 
 ##### Description:
@@ -60,12 +60,11 @@ Only authorized users are allowed to call this function.
 
 #### `setFlagRedeemed (bool)`
 
-##### Signature:
+##### Definition:
 
 ```solidity
-function setFlagRedeemed(
-        bool flagRedeemed_
-    ) public onlyRole(DEBT_CREDIT_EVENT_ROLE)
+function setFlagRedeemed(bool flagRedeemed_) 
+public onlyRole(DEBT_CREDIT_EVENT_ROLE) 
 ```
 
 ##### Description:
@@ -73,14 +72,13 @@ function setFlagRedeemed(
 Set the optional `flagRedeemed` to the given `flagRedeemed`.
 Only authorized users are allowed to call this function.
 
-#### `setRating (string)`
+#### `setRating(string)`
 
-##### Signature:
+##### Definition:
 
 ```solidity
-function setRating(
-        string memory rating_
-    ) public onlyRole(DEBT_CREDIT_EVENT_ROLE)
+function setRating(string memory rating_) 
+public onlyRole(DEBT_CREDIT_EVENT_ROLE)
 ```
 
 ##### Description:
@@ -94,7 +92,7 @@ Only authorized users are allowed to call this function.
 
 #### ` FlagDefault(bool`
 
-##### Signature:
+##### Definition:
 
 ```solidity
 event FlagDefault(bool indexed newFlagDefault)
@@ -106,7 +104,7 @@ Emitted when the attribute `flagDefault` is set.
 
 #### `FlagRedeemed(bool)`
 
-##### Signature:
+##### Definition:
 
 ```solidity
 event FlagRedeemed(bool indexed newFlagRedeemed)
@@ -116,12 +114,12 @@ event FlagRedeemed(bool indexed newFlagRedeemed)
 
 Emitted when the attribute `flagRedeemed` is set.
 
-#### `Rating((string, string)`
+#### `Rating(string, string)`
 
-##### Signature:
+##### Definition:
 
 ```solidity
- event Rating(string indexed newRatingIndexed, string newRating)
+event Rating(string indexed newRatingIndexed, string newRating)
 ```
 
 ##### Description:

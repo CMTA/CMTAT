@@ -10,31 +10,31 @@ This document defines Debt Module for the CMTA Token specification.
 
 #### Inheritance
 
-![surya_inheritance_DebtBaseModule.sol](../../schema/surya_inheritance/surya_inheritance_DebtBaseModule.sol.png)
+![surya_inheritance_DebtBaseModule.sol](../../../schema/surya_inheritance/surya_inheritance_DebtBaseModule.sol.png)
 
 
 
 #### UML
 
-![DebtBaseModule](../../schema/sol2uml/optional/DebtBaseModule.svg)
+![DebtBaseModule](../../../schema/sol2uml/optional/DebtBaseModule.svg)
 
 #### Graph
 
-![surya_graph_DebtBaseModule.sol](../../schema/surya_graph/surya_graph_DebtBaseModule.sol.png)
+![surya_graph_DebtBaseModule.sol](../../../schema/surya_graph/surya_graph_DebtBaseModule.sol.png)
 
 ### CreditEvents
 
 #### Inheritance
 
-![surya_inheritance_CreditEventsModule.sol](../../schema/surya_inheritance/surya_inheritance_CreditEventsModule.sol.png)
+![surya_inheritance_CreditEventsModule.sol](../../../schema/surya_inheritance/surya_inheritance_CreditEventsModule.sol.png)
 
 #### UML
 
-![CreditEventsModule](../../schema/sol2uml/optional/CreditEventsModule.svg)
+![CreditEventsModule](../../../schema/sol2uml/optional/CreditEventsModule.svg)
 
 #### Graph
 
-![surya_graph_CreditEventsModule.sol](../../schema/surya_graph/surya_graph_CreditEventsModule.sol.png)
+![surya_graph_CreditEventsModule.sol](../../../schema/surya_graph/surya_graph_CreditEventsModule.sol.png)
 
 
 
@@ -46,12 +46,13 @@ This section describes the Ethereum API of Debt Module.
 
 ### Functions
 
-#### `setDebt`
+#### `setDebt((uint256,uint256,string,string,string,string,string,string,string,string))`
 
-##### Signature:
+##### Definition:
 
 ```solidity
-setDebt(uint256 interestRate_, uint256 parValue_, string memory guarantor_, string memory bondHolder_, string memory maturityDate_, string memory interestScheduleFormat_, string memory interestPaymentDate_, string memory dayCountConvention_, string memory businessDayConvention_, string memory publicHolidayCalendar_)
+function setDebt(DebtBase memory debt_) 
+public onlyRole(DEBT_ROLE)
 ```
 
 ##### Description:
@@ -59,12 +60,13 @@ setDebt(uint256 interestRate_, uint256 parValue_, string memory guarantor_, stri
 Set the optional Debt  with the different parameters.
 Only authorized users are allowed to call this function.
 
-#### `setInterestRate (uint256 interestRate_)`
+#### `setInterestRate(uint256)`
 
-##### Signature:
+##### Definition:
 
 ```solidity
-function setInterestRate (uint256 interestRate_) public onlyRole(DEFAULT_ADMIN_ROLE)
+function setInterestRate(uint256 interestRate_) 
+public onlyRole(DEBT_ROLE) 
 ```
 
 ##### Description:
@@ -72,12 +74,13 @@ function setInterestRate (uint256 interestRate_) public onlyRole(DEFAULT_ADMIN_R
 Set the optional interest rate to the given `interestRate_`.
 Only authorized users are allowed to call this function.
 
-#### `setParValue (uint256 parValue_)`
+#### `setParValue(uint256)`
 
-##### Signature:
+##### Definition:
 
 ```solidity
-function setParValue (uint256 parValue_) public onlyRole(DEFAULT_ADMIN_ROLE)
+function setParValue (uint256 parValue_) 
+public onlyRole(DEFAULT_ADMIN_ROLE)
 ```
 
 ##### Description:
@@ -85,12 +88,13 @@ function setParValue (uint256 parValue_) public onlyRole(DEFAULT_ADMIN_ROLE)
 Set the optional `parValue` to the given `parValue_`.
 Only authorized users are allowed to call this function.
 
-#### `setGuarantor (string memory guarantor_)`
+#### `setGuarantor(string)`
 
-##### Signature:
+##### Definition:
 
 ```solidity
-function setGuarantor (string memory guarantor_) public onlyRole(DEFAULT_ADMIN_ROLE)
+function setGuarantor (string memory guarantor_) 
+public onlyRole(DEFAULT_ADMIN_ROLE)
 ```
 
 ##### Description:
@@ -98,12 +102,13 @@ function setGuarantor (string memory guarantor_) public onlyRole(DEFAULT_ADMIN_R
 Set the optional attribute `Guarantor` to the given `guarantor_`.
 Only authorized users are allowed to call this function.
 
-#### `setBondHolder (string memory bondHolder_)`
+#### `setBondHolder(string)`
 
-##### Signature:
+##### Definition:
 
 ```solidity
-function setBondHolder (string memory bondHolder_) public onlyRole(DEFAULT_ADMIN_ROLE)
+function setBondHolder (string memory bondHolder_) 
+public onlyRole(DEFAULT_ADMIN_ROLE)
 ```
 
 ##### Description:
@@ -111,12 +116,13 @@ function setBondHolder (string memory bondHolder_) public onlyRole(DEFAULT_ADMIN
 Set the optional attribute `bondHolder` to the given `bondHolder_`.
 Only authorized users are allowed to call this function.
 
-#### `setMaturityDate (string memory maturityDate_)`
+#### `setMaturityDate(string)`
 
-##### Signature:
+##### Definition:
 
 ```solidity
-function setMaturityDate (string memory maturityDate_) public onlyRole(DEFAULT_ADMIN_ROLE)
+function setMaturityDate (string memory maturityDate_) 
+public onlyRole(DEFAULT_ADMIN_ROLE)
 ```
 
 ##### Description:
@@ -124,12 +130,13 @@ function setMaturityDate (string memory maturityDate_) public onlyRole(DEFAULT_A
 Set the optional attribute `maturityDate` to the given `maturityDate_`.
 Only authorized users are allowed to call this function.
 
-#### `setInterestScheduleFormat (string memory interestScheduleFormat_)`
+#### `setInterestScheduleFormat(string)`
 
-##### Signature:
+##### Definition:
 
 ```solidity
-function setInterestScheduleFormat (string memory interestScheduleFormat_) public onlyRole(DEFAULT_ADMIN_ROLE)
+function setInterestScheduleFormat (string memory interestScheduleFormat_) 
+public onlyRole(DEFAULT_ADMIN_ROLE)
 ```
 
 ##### Description:
@@ -137,12 +144,13 @@ function setInterestScheduleFormat (string memory interestScheduleFormat_) publi
 Set the optional attribute `interestScheduleFormat` to the given `interestScheduleFormat_`.
 Only authorized users are allowed to call this function.
 
-#### `setInterestPaymentDate (string memory interestPaymentDate_)`
+#### `setInterestPaymentDate(string)`
 
-##### Signature:
+##### Definition:
 
 ```solidity
-function setInterestPaymentDate (string memory interestPaymentDate_) public onlyRole(DEFAULT_ADMIN_ROLE)
+function setInterestPaymentDate (string memory interestPaymentDate_) 
+public onlyRole(DEFAULT_ADMIN_ROLE)
 ```
 
 ##### Description:
@@ -150,12 +158,13 @@ function setInterestPaymentDate (string memory interestPaymentDate_) public only
 Set the optional attribute `interestPaymentDate` to the given `interestPaymentDate_`.
 Only authorized users are allowed to call this function.
 
-#### `setDayCountConvention (string memory dayCountConvention_)`
+#### `setDayCountConvention(string)`
 
-##### Signature:
+##### Definition:
 
 ```solidity
-function setDayCountConvention (string memory dayCountConvention_) public onlyRole(DEFAULT_ADMIN_ROLE)
+function setDayCountConvention (string memory dayCountConvention_) 
+public onlyRole(DEFAULT_ADMIN_ROLE)
 ```
 
 ##### Description:
@@ -163,12 +172,13 @@ function setDayCountConvention (string memory dayCountConvention_) public onlyRo
 Set the optional attribute `dayCountConvention` to the given `interestPaymentDate_`.
 Only authorized users are allowed to call this function.
 
-#### `setBusinessDayConvention (string memory businessDayConvention_)`
+#### `setBusinessDayConvention(string)`
 
-##### Signature:
+##### Definition:
 
 ```solidity
-function setBusinessDayConvention (string memory businessDayConvention_) public onlyRole(DEFAULT_ADMIN_ROLE)
+function setBusinessDayConvention (string memory businessDayConvention_) 
+public onlyRole(DEFAULT_ADMIN_ROLE)
 ```
 
 ##### Description:
@@ -176,137 +186,219 @@ function setBusinessDayConvention (string memory businessDayConvention_) public 
 Set the optional attribute `businessDayConvention` to the given `businessDayConvention_`.
 Only authorized users are allowed to call this function.
 
-#### ` setPublicHolidaysCalendar(string memory publicHolidayCalendar_)`
+#### ` setPublicHolidaysCalendar(string)`
 
-##### Signature:
+##### Definition:
 
 ```solidity
-function setPublicHolidaysCalendar(string memory publicHolidayCalendar_) public onlyRole(DEFAULT_ADMIN_ROLE)
+function setPublicHolidaysCalendar(string memory publicHolidaysCalendar_) 
+public onlyRole(DEFAULT_ADMIN_ROLE)
 ```
 
 ##### Description:
 
-Set the optional attribute `publicHolidayCalendar` to the given `publicHolidayCalendar_`.
+Set the optional attribute `publicHolidaysCalendar` to the given `publicHolidaysCalendar_`.
+Only authorized users are allowed to call this function.
+
+
+
+#### ` setIssuanceDate(string) `
+
+##### Definition:
+
+```solidity
+function setIssuanceDate(string memory issuanceDate_) 
+```
+
+##### Description:
+
+Set the optional attribute `issuanceDate` to the given `issuanceDate_`.
+Only authorized users are allowed to call this function.
+
+
+
+#### ` setCouponFrequency(string)`
+
+##### Definition:
+
+```solidity
+function setCouponFrequency(string memory couponFrequency_) 
+public onlyRole(DEBT_ROLE)
+```
+
+##### Description:
+
+Set the optional attribute `couponFrequency` to the given `couponFrequency_`.
 Only authorized users are allowed to call this function.
 
 ### Events
 
-#### `InterestRateSet(uint256)`
+#### `InterestRate(uint256)`
 
-##### Signature:
+##### Definition:
 
 ```solidity
-   event InterestRateSet(uint256 indexed newInterestRate)`
+event InterestRate(uint256 newInterestRate)
 ```
 
 ##### Description:
 
 Emitted when the attribute `Interest Rate` is set.
 
-#### `ParValueSet(uint256)`
+#### `ParValue(uint256)`
 
-##### Signature:
+##### Definition:
 
 ```solidity
-    event ParValueSet(uint256 indexed newParValue)
+event ParValue(uint256 newParValue)
 ```
 
 ##### Description:
 
 Emitted when the attribute `ParValue` is set.
 
-#### `GuarantorSet(string, string)`
+#### `Guarantor(string, string)`
 
-##### Signature:
+##### Definition:
 
 ```solidity
-  event GuarantorSet(string indexed newGuarantorIndexed, string newGuarantor)
+event Guarantor(string indexed newGuarantorIndexed, string newGuarantor)
 ```
 
 ##### Description:
 
 Emitted when the attribute `Guarantor` is set.
 
-#### `BondHolderSet(string, string)`
+#### `BondHolder(string,string)`
 
-##### Signature:
+##### Definition:
 
 ```solidity
-  event BondHolderSet(string indexed newBondHolderIndexed, string newBondHolder)
+event BondHolder(string indexed newBondHolderIndexed, string newBondHolder)
 ```
 
 ##### Description:
 
 Emitted when the attribute `BondHolder` is set.
 
-#### `MaturityDateSet(string, string)`
+#### `MaturityDate(string,string)`
 
-##### Signature:
+##### Definition:
 
 ```solidity
-event MaturityDateSet(string indexed newMaturityDateIndexed, string newMaturityDate);
+event MaturityDate(
+	string indexed newMaturityDateIndexed,
+	string newMaturityDate
+)
 ```
 
 ##### Description:
 
 Emitted when the attribute `maturityDate` is set.
 
-#### `InterestScheduleFormatSet(string, string)`
+#### `InterestScheduleFormat(string,string)`
 
-##### Signature:
+##### Definition:
 
 ```solidity
-event MaturityDateSet(string indexed newMaturityDateIndexed, string newMaturityDate);
+event InterestScheduleFormat(
+        string indexed newInterestScheduleFormatIndexed,
+        string newInterestScheduleFormat
+)
 ```
 
 ##### Description:
 
-Emitted when the attribute `maturityDate` is set.
+Emitted when the attribute `interestScheduleFormat` is set.
 
-#### `InterestPaymentDateSet(string, string)`
+#### `InterestPaymentDate(string,string)`
 
-##### Signature:
+##### Definition:
 
 ```solidity
-event MaturityDateSet(string indexed newMaturityDateIndexed, string newMaturityDate);
+ event InterestPaymentDate(
+        string indexed newInterestPaymentDateIndexed,
+        string newInterestPaymentDate
+)
 ```
 
 ##### Description:
 
-Emitted when the attribute `InterestScheduleFormatSet` is set.
+Emitted when the attribute `interestPaymentDate` is set.
 
-#### `DayCountConventionSet(string, string)`
+#### `DayCountConvention(string,string)`
 
-##### Signature:
+##### Definition:
 
 ```solidity
-event DayCountConventionSet(string indexed newDayCountConventionIndexed, string newDayCountConvention)
+event DayCountConvention(
+	string indexed newDayCountConventionIndexed,
+	string newDayCountConvention
+)
 ```
 
 ##### Description:
 
-Emitted when the attribute `DayCountConventionSet` is set.
+Emitted when the attribute `DayCountConvention` is set.
 
-#### `BusinessDayConventionSet(string, string)`
+#### `BusinessDayConvention(string,string)`
 
-##### Signature:
+##### Definition:
 
 ```solidity
-event BusinessDayConventionSet(string indexed newBusinessDayConventionIndexed, string newBusinessDayConvention)
+event BusinessDayConvention(
+	string indexed newBusinessDayConventionIndexed,
+	string newBusinessDayConvention
+)
 ```
 
 ##### Description:
 
-Emitted when the attribute `BusinessDayConventionSet` is set.
+Emitted when the attribute `BusinessDayConvention` is set.
 
-#### `PublicHolidaysCalendarSet(string, string)`
+#### `PublicHolidaysCalendar(string,string)`
 
-##### Signature:
+##### Definition:
 
 ```solidity
-event PublicHolidaysCalendarSet(string indexed newPublicHolidaysCalendarIndexed, string newPublicHolidaysCalendar)
+event PublicHolidaysCalendar(
+	string indexed newPublicHolidaysCalendarIndexed,
+	string newPublicHolidaysCalendar
+)
 ```
 
 ##### Description:
 
-Emitted when the attribute `PublicHolidaysCalendarSet` is set.
+Emitted when the attribute `PublicHolidaysCalendar` is set.
+
+
+
+#### `IssuanceDatee(string,string)`
+
+##### Definition:
+
+```solidity
+event IssuanceDate(
+	string indexed newIssuanceDateIndexed,
+	string newIssuanceDate
+)
+```
+
+##### Description:
+
+Emitted when the attribute `issuanceDate` is set.
+
+#### `CouponFrequency(string,string)`
+
+##### Definition:
+
+```solidity
+event CouponFrequency(
+	string indexed newCouponFrequencyIndexed,
+	string newCouponFrequency
+)
+```
+
+##### Description:
+
+Emitted when the attribute `couponFrequency` is set.

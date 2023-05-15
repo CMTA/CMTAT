@@ -13,7 +13,7 @@ interface IDebtGlobal {
         string interestPaymentDate;
         string dayCountConvention;
         string businessDayConvention;
-        string publicHolidayCalendar;
+        string publicHolidaysCalendar;
         string issuanceDate;
         string couponFrequency;
     }

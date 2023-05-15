@@ -4,6 +4,10 @@ This document defines the Pause Module for the CMTA Token specification.
 
 [TOC]
 
+## Rationale
+
+> The issuer must be able to “pause” the smart contract, to prevent execution of transactions on the distributed ledger until the issuer puts an end to the pause. This function can be used to block transactions in case of a “hard fork” of the distributed ledger, pending a decision of the issuer as to which version of the distributed ledger it will support.
+
 ## Schema
 
 ### Inheritance
@@ -57,11 +61,11 @@ This section describes the Ethereum API of the Pause Module.
 
 #### `pause()`
 
-##### Signature:
+##### Definition:
 
 ```solidity
-    function pause ()
-    public
+function pause() 
+public onlyRole(PAUSER_ROLE)
 ```
 
 ##### Description:
@@ -72,31 +76,38 @@ Only authorized users are allowed to call this function.
 
 #### `unpause()`
 
-##### Signature:
+##### Definition:
+
+```solidity
+function unpause() 
+public onlyRole(PAUSER_ROLE)
+```
 
 Unpause token transfers.
 Only authorized users are allowed to call this function.
 
 ### Events
 
-#### `Pause()`
+#### `Paused(address)`
 
-##### Signature:
+Origin: OpenZeppelin (PausableUpgradeable)
+
+##### Definition:
 
 ```solidity
-    event Pause ()
+event Paused(address account)
 ```
 
 ##### Description:
 
 Emitted when token transfers were paused.
 
-#### `Unpause()`
+#### `Unpaused(address)`
 
-##### Signature:
+##### Definition:
 
 ```solidity
-    events Unpause ()
+event Unpaused(address account)
 ```
 
 ##### Description:

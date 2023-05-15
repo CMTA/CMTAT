@@ -35,7 +35,7 @@ It can however also be used for other forms of financial instruments such as deb
 
 To use the CMTAT, we recommend that you use the latest audited version, from the [Releases](https://github.com/CMTA/CMTAT/releases) page.
 
-You may modify the token code by adding, removing, or modifying features. However, the base, enforcement must remain in place for compliance with Swiss law.
+You may modify the token code by adding, removing, or modifying features. However, the mandatory modules must remain in place for compliance with Swiss law.
 
 ### Deployment mode (Standalone / With A Proxy)
 
@@ -176,7 +176,10 @@ Here a summary of the main documentation
 | How to use the project            | [doc/USAGE.md](doc/USAGE.md)                               |
 | Project architecture              | [doc/general/architecture.md](doc/general/architecture.md) |
 
-CMTA will release further documentation describing the CMTAT framework in a platform-agnostic way, and coveging legal aspects.
+CMTA will release further documentation describing the CMTAT framework in a platform-agnostic way, and coveging legal aspects, see
+
+-  [CMTA Token (CMTAT)](https://cmta.ch/standards/cmta-token-cmtat)
+- [Standard for the tokenization of shares of Swiss corporations using the distributed ledger technology](https://cmta.ch/standards/standard-for-the-tokenization-of-shares-of-swiss-corporations-using-the-distributed-ledger-technology)
 
 ## Intellectual property
 

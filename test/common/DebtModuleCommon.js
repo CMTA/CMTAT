@@ -15,14 +15,27 @@ function BaseModuleCommon (owner, attacker) {
       (await this.cmtat.debt()).interestPaymentDate.should.equal('');
       (await this.cmtat.debt()).dayCountConvention.should.equal('');
       (await this.cmtat.debt()).businessDayConvention.should.equal('');
-      (await this.cmtat.debt()).publicHolidayCalendar.should.equal('');
+      (await this.cmtat.debt()).publicHolidaysCalendar.should.equal('');
       (await this.cmtat.debt()).issuanceDate.should.equal('');
-      (await this.cmtat.debt()).couponFrequency.should.equal('')
+      (await this.cmtat.debt()).couponFrequency.should.equal('');
 
       // Act
-      await this.cmtat.setDebt(1, 2, 'guarantor', 'bondHolder', 'maturityDate', 'interestScheduleFormat',
-        'interestPaymentDate', 'dayCountConvention', 'businessDayConvention', 'publicHolidayCalendar', 'issuanceDate', 'couponFrequency', { from: owner });
+      ({ logs: this.logs } = await this.cmtat.setDebt({
+        interestRate: 1,
+        parValue: 2,
+        guarantor: 'guarantor',
+        bondHolder: 'bondHolder',
+        maturityDate: 'maturityDate',
+        interestScheduleFormat: 'interestScheduleFormat',
+        interestPaymentDate: 'interestPaymentDate',
+        dayCountConvention: 'dayCountConvention',
+        businessDayConvention: 'businessDayConvention',
+        publicHolidaysCalendar: 'publicHolidaysCalendar',
+        issuanceDate: 'issuanceDate',
+        couponFrequency: 'couponFrequency'
+      }, { from: owner }));
       // Assert
+      // Value
       (await this.cmtat.debt()).interestRate.should.be.bignumber.equal('1');
       (await this.cmtat.debt()).parValue.should.be.bignumber.equal('2');
       (await this.cmtat.debt()).guarantor.should.equal('guarantor');
@@ -32,9 +45,57 @@ function BaseModuleCommon (owner, attacker) {
       (await this.cmtat.debt()).interestPaymentDate.should.equal('interestPaymentDate');
       (await this.cmtat.debt()).dayCountConvention.should.equal('dayCountConvention');
       (await this.cmtat.debt()).businessDayConvention.should.equal('businessDayConvention');
-      (await this.cmtat.debt()).publicHolidayCalendar.should.equal('publicHolidayCalendar');
+      (await this.cmtat.debt()).publicHolidaysCalendar.should.equal('publicHolidaysCalendar');
       (await this.cmtat.debt()).issuanceDate.should.equal('issuanceDate');
       (await this.cmtat.debt()).couponFrequency.should.equal('couponFrequency')
+
+      // events
+      expectEvent.inLogs(this.logs, 'InterestRate', {
+        newInterestRate: '1'
+      })
+      expectEvent.inLogs(this.logs, 'ParValue', {
+        newParValue: '2'
+      })
+      expectEvent.inLogs(this.logs, 'Guarantor', {
+        newGuarantorIndexed: web3.utils.sha3('guarantor'),
+        newGuarantor: 'guarantor'
+      })
+      expectEvent.inLogs(this.logs, 'BondHolder', {
+        newBondHolderIndexed: web3.utils.sha3('bondHolder'),
+        newBondHolder: 'bondHolder'
+      })
+      expectEvent.inLogs(this.logs, 'MaturityDate', {
+        newMaturityDateIndexed: web3.utils.sha3('maturityDate'),
+        newMaturityDate: 'maturityDate'
+      })
+      expectEvent.inLogs(this.logs, 'InterestScheduleFormat', {
+        newInterestScheduleFormatIndexed: web3.utils.sha3('interestScheduleFormat'),
+        newInterestScheduleFormat: 'interestScheduleFormat'
+      })
+      expectEvent.inLogs(this.logs, 'InterestPaymentDate', {
+        newInterestPaymentDateIndexed: web3.utils.sha3('interestPaymentDate'),
+        newInterestPaymentDate: 'interestPaymentDate'
+      })
+      expectEvent.inLogs(this.logs, 'DayCountConvention', {
+        newDayCountConventionIndexed: web3.utils.sha3('dayCountConvention'),
+        newDayCountConvention: 'dayCountConvention'
+      })
+      expectEvent.inLogs(this.logs, 'BusinessDayConvention', {
+        newBusinessDayConventionIndexed: web3.utils.sha3('businessDayConvention'),
+        newBusinessDayConvention: 'businessDayConvention'
+      })
+      expectEvent.inLogs(this.logs, 'PublicHolidaysCalendar', {
+        newPublicHolidaysCalendarIndexed: web3.utils.sha3('publicHolidaysCalendar'),
+        newPublicHolidaysCalendar: 'publicHolidaysCalendar'
+      })
+      expectEvent.inLogs(this.logs, 'IssuanceDate', {
+        newIssuanceDateIndexed: web3.utils.sha3('issuanceDate'),
+        newIssuanceDate: 'issuanceDate'
+      })
+      expectEvent.inLogs(this.logs, 'CouponFrequency', {
+        newCouponFrequencyIndexed: web3.utils.sha3('couponFrequency'),
+        newCouponFrequency: 'couponFrequency'
+      })
     })
 
     it('testAdminCanSetInterestRate', async function () {
@@ -172,11 +233,11 @@ function BaseModuleCommon (owner, attacker) {
 
     it('testAdminCanSetPublicHolidaysCalendar', async function () {
       // Arrange
-      (await this.cmtat.debt()).publicHolidayCalendar.should.equal('');
+      (await this.cmtat.debt()).publicHolidaysCalendar.should.equal('');
       // Act
       ({ logs: this.logs } = await this.cmtat.setPublicHolidaysCalendar('Test', { from: owner }));
       // Assert
-      (await this.cmtat.debt()).publicHolidayCalendar.should.equal('Test')
+      (await this.cmtat.debt()).publicHolidaysCalendar.should.equal('Test')
       expectEvent.inLogs(this.logs, 'PublicHolidaysCalendar', {
         newPublicHolidaysCalendarIndexed: web3.utils.sha3('Test'),
         newPublicHolidaysCalendar: 'Test'
@@ -214,8 +275,20 @@ function BaseModuleCommon (owner, attacker) {
     it('testCannotNonAdminSetDebt', async function () {
       // Act
       await expectRevert(
-        this.cmtat.setDebt(1, 2, 'guarantor', 'bondHolder', 'maturityDate', 'interestScheduleFormat',
-          'interestPaymentDate', 'dayCountConvention', 'businessDayConvention', 'publicHolidayCalendar', 'issuanceDate', 'couponFrequency', { from: attacker }),
+        this.cmtat.setDebt({
+          interestRate: 1,
+          parValue: 2,
+          guarantor: 'guarantor',
+          bondHolder: 'bondHolder',
+          maturityDate: 'maturityDate',
+          interestScheduleFormat: 'interestScheduleFormat',
+          interestPaymentDate: 'interestPaymentDate',
+          dayCountConvention: 'dayCountConvention',
+          businessDayConvention: 'businessDayConvention',
+          publicHolidaysCalendar: 'publicHolidaysCalendar',
+          issuanceDate: 'issuanceDate',
+          couponFrequency: 'couponFrequency'
+        }, { from: attacker }),
         'AccessControl: account ' +
             attacker.toLowerCase() +
               ' is missing role ' +
