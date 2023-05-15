@@ -101,8 +101,8 @@ Here the list of the differents modules with the links towards the documentation
 | MetaTxModule      | [metatx.md](doc/modules/presentation/optional/metatx.md)     | [MetaTxModule.sol](./contracts/modules/wrapper/optional/MetaTxModule.sol) |
 | SnapshotModule*   | [snapshot.md](doc/modules/presentation/optional/snapshot.md) | [SnapshotModule.sol](./contracts/modules/wrapper/optional/SnapshotModule.sol) |
 | ValidationModule  | [validation.md](doc/modules/presentation/optional/validation.md) | [ValidationModule.sol](./contracts/modules/wrapper/optional/SnapshotModule.sol) |
-| creditEventModule | [creditEvent.md](doc/modules/presentation/optional/Debt/creditEvent.md) | [creditEventModule.sol](./contracts/modules/wrapper/optional/creditEventModule.sol) |
-| DebtBaseModule    | [debtBase.md](doc/modules/presentation/optional/Debt/debtBase.md) | [DebtBaseModule.sol](./contracts/modules/wrapper/optional/DebtBaseModule.sol) |
+| creditEventModule | [creditEvent.md](doc/modules/presentation/optional/Debt/creditEvent.md) | [creditEventModule.sol](./contracts/modules/wrapper/optional/DebtModule/creditEventModule.sol) |
+| DebtBaseModule    | [debtBase.md](doc/modules/presentation/optional/Debt/debtBase.md) | [DebtBaseModule.sol](./contracts/modules/wrapper/optional/DebtModule/DebtBaseModule.sol) |
 
 *not imported by default
 
