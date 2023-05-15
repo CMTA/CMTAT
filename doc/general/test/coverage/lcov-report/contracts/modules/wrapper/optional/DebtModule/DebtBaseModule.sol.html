@@ -1,0 +1,851 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for contracts/modules/wrapper/optional/DebtModule/DebtBaseModule.sol</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../../../../prettify.css" />
+    <link rel="stylesheet" href="../../../../../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../../../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../../../../../index.html">all files</a> / <a href="index.html">contracts/modules/wrapper/optional/DebtModule/</a> DebtBaseModule.sol
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">82.76% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>24/29</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">91.18% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>31/34</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">93.33% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>14/15</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">88.1% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>37/42</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line high'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">//SPDX-License-Identifier: MPL-2.0
+&nbsp;
+pragma solidity ^0.8.17;
+&nbsp;
+import "../../../../../openzeppelin-contracts-upgradeable/contracts/access/AccessControlUpgradeable.sol";
+import "../../../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
+import "../../../../interfaces/IDebtGlobal.sol";
+import "../../../security/AuthorizationModule.sol";
+&nbsp;
+abstract contract DebtBaseModule is
+    IDebtGlobal,
+    Initializable,
+    ContextUpgradeable,
+    AuthorizationModule
+{
+    DebtBase public debt;
+&nbsp;
+    /* Events */
+    event InterestRate(uint256 newInterestRate);
+    event ParValue(uint256 newParValue);
+    event Guarantor(string indexed newGuarantorIndexed, string newGuarantor);
+    event BondHolder(
+        string indexed newBondHolderIndexed,
+        string newBondHolder
+    );
+    event MaturityDate(
+        string indexed newMaturityDateIndexed,
+        string newMaturityDate
+    );
+    event InterestScheduleFormat(
+        string indexed newInterestScheduleFormatIndexed,
+        string newInterestScheduleFormat
+    );
+    event InterestPaymentDate(
+        string indexed newInterestPaymentDateIndexed,
+        string newInterestPaymentDate
+    );
+    event DayCountConvention(
+        string indexed newDayCountConventionIndexed,
+        string newDayCountConvention
+    );
+    event BusinessDayConvention(
+        string indexed newBusinessDayConventionIndexed,
+        string newBusinessDayConvention
+    );
+    event PublicHolidaysCalendar(
+        string indexed newPublicHolidaysCalendarIndexed,
+        string newPublicHolidaysCalendar
+    );
+    event IssuanceDate(
+        string indexed newIssuanceDateIndexed,
+        string newIssuanceDate
+    );
+    event CouponFrequency(
+        string indexed newCouponFrequencyIndexed,
+        string newCouponFrequency
+    );
+&nbsp;
+<span class="fstat-no" title="function not covered" >    function __DebtBaseModule_init(address admin) internal onlyInitializing {</span>
+        /* OpenZeppelin */
+<span class="cstat-no" title="statement not covered" >        __Context_init_unchained()</span>;
+&nbsp;
+        // AccessControlUpgradeable inherits from ERC165Upgradeable
+<span class="cstat-no" title="statement not covered" >        __ERC165_init_unchained()</span>;
+        // AuthorizationModule inherits from AccessControlUpgradeable
+<span class="cstat-no" title="statement not covered" >        __AccessControl_init_unchained()</span>;
+&nbsp;
+        /* CMTAT modules */
+        // Security
+<span class="cstat-no" title="statement not covered" >        __AuthorizationModule_init_unchained(admin)</span>;
+&nbsp;
+        // own function
+<span class="cstat-no" title="statement not covered" >        __DebtBaseModule_init_unchained()</span>;
+    }
+&nbsp;
+    function __DebtBaseModule_init_unchained() internal <span class="missing-if-branch" title="else path not taken" >E</span>onlyInitializing {
+        // no variable to initialize
+    }
+&nbsp;
+    /*
+    @notice Set all attributes of debt
+    The values of all attributes will be changed even if the new values are the same as the current ones
+    */
+    function setDebt(
+        uint256 interestRate_,
+        uint256 parValue_,
+        string memory guarantor_,
+        string memory bondHolder_,
+        string memory maturityDate_,
+        string memory interestScheduleFormat_,
+        string memory interestPaymentDate_,
+        string memory dayCountConvention_,
+        string memory businessDayConvention_,
+        string memory publicHolidayCalendar_,
+        string memory issuanceDate_,
+        string memory couponFrequency_
+    ) public onlyRole(DEBT_ROLE) {
+        // setGuarantor
+        debt = (
+            DebtBase(
+                interestRate_,
+                parValue_,
+                guarantor_,
+                bondHolder_,
+                maturityDate_,
+                interestScheduleFormat_,
+                interestPaymentDate_,
+                dayCountConvention_,
+                businessDayConvention_,
+                publicHolidayCalendar_,
+                issuanceDate_,
+                couponFrequency_
+            )
+        );
+        emit InterestRate(interestRate_);
+        emit ParValue(parValue_);
+        emit Guarantor(guarantor_, guarantor_);
+        emit BondHolder(bondHolder_, bondHolder_);
+        emit MaturityDate(maturityDate_, maturityDate_);
+        emit InterestScheduleFormat(
+            interestScheduleFormat_,
+            interestScheduleFormat_
+        );
+        emit InterestPaymentDate(interestPaymentDate_, interestPaymentDate_);
+        emit DayCountConvention(dayCountConvention_, dayCountConvention_);
+        emit BusinessDayConvention(
+            businessDayConvention_,
+            businessDayConvention_
+        );
+        emit PublicHolidaysCalendar(
+            publicHolidayCalendar_,
+            publicHolidayCalendar_
+        );
+    }
+&nbsp;
+    /*
+    @notice The call will be reverted if the new value of interestRate is the same as the current one
+    */
+    function setInterestRate(uint256 interestRate_) public onlyRole(DEBT_ROLE) {
+        require(debt.interestRate != interestRate_, "Same value");
+        debt.interestRate = interestRate_;
+        emit InterestRate(interestRate_);
+    }
+&nbsp;
+    /*
+    @notice The call will be reverted if the new value of parValue is the same as the current one
+    */
+    function setParValue(uint256 parValue_) public onlyRole(DEBT_ROLE) {
+        require(debt.parValue != parValue_, "Same value");
+        debt.parValue = parValue_;
+        emit ParValue(parValue_);
+    }
+&nbsp;
+    /*
+    @notice The Guarantor will be changed even if the new value is the same as the current one
+    */
+    function setGuarantor(string memory guarantor_) public onlyRole(DEBT_ROLE) {
+        debt.guarantor = guarantor_;
+        emit Guarantor(guarantor_, guarantor_);
+    }
+&nbsp;
+    /*
+    @notice The bonHolder will be changed even if the new value is the same as the current one
+    */
+    function setBondHolder(
+        string memory bondHolder_
+    ) public onlyRole(DEBT_ROLE) {
+        debt.bondHolder = bondHolder_;
+        emit BondHolder(bondHolder_, bondHolder_);
+    }
+&nbsp;
+    /*
+    @notice The maturityDate will be changed even if the new value is the same as the current one
+    */
+    function setMaturityDate(
+        string memory maturityDate_
+    ) public onlyRole(DEBT_ROLE) {
+        debt.maturityDate = maturityDate_;
+        emit MaturityDate(maturityDate_, maturityDate_);
+    }
+&nbsp;
+    /*
+    @notice The interestScheduleFormat will be changed even if the new value is the same as the current one
+    */
+    function setInterestScheduleFormat(
+        string memory interestScheduleFormat_
+    ) public onlyRole(DEBT_ROLE) {
+        debt.interestScheduleFormat = interestScheduleFormat_;
+        emit InterestScheduleFormat(
+            interestScheduleFormat_,
+            interestScheduleFormat_
+        );
+    }
+&nbsp;
+    /*
+    @notice The interestPaymentDate will be changed even if the new value is the same as the current one
+    */
+    function setInterestPaymentDate(
+        string memory interestPaymentDate_
+    ) public onlyRole(DEBT_ROLE) {
+        debt.interestPaymentDate = interestPaymentDate_;
+        emit InterestPaymentDate(interestPaymentDate_, interestPaymentDate_);
+    }
+&nbsp;
+    /*
+    @notice The dayCountConvention will be changed even if the new value is the same as the current one
+    */
+    function setDayCountConvention(
+        string memory dayCountConvention_
+    ) public onlyRole(DEBT_ROLE) {
+        debt.dayCountConvention = dayCountConvention_;
+        emit DayCountConvention(dayCountConvention_, dayCountConvention_);
+    }
+&nbsp;
+    /*
+    @notice The businessDayConvention will be changed even if the new value is the same as the current one
+    */
+    function setBusinessDayConvention(
+        string memory businessDayConvention_
+    ) public onlyRole(DEBT_ROLE) {
+        debt.businessDayConvention = businessDayConvention_;
+        emit BusinessDayConvention(
+            businessDayConvention_,
+            businessDayConvention_
+        );
+    }
+&nbsp;
+    /*
+    @notice The publicHolidayCalendar will be changed even if the new value is the same as the current one
+    */
+    function setPublicHolidaysCalendar(
+        string memory publicHolidayCalendar_
+    ) public onlyRole(DEBT_ROLE) {
+        debt.publicHolidayCalendar = publicHolidayCalendar_;
+        emit PublicHolidaysCalendar(
+            publicHolidayCalendar_,
+            publicHolidayCalendar_
+        );
+    }
+&nbsp;
+    /*
+    @notice The issuanceDate will be changed even if the new value is the same as the current one
+    */
+    function setIssuanceDate(
+        string memory issuanceDate_
+    ) public onlyRole(DEBT_ROLE) {
+        debt.issuanceDate = issuanceDate_;
+        emit IssuanceDate(issuanceDate_, issuanceDate_);
+    }
+&nbsp;
+    /*
+    @notice The couponFrequency will be changed even if the new value is the same as the current one
+    */
+    function setCouponFrequency(
+        string memory couponFrequency_
+    ) public onlyRole(DEBT_ROLE) {
+        debt.couponFrequency = couponFrequency_;
+        emit CouponFrequency(couponFrequency_, couponFrequency_);
+    }
+&nbsp;
+    uint256[50] private __gap;
+}
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Tue May 09 2023 12:04:21 GMT+0200 (Central European Summer Time)
+</div>
+</div>
+<script src="../../../../../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../../../../../sorter.js"></script>
+</body>
+</html>
