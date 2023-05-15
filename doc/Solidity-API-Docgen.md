@@ -13,7 +13,7 @@ constructor(address forwarderIrrevocable) public
 ### constructor
 
 ```solidity
-constructor(address forwarderIrrevocable, address admin, string nameIrrevocable, string symbolIrrevocable, string tokenId, string terms, contract IEIP1404Wrapper ruleEngine, string information, uint256 flag) public
+constructor(address forwarderIrrevocable, address admin, string nameIrrevocable, string symbolIrrevocable, string tokenId_, string terms_, contract IEIP1404Wrapper ruleEngine_, string information_, uint256 flag_) public
 ```
 
 ## IDebtGlobal
@@ -31,7 +31,7 @@ struct DebtBase {
   string interestPaymentDate;
   string dayCountConvention;
   string businessDayConvention;
-  string publicHolidayCalendar;
+  string publicHolidaysCalendar;
   string issuanceDate;
   string couponFrequency;
 }
@@ -268,7 +268,7 @@ _return all the rules_
 ### initialize
 
 ```solidity
-function initialize(address admin, string nameIrrevocable, string symbolIrrevocable, string tokenId, string terms, contract IEIP1404Wrapper ruleEngine, string information, uint256 flag) public
+function initialize(address admin, string nameIrrevocable, string symbolIrrevocable, string tokenId_, string terms_, contract IEIP1404Wrapper ruleEngine_, string information_, uint256 flag_) public
 ```
 
 initialize the proxy contract
@@ -277,7 +277,7 @@ initialize the proxy contract
 ### __CMTAT_init
 
 ```solidity
-function __CMTAT_init(address admin, string nameIrrevocable, string symbolIrrevocable, string tokenId, string terms, contract IEIP1404Wrapper ruleEngine, string information, uint256 flag) internal
+function __CMTAT_init(address admin, string nameIrrevocable, string symbolIrrevocable, string tokenId_, string terms_, contract IEIP1404Wrapper ruleEngine_, string information_, uint256 flag_) internal
 ```
 
 _calls the different initialize functions from the different modules_
@@ -1205,7 +1205,7 @@ function __DebtBaseModule_init_unchained() internal
 ### setDebt
 
 ```solidity
-function setDebt(uint256 interestRate_, uint256 parValue_, string guarantor_, string bondHolder_, string maturityDate_, string interestScheduleFormat_, string interestPaymentDate_, string dayCountConvention_, string businessDayConvention_, string publicHolidayCalendar_, string issuanceDate_, string couponFrequency_) public
+function setDebt(struct IDebtGlobal.DebtBase debt_) public
 ```
 
 ### setInterestRate
@@ -1265,7 +1265,7 @@ function setBusinessDayConvention(string businessDayConvention_) public
 ### setPublicHolidaysCalendar
 
 ```solidity
-function setPublicHolidaysCalendar(string publicHolidayCalendar_) public
+function setPublicHolidaysCalendar(string publicHolidaysCalendar_) public
 ```
 
 ### setIssuanceDate
@@ -1438,6 +1438,84 @@ _ERC1404 returns the human readable explaination corresponding to the error code
 function validateTransfer(address from, address to, uint256 amount) public view returns (bool)
 ```
 
+## CMTATSnapshotProxyTest
+
+### constructor
+
+```solidity
+constructor(address forwarderIrrevocable) public
+```
+
+## CMTATSnapshotStandaloneTest
+
+### constructor
+
+```solidity
+constructor(address forwarderIrrevocable, address admin, string nameIrrevocable, string symbolIrrevocable, string tokenId, string terms, contract IEIP1404Wrapper ruleEngine, string information, uint256 flag) public
+```
+
+## CMTAT_BASE_SnapshotTest
+
+### initialize
+
+```solidity
+function initialize(address admin, string nameIrrevocable, string symbolIrrevocable, string tokenId, string terms, contract IEIP1404Wrapper ruleEngine, string information, uint256 flag) public
+```
+
+initialize the proxy contract
+    The calls to this function will revert if the contract was deployed without a proxy
+
+### __CMTAT_init
+
+```solidity
+function __CMTAT_init(address admin, string nameIrrevocable, string symbolIrrevocable, string tokenId, string terms, contract IEIP1404Wrapper ruleEngine, string information, uint256 flag) internal
+```
+
+_calls the different initialize functions from the different modules
+    @param admin the address has to be different from 0, check made in AuthorizationModule_
+
+### __CMTAT_init_unchained
+
+```solidity
+function __CMTAT_init_unchained() internal
+```
+
+### decimals
+
+```solidity
+function decimals() public view virtual returns (uint8)
+```
+
+Returns the number of decimals used to get its user representation.
+
+### transferFrom
+
+```solidity
+function transferFrom(address sender, address recipient, uint256 amount) public virtual returns (bool)
+```
+
+### _beforeTokenTransfer
+
+```solidity
+function _beforeTokenTransfer(address from, address to, uint256 amount) internal
+```
+
+### _msgSender
+
+```solidity
+function _msgSender() internal view returns (address sender)
+```
+
+_This surcharge is not necessary if you do not use the MetaTxModule_
+
+### _msgData
+
+```solidity
+function _msgData() internal view returns (bytes)
+```
+
+_This surcharge is not necessary if you do not use the MetaTxModule_
+
 ## BaseModuleTest
 
 _This version has removed the check of access control on the kill function
@@ -1609,84 +1687,6 @@ will be transferred to `to`.
 - `from` and `to` are never both zero.
 
 To learn more about hooks, head to xref:ROOT:extending-contracts.adoc#using-hooks[Using Hooks]._
-
-### _msgSender
-
-```solidity
-function _msgSender() internal view returns (address sender)
-```
-
-_This surcharge is not necessary if you do not use the MetaTxModule_
-
-### _msgData
-
-```solidity
-function _msgData() internal view returns (bytes)
-```
-
-_This surcharge is not necessary if you do not use the MetaTxModule_
-
-## CMTATSnapshotProxyTest
-
-### constructor
-
-```solidity
-constructor(address forwarderIrrevocable) public
-```
-
-## CMTATSnapshotStandaloneTest
-
-### constructor
-
-```solidity
-constructor(address forwarderIrrevocable, address admin, string nameIrrevocable, string symbolIrrevocable, string tokenId, string terms, contract IEIP1404Wrapper ruleEngine, string information, uint256 flag) public
-```
-
-## CMTAT_BASE_SnapshotTest
-
-### initialize
-
-```solidity
-function initialize(address admin, string nameIrrevocable, string symbolIrrevocable, string tokenId, string terms, contract IEIP1404Wrapper ruleEngine, string information, uint256 flag) public
-```
-
-initialize the proxy contract
-    The calls to this function will revert if the contract was deployed without a proxy
-
-### __CMTAT_init
-
-```solidity
-function __CMTAT_init(address admin, string nameIrrevocable, string symbolIrrevocable, string tokenId, string terms, contract IEIP1404Wrapper ruleEngine, string information, uint256 flag) internal
-```
-
-_calls the different initialize functions from the different modules
-    @param admin the address has to be different from 0, check made in AuthorizationModule_
-
-### __CMTAT_init_unchained
-
-```solidity
-function __CMTAT_init_unchained() internal
-```
-
-### decimals
-
-```solidity
-function decimals() public view virtual returns (uint8)
-```
-
-Returns the number of decimals used to get its user representation.
-
-### transferFrom
-
-```solidity
-function transferFrom(address sender, address recipient, uint256 amount) public virtual returns (bool)
-```
-
-### _beforeTokenTransfer
-
-```solidity
-function _beforeTokenTransfer(address from, address to, uint256 amount) internal
-```
 
 ### _msgSender
 
