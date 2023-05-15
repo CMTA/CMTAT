@@ -144,6 +144,8 @@ The contracts have been audited by [ABDKConsulting](https://www.abdk.consulting/
 Fixes of security issues discovered by the initial audit were reviewed by ABDK and confirmed to be effective, as certified by the [report released](doc/audits/ABDK-CMTAT-audit-20210910.pdf) on September 10, 2021, covering [version c3afd7b](https://github.com/CMTA/CMTAT/tree/c3afd7b4a2ade160c9b581adb7a44896bfc7aaea) of the contracts.
 Version [1.0](https://github.com/CMTA/CMTAT/releases) includes additional fixes of minor issues, compared to the version retested.
 
+A summary of all fixes and decisions taken is available in the file [CMTAT-Audit-20210910-summary.pdf](doc/audits/CMTAT-Audit-20210910-summary.pdf) 
+
 #### Second Audit - March, 2023
 
 The second audit was performed by ABDK on the version [2.2](https://github.com/CMTA/CMTAT/releases/tag/2.2).
