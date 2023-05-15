@@ -14,7 +14,9 @@ The release 2.3 contains mainly the different fixes and improvements related to 
 
 **General modifications**
 
-- Rename contract CreditEvents to CreditEventsModule([pull/168](https://github.com/CMTA/CMTAT/pull/168)
+- Rename contract CreditEvents to CreditEventsModule([pull/168](https://github.com/CMTA/CMTAT/pull/168))
+
+- DebtBaseModule: the function `setDebt`takes an argument of type `DebtBase`(struct) instead of individual parameters to avoid issues with some compilers ([pull/175](https://github.com/CMTA/CMTAT/pull/175)).
 
 - The interfaces ERC1404 & ERC1404Wrapper were renamed in IEIP1404 & EIP1404Wrapper since the proposition of standard ERC/EIP 1404 have never been approved ([pull/166](https://github.com/CMTA/CMTAT/pull/166)).
 

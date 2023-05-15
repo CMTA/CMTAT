@@ -152,7 +152,7 @@ The second audit was performed by ABDK on the version [2.2](https://github.com/C
 
 The release 2.3 contains the different fixes and improvements related to this audit.
 
-The temporary report is available in the file [Taurus. Audit 3.1. Collected Issues.ods](doc/audits/Taurus. Audit 3.1. Collected Issues.ods). 
+The temporary report is available in the file [Taurus. Audit 3.1. Collected Issues.ods](doc/audits/Taurus.Audit3.1.CollectedIssues.ods). 
 
 ### Tools
 
