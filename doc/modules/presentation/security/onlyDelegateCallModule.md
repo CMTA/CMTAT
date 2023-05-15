@@ -1,6 +1,6 @@
 # OnlyDelegateCallModule
 
-This document defines the module OnlyDelegateCallModule.
+This document defines the module `OnlyDelegateCallModule`.
 
 [TOC]
 
