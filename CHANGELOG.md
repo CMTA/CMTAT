@@ -4,17 +4,26 @@ Please follow <https://changelog.md/> conventions.
 
 ## 2.3
 
-The release 2.3 contains mainly the different fixes and improvements related to the audit performed on the version 2.
+The release 2.3 contains mainly the different fixes and improvements related to the audit performed on the version 2.2.
+
+**Documentation**
+
+- Update the documentation for the release
+- Add slither & coverage reports 
+- Install hardhat in order to use the solidity-coverage plugin
 
 **General modifications**
 
+- Rename contract CreditEvents to CreditEventsModule([pull/168](https://github.com/CMTA/CMTAT/pull/168)
+
 - The interfaces ERC1404 & ERC1404Wrapper were renamed in IEIP1404 & EIP1404Wrapper since the proposition of standard ERC/EIP 1404 have never been approved ([pull/166](https://github.com/CMTA/CMTAT/pull/166)).
 
-- The RuleEngine to be used with the CMTAT has to implement the interface IEIP1404Wrapper ([pull/166](https://github.com/CMTA/CMTAT/pull/166))
+- Improve rule engine architecture: the RuleEngine to be used with the CMTAT has to implement the interface IEIP1404Wrapper ([pull/166](https://github.com/CMTA/CMTAT/pull/166))
 
 It is no longer necessary to implement the interface RuleEngine, which was moved inside the mock directory
 
 - When a contract is deployed, the admin address put in parameter has to be different from zero ([pull/162](https://github.com/CMTA/CMTAT/pull/162)).
+- Remove snapshot module from default import since the snapshotModule is not audited ([pull/163](https://github.com/CMTA/CMTAT/pull/163))
 
 **Audit report**
 

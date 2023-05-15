@@ -1,42 +1,24 @@
-# Debt Module
+# DebtBase Module
 
-This document defines Debt Module for the CMTA Token specification.
+This document defines DebtBase Module for the CMTA Token specification.
 
 [TOC]
 
 ## Schema
 
-### DebtBaseModule
-
-#### Inheritance
+### Inheritance
 
 ![surya_inheritance_DebtBaseModule.sol](../../../schema/surya_inheritance/surya_inheritance_DebtBaseModule.sol.png)
 
 
 
-#### UML
+### UML
 
 ![DebtBaseModule](../../../schema/sol2uml/optional/DebtBaseModule.svg)
 
-#### Graph
+### Graph
 
 ![surya_graph_DebtBaseModule.sol](../../../schema/surya_graph/surya_graph_DebtBaseModule.sol.png)
-
-### CreditEvents
-
-#### Inheritance
-
-![surya_inheritance_CreditEventsModule.sol](../../../schema/surya_inheritance/surya_inheritance_CreditEventsModule.sol.png)
-
-#### UML
-
-![CreditEventsModule](../../../schema/sol2uml/optional/CreditEventsModule.svg)
-
-#### Graph
-
-![surya_graph_CreditEventsModule.sol](../../../schema/surya_graph/surya_graph_CreditEventsModule.sol.png)
-
-
 
 
 

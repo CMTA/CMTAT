@@ -1,6 +1,6 @@
-# Debt Module
+# CreditEvents Module
 
-This document defines Debt Module for the CMTA Token specification.
+This document defines CreditEvents Module for the CMTA Token specification.
 
 [TOC]
 

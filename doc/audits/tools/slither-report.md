@@ -1,4 +1,7 @@
+# Slither report
+
 Summary
+
  - [suicidal](#suicidal) (1 results) (High)
  - [calls-loop](#calls-loop) (3 results) (Low)
  - [timestamp](#timestamp) (6 results) (Low)
