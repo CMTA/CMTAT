@@ -63,8 +63,8 @@ abstract contract SnapshotModuleInternal is ERC20Upgradeable {
      * @dev Initializes the contract
      */
     function __Snapshot_init(
-        string memory name_,
-        string memory symbol_
+        string calldata name_,
+        string calldata symbol_
     ) internal onlyInitializing {
         __Context_init_unchained();
         __ERC20_init(name_, symbol_);
@@ -72,8 +72,7 @@ abstract contract SnapshotModuleInternal is ERC20Upgradeable {
     }
 
     function __Snapshot_init_unchained() internal onlyInitializing {
-        _currentSnapshotTime = 0;
-        _currentSnapshotIndex = 0;
+        // no variable to initialize
     }
 
     /** 
@@ -210,10 +209,11 @@ abstract contract SnapshotModuleInternal is ERC20Upgradeable {
                         indexLowerBound -
                         1;
                     nextScheduledSnapshot = new uint256[](arraySize);
-                    for (uint256 i = 0; i < nextScheduledSnapshot.length; ++i) {
+                    for (uint256 i; i < nextScheduledSnapshot.length;) {
                         nextScheduledSnapshot[i] = _scheduledSnapshots[
                             indexLowerBound + 1 + i
                         ];
+                        unchecked { ++i; }
                     }
                 }
             }
@@ -425,7 +425,7 @@ abstract contract SnapshotModuleInternal is ERC20Upgradeable {
         }
         uint256 mostRecent = 0;
         index = currentArraySize;
-        for (uint256 i = _currentSnapshotIndex; i < currentArraySize; ++i) {
+        for (uint256 i = _currentSnapshotIndex; i < currentArraySize;) {
             if (_scheduledSnapshots[i] <= block.timestamp) {
                 mostRecent = _scheduledSnapshots[i];
                 index = i;
@@ -433,6 +433,7 @@ abstract contract SnapshotModuleInternal is ERC20Upgradeable {
                 // All snapshot are planned in the futur
                 break;
             }
+            unchecked { ++i; }
         }
         return (mostRecent, index);
     }

@@ -48,7 +48,7 @@ abstract contract CreditEventsModule is
     function setCreditEvents(
         bool flagDefault_,
         bool flagRedeemed_,
-        string memory rating_
+        string calldata rating_
     ) public onlyRole(DEBT_CREDIT_EVENT_ROLE) {
         creditEvents = (CreditEvents(flagDefault_, flagRedeemed_, rating_));
         emit FlagDefault(flagDefault_);
@@ -82,7 +82,7 @@ abstract contract CreditEventsModule is
     @notice The rating will be changed even if the new value is the same as the current one
     */
     function setRating(
-        string memory rating_
+        string calldata rating_
     ) public onlyRole(DEBT_CREDIT_EVENT_ROLE) {
         creditEvents.rating = rating_;
         emit Rating(rating_, rating_);
