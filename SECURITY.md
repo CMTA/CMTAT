@@ -1,0 +1,28 @@
+# Security Policy
+
+## Reporting a Vulnerability
+
+To report a security vulnerability in CMTAT, please contact security@taurusgroup.ch.
+
+You may encrypt your message using the following PGP key:
+
+```
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+mDMEX3G3ARYJKwYBBAHaRw8BAQdA7sQCSqSkAmGylsLRJepXuAZKkcWA+EWRPeGa
+22cIXYC0KVRhdXJ1cyBTZWN1cml0eSA8c2VjdXJpdHlAdGF1cnVzZ3JvdXAuY2g+
+iJAEExYIADgFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AWIQQ0q1qzH0uLrdBgWQWf
+aUpuIE2KEAUCYOVKQwIbIwAKCRCfaUpuIE2KEEerAP9RiGFo932uc/dFhPmVU5Qm
+hhHbAWLt3CxeHWAztOVAgAEAw68wXxpa5NURAzZ2Qx9m8POwQjKNp7E2dA1cRRPA
+wQ2YMwRg5V8AFgkrBgEEAdpHDwEBB0CGZgfupQUEjQmiY/aCYEdeKqh8U6uLdxt+
+t+xf5cNeJ7QpVGF1cnVzIFNlY3VyaXR5IDxzZWN1cml0eUB0YXVydXNncm91cC5j
+aD6IkAQTFggAOBYhBPhEpYINIeMoGsBzFGodmG7oyiNkBQJg5V8AAhsDBQsJCAcC
+BhUKCQgLAgQWAgMBAh4BAheAAAoJEGodmG7oyiNkyDkA/iLFlVbP008qIz3tqkUn
+ExG1zc9YbJVu9oQdLmixNkWkAPwKpwXSkYiMXds9NoO8lMt6dbVtkjhhVp8fnbyY
+i9bCDrg4BGDlXwASCisGAQQBl1UBBQEBB0AjHYntohFgtCX+B2O37enowSn6DCjc
+Ni3JfkpLp19nKQMBCAeIeAQYFggAIBYhBPhEpYINIeMoGsBzFGodmG7oyiNkBQJg
+5V8AAhsMAAoJEGodmG7oyiNkJ/EA/iAKT8FOeNdXmx3LhOcw9stV4AZYyQgUqFgZ
+kOCSrfYUAQDOt/xVpVawvcAbVTAk7C3QuV9+i4aJFMDFBR2xXxVBDA==
+=Wytk
+-----END PGP PUBLIC KEY BLOCK-----
+```

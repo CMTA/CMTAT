@@ -12,11 +12,11 @@ The present repository provides CMTA's reference implementation of CMTAT for Eth
 
 The CMTAT is developed by a working group of CMTA's Technical Committee that includes members from Atpar, Bitcoin Suisse, Blockchain Innovation Group, Hypothekarbank Lenzburg, Lenz & Staehelin, Metaco, Mt Pelerin, SEBA, Swissquote, Sygnum, Taurus and Tezos Foundation. The design and security of the CMTAT was supported by ABDK, a leading team in smart contract security.
 
-The preferred way to receive comments is through the GitHub issue tracker.  Private comments and questions can be sent to the CMTA secretariat at <a href="mailto:admin@cmta.ch">admin@cmta.ch</a>.
+The preferred way to receive comments is through the GitHub issue tracker.  Private comments and questions can be sent to the CMTA secretariat at <a href="mailto:admin@cmta.ch">admin@cmta.ch</a>. For security matters, please see [SECURITY.md](./SECURITY.MD).
 
 ## Functionality
 
-### General Overview
+### Overview
 
 The CMTAT supports the following core features:
 
@@ -43,7 +43,7 @@ You may modify the token code by adding, removing, or modifying features. Howeve
 
 If you want to deploy without a proxy, in standalone mode, you need to use the contract version `CMTAT_STANDALONE`
 
-#### With A Proxy
+#### With A proxy
 
 The CMTAT supports deployment via a proxy contract.  Furthermore, using a proxy permits to upgrade the contract, using a standard proxy upgrade pattern.
 
@@ -127,6 +127,11 @@ A CMTAT version inheriting from the SnapshotModule and used for **testing** purp
 
 ## Security
 
+### Vulnerability disclosure
+
+Please see [SECURITY.md](./SECURITY.MD).
+
+
 ### Module
 
 See the Section Modules/Security.
@@ -139,14 +144,14 @@ The module `OnlyDelegateCallModule` is a special module to insure that some func
 
 The contracts have been audited by [ABDKConsulting](https://www.abdk.consulting/), a globally recognized firm specialized in smart contracts' security.
 
-#### First Audit - September 10, 2021
+#### First audit - September 2021
 
 Fixes of security issues discovered by the initial audit were reviewed by ABDK and confirmed to be effective, as certified by the [report released](doc/audits/ABDK-CMTAT-audit-20210910.pdf) on September 10, 2021, covering [version c3afd7b](https://github.com/CMTA/CMTAT/tree/c3afd7b4a2ade160c9b581adb7a44896bfc7aaea) of the contracts.
 Version [1.0](https://github.com/CMTA/CMTAT/releases/tag/1.0) includes additional fixes of minor issues, compared to the version retested.
 
 A summary of all fixes and decisions taken is available in the file [CMTAT-Audit-20210910-summary.pdf](doc/audits/CMTAT-Audit-20210910-summary.pdf) 
 
-#### Second Audit - March, 2023
+#### Second audit - March 2023
 
 The second audit was performed by ABDK on the version [2.2](https://github.com/CMTA/CMTAT/releases/tag/2.2).
 
