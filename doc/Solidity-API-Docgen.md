@@ -313,22 +313,6 @@ will be transferred to `to`.
 
 To learn more about hooks, head to xref:ROOT:extending-contracts.adoc#using-hooks[Using Hooks]._
 
-### _msgSender
-
-```solidity
-function _msgSender() internal view returns (address sender)
-```
-
-_This surcharge is not necessary if you do not use the MetaTxModule_
-
-### _msgData
-
-```solidity
-function _msgData() internal view returns (bytes)
-```
-
-_This surcharge is not necessary if you do not use the MetaTxModule_
-
 ## EnforcementModuleInternal
 
 _Enforcement module.
@@ -1120,32 +1104,6 @@ function setIssuanceDate(string issuanceDate_) public
 function setCouponFrequency(string couponFrequency_) public
 ```
 
-## MetaTxModule
-
-_Meta transaction (gasless) module.
-
-Useful for to provide UX where the user does not pay gas for token exchange
-To follow OpenZeppelin, this contract does not implement the functions init & init_unchained.
-()_
-
-### constructor
-
-```solidity
-constructor(address trustedForwarder) internal
-```
-
-### _msgSender
-
-```solidity
-function _msgSender() internal view virtual returns (address sender)
-```
-
-### _msgData
-
-```solidity
-function _msgData() internal view virtual returns (bytes)
-```
-
 ## ValidationModule
 
 _Validation module.
@@ -1264,22 +1222,6 @@ function transferFrom(address sender, address recipient, uint256 amount) public 
 ```solidity
 function _beforeTokenTransfer(address from, address to, uint256 amount) internal
 ```
-
-### _msgSender
-
-```solidity
-function _msgSender() internal view returns (address sender)
-```
-
-_This surcharge is not necessary if you do not use the MetaTxModule_
-
-### _msgData
-
-```solidity
-function _msgData() internal view returns (bytes)
-```
-
-_This surcharge is not necessary if you do not use the MetaTxModule_
 
 ## BaseModuleTest
 
@@ -1446,20 +1388,3 @@ will be transferred to `to`.
 - `from` and `to` are never both zero.
 
 To learn more about hooks, head to xref:ROOT:extending-contracts.adoc#using-hooks[Using Hooks]._
-
-### _msgSender
-
-```solidity
-function _msgSender() internal view returns (address sender)
-```
-
-_This surcharge is not necessary if you do not use the MetaTxModule_
-
-### _msgData
-
-```solidity
-function _msgData() internal view returns (bytes)
-```
-
-_This surcharge is not necessary if you do not use the MetaTxModule_
-

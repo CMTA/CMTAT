@@ -13,7 +13,6 @@ import "./wrapper/mandatory/EnforcementModule.sol";
 import "./wrapper/mandatory/ERC20BaseModule.sol";
 import "./wrapper/mandatory/PauseModule.sol";
 import "./wrapper/optional/ValidationModule.sol";
-import "./wrapper/optional/MetaTxModule.sol";
 import "./wrapper/optional/DebtModule/DebtBaseModule.sol";
 import "./wrapper/optional/DebtModule/CreditEventsModule.sol";
 import "./security/AuthorizationModule.sol";
@@ -30,7 +29,6 @@ abstract contract CMTAT_BASE is
     BurnModule,
     EnforcementModule,
     ValidationModule,
-    MetaTxModule,
     ERC20BaseModule,
     DebtBaseModule,
     CreditEventsModule
@@ -123,20 +121,6 @@ abstract contract CMTAT_BASE is
 
     function _beforeTokenTransfer(address from, address to, uint256 amount) internal view override(ERC20Upgradeable) {
         if (!ValidationModule.validateTransfer(from, to, amount)) revert Errors.BeforeTokenTransfer(from, to, amount);
-    }
-
-    /**
-     * @dev This surcharge is not necessary if you do not use the MetaTxModule
-     */
-    function _msgSender() internal view override(MetaTxModule, ContextUpgradeable) returns (address sender) {
-        return MetaTxModule._msgSender();
-    }
-
-    /**
-     * @dev This surcharge is not necessary if you do not use the MetaTxModule
-     */
-    function _msgData() internal view override(MetaTxModule, ContextUpgradeable) returns (bytes calldata) {
-        return MetaTxModule._msgData();
     }
 
     uint256[50] private __gap;

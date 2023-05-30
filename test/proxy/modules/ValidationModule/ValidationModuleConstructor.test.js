@@ -11,10 +11,7 @@ contract(
     beforeEach(async function () {
       this.flag = 5
       this.ruleEngineMock = await RuleEngineMock.new({ from: admin })
-      this.cmtat = await deployProxy(CMTAT, [admin, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', this.ruleEngineMock.address, 'CMTAT_info', this.flag], {
-        initializer: 'initialize',
-        constructorArgs: [_]
-      })
+      this.cmtat = await deployProxy(CMTAT, [admin, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', this.ruleEngineMock.address, 'CMTAT_info', this.flag])
       await this.cmtat.mint(address1, ADDRESS1_INITIAL_BALANCE, { from: admin })
       await this.cmtat.mint(address2, ADDRESS2_INITIAL_BALANCE, { from: admin })
       await this.cmtat.mint(address3, ADDRESS3_INITIAL_BALANCE, { from: admin })

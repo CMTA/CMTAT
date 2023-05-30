@@ -7,10 +7,7 @@ contract(
   function ([_, admin, address1, fakeRuleEngine]) {
     beforeEach(async function () {
       this.flag = 5
-      this.cmtat = await deployProxy(CMTAT, [admin, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', ZERO_ADDRESS, 'CMTAT_info', this.flag], {
-        initializer: 'initialize',
-        constructorArgs: [_]
-      })
+      this.cmtat = await deployProxy(CMTAT, [admin, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', ZERO_ADDRESS, 'CMTAT_info', this.flag])
     })
     ValidationModuleSetRuleEngineCommon(admin, address1, fakeRuleEngine)
   }

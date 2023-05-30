@@ -13,10 +13,7 @@ contract('UpgradeableCMTAT - Proxy', function ([_, admin, address1]) {
   it('testKeepStorageForTokens', async function () {
     this.flag = 5
     // With the first version of CMTAT
-    this.CMTAT_PROXY = await deployProxy(CMTAT1, [admin, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', ZERO_ADDRESS, 'CMTAT_info', this.flag], {
-      initializer: 'initialize',
-      constructorArgs: [_]
-    })
+    this.CMTAT_PROXY = await deployProxy(CMTAT1, [admin, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', ZERO_ADDRESS, 'CMTAT_info', this.flag])
     const implementationContractAddress1 = erc1967.getImplementationAddress(this.CMTAT_PROXY.address, {
       from: admin
     });
@@ -30,9 +27,7 @@ contract('UpgradeableCMTAT - Proxy', function ([_, admin, address1]) {
     (await this.CMTAT_PROXY.totalSupply()).should.be.bignumber.equal('20')
 
     // Upgrade the proxy with a new implementation contract
-    this.upgradeableCMTATV2Instance = await upgradeProxy(this.CMTAT_PROXY.address, CMTAT2, {
-      constructorArgs: [_]
-    })
+    this.upgradeableCMTATV2Instance = await upgradeProxy(this.CMTAT_PROXY.address, CMTAT2)
     // Get the new implementation contract address
     const implementationContractAddress2 = erc1967.getImplementationAddress(this.CMTAT_PROXY.address, {
       from: admin
