@@ -8,14 +8,6 @@
 constructor(address forwarderIrrevocable) public
 ```
 
-## CMTAT_STANDALONE
-
-### constructor
-
-```solidity
-constructor(address forwarderIrrevocable, address admin, string nameIrrevocable, string symbolIrrevocable, string tokenId_, string terms_, contract IEIP1404Wrapper ruleEngine_, string information_, uint256 flag_) public
-```
-
 ## IDebtGlobal
 
 ### DebtBase

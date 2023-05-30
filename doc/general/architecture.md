@@ -6,7 +6,7 @@ This documents presents an overview of the CMTAT architecture.
 
 ## Introduction
 
-There is two mains contracts for deployment: CMTAT_PROXY or CMTAT_STANDALONE in order to deploy the CMTAT with or without a proxy depending of your preference.
+There is two mains contracts for deployment: CMTAT_PROXY in order to deploy the CMTAT with or without a proxy depending of your preference.
 
 These two mains contract inherits from the same base contract CMTAT_BASE which inherits of the different modules.
 
@@ -28,10 +28,6 @@ This section presents the different schema
 
 ![surya_inheritance_CMTAT_PROXY.sol](./schema/surya_inheritance/surya_inheritance_CMTAT_PROXY.sol.png)
 
-#### Standalone
-
-![surya_inheritance_CMTAT_STANDALONE.sol](./schema/surya_inheritance/surya_inheritance_CMTAT_STANDALONE.sol.png)
-
 ### UML
 
 See 
@@ -44,12 +40,6 @@ See
 
 ![CMTAT_PROXY_d1](./schema/sol2uml/CMTAT_PROXY_d1.svg)
 
-#### CMTAT_STANDALONE
-
-![CMTAT_STANDALONE_d1](./schema/sol2uml/CMTAT_STANDALONE_d1.svg)
-
-
-
 ### Graph
 
 #### Base
@@ -59,7 +49,3 @@ See
 #### Proxy
 
 ![surya_graph_CMTAT_PROXY.sol](./schema/surya_graph/surya_graph_CMTAT_PROXY.sol.png)
-
-#### Standalone
-
-![surya_graph_CMTAT_STANDALONE.sol](./schema/surya_graph/surya_graph_CMTAT_STANDALONE.sol.png)

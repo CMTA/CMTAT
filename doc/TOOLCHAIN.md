@@ -149,7 +149,7 @@ From the version 2.3, this command is not working and generates the following er
 | Description                                                  | Command                                |
 | ------------------------------------------------------------ | -------------------------------------- |
 | Generate UML for the interfaces EIP1404                      | `npm run-script uml-i-eip1404`         |
-| Generate UML for the contracts CMTAT_STANDALONE, CMTAT_PROXY && CMTAT_BASE | `npm run-script uml-partial`           |
+| Generate UML for the contracts CMTAT_PROXY && CMTAT_BASE     | `npm run-script uml-partial`           |
 | Generate UML for mandatory modules                           | `npm run-script uml-modules-mandatory` |
 | Generate UML for optional modules                            | `npm run-script uml-modules-optional`  |
 | Generate UML for security modules                            | `npm run-script uml-modules-security`  |

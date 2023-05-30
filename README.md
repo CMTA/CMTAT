@@ -37,11 +37,7 @@ To use the CMTAT, we recommend that you use the latest audited version, from the
 
 You may modify the token code by adding, removing, or modifying features. However, the mandatory modules must remain in place for compliance with Swiss law.
 
-### Deployment mode (Standalone / With A Proxy)
-
-#### Standalone
-
-If you want to deploy without a proxy, in standalone mode, you need to use the contract version `CMTAT_STANDALONE`
+### Deployment mode (With A Proxy)
 
 #### With A proxy
 
