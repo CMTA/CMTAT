@@ -31,7 +31,6 @@ order to support:
 * Conditional transfers, via a rule engine
 
 This reference implementation allows the issuance and management of tokens representing equity securities.
-It can however also be used for other forms of financial instruments such as debt securities.
 
 To use the CMTAT, we recommend that you use the latest audited version, from the [Releases](https://github.com/CMTA/CMTAT/releases) page.
 
@@ -71,8 +70,6 @@ Here the list of the differents modules with the links towards the documentation
 | Name              | Documentation                                                | Main File                                                    |
 | ----------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | ValidationModule  | [validation.md](doc/modules/presentation/optional/validation.md) | [ValidationModule.sol](./contracts/modules/wrapper/optional/ValidationModule.sol) |
-| creditEventModule | [creditEvents.md](doc/modules/presentation/optional/Debt/creditEvents.md) | [CreditEventsModule.sol](./contracts/modules/wrapper/optional/DebtModule/CreditEventsModule.sol) |
-| DebtBaseModule    | [debtBase.md](doc/modules/presentation/optional/Debt/debtBase.md) | [DebtBaseModule.sol](./contracts/modules/wrapper/optional/DebtModule/DebtBaseModule.sol) |
 
 *not imported by default
 

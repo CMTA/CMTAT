@@ -16,15 +16,8 @@ abstract contract AuthorizationModule is AccessControlUpgradeable {
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     // PauseModule
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
-    // DebtModule
-    bytes32 public constant DEBT_ROLE = keccak256("DEBT_ROLE");
-    // CreditEvents
-    bytes32 public constant DEBT_CREDIT_EVENT_ROLE =
-        keccak256("DEBT_CREDIT_EVENT_ROLE");
 
-    function __AuthorizationModule_init(
-        address admin
-    ) internal onlyInitializing {
+    function __AuthorizationModule_init(address admin) internal onlyInitializing {
         /* OpenZeppelin */
         __Context_init_unchained();
         // AccessControlUpgradeable inherits from ERC165Upgradeable
@@ -40,20 +33,15 @@ abstract contract AuthorizationModule is AccessControlUpgradeable {
      * account that deploys the contract.
      *
      */
-    function __AuthorizationModule_init_unchained(
-        address admin
-    ) internal onlyInitializing {
-        if(admin == address(0)) revert Errors.AddressZeroNotAllowed();
+    function __AuthorizationModule_init_unchained(address admin) internal onlyInitializing {
+        if (admin == address(0)) revert Errors.AddressZeroNotAllowed();
         _grantRole(DEFAULT_ADMIN_ROLE, admin);
     }
 
     /*
      * @dev Returns `true` if `account` has been granted `role`.
      */
-    function hasRole(
-        bytes32 role,
-        address account
-    ) public view virtual override returns (bool) {
+    function hasRole(bytes32 role, address account) public view virtual override returns (bool) {
         // The Default Admin has all roles
         if (AccessControlUpgradeable.hasRole(DEFAULT_ADMIN_ROLE, account)) {
             return true;

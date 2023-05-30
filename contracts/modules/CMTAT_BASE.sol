@@ -13,8 +13,6 @@ import "./wrapper/mandatory/EnforcementModule.sol";
 import "./wrapper/mandatory/ERC20BaseModule.sol";
 import "./wrapper/mandatory/PauseModule.sol";
 import "./wrapper/optional/ValidationModule.sol";
-import "./wrapper/optional/DebtModule/DebtBaseModule.sol";
-import "./wrapper/optional/DebtModule/CreditEventsModule.sol";
 import "./security/AuthorizationModule.sol";
 import "../interfaces/IEIP1404/IEIP1404Wrapper.sol";
 
@@ -29,9 +27,7 @@ abstract contract CMTAT_BASE is
     BurnModule,
     EnforcementModule,
     ValidationModule,
-    ERC20BaseModule,
-    DebtBaseModule,
-    CreditEventsModule
+    ERC20BaseModule
 {
     /**
      * @notice 
@@ -91,8 +87,6 @@ abstract contract CMTAT_BASE is
         __ValidationModule_init_unchained();
 
         /* Other modules */
-        __DebtBaseModule_init_unchained();
-        __CreditEvents_init_unchained();
         __Base_init_unchained(tokenId_, terms_, information_, flag_);
 
         /* own function */
