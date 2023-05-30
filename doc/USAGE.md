@@ -79,11 +79,6 @@ To use the global Truffle install, use instead `truffle test`.
 
 Please see the Truffle [JavaScript tests documentation](https://www.trufflesuite.com/docs/truffle/testing/writing-tests-in-javascript) for more information about the writing and running of Truffle tests.
 
-If you try to run the tests with Hardhat, the tests related to the proxy and the SnapshotModule will not work.
-
-
-
-
 ## Code style guidelines
 
 We use linters to ensure consistent coding style. If you contribute code, please run this following command: 

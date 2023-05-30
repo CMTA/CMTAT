@@ -83,8 +83,7 @@ Here the list of the differents modules with the links towards the documentation
 | Name              | Documentation                                                | Main File                                                    |
 | ----------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | MetaTxModule      | [metatx.md](doc/modules/presentation/optional/metatx.md)     | [MetaTxModule.sol](./contracts/modules/wrapper/optional/MetaTxModule.sol) |
-| SnapshotModule*   | [snapshot.md](doc/modules/presentation/optional/snapshot.md) | [SnapshotModule.sol](./contracts/modules/wrapper/optional/SnapshotModule.sol) |
-| ValidationModule  | [validation.md](doc/modules/presentation/optional/validation.md) | [ValidationModule.sol](./contracts/modules/wrapper/optional/SnapshotModule.sol) |
+| ValidationModule  | [validation.md](doc/modules/presentation/optional/validation.md) | [ValidationModule.sol](./contracts/modules/wrapper/optional/ValidationModule.sol) |
 | creditEventModule | [creditEvents.md](doc/modules/presentation/optional/Debt/creditEvents.md) | [CreditEventsModule.sol](./contracts/modules/wrapper/optional/DebtModule/CreditEventsModule.sol) |
 | DebtBaseModule    | [debtBase.md](doc/modules/presentation/optional/Debt/debtBase.md) | [DebtBaseModule.sol](./contracts/modules/wrapper/optional/DebtModule/DebtBaseModule.sol) |
 
@@ -96,18 +95,6 @@ Here the list of the differents modules with the links towards the documentation
 | ---------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | AuthorizationModule    | [authorization.md](./doc/modules/presentation/security/authorization.md) | [AuthorizationModule.sol](./contracts/modules/security/AuthorizationModule.sol) |
 | OnlyDelegateCallModule | [onlyDelegateCallModule.md](./doc/modules/presentation/security/onlyDelegateCallModule.md) | [OnlyDelegateCallModule.sol](./contracts/modules/security/OnlyDelegateCallModule.sol) |
-
-
-
-### SnpashotModule
-
-This module was not audited during the audit made by ABDK and it is no longer imported by default inside the CMTAT.
-
-If you want to add this module, you have to uncomment the specific lines "SnapshotModule" inside the file `CMTAT_BASE.sol`.
-
-Be warned that this module may possibly contain security flaws.
-
-A CMTAT version inheriting from the SnapshotModule and used for **testing** purpose is available here: [CMTATSnapshotStandaloneTest.sol](./contracts/test/CMTATSnapshot/CMTATSnapshotStandaloneTest.sol) & [CMTATSnapshotProxyTest.sol](./contracts/test/CMTATSnapshot/CMTATSnapshotProxyTest.sol)
 
 ## Security
 

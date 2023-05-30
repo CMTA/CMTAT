@@ -16,8 +16,6 @@ abstract contract AuthorizationModule is AccessControlUpgradeable {
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     // PauseModule
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
-    // SnapshotModule
-    bytes32 public constant SNAPSHOOTER_ROLE = keccak256("SNAPSHOOTER_ROLE");
     // DebtModule
     bytes32 public constant DEBT_ROLE = keccak256("DEBT_ROLE");
     // CreditEvents

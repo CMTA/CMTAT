@@ -23,7 +23,7 @@
     "uml-i-eip1404": "npx sol2uml class -c contracts/interfaces/IEIP1404",
     "uml-partial": "npx sol2uml class contracts -c -b CMTAT_STANDALONE && npx sol2uml class contracts -c -b CMTAT_PROXY && npx sol2uml class contracts -c -b CMTAT_BASE",
     "uml-modules-mandatory": "npx sol2uml class contracts -c -b BaseModule && npx sol2uml class contracts -c -b BurnModule && npx sol2uml class contracts -c -b EnforcementModule && npx sol2uml class contracts -c -b ERC20BaseModule && npx sol2uml class contracts -c -b MintModule && npx sol2uml class contracts -c -b PauseModule",
-    "uml-modules-optional": "npx sol2uml class contracts -c -b DebtBaseModule && npx sol2uml class contracts -c -b CreditEventsModule  && npx sol2uml class contracts -c -b MetaTxModule && npx sol2uml class contracts -c -b SnapshotModule && npx sol2uml class contracts -c -b ValidationModule",
+    "uml-modules-optional": "npx sol2uml class contracts -c -b DebtBaseModule && npx sol2uml class contracts -c -b CreditEventsModule  && npx sol2uml class contracts -c -b MetaTxModule && npx sol2uml class contracts -c -b ValidationModule",
     "uml-modules-security": "npx sol2uml class contracts -c -b AuthorizationModule && npx sol2uml class contracts -c -b OnlyDelegateCallModule",
     "uml-mocks": "npx sol2uml class -c contracts/mocks/RuleEngine",
     "size": "npx truffle run contract-size",
