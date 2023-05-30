@@ -9,7 +9,6 @@ import "../../openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradea
 import "./wrapper/mandatory/BaseModule.sol";
 import "./wrapper/mandatory/BurnModule.sol";
 import "./wrapper/mandatory/MintModule.sol";
-import "./wrapper/mandatory/EnforcementModule.sol";
 import "./wrapper/mandatory/ERC20BaseModule.sol";
 import "./wrapper/mandatory/PauseModule.sol";
 import "./wrapper/optional/ValidationModule.sol";
@@ -25,7 +24,6 @@ abstract contract CMTAT_BASE is
     PauseModule,
     MintModule,
     BurnModule,
-    EnforcementModule,
     ValidationModule,
     ERC20BaseModule
 {
@@ -71,7 +69,6 @@ abstract contract CMTAT_BASE is
         __Pausable_init_unchained();
 
         /* Internal Modules */
-        __Enforcement_init_unchained();
         __Validation_init_unchained(ruleEngine_);
 
         /* Wrapper */
@@ -79,8 +76,6 @@ abstract contract CMTAT_BASE is
         __AuthorizationModule_init_unchained(admin);
         __BurnModule_init_unchained();
         __MintModule_init_unchained();
-        // EnforcementModule_init_unchained is called before ValidationModule_init_unchained due to inheritance
-        __EnforcementModule_init_unchained();
         __ERC20Module_init_unchained(0);
         // PauseModule_init_unchained is called before ValidationModule_init_unchained due to inheritance
         __PauseModule_init_unchained();

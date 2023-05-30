@@ -10,8 +10,6 @@ import "../../libraries/Errors.sol";
 abstract contract AuthorizationModule is AccessControlUpgradeable {
     // BurnModule
     bytes32 public constant BURNER_ROLE = keccak256("BURNER_ROLE");
-    // EnforcementModule
-    bytes32 public constant ENFORCER_ROLE = keccak256("ENFORCER_ROLE");
     // MintModule
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     // PauseModule

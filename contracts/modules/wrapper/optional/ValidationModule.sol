@@ -6,7 +6,6 @@ import "../../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Ini
 import "../../security/AuthorizationModule.sol";
 import "../../internal/ValidationModuleInternal.sol";
 import "../mandatory/PauseModule.sol";
-import "../mandatory/EnforcementModule.sol";
 
 import "../../../libraries/Errors.sol";
 
@@ -15,19 +14,11 @@ import "../../../libraries/Errors.sol";
  *
  * Useful for to restrict and validate transfers
  */
-abstract contract ValidationModule is
-    ValidationModuleInternal,
-    PauseModule,
-    EnforcementModule,
-    IEIP1404Wrapper
-{
+abstract contract ValidationModule is ValidationModuleInternal, PauseModule, IEIP1404Wrapper {
     string constant TEXT_TRANSFER_OK = "No restriction";
     string constant TEXT_UNKNOWN_CODE = "Unknown code";
 
-    function __ValidationModule_init(
-        IEIP1404Wrapper ruleEngine_,
-        address admin
-    ) internal onlyInitializing {
+    function __ValidationModule_init(IEIP1404Wrapper ruleEngine_, address admin) internal onlyInitializing {
         /* OpenZeppelin */
         __Context_init_unchained();
         // AccessControlUpgradeable inherits from ERC165Upgradeable
@@ -44,7 +35,6 @@ abstract contract ValidationModule is
 
         // Wrapper
         __PauseModule_init_unchained();
-        __EnforcementModule_init_unchained();
 
         // own function
         __ValidationModule_init_unchained();
@@ -58,10 +48,8 @@ abstract contract ValidationModule is
     @notice set a RuleEngine
     @param ruleEngine_ the call will be reverted if the new value of ruleEngine is the same as the current one
     */
-    function setRuleEngine(
-        IEIP1404Wrapper ruleEngine_
-    ) external onlyRole(DEFAULT_ADMIN_ROLE) {
-        if(ruleEngine == ruleEngine_) revert Errors.SameValue();
+    function setRuleEngine(IEIP1404Wrapper ruleEngine_) external onlyRole(DEFAULT_ADMIN_ROLE) {
+        if (ruleEngine == ruleEngine_) revert Errors.SameValue();
         ruleEngine = ruleEngine_;
         emit RuleEngine(ruleEngine_);
     }
@@ -73,17 +61,14 @@ abstract contract ValidationModule is
      * @param amount uint256 the amount of tokens to be transferred
      * @return code of the rejection reason
      */
-    function detectTransferRestriction(
-        address from,
-        address to,
-        uint256 amount
-    ) public view override returns (uint8 code) {
+    function detectTransferRestriction(address from, address to, uint256 amount)
+        public
+        view
+        override
+        returns (uint8 code)
+    {
         if (paused()) {
             return uint8(REJECTED_CODE_BASE.TRANSFER_REJECTED_PAUSED);
-        } else if (frozen(from)) {
-            return uint8(REJECTED_CODE_BASE.TRANSFER_REJECTED_FROM_FROZEN);
-        } else if (frozen(to)) {
-            return uint8(REJECTED_CODE_BASE.TRANSFER_REJECTED_TO_FROZEN);
         } else if (address(ruleEngine) != address(0)) {
             return _detectTransferRestriction(from, to, amount);
         } else {
@@ -96,26 +81,16 @@ abstract contract ValidationModule is
      * @param restrictionCode The error code returned by detectTransferRestriction
      * @return message The human readable explaination corresponding to the error code returned by detectTransferRestriction
      */
-    function messageForTransferRestriction(
-        uint8 restrictionCode
-    ) external view override returns (string memory message) {
+    function messageForTransferRestriction(uint8 restrictionCode)
+        external
+        view
+        override
+        returns (string memory message)
+    {
         if (restrictionCode == uint8(REJECTED_CODE_BASE.TRANSFER_OK)) {
             return TEXT_TRANSFER_OK;
-        } else if (
-            restrictionCode ==
-            uint8(REJECTED_CODE_BASE.TRANSFER_REJECTED_PAUSED)
-        ) {
+        } else if (restrictionCode == uint8(REJECTED_CODE_BASE.TRANSFER_REJECTED_PAUSED)) {
             return TEXT_TRANSFER_REJECTED_PAUSED;
-        } else if (
-            restrictionCode ==
-            uint8(REJECTED_CODE_BASE.TRANSFER_REJECTED_FROM_FROZEN)
-        ) {
-            return TEXT_TRANSFER_REJECTED_FROM_FROZEN;
-        } else if (
-            restrictionCode ==
-            uint8(REJECTED_CODE_BASE.TRANSFER_REJECTED_TO_FROZEN)
-        ) {
-            return TEXT_TRANSFER_REJECTED_TO_FROZEN;
         } else if (address(ruleEngine) != address(0)) {
             return _messageForTransferRestriction(restrictionCode);
         } else {
@@ -123,12 +98,8 @@ abstract contract ValidationModule is
         }
     }
 
-    function validateTransfer(
-        address from,
-        address to,
-        uint256 amount
-    ) public view override returns (bool) {
-        if (paused() || frozen(from) || frozen(to)) {
+    function validateTransfer(address from, address to, uint256 amount) public view override returns (bool) {
+        if (paused()) {
             return false;
         }
         if (address(ruleEngine) != address(0)) {

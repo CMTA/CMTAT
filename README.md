@@ -60,7 +60,6 @@ Here the list of the differents modules with the links towards the documentation
 | ----------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | BaseModule        | [base.md](doc/modules/presentation/mandatory/base.md)        | [BaseModule.sol](./contracts/modules/wrapper/mandatory/BaseModule.sol) |
 | BurnModule        | [burn.md](doc/modules/presentation/mandatory/burn.md)        | [BurnModule.sol](./contracts/modules/wrapper/mandatory/BurnModule.sol) |
-| EnforcementModule | [enforcement.md](doc/modules/presentation/mandatory/enforcement.md) | [EnforcementModule.sol](./contracts/modules/wrapper/mandatory/EnforcementModule.sol) |
 | ERC20BaseModule   | [erc20base.md](doc/modules/presentation/mandatory/erc20base.md) | [ERC20BaseModule.sol](./contracts/modules/wrapper/mandatory/ERC20BaseModule.sol) |
 | MintModule        | [mint.md](doc/modules/presentation/mandatory/mint.md)        | [MintModule.sol](./contracts/modules/wrapper/mandatory/MintModule.sol) |
 | PauseModule       | [pause.md](doc/modules/presentation/mandatory/pause.md)      | [PauseModule.sol](./contracts/modules/wrapper/mandatory/PauseModule.sol) |
