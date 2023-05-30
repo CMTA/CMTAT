@@ -63,22 +63,6 @@ At deployment, the parameter  `forwarder` inside the  CMTAT contract constructor
 
 Please see the OpenGSN [documentation](https://docs.opengsn.org/contracts/#receiving-a-relayed-call) for more details on what is done to support GSN in the contract.
 
-### Kill switch
-
-> This functionality uses the opcode SELFDESTRUCT which the property of destroying the contract (= deletion of any storage keys or code) will be remove with the Cancun Upgrade, an upgrade of the Ethereum network.
->
-> Therefore, when the Ethereum Network will integrate this upgrade, this functionality will no longer be available.
->
-> See https://eips.ethereum.org/EIPS/eip-6780 & https://github.com/ethereum/execution-specs/blob/master/network-upgrades/mainnet-upgrades/cancun.md
-
-A "kill switch" is a necessary function to allow the issuer to carry out certain corporate actions (e.g., share splits, reverse splits, and mergers), which involve cancelling all existing tokens and replacing them by new ones, and can also be used if the issuer decides that it no longer wishes to have its shares issued in the form of ledger securities. The "kill switch" function affects all tokens issued.
-
-Such a functionality can be performed via that `kill()` function. A new token contract may then be deployed.
-
-Alternatively, if interactions with the "contract" are still necessary, it may be paused (and never unpaused).
-
-
-
 ## Modules
 
 Here the list of the differents modules with the links towards the documentation and the main file.

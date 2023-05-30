@@ -27,11 +27,11 @@ contract(
           'Initializable: contract is already initialized'
         )
         await expectRevert(
-          this.implementationContract.kill({ from: attacker }),
+          this.implementationContract.setFlag(0, { from: attacker }),
           'AccessControl: account ' +
           attacker.toLowerCase() +
-            ' is missing role ' +
-            DEFAULT_ADMIN_ROLE
+          ' is missing role ' +
+          DEFAULT_ADMIN_ROLE
         )
       })
       // Here the argument to indicate if it is deployed with a proxy, set at true by the attacker
@@ -41,24 +41,12 @@ contract(
           'Initializable: contract is already initialized'
         )
         await expectRevert(
-          this.implementationContract.kill({ from: attacker }),
+          this.implementationContract.setFlag(0, { from: attacker }),
           'AccessControl: account ' +
           attacker.toLowerCase() +
-            ' is missing role ' +
-            DEFAULT_ADMIN_ROLE
+          ' is missing role ' +
+          DEFAULT_ADMIN_ROLE
         )
-      })
-    })
-    context('Admin', function () {
-      it('testCannotKillTheImplementationContractByAdmin', async function () {
-        await expectRevert(
-          this.implementationContract.kill({ from: admin }),
-          'AccessControl: account ' +
-          admin.toLowerCase() +
-            ' is missing role ' +
-            DEFAULT_ADMIN_ROLE
-        );
-        (await this.implementationContract.terms()).should.equal('')
       })
     })
   })

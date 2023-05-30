@@ -790,12 +790,6 @@ function setInformation(string information_) public
 function setFlag(uint256 flag_) public
 ```
 
-### kill
-
-```solidity
-function kill() public
-```
-
 ## BurnModule
 
 ### Burn
@@ -1520,12 +1514,6 @@ _This surcharge is not necessary if you do not use the MetaTxModule_
 
 _This version has removed the check of access control on the kill function
 The only remaining protection is the call to the modifier onlyDelegateCall_
-
-### kill
-
-```solidity
-function kill() public
-```
 
 ### deployedWithProxy
 

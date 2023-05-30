@@ -8,25 +8,15 @@ import "../../modules/security/AuthorizationModule.sol";
 import "../../modules/security/OnlyDelegateCallModule.sol";
 
 /**
-@title A BaseModule version only for TESTING
-@dev This version has removed the check of access control on the kill function
-The only remaining protection is the call to the modifier onlyDelegateCall
-*/
-abstract contract BaseModuleTest is
-    Initializable,
-    AuthorizationModule,
-    OnlyDelegateCallModule
-{
-    // @dev we removed the access control to check onlyDelegateCall
-    /// @custom:oz-upgrades-unsafe-allow selfdestruct
-    function kill() public onlyDelegateCall(deployedWithProxy) {
-        selfdestruct(payable(_msgSender()));
-    }
-
+ * @title A BaseModule version only for TESTING
+ * @dev The only remaining protection is the call to the modifier onlyDelegateCall
+ */
+abstract contract BaseModuleTest is Initializable, AuthorizationModule, OnlyDelegateCallModule {
     //******* Code from BaseModule, not modified *******/
 
     bool internal deployedWithProxy;
     /* Events */
+
     event TermSet(string indexed newTerm);
     event TokenIdSet(string indexed newTokenId);
     event InformationSet(string indexed newInformation);
@@ -79,23 +69,17 @@ abstract contract BaseModuleTest is
     }
 
     /* Methods */
-    function setTokenId(
-        string calldata tokenId_
-    ) public onlyRole(DEFAULT_ADMIN_ROLE) {
+    function setTokenId(string calldata tokenId_) public onlyRole(DEFAULT_ADMIN_ROLE) {
         tokenId = tokenId_;
         emit TokenIdSet(tokenId_);
     }
 
-    function setTerms(
-        string calldata terms_
-    ) public onlyRole(DEFAULT_ADMIN_ROLE) {
+    function setTerms(string calldata terms_) public onlyRole(DEFAULT_ADMIN_ROLE) {
         terms = terms_;
         emit TermSet(terms_);
     }
 
-    function setInformation(
-        string calldata information_
-    ) public onlyRole(DEFAULT_ADMIN_ROLE) {
+    function setInformation(string calldata information_) public onlyRole(DEFAULT_ADMIN_ROLE) {
         information = information_;
         emit InformationSet(information_);
     }

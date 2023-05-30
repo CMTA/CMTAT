@@ -13,12 +13,10 @@ abstract contract BaseModule is AuthorizationModule, OnlyDelegateCallModule {
     // to initialize inside the implementation constructor when deployed with a Proxy
     bool internal deployedWithProxy;
     /* Events */
+
     event Term(string indexed newTermIndexed, string newTerm);
     event TokenId(string indexed newTokenIdIndexed, string newTokenId);
-    event Information(
-        string indexed newInformationIndexed,
-        string newInformation
-    );
+    event Information(string indexed newInformationIndexed, string newInformation);
     event Flag(uint256 indexed newFlag);
 
     /* Variables */
@@ -72,9 +70,7 @@ abstract contract BaseModule is AuthorizationModule, OnlyDelegateCallModule {
     /*
     @notice the tokenId will be changed even if the new value is the same as the current one
     */
-    function setTokenId(
-        string memory tokenId_
-    ) public onlyRole(DEFAULT_ADMIN_ROLE) {
+    function setTokenId(string memory tokenId_) public onlyRole(DEFAULT_ADMIN_ROLE) {
         tokenId = tokenId_;
         emit TokenId(tokenId_, tokenId_);
     }
@@ -82,9 +78,7 @@ abstract contract BaseModule is AuthorizationModule, OnlyDelegateCallModule {
     /*
     @notice The terms will be changed even if the new value is the same as the current one
     */
-    function setTerms(
-        string memory terms_
-    ) public onlyRole(DEFAULT_ADMIN_ROLE) {
+    function setTerms(string memory terms_) public onlyRole(DEFAULT_ADMIN_ROLE) {
         terms = terms_;
         emit Term(terms_, terms_);
     }
@@ -92,9 +86,7 @@ abstract contract BaseModule is AuthorizationModule, OnlyDelegateCallModule {
     /*
     @notice The information will be changed even if the new value is the same as the current one
     */
-    function setInformation(
-        string memory information_
-    ) public onlyRole(DEFAULT_ADMIN_ROLE) {
+    function setInformation(string memory information_) public onlyRole(DEFAULT_ADMIN_ROLE) {
         information = information_;
         emit Information(information_, information_);
     }
@@ -103,22 +95,9 @@ abstract contract BaseModule is AuthorizationModule, OnlyDelegateCallModule {
     @notice The call will be reverted if the new value of flag is the same as the current one
     */
     function setFlag(uint256 flag_) public onlyRole(DEFAULT_ADMIN_ROLE) {
-        if(flag == flag_) revert Errors.SameValue();
+        if (flag == flag_) revert Errors.SameValue();
         flag = flag_;
         emit Flag(flag_);
-    }
-
-    /**
-    @notice destroys the contract and send the remaining ethers in the contract to the sender
-    Warning: the operation is irreversible, be careful
-    */
-    /// @custom:oz-upgrades-unsafe-allow selfdestruct
-    function kill()
-        public
-        onlyRole(DEFAULT_ADMIN_ROLE)
-        onlyDelegateCall(deployedWithProxy)
-    {
-        selfdestruct(payable(_msgSender()));
     }
 
     uint256[50] private __gap;

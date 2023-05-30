@@ -11,7 +11,6 @@ This document defines Base Module for the CMTA Token specification.
 > - Terms of tokenization
 > - Token ID (ISIN or other identifier) 
 > - Others fields to allow the issuer to add additional information: information, flag
-> - The "killswitch" function
 
 ## Schema
 
