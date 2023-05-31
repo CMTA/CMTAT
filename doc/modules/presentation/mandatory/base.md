@@ -43,7 +43,7 @@ This document defines Base Module for the CMTA Token specification.
 | :------------: | :-------------------: | :-----------------------------------------: | :------------: | :-----------------------: |
 |       └        |   **Function Name**   |               **Visibility**                | **Mutability** |       **Modifiers**       |
 |                |                       |                                             |                |                           |
-| **BaseModule** |    Implementation     | AuthorizationModule, OnlyDelegateCallModule |                |                           |
+| **BaseModule** |    Implementation     | AuthorizationModule                          |                |                           |
 |       └        |      __Base_init      |                 Internal 🔒                  |       🛑        |     onlyInitializing      |
 |       └        | __Base_init_unchained |                 Internal 🔒                  |       🛑        |     onlyInitializing      |
 |       └        |      setTokenId       |                  Public ❗️                   |       🛑        |         onlyRole          |

@@ -512,17 +512,6 @@ function hasRole(bytes32 role, address account) public view virtual returns (boo
 
 _Returns `true` if `account` has been granted `role`._
 
-## OnlyDelegateCallModule
-
-_When a contract is deployed with a proxy, insure that some functions (e.g. delegatecall and selfdestruct) can only be triggered through proxies 
-and not on the implementation contract itself._
-
-### onlyDelegateCall
-
-```solidity
-modifier onlyDelegateCall(bool deployedWithProxy)
-```
-
 ## BaseModule
 
 ### deployedWithProxy

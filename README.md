@@ -77,7 +77,6 @@ Here the list of the differents modules with the links towards the documentation
 | Name                   | Documentation                                                | Main File                                                    |
 | ---------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | AuthorizationModule    | [authorization.md](./doc/modules/presentation/security/authorization.md) | [AuthorizationModule.sol](./contracts/modules/security/AuthorizationModule.sol) |
-| OnlyDelegateCallModule | [onlyDelegateCallModule.md](./doc/modules/presentation/security/onlyDelegateCallModule.md) | [OnlyDelegateCallModule.sol](./contracts/modules/security/OnlyDelegateCallModule.sol) |
 
 ## Security
 
@@ -91,8 +90,6 @@ Please see [SECURITY.md](./SECURITY.MD).
 See the Section Modules/Security.
 
 The Access Control is managed inside the module `AuthorizationModule`.
-
-The module `OnlyDelegateCallModule` is a special module to insure that some functions (e.g. delegatecall and selfdestruct) can only be triggered through proxies when the contract is deployed with a Proxy.
 
 ### Audit
 
