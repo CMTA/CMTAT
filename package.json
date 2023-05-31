@@ -85,7 +85,6 @@
   },
   "dependencies": {
     "@metamask/eth-sig-util": "^5.1.0",
-    "@openzeppelin/truffle-upgrades": "^1.19.0",
-    "ethereumjs-wallet": "^1.0.2"
+    "@openzeppelin/truffle-upgrades": "^1.19.0"
   }
 }
