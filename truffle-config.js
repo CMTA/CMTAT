@@ -3,14 +3,14 @@ require('dotenv').config()
 module.exports = {
   networks: {
     ganache: {
-      host: "127.0.0.1",
-      port: 8545,
-      network_id: "*", // match any network
+      host: '127.0.0.1',
+      port: 7545,
+      network_id: 5777 // match any network
     },
     live: {
-      host: "178.25.19.88", // Random IP for example purposes (do not use)
+      host: '178.25.19.88', // Random IP for example purposes (do not use)
       port: 80,
-      network_id: 1,        // Ethereum public network
+      network_id: 5777 // Ethereum public network
       // optional config values:
       // gas
       // gasPrice
@@ -28,7 +28,7 @@ module.exports = {
       settings: {
         optimizer: {
           enabled: true,
-          runs: 500
+          runs: 200
         }
       }
     }
