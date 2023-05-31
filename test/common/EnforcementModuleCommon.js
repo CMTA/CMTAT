@@ -143,10 +143,7 @@ function EnforcementModuleCommon (owner, address1, address2, address3) {
       (await this.cmtat.messageForTransferRestriction(2)).should.equal(
         'The address FROM is frozen'
       )
-      await expectRevert(
-        this.cmtat.transfer(address2, 10, { from: address1 }),
-        CMTAT_TRANSFER_REJECT
-      )
+      await expectRevert.unspecified(this.cmtat.transfer(address2, 10, { from: address1 }))
     })
 
     // reverts if address3 transfers tokens from address1 to address2 when paused
@@ -164,10 +161,7 @@ function EnforcementModuleCommon (owner, address1, address2, address3) {
       (await this.cmtat.messageForTransferRestriction(3)).should.equal(
         'The address TO is frozen'
       )
-      await expectRevert(
-        this.cmtat.transferFrom(address3, address2, 10, { from: address1 }),
-        CMTAT_TRANSFER_REJECT
-      )
+      await expectRevert.unspecified(this.cmtat.transferFrom(address3, address2, 10, { from: address1 }))
     })
   })
 }

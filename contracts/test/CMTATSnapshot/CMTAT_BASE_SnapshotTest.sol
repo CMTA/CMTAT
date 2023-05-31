@@ -24,6 +24,8 @@ import "../../modules/wrapper/optional/DebtModule/CreditEventsModule.sol";
 import "../../modules/security/AuthorizationModule.sol";
 import "../../interfaces/IEIP1404/IEIP1404Wrapper.sol";
 
+import "../../libraries/Errors.sol";
+
 abstract contract CMTAT_BASE_SnapshotTest is
     Initializable,
     ContextUpgradeable,
@@ -169,10 +171,7 @@ abstract contract CMTAT_BASE_SnapshotTest is
         address to,
         uint256 amount
     ) internal override(SnapshotModuleInternal, ERC20Upgradeable) {
-        require(
-            ValidationModule.validateTransfer(from, to, amount),
-            "CMTAT: transfer rejected by validation module"
-        );
+        if(!ValidationModule.validateTransfer(from, to, amount)) revert Errors.InvalidTransfer(from, to, amount);
         // We call the SnapshotModule only if the transfer is valid
         /*
         SnapshotModule:

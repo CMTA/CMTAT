@@ -15,9 +15,8 @@ function PauseModuleCommon (admin, address1, address2, address3) {
       // emits a Paused event
       expectEvent.inLogs(this.logs, 'Paused', { account: admin })
       // Transfer is reverted
-      await expectRevert(
-        this.cmtat.transfer(address2, 10, { from: address1 }),
-        CMTAT_TRANSFER_REJECT
+      await expectRevert.unspecified(
+        this.cmtat.transfer(address2, 10, { from: address1 })
       )
     })
 
@@ -32,9 +31,8 @@ function PauseModuleCommon (admin, address1, address2, address3) {
       // emits a Paused event
       expectEvent.inLogs(this.logs, 'Paused', { account: address1 })
       // Transfer is reverted
-      await expectRevert(
-        this.cmtat.transfer(address2, 10, { from: address1 }),
-        CMTAT_TRANSFER_REJECT
+      await expectRevert.unspecified(
+        this.cmtat.transfer(address2, 10, { from: address1 })
       )
     })
 
@@ -102,9 +100,8 @@ function PauseModuleCommon (admin, address1, address2, address3) {
       (await this.cmtat.messageForTransferRestriction(1)).should.equal(
         'All transfers paused'
       )
-      await expectRevert(
-        this.cmtat.transfer(address2, 10, { from: address1 }),
-        CMTAT_TRANSFER_REJECT
+      await expectRevert.unspecified(
+        this.cmtat.transfer(address2, 10, { from: address1 })
       )
     })
 
@@ -124,9 +121,8 @@ function PauseModuleCommon (admin, address1, address2, address3) {
       (await this.cmtat.messageForTransferRestriction(1)).should.equal(
         'All transfers paused'
       )
-      await expectRevert(
-        this.cmtat.transferFrom(address1, address2, 10, { from: address3 }),
-        CMTAT_TRANSFER_REJECT
+      await expectRevert.unspecified(
+        this.cmtat.transferFrom(address1, address2, 10, { from: address3 })
       )
     })
   })
