@@ -15,3 +15,5 @@ artifacts
 cache
 #manticore
 mcore_*
+#secrets
+.env

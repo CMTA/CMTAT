@@ -159,14 +159,13 @@ function BaseModuleCommon (owner, address1, address2, address3, proxyTest) {
         await this.cmtat.allowance(address1, address3)
       ).should.be.bignumber.equal('20')
       // Act
-      await expectRevert(
+      await expectRevert.unspecified(
         this.cmtat.methods['approve(address,uint256,uint256)'](
           address3,
           30,
           10,
           { from: address1 }
-        ),
-        'CMTAT: current allowance is not right'
+        )
       );
       // Assert
       (

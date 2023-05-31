@@ -114,9 +114,7 @@ function BaseModuleCommon (owner, attacker) {
       // Arrange
       (await this.cmtat.debt()).interestRate.should.be.bignumber.equal('0')
       // Act + Assert
-      await expectRevert(this.cmtat.setInterestRate(0, { from: owner }),
-        'Same value'
-      )
+      await expectRevert.unspecified(this.cmtat.setInterestRate(0, { from: owner }))
     })
 
     it('testAdminCanSetParValue', async function () {
@@ -135,9 +133,7 @@ function BaseModuleCommon (owner, attacker) {
       // Arrange
       (await this.cmtat.debt()).parValue.should.be.bignumber.equal('0')
       // Act + Assert
-      await expectRevert(this.cmtat.setParValue(0, { from: owner }),
-        'Same value'
-      )
+      await expectRevert.unspecified(this.cmtat.setParValue(0, { from: owner }))
     })
 
     it('testAdminCanSetGuarantor', async function () {

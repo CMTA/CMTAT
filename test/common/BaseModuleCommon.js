@@ -105,8 +105,14 @@ function BaseModuleCommon (owner, address1, address2, address3, proxyTest) {
       // Arrange - Assert
       (await this.cmtat.flag()).should.be.bignumber.equal(this.flag.toString())
       // Act
-      await expectRevert(this.cmtat.setFlag(this.flag.toString(), { from: owner }),
-        'Same value'
+
+      /////////////////////////////////////////////////////////////////////////////////////////////////////////
+      // TODO: Check SameValue() custom error on-chain when the contract is deployed.
+      // As of now, Truffle doesn't support custom errors: https://github.com/trufflesuite/truffle/issues/5753
+      //
+      // Note: We can use ".unspecified" as a filter to find all the custom errors we need to check
+      /////////////////////////////////////////////////////////////////////////////////////////////////////////
+      await expectRevert.unspecified(this.cmtat.setFlag(this.flag.toString(), { from: owner })
       )
     })
     it('testCannotNonAdminUpdateFlag', async function () {

@@ -5,6 +5,8 @@ pragma solidity ^0.8.17;
 import "../../../openzeppelin-contracts-upgradeable/contracts/access/AccessControlUpgradeable.sol";
 import "../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
 
+import "../../libraries/Errors.sol";
+
 abstract contract AuthorizationModule is AccessControlUpgradeable {
     // BurnModule
     bytes32 public constant BURNER_ROLE = keccak256("BURNER_ROLE");
@@ -43,7 +45,7 @@ abstract contract AuthorizationModule is AccessControlUpgradeable {
     function __AuthorizationModule_init_unchained(
         address admin
     ) internal onlyInitializing {
-        require(admin != address(0), "Address 0 not allowed");
+        if(admin == address(0)) revert Errors.AddressZeroNotAllowed();
         _grantRole(DEFAULT_ADMIN_ROLE, admin);
     }
 
