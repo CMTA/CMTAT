@@ -133,7 +133,7 @@ abstract contract DebtBaseModule is
     @notice The call will be reverted if the new value of interestRate is the same as the current one
     */
     function setInterestRate(uint256 interestRate_) public onlyRole(DEBT_ROLE) {
-        if(interestRate_ == debt.interestRate) revert Errors.SameValue();
+        if (interestRate_ == debt.interestRate) revert Errors.SameValue();
         debt.interestRate = interestRate_;
         emit InterestRate(interestRate_);
     }
@@ -142,7 +142,7 @@ abstract contract DebtBaseModule is
     @notice The call will be reverted if the new value of parValue is the same as the current one
     */
     function setParValue(uint256 parValue_) public onlyRole(DEBT_ROLE) {
-        if(parValue_ == debt.parValue) revert Errors.SameValue();
+        if (parValue_ == debt.parValue) revert Errors.SameValue();
         debt.parValue = parValue_;
         emit ParValue(parValue_);
     }
@@ -150,7 +150,9 @@ abstract contract DebtBaseModule is
     /*
     @notice The Guarantor will be changed even if the new value is the same as the current one
     */
-    function setGuarantor(string calldata guarantor_) public onlyRole(DEBT_ROLE) {
+    function setGuarantor(
+        string calldata guarantor_
+    ) public onlyRole(DEBT_ROLE) {
         debt.guarantor = guarantor_;
         emit Guarantor(guarantor_, guarantor_);
     }

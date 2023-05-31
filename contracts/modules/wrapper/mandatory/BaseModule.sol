@@ -103,7 +103,7 @@ abstract contract BaseModule is AuthorizationModule, OnlyDelegateCallModule {
     @notice The call will be reverted if the new value of flag is the same as the current one
     */
     function setFlag(uint256 flag_) public onlyRole(DEFAULT_ADMIN_ROLE) {
-        if(flag == flag_) revert Errors.SameValue();
+        if (flag == flag_) revert Errors.SameValue();
         flag = flag_;
         emit Flag(flag_);
     }

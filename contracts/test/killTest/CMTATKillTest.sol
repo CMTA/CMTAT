@@ -24,9 +24,9 @@ import "../../interfaces/IEIP1404/IEIP1404Wrapper.sol";
 import "../../libraries/Errors.sol";
 
 /**
-@title A CMTAT version only for TESTING
-@dev This version inherits from BaseModuleTest instead of BaseModule
-*/
+ * @title A CMTAT version only for TESTING
+ * @dev This version inherits from BaseModuleTest instead of BaseModule
+ */
 contract CMTAT_KILL_TEST is
     Initializable,
     ContextUpgradeable,
@@ -43,10 +43,10 @@ contract CMTAT_KILL_TEST is
     CreditEventsModule
 {
     // CMTAT_PROXY constructor
-    /** 
-    @notice Contract version for the deployment with a proxy
-    @param forwarderIrrevocable address of the forwarder, required for the gasless support
-    */
+    /**
+     * @notice Contract version for the deployment with a proxy
+     * @param forwarderIrrevocable address of the forwarder, required for the gasless support
+     */
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor(
         address forwarderIrrevocable
@@ -58,10 +58,10 @@ contract CMTAT_KILL_TEST is
     }
 
     /**
-    @notice 
-    initialize the proxy contract
-    The calls to this function will revert if the contract was deployed without a proxy
-    */
+     * @notice
+     * initialize the proxy contract
+     * The calls to this function will revert if the contract was deployed without a proxy
+     */
     function initialize(
         address admin,
         string memory nameIrrevocable,
@@ -85,8 +85,8 @@ contract CMTAT_KILL_TEST is
     }
 
     /**
-    @dev calls the different initialize functions from the different modules
-    */
+     * @dev calls the different initialize functions from the different modules
+     */
     function __CMTAT_init(
         address admin,
         string memory nameIrrevocable,
@@ -148,8 +148,8 @@ contract CMTAT_KILL_TEST is
     }
 
     /**
-    @notice Returns the number of decimals used to get its user representation.
-    */
+     * @notice Returns the number of decimals used to get its user representation.
+     */
     function decimals()
         public
         view
@@ -185,7 +185,8 @@ contract CMTAT_KILL_TEST is
         address to,
         uint256 amount
     ) internal view override(ERC20Upgradeable) {
-        if(!ValidationModule.validateTransfer(from, to, amount)) revert Errors.InvalidTransfer(from, to, amount);
+        if (!ValidationModule.validateTransfer(from, to, amount))
+            revert Errors.InvalidTransfer(from, to, amount);
         // We call the SnapshotModule only if the transfer is valid
         /*
         SnapshotModule:
@@ -194,9 +195,9 @@ contract CMTAT_KILL_TEST is
         */
     }
 
-    /** 
-    @dev This surcharge is not necessary if you do not use the MetaTxModule
-    */
+    /**
+     * @dev This surcharge is not necessary if you do not use the MetaTxModule
+     */
     function _msgSender()
         internal
         view
@@ -206,9 +207,9 @@ contract CMTAT_KILL_TEST is
         return MetaTxModule._msgSender();
     }
 
-    /** 
-    @dev This surcharge is not necessary if you do not use the MetaTxModule
-    */
+    /**
+     * @dev This surcharge is not necessary if you do not use the MetaTxModule
+     */
     function _msgData()
         internal
         view

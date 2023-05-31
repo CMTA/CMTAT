@@ -64,7 +64,7 @@ abstract contract CreditEventsModule is
     function setFlagDefault(
         bool flagDefault_
     ) public onlyRole(DEBT_CREDIT_EVENT_ROLE) {
-        if(flagDefault_ == creditEvents.flagDefault) revert Errors.SameValue();
+        if (flagDefault_ == creditEvents.flagDefault) revert Errors.SameValue();
         creditEvents.flagDefault = flagDefault_;
         emit FlagDefault(flagDefault_);
     }
@@ -75,7 +75,8 @@ abstract contract CreditEventsModule is
     function setFlagRedeemed(
         bool flagRedeemed_
     ) public onlyRole(DEBT_CREDIT_EVENT_ROLE) {
-        if(flagRedeemed_ == creditEvents.flagRedeemed) revert Errors.SameValue();
+        if (flagRedeemed_ == creditEvents.flagRedeemed)
+            revert Errors.SameValue();
         creditEvents.flagRedeemed = flagRedeemed_;
         emit FlagRedeemed(flagRedeemed_);
     }

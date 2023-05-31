@@ -43,7 +43,7 @@ contract RuleEngineMock is IRuleEngine {
         uint256 _amount
     ) public view override returns (uint8) {
         uint256 ruleArrayLength = _rules.length;
-        for (uint256 i; i < ruleArrayLength;) {
+        for (uint256 i; i < ruleArrayLength; ) {
             uint8 restriction = _rules[i].detectTransferRestriction(
                 _from,
                 _to,
@@ -52,7 +52,9 @@ contract RuleEngineMock is IRuleEngine {
             if (restriction != uint8(REJECTED_CODE_BASE.TRANSFER_OK)) {
                 return restriction;
             }
-            unchecked { ++i; }
+            unchecked {
+                ++i;
+            }
         }
         return uint8(REJECTED_CODE_BASE.TRANSFER_OK);
     }
@@ -73,12 +75,14 @@ contract RuleEngineMock is IRuleEngine {
         uint8 _restrictionCode
     ) public view override returns (string memory) {
         uint256 ruleArrayLength = _rules.length;
-        for (uint256 i; i < ruleArrayLength;) {
+        for (uint256 i; i < ruleArrayLength; ) {
             if (_rules[i].canReturnTransferRestrictionCode(_restrictionCode)) {
                 return
                     _rules[i].messageForTransferRestriction(_restrictionCode);
             }
-            unchecked { ++i; }
+            unchecked {
+                ++i;
+            }
         }
         return "Unknown restriction code";
     }
