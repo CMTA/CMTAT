@@ -13,7 +13,7 @@ abstract contract OnlyDelegateCallModule {
     address private immutable self = address(this);
 
     function checkDelegateCall() private view {
-        if(address(this) == self) revert Errors.DirectCallToImplementation();
+        if (address(this) == self) revert Errors.DirectCallToImplementation();
     }
 
     modifier onlyDelegateCall(bool deployedWithProxy) {

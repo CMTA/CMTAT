@@ -14,51 +14,51 @@ import "../../libraries/Errors.sol";
  *
  * Useful to take a snapshot of token holder balance and total supply at a specific time
  * Inspired by Openzeppelin - ERC20Snapshot but use the time as Id instead of a counter.
- * Contrary to OpenZeppelin, the function _getCurrentSnapshotId is not available 
-   because overriding this function can break the contract.
+ * Contrary to OpenZeppelin, the function _getCurrentSnapshotId is not available
+ *    because overriding this function can break the contract.
  */
 
 abstract contract SnapshotModuleInternal is ERC20Upgradeable {
     using ArraysUpgradeable for uint256[];
 
     /**
-    @notice Emitted when the snapshot with the specified oldTime was scheduled or rescheduled at the specified newTime.
-    */
+     * @notice Emitted when the snapshot with the specified oldTime was scheduled or rescheduled at the specified newTime.
+     */
     event SnapshotSchedule(uint256 indexed oldTime, uint256 indexed newTime);
 
-    /** 
-    @notice Emitted when the scheduled snapshot with the specified time was cancelled.
-    */
+    /**
+     * @notice Emitted when the scheduled snapshot with the specified time was cancelled.
+     */
     event SnapshotUnschedule(uint256 indexed time);
 
-    /** 
-    @dev See {OpenZeppelin - ERC20Snapshot}
-    Snapshotted values have arrays of ids (time) and the value corresponding to that id.
-    ids is expected to be sorted in ascending order, and to contain no repeated elements 
-    because we use findUpperBound in the function _valueAt
-    */
+    /**
+     * @dev See {OpenZeppelin - ERC20Snapshot}
+     * Snapshotted values have arrays of ids (time) and the value corresponding to that id.
+     * ids is expected to be sorted in ascending order, and to contain no repeated elements
+     * because we use findUpperBound in the function _valueAt
+     */
     struct Snapshots {
         uint256[] ids;
         uint256[] values;
     }
 
     /**
-    @dev See {OpenZeppelin - ERC20Snapshot}
-    */
+     * @dev See {OpenZeppelin - ERC20Snapshot}
+     */
     mapping(address => Snapshots) private _accountBalanceSnapshots;
     Snapshots private _totalSupplySnapshots;
 
     /**
-    @dev time instead of a counter for OpenZeppelin
-    */
+     * @dev time instead of a counter for OpenZeppelin
+     */
     uint256 private _currentSnapshotTime;
     uint256 private _currentSnapshotIndex;
 
-    /** 
-    @dev 
-    list of scheduled snapshot (time)
-    This list is sorted in ascending order
-    */
+    /**
+     * @dev
+     * list of scheduled snapshot (time)
+     * This list is sorted in ascending order
+     */
     uint256[] private _scheduledSnapshots;
 
     /**
@@ -77,32 +77,37 @@ abstract contract SnapshotModuleInternal is ERC20Upgradeable {
         // no variable to initialize
     }
 
-    /** 
-    @dev schedule a snapshot at the specified time
-    You can only add a snapshot after the last previous
-    */
+    /**
+     * @dev schedule a snapshot at the specified time
+     * You can only add a snapshot after the last previous
+     */
     function _scheduleSnapshot(uint256 time) internal {
         // Check the time firstly to avoid an useless read of storage
-        if(time <= block.timestamp) revert Errors.SnapshotScheduledInThePast(time, block.timestamp);
+        if (time <= block.timestamp)
+            revert Errors.SnapshotScheduledInThePast(time, block.timestamp);
 
         if (_scheduledSnapshots.length > 0) {
             // We check the last snapshot on the list
-            if(time <= _scheduledSnapshots[_scheduledSnapshots.length - 1]) {
-                revert Errors.SnapshotTimestampBeforeLastSnapshot(time, _scheduledSnapshots[_scheduledSnapshots.length - 1]);
+            if (time <= _scheduledSnapshots[_scheduledSnapshots.length - 1]) {
+                revert Errors.SnapshotTimestampBeforeLastSnapshot(
+                    time,
+                    _scheduledSnapshots[_scheduledSnapshots.length - 1]
+                );
             }
         }
         _scheduledSnapshots.push(time);
         emit SnapshotSchedule(0, time);
     }
 
-    /** 
-    @dev schedule a snapshot at the specified time
-    */
+    /**
+     * @dev schedule a snapshot at the specified time
+     */
     function _scheduleSnapshotNotOptimized(uint256 time) internal {
-        if(time <= block.timestamp)) revert Errors.SnapshotScheduledInThePast(time, block.timestamp);
+        if (time <= block.timestamp)
+            revert Errors.SnapshotScheduledInThePast(time, block.timestamp);
         (bool isFound, uint256 index) = _findScheduledSnapshotIndex(time);
         // Perfect match
-        if(isFound) revert Errors.SnapshotAlreadyExists();
+        if (isFound) revert Errors.SnapshotAlreadyExists();
         // if no upper bound match found, we push the snapshot at the end of the list
         if (index == _scheduledSnapshots.length) {
             _scheduledSnapshots.push(time);
@@ -110,7 +115,7 @@ abstract contract SnapshotModuleInternal is ERC20Upgradeable {
             _scheduledSnapshots.push(
                 _scheduledSnapshots[_scheduledSnapshots.length - 1]
             );
-            for (uint256 i = _scheduledSnapshots.length - 2; i > index;) {
+            for (uint256 i = _scheduledSnapshots.length - 2; i > index; ) {
                 _scheduledSnapshots[i] = _scheduledSnapshots[i - 1];
                 unchecked {
                     --i;
@@ -121,24 +126,36 @@ abstract contract SnapshotModuleInternal is ERC20Upgradeable {
         emit SnapshotSchedule(0, time);
     }
 
-    /** 
-    @dev reschedule a scheduled snapshot at the specified newTime
-    */
+    /**
+     * @dev reschedule a scheduled snapshot at the specified newTime
+     */
     function _rescheduleSnapshot(uint256 oldTime, uint256 newTime) internal {
         // Check the time firstly to avoid an useless read of storage
-        if(oldTime <= block.timestamp) revert Errors.SnapshotAlreadyDone();
-        if(newTime <= block.timestamp) revert Errors.SnapshotScheduledInThePast(newTime, block.timestamp);
-        if(_scheduledSnapshots.length == 0) revert Errors.SnapshotNotScheduled();
+        if (oldTime <= block.timestamp) revert Errors.SnapshotAlreadyDone();
+        if (newTime <= block.timestamp)
+            revert Errors.SnapshotScheduledInThePast(newTime, block.timestamp);
+        if (_scheduledSnapshots.length == 0)
+            revert Errors.SnapshotNotScheduled();
 
         (bool foundOld, uint256 index) = _findScheduledSnapshotIndex(oldTime);
-        if(!foundOld) revert Errors.SnapshotNotFound();
+        if (!foundOld) revert Errors.SnapshotNotFound();
 
         if (index + 1 < _scheduledSnapshots.length) {
-            if(newTime >= _scheduledSnapshots[index + 1]) revert Errors.SnapshotTimestampAfterNextSnapshot(newTime, _scheduledSnapshots[index + 1]);
+            if (newTime >= _scheduledSnapshots[index + 1]) {
+                revert Errors.SnapshotTimestampAfterNextSnapshot(
+                    newTime,
+                    _scheduledSnapshots[index + 1]
+                );
+            }
         }
 
         if (index > 0) {
-            if(newTime <= _scheduledSnapshots[index - 1]) revert Errors.SnapshotTimestampBeforePreviousSnapshot(newTime, _scheduledSnapshots[index - 1]);
+            if (newTime <= _scheduledSnapshots[index - 1]) {
+                revert Errors.SnapshotTimestampBeforePreviousSnapshot(
+                    newTime,
+                    _scheduledSnapshots[index - 1]
+                );
+            }
         }
 
         _scheduledSnapshots[index] = newTime;
@@ -147,29 +164,31 @@ abstract contract SnapshotModuleInternal is ERC20Upgradeable {
     }
 
     /**
-    @dev unschedule the last scheduled snapshot
-    */
+     * @dev unschedule the last scheduled snapshot
+     */
     function _unscheduleLastSnapshot(uint256 time) internal {
         // Check the time firstly to avoid an useless read of storage
-        if(time <= block.timestamp)) revert Errors.SnapshotAlreadyDone();
-        if(_scheduledSnapshots.length == 0) revert Errors.SnapshotNotScheduled();
+        if (time <= block.timestamp) revert Errors.SnapshotAlreadyDone();
+        if (_scheduledSnapshots.length == 0)
+            revert Errors.SnapshotNotScheduled();
         // All snapshot time are unique, so we do not check the indice
-        if(time != _scheduledSnapshots[_scheduledSnapshots.length - 1]) revert Errors.SnapshotNeverScheduled();
+        if (time != _scheduledSnapshots[_scheduledSnapshots.length - 1])
+            revert Errors.SnapshotNeverScheduled();
         _scheduledSnapshots.pop();
         emit SnapshotUnschedule(time);
     }
 
-    /** 
-    @dev unschedule (remove) a scheduled snapshot in three steps:
-    - search the snapshot in the list
-    - If found, move all next snapshots one position to the left
-    - Reduce the array size by deleting the last snapshot
-    */
+    /**
+     * @dev unschedule (remove) a scheduled snapshot in three steps:
+     * - search the snapshot in the list
+     * - If found, move all next snapshots one position to the left
+     * - Reduce the array size by deleting the last snapshot
+     */
     function _unscheduleSnapshotNotOptimized(uint256 time) internal {
-        if(time <= block.timestamp)) revert Errors.SnapshotAlreadyDone();
+        if (time <= block.timestamp) revert Errors.SnapshotAlreadyDone();
         (bool isFound, uint256 index) = _findScheduledSnapshotIndex(time);
-        if(!isFound) revert Errors.SnapshotNotFound();
-        for (uint256 i = index; i + 1 < _scheduledSnapshots.length;) {
+        if (!isFound) revert Errors.SnapshotNotFound();
+        for (uint256 i = index; i + 1 < _scheduledSnapshots.length; ) {
             _scheduledSnapshots[i] = _scheduledSnapshots[i + 1];
             unchecked {
                 ++i;
@@ -178,10 +197,10 @@ abstract contract SnapshotModuleInternal is ERC20Upgradeable {
         _scheduledSnapshots.pop();
     }
 
-    /** 
-    @dev 
-    Get the next scheduled snapshots
-    */
+    /**
+     * @dev
+     * Get the next scheduled snapshots
+     */
     function getNextSnapshots() public view returns (uint256[] memory) {
         uint256[] memory nextScheduledSnapshot = new uint256[](0);
         // no snapshot were planned
@@ -201,11 +220,13 @@ abstract contract SnapshotModuleInternal is ERC20Upgradeable {
                         indexLowerBound -
                         1;
                     nextScheduledSnapshot = new uint256[](arraySize);
-                    for (uint256 i; i < arraySize;) {
+                    for (uint256 i; i < arraySize; ) {
                         nextScheduledSnapshot[i] = _scheduledSnapshots[
                             indexLowerBound + 1 + i
                         ];
-                        unchecked { ++i; }
+                        unchecked {
+                            ++i;
+                        }
                     }
                 }
             }
@@ -213,18 +234,18 @@ abstract contract SnapshotModuleInternal is ERC20Upgradeable {
         return nextScheduledSnapshot;
     }
 
-    /** 
-    @dev 
-    Get all snapshots
-    */
+    /**
+     * @dev
+     * Get all snapshots
+     */
     function getAllSnapshots() public view returns (uint256[] memory) {
         return _scheduledSnapshots;
     }
 
-    /** 
-    @notice Return the number of tokens owned by the given owner at the time when the snapshot with the given time was created.
-    @return value stored in the snapshot, or the actual balance if no snapshot
-    */
+    /**
+     * @notice Return the number of tokens owned by the given owner at the time when the snapshot with the given time was created.
+     * @return value stored in the snapshot, or the actual balance if no snapshot
+     */
     function snapshotBalanceOf(
         uint256 time,
         address owner
@@ -238,10 +259,10 @@ abstract contract SnapshotModuleInternal is ERC20Upgradeable {
     }
 
     /**
-    @dev See {OpenZeppelin - ERC20Snapshot}
-    Retrieves the total supply at the specified time.
-    @return value stored in the snapshot, or the actual totalSupply if no snapshot
-    */
+     * @dev See {OpenZeppelin - ERC20Snapshot}
+     * Retrieves the total supply at the specified time.
+     * @return value stored in the snapshot, or the actual totalSupply if no snapshot
+     */
     function snapshotTotalSupply(uint256 time) public view returns (uint256) {
         (bool snapshotted, uint256 value) = _valueAt(
             time,
@@ -250,10 +271,10 @@ abstract contract SnapshotModuleInternal is ERC20Upgradeable {
         return snapshotted ? value : totalSupply();
     }
 
-    /** 
-    @dev Update balance and/or total supply snapshots before the values are modified. This is implemented
-    in the _beforeTokenTransfer hook, which is executed for _mint, _burn, and _transfer operations.
-    */
+    /**
+     * @dev Update balance and/or total supply snapshots before the values are modified. This is implemented
+     * in the _beforeTokenTransfer hook, which is executed for _mint, _burn, and _transfer operations.
+     */
     function _beforeTokenTransfer(
         address from,
         address to,
@@ -280,12 +301,12 @@ abstract contract SnapshotModuleInternal is ERC20Upgradeable {
     }
 
     /**
-    @dev See {OpenZeppelin - ERC20Snapshot}
-    @param time where we want a snapshot
-    @param snapshots the struct where are stored the snapshots
-    @return  snapshotExist true if a snapshot is found, false otherwise
-    value 0 if no snapshot, balance value if a snapshot exists
-    */
+     * @dev See {OpenZeppelin - ERC20Snapshot}
+     * @param time where we want a snapshot
+     * @param snapshots the struct where are stored the snapshots
+     * @return  snapshotExist true if a snapshot is found, false otherwise
+     * value 0 if no snapshot, balance value if a snapshot exists
+     */
     function _valueAt(
         uint256 time,
         Snapshots storage snapshots
@@ -314,25 +335,25 @@ abstract contract SnapshotModuleInternal is ERC20Upgradeable {
     }
 
     /**
-    @dev See {OpenZeppelin - ERC20Snapshot}
-    */
+     * @dev See {OpenZeppelin - ERC20Snapshot}
+     */
     function _updateAccountSnapshot(address account) private {
         _updateSnapshot(_accountBalanceSnapshots[account], balanceOf(account));
     }
 
     /**
-    @dev See {OpenZeppelin - ERC20Snapshot}
-    */
+     * @dev See {OpenZeppelin - ERC20Snapshot}
+     */
     function _updateTotalSupplySnapshot() private {
         _updateSnapshot(_totalSupplySnapshots, totalSupply());
     }
 
-    /** 
-    @dev 
-    Inside a struct Snapshots:
-    - Update the array ids to the current Snapshot time if this one is greater than the snapshot times stored in ids.
-    - Update the value to the corresponding value.
-    */
+    /**
+     * @dev
+     * Inside a struct Snapshots:
+     * - Update the array ids to the current Snapshot time if this one is greater than the snapshot times stored in ids.
+     * - Update the value to the corresponding value.
+     */
     function _updateSnapshot(
         Snapshots storage snapshots,
         uint256 currentValue
@@ -344,11 +365,11 @@ abstract contract SnapshotModuleInternal is ERC20Upgradeable {
         }
     }
 
-    /** 
-    @dev
-    Set the currentSnapshotTime by retrieving the most recent snapshot
-    if a snapshot exists, clear all past scheduled snapshot
-    */
+    /**
+     * @dev
+     * Set the currentSnapshotTime by retrieving the most recent snapshot
+     * if a snapshot exists, clear all past scheduled snapshot
+     */
     function _setCurrentSnapshot() internal {
         (
             uint256 scheduleSnapshotTime,
@@ -361,8 +382,8 @@ abstract contract SnapshotModuleInternal is ERC20Upgradeable {
     }
 
     /**
-    @return the last snapshot time inside a snapshot ids array
-    */
+     * @return the last snapshot time inside a snapshot ids array
+     */
     function _lastSnapshot(
         uint256[] storage ids
     ) private view returns (uint256) {
@@ -373,10 +394,10 @@ abstract contract SnapshotModuleInternal is ERC20Upgradeable {
         }
     }
 
-    /** 
-    @dev Find the snapshot index at the specified time
-    @return (true, index) if the snapshot exists, (false, 0) otherwise
-    */
+    /**
+     * @dev Find the snapshot index at the specified time
+     * @return (true, index) if the snapshot exists, (false, 0) otherwise
+     */
     function _findScheduledSnapshotIndex(
         uint256 time
     ) private view returns (bool, uint256) {
@@ -399,10 +420,10 @@ abstract contract SnapshotModuleInternal is ERC20Upgradeable {
         }
     }
 
-    /** 
-    @dev find the most recent past snapshot
-    The complexity of this function is O(N) because we go through the whole list
-    */
+    /**
+     * @dev find the most recent past snapshot
+     * The complexity of this function is O(N) because we go through the whole list
+     */
     function _findScheduledMostRecentPastSnapshot()
         private
         view
@@ -418,7 +439,7 @@ abstract contract SnapshotModuleInternal is ERC20Upgradeable {
         }
         uint256 mostRecent;
         index = currentArraySize;
-        for (uint256 i = _currentSnapshotIndex; i < currentArraySize;) {
+        for (uint256 i = _currentSnapshotIndex; i < currentArraySize; ) {
             if (_scheduledSnapshots[i] <= block.timestamp) {
                 mostRecent = _scheduledSnapshots[i];
                 index = i;
@@ -426,7 +447,9 @@ abstract contract SnapshotModuleInternal is ERC20Upgradeable {
                 // All snapshot are planned in the futur
                 break;
             }
-            unchecked { ++i; }
+            unchecked {
+                ++i;
+            }
         }
         return (mostRecent, index);
     }

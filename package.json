@@ -12,8 +12,8 @@
     "lint:js:fix": "npx eslint test --fix",
     "lint:sol": "npx solium -d contracts",
     "lint:sol:fix": "npx solium -d contracts --fix",
-    "lint:all": "npx run lint && npm run lint:sol",
-    "lint:all:fix": "npx run lint:fix && npm run lint:sol:fix",
+    "lint:all": "npx run lint:js && npm run lint:sol",
+    "lint:all:fix": "npx run lint:js:fix && npm run lint:sol:fix",
     "lint:sol:prettier": "npx prettier --write 'contracts/**/*.sol'",
     "lint:js:prettier": "npx prettier test",
     "console": "truffle console",
@@ -85,10 +85,12 @@
     "truffle": "^5.8.3",
     "truffle-contract-size": "^2.0.1",
     "truffle-flattener": "^1.6.0",
+    "truffle-plugin-verify": "^0.6.3",
     "web3": "^1.9.0"
   },
   "dependencies": {
     "@openzeppelin/truffle-upgrades": "^1.17.1",
+    "@truffle/hdwallet-provider": "^1.4.0",
     "eth-sig-util": "^3.0.1",
     "ethereumjs-wallet": "^1.0.2"
   }
