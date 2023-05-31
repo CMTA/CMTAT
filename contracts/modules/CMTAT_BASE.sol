@@ -25,7 +25,7 @@ abstract contract CMTAT_BASE is
     ERC20BaseModule
 {
     /**
-     * @notice 
+     * @notice
      * initialize the proxy contract
      * The calls to this function will revert if the contract was deployed without a proxy
      */
@@ -38,7 +38,15 @@ abstract contract CMTAT_BASE is
         string memory information_,
         uint256 flag_
     ) public initializer {
-        __CMTAT_init(admin, nameIrrevocable, symbolIrrevocable, tokenId_, terms_, information_, flag_);
+        __CMTAT_init(
+            admin,
+            nameIrrevocable,
+            symbolIrrevocable,
+            tokenId_,
+            terms_,
+            information_,
+            flag_
+        );
     }
 
     /**
@@ -85,11 +93,21 @@ abstract contract CMTAT_BASE is
     /**
      * @notice Returns the number of decimals used to get its user representation.
      */
-    function decimals() public view virtual override(ERC20Upgradeable, ERC20BaseModule) returns (uint8) {
+    function decimals()
+        public
+        view
+        virtual
+        override(ERC20Upgradeable, ERC20BaseModule)
+        returns (uint8)
+    {
         return ERC20BaseModule.decimals();
     }
 
-    function transferFrom(address sender, address recipient, uint256 amount)
+    function transferFrom(
+        address sender,
+        address recipient,
+        uint256 amount
+    )
         public
         virtual
         override(ERC20Upgradeable, ERC20BaseModule)
@@ -98,7 +116,11 @@ abstract contract CMTAT_BASE is
         return ERC20BaseModule.transferFrom(sender, recipient, amount);
     }
 
-    function _beforeTokenTransfer(address from, address to, uint256 amount) internal view override(ERC20Upgradeable) {
+    function _beforeTokenTransfer(
+        address from,
+        address to,
+        uint256 amount
+    ) internal view override(ERC20Upgradeable) {
         if (paused()) revert Errors.InvalidTransfer(from, to, amount);
     }
 

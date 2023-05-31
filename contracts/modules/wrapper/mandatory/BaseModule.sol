@@ -15,7 +15,10 @@ abstract contract BaseModule is AuthorizationModule {
 
     event Term(string indexed newTermIndexed, string newTerm);
     event TokenId(string indexed newTokenIdIndexed, string newTokenId);
-    event Information(string indexed newInformationIndexed, string newInformation);
+    event Information(
+        string indexed newInformationIndexed,
+        string newInformation
+    );
     event Flag(uint256 indexed newFlag);
 
     /* Variables */
@@ -69,7 +72,9 @@ abstract contract BaseModule is AuthorizationModule {
     /*
     @notice the tokenId will be changed even if the new value is the same as the current one
     */
-    function setTokenId(string memory tokenId_) public onlyRole(DEFAULT_ADMIN_ROLE) {
+    function setTokenId(
+        string memory tokenId_
+    ) public onlyRole(DEFAULT_ADMIN_ROLE) {
         tokenId = tokenId_;
         emit TokenId(tokenId_, tokenId_);
     }
@@ -77,7 +82,9 @@ abstract contract BaseModule is AuthorizationModule {
     /*
     @notice The terms will be changed even if the new value is the same as the current one
     */
-    function setTerms(string memory terms_) public onlyRole(DEFAULT_ADMIN_ROLE) {
+    function setTerms(
+        string memory terms_
+    ) public onlyRole(DEFAULT_ADMIN_ROLE) {
         terms = terms_;
         emit Term(terms_, terms_);
     }
@@ -85,7 +92,9 @@ abstract contract BaseModule is AuthorizationModule {
     /*
     @notice The information will be changed even if the new value is the same as the current one
     */
-    function setInformation(string memory information_) public onlyRole(DEFAULT_ADMIN_ROLE) {
+    function setInformation(
+        string memory information_
+    ) public onlyRole(DEFAULT_ADMIN_ROLE) {
         information = information_;
         emit Information(information_, information_);
     }
