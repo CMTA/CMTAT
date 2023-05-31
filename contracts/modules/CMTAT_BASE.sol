@@ -11,9 +11,7 @@ import "./wrapper/mandatory/BurnModule.sol";
 import "./wrapper/mandatory/MintModule.sol";
 import "./wrapper/mandatory/ERC20BaseModule.sol";
 import "./wrapper/mandatory/PauseModule.sol";
-import "./wrapper/optional/ValidationModule.sol";
 import "./security/AuthorizationModule.sol";
-import "../interfaces/IEIP1404/IEIP1404Wrapper.sol";
 
 import "../libraries/Errors.sol";
 
@@ -24,7 +22,6 @@ abstract contract CMTAT_BASE is
     PauseModule,
     MintModule,
     BurnModule,
-    ValidationModule,
     ERC20BaseModule
 {
     /**
@@ -38,11 +35,10 @@ abstract contract CMTAT_BASE is
         string memory symbolIrrevocable,
         string memory tokenId_,
         string memory terms_,
-        IEIP1404Wrapper ruleEngine_,
         string memory information_,
         uint256 flag_
     ) public initializer {
-        __CMTAT_init(admin, nameIrrevocable, symbolIrrevocable, tokenId_, terms_, ruleEngine_, information_, flag_);
+        __CMTAT_init(admin, nameIrrevocable, symbolIrrevocable, tokenId_, terms_, information_, flag_);
     }
 
     /**
@@ -54,7 +50,6 @@ abstract contract CMTAT_BASE is
         string memory symbolIrrevocable,
         string memory tokenId_,
         string memory terms_,
-        IEIP1404Wrapper ruleEngine_,
         string memory information_,
         uint256 flag_
     ) internal onlyInitializing {
@@ -68,18 +63,13 @@ abstract contract CMTAT_BASE is
         __AccessControl_init_unchained();
         __Pausable_init_unchained();
 
-        /* Internal Modules */
-        __Validation_init_unchained(ruleEngine_);
-
         /* Wrapper */
         // AuthorizationModule_init_unchained is called firstly due to inheritance
         __AuthorizationModule_init_unchained(admin);
         __BurnModule_init_unchained();
         __MintModule_init_unchained();
         __ERC20Module_init_unchained(0);
-        // PauseModule_init_unchained is called before ValidationModule_init_unchained due to inheritance
         __PauseModule_init_unchained();
-        __ValidationModule_init_unchained();
 
         /* Other modules */
         __Base_init_unchained(tokenId_, terms_, information_, flag_);
@@ -109,7 +99,7 @@ abstract contract CMTAT_BASE is
     }
 
     function _beforeTokenTransfer(address from, address to, uint256 amount) internal view override(ERC20Upgradeable) {
-        if (!ValidationModule.validateTransfer(from, to, amount)) revert Errors.BeforeTokenTransfer(from, to, amount);
+        if (paused()) revert Errors.InvalidTransfer(from, to, amount);
     }
 
     uint256[50] private __gap;

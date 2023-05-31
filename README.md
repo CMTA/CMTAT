@@ -64,12 +64,6 @@ Here the list of the differents modules with the links towards the documentation
 | MintModule        | [mint.md](doc/modules/presentation/mandatory/mint.md)        | [MintModule.sol](./contracts/modules/wrapper/mandatory/MintModule.sol) |
 | PauseModule       | [pause.md](doc/modules/presentation/mandatory/pause.md)      | [PauseModule.sol](./contracts/modules/wrapper/mandatory/PauseModule.sol) |
 
-### Optional
-
-| Name              | Documentation                                                | Main File                                                    |
-| ----------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| ValidationModule  | [validation.md](doc/modules/presentation/optional/validation.md) | [ValidationModule.sol](./contracts/modules/wrapper/optional/ValidationModule.sol) |
-
 *not imported by default
 
 ### Security

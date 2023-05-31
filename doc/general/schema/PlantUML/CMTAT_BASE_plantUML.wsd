@@ -18,7 +18,6 @@ class CMTAT_BASE {
 	{abstract}MintModule
 	{abstract}BurnModule
 	{abstract}EnforcementModule
-	{abstract}ValidationModule
 	{abstract}ERC20BaseModule
 	{abstract}DebtBaseModule
 	{abstract}CreditEvents
@@ -47,7 +46,6 @@ CMTAT_BASE --[#DarkGoldenRod]|> PauseModule
 CMTAT_BASE --[#DarkGoldenRod]|> MintModule
 CMTAT_BASE --[#DarkGoldenRod]|> BurnModule
 CMTAT_BASE --[#DarkGoldenRod]|> EnforcementModule
-CMTAT_BASE --[#DarkGoldenRod]|> ValidationModule
 CMTAT_BASE --[#DarkGoldenRod]|> ERC20BaseModule
 CMTAT_BASE --[#DarkGoldenRod]|> DebtBaseModule
 CMTAT_BASE --[#DarkGoldenRod]|> CreditEvents
