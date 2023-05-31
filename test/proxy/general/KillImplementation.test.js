@@ -36,9 +36,8 @@ contract('Proxy - Security Test', function ([_, admin]) {
   })
   context('Implementation contract', function () {
     it('testCannotKillTheImplementationContract', async function () {
-      await expectRevert(
-        this.implementationContract.kill({ from: admin }),
-        'Direct call to the implementation not allowed'
+      await expectRevert.unspecified(
+        this.implementationContract.kill({ from: admin })
       )
     })
   })

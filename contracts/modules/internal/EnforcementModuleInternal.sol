@@ -64,7 +64,7 @@ abstract contract EnforcementModuleInternal is
      */
     function _freeze(
         address account,
-        string memory reason
+        string calldata reason
     ) internal virtual returns (bool) {
         if (_frozen[account]) return false;
         _frozen[account] = true;
@@ -79,7 +79,7 @@ abstract contract EnforcementModuleInternal is
      */
     function _unfreeze(
         address account,
-        string memory reason
+        string calldata reason
     ) internal virtual returns (bool) {
         if (!_frozen[account]) return false;
         _frozen[account] = false;

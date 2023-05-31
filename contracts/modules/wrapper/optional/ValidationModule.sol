@@ -8,6 +8,8 @@ import "../../internal/ValidationModuleInternal.sol";
 import "../mandatory/PauseModule.sol";
 import "../mandatory/EnforcementModule.sol";
 
+import "../../../libraries/Errors.sol";
+
 /**
  * @dev Validation module.
  *
@@ -59,7 +61,7 @@ abstract contract ValidationModule is
     function setRuleEngine(
         IEIP1404Wrapper ruleEngine_
     ) external onlyRole(DEFAULT_ADMIN_ROLE) {
-        require(ruleEngine != ruleEngine_, "Same value");
+        if(ruleEngine == ruleEngine_) revert Errors.SameValue();
         ruleEngine = ruleEngine_;
         emit RuleEngine(ruleEngine_);
     }
