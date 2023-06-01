@@ -1,16 +1,11 @@
 # CMTA Token 
 
-[TOC]
-
 ## Introduction
 
-The CMTA token (CMTAT) is a framework enabling the tokenization of securities in compliance with Swiss law.
+The CMTA token (CMTAT) is a framework enabling the tokenization of securities in compliance with Swiss law. This repository provides CMTA's reference implementation of CMTAT for Ethereum, as an ERC-20 compatible token.
 
-The CMTAT is an open standard from the [Capital Markets and Technology Association](http://www.cmta.ch/) (CMTA), and the product of collaborative work by leading organizations in the Swiss finance and technology ecosystem.
-
-The present repository provides CMTA's reference implementation of CMTAT for Ethereum, as an ERC-20 compatible token.
-
-The CMTAT is developed by a working group of CMTA's Technical Committee that includes members from Atpar, Bitcoin Suisse, Blockchain Innovation Group, Hypothekarbank Lenzburg, Lenz & Staehelin, Metaco, Mt Pelerin, SEBA, Swissquote, Sygnum, Taurus and Tezos Foundation. The design and security of the CMTAT was supported by ABDK, a leading team in smart contract security.
+The CMTAT is an open standard from the [Capital Markets and Technology Association](http://www.cmta.ch/) (CMTA), which gathers Swiss finance, legal, and technology organizations.
+The CMTAT was developed by a working group of CMTA's Technical Committee that includes members from Atpar, Bitcoin Suisse, Blockchain Innovation Group, Hypothekarbank Lenzburg, Lenz & Staehelin, Metaco, Mt Pelerin, SEBA, Swissquote, Sygnum, Taurus and Tezos Foundation. The design and security of the CMTAT was supported by ABDK, a leading team in smart contract security.
 
 The preferred way to receive comments is through the GitHub issue tracker.  Private comments and questions can be sent to the CMTA secretariat at <a href="mailto:admin@cmta.ch">admin@cmta.ch</a>. For security matters, please see [SECURITY.md](./SECURITY.MD).
 
@@ -37,13 +32,13 @@ To use the CMTAT, we recommend that you use the latest audited version, from the
 
 You may modify the token code by adding, removing, or modifying features. However, the mandatory modules must remain in place for compliance with Swiss law.
 
-### Deployment mode (Standalone / With A Proxy)
+### Deployment model 
 
 #### Standalone
 
-If you want to deploy without a proxy, in standalone mode, you need to use the contract version `CMTAT_STANDALONE`
+To deploy CMTAT without a proxy, in standalone mode, you need to use the contract version `CMTAT_STANDALONE`.
 
-#### With A proxy
+#### With a proxy
 
 The CMTAT supports deployment via a proxy contract.  Furthermore, using a proxy permits to upgrade the contract, using a standard proxy upgrade pattern.
 
@@ -51,9 +46,10 @@ The contract version to use as an implementation is the `CMTAT_PROXY`.
 
 Please see the OpenZeppelin [upgradeable contracts documentation](https://docs.openzeppelin.com/upgrades-plugins/1.x/writing-upgradeable) for more information about the proxy requirements applied to the contract.
 
-Please see the OpenZeppelin [Upgrades plugins](https://docs.openzeppelin.com/upgrades-plugins/1.x/) for more information about upgrades plugins in general.
+Please see the OpenZeppelin [Upgrades plugins](https://docs.openzeppelin.com/upgrades-plugins/1.x/) for more information about plugin upgrades in general.
 
-Note that deployment via a proxy is not mandatory, but recommended by CMTA.
+Note that deployment via a proxy is not mandatory, but is recommended by CMTA.
+
 
 ### Gasless support
 
@@ -65,18 +61,12 @@ Please see the OpenGSN [documentation](https://docs.opengsn.org/contracts/#recei
 
 ### Kill switch
 
-> This functionality uses the opcode SELFDESTRUCT which the property of destroying the contract (= deletion of any storage keys or code) will be remove with the Cancun Upgrade, an upgrade of the Ethereum network.
->
-> Therefore, when the Ethereum Network will integrate this upgrade, this functionality will no longer be available.
->
-> See https://eips.ethereum.org/EIPS/eip-6780 & https://github.com/ethereum/execution-specs/blob/master/network-upgrades/mainnet-upgrades/cancun.md
+CMTAT initially supported a `kill()` function relying on the SELFDESTRUCT opcode (which effectively destroyed the contract's storage and code).
+However, Ethereum's [Cancun update](https://github.com/ethereum/execution-specs/blob/master/network-upgrades/mainnet-upgrades/cancun.md) (rolled out in the second half of
+2023) will remove support for SELFDESTRUCT (see
+[EIP-6780](https://eips.ethereum.org/EIPS/eip-6780)).
 
-A "kill switch" is a necessary function to allow the issuer to carry out certain corporate actions (e.g., share splits, reverse splits, and mergers), which involve cancelling all existing tokens and replacing them by new ones, and can also be used if the issuer decides that it no longer wishes to have its shares issued in the form of ledger securities. The "kill switch" function affects all tokens issued.
-
-Such a functionality can be performed via that `kill()` function. A new token contract may then be deployed.
-
-Alternatively, if interactions with the "contract" are still necessary, it may be paused (and never unpaused).
-
+The `kill()` function will therefore not behave as it used to once Cancun is deployed.  As an alternative, the token contract can be paused indefinitely, and a new contract deployed (and the proxy modified accordingly).
 
 
 ## Modules
@@ -115,15 +105,14 @@ Here the list of the differents modules with the links towards the documentation
 
 
 
-### SnpashotModule
+### SnapshotModule
 
-This module was not audited during the audit made by ABDK and it is no longer imported by default inside the CMTAT.
+This module designed for future support of dividend and interest distribution, was not covered by the audit made by ABDK and it is no longer imported by default inside the CMTAT.
 
-If you want to add this module, you have to uncomment the specific lines "SnapshotModule" inside the file `CMTAT_BASE.sol`.
+If you want to add this module, you have to uncomment the specific lines "SnapshotModule" in [CMTAT_BASE.sol](./contracts/modules/CMTAT_BASE.sol).
 
-Be warned that this module may possibly contain security flaws.
+A CMTAT version inheriting from the SnapshotModule and used for **testing** purpose is available in [CMTATSnapshotStandaloneTest.sol](./contracts/test/CMTATSnapshot/CMTATSnapshotStandaloneTest.sol) and [CMTATSnapshotProxyTest.sol](./contracts/test/CMTATSnapshot/CMTATSnapshotProxyTest.sol).
 
-A CMTAT version inheriting from the SnapshotModule and used for **testing** purpose is available here: [CMTATSnapshotStandaloneTest.sol](./contracts/test/CMTATSnapshot/CMTATSnapshotStandaloneTest.sol) & [CMTATSnapshotProxyTest.sol](./contracts/test/CMTATSnapshot/CMTATSnapshotProxyTest.sol)
 
 ## Security
 
@@ -134,15 +123,17 @@ Please see [SECURITY.md](./SECURITY.MD).
 
 ### Module
 
-See the Section Modules/Security.
+See the code in [modules/security](./contracts/modules/security).
 
-The Access Control is managed inside the module `AuthorizationModule`.
+Access control is managed thanks to the module `AuthorizationModule`.
 
-The module `OnlyDelegateCallModule` is a special module to insure that some functions (e.g. delegatecall and selfdestruct) can only be triggered through proxies when the contract is deployed with a Proxy.
+The module `OnlyDelegateCallModule` is a special module to insure that
+some functions (e.g., such as `delegatecall()` and `selfdestruct`) can only be triggered through proxies when the contract is deployed with a proxy.
 
 ### Audit
 
-The contracts have been audited by [ABDKConsulting](https://www.abdk.consulting/), a globally recognized firm specialized in smart contracts' security.
+The contracts have been audited by [ABDKConsulting](https://www.abdk.consulting/), a globally recognized firm specialized in smart contracts security.
+
 
 #### First audit - September 2021
 
@@ -153,22 +144,24 @@ A summary of all fixes and decisions taken is available in the file [CMTAT-Audit
 
 #### Second audit - March 2023
 
-The second audit was performed by ABDK on the version [2.2](https://github.com/CMTA/CMTAT/releases/tag/2.2).
+The second audit covered version [2.2](https://github.com/CMTA/CMTAT/releases/tag/2.2).
 
-The release 2.3 contains the different fixes and improvements related to this audit.
+Version 2.3 contains the different fixes and improvements related to this audit.
 
-The temporary report is available in the file [Taurus. Audit 3.1. Collected Issues.ods](doc/audits/Taurus.Audit3.1.CollectedIssues.ods). 
+The list if findings is documented in [Taurus. Audit 3.1. Collected Issues.ods](doc/audits/Taurus.Audit3.1.CollectedIssues.ods). 
 
 ### Tools
 
-You will find the report performed with [Slither](https://github.com/crytic/slither) in the file [slither-report.md](doc/audits/tools/slither-report.md) 
+You will find the report produced by [Slither](https://github.com/crytic/slither) in [slither-report.md](doc/audits/tools/slither-report.md). 
+
 
 ### Test
 
-- You will find a summary of all automatic tests in the file [test.pdf](doc/general/test/test.pdf) 
-- A code coverage is available in the file [index.html](doc/general/test/coverage/index.html)
+- A summary of automatic tests is available in [test.pdf](doc/general/test/test.pdf).
+- A code coverage is available in [index.html](doc/general/test/coverage/index.html).
 
-> For information, we do not perform tests on the internal functions `init` of the different modules.
+> Note that we do not perform tests on the internal functions `init` of the different modules.
+
 
 ### Remarks
 
@@ -177,7 +170,7 @@ Likewise, access to the proxy contract must be restricted and seggregated from t
 
 ## Documentation
 
-Here a summary of the main documentation
+Here a summary of the main documents:
 
 | Document                          | Link/Files                                                 |
 | --------------------------------- | ---------------------------------------------------------- |
@@ -186,7 +179,7 @@ Here a summary of the main documentation
 | How to use the project            | [doc/USAGE.md](doc/USAGE.md)                               |
 | Project architecture              | [doc/general/architecture.md](doc/general/architecture.md) |
 
-CMTA will release further documentation describing the CMTAT framework in a platform-agnostic way, and coveging legal aspects, see
+CMTA providers further documentation describing the CMTAT framework in a platform-agnostic way, and covering legal aspects, see
 
 -  [CMTA Token (CMTAT)](https://cmta.ch/standards/cmta-token-cmtat)
 - [Standard for the tokenization of shares of Swiss corporations using the distributed ledger technology](https://cmta.ch/standards/standard-for-the-tokenization-of-shares-of-swiss-corporations-using-the-distributed-ledger-technology)
