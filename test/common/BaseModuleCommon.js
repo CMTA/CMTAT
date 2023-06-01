@@ -2,7 +2,7 @@ const { expectEvent, expectRevert } = require('@openzeppelin/test-helpers')
 const { DEFAULT_ADMIN_ROLE } = require('../utils')
 const { should } = require('chai').should()
 
-function BaseModuleCommon (owner, address1, address2, address3, proxyTest) {
+function BaseModuleCommon(owner, address1, address2, address3, proxyTest) {
   context('Token structure', function () {
     it('testHasTheDefinedTokenId', async function () {
       // Act + Assert
@@ -31,9 +31,9 @@ function BaseModuleCommon (owner, address1, address2, address3, proxyTest) {
       await expectRevert(
         this.cmtat.setTokenId('CMTAT_TOKENID', { from: address1 }),
         'AccessControl: account ' +
-          address1.toLowerCase() +
-          ' is missing role ' +
-          DEFAULT_ADMIN_ROLE
+        address1.toLowerCase() +
+        ' is missing role ' +
+        DEFAULT_ADMIN_ROLE
       );
       // Assert
       (await this.cmtat.tokenId()).should.equal('CMTAT_ISIN')
@@ -57,9 +57,9 @@ function BaseModuleCommon (owner, address1, address2, address3, proxyTest) {
       await expectRevert(
         this.cmtat.setTerms('https://cmta.ch/terms', { from: address1 }),
         'AccessControl: account ' +
-          address1.toLowerCase() +
-          ' is missing role ' +
-          DEFAULT_ADMIN_ROLE
+        address1.toLowerCase() +
+        ' is missing role ' +
+        DEFAULT_ADMIN_ROLE
       );
       // Assert
       (await this.cmtat.terms()).should.equal('https://cmta.ch')
@@ -83,9 +83,9 @@ function BaseModuleCommon (owner, address1, address2, address3, proxyTest) {
       await expectRevert(
         this.cmtat.setInformation('new info available', { from: address1 }),
         'AccessControl: account ' +
-          address1.toLowerCase() +
-          ' is missing role ' +
-          DEFAULT_ADMIN_ROLE
+        address1.toLowerCase() +
+        ' is missing role ' +
+        DEFAULT_ADMIN_ROLE
       );
       // Assert
       (await this.cmtat.information()).should.equal('CMTAT_info')
@@ -106,12 +106,12 @@ function BaseModuleCommon (owner, address1, address2, address3, proxyTest) {
       (await this.cmtat.flag()).should.be.bignumber.equal(this.flag.toString())
       // Act
 
-      /////////////////////////////////////////////////////////////////////////////////////////////////////////
+      /// //////////////////////////////////////////////////////////////////////////////////////////////////////
       // TODO: Check SameValue() custom error on-chain when the contract is deployed.
       // As of now, Truffle doesn't support custom errors: https://github.com/trufflesuite/truffle/issues/5753
       //
       // Note: We can use ".unspecified" as a filter to find all the custom errors we need to check
-      /////////////////////////////////////////////////////////////////////////////////////////////////////////
+      /// //////////////////////////////////////////////////////////////////////////////////////////////////////
       await expectRevert.unspecified(this.cmtat.setFlag(this.flag.toString(), { from: owner })
       )
     })
@@ -121,43 +121,12 @@ function BaseModuleCommon (owner, address1, address2, address3, proxyTest) {
       // Act
       await expectRevert(this.cmtat.setFlag(25, { from: address1 }),
         'AccessControl: account ' +
-          address1.toLowerCase() +
-          ' is missing role ' +
-          DEFAULT_ADMIN_ROLE
+        address1.toLowerCase() +
+        ' is missing role ' +
+        DEFAULT_ADMIN_ROLE
       );
       // Assert
       (await this.cmtat.flag()).should.be.bignumber.equal(this.flag.toString())
-    })
-    it('testAdminCanKillContract', async function () {
-      // Arrange - Assert
-      await web3.eth.getCode(this.cmtat.address).should.not.equal('0x')
-      // Act
-      await this.cmtat.kill({ from: owner });
-      // Assert
-      // TODO: Check if the ethers inside the contract is sent to the right address
-      // A destroyed contract has a bytecode size of 0.
-      (await web3.eth.getCode(this.cmtat.address)).should.equal('0x')
-      try {
-        await this.cmtat.terms()
-      } catch (e) {
-        e.message.should.equal(
-          "Returned values aren't valid, did it run Out of Gas? You might also see this error if you are not using the correct ABI for the contract you are retrieving data from, requesting data from a block number that does not exist, or querying a node which is not fully synced."
-        )
-      }
-    })
-    it('testCannotNonAdminKillContract', async function () {
-      // Act
-      await expectRevert(
-        this.cmtat.kill({ from: address1 }),
-        'AccessControl: account ' +
-          address1.toLowerCase() +
-          ' is missing role ' +
-          DEFAULT_ADMIN_ROLE
-      );
-      // Assert
-      (await this.cmtat.terms()).should.equal('https://cmta.ch')
-      // The contract is not destroyed, so the contract has a bytecode size different from zero.
-      await web3.eth.getCode(this.cmtat.address).should.not.equal('0x')
     })
   })
 }

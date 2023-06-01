@@ -7,11 +7,11 @@ The instructions below have been tested on Ubuntu 20.04.5 LTS.
 The toolchain includes the following components, where the versions
 are the latest ones that we tested: 
 
-- npm 8.19.2
-- Truffle 5.8.3
+- npm 9.5.1
+- Truffle 5.9.2
 - Solidity 0.8.17 (via solc-js)
-- Node 16.17.0
-- Web3.js 1.9.0
+- Node 18.16.0
+- Web3.js 1.10.0
 - OpenZeppelin Contracts Upgradeable (submodule) 4.8.1
 
 Although present in the dependencies, Hardhat is not included in the toolchain since the project was mainly build with and for Truffle.
@@ -78,11 +78,6 @@ Tests are written in JavaScript and run with Truffle as follows:
 To use the global Truffle install, use instead `truffle test`.
 
 Please see the Truffle [JavaScript tests documentation](https://www.trufflesuite.com/docs/truffle/testing/writing-tests-in-javascript) for more information about the writing and running of Truffle tests.
-
-If you try to run the tests with Hardhat, the tests related to the proxy and the SnapshotModule will not work.
-
-
-
 
 ## Code style guidelines
 

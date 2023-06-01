@@ -10,19 +10,10 @@ import "../../libraries/Errors.sol";
 abstract contract AuthorizationModule is AccessControlUpgradeable {
     // BurnModule
     bytes32 public constant BURNER_ROLE = keccak256("BURNER_ROLE");
-    // EnforcementModule
-    bytes32 public constant ENFORCER_ROLE = keccak256("ENFORCER_ROLE");
     // MintModule
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     // PauseModule
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
-    // SnapshotModule
-    bytes32 public constant SNAPSHOOTER_ROLE = keccak256("SNAPSHOOTER_ROLE");
-    // DebtModule
-    bytes32 public constant DEBT_ROLE = keccak256("DEBT_ROLE");
-    // CreditEvents
-    bytes32 public constant DEBT_CREDIT_EVENT_ROLE =
-        keccak256("DEBT_CREDIT_EVENT_ROLE");
 
     function __AuthorizationModule_init(
         address admin
@@ -45,7 +36,7 @@ abstract contract AuthorizationModule is AccessControlUpgradeable {
     function __AuthorizationModule_init_unchained(
         address admin
     ) internal onlyInitializing {
-        if(admin == address(0)) revert Errors.AddressZeroNotAllowed();
+        if (admin == address(0)) revert Errors.AddressZeroNotAllowed();
         _grantRole(DEFAULT_ADMIN_ROLE, admin);
     }
 

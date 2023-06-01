@@ -2,7 +2,7 @@ const { expectEvent, expectRevert } = require('@openzeppelin/test-helpers')
 const { PAUSER_ROLE, CMTAT_TRANSFER_REJECT } = require('../utils')
 const { should } = require('chai').should()
 
-function PauseModuleCommon (admin, address1, address2, address3) {
+function PauseModuleCommon(admin, address1, address2, address3) {
   context('Pause', function () {
     /**
     The admin is assigned the PAUSER role when the contract is deployed
@@ -41,9 +41,9 @@ function PauseModuleCommon (admin, address1, address2, address3) {
       await expectRevert(
         this.cmtat.pause({ from: address1 }),
         'AccessControl: account ' +
-          address1.toLowerCase() +
-          ' is missing role ' +
-          PAUSER_ROLE
+        address1.toLowerCase() +
+        ' is missing role ' +
+        PAUSER_ROLE
       )
     })
 
@@ -83,23 +83,17 @@ function PauseModuleCommon (admin, address1, address2, address3) {
       await expectRevert(
         this.cmtat.unpause({ from: address1 }),
         'AccessControl: account ' +
-          address1.toLowerCase() +
-          ' is missing role ' +
-          PAUSER_ROLE
+        address1.toLowerCase() +
+        ' is missing role ' +
+        PAUSER_ROLE
       )
     })
 
     // reverts if address1 transfers tokens to address2 when paused
     it('testCannotTransferTokenWhenPaused_A', async function () {
       // Act
-      await this.cmtat.pause({ from: admin });
+      await this.cmtat.pause({ from: admin })
       // Assert
-      (
-        await this.cmtat.detectTransferRestriction(address1, address2, 10)
-      ).should.be.bignumber.equal('1');
-      (await this.cmtat.messageForTransferRestriction(1)).should.equal(
-        'All transfers paused'
-      )
       await expectRevert.unspecified(
         this.cmtat.transfer(address2, 10, { from: address1 })
       )
@@ -112,15 +106,9 @@ function PauseModuleCommon (admin, address1, address2, address3) {
       await this.cmtat.approve(address3, 20, { from: address1 })
 
       // Act
-      await this.cmtat.pause({ from: admin });
+      await this.cmtat.pause({ from: admin })
 
       // Assert
-      (
-        await this.cmtat.detectTransferRestriction(address1, address2, 10)
-      ).should.be.bignumber.equal('1');
-      (await this.cmtat.messageForTransferRestriction(1)).should.equal(
-        'All transfers paused'
-      )
       await expectRevert.unspecified(
         this.cmtat.transferFrom(address1, address2, 10, { from: address3 })
       )

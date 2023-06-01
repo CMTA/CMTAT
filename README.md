@@ -31,17 +31,12 @@ order to support:
 * Conditional transfers, via a rule engine
 
 This reference implementation allows the issuance and management of tokens representing equity securities.
-It can however also be used for other forms of financial instruments such as debt securities.
 
 To use the CMTAT, we recommend that you use the latest audited version, from the [Releases](https://github.com/CMTA/CMTAT/releases) page.
 
 You may modify the token code by adding, removing, or modifying features. However, the mandatory modules must remain in place for compliance with Swiss law.
 
-### Deployment mode (Standalone / With A Proxy)
-
-#### Standalone
-
-If you want to deploy without a proxy, in standalone mode, you need to use the contract version `CMTAT_STANDALONE`
+### Deployment mode (With A Proxy)
 
 #### With A proxy
 
@@ -55,30 +50,6 @@ Please see the OpenZeppelin [Upgrades plugins](https://docs.openzeppelin.com/upg
 
 Note that deployment via a proxy is not mandatory, but recommended by CMTA.
 
-### Gasless support
-
-The CMTAT supports client-side gasless transactions using the [Gas Station Network](https://docs.opengsn.org/#the-problem) (GSN) pattern, the main open standard for transfering fee payment to another account than that of the transaction issuer. The contract uses the OpenZeppelin contract `ERC2771ContextUpgradeable`, which allows a contract to get the original client with `_msgSender()` instead of the fee payer given by `msg.sender` while allowing upgrades on the main contract (see *Deployment via a proxy* above).
-
-At deployment, the parameter  `forwarder` inside the  CMTAT contract constructor has to be set  with the defined address of the forwarder. Please note that the forwarder can not be changed after deployment, and with a proxy architecture, its value is stored inside the implementation contract bytecode instead of the storage of the proxy.
-
-Please see the OpenGSN [documentation](https://docs.opengsn.org/contracts/#receiving-a-relayed-call) for more details on what is done to support GSN in the contract.
-
-### Kill switch
-
-> This functionality uses the opcode SELFDESTRUCT which the property of destroying the contract (= deletion of any storage keys or code) will be remove with the Cancun Upgrade, an upgrade of the Ethereum network.
->
-> Therefore, when the Ethereum Network will integrate this upgrade, this functionality will no longer be available.
->
-> See https://eips.ethereum.org/EIPS/eip-6780 & https://github.com/ethereum/execution-specs/blob/master/network-upgrades/mainnet-upgrades/cancun.md
-
-A "kill switch" is a necessary function to allow the issuer to carry out certain corporate actions (e.g., share splits, reverse splits, and mergers), which involve cancelling all existing tokens and replacing them by new ones, and can also be used if the issuer decides that it no longer wishes to have its shares issued in the form of ledger securities. The "kill switch" function affects all tokens issued.
-
-Such a functionality can be performed via that `kill()` function. A new token contract may then be deployed.
-
-Alternatively, if interactions with the "contract" are still necessary, it may be paused (and never unpaused).
-
-
-
 ## Modules
 
 Here the list of the differents modules with the links towards the documentation and the main file.
@@ -89,20 +60,9 @@ Here the list of the differents modules with the links towards the documentation
 | ----------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | BaseModule        | [base.md](doc/modules/presentation/mandatory/base.md)        | [BaseModule.sol](./contracts/modules/wrapper/mandatory/BaseModule.sol) |
 | BurnModule        | [burn.md](doc/modules/presentation/mandatory/burn.md)        | [BurnModule.sol](./contracts/modules/wrapper/mandatory/BurnModule.sol) |
-| EnforcementModule | [enforcement.md](doc/modules/presentation/mandatory/enforcement.md) | [EnforcementModule.sol](./contracts/modules/wrapper/mandatory/EnforcementModule.sol) |
 | ERC20BaseModule   | [erc20base.md](doc/modules/presentation/mandatory/erc20base.md) | [ERC20BaseModule.sol](./contracts/modules/wrapper/mandatory/ERC20BaseModule.sol) |
 | MintModule        | [mint.md](doc/modules/presentation/mandatory/mint.md)        | [MintModule.sol](./contracts/modules/wrapper/mandatory/MintModule.sol) |
 | PauseModule       | [pause.md](doc/modules/presentation/mandatory/pause.md)      | [PauseModule.sol](./contracts/modules/wrapper/mandatory/PauseModule.sol) |
-
-### Optional
-
-| Name              | Documentation                                                | Main File                                                    |
-| ----------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| MetaTxModule      | [metatx.md](doc/modules/presentation/optional/metatx.md)     | [MetaTxModule.sol](./contracts/modules/wrapper/optional/MetaTxModule.sol) |
-| SnapshotModule*   | [snapshot.md](doc/modules/presentation/optional/snapshot.md) | [SnapshotModule.sol](./contracts/modules/wrapper/optional/SnapshotModule.sol) |
-| ValidationModule  | [validation.md](doc/modules/presentation/optional/validation.md) | [ValidationModule.sol](./contracts/modules/wrapper/optional/SnapshotModule.sol) |
-| creditEventModule | [creditEvents.md](doc/modules/presentation/optional/Debt/creditEvents.md) | [CreditEventsModule.sol](./contracts/modules/wrapper/optional/DebtModule/CreditEventsModule.sol) |
-| DebtBaseModule    | [debtBase.md](doc/modules/presentation/optional/Debt/debtBase.md) | [DebtBaseModule.sol](./contracts/modules/wrapper/optional/DebtModule/DebtBaseModule.sol) |
 
 *not imported by default
 
@@ -111,19 +71,6 @@ Here the list of the differents modules with the links towards the documentation
 | Name                   | Documentation                                                | Main File                                                    |
 | ---------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | AuthorizationModule    | [authorization.md](./doc/modules/presentation/security/authorization.md) | [AuthorizationModule.sol](./contracts/modules/security/AuthorizationModule.sol) |
-| OnlyDelegateCallModule | [onlyDelegateCallModule.md](./doc/modules/presentation/security/onlyDelegateCallModule.md) | [OnlyDelegateCallModule.sol](./contracts/modules/security/OnlyDelegateCallModule.sol) |
-
-
-
-### SnpashotModule
-
-This module was not audited during the audit made by ABDK and it is no longer imported by default inside the CMTAT.
-
-If you want to add this module, you have to uncomment the specific lines "SnapshotModule" inside the file `CMTAT_BASE.sol`.
-
-Be warned that this module may possibly contain security flaws.
-
-A CMTAT version inheriting from the SnapshotModule and used for **testing** purpose is available here: [CMTATSnapshotStandaloneTest.sol](./contracts/test/CMTATSnapshot/CMTATSnapshotStandaloneTest.sol) & [CMTATSnapshotProxyTest.sol](./contracts/test/CMTATSnapshot/CMTATSnapshotProxyTest.sol)
 
 ## Security
 
@@ -137,8 +84,6 @@ Please see [SECURITY.md](./SECURITY.MD).
 See the Section Modules/Security.
 
 The Access Control is managed inside the module `AuthorizationModule`.
-
-The module `OnlyDelegateCallModule` is a special module to insure that some functions (e.g. delegatecall and selfdestruct) can only be triggered through proxies when the contract is deployed with a Proxy.
 
 ### Audit
 
