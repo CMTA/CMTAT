@@ -127,7 +127,8 @@ See the code in [modules/security](./contracts/modules/security).
 
 Access control is managed thanks to the module `AuthorizationModule`.
 
-The module `OnlyDelegateCallModule` is a special module to insure that some functions (e.g., such as `delegatecall()`) can only be triggered through proxies when the contract is deployed with a proxy.
+The module `OnlyDelegateCallModule` is a special module to insure that
+some functions (e.g., such as `delegatecall()` and `selfdestruct`) can only be triggered through proxies when the contract is deployed with a proxy.
 
 ### Audit
 
