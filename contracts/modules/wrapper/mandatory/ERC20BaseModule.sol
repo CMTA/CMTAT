@@ -99,11 +99,12 @@ abstract contract ERC20BaseModule is ERC20Upgradeable {
         uint256 amount,
         uint256 currentAllowance
     ) public virtual returns (bool) {
-        if (allowance(_msgSender(), spender) != currentAllowance)
+        if (allowance(_msgSender(), spender) != currentAllowance) {
             revert Errors.WrongAllowance(
                 allowance(_msgSender(), spender),
                 currentAllowance
             );
+        }
         super.approve(spender, amount);
         return true;
     }
