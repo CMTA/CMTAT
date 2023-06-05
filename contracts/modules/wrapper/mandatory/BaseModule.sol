@@ -9,8 +9,6 @@ import "../../security/AuthorizationModule.sol";
 import "../../../libraries/Errors.sol";
 
 abstract contract BaseModule is AuthorizationModule {
-    // to initialize inside the implementation constructor when deployed with a Proxy
-    bool internal deployedWithProxy;
     /* Events */
 
     event Term(string indexed newTermIndexed, string newTerm);

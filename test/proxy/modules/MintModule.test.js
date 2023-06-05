@@ -1,5 +1,5 @@
 const { deployProxy } = require('@openzeppelin/truffle-upgrades')
-const CMTAT = artifacts.require('CMTAT_PROXY')
+const CMTAT = artifacts.require('CMTAT_BASE')
 const MintModuleCommon = require('../../common/MintModuleCommon')
 const { ZERO_ADDRESS } = require('../../utils')
 

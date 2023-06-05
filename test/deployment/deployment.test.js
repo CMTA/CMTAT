@@ -1,5 +1,5 @@
 const { expectRevert } = require('@openzeppelin/test-helpers')
-const CMTAT_PROXY = artifacts.require('CMTAT_PROXY')
+const CMTAT_BASE = artifacts.require('CMTAT_BASE')
 const { deployProxy } = require('@openzeppelin/truffle-upgrades')
 const { ZERO_ADDRESS } = require('../utils')
 contract(
@@ -9,7 +9,7 @@ contract(
       this.flag = 5
 
       // Act + Assert
-      await expectRevert.unspecified(deployProxy(CMTAT_PROXY, [ZERO_ADDRESS, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', 'CMTAT_info', this.flag]))
+      await expectRevert.unspecified(deployProxy(CMTAT_BASE, [ZERO_ADDRESS, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', 'CMTAT_info', this.flag]))
     })
   }
 )

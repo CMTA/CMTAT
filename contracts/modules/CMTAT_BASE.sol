@@ -15,7 +15,7 @@ import "./security/AuthorizationModule.sol";
 
 import "../libraries/Errors.sol";
 
-abstract contract CMTAT_BASE is
+contract CMTAT_BASE is
     Initializable,
     ContextUpgradeable,
     BaseModule,
@@ -24,6 +24,15 @@ abstract contract CMTAT_BASE is
     BurnModule,
     ERC20BaseModule
 {
+    /**
+     * @notice Contract version for the deployment with a proxy
+     */
+    /// @custom:oz-upgrades-unsafe-allow constructor
+    constructor() {
+        // Disable the possibility to initialize the implementation
+        _disableInitializers();
+    }
+
     /**
      * @notice
      * initialize the proxy contract

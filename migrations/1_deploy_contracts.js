@@ -1,13 +1,13 @@
 require('dotenv').config()
 
-const CMTAT_PROXY = artifacts.require('CMTAT_PROXY')
+const CMTAT_BASE = artifacts.require('CMTAT_BASE')
 const { deployProxy } = require('@openzeppelin/truffle-upgrades')
 
 module.exports = async function (deployer, _network, account) {
   const admin = process.env.ADMIN_ADDRESS ? process.env.ADMIN_ADDRESS : account[0]
   const flag = 0
   const proxyContract = await deployProxy(
-    CMTAT_PROXY,
+    CMTAT_BASE,
     [
       admin,
       'Test CMTA Token',
@@ -18,6 +18,6 @@ module.exports = async function (deployer, _network, account) {
       flag
     ]
   )
-  await CMTAT_PROXY.deployed()
+  await CMTAT_BASE.deployed()
   console.log('Proxy deployed at: ', proxyContract.address)
 }

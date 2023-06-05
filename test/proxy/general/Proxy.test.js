@@ -2,17 +2,17 @@ const { expectEvent, expectRevert } = require('@openzeppelin/test-helpers')
 const { should } = require('chai').should()
 
 const { deployProxy, upgradeProxy, erc1967 } = require('@openzeppelin/truffle-upgrades')
-const CMTAT1 = artifacts.require('CMTAT_PROXY')
+const CMTAT1 = artifacts.require('CMTAT_BASE')
 const { DEFAULT_ADMIN_ROLE } = require('../../utils')
-const CMTAT = artifacts.require('CMTAT_PROXY')
+const CMTAT = artifacts.require('CMTAT_BASE')
 const { ZERO_ADDRESS } = require('../../utils')
 contract(
   'Proxy - Security Test',
   function ([_, admin, attacker]) {
     beforeEach(async function () {
       this.flag = 5
-      this.CMTAT_PROXY = await deployProxy(CMTAT1, [admin, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', 'CMTAT_info', this.flag])
-      const implementationContractAddress = await erc1967.getImplementationAddress(this.CMTAT_PROXY.address, { from: admin })
+      this.CMTAT_BASE = await deployProxy(CMTAT1, [admin, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', 'CMTAT_info', this.flag])
+      const implementationContractAddress = await erc1967.getImplementationAddress(this.CMTAT_BASE.address, { from: admin })
       this.implementationContract = await CMTAT.at(implementationContractAddress)
     })
 

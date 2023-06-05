@@ -9,7 +9,7 @@
 ' -- classes --
 
 
-class CMTAT_PROXY {
+class CMTAT_BASE {
     ' -- inheritance --
 	{abstract}CMTAT_BASE
 
@@ -23,6 +23,6 @@ class CMTAT_PROXY {
 
 }
 ' -- inheritance / usingFor --
-CMTAT_PROXY --[#DarkGoldenRod]|> CMTAT_BASE
+CMTAT_BASE --[#DarkGoldenRod]|> CMTAT_BASE
 
 @enduml
