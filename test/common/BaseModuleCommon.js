@@ -1,8 +1,7 @@
 const { expectEvent, expectRevert } = require('@openzeppelin/test-helpers')
 const { DEFAULT_ADMIN_ROLE } = require('../utils')
-const { should } = require('chai').should()
 
-function BaseModuleCommon(owner, address1, address2, address3, proxyTest) {
+function BaseModuleCommon(owner, address1) {
   context('Token structure', function () {
     it('testHasTheDefinedTokenId', async function () {
       // Act + Assert
@@ -11,6 +10,14 @@ function BaseModuleCommon(owner, address1, address2, address3, proxyTest) {
     it('testHasTheDefinedTerms', async function () {
       // Act + Assert
       (await this.cmtat.terms()).should.equal('https://cmta.ch')
+    })
+    it('testHasTheDefinedInformation', async function () {
+      // Act + Assert
+      (await this.cmtat.information()).should.equal('CMTAT_info')
+    })
+    it('testHasTheDefinedFlag', async function () {
+      // Act + Assert
+      (await this.cmtat.flag()).should.be.bignumber.equal(this.flag.toString())
     })
     it('testAdminCanChangeTokenId', async function () {
       // Arrange

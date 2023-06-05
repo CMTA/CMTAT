@@ -1,11 +1,10 @@
-const { expectEvent, expectRevert } = require('@openzeppelin/test-helpers')
-const { should } = require('chai').should()
+const { expectRevert } = require('@openzeppelin/test-helpers')
 
-const { deployProxy, upgradeProxy, erc1967 } = require('@openzeppelin/truffle-upgrades')
+const { deployProxy, erc1967 } = require('@openzeppelin/truffle-upgrades')
 const CMTAT1 = artifacts.require('CMTAT_BASE')
 const { DEFAULT_ADMIN_ROLE } = require('../../utils')
 const CMTAT = artifacts.require('CMTAT_BASE')
-const { ZERO_ADDRESS } = require('../../utils')
+
 contract(
   'Proxy - Security Test',
   function ([_, admin, attacker]) {

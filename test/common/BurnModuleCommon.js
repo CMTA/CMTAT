@@ -1,6 +1,5 @@
 const { expectEvent, expectRevert } = require('@openzeppelin/test-helpers')
 const { BURNER_ROLE, ZERO_ADDRESS } = require('../utils')
-const { should } = require('chai').should()
 
 function BurnModuleCommon (admin, address1, address2) {
   context('Burn', function () {

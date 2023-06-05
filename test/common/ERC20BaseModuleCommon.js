@@ -1,8 +1,6 @@
 const { expectEvent, expectRevert } = require('@openzeppelin/test-helpers')
-const { DEFAULT_ADMIN_ROLE } = require('../utils')
-const { should } = require('chai').should()
 
-function BaseModuleCommon (owner, address1, address2, address3, proxyTest) {
+function BaseModuleCommon (owner, address1, address2, address3) {
   context('Token structure', function () {
     it('testHasTheDefinedName', async function () {
       // Act + Assert

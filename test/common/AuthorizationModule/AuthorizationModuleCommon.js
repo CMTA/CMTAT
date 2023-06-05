@@ -1,8 +1,5 @@
 const { expectEvent, expectRevert } = require('@openzeppelin/test-helpers')
 const { PAUSER_ROLE } = require('../../utils')
-const chai = require('chai')
-const expect = chai.expect
-const should = chai.should()
 
 function AuthorizationModuleCommon (owner, address1, address2) {
   context('Authorization', function () {
@@ -44,6 +41,27 @@ function AuthorizationModuleCommon (owner, address1, address2) {
       })
     })
 
+    it('testOnlyRoleCanRenonunceRole', async function () {
+      // Arrange
+      await this.cmtat.grantRole(PAUSER_ROLE, address1, { from: owner });
+      // Arrange - Assert
+      (await this.cmtat.hasRole(PAUSER_ROLE, address1)).should.equal(true);
+      // Act
+      ({ logs: this.logs } = await this.cmtat.renounceRole(
+        PAUSER_ROLE,
+        address1,
+        { from: address1 }
+      ));
+      // Assert
+      (await this.cmtat.hasRole(PAUSER_ROLE, address1)).should.equal(false)
+      // emits a RoleRevoked event
+      expectEvent.inLogs(this.logs, 'RoleRevoked', {
+        role: PAUSER_ROLE,
+        account: address1,
+        sender: address1
+      })
+    })
+
     it('testCannotNonAdminGrantRole', async function () {
       // Arrange - Assert
       (await this.cmtat.hasRole(PAUSER_ROLE, address1)).should.equal(false)
@@ -70,6 +88,20 @@ function AuthorizationModuleCommon (owner, address1, address2) {
         'AccessControl: account ' +
           address2.toLowerCase() +
           ' is missing role 0x0000000000000000000000000000000000000000000000000000000000000000'
+      );
+      // Assert
+      (await this.cmtat.hasRole(PAUSER_ROLE, address1)).should.equal(true)
+    })
+
+    it('testCannotRenonunceToNotYourRole', async function () {
+      // Arrange
+      await this.cmtat.grantRole(PAUSER_ROLE, address1, { from: owner });
+      // Arrange - Assert
+      (await this.cmtat.hasRole(PAUSER_ROLE, address1)).should.equal(true);
+      // Act
+      await expectRevert(
+        this.cmtat.renounceRole(PAUSER_ROLE, address1, { from: address2 }),
+        'AccessControl: can only renounce roles for self'
       );
       // Assert
       (await this.cmtat.hasRole(PAUSER_ROLE, address1)).should.equal(true)
