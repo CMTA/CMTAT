@@ -8,7 +8,7 @@ The toolchain includes the following components, where the versions
 are the latest ones that we tested: 
 
 - npm 8.19.2
-- Truffle 5.8.3
+- Truffle 5.9.3
 - Solidity 0.8.17 (via solc-js)
 - Node 16.17.0
 - Web3.js 1.9.0
