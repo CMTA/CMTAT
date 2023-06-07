@@ -8,7 +8,7 @@ The toolchain includes the following components, where the versions
 are the latest ones that we tested: 
 
 - npm 8.19.2
-- Truffle 5.8.3
+- Truffle 5.9.3
 - Solidity 0.8.17 (via solc-js)
 - Node 16.17.0
 - Web3.js 1.9.0
@@ -18,11 +18,19 @@ Although present in the dependencies, Hardhat is not included in the toolchain s
 
 ## Installation
 
+- Clone the repository
+
 Clone the git repository, with the option `--recurse-submodules` to fetch the submodules:
 
 `git clone git@github.com:CMTA/CMTAT.git  --recurse-submodules`  
 
+- Node.js version
+
 We recommend to install the [Node Version Manager `nvm`](https://github.com/nvm-sh/nvm) to manage multiple versions of Node.js on your machine. You can then, for example, install the version 16.17.0 of Node.js with the following command: `nvm install 16.17.0`
+
+The file [.nvmrc](../.nvmrc) at the root of the project set the Node.js version. `nvm use`will automatically use this version if no version is supplied on the command line.
+
+- node modules
 
 To install the node modules required by CMTAT, run the following command at the root of the project:
 
