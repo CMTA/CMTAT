@@ -28,10 +28,13 @@ module.exports = {
       settings: {
         optimizer: {
           enabled: true,
-          runs: 500
+          runs: 200
         }
       }
     }
+  },
+  mocha: {
+    reporter: 'eth-gas-reporter'
   },
   plugins: [
     'truffle-contract-size'

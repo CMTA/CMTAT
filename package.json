@@ -71,6 +71,7 @@
     "eslint-plugin-n": "^15.7.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6.0.1",
+    "eth-gas-reporter": "^0.2.25",
     "ethereumjs-util": "^7.1.5",
     "ethjs-abi": "^0.2.1",
     "ethlint": "^1.2.5",
