@@ -8,8 +8,6 @@ Please follow <https://changelog.md/> conventions.
 - Add Truffle plugin [eth-gas-reporter](https://github.com/cgewecke/eth-gas-reporter)
 - Add security policy
 
-
-
 ## 2.3-rc.0
 
 > The release 2.3-rc.0 is a *release candidate* before performing an official release 2.3
