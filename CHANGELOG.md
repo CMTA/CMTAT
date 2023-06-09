@@ -2,13 +2,13 @@
 
 Please follow <https://changelog.md/> conventions.
 
-## 2.3
+## 2.3 - 20230609
 
 - Add Truffle CI workflow (Contributor: [diego-G](https://github.com/diego-G) / [21.co](https://github.com/amun))
 - Add Truffle plugin [eth-gas-reporter](https://github.com/cgewecke/eth-gas-reporter)
 - Add security policy
 
-## 2.3-rc.0
+## 2.3-rc.0 - 20230515
 
 > The release 2.3-rc.0 is a *release candidate* before performing an official release 2.3
 
