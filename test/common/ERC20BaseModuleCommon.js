@@ -10,9 +10,9 @@ function BaseModuleCommon (owner, address1, address2, address3) {
       // Act + Assert
       (await this.cmtat.symbol()).should.equal('CMTAT')
     })
-    it('testDecimalsEqual0', async function () {
+    it('testHasTheDefinedDecimals', async function () {
       // Act + Assert
-      (await this.cmtat.decimals()).should.be.bignumber.equal('0')
+      (await this.cmtat.decimals()).should.be.bignumber.equal('18')
     })
   })
 

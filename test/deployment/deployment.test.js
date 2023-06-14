@@ -9,7 +9,7 @@ contract(
       this.flag = 5
 
       // Act + Assert
-      await expectRevert.unspecified(deployProxy(CMTAT_BASE, [ZERO_ADDRESS, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', 'CMTAT_info', this.flag]))
+      await expectRevert.unspecified(deployProxy(CMTAT_BASE, [ZERO_ADDRESS, 'CMTA Token', 'CMTAT', 18, 'CMTAT_ISIN', 'https://cmta.ch', 'CMTAT_info', this.flag]))
     })
   }
 )

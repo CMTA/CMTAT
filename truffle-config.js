@@ -5,8 +5,8 @@ module.exports = {
   networks: {
     ganache: {
       host: '127.0.0.1',
-      port: 7545,
-      network_id: 5777 // match any network
+      port: 8545,
+      network_id: '*' // match any network
     },
     live: {
       host: '178.25.19.88',
@@ -26,8 +26,15 @@ module.exports = {
       provider: () => {
         return new HDWalletProvider(process.env.PRIVATE_KEY, process.env.GOERLI_NODE)
       },
-      network_id: '5' // eslint-disable-line camelcase
-    }
+      network_id: '5', // eslint-disable-line camelcase
+    },
+    polygon: {
+      provider: () => {
+        return new HDWalletProvider(process.env.PRIVATE_KEY, process.env.POLYGON_NODE)
+      },
+      network_id: '137', // eslint-disable-line camelcase,
+      gasPrice: "450000000000"
+    },
   },
   compilers: {
     solc: {
@@ -45,6 +52,7 @@ module.exports = {
     'truffle-plugin-verify'
   ],
   api_keys: {
-    etherscan: process.env.ETHERSCAN_API_KEY
-  }
+    etherscan: process.env.ETHERSCAN_API_KEY,
+    polygonscan: process.env.POLYGONSCAN_API_KEY,
+  },
 }

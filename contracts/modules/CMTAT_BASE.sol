@@ -42,6 +42,7 @@ contract CMTAT_BASE is
         address admin,
         string memory nameIrrevocable,
         string memory symbolIrrevocable,
+        uint8 decimalsIrrevocable,
         string memory tokenId_,
         string memory terms_,
         string memory information_,
@@ -51,6 +52,7 @@ contract CMTAT_BASE is
             admin,
             nameIrrevocable,
             symbolIrrevocable,
+            decimalsIrrevocable,
             tokenId_,
             terms_,
             information_,
@@ -65,6 +67,7 @@ contract CMTAT_BASE is
         address admin,
         string memory nameIrrevocable,
         string memory symbolIrrevocable,
+        uint8 decimalsIrrevocable,
         string memory tokenId_,
         string memory terms_,
         string memory information_,
@@ -85,7 +88,7 @@ contract CMTAT_BASE is
         __AuthorizationModule_init_unchained(admin);
         __BurnModule_init_unchained();
         __MintModule_init_unchained();
-        __ERC20Module_init_unchained(0);
+        __ERC20Module_init_unchained(decimalsIrrevocable);
         __PauseModule_init_unchained();
 
         /* Other modules */
