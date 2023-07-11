@@ -148,7 +148,7 @@ The second audit covered version [2.2](https://github.com/CMTA/CMTAT/releases/ta
 
 Version 2.3 contains the different fixes and improvements related to this audit.
 
-The list if findings is documented in [Taurus. Audit 3.1. Collected Issues.ods](doc/audits/Taurus.Audit3.1.CollectedIssues.ods). 
+The report is available in [ABDK_CMTA_CMTATRuleEngine_v_1_0.pdf](doc/audits/ABDK_CMTA_CMTATRuleEngine_v_1_0.pdf). 
 
 ### Tools
 
