@@ -1,4 +1,5 @@
 # CMTA Token 
+> To use the CMTAT, we recommend the latest audited version, from the [Releases](https://github.com/CMTA/CMTAT/releases) page. Currently, it is the version [v2.3.0](https://github.com/CMTA/CMTAT/releases/tag/v2.3.0)
 
 ## Introduction
 
@@ -27,8 +28,6 @@ order to support:
 
 This reference implementation allows the issuance and management of tokens representing equity securities.
 It can however also be used for other forms of financial instruments such as debt securities.
-
-To use the CMTAT, we recommend that you use the latest audited version, from the [Releases](https://github.com/CMTA/CMTAT/releases) page. Currently, it is the version [v2.3.0](https://github.com/CMTA/CMTAT/releases/tag/v2.3.0)
 
 You may modify the token code by adding, removing, or modifying features. However, the mandatory modules must remain in place for compliance with Swiss law.
 
