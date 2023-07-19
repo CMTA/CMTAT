@@ -147,7 +147,7 @@ The second audit covered version [2.2](https://github.com/CMTA/CMTAT/releases/ta
 
 Version 2.3 contains the different fixes and improvements related to this audit.
 
-The report is available in [ABDK_CMTA_CMTATRuleEngine_v_1_0.pdf](doc/audits/ABDK_CMTA_CMTATRuleEngine_v_1_0.pdf). 
+The report is available in [ABDK_CMTA_CMTATRuleEngine_v_1_0.pdf](doc/audits/ABDK_CMTA_CMTATRuleEngine_v_1_0/ABDK_CMTA_CMTATRuleEngine_v_1_0.pdf). 
 
 ### Tools
 
