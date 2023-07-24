@@ -1,4 +1,3 @@
-
 const CMTAT = artifacts.require('CMTAT_STANDALONE')
 const EnforcementModuleCommon = require('../../common/EnforcementModuleCommon')
 const { ZERO_ADDRESS } = require('../../utils')

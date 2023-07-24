@@ -53,7 +53,7 @@ abstract contract MintModule is ERC20Upgradeable, AuthorizationModule {
      * @dev batch version of {mint}.
      *
      * See {ERC20-_mint}.
-     * 
+     *
      * Emits a {Mint} event.
      *
      * Requirements:
@@ -64,11 +64,12 @@ abstract contract MintModule is ERC20Upgradeable, AuthorizationModule {
         address[] calldata to,
         uint256[] calldata amounts
     ) public onlyRole(MINTER_ROLE) {
-        
-        require(to.length == amounts.length, "CMTAT: to and amounts length mismatch");
+        require(
+            to.length == amounts.length,
+            "CMTAT: to and amounts length mismatch"
+        );
 
-        for (uint256 i = 0; i < to.length;) {
-
+        for (uint256 i = 0; i < to.length; ) {
             _mint(to[i], amounts[i]);
             emit Mint(to[i], amounts[i]);
             unchecked {

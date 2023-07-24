@@ -38,6 +38,7 @@ abstract contract BurnModule is ERC20Upgradeable, AuthorizationModule {
      * @dev Destroys `amount` tokens from `account`
      *
      * See {ERC20-_burn}
+     * Emits a {Burn} event
      */
     function forceBurn(
         address account,
@@ -46,6 +47,37 @@ abstract contract BurnModule is ERC20Upgradeable, AuthorizationModule {
     ) public onlyRole(BURNER_ROLE) {
         _burn(account, amount);
         emit Burn(account, amount, reason);
+    }
+
+    /**
+     *
+     * @dev batch version of {mint}.
+     *
+     * See {ERC20-_burn}.
+     *
+     * Emits a {Burn} event by burn action.
+     *
+     * Requirements:
+     *
+     * - the caller must have the `BURNER_ROLE`.
+     */
+    function forceBurnBatch(
+        address[] calldata accounts,
+        uint256[] calldata amounts,
+        string memory reason
+    ) public onlyRole(BURNER_ROLE) {
+        require(
+            accounts.length == amounts.length,
+            "CMTAT: accounts and amounts length mismatch"
+        );
+
+        for (uint256 i = 0; i < accounts.length; ) {
+            _burn(accounts[i], amounts[i]);
+            emit Burn(accounts[i], amounts[i], reason);
+            unchecked {
+                ++i;
+            }
+        }
     }
 
     uint256[50] private __gap;
