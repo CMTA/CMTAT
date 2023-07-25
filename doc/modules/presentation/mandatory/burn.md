@@ -26,28 +26,6 @@ This document defines Burn Module for the CMTA Token specification.
 
 
 
-## Sūrya's Description Report
-
-### Files Description Table
-
-
-| File Name                                  | SHA-1 Hash                               |
-| ------------------------------------------ | ---------------------------------------- |
-| ./modules/wrapper/mandatory/BurnModule.sol | 3547e217049388e5b1a48524255301aac8d301de |
-
-
-### Contracts Description Table
-
-
-|    Contract    |            Type             |                 Bases                 |                |                  |
-| :------------: | :-------------------------: | :-----------------------------------: | :------------: | :--------------: |
-|       └        |      **Function Name**      |            **Visibility**             | **Mutability** |  **Modifiers**   |
-|                |                             |                                       |                |                  |
-| **BurnModule** |       Implementation        | ERC20Upgradeable, AuthorizationModule |                |                  |
-|       └        |      __BurnModule_init      |              Internal 🔒               |       🛑        | onlyInitializing |
-|       └        | __BurnModule_init_unchained |              Internal 🔒               |       🛑        | onlyInitializing |
-|       └        |          forceBurn          |               Public ❗️                |       🛑        |     onlyRole     |
-
 
 ### Legend
 
@@ -64,28 +42,44 @@ This section describes the Ethereum API of Burn Module.
 
 #### `forceBurn(address,uint256,string)`
 
-##### Signature:
+##### Definition
 
 ```solidity
 function forceBurn(address account,uint256 amount,string memory reason) 
 public onlyRole(BURNER_ROLE)
 ```
 
-##### Description:
+##### Description
 
 Redeem the given `amount` of tokens from the given `account`.
 Only authorized users are allowed to call this function.
+
+#### `forceBurnBatch(address[],uint256[],string)  `
+
+##### Definition
+
+```solidity
+function forceBurnBatch(address[] calldata accounts,uint256[] calldata amounts,string memory reason) 
+public onlyRole(BURNER_ROLE)
+```
+
+##### Description
+
+For each account in `accounts`, redeem  the corresponding amount of tokens given by `amounts`.
+Only authorized users are allowed to call this function.
+
+The burn `reason`is the same for all `accounts` which tokens are burnt.
 
 ### Events
 
 #### `Burn(address,uint,string)`
 
-##### Signature:
+##### Definition
 
 ```solidity
 event Burn(address indexed owner, uint256 amount, string reason)
 ```
 
-##### Description:
+##### Description
 
 Emitted when the specified `amount` of tokens was burnt from the specified `account`.

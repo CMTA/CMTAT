@@ -51,9 +51,9 @@ abstract contract BurnModule is ERC20Upgradeable, AuthorizationModule {
 
     /**
      *
-     * @dev batch version of {mint}.
+     * @dev batch version of {burn}.
      *
-     * See {ERC20-_burn}.
+     * See {ERC20-_burn} and {OpenZeppelin ERC1155_burnBatch}.
      *
      * Emits a {Burn} event by burn action.
      *

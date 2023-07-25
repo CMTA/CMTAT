@@ -52,7 +52,7 @@ abstract contract MintModule is ERC20Upgradeable, AuthorizationModule {
      *
      * @dev batch version of {mint}.
      *
-     * See {ERC20-_mint}.
+     * See {ERC20-_mint} and {OpenZeppelin ERC1155_mintBatch}.
      *
      * Emits a {Mint} event.
      *
@@ -61,17 +61,17 @@ abstract contract MintModule is ERC20Upgradeable, AuthorizationModule {
      * - the caller must have the `MINTER_ROLE`.
      */
     function mintBatch(
-        address[] calldata to,
+        address[] calldata tos,
         uint256[] calldata amounts
     ) public onlyRole(MINTER_ROLE) {
         require(
-            to.length == amounts.length,
+            tos.length == amounts.length,
             "CMTAT: to and amounts length mismatch"
         );
 
-        for (uint256 i = 0; i < to.length; ) {
-            _mint(to[i], amounts[i]);
-            emit Mint(to[i], amounts[i]);
+        for (uint256 i = 0; i < tos.length; ) {
+            _mint(tos[i], amounts[i]);
+            emit Mint(tos[i], amounts[i]);
             unchecked {
                 ++i;
             }

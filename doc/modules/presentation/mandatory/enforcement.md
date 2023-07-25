@@ -14,7 +14,7 @@ This document defines Enforcement Module for the CMTA Token specification.
 
 #### EnforcementModule
 
-![surya_inheritance_EnforcementModule.sol](/home/ryan/Downloads/CM/cmtat-2.3/CMTAT-doc/doc/modules/schema/surya_inheritance/surya_inheritance_EnforcementModule.sol.png)
+![surya_inheritance_EnforcementModule.sol](../../schema/surya_inheritance/surya_inheritance_EnforcementModule.sol.png)
 
 #### EnforcementModuleInternal
 
