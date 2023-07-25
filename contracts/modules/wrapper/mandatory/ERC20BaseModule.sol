@@ -87,27 +87,5 @@ abstract contract ERC20BaseModule is ERC20Upgradeable {
         return result;
     }
 
-    /**
-     * @dev See {IERC20-approve}.
-     *
-     * Requirements:
-     *
-     * - `spender` cannot be the zero address.
-     */
-    function approve(
-        address spender,
-        uint256 amount,
-        uint256 currentAllowance
-    ) public virtual returns (bool) {
-        if (allowance(_msgSender(), spender) != currentAllowance) {
-            revert Errors.WrongAllowance(
-                allowance(_msgSender(), spender),
-                currentAllowance
-            );
-        }
-        super.approve(spender, amount);
-        return true;
-    }
-
     uint256[50] private __gap;
 }

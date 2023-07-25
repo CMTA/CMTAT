@@ -1,6 +1,6 @@
 const { deployProxy } = require('@openzeppelin/truffle-upgrades')
 const CMTAT = artifacts.require('CMTAT_BASE')
-const ERC20BaseModuleCommon = require('../../common/BaseModuleCommon')
+const ERC20BaseModuleCommon = require('../../common/ERC20BaseModuleCommon')
 
 contract(
   'Proxy - ERC20BaseModule',

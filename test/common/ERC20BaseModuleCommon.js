@@ -1,6 +1,6 @@
 const { expectEvent, expectRevert } = require('@openzeppelin/test-helpers')
 
-function BaseModuleCommon (owner, address1, address2, address3) {
+function ERC20BaseModuleCommon (owner, address1, address2, address3) {
   context('Token structure', function () {
     it('testHasTheDefinedName', async function () {
       // Act + Assert
@@ -119,57 +119,6 @@ function BaseModuleCommon (owner, address1, address2, address3) {
         value: '50'
       })
     })
-
-    it('testDefinedAllowanceByTakingInAccountTheCurrentAllowance', async function () {
-      // Arrange
-      (
-        await this.cmtat.allowance(address1, address3)
-      ).should.be.bignumber.equal('0')
-      await this.cmtat.approve(address3, 20, { from: address1 });
-      // Arrange - Assert
-      (
-        await this.cmtat.allowance(address1, address3)
-      ).should.be.bignumber.equal('20');
-      // Act
-      ({ logs: this.logs } = await this.cmtat.methods[
-        'approve(address,uint256,uint256)'
-      ](address3, 30, 20, { from: address1 }));
-      // Assert
-      (
-        await this.cmtat.allowance(address1, address3)
-      ).should.be.bignumber.equal('30')
-      // emits an Approval event
-      expectEvent.inLogs(this.logs, 'Approval', {
-        owner: address1,
-        spender: address3,
-        value: '30'
-      })
-    })
-
-    it('testCannotDefinedAllowanceByTakingInAccountTheWrongCurrentAllowance', async function () {
-      // Arrange
-      (
-        await this.cmtat.allowance(address1, address3)
-      ).should.be.bignumber.equal('0')
-      await this.cmtat.approve(address3, 20, { from: address1 });
-      // Arrange - Assert
-      (
-        await this.cmtat.allowance(address1, address3)
-      ).should.be.bignumber.equal('20')
-      // Act
-      await expectRevert.unspecified(
-        this.cmtat.methods['approve(address,uint256,uint256)'](
-          address3,
-          30,
-          10,
-          { from: address1 }
-        )
-      );
-      // Assert
-      (
-        await this.cmtat.allowance(address1, address3)
-      ).should.be.bignumber.equal('20')
-    })
   })
 
   context('Transfer', function () {
@@ -271,4 +220,4 @@ function BaseModuleCommon (owner, address1, address2, address3) {
     })
   })
 }
-module.exports = BaseModuleCommon
+module.exports = ERC20BaseModuleCommon
