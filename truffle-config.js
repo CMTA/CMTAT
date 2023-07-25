@@ -35,6 +35,12 @@ module.exports = {
       network_id: '137', // eslint-disable-line camelcase,
       gasPrice: "450000000000"
     },
+    mainnet: {
+      provider: () => {
+        return new HDWalletProvider(process.env.PRIVATE_KEY, process.env.MAINNET_NODE)
+      },
+      network_id: '1', // eslint-disable-line camelcase
+    },
   },
   compilers: {
     solc: {

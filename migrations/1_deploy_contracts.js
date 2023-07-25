@@ -10,9 +10,9 @@ module.exports = async function (deployer, _network, account) {
 		CMTAT_BASE,
 		[
 			admin,
-			"test_token_b",
-			"ttb",
-			6,
+			"test_token",
+			"tt",
+			18,
 			"",
 			"",
 			"",
