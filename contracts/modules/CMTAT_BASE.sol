@@ -14,8 +14,7 @@ import "./wrapper/mandatory/ERC20BaseModule.sol";
 /*
 SnapshotModule:
 Add this import in case you add the SnapshotModule
-import "./wrapper/optional/SnapshotModule.sol";
-*/
+import "./wrapper/optional/SnapshotModule.sol";*/
 import "./wrapper/mandatory/PauseModule.sol";
 import "./wrapper/optional/ValidationModule.sol";
 import "./wrapper/optional/MetaTxModule.sol";
@@ -23,6 +22,8 @@ import "./wrapper/optional/DebtModule/DebtBaseModule.sol";
 import "./wrapper/optional/DebtModule/CreditEventsModule.sol";
 import "./security/AuthorizationModule.sol";
 import "../interfaces/IEIP1404/IEIP1404Wrapper.sol";
+
+import "../libraries/Errors.sol";
 
 abstract contract CMTAT_BASE is
     Initializable,
@@ -40,10 +41,10 @@ abstract contract CMTAT_BASE is
     CreditEventsModule
 {
     /**
-    @notice 
-    initialize the proxy contract
-    The calls to this function will revert if the contract was deployed without a proxy
-    */
+     * @notice
+     * initialize the proxy contract
+     * The calls to this function will revert if the contract was deployed without a proxy
+     */
     function initialize(
         address admin,
         string memory nameIrrevocable,
@@ -67,8 +68,8 @@ abstract contract CMTAT_BASE is
     }
 
     /**
-    @dev calls the different initialize functions from the different modules
-    */
+     * @dev calls the different initialize functions from the different modules
+     */
     function __CMTAT_init(
         address admin,
         string memory nameIrrevocable,
@@ -130,8 +131,8 @@ abstract contract CMTAT_BASE is
     }
 
     /**
-    @notice Returns the number of decimals used to get its user representation.
-    */
+     * @notice Returns the number of decimals used to get its user representation.
+     */
     function decimals()
         public
         view
@@ -167,10 +168,8 @@ abstract contract CMTAT_BASE is
         address to,
         uint256 amount
     ) internal view override(ERC20Upgradeable) {
-        require(
-            ValidationModule.validateTransfer(from, to, amount),
-            "CMTAT: transfer rejected by validation module"
-        );
+        if (!ValidationModule.validateTransfer(from, to, amount))
+            revert Errors.InvalidTransfer(from, to, amount);
         // We call the SnapshotModule only if the transfer is valid
         /*
         SnapshotModule:
@@ -179,9 +178,9 @@ abstract contract CMTAT_BASE is
         */
     }
 
-    /** 
-    @dev This surcharge is not necessary if you do not use the MetaTxModule
-    */
+    /**
+     * @dev This surcharge is not necessary if you do not use the MetaTxModule
+     */
     function _msgSender()
         internal
         view
@@ -191,9 +190,9 @@ abstract contract CMTAT_BASE is
         return MetaTxModule._msgSender();
     }
 
-    /** 
-    @dev This surcharge is not necessary if you do not use the MetaTxModule
-    */
+    /**
+     * @dev This surcharge is not necessary if you do not use the MetaTxModule
+     */
     function _msgData()
         internal
         view

@@ -7,6 +7,8 @@ import "../../../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/
 import "../../../../interfaces/IDebtGlobal.sol";
 import "../../../security/AuthorizationModule.sol";
 
+import "../../../../libraries/Errors.sol";
+
 abstract contract CreditEventsModule is
     IDebtGlobal,
     Initializable,
@@ -48,7 +50,7 @@ abstract contract CreditEventsModule is
     function setCreditEvents(
         bool flagDefault_,
         bool flagRedeemed_,
-        string memory rating_
+        string calldata rating_
     ) public onlyRole(DEBT_CREDIT_EVENT_ROLE) {
         creditEvents = (CreditEvents(flagDefault_, flagRedeemed_, rating_));
         emit FlagDefault(flagDefault_);
@@ -62,7 +64,7 @@ abstract contract CreditEventsModule is
     function setFlagDefault(
         bool flagDefault_
     ) public onlyRole(DEBT_CREDIT_EVENT_ROLE) {
-        require(flagDefault_ != creditEvents.flagDefault, "Same value");
+        if (flagDefault_ == creditEvents.flagDefault) revert Errors.SameValue();
         creditEvents.flagDefault = flagDefault_;
         emit FlagDefault(flagDefault_);
     }
@@ -73,7 +75,8 @@ abstract contract CreditEventsModule is
     function setFlagRedeemed(
         bool flagRedeemed_
     ) public onlyRole(DEBT_CREDIT_EVENT_ROLE) {
-        require(flagRedeemed_ != creditEvents.flagRedeemed, "Same value");
+        if (flagRedeemed_ == creditEvents.flagRedeemed)
+            revert Errors.SameValue();
         creditEvents.flagRedeemed = flagRedeemed_;
         emit FlagRedeemed(flagRedeemed_);
     }
@@ -82,7 +85,7 @@ abstract contract CreditEventsModule is
     @notice The rating will be changed even if the new value is the same as the current one
     */
     function setRating(
-        string memory rating_
+        string calldata rating_
     ) public onlyRole(DEBT_CREDIT_EVENT_ROLE) {
         creditEvents.rating = rating_;
         emit Rating(rating_, rating_);

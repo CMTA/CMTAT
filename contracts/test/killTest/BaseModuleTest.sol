@@ -80,21 +80,21 @@ abstract contract BaseModuleTest is
 
     /* Methods */
     function setTokenId(
-        string memory tokenId_
+        string calldata tokenId_
     ) public onlyRole(DEFAULT_ADMIN_ROLE) {
         tokenId = tokenId_;
         emit TokenIdSet(tokenId_);
     }
 
     function setTerms(
-        string memory terms_
+        string calldata terms_
     ) public onlyRole(DEFAULT_ADMIN_ROLE) {
         terms = terms_;
         emit TermSet(terms_);
     }
 
     function setInformation(
-        string memory information_
+        string calldata information_
     ) public onlyRole(DEFAULT_ADMIN_ROLE) {
         information = information_;
         emit InformationSet(information_);

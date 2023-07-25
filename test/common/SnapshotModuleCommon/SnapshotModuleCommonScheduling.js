@@ -33,19 +33,17 @@ function SnapshotModuleCommonScheduling (owner, address1, address2, address3) {
     })
 
     it('reverts when trying to schedule a snapshot in the past', async function () {
-      await expectRevert(
+      await expectRevert.unspecified(
         this.cmtat.scheduleSnapshot(`${getUnixTimestamp() - 60}`, {
           from: owner
-        }),
-        'Snapshot scheduled in the past'
+        })
       )
     })
 
     it('reverts when trying to schedule a snapshot with the same time twice', async function () {
       await this.cmtat.scheduleSnapshot(this.snapshotTime, { from: owner })
-      await expectRevert(
-        this.cmtat.scheduleSnapshot(this.snapshotTime, { from: owner }),
-        'time has to be greater than the last snapshot time'
+      await expectRevert.unspecified(
+        this.cmtat.scheduleSnapshot(this.snapshotTime, { from: owner })
       )
       const snapshots = await this.cmtat.getNextSnapshots()
       snapshots.length.should.equal(1)
@@ -137,11 +135,10 @@ function SnapshotModuleCommonScheduling (owner, address1, address2, address3) {
     })
 
     it('reverts when trying to schedule a snapshot in the past', async function () {
-      await expectRevert(
+      await expectRevert.unspecified(
         this.cmtat.scheduleSnapshotNotOptimized(`${getUnixTimestamp() - 60}`, {
           from: owner
-        }),
-        'Snapshot scheduled in the past'
+        })
       )
     })
 
@@ -157,9 +154,8 @@ function SnapshotModuleCommonScheduling (owner, address1, address2, address3) {
         { from: owner }
       ))
 
-      await expectRevert(
-        this.cmtat.scheduleSnapshotNotOptimized(this.firstSnapshotTime, { from: owner }),
-        'Snapshot already exists'
+      await expectRevert.unspecified(
+        this.cmtat.scheduleSnapshotNotOptimized(this.firstSnapshotTime, { from: owner })
       )
       const snapshots = await this.cmtat.getNextSnapshots()
       snapshots.length.should.equal(2)

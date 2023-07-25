@@ -65,9 +65,8 @@ function ValidationModuleCommon (admin, address1, address2, address3, address1In
     // reverts if ADDRESS1 transfers more tokens than rule allows
     it('testCannotTransferIfNotAllowedByRule', async function () {
       // Act
-      await expectRevert(
-        this.cmtat.transfer(address2, RULE_MOCK_AMOUNT_MAX + 1, { from: address1 }),
-        'CMTAT: transfer rejected by validation module'
+      await expectRevert.unspecified(
+        this.cmtat.transfer(address2, RULE_MOCK_AMOUNT_MAX + 1, { from: address1 })
       )
     })
   })

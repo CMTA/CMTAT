@@ -18,9 +18,7 @@ function ValidationModuleSetRuleEngineCommon (admin, address1, ruleEngine) {
 
     it('testCanNotBeSetByAdminWithTheSameValue', async function () {
       // Act
-      await expectRevert(this.cmtat.setRuleEngine(await this.cmtat.ruleEngine(), { from: admin }),
-        'Same value'
-      )
+      await expectRevert.unspecified(this.cmtat.setRuleEngine(await this.cmtat.ruleEngine(), { from: admin }))
     })
 
     it('testCannotBeSetByNonAdmin', async function () {
