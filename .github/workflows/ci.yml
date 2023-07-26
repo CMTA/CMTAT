@@ -1,0 +1,31 @@
+name: Truffle CI
+
+on:
+  push:
+    branches: [dev, master, main]
+  pull_request:
+    branches: [dev, master, main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup NodeJS 16
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.17.0
+
+      - name: Show NodeJS version
+        run: npm --version
+
+      - name: Checkout submodules
+        run: git submodule update --init --recursive
+
+      - name: Install Project Dependencies
+        run: npm install
+
+      - name: Run Truffle Test
+        run: npx truffle test
