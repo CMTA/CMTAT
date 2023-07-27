@@ -51,14 +51,14 @@ abstract contract BurnModule is ERC20Upgradeable, AuthorizationModule {
 
     /**
      *
-     * @dev batch version of {burn}.
+     * @dev batch version of {forceBurn}.
      *
      * See {ERC20-_burn} and {OpenZeppelin ERC1155_burnBatch}.
      *
      * Emits a {Burn} event by burn action.
      *
      * Requirements:
-     *
+     * - `tos` and `amounts` must have the same length
      * - the caller must have the `BURNER_ROLE`.
      */
     function forceBurnBatch(
@@ -66,6 +66,12 @@ abstract contract BurnModule is ERC20Upgradeable, AuthorizationModule {
         uint256[] calldata amounts,
         string memory reason
     ) public onlyRole(BURNER_ROLE) {
+        require(
+            accounts.length > 0,
+            "CMTAT: tos is empty"
+        );
+        // We do not check that amounts is not empty since
+        // this require will throw an error in this case.
         require(
             accounts.length == amounts.length,
             "CMTAT: accounts and amounts length mismatch"

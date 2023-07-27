@@ -57,7 +57,7 @@ abstract contract MintModule is ERC20Upgradeable, AuthorizationModule {
      * Emits a {Mint} event.
      *
      * Requirements:
-     *
+     * - `tos` and `amounts` must have the same length
      * - the caller must have the `MINTER_ROLE`.
      */
     function mintBatch(
@@ -65,8 +65,14 @@ abstract contract MintModule is ERC20Upgradeable, AuthorizationModule {
         uint256[] calldata amounts
     ) public onlyRole(MINTER_ROLE) {
         require(
+            tos.length > 0,
+            "CMTAT: tos is empty"
+        );
+        // We do not check that amounts is not empty since
+        // this require will throw an error in this case.
+        require(
             tos.length == amounts.length,
-            "CMTAT: to and amounts length mismatch"
+            "CMTAT: tos and amounts length mismatch"
         );
 
         for (uint256 i = 0; i < tos.length; ) {

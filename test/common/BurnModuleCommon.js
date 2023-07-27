@@ -215,6 +215,22 @@ function BurnModuleCommon (admin, address1, address2) {
             BURNER_ROLE
       )
     })
+
+    it('testCannotBurnIfLengthMismatch', async function () {
+      const TOKEN_HOLDER_INVALID = [admin, address1]
+      await expectRevert(
+        this.cmtat.forceBurnBatch(TOKEN_HOLDER_INVALID, TOKEN_BY_HOLDERS_TO_BURN, REASON, { from: admin }),
+        'CMTAT: accounts and amounts length mismatch'
+      )
+    })
+
+    it('testCannotBurnBatchIfAccountsIsEmpty', async function () {
+      const TOKEN_ADDRESS_TOS_INVALID = []
+      await expectRevert(
+        this.cmtat.transferBatch(TOKEN_ADDRESS_TOS_INVALID, TOKEN_BY_HOLDERS_TO_BURN, { from: admin }),
+        'CMTAT: tos is empty'
+      )
+    })
   })
 }
 module.exports = BurnModuleCommon

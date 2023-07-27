@@ -63,7 +63,7 @@ function MintModuleCommon (admin, address1, address2) {
       })
     })
 
-    it('testCanBeMintedByANewMinter', async function () {
+    it('testCanMintByANewMinter', async function () {
       // Arrange
       await this.cmtat.grantRole(MINTER_ROLE, address1, { from: admin });
       // Arrange - Assert
@@ -95,7 +95,7 @@ function MintModuleCommon (admin, address1, address2) {
     })
 
     // reverts when issuing by a non minter
-    it('testCannotIssuingByNonMinter', async function () {
+    it('testCannotMintByNonMinter', async function () {
       await expectRevert(
         this.cmtat.mint(address1, VALUE1, { from: address1 }),
         'AccessControl: account ' +
@@ -113,7 +113,7 @@ function MintModuleCommon (admin, address1, address2) {
     /**
     The admin is assigned the MINTER role when the contract is deployed
      */
-    it('testCanBeMintedByAdmin', async function () {
+    it('testCanBeMintedBatchByAdmin', async function () {
       // Arrange - Assert
       // Check first balance
       for (let i = 0; i < TOKEN_HOLDER.length; ++i) {
@@ -153,7 +153,7 @@ function MintModuleCommon (admin, address1, address2) {
       }
     })
 
-    it('testCanBeMintedByANewMinter', async function () {
+    it('testCanBeMinteBatchdByANewMinter', async function () {
       // Arrange
       await this.cmtat.grantRole(MINTER_ROLE, address1, { from: admin })
       const TOKEN_HOLDER = [admin, address1, address2]
@@ -181,7 +181,6 @@ function MintModuleCommon (admin, address1, address2) {
       // Assert event
       // emits a Transfer event
       for (let i = 0; i < TOKEN_HOLDER.length; ++i) {
-        // emits a Mint event
         expectEvent.inLogs(this.logs1, 'Transfer', {
           from: ZERO_ADDRESS,
           to: TOKEN_HOLDER[i],
@@ -189,8 +188,8 @@ function MintModuleCommon (admin, address1, address2) {
         })
       }
 
+      // emits a Mint event
       for (let i = 0; i < TOKEN_HOLDER.length; ++i) {
-        // emits a Mint event
         expectEvent.inLogs(this.logs1, 'Mint', {
           beneficiary: TOKEN_HOLDER[i],
           amount: TOKEN_SUPPLY_BY_HOLDERS[i]
@@ -198,8 +197,7 @@ function MintModuleCommon (admin, address1, address2) {
       }
     })
 
-    // reverts when issuing by a non minter
-    it('testCannotIssuingByNonMinter', async function () {
+    it('testCannotMintBatchByNonMinter', async function () {
       const TOKEN_HOLDER = [admin, address1, address2]
       const TOKEN_SUPPLY_BY_HOLDERS = [BN(10), BN(100), BN(1000)]
       await expectRevert(
@@ -208,6 +206,24 @@ function MintModuleCommon (admin, address1, address2) {
             address1.toLowerCase() +
             ' is missing role ' +
             MINTER_ROLE
+      )
+    })
+
+    it('testCannotMintBatchIfLengthMismatch', async function () {
+      const TOKEN_HOLDER_INVALID = [admin, address1]
+      const TOKEN_SUPPLY_BY_HOLDERS = [BN(10), BN(100), BN(1000)]
+      await expectRevert(
+        this.cmtat.mintBatch(TOKEN_HOLDER_INVALID, TOKEN_SUPPLY_BY_HOLDERS, { from: admin }),
+        'CMTAT: tos and amounts length mismatch'
+      )
+    })
+
+    it('testCannotMintBatchIfTOSIsEmpty', async function () {
+      const TOKEN_HOLDER_INVALID = []
+      const TOKEN_SUPPLY_BY_HOLDERS = []
+      await expectRevert(
+        this.cmtat.mintBatch(TOKEN_HOLDER_INVALID, TOKEN_SUPPLY_BY_HOLDERS, { from: admin }),
+        'CMTAT: tos is empty'
       )
     })
   })
