@@ -62,101 +62,108 @@ Base Module API for Ethereum blockchain extends the [ERC-20](https://github.com/
 
 ### Functions
 
-#### `totalSupply()`
+#### OpenZeppelin
+
+##### `totalSupply()`
 
 Origin: OpenZeppelin (ERC20Upgradeable)
 
-##### Definition:
+###### Definition
 
 ```solidity
-function totalSupply() 
-external view 
+function totalSupply() public view virtual 
 returns (uint256)
 ```
 
-##### Description:
+###### Description
 
 Return the total number of tokens currently in circulation.
 
-#### `balanceOf(address)`
+##### `balanceOf(address)`
 
 Origin: OpenZeppelin (ERC20Upgradeable)
 
-##### Definition:
+###### Definition
 
 ```solidity
 function balanceOf(address account) 
-external view 
+public view virtual 
 returns (uint256)
 ```
 
-##### Description:
+###### Description
 
 Return the number of tokens currently owned by the given `owner`.
 
-#### `transfer(address,uint256)`
+##### `transfer(address,uint256)`
 
 Origin: OpenZeppelin (ERC20Upgradeable)
 
-##### Definition:
+###### Definition
 
 ```solidity
-function transfer(address to, uint256 amount) 
-external 
-returns (bool)
-```
-
-##### Description:
-
-Transfer the given `amount` of tokens from the caller to the given `destination` address.
-The function returns `true` on success and reverts on error.
-
-#### `approve(address,uint256)`
-
-Origin: OpenZeppelin (ERC20Upgradeable)
-
-##### Definition:
-
-```solidity
-function approve(address spender, uint256 amount) 
-external 
-returns (bool)
-```
-
-##### Description:
-
-Allow the given `spender` to transfer at most the given `amount` of tokens from the caller.
-The function returns `true` on success and reverts of error.
-
-#### `allowance(address,address)`
-
-Origin: OpenZeppelin (ERC20Upgradeable)
-
-##### Definition:
-
-```solidity
-function allowance(address owner, address spender) 
-external view 
-returns (uint256)
-```
-
-##### Description:
-
-Return the number of tokens the given `spender` is currently allowed to transfer from the given `owner`.
-
-#### `approve(address,uint256,uint256)`
-
-##### Definition:
-
-```solidity
-function approve(address spender,uint256 amount,uint256 currentAllowance) 
+function transfer(address to, uint256 value) 
 public virtual 
 returns (bool)
 ```
 
-##### Description:
+###### Description
+
+Transfer the given `amount` of tokens from the caller to the given `destination` address.
+The function returns `true` on success and reverts on error.
+
+##### `approve(address,uint256)`
+
+Origin: OpenZeppelin (ERC20Upgradeable)
+
+###### Definition
+
+```solidity
+function approve(address spender, uint256 value) 
+public virtual 
+returns (bool)
+```
+
+###### Description
 
 Allow the given `spender` to transfer at most the given `amount` of tokens from the caller.
+The function returns `true` on success and reverts of error.
+
+###### Requirement
+
+`spender` cannot be the zero address.
+
+##### `allowance(address,address)`
+
+Origin: OpenZeppelin (ERC20Upgradeable)
+
+###### Definition
+
+```solidity
+function allowance(address owner, address spender) 
+public view virtual 
+returns (uint256)
+```
+
+###### Description
+
+Return the number of tokens the given `spender` is currently allowed to transfer from the given `owner`.
+
+#### CMTAT
+
+##### `approve(address,uint256,uint256)`
+
+###### Definition
+
+```solidity
+function approve(address spender,uint256 value,uint256 currentAllowance) 
+public virtual 
+returns (bool)
+```
+
+###### Description
+
+Allows `spender` to withdraw from your account multiple times, up to the `value` amount
 The function may be successfully executed only when the given `currentAllowance` values equals to the amount of token the spender is currently allowed to transfer from the caller.
 The function returns `true` on success and reverts of error.
 
@@ -174,62 +181,74 @@ So, Bob got 210 tokens in total, while Alice never means to allow him to transfe
 
 In order to mitigate this kind of attack, Alice at step 3 calls `approve (bob, 110, 100)`.  Such call could only succeed if the allowance is still 100, i.e. Bob's attempt to front run the transaction will make Alice's transaction to fail.
 
-#### `transferFrom(address,address,uint256)`
+##### `transferFrom(address,address,uint256)`
 
-##### Definition:
+This function overrides the function `transferFrom`from OpenZeppelin
+
+###### Definition
 
 ```solidity
-function transferFrom(address sender,address recipient,uint256 amount) 
+function transferFrom(address from,address to,uint256 value) 
 public virtual override 
-returns (bool)
+returns (bool) 
 ```
 
-##### Description:
+###### Description
 
-Transfer the given `amount` of tokens from the given `owner` to the given `destination` address.
-`sender` and `recipient` cannot be the zero address.
-The function returns `true` on success and reverts of error.
+Transfers `value` amount of tokens from address `from` to address `to`
+
+The function returns `true` on success, nothing if the parent function return false. The behavior of the parent function in case of an error is to revert rather than returned false.
+
+###### Requirement
+
+`from` and `to` cannot be the zero address.
 
 ### Events
 
-#### `Transfer(address,address,uint256)`
+#### OpenZeppelin
+
+##### `Transfer(address,address,uint256)`
 
 Origin: OpenZeppelin (ERC20Upgradeable)
 
-##### Definition:
+###### Definition
 
 ```solidity
 event Transfer(address indexed from, address indexed to, uint256 value)
 ```
 
-##### Description:
+###### Description
 
-Emitted when the specified `amount` of tokens was transferred from the specified `origin` address to the specified `destination` address.
+Emitted when `value` tokens are moved from one account (`from`) to another (`to`).
 
-#### `Approval(address,address,uint256)`
+Note that `value` may be zero.
+
+##### `Approval(address,address,uint256)`
 
 Origin: OpenZeppelin (ERC20Upgradeable)
 
-##### Definition:
+###### Definition
 
 ```solidity
 event Approval(address indexed owner, address indexed spender, uint256 value)
 ```
 
-##### Description:
+###### Description
 
-Emitted when the specified `owner` allowed the specified `spender` to transfer the specified `amount` of tokens.
+Emitted when the allowance of a `spender` for an `owner` is set by a call to {approve}. `value` is the new allowance.
 
-#### `Spend(address,address,uint256)`
+#### CMTAT
 
-##### Definition:
+##### `Spend(address,address,uint256)`
+
+###### Definition
 
 ```solidity
-event Spend (address indexed owner, address indexed spender, uint256 amount)
+event Spend (address indexed owner, address indexed spender, uint256 value)
 ```
 
-##### Description:
+###### Description
 
-Emitted when the specified `spender` spends the specified `amount` of the tokens owned by the specified `owner` reducing the corresponding allowance.
+Emitted when the specified `spender` spends the specified `value` tokens owned by the specified `owner` reducing the corresponding allowance.
 
 This event is not defined by ERC-20 and is needed to track allowance changes.

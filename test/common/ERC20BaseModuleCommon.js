@@ -238,7 +238,7 @@ function BaseModuleCommon (admin, address1, address2, address3, proxyTest) {
       expectEvent.inLogs(this.logs, 'Spend', {
         owner: address1,
         spender: address3,
-        amount: '11'
+        value: '11'
       })
     })
 

@@ -6,19 +6,23 @@ pragma solidity ^0.8.17;
 import "../../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
 import "../../../../openzeppelin-contracts-upgradeable/contracts/token/ERC20/ERC20Upgradeable.sol";
 
+
 abstract contract ERC20BaseModule is ERC20Upgradeable {
     /* Events */
-    event Spend(address indexed owner, address indexed spender, uint256 amount);
+    /**
+    @notice Emitted when the specified `spender` spends the specified `value` tokens owned by the specified `owner` reducing the corresponding allowance.
+    */
+    event Spend(address indexed owner, address indexed spender, uint256 value);
 
     /* Variables */
     uint8 private _decimals;
 
     /* Initializers */
     /**
-     * @dev Sets the values for {name} and {symbol}.
+     * @dev Sets the values for {name}, {symbol} and decimals.
      *
-     * All two of these values are immutable: they can only be set once during
-     * construction.
+     * These values are immutable: they can only be set once during
+     * construction/initialization.
      */
     function __ERC20Module_init(
         string memory name_,
@@ -41,48 +45,12 @@ abstract contract ERC20BaseModule is ERC20Upgradeable {
 
     /* Methods */
     /**
+     *
      * @notice Returns the number of decimals used to get its user representation.
-     * @dev
-     * For example, if `decimals` equals `2`, a balance of `505` tokens should
-     * be displayed to a user as `5,05` (`505 / 10 ** 2`).
-     *
-     * Tokens usually opt for a value of 18, imitating the relationship between
-     * Ether and Wei. This is the value {ERC20} uses, unless this function is
-     * overridden;
-     *
-     * NOTE: This information is only used for _display_ purposes: it in
-     * no way affects any of the arithmetic of the contract, including
-     * {IERC20-balanceOf} and {IERC20-transfer}.
+     * @inheritdoc ERC20Upgradeable
      */
     function decimals() public view virtual override returns (uint8) {
         return _decimals;
-    }
-
-    /**
-     * @dev See {IERC20-transferFrom}.
-     *
-     * Emits an {Approval} event indicating the updated allowance. This is not
-     * required by the EIP. See the note at the beginning of {ERC20}.
-     *
-     * Requirements:
-     *
-     * - `sender` and `recipient` cannot be the zero address.
-     * - `sender` must have a balance of at least `amount`.
-     * - the caller must have allowance for ``sender``'s tokens of at least
-     * `amount`.
-     */
-    function transferFrom(
-        address sender,
-        address recipient,
-        uint256 amount
-    ) public virtual override returns (bool) {
-        bool result = super.transferFrom(sender, recipient, amount);
-        // The result will be normally always true because OpenZeppelin uses require to check all the conditions.
-        if (result) {
-            emit Spend(sender, _msgSender(), amount);
-        }
-
-        return result;
     }
 
     /**
@@ -94,13 +62,13 @@ abstract contract ERC20BaseModule is ERC20Upgradeable {
      *
      * Requirements:
      * - `tos` and `values` must have the same length
-     * - `tos`cannot contain a zero address
+     * - `tos`cannot contain a zero address (check made by transfer)
      * - the caller must have a balance cooresponding to the total values
      */
     function transferBatch(
         address[] calldata tos,
         uint256[] calldata values
-    ) public {
+    ) public returns (bool) {
         require(
             tos.length > 0,
             "CMTAT: tos is empty"
@@ -111,33 +79,53 @@ abstract contract ERC20BaseModule is ERC20Upgradeable {
             tos.length == values.length,
             "CMTAT: tos and values length mismatch"
         );
-        bool result;
         for (uint256 i = 0; i < tos.length; ) {
-            result = ERC20Upgradeable.transfer(tos[i], values[i]);
-            require(result, "CMTAT: transfer failed");
+            // We call directly the internal function transfer
+            // The reason is that the public function adds only the owner address recovery
+            ERC20Upgradeable._transfer(_msgSender(), tos[i], values[i]);
             unchecked {
                 ++i;
             }
         }
+        // not really useful
+        // Here only to keep the same behaviour as transfer
+        return true;
     }
 
     /**
-     * @dev See {IERC20-approve}.
-     *
-     * Requirements:
-     *
-     * - `spender` cannot be the zero address.
+     * @notice Transfers `value` amount of tokens from address `from` to address `to`
+     * @inheritdoc ERC20Upgradeable
+     * @custom:dev-cmtat
+     * Emits a {Spend} event indicating the spended allowance.
+     */
+    function transferFrom(
+        address from,
+        address to,
+        uint256 value
+    ) public virtual override returns (bool) {
+        bool result = ERC20Upgradeable.transferFrom(from, to, value);
+        // The result will be normally always true because OpenZeppelin will revert in case of an error
+        if (result) {
+            emit Spend(from, _msgSender(), value);
+        }
+
+        return result;
+    }
+
+    /**
+     * @notice Allows `spender` to withdraw from your account multiple times, up to the `value` amount
+     * @dev see {OpenZeppelin ERC20 - approve}
      */
     function approve(
         address spender,
-        uint256 amount,
+        uint256 value,
         uint256 currentAllowance
     ) public virtual returns (bool) {
         require(
             allowance(_msgSender(), spender) == currentAllowance,
             "CMTAT: current allowance is not right"
         );
-        super.approve(spender, amount);
+        ERC20Upgradeable.approve(spender, value);
         return true;
     }
 

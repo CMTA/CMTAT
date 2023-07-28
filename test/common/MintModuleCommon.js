@@ -35,8 +35,8 @@ function MintModuleCommon (admin, address1, address2) {
       })
       // emits a Mint event
       expectEvent.inLogs(this.logs1, 'Mint', {
-        beneficiary: address1,
-        amount: VALUE1
+        account: address1,
+        value: VALUE1
       });
 
       // Act
@@ -58,8 +58,8 @@ function MintModuleCommon (admin, address1, address2) {
       })
       // emits a Mint event
       expectEvent.inLogs(this.logs2, 'Mint', {
-        beneficiary: address2,
-        amount: VALUE2
+        account: address2,
+        value: VALUE2
       })
     })
 
@@ -89,8 +89,8 @@ function MintModuleCommon (admin, address1, address2) {
       })
       // emits a Mint event
       expectEvent.inLogs(this.logs1, 'Mint', {
-        beneficiary: address1,
-        amount: VALUE1
+        account: address1,
+        value: VALUE1
       })
     })
 
@@ -147,8 +147,8 @@ function MintModuleCommon (admin, address1, address2) {
       for (let i = 0; i < TOKEN_HOLDER.length; ++i) {
         // emits a Mint event
         expectEvent.inLogs(this.logs1, 'Mint', {
-          beneficiary: TOKEN_HOLDER[i],
-          amount: TOKEN_SUPPLY_BY_HOLDERS[i]
+          account: TOKEN_HOLDER[i],
+          value: TOKEN_SUPPLY_BY_HOLDERS[i]
         })
       }
     })
@@ -191,8 +191,8 @@ function MintModuleCommon (admin, address1, address2) {
       // emits a Mint event
       for (let i = 0; i < TOKEN_HOLDER.length; ++i) {
         expectEvent.inLogs(this.logs1, 'Mint', {
-          beneficiary: TOKEN_HOLDER[i],
-          amount: TOKEN_SUPPLY_BY_HOLDERS[i]
+          account: TOKEN_HOLDER[i],
+          value: TOKEN_SUPPLY_BY_HOLDERS[i]
         })
       }
     })
@@ -214,7 +214,7 @@ function MintModuleCommon (admin, address1, address2) {
       const TOKEN_SUPPLY_BY_HOLDERS = [BN(10), BN(100), BN(1000)]
       await expectRevert(
         this.cmtat.mintBatch(TOKEN_HOLDER_INVALID, TOKEN_SUPPLY_BY_HOLDERS, { from: admin }),
-        'CMTAT: tos and amounts length mismatch'
+        'CMTAT: accounts and values length mismatch'
       )
     })
 
@@ -223,7 +223,7 @@ function MintModuleCommon (admin, address1, address2) {
       const TOKEN_SUPPLY_BY_HOLDERS = []
       await expectRevert(
         this.cmtat.mintBatch(TOKEN_HOLDER_INVALID, TOKEN_SUPPLY_BY_HOLDERS, { from: admin }),
-        'CMTAT: tos is empty'
+        'CMTAT: accounts is empty'
       )
     })
   })

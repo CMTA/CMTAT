@@ -59,9 +59,9 @@
 <text text-anchor="start" x="23.79" y="-133.5" font-family="Times,serif" font-size="14.00"> &#160;&#160;&#160;__BurnModule_init(name_: string, symbol_: string, admin: address) &lt;&lt;onlyInitializing&gt;&gt;</text>
 <text text-anchor="start" x="23.79" y="-116.7" font-family="Times,serif" font-size="14.00"> &#160;&#160;&#160;__BurnModule_init_unchained() &lt;&lt;onlyInitializing&gt;&gt;</text>
 <text text-anchor="start" x="23.79" y="-99.9" font-family="Times,serif" font-size="14.00">Public:</text>
-<text text-anchor="start" x="23.79" y="-83.1" font-family="Times,serif" font-size="14.00"> &#160;&#160;&#160;&lt;&lt;event&gt;&gt; Burn(owner: address, amount: uint256, reason: string)</text>
-<text text-anchor="start" x="23.79" y="-66.3" font-family="Times,serif" font-size="14.00"> &#160;&#160;&#160;forceBurn(account: address, amount: uint256, reason: string) &lt;&lt;onlyRole&gt;&gt;</text>
-<text text-anchor="start" x="23.79" y="-49.5" font-family="Times,serif" font-size="14.00"> &#160;&#160;&#160;forceBurnBatch(accounts: address[], amounts: uint256[], reason: string) &lt;&lt;onlyRole&gt;&gt;</text>
+<text text-anchor="start" x="23.79" y="-83.1" font-family="Times,serif" font-size="14.00"> &#160;&#160;&#160;&lt;&lt;event&gt;&gt; Burn(owner: address, value: uint256, reason: string)</text>
+<text text-anchor="start" x="23.79" y="-66.3" font-family="Times,serif" font-size="14.00"> &#160;&#160;&#160;forceBurn(account: address, value: uint256, reason: string) &lt;&lt;onlyRole&gt;&gt;</text>
+<text text-anchor="start" x="23.79" y="-49.5" font-family="Times,serif" font-size="14.00"> &#160;&#160;&#160;forceBurnBatch(accounts: address[], values: uint256[], reason: string) &lt;&lt;onlyRole&gt;&gt;</text>
 </g>
 <!-- 27&#45;&gt;17 -->
 <g id="edge1" class="edge">
