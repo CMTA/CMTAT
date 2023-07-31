@@ -120,6 +120,6 @@ event Mint(address indexed account, uint256 value)
 
 ##### Description
 
-Emitted when the specified  `value` amount of new tokens were created and
+Emitted when the specified  `value` amount of new tokens are created and
 allocated to the specified `account`.
 

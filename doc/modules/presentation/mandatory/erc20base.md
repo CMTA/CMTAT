@@ -112,6 +112,11 @@ returns (bool)
 Transfer the given `amount` of tokens from the caller to the given `destination` address.
 The function returns `true` on success and reverts on error.
 
+###### Requirements
+
+ * `to` cannot be the zero address.
+ * the caller must have a balance of at least `value`.
+
 ##### `approve(address,uint256)`
 
 Origin: OpenZeppelin (ERC20Upgradeable)
@@ -180,6 +185,11 @@ This function in not defined by ERC-20 and is needed to safely change the allowa
 So, Bob got 210 tokens in total, while Alice never means to allow him to transfer more than 110 tokens.
 
 In order to mitigate this kind of attack, Alice at step 3 calls `approve (bob, 110, 100)`.  Such call could only succeed if the allowance is still 100, i.e. Bob's attempt to front run the transaction will make Alice's transaction to fail.
+
+###### Requirement
+
+- The given `currentAllowance` value has to be equal to the amount of token the spender is currently allowed to transfer from the caller.
+-  `spender`and the sender cannot be the zero address (check made by `OpenZeppelin-_approve`).
 
 ##### `transferFrom(address,address,uint256)`
 

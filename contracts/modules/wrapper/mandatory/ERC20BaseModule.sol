@@ -121,11 +121,14 @@ abstract contract ERC20BaseModule is ERC20Upgradeable {
         uint256 value,
         uint256 currentAllowance
     ) public virtual returns (bool) {
+        address owner = _msgSender();
         require(
-            allowance(_msgSender(), spender) == currentAllowance,
+            allowance(owner, spender) == currentAllowance,
             "CMTAT: current allowance is not right"
         );
-        ERC20Upgradeable.approve(spender, value);
+        // We call directly the internal function _approve
+        // The reason is that the public function adds only the owner address recovery
+        ERC20Upgradeable._approve(owner, spender, value);
         return true;
     }
 
