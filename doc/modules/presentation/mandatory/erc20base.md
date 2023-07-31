@@ -22,7 +22,7 @@ The ERC20Base Module sets forth the ERC20 basic functionalities a token must hav
 
 ### Graph
 
-![surya_graph_ERC20BaseModule.sol](../..//schema/surya_graph/surya_graph_ERC20BaseModule.sol.png)
+![surya_graph_ERC20BaseModule.sol](/home/ryan/Downloads/no_backup/CM/cmtat-2.3/CMTAT/out/surya_graph/surya_graph_ERC20BaseModule.sol.png)
 
 ## Sūrya's Description Report
 
@@ -32,7 +32,6 @@ The ERC20Base Module sets forth the ERC20 basic functionalities a token must hav
 | File Name                                       | SHA-1 Hash                               |
 | ----------------------------------------------- | ---------------------------------------- |
 | ./modules/wrapper/mandatory/ERC20BaseModule.sol | fdaf8d8a710a4ae6166fb0e491018c559acb4e89 |
-
 
 ### Contracts Description Table
 
@@ -45,9 +44,9 @@ The ERC20Base Module sets forth the ERC20 basic functionalities a token must hav
 |          └          |      __ERC20Module_init      |    Internal 🔒    |       🛑        | onlyInitializing |
 |          └          | __ERC20Module_init_unchained |    Internal 🔒    |       🛑        | onlyInitializing |
 |          └          |           decimals           |     Public ❗️     |                |       NO❗️        |
+|          └          |        transferBatch         |     Public ❗️     |       🛑        |       NO❗️        |
 |          └          |         transferFrom         |     Public ❗️     |       🛑        |       NO❗️        |
 |          └          |           approve            |     Public ❗️     |       🛑        |       NO❗️        |
-
 
 ### Legend
 
