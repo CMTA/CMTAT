@@ -64,21 +64,23 @@ contract CMTAT_KILL_TEST is
         address admin,
         string memory nameIrrevocable,
         string memory symbolIrrevocable,
-        string memory tokenId,
-        string memory terms,
-        IEIP1404Wrapper ruleEngine,
-        string memory information,
-        uint256 flag
+        uint8 decimalsIrrevocable,
+        string memory tokenId_,
+        string memory terms_,
+        IEIP1404Wrapper ruleEngine_,
+        string memory information_,
+        uint256 flag_
     ) public initializer {
         __CMTAT_init(
             admin,
             nameIrrevocable,
             symbolIrrevocable,
-            tokenId,
-            terms,
-            ruleEngine,
-            information,
-            flag
+            decimalsIrrevocable,
+            tokenId_,
+            terms_,
+            ruleEngine_,
+            information_,
+            flag_
         );
     }
 
@@ -89,11 +91,12 @@ contract CMTAT_KILL_TEST is
         address admin,
         string memory nameIrrevocable,
         string memory symbolIrrevocable,
-        string memory tokenId,
-        string memory terms,
-        IEIP1404Wrapper ruleEngine,
-        string memory information,
-        uint256 flag
+        uint8 decimalsIrrevocable,
+        string memory tokenId_,
+        string memory terms_,
+        IEIP1404Wrapper ruleEngine_,
+        string memory information_,
+        uint256 flag_
     ) internal onlyInitializing {
         /* OpenZeppelin library */
         // OZ init_unchained functions are called firstly due to inheritance
@@ -112,7 +115,7 @@ contract CMTAT_KILL_TEST is
         Add this call in case you add the SnapshotModule
         __Snapshot_init_unchained();
         */
-        __Validation_init_unchained(ruleEngine);
+        __Validation_init_unchained(ruleEngine_);
 
         /* Wrapper */
         // AuthorizationModule_init_unchained is called firstly due to inheritance
@@ -121,7 +124,7 @@ contract CMTAT_KILL_TEST is
         __MintModule_init_unchained();
         // EnforcementModule_init_unchained is called before ValidationModule_init_unchained due to inheritance
         __EnforcementModule_init_unchained();
-        __ERC20Module_init_unchained(0);
+        __ERC20Module_init_unchained(decimalsIrrevocable);
         // PauseModule_init_unchained is called before ValidationModule_init_unchained due to inheritance
         __PauseModule_init_unchained();
         __ValidationModule_init_unchained();
@@ -135,7 +138,7 @@ contract CMTAT_KILL_TEST is
         /* Other modules */
         __DebtBaseModule_init_unchained();
         __CreditEvents_init_unchained();
-        __Base_init_unchained(tokenId, terms, information, flag);
+        __Base_init_unchained(tokenId_, terms_, information_, flag_);
 
         /* own function */
         __CMTAT_init_unchained();

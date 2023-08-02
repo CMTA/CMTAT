@@ -14,6 +14,7 @@ module.exports = async function (deployer, _network, account) {
 			admin,
 			"Test CMTA Token",
 			"TCMTAT",
+			0,
 			"TCMTAT_ISIN",
 			"https://cmta.ch",
 			ZERO_ADDRESS,
