@@ -46,7 +46,7 @@ abstract contract CMTAT_BASE is
     * @param admin address of the admin of contract (Access Control)
     * @param nameIrrevocable name of the token
     * @param symbolIrrevocable name of the symbol
-    * @param decimalsIrrevocable number of decimals used to get its user representation, should be 0 to be compliant with the CMTAT specifications.
+    * @param decimalsIrrevocable number of decimals of the token, must be 0 to be compliant with Swiss law as per CMTAT specifications (non-zero decimal number may be needed for other use cases)
     * @param tokenId_ name of the tokenId
     * @param terms_ terms associated with the token
     * @param ruleEngine_ address of the ruleEngine to apply rules to transfers
