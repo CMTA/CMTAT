@@ -1,17 +1,11 @@
-const { deployProxy } = require('@openzeppelin/truffle-upgrades')
-const CMTAT = artifacts.require('CMTAT_PROXY')
-const ERC20BaseModuleCommon = require('../../common/BaseModuleCommon')
-const { ZERO_ADDRESS } = require('../../utils')
+const ERC20BaseModuleCommon = require('../../common/ERC20BaseModuleCommon')
+const {deployCMTATProxy} = require('../../deploymentUtils')
 
 contract(
   'Proxy - ERC20BaseModule',
-  function ([_, admin, address1, address2, address3]) {
+  function ([_, admin, address1, address2, address3, deployerAddress]) {
     beforeEach(async function () {
-      this.flag = 5
-      this.cmtat = await deployProxy(CMTAT, [admin, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', ZERO_ADDRESS, 'CMTAT_info', this.flag], {
-        initializer: 'initialize',
-        constructorArgs: [_]
-      })
+      this.cmtat = await deployCMTATProxy(_, admin, deployerAddress)
     })
 
     ERC20BaseModuleCommon(admin, address1, address2, address3, true)

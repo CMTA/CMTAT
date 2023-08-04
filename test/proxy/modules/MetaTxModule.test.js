@@ -13,9 +13,10 @@ contract(
   ]) {
     beforeEach(async function () {
       this.flag = 5
+      const DECIMAL = 0
       this.trustedForwarder = await MinimalForwarderMock.new()
       await this.trustedForwarder.initialize()
-      this.cmtat = await deployProxy(CMTAT, [owner, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', ZERO_ADDRESS, 'CMTAT_info', this.flag], {
+      this.cmtat = await deployProxy(CMTAT, [owner, 'CMTA Token', 'CMTAT', DECIMAL, 'CMTAT_ISIN', 'https://cmta.ch', ZERO_ADDRESS, 'CMTAT_info', this.flag], {
         initializer: 'initialize',
         constructorArgs: [this.trustedForwarder.address]
       })

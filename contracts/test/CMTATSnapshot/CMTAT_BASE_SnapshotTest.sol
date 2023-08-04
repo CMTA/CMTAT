@@ -39,7 +39,7 @@ abstract contract CMTAT_BASE_SnapshotTest is
     DebtBaseModule,
     CreditEventsModule
 {
-    /**
+/**
     @notice 
     initialize the proxy contract
     The calls to this function will revert if the contract was deployed without a proxy
@@ -48,37 +48,39 @@ abstract contract CMTAT_BASE_SnapshotTest is
         address admin,
         string memory nameIrrevocable,
         string memory symbolIrrevocable,
-        string memory tokenId,
-        string memory terms,
-        IEIP1404Wrapper ruleEngine,
-        string memory information,
-        uint256 flag
+        uint8 decimalsIrrevocable,
+        string memory tokenId_,
+        string memory terms_,
+        IEIP1404Wrapper ruleEngine_,
+        string memory information_,
+        uint256 flag_
     ) public initializer {
         __CMTAT_init(
             admin,
             nameIrrevocable,
             symbolIrrevocable,
-            tokenId,
-            terms,
-            ruleEngine,
-            information,
-            flag
+            decimalsIrrevocable,
+            tokenId_,
+            terms_,
+            ruleEngine_,
+            information_,
+            flag_
         );
     }
 
     /**
     @dev calls the different initialize functions from the different modules
-    @param admin the address has to be different from 0, check made in AuthorizationModule
     */
     function __CMTAT_init(
         address admin,
         string memory nameIrrevocable,
         string memory symbolIrrevocable,
-        string memory tokenId,
-        string memory terms,
-        IEIP1404Wrapper ruleEngine,
-        string memory information,
-        uint256 flag
+        uint8 decimalsIrrevocable,
+        string memory tokenId_,
+        string memory terms_,
+        IEIP1404Wrapper ruleEngine_,
+        string memory information_,
+        uint256 flag_
     ) internal onlyInitializing {
         /* OpenZeppelin library */
         // OZ init_unchained functions are called firstly due to inheritance
@@ -95,10 +97,9 @@ abstract contract CMTAT_BASE_SnapshotTest is
         /*
         SnapshotModule:
         Add this call in case you add the SnapshotModule
-        */
         __Snapshot_init_unchained();
-
-        __Validation_init_unchained(ruleEngine);
+        */
+        __Validation_init_unchained(ruleEngine_);
 
         /* Wrapper */
         // AuthorizationModule_init_unchained is called firstly due to inheritance
@@ -107,7 +108,7 @@ abstract contract CMTAT_BASE_SnapshotTest is
         __MintModule_init_unchained();
         // EnforcementModule_init_unchained is called before ValidationModule_init_unchained due to inheritance
         __EnforcementModule_init_unchained();
-        __ERC20Module_init_unchained(0);
+        __ERC20Module_init_unchained(decimalsIrrevocable);
         // PauseModule_init_unchained is called before ValidationModule_init_unchained due to inheritance
         __PauseModule_init_unchained();
         __ValidationModule_init_unchained();
@@ -117,11 +118,12 @@ abstract contract CMTAT_BASE_SnapshotTest is
         Add this call in case you add the SnapshotModule
         */
         __SnasphotModule_init_unchained();
+        
 
         /* Other modules */
         __DebtBaseModule_init_unchained();
         __CreditEvents_init_unchained();
-        __Base_init_unchained(tokenId, terms, information, flag);
+        __Base_init_unchained(tokenId_, terms_, information_, flag_);
 
         /* own function */
         __CMTAT_init_unchained();

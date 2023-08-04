@@ -1,13 +1,10 @@
-const CMTAT = artifacts.require('CMTAT_STANDALONE')
 const BurnModuleCommon = require('../../common/BurnModuleCommon')
-const { ZERO_ADDRESS } = require('../../utils')
-
+const {deployCMTATStandalone} = require('../../deploymentUtils')
 contract(
   'Standard - BurnModule',
-  function ([_, admin, address1, address2, randomDeployer]) {
+  function ([_, admin, address1, address2, deployerAddress]) {
     beforeEach(async function () {
-      this.flag = 5
-      this.cmtat = await CMTAT.new(_, admin, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', ZERO_ADDRESS, 'CMTAT_info', this.flag, { from: randomDeployer })
+      this.cmtat = await deployCMTATStandalone(_, admin, deployerAddress)
     })
 
     BurnModuleCommon(admin, address1, address2)

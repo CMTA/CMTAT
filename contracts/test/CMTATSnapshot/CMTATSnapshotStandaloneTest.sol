@@ -5,7 +5,7 @@ pragma solidity ^0.8.17;
 import "./CMTAT_BASE_SnapshotTest.sol";
 
 contract CMTATSnapshotStandaloneTest is CMTAT_BASE_SnapshotTest {
-    /** 
+ /** 
     @notice Contract version for standalone deployment
     @param forwarderIrrevocable address of the forwarder, required for the gasless support
     @param admin address of the admin of contract (Access Control)
@@ -23,11 +23,12 @@ contract CMTATSnapshotStandaloneTest is CMTAT_BASE_SnapshotTest {
         address admin,
         string memory nameIrrevocable,
         string memory symbolIrrevocable,
-        string memory tokenId,
-        string memory terms,
-        IEIP1404Wrapper ruleEngine,
-        string memory information,
-        uint256 flag
+        uint8 decimalsIrrevocable,
+        string memory tokenId_,
+        string memory terms_,
+        IEIP1404Wrapper ruleEngine_,
+        string memory information_,
+        uint256 flag_
     ) MetaTxModule(forwarderIrrevocable) {
         // Initialize the contract to avoid front-running
         // Warning : do not initialize the proxy
@@ -35,11 +36,12 @@ contract CMTATSnapshotStandaloneTest is CMTAT_BASE_SnapshotTest {
             admin,
             nameIrrevocable,
             symbolIrrevocable,
-            tokenId,
-            terms,
-            ruleEngine,
-            information,
-            flag
+            decimalsIrrevocable,
+            tokenId_,
+            terms_,
+            ruleEngine_,
+            information_,
+            flag_
         );
     }
 
