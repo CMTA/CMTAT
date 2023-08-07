@@ -7,7 +7,10 @@ import "../../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Ini
 import "../../security/AuthorizationModule.sol";
 
 abstract contract BurnModule is ERC20Upgradeable, AuthorizationModule {
-    event Burn(address indexed owner, uint256 amount, string reason);
+    /**
+    * @notice Emitted when the specified `value` amount of tokens owned by `owner`are destroyed with the given `reason`
+    */
+    event Burn(address indexed owner, uint256 value, string reason);
 
     function __BurnModule_init(
         string memory name_,
@@ -35,51 +38,56 @@ abstract contract BurnModule is ERC20Upgradeable, AuthorizationModule {
     }
 
     /**
-     * @dev Destroys `amount` tokens from `account`
-     *
+     * @notice Destroys a `value` amount of tokens from `account`, by transferring it to address(0).
+     * @dev  
      * See {ERC20-_burn}
      * Emits a {Burn} event
+     * Emits a {Transfer} event with `to` set to the zero address  (emits inside _burn).
+     * Requirements:
+     * - the caller must have the `BURNER_ROLE`.
      */
     function forceBurn(
         address account,
-        uint256 amount,
+        uint256 value,
         string memory reason
     ) public onlyRole(BURNER_ROLE) {
-        _burn(account, amount);
-        emit Burn(account, amount, reason);
+        _burn(account, value);
+        emit Burn(account, value, reason);
     }
 
     /**
      *
-     * @dev batch version of {forceBurn}.
-     *
+     * @notice batch version of {forceBurn}.
+     * @dev 
      * See {ERC20-_burn} and {OpenZeppelin ERC1155_burnBatch}.
      *
-     * Emits a {Burn} event by burn action.
-     *
+     * For each burn action:
+     * -Emits a {Burn} event
+     * -Emits a {Transfer} event with `to` set to the zero address  (emits inside _burn).
+     * The burn `reason`is the same for all `accounts` which tokens are burnt.
      * Requirements:
-     * - `tos` and `amounts` must have the same length
+     * - `accounts` and `values` must have the same length
      * - the caller must have the `BURNER_ROLE`.
      */
     function forceBurnBatch(
         address[] calldata accounts,
-        uint256[] calldata amounts,
+        uint256[] calldata values,
         string memory reason
     ) public onlyRole(BURNER_ROLE) {
         require(
             accounts.length > 0,
-            "CMTAT: tos is empty"
+            "CMTAT: accounts is empty"
         );
-        // We do not check that amounts is not empty since
+        // We do not check that values is not empty since
         // this require will throw an error in this case.
         require(
-            accounts.length == amounts.length,
-            "CMTAT: accounts and amounts length mismatch"
+            accounts.length == values.length,
+            "CMTAT: accounts and values length mismatch"
         );
 
         for (uint256 i = 0; i < accounts.length; ) {
-            _burn(accounts[i], amounts[i]);
-            emit Burn(accounts[i], amounts[i], reason);
+            _burn(accounts[i], values[i]);
+            emit Burn(accounts[i], values[i], reason);
             unchecked {
                 ++i;
             }

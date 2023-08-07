@@ -33,7 +33,7 @@ This document defines Mint Module for the CMTA Token specification.
 
 | File Name                                  | SHA-1 Hash                               |
 | ------------------------------------------ | ---------------------------------------- |
-| ./modules/wrapper/mandatory/MintModule.sol | 59896c200ba366d171fc377d8b78d757aefbc69d |
+| ./modules/wrapper/mandatory/MintModule.sol | 3d6fa6f2890f85f4f426aee39ea2ee31203f2109 |
 
 
 ### Contracts Description Table
@@ -48,6 +48,8 @@ This document defines Mint Module for the CMTA Token specification.
 |       └        | __MintModule_init_unchained |              Internal 🔒               |       🛑        | onlyInitializing |
 |       └        |            mint             |               Public ❗️                |       🛑        |     onlyRole     |
 |       └        |          mintBatch          |               Public ❗️                |       🛑        |     onlyRole     |
+
+
 
 
 ### Legend
@@ -70,28 +72,40 @@ This section describes the Ethereum API of Issue Module.
 ##### Definition
 
 ```solidity
-function mint(address to, uint256 amount) 
+function mint(address account, uint256 value) 
 public onlyRole(MINTER_ROLE)
 ```
 
 ##### Description
 
-Create the given `amount` of tokens and allocate them to the given  address`to`.
-Only authorized users are allowed to call this function.
+ Creates a `value` amount of tokens and assigns them to `account`, by transferring it from address(0)
+
+
+##### Requirements
+
+- Only authorized users (`MINTER_ROLE`) are allowed to call this function.
+-  `account` cannot be the zero address (check made by _mint).
 
 #### `mintBatch(address[],uint256[]) `
 
 ##### Definition
 
 ```solidity
-function mintBatch(address[] calldata to,uint256[] calldata amounts) 
+function mintBatch(address[] calldata accounts,uint256[] calldata values) 
 public onlyRole(MINTER_ROLE)
 ```
 
 ##### Description
 
-For each address in `to`, create the corresponding amount of tokens given by `amounts` and allocate them to the given address`to`.
-Only authorized users are allowed to call this function.
+For each address in `accounts`, create the corresponding amount of tokens given by `amounts` and allocate them to the given address`to`.
+
+##### Requirements
+
+Only authorized users (`MINTER_ROLE`) are allowed to call this function
+
+`accounts` and `values` must have the same length
+
+`accounts` cannot contain a zero address (check made by _mint).
 
 ### Events
 
@@ -101,11 +115,11 @@ Only authorized users are allowed to call this function.
 
 
 ```solidity
-event Mint (address indexed beneficiary,uint256 amount)
+event Mint(address indexed account, uint256 value)
 ```
 
 ##### Description
 
-Emitted when the specified `amount` of new tokens was created and
-allocated to the specified `beneficiary`.
+Emitted when the specified  `value` amount of new tokens are created and
+allocated to the specified `account`.
 

@@ -7,7 +7,11 @@ import "../../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Ini
 import "../../security/AuthorizationModule.sol";
 
 abstract contract MintModule is ERC20Upgradeable, AuthorizationModule {
-    event Mint(address indexed beneficiary, uint256 amount);
+    /**
+    * @notice Emitted when the specified  `value` amount of new tokens are created and
+    * allocated to the specified `account`.
+    */
+    event Mint(address indexed account, uint256 value);
 
     function __MintModule_init(
         string memory name_,
@@ -35,49 +39,54 @@ abstract contract MintModule is ERC20Upgradeable, AuthorizationModule {
     }
 
     /**
-     * @dev Creates `amount` new tokens for `to`.
-     *
-     * See {ERC20-_mint}.
+     * @notice  Creates a `value` amount of tokens and assigns them to `account`, by transferring it from address(0)
+     * @dev 
+     * See {OpenZeppelin ERC20-_mint}.
+     * Emits a {Mint} event.
+     * Emits a {Transfer} event with `from` set to the zero address (emits inside _mint).
      *
      * Requirements:
-     *
-     * - the caller must have the `MINTER_ROLE`.
+     * - `account` cannot be the zero address (check made by _mint).
+     * - The caller must have the `MINTER_ROLE`.
      */
-    function mint(address to, uint256 amount) public onlyRole(MINTER_ROLE) {
-        _mint(to, amount);
-        emit Mint(to, amount);
+    function mint(address account, uint256 value) public onlyRole(MINTER_ROLE) {
+        _mint(account, value);
+        emit Mint(account, value);
     }
 
     /**
      *
-     * @dev batch version of {mint}.
+     * @notice batch version of {mint}
+     * @dev 
+     * See {OpenZeppelin ERC20-_mint} and {OpenZeppelin ERC1155_mintBatch}.
      *
-     * See {ERC20-_mint} and {OpenZeppelin ERC1155_mintBatch}.
-     *
-     * Emits a {Mint} event.
+     * For each mint action:
+     * - Emits a {Mint} event.
+     * - Emits a {Transfer} event with `from` set to the zero address (emits inside _mint).
      *
      * Requirements:
-     * - `tos` and `amounts` must have the same length
+     * - `accounts` and `values` must have the same length
+     * - `accounts` cannot contain a zero address (check made by _mint).
      * - the caller must have the `MINTER_ROLE`.
      */
     function mintBatch(
-        address[] calldata tos,
-        uint256[] calldata amounts
+        address[] calldata accounts,
+        uint256[] calldata values
     ) public onlyRole(MINTER_ROLE) {
         require(
-            tos.length > 0,
-            "CMTAT: tos is empty"
+            accounts.length > 0,
+            "CMTAT: accounts is empty"
         );
-        // We do not check that amounts is not empty since
+        // We do not check that values is not empty since
         // this require will throw an error in this case.
         require(
-            tos.length == amounts.length,
-            "CMTAT: tos and amounts length mismatch"
+            accounts.length == values.length,
+            "CMTAT: accounts and values length mismatch"
         );
 
-        for (uint256 i = 0; i < tos.length; ) {
-            _mint(tos[i], amounts[i]);
-            emit Mint(tos[i], amounts[i]);
+        for (uint256 i = 0; i < accounts.length; ) {
+            _mint(accounts[i], values[i]);
+            emit Mint(accounts[i], values[i]);
             unchecked {
                 ++i;
             }

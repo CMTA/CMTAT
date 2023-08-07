@@ -30,7 +30,7 @@ function BurnModuleCommon (admin, address1, address2) {
       // Emits a Burn event
       expectEvent.inLogs(this.logs1, 'Burn', {
         owner: address1,
-        amount: VALUE1,
+        value: VALUE1,
         reason: REASON
       });
       // Check balances and total supply
@@ -52,7 +52,7 @@ function BurnModuleCommon (admin, address1, address2) {
       // Emits a Burn event
       expectEvent.inLogs(this.logs2, 'Burn', {
         owner: address1,
-        amount: DIFFERENCE,
+        value: DIFFERENCE,
         reason: REASON
       });
       // Check balances and total supply
@@ -78,7 +78,7 @@ function BurnModuleCommon (admin, address1, address2) {
       // Emits a Burn event
       expectEvent.inLogs(this.logs, 'Burn', {
         owner: address1,
-        amount: VALUE1,
+        value: VALUE1,
         reason: REASON
       })
     })
@@ -145,7 +145,7 @@ function BurnModuleCommon (admin, address1, address2) {
         // emits a Mint event
         expectEvent.inLogs(this.logs1, 'Burn', {
           owner: TOKEN_HOLDER[i],
-          amount: TOKEN_BY_HOLDERS_TO_BURN[i],
+          value: TOKEN_BY_HOLDERS_TO_BURN[i],
           reason: REASON
         })
       }
@@ -158,7 +158,7 @@ function BurnModuleCommon (admin, address1, address2) {
       (await this.cmtat.totalSupply()).should.be.bignumber.equal(TOTAL_SUPPLY_AFTER_BURN)
     })
 
-    it('testCanBeBurntByBurnerRole', async function () {
+    it('testCanBeBurntBatchByBurnerRole', async function () {
       // Arrange
       await this.cmtat.grantRole(BURNER_ROLE, address2, { from: admin });
 
@@ -184,7 +184,7 @@ function BurnModuleCommon (admin, address1, address2) {
         // emits a Mint event
         expectEvent.inLogs(this.logs1, 'Burn', {
           owner: TOKEN_HOLDER[i],
-          amount: TOKEN_BY_HOLDERS_TO_BURN[i]
+          value: TOKEN_BY_HOLDERS_TO_BURN[i]
         })
       }
       // Check balances and total supply
@@ -220,15 +220,15 @@ function BurnModuleCommon (admin, address1, address2) {
       const TOKEN_HOLDER_INVALID = [admin, address1]
       await expectRevert(
         this.cmtat.forceBurnBatch(TOKEN_HOLDER_INVALID, TOKEN_BY_HOLDERS_TO_BURN, REASON, { from: admin }),
-        'CMTAT: accounts and amounts length mismatch'
+        'CMTAT: accounts and values length mismatch'
       )
     })
 
     it('testCannotBurnBatchIfAccountsIsEmpty', async function () {
       const TOKEN_ADDRESS_TOS_INVALID = []
       await expectRevert(
-        this.cmtat.transferBatch(TOKEN_ADDRESS_TOS_INVALID, TOKEN_BY_HOLDERS_TO_BURN, { from: admin }),
-        'CMTAT: tos is empty'
+        this.cmtat.forceBurnBatch(TOKEN_ADDRESS_TOS_INVALID, TOKEN_BY_HOLDERS_TO_BURN, REASON, { from: admin }),
+        'CMTAT: accounts is empty'
       )
     })
   })

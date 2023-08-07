@@ -51,8 +51,11 @@ public onlyRole(BURNER_ROLE)
 
 ##### Description
 
-Redeem the given `amount` of tokens from the given `account`.
-Only authorized users are allowed to call this function.
+Destroys a `value` amount of tokens from `account`, by transferring it to address(0).
+
+##### Requirements
+
+Only authorized users (*BURNER_ROLE*) are allowed to call this function.
 
 #### `forceBurnBatch(address[],uint256[],string)  `
 
@@ -65,10 +68,15 @@ public onlyRole(BURNER_ROLE)
 
 ##### Description
 
-For each account in `accounts`, redeem  the corresponding amount of tokens given by `amounts`.
-Only authorized users are allowed to call this function.
+For each account in `accounts`, destroys a `value` amount of tokens from `account`, by transferring it to address(0).
 
 The burn `reason`is the same for all `accounts` which tokens are burnt.
+
+##### Requirements
+
+- `accounts` and `values` must have the same length
+
+- The caller must have the `BURNER_ROLE`.
 
 ### Events
 
@@ -82,4 +90,6 @@ event Burn(address indexed owner, uint256 amount, string reason)
 
 ##### Description
 
-Emitted when the specified `amount` of tokens was burnt from the specified `account`.
+Emitted when the specified `value` amount of tokens owned by `owner`are destroyed with the given `reason`
+
+​    
