@@ -37,7 +37,8 @@
     "test:erc20Base": "npx truffle test test/standard/modules/ERC20BaseModule.test.js test/proxy/modules/ERC20BaseModule.test.js",
     "test:debt": "npx truffle test test/standard/modules/DebtModule.test.js test/proxy/modules/DebtModule.test.js",
     "test:creditEvents": "npx truffle test test/standard/modules/CreditEventsModule.test.js test/proxy/modules/CreditEventsModule.test.js",
-    "test:deployment": "npx truffle test test/deployment/deployment.test.js"
+    "test:deployment": "npx truffle test test/deployment/deployment.test.js",
+    "test:proxy": "npx truffle test test/proxy/general/KillImplementation.test.js test/proxy/general/Proxy.test.js test/proxy/general/UpgradeProxy.test.js"
   },
   "repository": {
     "type": "git",
