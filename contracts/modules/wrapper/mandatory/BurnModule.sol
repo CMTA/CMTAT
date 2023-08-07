@@ -38,6 +38,7 @@ abstract contract BurnModule is ERC20Upgradeable, AuthorizationModule {
      * @dev Destroys `amount` tokens from `account`
      *
      * See {ERC20-_burn}
+     * Emits a {Burn} event
      */
     function forceBurn(
         address account,
@@ -46,6 +47,43 @@ abstract contract BurnModule is ERC20Upgradeable, AuthorizationModule {
     ) public onlyRole(BURNER_ROLE) {
         _burn(account, amount);
         emit Burn(account, amount, reason);
+    }
+
+    /**
+     *
+     * @dev batch version of {forceBurn}.
+     *
+     * See {ERC20-_burn} and {OpenZeppelin ERC1155_burnBatch}.
+     *
+     * Emits a {Burn} event by burn action.
+     *
+     * Requirements:
+     * - `tos` and `amounts` must have the same length
+     * - the caller must have the `BURNER_ROLE`.
+     */
+    function forceBurnBatch(
+        address[] calldata accounts,
+        uint256[] calldata amounts,
+        string memory reason
+    ) public onlyRole(BURNER_ROLE) {
+        require(
+            accounts.length > 0,
+            "CMTAT: tos is empty"
+        );
+        // We do not check that amounts is not empty since
+        // this require will throw an error in this case.
+        require(
+            accounts.length == amounts.length,
+            "CMTAT: accounts and amounts length mismatch"
+        );
+
+        for (uint256 i = 0; i < accounts.length; ) {
+            _burn(accounts[i], amounts[i]);
+            emit Burn(accounts[i], amounts[i], reason);
+            unchecked {
+                ++i;
+            }
+        }
     }
 
     uint256[50] private __gap;

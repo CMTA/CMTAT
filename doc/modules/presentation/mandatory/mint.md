@@ -33,7 +33,7 @@ This document defines Mint Module for the CMTA Token specification.
 
 | File Name                                  | SHA-1 Hash                               |
 | ------------------------------------------ | ---------------------------------------- |
-| ./modules/wrapper/mandatory/MintModule.sol | c0300d093480b66e7a9c5acd1a1c46c34f6221bb |
+| ./modules/wrapper/mandatory/MintModule.sol | 59896c200ba366d171fc377d8b78d757aefbc69d |
 
 
 ### Contracts Description Table
@@ -47,6 +47,7 @@ This document defines Mint Module for the CMTA Token specification.
 |       └        |      __MintModule_init      |              Internal 🔒               |       🛑        | onlyInitializing |
 |       └        | __MintModule_init_unchained |              Internal 🔒               |       🛑        | onlyInitializing |
 |       └        |            mint             |               Public ❗️                |       🛑        |     onlyRole     |
+|       └        |          mintBatch          |               Public ❗️                |       🛑        |     onlyRole     |
 
 
 ### Legend
@@ -56,6 +57,8 @@ This document defines Mint Module for the CMTA Token specification.
 |   🛑    | Function can modify state |
 |   💵    | Function is payable       |
 
+
+
 ## API for Ethereum
 
 This section describes the Ethereum API of Issue Module.
@@ -64,23 +67,37 @@ This section describes the Ethereum API of Issue Module.
 
 #### `mint(address,uint256)`
 
-##### Definition:
+##### Definition
 
 ```solidity
 function mint(address to, uint256 amount) 
 public onlyRole(MINTER_ROLE)
 ```
 
-##### Description:
+##### Description
 
 Create the given `amount` of tokens and allocate them to the given  address`to`.
+Only authorized users are allowed to call this function.
+
+#### `mintBatch(address[],uint256[]) `
+
+##### Definition
+
+```solidity
+function mintBatch(address[] calldata to,uint256[] calldata amounts) 
+public onlyRole(MINTER_ROLE)
+```
+
+##### Description
+
+For each address in `to`, create the corresponding amount of tokens given by `amounts` and allocate them to the given address`to`.
 Only authorized users are allowed to call this function.
 
 ### Events
 
 #### `Mint(address,uint256)`
 
-##### Definition:
+##### Definition
 
 
 ```solidity

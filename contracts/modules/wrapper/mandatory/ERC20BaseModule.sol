@@ -86,6 +86,42 @@ abstract contract ERC20BaseModule is ERC20Upgradeable {
     }
 
     /**
+     * @notice batch version of transfer
+     * @param tos can not be empty, must have the same length as values
+     * @param values can not be empty
+     * @dev See {OpenZeppelin ERC20-transfer & ERC1155-safeBatchTransferFrom}.
+     *
+     *
+     * Requirements:
+     * - `tos` and `values` must have the same length
+     * - `tos`cannot contain a zero address
+     * - the caller must have a balance cooresponding to the total values
+     */
+    function transferBatch(
+        address[] calldata tos,
+        uint256[] calldata values
+    ) public {
+        require(
+            tos.length > 0,
+            "CMTAT: tos is empty"
+        );
+        // We do not check that values is not empty since
+        // this require will throw an error in this case.
+        require(
+            tos.length == values.length,
+            "CMTAT: tos and values length mismatch"
+        );
+        bool result;
+        for (uint256 i = 0; i < tos.length; ) {
+            result = ERC20Upgradeable.transfer(tos[i], values[i]);
+            require(result, "CMTAT: transfer failed");
+            unchecked {
+                ++i;
+            }
+        }
+    }
+
+    /**
      * @dev See {IERC20-approve}.
      *
      * Requirements:
