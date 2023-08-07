@@ -13,9 +13,10 @@ contract(
   ]) {
     beforeEach(async function () {
       this.flag = 5
+      const DECIMAL = 0
       this.trustedForwarder = await MinimalForwarderMock.new()
       this.trustedForwarder.initialize()
-      this.cmtat = await CMTAT.new(this.trustedForwarder.address, admin, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', ZERO_ADDRESS, 'CMTAT_info', this.flag, { from: randomDeployer })
+      this.cmtat = await CMTAT.new(this.trustedForwarder.address, admin, 'CMTA Token', 'CMTAT',  DECIMAL, 'CMTAT_ISIN', 'https://cmta.ch', ZERO_ADDRESS, 'CMTAT_info', this.flag, { from: randomDeployer })
     })
 
     MetaTxModuleCommon(admin, address1)

@@ -5,6 +5,7 @@ const { deployProxy, upgradeProxy, erc1967 } = require('@openzeppelin/truffle-up
 const CMTAT1 = artifacts.require('CMTAT_PROXY')
 const CMTAT2 = artifacts.require('CMTAT_PROXY')
 const { ZERO_ADDRESS } = require('../../utils')
+const DECIMAL = 0
 
 contract('UpgradeableCMTAT - Proxy', function ([_, admin, address1]) {
   /*
@@ -13,7 +14,7 @@ contract('UpgradeableCMTAT - Proxy', function ([_, admin, address1]) {
   it('testKeepStorageForTokens', async function () {
     this.flag = 5
     // With the first version of CMTAT
-    this.CMTAT_PROXY = await deployProxy(CMTAT1, [admin, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', ZERO_ADDRESS, 'CMTAT_info', this.flag], {
+    this.CMTAT_PROXY = await deployProxy(CMTAT1, [admin, 'CMTA Token', 'CMTAT', DECIMAL, 'CMTAT_ISIN', 'https://cmta.ch', ZERO_ADDRESS, 'CMTAT_info', this.flag], {
       initializer: 'initialize',
       constructorArgs: [_]
     })
