@@ -1,8 +1,8 @@
-const { expectEvent, expectRevert } = require('@openzeppelin/test-helpers')
+const { BN, expectEvent, expectRevert } = require('@openzeppelin/test-helpers')
 const { DEFAULT_ADMIN_ROLE } = require('../utils')
 const { should } = require('chai').should()
 
-function BaseModuleCommon (owner, address1, address2, address3, proxyTest) {
+function BaseModuleCommon (admin, address1, address2, address3, proxyTest) {
   context('Token structure', function () {
     it('testHasTheDefinedName', async function () {
       // Act + Assert
@@ -176,9 +176,9 @@ function BaseModuleCommon (owner, address1, address2, address3, proxyTest) {
 
   context('Transfer', function () {
     beforeEach(async function () {
-      await this.cmtat.mint(address1, 31, { from: owner })
-      await this.cmtat.mint(address2, 32, { from: owner })
-      await this.cmtat.mint(address3, 33, { from: owner })
+      await this.cmtat.mint(address1, 31, { from: admin })
+      await this.cmtat.mint(address2, 32, { from: admin })
+      await this.cmtat.mint(address3, 33, { from: admin })
     })
 
     it('testTransferFromOneAccountToAnother', async function () {
@@ -237,7 +237,7 @@ function BaseModuleCommon (owner, address1, address2, address3, proxyTest) {
       expectEvent.inLogs(this.logs, 'Spend', {
         owner: address1,
         spender: address3,
-        amount: '11'
+        value: '11'
       })
     })
 
@@ -269,6 +269,97 @@ function BaseModuleCommon (owner, address1, address2, address3, proxyTest) {
       await expectRevert(
         this.cmtat.transferFrom(address1, address2, 50, { from: address3 }),
         'ERC20: transfer amount exceeds balance'
+      )
+    })
+  })
+
+  context('transferFrom', function () {
+    beforeEach(async function () {
+      await this.cmtat.mint(address1, 31, { from: admin })
+      await this.cmtat.mint(address2, 32, { from: admin })
+      await this.cmtat.mint(address3, 33, { from: admin })
+    })
+
+    it('testTransferFromOneAccountToAnother', async function () {
+      // Act
+      ({ logs: this.logs } = await this.cmtat.transfer(address2, 11, {
+        from: address1
+      }));
+      // Assert
+      (await this.cmtat.balanceOf(address1)).should.be.bignumber.equal('20');
+      (await this.cmtat.balanceOf(address2)).should.be.bignumber.equal('43');
+      (await this.cmtat.balanceOf(address3)).should.be.bignumber.equal('33');
+      (await this.cmtat.totalSupply()).should.be.bignumber.equal('96')
+      // emits a Transfer event
+      expectEvent.inLogs(this.logs, 'Transfer', {
+        from: address1,
+        to: address2,
+        value: '11'
+      })
+    })
+
+    // ADDRESS1 -> ADDRESS2
+    it('testCannotTransferMoreTokensThanOwn', async function () {
+      // Act
+      await expectRevert(
+        this.cmtat.transfer(address2, 50, { from: address1 }),
+        'ERC20: transfer amount exceeds balance'
+      )
+    })
+  })
+
+  context('transferBatch', function () {
+    const TOKEN_ADDRESS_TOS = [address1, address2, address3]
+    const TOKEN_AMOUNTS = [BN(10), BN(100), BN(1000)]
+
+    beforeEach(async function () {
+      await this.cmtat.mint(admin, TOKEN_AMOUNTS.reduce((a, b) => { return a.add(b) }), { from: admin })
+    })
+
+    it('testTransferBatch', async function () {
+      // Act
+      ({ logs: this.logs } = await this.cmtat.transferBatch(TOKEN_ADDRESS_TOS, TOKEN_AMOUNTS, {
+        from: admin
+      }));
+      // Assert
+      for (let i = 0; i < TOKEN_ADDRESS_TOS.length; ++i) {
+        (await this.cmtat.balanceOf(TOKEN_ADDRESS_TOS[i])).should.be.bignumber.equal(TOKEN_AMOUNTS[i])
+      }
+      // emits a Transfer event
+      for (let i = 0; i < TOKEN_ADDRESS_TOS.length; ++i) {
+        expectEvent.inLogs(this.logs, 'Transfer', {
+          from: admin,
+          to: TOKEN_ADDRESS_TOS[i],
+          value: TOKEN_AMOUNTS[i]
+        })
+      }
+    })
+
+    // ADDRESS1 -> ADDRESS2
+    it('testCannotTransferBatchMoreTokensThanOwn', async function () {
+      const TOKEN_AMOUNTS_INVALID = [TOKEN_AMOUNTS[0], TOKEN_AMOUNTS[1].add(BN(1)), TOKEN_AMOUNTS[2]]
+      // Act
+      await expectRevert(
+        this.cmtat.transferBatch(TOKEN_ADDRESS_TOS, TOKEN_AMOUNTS_INVALID, {
+          from: admin
+        }),
+        'ERC20: transfer amount exceeds balance'
+      )
+    })
+
+    it('testCannotTransferBatchIfLengthMismatch', async function () {
+      const TOKEN_ADDRESS_TOS_INVALID = [address1, address2]
+      await expectRevert(
+        this.cmtat.transferBatch(TOKEN_ADDRESS_TOS_INVALID, TOKEN_AMOUNTS, { from: admin }),
+        'CMTAT: tos and values length mismatch'
+      )
+    })
+
+    it('testCannotTransferBatchIfTOSIsEmpty', async function () {
+      const TOKEN_ADDRESS_TOS_INVALID = []
+      await expectRevert(
+        this.cmtat.transferBatch(TOKEN_ADDRESS_TOS_INVALID, TOKEN_AMOUNTS, { from: admin }),
+        'CMTAT: tos is empty'
       )
     })
   })

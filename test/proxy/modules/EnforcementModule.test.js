@@ -1,17 +1,11 @@
-const { deployProxy } = require('@openzeppelin/truffle-upgrades')
-const CMTAT = artifacts.require('CMTAT_PROXY')
 const EnforcementModuleCommon = require('../../common/EnforcementModuleCommon')
-const { ZERO_ADDRESS } = require('../../utils')
+const {deployCMTATProxy} = require('../../deploymentUtils')
 
 contract(
   'Proxy - EnforcementModule',
-  function ([_, admin, address1, address2, address3]) {
+  function ([_, admin, address1, address2, address3, deployerAddress]) {
     beforeEach(async function () {
-      this.flag = 5
-      this.cmtat = await deployProxy(CMTAT, [admin, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', ZERO_ADDRESS, 'CMTAT_info', this.flag], {
-        initializer: 'initialize',
-        constructorArgs: [_]
-      })
+      this.cmtat = await deployCMTATProxy(_, admin, deployerAddress)
     })
 
     EnforcementModuleCommon(admin, address1, address2, address3)

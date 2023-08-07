@@ -26,28 +26,6 @@ This document defines Burn Module for the CMTA Token specification.
 
 
 
-## Sūrya's Description Report
-
-### Files Description Table
-
-
-| File Name                                  | SHA-1 Hash                               |
-| ------------------------------------------ | ---------------------------------------- |
-| ./modules/wrapper/mandatory/BurnModule.sol | 3547e217049388e5b1a48524255301aac8d301de |
-
-
-### Contracts Description Table
-
-
-|    Contract    |            Type             |                 Bases                 |                |                  |
-| :------------: | :-------------------------: | :-----------------------------------: | :------------: | :--------------: |
-|       └        |      **Function Name**      |            **Visibility**             | **Mutability** |  **Modifiers**   |
-|                |                             |                                       |                |                  |
-| **BurnModule** |       Implementation        | ERC20Upgradeable, AuthorizationModule |                |                  |
-|       └        |      __BurnModule_init      |              Internal 🔒               |       🛑        | onlyInitializing |
-|       └        | __BurnModule_init_unchained |              Internal 🔒               |       🛑        | onlyInitializing |
-|       └        |          forceBurn          |               Public ❗️                |       🛑        |     onlyRole     |
-
 
 ### Legend
 
@@ -64,28 +42,54 @@ This section describes the Ethereum API of Burn Module.
 
 #### `forceBurn(address,uint256,string)`
 
-##### Signature:
+##### Definition
 
 ```solidity
 function forceBurn(address account,uint256 amount,string memory reason) 
 public onlyRole(BURNER_ROLE)
 ```
 
-##### Description:
+##### Description
 
-Redeem the given `amount` of tokens from the given `account`.
-Only authorized users are allowed to call this function.
+Destroys a `value` amount of tokens from `account`, by transferring it to address(0).
+
+##### Requirements
+
+Only authorized users (*BURNER_ROLE*) are allowed to call this function.
+
+#### `forceBurnBatch(address[],uint256[],string)  `
+
+##### Definition
+
+```solidity
+function forceBurnBatch(address[] calldata accounts,uint256[] calldata amounts,string memory reason) 
+public onlyRole(BURNER_ROLE)
+```
+
+##### Description
+
+For each account in `accounts`, destroys a `value` amount of tokens from `account`, by transferring it to address(0).
+
+The burn `reason`is the same for all `accounts` which tokens are burnt.
+
+##### Requirements
+
+- `accounts` and `values` must have the same length
+
+- The caller must have the `BURNER_ROLE`.
 
 ### Events
 
 #### `Burn(address,uint,string)`
 
-##### Signature:
+##### Definition
 
 ```solidity
 event Burn(address indexed owner, uint256 amount, string reason)
 ```
 
-##### Description:
+##### Description
 
-Emitted when the specified `amount` of tokens was burnt from the specified `account`.
+Emitted when the specified `value` amount of tokens owned by `owner`are destroyed with the given `reason`
+
+​    

@@ -8,18 +8,18 @@ contract(
   function ([_], admin) {
     it('testCannotDeployProxyWithAdminSetToAddressZero', async function () {
       this.flag = 5
-
+      const DECIMAL = 0
       // Act + Assert
-      await expectRevert.unspecified(deployProxy(CMTAT_PROXY, [ZERO_ADDRESS, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', ZERO_ADDRESS, 'CMTAT_info', this.flag], {
+      await expectRevert.unspecified(deployProxy(CMTAT_PROXY, [ZERO_ADDRESS, 'CMTA Token', 'CMTAT',  DECIMAL, 'CMTAT_ISIN', 'https://cmta.ch', ZERO_ADDRESS, 'CMTAT_info', this.flag], {
         initializer: 'initialize',
         constructorArgs: [_]
       }))
     })
     it('testCannotDeployStandaloneWithAdminSetToAddressZero', async function () {
       this.flag = 5
-
+      const DECIMAL = 0
       // Act + Assert
-      await expectRevert.unspecified(CMTAT_STANDALONE.new(_, ZERO_ADDRESS, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', ZERO_ADDRESS, 'CMTAT_info', this.flag, { from: admin }))
+      await expectRevert.unspecified(CMTAT_STANDALONE.new(_, ZERO_ADDRESS, 'CMTA Token', 'CMTAT', DECIMAL, 'CMTAT_ISIN', 'https://cmta.ch', ZERO_ADDRESS, 'CMTAT_info', this.flag, { from: admin }))
     })
   }
 )

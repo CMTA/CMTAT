@@ -9,13 +9,14 @@ const SnapshotModuleMultiplePlannedTest = require('../../common/SnapshotModuleCo
 const SnapshotModuleOnePlannedSnapshotTest = require('../../common/SnapshotModuleCommon/global/SnapshotModuleOnePlannedSnapshotTest')
 const SnapshotModuleZeroPlannedSnapshotTest = require('../../common/SnapshotModuleCommon/global/SnapshotModuleZeroPlannedSnapshot')
 const { ZERO_ADDRESS } = require('../../utils')
+const DECIMAL = 0
 
 contract(
   'Proxy - SnapshotModule',
   function ([_, admin, address1, address2, address3]) {
     beforeEach(async function () {
       this.flag = 5
-      this.cmtat = await deployProxy(CMTAT, [admin, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', ZERO_ADDRESS, 'CMTAT_info', this.flag], {
+      this.cmtat = await deployProxy(CMTAT, [admin, 'CMTA Token', 'CMTAT', DECIMAL, 'CMTAT_ISIN', 'https://cmta.ch', ZERO_ADDRESS, 'CMTAT_info', this.flag], {
         initializer: 'initialize',
         constructorArgs: [_]
       })

@@ -10,8 +10,9 @@ contract(
   function ([_, admin, address1, address2, address3]) {
     beforeEach(async function () {
       this.flag = 5
+      const DECIMAL = 0
       this.ruleEngineMock = await RuleEngineMock.new({ from: admin })
-      this.cmtat = await deployProxy(CMTAT, [admin, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', this.ruleEngineMock.address, 'CMTAT_info', this.flag], {
+      this.cmtat = await deployProxy(CMTAT, [admin, 'CMTA Token', 'CMTAT', DECIMAL, 'CMTAT_ISIN', 'https://cmta.ch', this.ruleEngineMock.address, 'CMTAT_info', this.flag], {
         initializer: 'initialize',
         constructorArgs: [_]
       })
