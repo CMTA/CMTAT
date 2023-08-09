@@ -39,7 +39,8 @@
     "test:debt": "npx truffle test test/standard/modules/DebtModule.test.js test/proxy/modules/DebtModule.test.js",
     "test:creditEvents": "npx truffle test test/standard/modules/CreditEventsModule.test.js test/proxy/modules/CreditEventsModule.test.js",
     "test:deployment": "npx truffle test test/deployment/deployment.test.js",
-    "test:proxy": "npx truffle test test/proxy/general/KillImplementation.test.js test/proxy/general/Proxy.test.js test/proxy/general/UpgradeProxy.test.js"
+    "test:proxy": "npx truffle test test/proxy/general/KillImplementation.test.js test/proxy/general/Proxy.test.js test/proxy/general/UpgradeProxy.test.js",
+    "test:metaTx": "npx truffle test test/standard/modules/MetaTxModule.test.js test/proxy/modules/MetaTxModule.test.js"
   },
   "repository": {
     "type": "git",
@@ -77,6 +78,7 @@
     "ethereumjs-util": "^7.1.5",
     "ethjs-abi": "^0.2.1",
     "ethlint": "^1.2.5",
+    "keccak256": "^1.0.6",
     "prettier": "^2.8.7",
     "prettier-plugin-solidity": "^1.1.3",
     "sol2uml": "^2.5.4",

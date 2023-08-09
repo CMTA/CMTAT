@@ -1,6 +1,6 @@
 //SPDX-License-Identifier: MPL-2.0
 
-pragma solidity ^0.8.17;
+pragma solidity ^0.8.20;
 
 // required OZ imports here
 import "../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
@@ -168,7 +168,7 @@ abstract contract CMTAT_BASE_SnapshotTest is
     e.g. override(SnapshotModuleInternal, ERC20Upgradeable)
     - remove the keyword view
     */
-    function _beforeTokenTransfer(
+    function _update(
         address from,
         address to,
         uint256 amount
@@ -179,7 +179,7 @@ abstract contract CMTAT_BASE_SnapshotTest is
         SnapshotModule:
         Add this call in case you add the SnapshotModule
         */
-        SnapshotModuleInternal._beforeTokenTransfer(from, to, amount);
+        SnapshotModuleInternal._update(from, to, amount);
     }
 
     /** 

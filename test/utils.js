@@ -16,5 +16,8 @@ module.exports = {
     '0x0000000000000000000000000000000000000000000000000000000000000000',
   ZERO_ADDRESS: '0x0000000000000000000000000000000000000000',
   RULE_MOCK_AMOUNT_MAX: '20',
-  CMTAT_TRANSFER_REJECT: 'CMTAT: transfer rejected by validation module'
+  CMTAT_TRANSFER_REJECT: 'CMTAT: transfer rejected by validation module',
+  // Metatx test
+ERC2771ForwarderDomain: "ERC2771ForwarderDomain"
+  
 }

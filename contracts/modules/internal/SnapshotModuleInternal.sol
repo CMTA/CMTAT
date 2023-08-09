@@ -1,6 +1,6 @@
 //SPDX-License-Identifier: MPL-2.0
 
-pragma solidity ^0.8.17;
+pragma solidity ^0.8.20;
 
 import "../../../openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradeable.sol";
 import "../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
@@ -255,12 +255,12 @@ abstract contract SnapshotModuleInternal is ERC20Upgradeable {
     @dev Update balance and/or total supply snapshots before the values are modified. This is implemented
     in the _beforeTokenTransfer hook, which is executed for _mint, _burn, and _transfer operations.
     */
-    function _beforeTokenTransfer(
+    function _update(
         address from,
         address to,
         uint256 amount
     ) internal virtual override {
-        super._beforeTokenTransfer(from, to, amount);
+        super._update(from, to, amount);
 
         _setCurrentSnapshot();
         if (from != address(0)) {
