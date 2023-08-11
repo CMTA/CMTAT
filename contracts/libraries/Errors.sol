@@ -25,6 +25,10 @@ library Errors {
     // BurnModule
     error CMTAT_BurnModule_EmptyAccounts();
     error CMTAT_BurnModule_AccountsValueslengthMismatch();
+
+    // MintModule
+    error CMTAT_MintModule_EmptyAccounts();
+    error CMTAT_MintModule_AccountsValueslengthMismatch();
     // ?
     error SameValue();
 }
