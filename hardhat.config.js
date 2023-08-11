@@ -1,5 +1,6 @@
 /** @type import('hardhat/config').HardhatUserConfig */
 require('@nomiclabs/hardhat-truffle5')
+require('@openzeppelin/hardhat-upgrades')
 require("solidity-coverage")
 require('solidity-docgen')
 module.exports = {

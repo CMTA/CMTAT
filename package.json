@@ -40,7 +40,8 @@
     "test:creditEvents": "npx truffle test test/standard/modules/CreditEventsModule.test.js test/proxy/modules/CreditEventsModule.test.js",
     "test:deployment": "npx truffle test test/deployment/deployment.test.js",
     "test:proxy": "npx truffle test test/proxy/general/KillImplementation.test.js test/proxy/general/Proxy.test.js test/proxy/general/UpgradeProxy.test.js",
-    "test:metaTx": "npx truffle test test/standard/modules/MetaTxModule.test.js test/proxy/modules/MetaTxModule.test.js"
+    "test:metaTx": "npx truffle test test/standard/modules/MetaTxModule.test.js test/proxy/modules/MetaTxModule.test.js",
+    "test:hardhat:burn": "npx hardhat test test/standard/modules/BurnModule.test.js test/proxy/modules/BurnModule.test.js"
   },
   "repository": {
     "type": "git",
@@ -61,8 +62,10 @@
   },
   "homepage": "https://github.com/CMTA/CMTAT",
   "devDependencies": {
+    "@nomicfoundation/hardhat-ethers": "^3.0.4",
     "@nomiclabs/hardhat-truffle5": "^2.0.7",
     "@nomiclabs/hardhat-web3": "^2.0.0",
+    "@openzeppelin/hardhat-upgrades": "^2.1.1",
     "@openzeppelin/test-helpers": "^0.5.16",
     "chai": "^4.3.7",
     "coveralls": "^3.1.1",

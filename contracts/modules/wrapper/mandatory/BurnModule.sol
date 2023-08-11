@@ -74,16 +74,14 @@ abstract contract BurnModule is ERC20Upgradeable, AuthorizationModule {
         uint256[] calldata values,
         string memory reason
     ) public onlyRole(BURNER_ROLE) {
-        require(
-            accounts.length > 0,
-            "CMTAT: accounts is empty"
-        );
+        if(accounts.length == 0) {
+            revert Errors.CMTAT_BurnModule_EmptyAccounts();
+        }
         // We do not check that values is not empty since
         // this require will throw an error in this case.
-        require(
-            accounts.length == values.length,
-            "CMTAT: accounts and values length mismatch"
-        );
+        if(bool(accounts.length < values.length)) {
+            revert Errors.CMTAT_BurnModule_AccountsValueslengthMismatch();
+        }
 
         for (uint256 i = 0; i < accounts.length; ) {
             _burn(accounts[i], values[i]);

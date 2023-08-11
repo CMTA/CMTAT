@@ -1,5 +1,6 @@
-const { BN, expectEvent, expectRevert } = require('@openzeppelin/test-helpers')
+const { BN, expectEvent } = require('@openzeppelin/test-helpers')
 const { BURNER_ROLE, ZERO_ADDRESS } = require('../utils')
+const { expectRevertCustomError } = require('../../openzeppelin-contracts-upgradeable/test/helpers/customError.js');
 const { should } = require('chai').should()
 
 function BurnModuleCommon (admin, address1, address2) {
@@ -17,18 +18,18 @@ function BurnModuleCommon (admin, address1, address2) {
     it('testCanBeBurntByAdmin', async function () {
       // Act
       // Burn 20
-      ({ logs: this.logs1 } = await this.cmtat.forceBurn(address1, VALUE1, REASON, {
+      this.logs = await this.cmtat.forceBurn(address1, VALUE1, REASON, {
         from: admin
-      }))
+      })
       // Assert
       // emits a Transfer event
-      expectEvent.inLogs(this.logs1, 'Transfer', {
+      expectEvent(this.logs, 'Transfer', {
         from: address1,
         to: ZERO_ADDRESS,
         value: VALUE1
       })
       // Emits a Burn event
-      expectEvent.inLogs(this.logs1, 'Burn', {
+      expectEvent(this.logs, 'Burn', {
         owner: address1,
         value: VALUE1,
         reason: REASON
@@ -39,18 +40,19 @@ function BurnModuleCommon (admin, address1, address2) {
 
       // Burn 30
       // Act
-      ({ logs: this.logs2 } = await this.cmtat.forceBurn(address1, DIFFERENCE, REASON, {
+      this.logs = await this.cmtat.forceBurn(address1, DIFFERENCE, REASON, {
         from: admin
-      }))
+      })
+      
       // Assert
       // Emits a Transfer event
-      expectEvent.inLogs(this.logs2, 'Transfer', {
+      expectEvent(this.logs, 'Transfer', {
         from: address1,
         to: ZERO_ADDRESS,
         value: DIFFERENCE
       })
       // Emits a Burn event
-      expectEvent.inLogs(this.logs2, 'Burn', {
+      expectEvent(this.logs, 'Burn', {
         owner: address1,
         value: DIFFERENCE,
         reason: REASON
@@ -64,19 +66,20 @@ function BurnModuleCommon (admin, address1, address2) {
       // Arrange
       await this.cmtat.grantRole(BURNER_ROLE, address2, { from: admin });
       // Act
-      ({ logs: this.logs } = await this.cmtat.forceBurn(address1, VALUE1, REASON, { from: address2 }));
+      this.logs = await this.cmtat.forceBurn(address1, VALUE1, REASON, { from: address2 });
       // Assert
       (await this.cmtat.balanceOf(address1)).should.be.bignumber.equal(DIFFERENCE);
       (await this.cmtat.totalSupply()).should.be.bignumber.equal(DIFFERENCE)
-
+      
       // Emits a Transfer event
-      expectEvent.inLogs(this.logs, 'Transfer', {
+      expectEvent(this.logs, 'Transfer', {
         from: address1,
         to: ZERO_ADDRESS,
         value: VALUE1
-      })
+      });
+
       // Emits a Burn event
-      expectEvent.inLogs(this.logs, 'Burn', {
+      expectEvent(this.logs, 'Burn', {
         owner: address1,
         value: VALUE1,
         reason: REASON
@@ -84,21 +87,22 @@ function BurnModuleCommon (admin, address1, address2) {
     })
 
     it('testCannotBeBurntIfBalanceExceeds', async function () {
+      // error AccessControlUnauthorizedAccount(address account, bytes32 neededRole);
+      const AMOUNT_TO_BURN = BN(200)
+      const ADDRESS1_BALANCE = await this.cmtat.balanceOf(address1)
       // Act
-      await expectRevert(
-        this.cmtat.forceBurn(address1, 200, '', { from: admin }),
-        'ERC20: burn amount exceeds balance'
-      )
+      await expectRevertCustomError(
+        this.cmtat.forceBurn(address1, AMOUNT_TO_BURN, '', { from: admin }),
+        'ERC20InsufficientBalance',
+        [address1, ADDRESS1_BALANCE, AMOUNT_TO_BURN],
+      );
     })
 
     it('testCannotBeBurntWithoutBurnerRole', async function () {
-      // Act
-      await expectRevert(
-        this.cmtat.forceBurn(address1, 20, '', { from: address2 }),
-        'AccessControl: account ' +
-            address2.toLowerCase() +
-            ' is missing role ' +
-            BURNER_ROLE
+      await expectRevertCustomError(
+       this.cmtat.forceBurn(address1, 20, '', { from: address2 }),
+        'AccessControlUnauthorizedAccount',
+        [address2, BURNER_ROLE]
       )
     })
   })
@@ -125,16 +129,16 @@ function BurnModuleCommon (admin, address1, address2) {
     it('testCanBeBurntBatchByAdmin', async function () {
       // Act
       // Burn
-      ({ logs: this.logs1 } = await this.cmtat.forceBurnBatch(TOKEN_HOLDER, TOKEN_BY_HOLDERS_TO_BURN, REASON, {
+      this.logs = await this.cmtat.forceBurnBatch(TOKEN_HOLDER, TOKEN_BY_HOLDERS_TO_BURN, REASON, {
         from: admin
-      }))
+      })
       // Assert
       // emits a Transfer event
       // Assert event
       // emits a Transfer event
       for (let i = 0; i < TOKEN_HOLDER.length; ++i) {
         // emits a Mint event
-        expectEvent.inLogs(this.logs1, 'Transfer', {
+        expectEvent(this.logs, 'Transfer', {
           from: TOKEN_HOLDER[i],
           to: ZERO_ADDRESS,
           value: TOKEN_BY_HOLDERS_TO_BURN[i]
@@ -143,7 +147,7 @@ function BurnModuleCommon (admin, address1, address2) {
 
       for (let i = 0; i < TOKEN_HOLDER.length; ++i) {
         // emits a Mint event
-        expectEvent.inLogs(this.logs1, 'Burn', {
+        expectEvent(this.logs, 'Burn', {
           owner: TOKEN_HOLDER[i],
           value: TOKEN_BY_HOLDERS_TO_BURN[i],
           reason: REASON
@@ -164,16 +168,17 @@ function BurnModuleCommon (admin, address1, address2) {
 
       // Act
       // Burn
-      ({ logs: this.logs1 } = await this.cmtat.forceBurnBatch(TOKEN_HOLDER, TOKEN_BY_HOLDERS_TO_BURN, REASON, {
+      this.logs = await this.cmtat.forceBurnBatch(TOKEN_HOLDER, TOKEN_BY_HOLDERS_TO_BURN, REASON, {
         from: address2
-      }))
+      })
+
       // Assert
       // emits a Transfer event
       // Assert event
       // emits a Transfer event
       for (let i = 0; i < TOKEN_HOLDER.length; ++i) {
         // emits a Mint event
-        expectEvent.inLogs(this.logs1, 'Transfer', {
+        expectEvent(this.logs, 'Transfer', {
           from: TOKEN_HOLDER[i],
           to: ZERO_ADDRESS,
           value: TOKEN_BY_HOLDERS_TO_BURN[i]
@@ -182,7 +187,7 @@ function BurnModuleCommon (admin, address1, address2) {
 
       for (let i = 0; i < TOKEN_HOLDER.length; ++i) {
         // emits a Mint event
-        expectEvent.inLogs(this.logs1, 'Burn', {
+        expectEvent(this.logs, 'Burn', {
           owner: TOKEN_HOLDER[i],
           value: TOKEN_BY_HOLDERS_TO_BURN[i]
         })
@@ -198,37 +203,39 @@ function BurnModuleCommon (admin, address1, address2) {
 
     it('testCannotBeBurntIfOneBalanceExceeds', async function () {
       const TOKEN_BY_HOLDERS_TO_BURN_FAIL = [BN(5), BN(50), BN(5000000)]
+      const ADDRESS2_BALANCE = await this.cmtat.balanceOf(address2)
       // Act
-      await expectRevert(
+      await expectRevertCustomError(
         this.cmtat.forceBurnBatch(TOKEN_HOLDER, TOKEN_BY_HOLDERS_TO_BURN_FAIL, '', { from: admin }),
-        'ERC20: burn amount exceeds balance'
-      )
+        'ERC20InsufficientBalance',
+        [address2, ADDRESS2_BALANCE, TOKEN_BY_HOLDERS_TO_BURN_FAIL[2]]
+      );
     })
 
     it('testCannotBeBurntWithoutBurnerRole', async function () {
-      // Act
-      await expectRevert(
+      await expectRevertCustomError(
         this.cmtat.forceBurnBatch(TOKEN_HOLDER, TOKEN_BY_HOLDERS_TO_BURN, '', { from: address2 }),
-        'AccessControl: account ' +
-            address2.toLowerCase() +
-            ' is missing role ' +
-            BURNER_ROLE
-      )
+        'AccessControlUnauthorizedAccount',
+        [address2, BURNER_ROLE]
+      );
     })
 
     it('testCannotBurnIfLengthMismatch', async function () {
       const TOKEN_HOLDER_INVALID = [admin, address1]
-      await expectRevert(
+      await expectRevertCustomError(
         this.cmtat.forceBurnBatch(TOKEN_HOLDER_INVALID, TOKEN_BY_HOLDERS_TO_BURN, REASON, { from: admin }),
-        'CMTAT: accounts and values length mismatch'
+        'CMTAT_BurnModule_AccountsValueslengthMismatch',
+        []
       )
     })
 
     it('testCannotBurnBatchIfAccountsIsEmpty', async function () {
+
       const TOKEN_ADDRESS_TOS_INVALID = []
-      await expectRevert(
+      await expectRevertCustomError(
         this.cmtat.forceBurnBatch(TOKEN_ADDRESS_TOS_INVALID, TOKEN_BY_HOLDERS_TO_BURN, REASON, { from: admin }),
-        'CMTAT: accounts is empty'
+        'CMTAT_BurnModule_EmptyAccounts',
+        []
       )
     })
   })
