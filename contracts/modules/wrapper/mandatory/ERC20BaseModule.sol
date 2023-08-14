@@ -69,16 +69,15 @@ abstract contract ERC20BaseModule is ERC20Upgradeable {
         address[] calldata tos,
         uint256[] calldata values
     ) public returns (bool) {
-        require(
-            tos.length > 0,
-            "CMTAT: tos is empty"
-        );
+        if(tos.length == 0) {
+            revert Errors.CMTAT_ERC20BaseModule_EmptyTos();
+        }
         // We do not check that values is not empty since
         // this require will throw an error in this case.
-        require(
-            tos.length == values.length,
-            "CMTAT: tos and values length mismatch"
-        );
+        if(bool(tos.length != values.length)) {
+            revert Errors.CMTAT_ERC20BaseModule_TosValueslengthMismatch();
+        }
+
         for (uint256 i = 0; i < tos.length; ) {
             // We call directly the internal function transfer
             // The reason is that the public function adds only the owner address recovery

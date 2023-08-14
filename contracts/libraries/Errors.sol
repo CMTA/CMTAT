@@ -29,6 +29,10 @@ library Errors {
     // MintModule
     error CMTAT_MintModule_EmptyAccounts();
     error CMTAT_MintModule_AccountsValueslengthMismatch();
+
+    // ERC20BaseModule
+    error CMTAT_ERC20BaseModule_EmptyTos();
+    error CMTAT_ERC20BaseModule_TosValueslengthMismatch();
     // ?
     error SameValue();
 }

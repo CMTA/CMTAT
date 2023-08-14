@@ -206,8 +206,20 @@ function MintModuleCommon (admin, address1, address2) {
       )
     })
 
-    it('testCannotMintBatchIfLengthMismatch', async function () {
+    it('testCannotMintBatchIfLengthMismatch_1', async function () {
+      // Number of addresses is insufficient
       const TOKEN_HOLDER_INVALID = [admin, address1]
+      const TOKEN_SUPPLY_BY_HOLDERS = [BN(10), BN(100), BN(1000)]
+      await expectRevertCustomError(
+        this.cmtat.mintBatch(TOKEN_HOLDER_INVALID, TOKEN_SUPPLY_BY_HOLDERS, { from: admin }),
+        'CMTAT_MintModule_AccountsValueslengthMismatch',
+        []
+      )
+    })
+
+    it('testCannotMintBatchIfLengthMismatch_2', async function () {
+      // There are too many addresses
+      const TOKEN_HOLDER_INVALID = [admin, address1, address1, address1]
       const TOKEN_SUPPLY_BY_HOLDERS = [BN(10), BN(100), BN(1000)]
       await expectRevertCustomError(
         this.cmtat.mintBatch(TOKEN_HOLDER_INVALID, TOKEN_SUPPLY_BY_HOLDERS, { from: admin }),

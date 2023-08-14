@@ -1,6 +1,6 @@
 const { BN, expectEvent } = require('@openzeppelin/test-helpers')
 const { BURNER_ROLE, ZERO_ADDRESS } = require('../utils')
-const { expectRevertCustomError } = require('../../openzeppelin-contracts-upgradeable/test/helpers/customError.js');
+const { expectRevertCustomError } = require('../../openzeppelin-contracts-upgradeable/test/helpers/customError.js')
 const { should } = require('chai').should()
 
 function BurnModuleCommon (admin, address1, address2) {
@@ -36,14 +36,14 @@ function BurnModuleCommon (admin, address1, address2) {
       });
       // Check balances and total supply
       (await this.cmtat.balanceOf(address1)).should.be.bignumber.equal(DIFFERENCE);
-      (await this.cmtat.totalSupply()).should.be.bignumber.equal(DIFFERENCE);
+      (await this.cmtat.totalSupply()).should.be.bignumber.equal(DIFFERENCE)
 
       // Burn 30
       // Act
       this.logs = await this.cmtat.forceBurn(address1, DIFFERENCE, REASON, {
         from: admin
       })
-      
+
       // Assert
       // Emits a Transfer event
       expectEvent(this.logs, 'Transfer', {
@@ -64,19 +64,19 @@ function BurnModuleCommon (admin, address1, address2) {
 
     it('testCanBeBurntByBurnerRole', async function () {
       // Arrange
-      await this.cmtat.grantRole(BURNER_ROLE, address2, { from: admin });
+      await this.cmtat.grantRole(BURNER_ROLE, address2, { from: admin })
       // Act
       this.logs = await this.cmtat.forceBurn(address1, VALUE1, REASON, { from: address2 });
       // Assert
       (await this.cmtat.balanceOf(address1)).should.be.bignumber.equal(DIFFERENCE);
       (await this.cmtat.totalSupply()).should.be.bignumber.equal(DIFFERENCE)
-      
+
       // Emits a Transfer event
       expectEvent(this.logs, 'Transfer', {
         from: address1,
         to: ZERO_ADDRESS,
         value: VALUE1
-      });
+      })
 
       // Emits a Burn event
       expectEvent(this.logs, 'Burn', {
@@ -94,13 +94,13 @@ function BurnModuleCommon (admin, address1, address2) {
       await expectRevertCustomError(
         this.cmtat.forceBurn(address1, AMOUNT_TO_BURN, '', { from: admin }),
         'ERC20InsufficientBalance',
-        [address1, ADDRESS1_BALANCE, AMOUNT_TO_BURN],
-      );
+        [address1, ADDRESS1_BALANCE, AMOUNT_TO_BURN]
+      )
     })
 
     it('testCannotBeBurntWithoutBurnerRole', async function () {
       await expectRevertCustomError(
-       this.cmtat.forceBurn(address1, 20, '', { from: address2 }),
+        this.cmtat.forceBurn(address1, 20, '', { from: address2 }),
         'AccessControlUnauthorizedAccount',
         [address2, BURNER_ROLE]
       )
@@ -164,7 +164,7 @@ function BurnModuleCommon (admin, address1, address2) {
 
     it('testCanBeBurntBatchByBurnerRole', async function () {
       // Arrange
-      await this.cmtat.grantRole(BURNER_ROLE, address2, { from: admin });
+      await this.cmtat.grantRole(BURNER_ROLE, address2, { from: admin })
 
       // Act
       // Burn
@@ -209,7 +209,7 @@ function BurnModuleCommon (admin, address1, address2) {
         this.cmtat.forceBurnBatch(TOKEN_HOLDER, TOKEN_BY_HOLDERS_TO_BURN_FAIL, '', { from: admin }),
         'ERC20InsufficientBalance',
         [address2, ADDRESS2_BALANCE, TOKEN_BY_HOLDERS_TO_BURN_FAIL[2]]
-      );
+      )
     })
 
     it('testCannotBeBurntWithoutBurnerRole', async function () {
@@ -217,10 +217,11 @@ function BurnModuleCommon (admin, address1, address2) {
         this.cmtat.forceBurnBatch(TOKEN_HOLDER, TOKEN_BY_HOLDERS_TO_BURN, '', { from: address2 }),
         'AccessControlUnauthorizedAccount',
         [address2, BURNER_ROLE]
-      );
+      )
     })
 
-    it('testCannotBurnIfLengthMismatch', async function () {
+    it('testCannotBurnIfLengthMismatch_1', async function () {
+      // Number of addresses is insufficient
       const TOKEN_HOLDER_INVALID = [admin, address1]
       await expectRevertCustomError(
         this.cmtat.forceBurnBatch(TOKEN_HOLDER_INVALID, TOKEN_BY_HOLDERS_TO_BURN, REASON, { from: admin }),
@@ -229,8 +230,17 @@ function BurnModuleCommon (admin, address1, address2) {
       )
     })
 
-    it('testCannotBurnBatchIfAccountsIsEmpty', async function () {
+    it('testCannotBurnIfLengthMismatch_2', async function () {
+      // There are too many addresses
+      const TOKEN_HOLDER_INVALID = [admin, address1, address1, address1]
+      await expectRevertCustomError(
+        this.cmtat.forceBurnBatch(TOKEN_HOLDER_INVALID, TOKEN_BY_HOLDERS_TO_BURN, REASON, { from: admin }),
+        'CMTAT_BurnModule_AccountsValueslengthMismatch',
+        []
+      )
+    })
 
+    it('testCannotBurnBatchIfAccountsIsEmpty', async function () {
       const TOKEN_ADDRESS_TOS_INVALID = []
       await expectRevertCustomError(
         this.cmtat.forceBurnBatch(TOKEN_ADDRESS_TOS_INVALID, TOKEN_BY_HOLDERS_TO_BURN, REASON, { from: admin }),

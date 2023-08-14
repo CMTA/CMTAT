@@ -79,7 +79,7 @@ abstract contract BurnModule is ERC20Upgradeable, AuthorizationModule {
         }
         // We do not check that values is not empty since
         // this require will throw an error in this case.
-        if(bool(accounts.length < values.length)) {
+        if(bool(accounts.length != values.length)) {
             revert Errors.CMTAT_BurnModule_AccountsValueslengthMismatch();
         }
 
