@@ -45,7 +45,9 @@
     "test:hardhat:mint": "npx hardhat test test/standard/modules/MintModule.test.js test/proxy/modules/MintModule.test.js",
     "test:hardhat:erc20Base": "npx hardhat test test/standard/modules/ERC20BaseModule.test.js test/proxy/modules/ERC20BaseModule.test.js",
     "test:hardhat:debt": "npx hardhat test test/standard/modules/DebtModule.test.js test/proxy/modules/DebtModule.test.js",
-    "test:hardhat:base": "npx hardhat test test/standard/modules/BaseModule.test.js test/proxy/modules/BaseModule.test.js"
+    "test:hardhat:base": "npx hardhat test test/standard/modules/BaseModule.test.js test/proxy/modules/BaseModule.test.js",
+    "test:hardhat:pause": "npx hardhat test test/standard/modules/PauseModule.test.js test/proxy/modules/PauseModule.test.js",
+    "test:hardhat:creditEvents": "npx hardhat test test/standard/modules/CreditEventsModule.test.js test/proxy/modules/CreditEventsModule.test.js"
   },
   "repository": {
     "type": "git",

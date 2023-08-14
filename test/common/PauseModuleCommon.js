@@ -1,5 +1,6 @@
 const { expectEvent, expectRevert } = require('@openzeppelin/test-helpers')
-const { PAUSER_ROLE, CMTAT_TRANSFER_REJECT } = require('../utils')
+const { expectRevertCustomError } = require('../../openzeppelin-contracts-upgradeable/test/helpers/customError.js');
+const { PAUSER_ROLE } = require('../utils')
 const { should } = require('chai').should()
 
 function PauseModuleCommon (admin, address1, address2, address3) {
@@ -9,11 +10,11 @@ function PauseModuleCommon (admin, address1, address2, address3) {
     */
     it('testCanBePausedByAdmin', async function () {
       // Act
-      ({ logs: this.logs } = await this.cmtat.pause({ from: admin }))
+      this.logs = await this.cmtat.pause({ from: admin })
 
       // Assert
       // emits a Paused event
-      expectEvent.inLogs(this.logs, 'Paused', { account: admin })
+      expectEvent(this.logs, 'Paused', { account: admin })
       // Transfer is reverted
       await expectRevert.unspecified(
         this.cmtat.transfer(address2, 10, { from: address1 })
@@ -25,11 +26,11 @@ function PauseModuleCommon (admin, address1, address2, address3) {
       await this.cmtat.grantRole(PAUSER_ROLE, address1, { from: admin });
 
       // Act
-      ({ logs: this.logs } = await this.cmtat.pause({ from: address1 }))
+      this.logs = await this.cmtat.pause({ from: address1 })
 
       // Assert
       // emits a Paused event
-      expectEvent.inLogs(this.logs, 'Paused', { account: address1 })
+      expectEvent(this.logs, 'Paused', { account: address1 })
       // Transfer is reverted
       await expectRevert.unspecified(
         this.cmtat.transfer(address2, 10, { from: address1 })
@@ -38,12 +39,10 @@ function PauseModuleCommon (admin, address1, address2, address3) {
 
     it('testCannotBePausedByNonPauser', async function () {
       // Act
-      await expectRevert(
+      await expectRevertCustomError(
         this.cmtat.pause({ from: address1 }),
-        'AccessControl: account ' +
-          address1.toLowerCase() +
-          ' is missing role ' +
-          PAUSER_ROLE
+        'AccessControlUnauthorizedAccount',
+        [address1, PAUSER_ROLE]
       )
     })
 
@@ -52,11 +51,11 @@ function PauseModuleCommon (admin, address1, address2, address3) {
       await this.cmtat.pause({ from: admin });
 
       // Act
-      ({ logs: this.logs } = await this.cmtat.unpause({ from: admin }))
+      this.logs = await this.cmtat.unpause({ from: admin })
 
       // Assert
       // emits a Unpaused event
-      expectEvent.inLogs(this.logs, 'Unpaused', { account: admin })
+      expectEvent(this.logs, 'Unpaused', { account: admin })
       // Transfer works
       this.cmtat.transfer(address2, 10, { from: address1 })
     })
@@ -67,11 +66,11 @@ function PauseModuleCommon (admin, address1, address2, address3) {
       await this.cmtat.grantRole(PAUSER_ROLE, address1, { from: admin });
 
       // Act
-      ({ logs: this.logs } = await this.cmtat.unpause({ from: address1 }))
+      this.logs = await this.cmtat.unpause({ from: address1 })
 
       // Assert
       // emits a Unpaused event
-      expectEvent.inLogs(this.logs, 'Unpaused', { account: address1 })
+      expectEvent(this.logs, 'Unpaused', { account: address1 })
       // Transfer works
       this.cmtat.transfer(address2, 10, { from: address1 })
     })
@@ -80,12 +79,10 @@ function PauseModuleCommon (admin, address1, address2, address3) {
       // Arrange
       await this.cmtat.pause({ from: admin })
       // Act
-      await expectRevert(
+      await expectRevertCustomError(
         this.cmtat.unpause({ from: address1 }),
-        'AccessControl: account ' +
-          address1.toLowerCase() +
-          ' is missing role ' +
-          PAUSER_ROLE
+        'AccessControlUnauthorizedAccount',
+        [address1, PAUSER_ROLE]
       )
     })
 

@@ -1,5 +1,6 @@
 const { expectEvent, expectRevert } = require('@openzeppelin/test-helpers')
 const { DEBT_CREDIT_EVENT_ROLE } = require('../utils')
+const { expectRevertCustomError } = require('../../openzeppelin-contracts-upgradeable/test/helpers/customError.js');
 const { should } = require('chai').should()
 
 function CreditEventsModuleCommon (owner, attacker) {
@@ -23,34 +24,52 @@ function CreditEventsModuleCommon (owner, attacker) {
       // Arrange
       (await this.cmtat.creditEvents()).flagDefault.should.equal(false);
       // Act
-      ({ logs: this.logs } = await this.cmtat.setFlagDefault(true, { from: owner }));
+      this.logs = await this.cmtat.setFlagDefault(true, { from: owner });
       // Assert
       (await this.cmtat.creditEvents()).flagDefault.should.equal(true)
-      expectEvent.inLogs(this.logs, 'FlagDefault', {
+      expectEvent(this.logs, 'FlagDefault', {
         newFlagDefault: true
       })
+    })
+
+    it('testAdminCanNotSetFlagDefaultWithTheSameValue', async function () {
+      // Act + Assert
+      await expectRevertCustomError(
+        this.cmtat.setFlagDefault(await this.cmtat.creditEvents().flagDefault, { from: owner }),
+        'CMTAT_DebtModule_SameValue',
+        []
+      )
     })
 
     it('testAdminCanSetFlagRedeemed', async function () {
       // Arrange
       (await this.cmtat.creditEvents()).flagRedeemed.should.equal(false);
       // Act
-      ({ logs: this.logs } = await this.cmtat.setFlagRedeemed(true, { from: owner }));
+      this.logs = await this.cmtat.setFlagRedeemed(true, { from: owner });
       // Assert
       (await this.cmtat.creditEvents()).flagRedeemed.should.equal(true)
-      expectEvent.inLogs(this.logs, 'FlagRedeemed', {
+      expectEvent(this.logs, 'FlagRedeemed', {
         newFlagRedeemed: true
       })
+    })
+
+    it('testAdminCanNotSetFlagRedeemedWithTheSameValue', async function () {
+      // Act + Assert
+      await expectRevertCustomError(
+        this.cmtat.setFlagRedeemed(await this.cmtat.creditEvents().flagRedeemed, { from: owner }),
+        'CMTAT_DebtModule_SameValue',
+        []
+      )
     })
 
     it('testAdminCanSetRating', async function () {
       // Arrange
       (await this.cmtat.creditEvents()).rating.should.equal('');
       // Act
-      ({ logs: this.logs } = await this.cmtat.setRating('B++', { from: owner }));
+      this.logs = await this.cmtat.setRating('B++', { from: owner });
       // Assert
       (await this.cmtat.creditEvents()).rating.should.equal('B++')
-      expectEvent.inLogs(this.logs, 'Rating', {
+      expectEvent(this.logs, 'Rating', {
         newRatingIndexed: web3.utils.sha3('B++'),
         newRating: 'B++'
       })
@@ -60,42 +79,38 @@ function CreditEventsModuleCommon (owner, attacker) {
   context('NonAdminCannotSetDebt', function () {
     it('testCannotNonAdminSetCreditEvents', async function () {
       // Act
-      await expectRevert(
+      await expectRevertCustomError(
         this.cmtat.setCreditEvents(true, true, 'B++', { from: attacker }),
-        'AccessControl: account ' +
-            attacker.toLowerCase() +
-              ' is missing role ' +
-              DEBT_CREDIT_EVENT_ROLE)
+        'AccessControlUnauthorizedAccount',
+        [attacker, DEBT_CREDIT_EVENT_ROLE]
+      )
     })
 
     it('testCannotNonAdminSetFlagDefault', async function () {
       // Act
-      await expectRevert(
+      await expectRevertCustomError(
         this.cmtat.setFlagDefault(true, { from: attacker }),
-        'AccessControl: account ' +
-          attacker.toLowerCase() +
-            ' is missing role ' +
-            DEBT_CREDIT_EVENT_ROLE)
+        'AccessControlUnauthorizedAccount',
+        [attacker, DEBT_CREDIT_EVENT_ROLE]
+      )
     })
 
     it('testCannotNonAdminSetFlagRedeemed', async function () {
       // Act
-      await expectRevert(
+      await expectRevertCustomError(
         this.cmtat.setFlagRedeemed(true, { from: attacker }),
-        'AccessControl: account ' +
-          attacker.toLowerCase() +
-            ' is missing role ' +
-            DEBT_CREDIT_EVENT_ROLE)
+        'AccessControlUnauthorizedAccount',
+        [attacker, DEBT_CREDIT_EVENT_ROLE]
+      )
     })
 
     it('testCannotNonAdminSetRating', async function () {
       // Act
-      await expectRevert(
+      await expectRevertCustomError(
         this.cmtat.setRating('B++', { from: attacker }),
-        'AccessControl: account ' +
-          attacker.toLowerCase() +
-            ' is missing role ' +
-            DEBT_CREDIT_EVENT_ROLE)
+        'AccessControlUnauthorizedAccount',
+        [attacker, DEBT_CREDIT_EVENT_ROLE]
+      )
     })
   })
 }
