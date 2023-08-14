@@ -43,7 +43,8 @@
     "test:metaTx": "npx truffle test test/standard/modules/MetaTxModule.test.js test/proxy/modules/MetaTxModule.test.js",
     "test:hardhat:burn": "npx hardhat test test/standard/modules/BurnModule.test.js test/proxy/modules/BurnModule.test.js",
     "test:hardhat:mint": "npx hardhat test test/standard/modules/MintModule.test.js test/proxy/modules/MintModule.test.js",
-    "test:hardhat:erc20Base": "npx hardhat test test/standard/modules/ERC20BaseModule.test.js test/proxy/modules/ERC20BaseModule.test.js"
+    "test:hardhat:erc20Base": "npx hardhat test test/standard/modules/ERC20BaseModule.test.js test/proxy/modules/ERC20BaseModule.test.js",
+    "test:hardhat:debt": "npx hardhat test test/standard/modules/DebtModule.test.js test/proxy/modules/DebtModule.test.js"
   },
   "repository": {
     "type": "git",

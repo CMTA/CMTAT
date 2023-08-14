@@ -134,7 +134,7 @@ abstract contract DebtBaseModule is
     */
     function setInterestRate(uint256 interestRate_) public onlyRole(DEBT_ROLE) {
         if(interestRate_ == debt.interestRate) {
-            revert Errors.SameValue();
+            revert Errors.CMTAT_DebtModule_SameValue();
         }
         debt.interestRate = interestRate_;
         emit InterestRate(interestRate_);
@@ -145,7 +145,7 @@ abstract contract DebtBaseModule is
     */
     function setParValue(uint256 parValue_) public onlyRole(DEBT_ROLE) {
         if(parValue_ == debt.parValue) {
-            revert Errors.SameValue();
+            revert Errors.CMTAT_DebtModule_SameValue();
         }
         debt.parValue = parValue_;
         emit ParValue(parValue_);

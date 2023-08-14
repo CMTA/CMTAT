@@ -104,7 +104,7 @@ abstract contract BaseModule is AuthorizationModule, OnlyDelegateCallModule {
     */
     function setFlag(uint256 flag_) public onlyRole(DEFAULT_ADMIN_ROLE) {
         if(flag == flag_) {
-            revert Errors.SameValue();
+            revert Errors.CMTAT_BaseModule_SameValue();
         }
         flag = flag_;
         emit Flag(flag_);

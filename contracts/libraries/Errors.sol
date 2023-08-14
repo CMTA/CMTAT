@@ -33,7 +33,14 @@ library Errors {
     // ERC20BaseModule
     error CMTAT_ERC20BaseModule_EmptyTos();
     error CMTAT_ERC20BaseModule_TosValueslengthMismatch();
-    // ?
-    error SameValue();
+    
+    // DebtModule
+    error CMTAT_DebtModule_SameValue();
+
+    // BaseModule
+    error CMTAT_BaseModule_SameValue();
+
+    // ValidationModule
+    error CMTAT_ValidationModule_SameValue();
 }
     
