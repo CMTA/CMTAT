@@ -1,4 +1,4 @@
-name: Truffle CI
+name: Hardhat CI
 
 on:
   push:
