@@ -27,5 +27,5 @@ jobs:
       - name: Install Project Dependencies
         run: npm install
 
-      - name: Run Truffle Test
-        run: npx truffle test
+      - name: Run Hardhat Test
+        run: npx hardhat test
