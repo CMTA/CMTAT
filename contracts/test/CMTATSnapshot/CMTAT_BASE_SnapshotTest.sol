@@ -173,8 +173,11 @@ abstract contract CMTAT_BASE_SnapshotTest is
         address to,
         uint256 amount
     ) internal override(SnapshotModuleInternal, ERC20Upgradeable) {
-        if(!ValidationModule.validateTransfer(from, to, amount)) revert Errors.InvalidTransfer(from, to, amount);
         // We call the SnapshotModule only if the transfer is valid
+        if(!ValidationModule.validateTransfer(from, to, amount)) revert Errors.CMTAT_InvalidTransfer(from, to, amount);
+        /*
+        We do not call ERC20Upgradeable._update(from, to, amount) here because it is called inside the SnapshotModule
+        */
         /*
         SnapshotModule:
         Add this call in case you add the SnapshotModule

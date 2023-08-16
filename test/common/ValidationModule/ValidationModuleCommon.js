@@ -1,6 +1,6 @@
 const { expectEvent, expectRevert } = require('@openzeppelin/test-helpers')
 const { should } = require('chai').should()
-
+const { expectRevertCustomError } = require('../../../openzeppelin-contracts-upgradeable/test/helpers/customError')
 const RuleEngineMock = artifacts.require('RuleEngineMock')
 const { RULE_MOCK_AMOUNT_MAX, ZERO_ADDRESS } = require('../../utils')
 
@@ -64,9 +64,12 @@ function ValidationModuleCommon (admin, address1, address2, address3, address1In
 
     // reverts if ADDRESS1 transfers more tokens than rule allows
     it('testCannotTransferIfNotAllowedByRule', async function () {
+      const AMOUNT_TO_TRANSFER = RULE_MOCK_AMOUNT_MAX + 1
       // Act
-      await expectRevert.unspecified(
-        this.cmtat.transfer(address2, RULE_MOCK_AMOUNT_MAX + 1, { from: address1 })
+      await expectRevertCustomError(
+        this.cmtat.transfer(address2, AMOUNT_TO_TRANSFER, { from: address1 }),
+        'CMTAT_InvalidTransfer',
+        [address1, address2, AMOUNT_TO_TRANSFER]
       )
     })
   })

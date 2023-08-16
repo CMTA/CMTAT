@@ -3,17 +3,19 @@
 pragma solidity ^0.8.17;
 
 library Errors {
-    error InvalidTransfer(address from, address to, uint256 amount);
+    // CMTAT
+    error CMTAT_InvalidTransfer(address from, address to, uint256 amount);
+    
     // SnapshotModule
-    error SnapshotScheduledInThePast(uint256 time, uint256 timestamp);
-    error SnapshotTimestampBeforeLastSnapshot(uint256 time, uint256 lastSnapshotTimestamp);
-    error SnapshotTimestampAfterNextSnapshot(uint256 time, uint256 nextSnapshotTimestamp);
-    error SnapshotTimestampBeforePreviousSnapshot(uint256 time, uint256 previousSnapshotTimestamp);
-    error SnapshotAlreadyExists();
-    error SnapshotAlreadyDone();
-    error SnapshotNotScheduled();
-    error SnapshotNotFound();
-    error SnapshotNeverScheduled();
+    error CMTAT_SnapshotModule_SnapshotScheduledInThePast(uint256 time, uint256 timestamp);
+    error CMTAT_SnapshotModule_SnapshotTimestampBeforeLastSnapshot(uint256 time, uint256 lastSnapshotTimestamp);
+    error CMTAT_SnapshotModule_SnapshotTimestampAfterNextSnapshot(uint256 time, uint256 nextSnapshotTimestamp);
+    error CMTAT_SnapshotModule_SnapshotTimestampBeforePreviousSnapshot(uint256 time, uint256 previousSnapshotTimestamp);
+    error CMTAT_SnapshotModule_SnapshotAlreadyExists();
+    error CMTAT_SnapshotModule_SnapshotAlreadyDone();
+    error CMTAT_SnapshotModule_SnapshotNotScheduled();
+    error CMTAT_SnapshotModule_SnapshotNotFound();
+    error CMTAT_SnapshotModule_SnapshotNeverScheduled();
     
     // Generic
     error AddressZeroNotAllowed();
