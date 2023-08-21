@@ -18,7 +18,6 @@ library Errors {
     error CMTAT_SnapshotModule_SnapshotNeverScheduled();
     
     // Generic
-    error AddressZeroNotAllowed();
     error DirectCallToImplementation();
 
     // ERC20BaseModule
@@ -45,9 +44,7 @@ library Errors {
     // ValidationModule
     error CMTAT_ValidationModule_SameValue();
 
-    /*// EnforcementModule
-    error CMTAT_EnforcementModule_TransferRejectedAddressFromIsFrozen();
-    error CMTAT_EnforcementModule_TransferRejectedAddressToIsFrozen();
-    */
+    // AuthorizationModule
+    error CMTAT_AuthorizationModule_AddressZeroNotAllowed();
 }
     

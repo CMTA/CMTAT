@@ -45,7 +45,9 @@ abstract contract AuthorizationModule is AccessControlUpgradeable {
     function __AuthorizationModule_init_unchained(
         address admin
     ) internal onlyInitializing {
-        if(admin == address(0)) revert Errors.AddressZeroNotAllowed();
+        if(admin == address(0)){
+            revert Errors.CMTAT_AuthorizationModule_AddressZeroNotAllowed();
+        } 
         _grantRole(DEFAULT_ADMIN_ROLE, admin);
     }
 
