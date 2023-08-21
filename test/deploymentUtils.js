@@ -52,6 +52,19 @@ async function deployCMTATProxyWithSnapshot (_, admin, deployerAddress) {
   return TRUFFLE_CMTAT_PROXY_ADDRESS
 }
 
+async function deployCMTATProxyWithKillTest (_, admin, deployerAddress) {
+  // Ref: https://forum.openzeppelin.com/t/upgrades-hardhat-truffle5/30883/3
+  const ETHERS_CMTAT_PROXY_FACTORY = await ethers.getContractFactory('CMTAT_KILL_TEST');
+  const ETHERS_CMTAT_PROXY = await upgrades.deployProxy(ETHERS_CMTAT_PROXY_FACTORY, [admin, 'CMTA Token', 'CMTAT', DEPLOYMENT_DECIMAL, 'CMTAT_ISIN', 'https://cmta.ch', ZERO_ADDRESS, 'CMTAT_info', DEPLOYMENT_FLAG], {
+    initializer: 'initialize',
+    constructorArgs: [_],
+    from: deployerAddress
+  });
+  const TRUFFLE_CMTAT_PROXY = artifacts.require('CMTAT_KILL_TEST')
+  const TRUFFLE_CMTAT_PROXY_ADDRESS = await TRUFFLE_CMTAT_PROXY.at(await ETHERS_CMTAT_PROXY.getAddress());
+  return TRUFFLE_CMTAT_PROXY_ADDRESS
+}
+
 
 async function deployCMTATProxyWithParameter (deployerAddress, forwarderIrrevocable, admin,
   nameIrrevocable, symbolIrrevocable, decimalsIrrevocable, 
@@ -69,4 +82,4 @@ async function deployCMTATProxyWithParameter (deployerAddress, forwarderIrrevoca
   return TRUFFLE_CMTAT_PROXY_ADDRESS
 }
 
-module.exports = { deployCMTATStandalone, deployCMTATProxy, deployCMTATProxyWithSnapshot, deployCMTATProxyWithParameter, deployCMTATStandaloneWithParameter, DEPLOYMENT_FLAG, DEPLOYMENT_DECIMAL }
+module.exports = { deployCMTATStandalone, deployCMTATProxy, deployCMTATProxyWithSnapshot, deployCMTATProxyWithKillTest, deployCMTATProxyWithParameter, deployCMTATStandaloneWithParameter, DEPLOYMENT_FLAG, DEPLOYMENT_DECIMAL }

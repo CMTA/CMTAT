@@ -4,6 +4,7 @@
  *
 */
 const { expectEvent, expectRevert } = require('@openzeppelin/test-helpers')
+const {deployCMTATProxyWithKillTest} = require('../../deploymentUtils')
 const { should } = require('chai').should()
 const DECIMAL = 0
 const { ZERO_ADDRESS } = require('../../utils')
@@ -11,25 +12,16 @@ const {
   deployProxy,
   erc1967
 } = require('@openzeppelin/truffle-upgrades')
-
+const { ethers, upgrades } = require("hardhat");
 const CMTAT_KILL_TEST = artifacts.require('CMTAT_KILL_TEST')
 
-contract('Proxy - Security Test', function ([_, admin]) {
+contract('Proxy - Security Test', function ([_, admin, deployerAddress]) {
   beforeEach(async function () {
     this.flag = 5
     // Contract to deploy: CMTAT_KILL_TEST
-    this.CMTAT_PROXY = await deployProxy(
-      CMTAT_KILL_TEST,
-      [admin, 'CMTA Token', 'CMTAT', DECIMAL, 'CMTAT_ISIN', 'https://cmta.ch', ZERO_ADDRESS, 'CMTAT_info', this.flag],
-      {
-        initializer: 'initialize',
-        constructorArgs: [
-          _
-        ]
-      }
-    )
+    this.CMTAT_PROXY = await deployCMTATProxyWithKillTest(_, admin, deployerAddress)
     const implementationContractAddress =
-      await erc1967.getImplementationAddress(this.CMTAT_PROXY.address, {
+      await upgrades.erc1967.getImplementationAddress(this.CMTAT_PROXY.address, {
         from: admin
       })
     this.implementationContract = await CMTAT_KILL_TEST.at(
