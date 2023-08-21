@@ -1,7 +1,7 @@
 const { expectEvent, expectRevert } = require('@openzeppelin/test-helpers')
 const { should } = require('chai').should()
 const { ENFORCER_ROLE, CMTAT_TRANSFER_REJECT } = require('../utils')
-
+const { expectRevertCustomError } = require('../../openzeppelin-contracts-upgradeable/test/helpers/customError.js')
 const reasonFreeze = 'testFreeze'
 const reasonUnfreeze = 'testUnfreeze'
 
@@ -106,12 +106,11 @@ function EnforcementModuleCommon (owner, address1, address2, address3) {
     })
 
     it('testCannotNonEnforcerFreezeAddress', async function () {
-      await expectRevert(
+       // Act
+       await expectRevertCustomError(
         this.cmtat.freeze(address1, reasonFreeze, { from: address2 }),
-        'AccessControl: account ' +
-            address2.toLowerCase() +
-            ' is missing role ' +
-            ENFORCER_ROLE
+        'AccessControlUnauthorizedAccount',
+        [address2, ENFORCER_ROLE]
       );
       // Assert
       (await this.cmtat.frozen(address1)).should.equal(false)
@@ -121,12 +120,10 @@ function EnforcementModuleCommon (owner, address1, address2, address3) {
       // Arrange
       await this.cmtat.freeze(address1, reasonFreeze, { from: owner })
       // Act
-      await expectRevert(
+      await expectRevertCustomError(
         this.cmtat.unfreeze(address1, reasonUnfreeze, { from: address2 }),
-        'AccessControl: account ' +
-            address2.toLowerCase() +
-            ' is missing role ' +
-            ENFORCER_ROLE
+        'AccessControlUnauthorizedAccount',
+        [address2, ENFORCER_ROLE]
       );
       // Assert
       (await this.cmtat.frozen(address1)).should.equal(true)
@@ -143,7 +140,12 @@ function EnforcementModuleCommon (owner, address1, address2, address3) {
       (await this.cmtat.messageForTransferRestriction(2)).should.equal(
         'The address FROM is frozen'
       )
-      await expectRevert.unspecified(this.cmtat.transfer(address2, 10, { from: address1 }))
+      const AMOUNT_TO_TRANSFER = 10
+      await expectRevertCustomError(
+        this.cmtat.transfer(address2, AMOUNT_TO_TRANSFER, { from: address1 }),
+        'CMTAT_InvalidTransfer',
+        [address1, address2, AMOUNT_TO_TRANSFER]
+      )
     })
 
     // reverts if address3 transfers tokens from address1 to address2 when paused
@@ -161,7 +163,13 @@ function EnforcementModuleCommon (owner, address1, address2, address3) {
       (await this.cmtat.messageForTransferRestriction(3)).should.equal(
         'The address TO is frozen'
       )
-      await expectRevert.unspecified(this.cmtat.transferFrom(address3, address2, 10, { from: address1 }))
+      const AMOUNT_TO_TRANSFER = 10
+      await expectRevertCustomError(
+        this.cmtat.transferFrom(address3, address2, AMOUNT_TO_TRANSFER, { from: address1 }),
+        'CMTAT_InvalidTransfer',
+        [address3, address2, AMOUNT_TO_TRANSFER]
+      )
+    
     })
   })
 }

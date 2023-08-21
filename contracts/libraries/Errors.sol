@@ -44,5 +44,10 @@ library Errors {
 
     // ValidationModule
     error CMTAT_ValidationModule_SameValue();
+
+    /*// EnforcementModule
+    error CMTAT_EnforcementModule_TransferRejectedAddressFromIsFrozen();
+    error CMTAT_EnforcementModule_TransferRejectedAddressToIsFrozen();
+    */
 }
     
