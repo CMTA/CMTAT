@@ -2,7 +2,7 @@ const { expectEvent, expectRevert, time } = require('@openzeppelin/test-helpers'
 const { expectRevertCustomError } = require('../../../openzeppelin-contracts-upgradeable/test/helpers/customError')
 const { SNAPSHOOTER_ROLE } = require('../../utils')
 const { should } = require('chai').should()
-const { getUnixTimestamp, checkArraySnapshot } = require('./SnapshotModuleUtils/SnapshotModuleUtils')
+const { checkArraySnapshot } = require('./SnapshotModuleUtils/SnapshotModuleUtils')
 
 
 function SnapshotModuleCommonRescheduling (owner, address1, address2, address3) {

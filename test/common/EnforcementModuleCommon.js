@@ -1,6 +1,6 @@
 const { expectEvent, expectRevert } = require('@openzeppelin/test-helpers')
 const { should } = require('chai').should()
-const { ENFORCER_ROLE, CMTAT_TRANSFER_REJECT } = require('../utils')
+const { ENFORCER_ROLE } = require('../utils')
 const { expectRevertCustomError } = require('../../openzeppelin-contracts-upgradeable/test/helpers/customError.js')
 const reasonFreeze = 'testFreeze'
 const reasonUnfreeze = 'testUnfreeze'

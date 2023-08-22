@@ -1,7 +1,3 @@
-const { expectRevert } = require('@openzeppelin/test-helpers')
-const CMTAT_STANDALONE = artifacts.require('CMTAT_STANDALONE')
-const CMTAT_PROXY = artifacts.require('CMTAT_PROXY')
-const { deployProxy } = require('@openzeppelin/truffle-upgrades')
 const { expectRevertCustomError } = require('../../openzeppelin-contracts-upgradeable/test/helpers/customError.js');
 const { ZERO_ADDRESS } = require('../utils')
 const { deployCMTATProxyWithParameter, deployCMTATStandaloneWithParameter } = require('../deploymentUtils')

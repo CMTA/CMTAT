@@ -1,7 +1,6 @@
-const { expectEvent, expectRevert, time, BN } = require('@openzeppelin/test-helpers')
-const { SNAPSHOOTER_ROLE } = require('../../utils')
+const { time } = require('@openzeppelin/test-helpers')
 const { should } = require('chai').should()
-const { getUnixTimestamp, timeout, checkArraySnapshot } = require('./SnapshotModuleUtils/SnapshotModuleUtils')
+const { checkArraySnapshot } = require('./SnapshotModuleUtils/SnapshotModuleUtils')
 
 function SnapshotModuleCommonGetNextSnapshot (owner, address1, address2, address3) {
   context('Snapshot scheduling', function () {

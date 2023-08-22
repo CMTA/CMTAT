@@ -1,5 +1,4 @@
 const { BN, expectEvent, expectRevert } = require('@openzeppelin/test-helpers')
-const { DEFAULT_ADMIN_ROLE } = require('../utils')
 const { should } = require('chai').should()
 const { expectRevertCustomError } = require('../../openzeppelin-contracts-upgradeable/test/helpers/customError.js')
 

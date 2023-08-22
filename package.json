@@ -52,6 +52,7 @@
     "test:hardhat:authorization": "npx hardhat test test/standard/modules/AuthorizationModule/AuthorizationModule.test.js test/proxy/modules/AuthorizationModule/AuthorizationModule.test.js",
     "test:hardhat:snapshot": "npx hardhat test test/standard/modules/SnapshotModule.test.js test/proxy/modules/SnapshotModule.test.js",
     "test:hardhat:enforcement": "npx hardhat test test/standard/modules/EnforcementModule.test.js test/proxy/modules/EnforcementModule.test.js",
+    "test:hardhat:metaTx": "npx hardhat test test/standard/modules/MetaTxModule.test.js test/proxy/modules/MetaTxModule.test.js",
     "test:hardhat:proxy": "npx hardhat test test/proxy/general/KillImplementation.test.js test/proxy/general/Proxy.test.js test/proxy/general/UpgradeProxy.test.js",
     "test:hardhat:deployment": "npx hardhat test test/deployment/deployment.test.js"
   },

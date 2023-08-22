@@ -1,6 +1,6 @@
-const { expectEvent, expectRevert, time, BN } = require('@openzeppelin/test-helpers')
+const { time, BN } = require('@openzeppelin/test-helpers')
 const { should } = require('chai').should()
-const { getUnixTimestamp, timeout, checkSnapshot } = require('../SnapshotModuleUtils/SnapshotModuleUtils')
+const { checkSnapshot } = require('../SnapshotModuleUtils/SnapshotModuleUtils')
 
 function SnapshotModuleMultiplePlannedTest (admin, address1, address2, address3) {
   // With multiple planned snapshot

@@ -3,11 +3,9 @@
  * The goal is to verify if the modifier onlyDelegateCall works as intended
  *
 */
-const { expectEvent, expectRevert } = require('@openzeppelin/test-helpers')
+const { expectRevert } = require('@openzeppelin/test-helpers')
 const {deployCMTATProxyWithKillTest} = require('../../deploymentUtils')
 const { should } = require('chai').should()
-const DECIMAL = 0
-const { ZERO_ADDRESS } = require('../../utils')
 const {
   deployProxy,
   erc1967

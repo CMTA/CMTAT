@@ -1,4 +1,3 @@
-const CMTAT = artifacts.require('CMTATSnapshotProxyTest')
 const { deployCMTATProxyWithSnapshot } = require('../../deploymentUtils')
 const SnapshotModuleCommonRescheduling = require('../../common/SnapshotModuleCommon/SnapshotModuleCommonRescheduling')
 const SnapshotModuleCommonScheduling = require('../../common/SnapshotModuleCommon/SnapshotModuleCommonScheduling')
@@ -7,8 +6,6 @@ const SnapshotModuleCommonGetNextSnapshot = require('../../common/SnapshotModule
 const SnapshotModuleMultiplePlannedTest = require('../../common/SnapshotModuleCommon/global/SnapshotModuleMultiplePlannedTest')
 const SnapshotModuleOnePlannedSnapshotTest = require('../../common/SnapshotModuleCommon/global/SnapshotModuleOnePlannedSnapshotTest')
 const SnapshotModuleZeroPlannedSnapshotTest = require('../../common/SnapshotModuleCommon/global/SnapshotModuleZeroPlannedSnapshot')
-const { ZERO_ADDRESS } = require('../../utils')
-const DECIMAL = 0
 
 contract(
   'Proxy - SnapshotModule',

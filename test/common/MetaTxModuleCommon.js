@@ -1,4 +1,4 @@
-const { BN, expectEvent, expectRevert, time } = require('@openzeppelin/test-helpers')
+const { BN, time } = require('@openzeppelin/test-helpers')
 const { getDomain, domainType } = require('../../openzeppelin-contracts-upgradeable/test/helpers/eip712');
 // TODO : Update the library
 // const ethSigUtil = require('@metamask/eth-sig-util')

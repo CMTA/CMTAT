@@ -1,11 +1,6 @@
-const { expectEvent, expectRevert, BN } = require('@openzeppelin/test-helpers')
+const { BN } = require('@openzeppelin/test-helpers')
 const { should } = require('chai').should()
-
-const { deployProxy, upgradeProxy, erc1967 } = require('@openzeppelin/truffle-upgrades')
-const CMTAT1 = artifacts.require('CMTAT_PROXY')
-const CMTAT2 = artifacts.require('CMTAT_PROXY_TEST')
 const { ZERO_ADDRESS } = require('../../utils')
-const DECIMAL = 0
 const { deployCMTATProxy, DEPLOYMENT_FLAG, DEPLOYMENT_DECIMAL } = require('../../deploymentUtils')
 const { ethers, upgrades } = require("hardhat");
 contract('UpgradeableCMTAT - Proxy', function ([_, admin, address1, deployerAddress]) {

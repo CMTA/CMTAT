@@ -1,8 +1,7 @@
-const { expectEvent, expectRevert } = require('@openzeppelin/test-helpers')
+const { expectEvent } = require('@openzeppelin/test-helpers')
 const { expectRevertCustomError } = require('../../../openzeppelin-contracts-upgradeable/test/helpers/customError')
 const { PAUSER_ROLE, DEFAULT_ADMIN_ROLE } = require('../../utils')
 const chai = require('chai')
-const expect = chai.expect
 const should = chai.should()
 
 function AuthorizationModuleCommon (owner, address1, address2) {

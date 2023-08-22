@@ -1,4 +1,3 @@
-const CMTAT = artifacts.require('CMTAT_PROXY')
 const ValidationModuleSetRuleEngineCommon = require('../../../common/ValidationModule/ValidationModuleSetRuleEngineCommon')
 const { deployCMTATProxy } = require('../../../deploymentUtils')
 

@@ -1,7 +1,6 @@
-const { expectEvent, expectRevert, time } = require('@openzeppelin/test-helpers')
-const { SNAPSHOOTER_ROLE } = require('../../../utils')
+const { time } = require('@openzeppelin/test-helpers')
 const { should } = require('chai').should()
-const { getUnixTimestamp, timeout, checkSnapshot } = require('../SnapshotModuleUtils/SnapshotModuleUtils')
+const { checkSnapshot } = require('../SnapshotModuleUtils/SnapshotModuleUtils')
 const reason = 'BURN_TEST'
 
 function SnapshotModuleOnePlannedSnapshotTest (admin, address1, address2, address3) {
