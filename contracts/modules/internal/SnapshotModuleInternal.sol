@@ -147,13 +147,16 @@ abstract contract SnapshotModuleInternal is ERC20Upgradeable {
             revert Errors.CMTAT_SnapshotModule_SnapshotNotFound();
         } 
         if (index + 1 < _scheduledSnapshots.length) {
-            if(newTime >= _scheduledSnapshots[index + 1]) revert Errors.CMTAT_SnapshotModule_SnapshotTimestampAfterNextSnapshot(newTime, _scheduledSnapshots[index + 1]);
+            uint256 nextSnapshotTime = _scheduledSnapshots[index + 1];
+            if(newTime > nextSnapshotTime) {
+                revert Errors.CMTAT_SnapshotModule_SnapshotTimestampAfterNextSnapshot(newTime, nextSnapshotTime);
+            } else if(newTime == nextSnapshotTime){
+                revert Errors.CMTAT_SnapshotModule_SnapshotAlreadyExists();
+            }
         }
-
         if (index > 0) {
             if(newTime <= _scheduledSnapshots[index - 1]) revert Errors.CMTAT_SnapshotModule_SnapshotTimestampBeforePreviousSnapshot(newTime, _scheduledSnapshots[index - 1]);
         }
-
         _scheduledSnapshots[index] = newTime;
 
         emit SnapshotSchedule(oldTime, newTime);

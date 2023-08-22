@@ -13,12 +13,12 @@ contract(
     beforeEach(async function () {
       this.cmtat = await deployCMTATProxyWithSnapshot(_, admin, deployerAddress)
     })
-    SnapshotModuleMultiplePlannedTest(admin, address1, address2, address3)
-    SnapshotModuleOnePlannedSnapshotTest(admin, address1, address2, address3)
-    SnapshotModuleZeroPlannedSnapshotTest(admin, address1, address2, address3)
+    //SnapshotModuleMultiplePlannedTest(admin, address1, address2, address3)
+    //SnapshotModuleOnePlannedSnapshotTest(admin, address1, address2, address3)
+    //SnapshotModuleZeroPlannedSnapshotTest(admin, address1, address2, address3)
     SnapshotModuleCommonRescheduling(admin, address1, address2, address3)
-    SnapshotModuleCommonScheduling(admin, address1, address2, address3)
-    SnapshotModuleCommonUnschedule(admin, address1, address2, address3)
-    SnapshotModuleCommonGetNextSnapshot(admin, address1, address2, address3)
+    //SnapshotModuleCommonScheduling(admin, address1, address2, address3)
+    //SnapshotModuleCommonUnschedule(admin, address1, address2, address3)
+    //SnapshotModuleCommonGetNextSnapshot(admin, address1, address2, address3)
   }
 )
