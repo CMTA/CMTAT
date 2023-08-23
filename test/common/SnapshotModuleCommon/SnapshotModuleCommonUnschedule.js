@@ -69,10 +69,12 @@ function SnapshotModuleCommonUnschedule(owner, address1, address2, address3) {
       const SNAPSHOT_TIME = this.currentTime.add(time.duration.seconds(60))
       let snapshots = await this.cmtat.getNextSnapshots()
       snapshots.length.should.equal(0)
-      await expectRevert.unspecified(
+      await expectRevertCustomError(
         this.cmtat.unscheduleSnapshotNotOptimized(SNAPSHOT_TIME, {
           from: owner
-        })
+        }),
+        'CMTAT_SnapshotModule_SnapshotNotFound',
+        []
       )
       snapshots = await this.cmtat.getNextSnapshots()
       snapshots.length.should.equal(0)
@@ -188,32 +190,41 @@ function SnapshotModuleCommonUnschedule(owner, address1, address2, address3) {
 
     it('reverts if no snapshot is scheduled', async function () {
       const SNAPSHOT_TIME = this.currentTime.add(time.duration.seconds(90))
+      // Arrange
       // Delete the only snapshot
       this.logs = await this.cmtat.unscheduleLastSnapshot(this.snapshotTime, {
         from: owner
       })
-      await expectRevert.unspecified(
+      // Act
+      await expectRevertCustomError(
         this.cmtat.unscheduleLastSnapshot(SNAPSHOT_TIME, {
           from: owner
-        })
+        }),
+        'CMTAT_SnapshotModule_NoSnapshotScheduled',
+        []
       )
     })
 
     it('reverts when snapshot is not found', async function () {
       const SNAPSHOT_TIME = this.currentTime.add(time.duration.seconds(90))
-      await expectRevert.unspecified(
+      // Act
+      await expectRevertCustomError(
         this.cmtat.unscheduleLastSnapshot(SNAPSHOT_TIME, {
           from: owner
-        })
+        }),
+        'CMTAT_SnapshotModule_SnapshotNotFound',
+        []
       )
     })
 
     it('reverts when snapshot has been processed', async function () {
       const SNAPSHOT_TIME = this.currentTime.sub(time.duration.seconds(60))
-      await expectRevert.unspecified(
+      await expectRevertCustomError(
         this.cmtat.unscheduleLastSnapshot(SNAPSHOT_TIME, {
           from: owner
-        })
+        }),
+        'CMTAT_SnapshotModule_SnapshotAlreadyDone',
+        []
       )
     })
   })

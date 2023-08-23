@@ -1,6 +1,6 @@
 const { BN, expectEvent, expectRevert } = require('@openzeppelin/test-helpers')
+const { expectRevertCustomError } = require('../../openzeppelin-contracts-upgradeable/test/helpers/customError')
 const { should } = require('chai').should()
-const { expectRevertCustomError } = require('../../openzeppelin-contracts-upgradeable/test/helpers/customError.js')
 
 function BaseModuleCommon (admin, address1, address2, address3, proxyTest) {
   context('Token structure', function () {
@@ -173,13 +173,15 @@ function BaseModuleCommon (admin, address1, address2, address3, proxyTest) {
         await this.cmtat.allowance(address1, address3)
       ).should.be.bignumber.equal(FIRST_AMOUNT_TO_APPROVE)
       // Act
-      await expectRevert.unspecified(
+      await expectRevertCustomError(
         this.cmtat.methods['approve(address,uint256,uint256)'](
           address3,
           AMOUNT_TO_APPROVE,
           WRONG_CURRENT_ALLOWANCE,
           { from: address1 }
-        )
+        ),
+        'CMTAT_ERC20BaseModule_WrongAllowance',
+        [address3, FIRST_AMOUNT_TO_APPROVE, WRONG_CURRENT_ALLOWANCE]
       );
       // Assert
       (

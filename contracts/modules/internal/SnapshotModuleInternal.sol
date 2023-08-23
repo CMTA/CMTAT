@@ -88,11 +88,15 @@ abstract contract SnapshotModuleInternal is ERC20Upgradeable {
             revert Errors.CMTAT_SnapshotModule_SnapshotScheduledInThePast(time, block.timestamp);
         }
 
-        if (_scheduledSnapshots.length > 0) {
+       if (_scheduledSnapshots.length > 0) {
             // We check the last snapshot on the list
-            if(time <= _scheduledSnapshots[_scheduledSnapshots.length - 1]) {
-                revert Errors.CMTAT_SnapshotModule_SnapshotTimestampBeforeLastSnapshot(time, _scheduledSnapshots[_scheduledSnapshots.length - 1]);
+            uint256 nextSnapshotTime = _scheduledSnapshots[_scheduledSnapshots.length - 1];
+            if(time < nextSnapshotTime) {
+                revert Errors.CMTAT_SnapshotModule_SnapshotTimestampBeforeLastSnapshot(time, nextSnapshotTime);
+            } else if(time == nextSnapshotTime){
+                revert Errors.CMTAT_SnapshotModule_SnapshotAlreadyExists();
             }
+
         }
         _scheduledSnapshots.push(time);
         emit SnapshotSchedule(0, time);
@@ -140,7 +144,7 @@ abstract contract SnapshotModuleInternal is ERC20Upgradeable {
             revert Errors.CMTAT_SnapshotModule_SnapshotScheduledInThePast(newTime, block.timestamp);
         }
         if(_scheduledSnapshots.length == 0){
-            revert Errors.CMTAT_SnapshotModule_SnapshotNotScheduled();
+            revert Errors.CMTAT_SnapshotModule_NoSnapshotScheduled();
         } 
         (bool foundOld, uint256 index) = _findScheduledSnapshotIndex(oldTime);
         if(!foundOld){
@@ -171,11 +175,11 @@ abstract contract SnapshotModuleInternal is ERC20Upgradeable {
             revert Errors.CMTAT_SnapshotModule_SnapshotAlreadyDone();
         } 
         if(_scheduledSnapshots.length == 0){
-            revert Errors.CMTAT_SnapshotModule_SnapshotNotScheduled();
+            revert Errors.CMTAT_SnapshotModule_NoSnapshotScheduled();
         } 
         // All snapshot time are unique, so we do not check the indice
         if(time != _scheduledSnapshots[_scheduledSnapshots.length - 1]){
-            revert Errors.CMTAT_SnapshotModule_SnapshotNeverScheduled();
+            revert Errors.CMTAT_SnapshotModule_SnapshotNotFound();
         } 
         _scheduledSnapshots.pop();
         emit SnapshotUnschedule(time);

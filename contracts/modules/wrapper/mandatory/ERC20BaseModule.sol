@@ -121,8 +121,9 @@ abstract contract ERC20BaseModule is ERC20Upgradeable {
         uint256 currentAllowance
     ) public virtual returns (bool) {
         address owner = _msgSender();
-        if(allowance(_msgSender(), spender) != currentAllowance) {
-            revert Errors.WrongAllowance(allowance(owner , spender), currentAllowance);
+        uint256 currentAllowanceFromSmartContract = allowance(owner, spender);
+        if(currentAllowanceFromSmartContract != currentAllowance) {
+            revert Errors.CMTAT_ERC20BaseModule_WrongAllowance(spender, currentAllowanceFromSmartContract, currentAllowance) ;
        }
         // We call directly the internal function _approve
         // The reason is that the public function adds only the owner address recovery

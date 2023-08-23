@@ -39,10 +39,12 @@ function SnapshotModuleCommonScheduling (owner, address1, address2, address3) {
 
     it('reverts when trying to schedule a snapshot in the past', async function () {
       const SNAPSHOT_TIME = this.currentTime.sub(time.duration.seconds(60))
-      await expectRevert.unspecified(
+      await expectRevertCustomError(
         this.cmtat.scheduleSnapshot(SNAPSHOT_TIME, {
           from: owner
-        })
+        }),
+        'CMTAT_SnapshotModule_SnapshotScheduledInThePast',
+        [SNAPSHOT_TIME, (await time.latest()).add(time.duration.seconds(1))]
       )
     })
 
@@ -51,8 +53,10 @@ function SnapshotModuleCommonScheduling (owner, address1, address2, address3) {
       // Arrange
       await this.cmtat.scheduleSnapshot(SNAPSHOT_TIME, { from: owner })
       // Act
-      await expectRevert.unspecified(
-        this.cmtat.scheduleSnapshot(SNAPSHOT_TIME, { from: owner })
+      await expectRevertCustomError(
+        this.cmtat.scheduleSnapshot(SNAPSHOT_TIME, { from: owner }),
+        'CMTAT_SnapshotModule_SnapshotAlreadyExists',
+        []
       )
       // Assert
       const snapshots = await this.cmtat.getNextSnapshots()
@@ -152,10 +156,12 @@ function SnapshotModuleCommonScheduling (owner, address1, address2, address3) {
 
     it('reverts when trying to schedule a snapshot in the past', async function () {
       const SNAPSHOT_TIME = this.currentTime.sub(time.duration.seconds(60))
-      await expectRevert.unspecified(
+      await expectRevertCustomError(
         this.cmtat.scheduleSnapshotNotOptimized(SNAPSHOT_TIME, {
           from: owner
-        })
+        }),
+        'CMTAT_SnapshotModule_SnapshotScheduledInThePast',
+        [SNAPSHOT_TIME, (await time.latest()).add(time.duration.seconds(1))]
       )
     })
 
@@ -172,9 +178,12 @@ function SnapshotModuleCommonScheduling (owner, address1, address2, address3) {
         { from: owner }
       )
       // Act
-      await expectRevert.unspecified(
-        this.cmtat.scheduleSnapshotNotOptimized(FIRST_SNAPSHOT, { from: owner })
+      await expectRevertCustomError(
+        this.cmtat.scheduleSnapshotNotOptimized(FIRST_SNAPSHOT, { from: owner }),
+        'CMTAT_SnapshotModule_SnapshotAlreadyExists',
+        []
       )
+      // Assert
       const snapshots = await this.cmtat.getNextSnapshots()
       snapshots.length.should.equal(2)
       checkArraySnapshot(snapshots, [FIRST_SNAPSHOT, SECOND_SNAPSHOT])

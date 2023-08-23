@@ -5,6 +5,7 @@
 */
 const { expectRevert } = require('@openzeppelin/test-helpers')
 const {deployCMTATProxyWithKillTest} = require('../../deploymentUtils')
+const { expectRevertCustomError } = require('../../../openzeppelin-contracts-upgradeable/test/helpers/customError.js');
 const { should } = require('chai').should()
 const {
   deployProxy,
@@ -28,8 +29,10 @@ contract('Proxy - Security Test', function ([_, admin, deployerAddress]) {
   })
   context('Implementation contract', function () {
     it('testCannotKillTheImplementationContract', async function () {
-      await expectRevert.unspecified(
-        this.implementationContract.kill({ from: admin })
+      await expectRevertCustomError(
+        this.implementationContract.kill({ from: admin }),
+        'CMTAT_OnlyDelegateCallModule_DirectCallToImplementation',
+        []
       )
     })
   })

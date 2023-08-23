@@ -106,8 +106,8 @@ function EnforcementModuleCommon (owner, address1, address2, address3) {
     })
 
     it('testCannotNonEnforcerFreezeAddress', async function () {
-       // Act
-       await expectRevertCustomError(
+      // Act
+      await expectRevertCustomError(
         this.cmtat.freeze(address1, reasonFreeze, { from: address2 }),
         'AccessControlUnauthorizedAccount',
         [address2, ENFORCER_ROLE]
@@ -130,7 +130,7 @@ function EnforcementModuleCommon (owner, address1, address2, address3) {
     })
 
     // reverts if address1 transfers tokens to address2 when paused
-    it('testCannotTransferTokenWhenFromIsFrozen', async function () {
+    it('testCannotTransferWhenFromIsFrozenWithTransfer', async function () {
       // Act
       await this.cmtat.freeze(address1, reasonFreeze, { from: owner });
       // Assert
@@ -149,7 +149,7 @@ function EnforcementModuleCommon (owner, address1, address2, address3) {
     })
 
     // reverts if address3 transfers tokens from address1 to address2 when paused
-    it('testCannotTransferTokenWhenToIsFrozen', async function () {
+    it('testCannotTransferTokenWhenToIsFrozenWithTransferFrom', async function () {
       // Arrange
       // Define allowance
       await this.cmtat.approve(address1, 20, { from: address3 })
@@ -169,7 +169,6 @@ function EnforcementModuleCommon (owner, address1, address2, address3) {
         'CMTAT_InvalidTransfer',
         [address3, address2, AMOUNT_TO_TRANSFER]
       )
-    
     })
   })
 }

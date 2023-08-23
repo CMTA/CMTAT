@@ -13,15 +13,14 @@ library Errors {
     error CMTAT_SnapshotModule_SnapshotTimestampBeforePreviousSnapshot(uint256 time, uint256 previousSnapshotTimestamp);
     error CMTAT_SnapshotModule_SnapshotAlreadyExists();
     error CMTAT_SnapshotModule_SnapshotAlreadyDone();
-    error CMTAT_SnapshotModule_SnapshotNotScheduled();
+    error CMTAT_SnapshotModule_NoSnapshotScheduled();
     error CMTAT_SnapshotModule_SnapshotNotFound();
-    error CMTAT_SnapshotModule_SnapshotNeverScheduled();
     
-    // Generic
-    error DirectCallToImplementation();
+    // OnlyDelegateCallModule
+    error CMTAT_OnlyDelegateCallModule_DirectCallToImplementation();
 
     // ERC20BaseModule
-    error WrongAllowance(uint256 allowance, uint256 currentAllowance);
+    error CMTAT_ERC20BaseModule_WrongAllowance(address spender, uint256 currentAllowance, uint256 allowanceProvided);
     
     // BurnModule
     error CMTAT_BurnModule_EmptyAccounts();
