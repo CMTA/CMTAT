@@ -64,7 +64,7 @@ abstract contract CreditEventsModule is
     function setFlagDefault(
         bool flagDefault_
     ) public onlyRole(DEBT_CREDIT_EVENT_ROLE) {
-        if(flagDefault_ == creditEvents.flagDefault) {
+        if (flagDefault_ == creditEvents.flagDefault) {
             revert Errors.CMTAT_DebtModule_SameValue();
         }
         creditEvents.flagDefault = flagDefault_;
@@ -77,7 +77,7 @@ abstract contract CreditEventsModule is
     function setFlagRedeemed(
         bool flagRedeemed_
     ) public onlyRole(DEBT_CREDIT_EVENT_ROLE) {
-        if(flagRedeemed_ == creditEvents.flagRedeemed) {
+        if (flagRedeemed_ == creditEvents.flagRedeemed) {
             revert Errors.CMTAT_DebtModule_SameValue();
         }
         creditEvents.flagRedeemed = flagRedeemed_;

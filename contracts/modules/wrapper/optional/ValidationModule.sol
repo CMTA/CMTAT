@@ -61,7 +61,8 @@ abstract contract ValidationModule is
     function setRuleEngine(
         IEIP1404Wrapper ruleEngine_
     ) external onlyRole(DEFAULT_ADMIN_ROLE) {
-        if(ruleEngine == ruleEngine_) revert Errors.CMTAT_ValidationModule_SameValue();
+        if (ruleEngine == ruleEngine_)
+            revert Errors.CMTAT_ValidationModule_SameValue();
         ruleEngine = ruleEngine_;
         emit RuleEngine(ruleEngine_);
     }

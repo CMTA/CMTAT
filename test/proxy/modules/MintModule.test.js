@@ -1,5 +1,5 @@
 const MintModuleCommon = require('../../common/MintModuleCommon')
-const {deployCMTATProxy} = require('../../deploymentUtils')
+const { deployCMTATProxy } = require('../../deploymentUtils')
 
 contract(
   'Proxy - MintModule',

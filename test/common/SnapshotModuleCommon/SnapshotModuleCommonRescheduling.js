@@ -1,9 +1,17 @@
-const { expectEvent, expectRevert, time, BN } = require('@openzeppelin/test-helpers')
-const { expectRevertCustomError } = require('../../../openzeppelin-contracts-upgradeable/test/helpers/customError')
+const {
+  expectEvent,
+  expectRevert,
+  time,
+  BN
+} = require('@openzeppelin/test-helpers')
+const {
+  expectRevertCustomError
+} = require('../../../openzeppelin-contracts-upgradeable/test/helpers/customError')
 const { SNAPSHOOTER_ROLE } = require('../../utils')
 const { should } = require('chai').should()
-const { checkArraySnapshot } = require('./SnapshotModuleUtils/SnapshotModuleUtils')
-
+const {
+  checkArraySnapshot
+} = require('./SnapshotModuleUtils/SnapshotModuleUtils')
 
 function SnapshotModuleCommonRescheduling (owner, address1, address2, address3) {
   context('Snapshot rescheduling', function () {
@@ -30,13 +38,19 @@ function SnapshotModuleCommonRescheduling (owner, address1, address2, address3) 
     })
 
     it('can reschedule a snapshot between a range of snapshot', async function () {
-      const SNAPSHOT_MIDDLE_OLD_TIME = this.snapshotTime.add(time.duration.seconds(30))
-      const SNAPSHOT_MIDDLE_NEW_TIME = this.snapshotTime.add(time.duration.seconds(40))
+      const SNAPSHOT_MIDDLE_OLD_TIME = this.snapshotTime.add(
+        time.duration.seconds(30)
+      )
+      const SNAPSHOT_MIDDLE_NEW_TIME = this.snapshotTime.add(
+        time.duration.seconds(40)
+      )
       const FIRST_SNAPSHOT = this.snapshotTime.add(time.duration.seconds(60))
       const SECOND_SNAPSHOT = this.snapshotTime.add(time.duration.seconds(90))
-      await this.cmtat.scheduleSnapshot(SNAPSHOT_MIDDLE_OLD_TIME, { from: owner })
+      await this.cmtat.scheduleSnapshot(SNAPSHOT_MIDDLE_OLD_TIME, {
+        from: owner
+      })
       await this.cmtat.scheduleSnapshot(FIRST_SNAPSHOT, { from: owner })
-      await this.cmtat.scheduleSnapshot(SECOND_SNAPSHOT, { from: owner });
+      await this.cmtat.scheduleSnapshot(SECOND_SNAPSHOT, { from: owner })
       this.logs = await this.cmtat.rescheduleSnapshot(
         SNAPSHOT_MIDDLE_OLD_TIME,
         SNAPSHOT_MIDDLE_NEW_TIME,
@@ -48,15 +62,26 @@ function SnapshotModuleCommonRescheduling (owner, address1, address2, address3) 
       })
       const snapshots = await this.cmtat.getNextSnapshots()
       snapshots.length.should.equal(4)
-      checkArraySnapshot(snapshots, [this.snapshotTime, SNAPSHOT_MIDDLE_NEW_TIME, FIRST_SNAPSHOT, SECOND_SNAPSHOT])
+      checkArraySnapshot(snapshots, [
+        this.snapshotTime,
+        SNAPSHOT_MIDDLE_NEW_TIME,
+        FIRST_SNAPSHOT,
+        SECOND_SNAPSHOT
+      ])
     })
 
     it('testCannotRescheduleASnapshotAfterTheNextSnapshot', async function () {
-      const SNAPSHOT_MIDDLE_OLD_TIME = this.snapshotTime.add(time.duration.seconds(30))
-      const SNAPSHOT_MIDDLE_NEW_TIME = this.snapshotTime.add(time.duration.seconds(61))
+      const SNAPSHOT_MIDDLE_OLD_TIME = this.snapshotTime.add(
+        time.duration.seconds(30)
+      )
+      const SNAPSHOT_MIDDLE_NEW_TIME = this.snapshotTime.add(
+        time.duration.seconds(61)
+      )
       const FIRST_SNAPSHOT = this.snapshotTime.add(time.duration.seconds(60))
       const SECOND_SNAPSHOT = this.snapshotTime.add(time.duration.seconds(90))
-      await this.cmtat.scheduleSnapshot(SNAPSHOT_MIDDLE_OLD_TIME, { from: owner })
+      await this.cmtat.scheduleSnapshot(SNAPSHOT_MIDDLE_OLD_TIME, {
+        from: owner
+      })
       await this.cmtat.scheduleSnapshot(FIRST_SNAPSHOT, { from: owner })
       await this.cmtat.scheduleSnapshot(SECOND_SNAPSHOT, { from: owner })
       await expectRevertCustomError(
@@ -70,15 +95,26 @@ function SnapshotModuleCommonRescheduling (owner, address1, address2, address3) 
       )
       const snapshots = await this.cmtat.getNextSnapshots()
       snapshots.length.should.equal(4)
-      checkArraySnapshot(snapshots, [this.snapshotTime, SNAPSHOT_MIDDLE_OLD_TIME, FIRST_SNAPSHOT, SECOND_SNAPSHOT])
+      checkArraySnapshot(snapshots, [
+        this.snapshotTime,
+        SNAPSHOT_MIDDLE_OLD_TIME,
+        FIRST_SNAPSHOT,
+        SECOND_SNAPSHOT
+      ])
     })
 
     it('testCannotRescheduleASnapshotBeforeThePreviousSnapshot', async function () {
-      const SNAPSHOT_MIDDLE_OLD_TIME = this.snapshotTime.add(time.duration.seconds(30))
-      const SNAPSHOT_MIDDLE_NEW_TIME = this.snapshotTime.sub(time.duration.seconds(1))
+      const SNAPSHOT_MIDDLE_OLD_TIME = this.snapshotTime.add(
+        time.duration.seconds(30)
+      )
+      const SNAPSHOT_MIDDLE_NEW_TIME = this.snapshotTime.sub(
+        time.duration.seconds(1)
+      )
       const FIRST_SNAPSHOT = this.snapshotTime.add(time.duration.seconds(60))
       const SECOND_SNAPSHOT = this.snapshotTime.add(time.duration.seconds(90))
-      await this.cmtat.scheduleSnapshot(SNAPSHOT_MIDDLE_OLD_TIME, { from: owner })
+      await this.cmtat.scheduleSnapshot(SNAPSHOT_MIDDLE_OLD_TIME, {
+        from: owner
+      })
       await this.cmtat.scheduleSnapshot(FIRST_SNAPSHOT, { from: owner })
       await this.cmtat.scheduleSnapshot(SECOND_SNAPSHOT, { from: owner })
       await expectRevertCustomError(
@@ -92,17 +128,20 @@ function SnapshotModuleCommonRescheduling (owner, address1, address2, address3) 
       )
       const snapshots = await this.cmtat.getNextSnapshots()
       snapshots.length.should.equal(4)
-      checkArraySnapshot(snapshots, [this.snapshotTime, SNAPSHOT_MIDDLE_OLD_TIME, FIRST_SNAPSHOT, SECOND_SNAPSHOT])
+      checkArraySnapshot(snapshots, [
+        this.snapshotTime,
+        SNAPSHOT_MIDDLE_OLD_TIME,
+        FIRST_SNAPSHOT,
+        SECOND_SNAPSHOT
+      ])
     })
 
     it('reverts when calling from non-owner', async function () {
       // Act
       await expectRevertCustomError(
-        this.cmtat.rescheduleSnapshot(
-          this.snapshotTime,
-          this.newSnapshotTime,
-          { from: address1 }
-        ),
+        this.cmtat.rescheduleSnapshot(this.snapshotTime, this.newSnapshotTime, {
+          from: address1
+        }),
         'AccessControlUnauthorizedAccount',
         [address1, SNAPSHOOTER_ROLE]
       )
@@ -111,11 +150,9 @@ function SnapshotModuleCommonRescheduling (owner, address1, address2, address3) 
     it('reverts when trying to reschedule a snapshot in the past', async function () {
       const NEW_TIME = this.snapshotTime.sub(time.duration.seconds(60))
       await expectRevertCustomError(
-        this.cmtat.rescheduleSnapshot(
-          this.snapshotTime,
-          NEW_TIME,
-          { from: owner }
-        ),
+        this.cmtat.rescheduleSnapshot(this.snapshotTime, NEW_TIME, {
+          from: owner
+        }),
         'CMTAT_SnapshotModule_SnapshotScheduledInThePast',
         [NEW_TIME, (await time.latest()).add(time.duration.seconds(1))]
       )
@@ -125,11 +162,9 @@ function SnapshotModuleCommonRescheduling (owner, address1, address2, address3) 
       const NEW_TIME = this.snapshotTime.add(time.duration.seconds(60))
       await this.cmtat.scheduleSnapshot(NEW_TIME, { from: owner })
       await expectRevertCustomError(
-        this.cmtat.rescheduleSnapshot(
-          this.snapshotTime,
-          NEW_TIME,
-          { from: owner }
-        ),
+        this.cmtat.rescheduleSnapshot(this.snapshotTime, NEW_TIME, {
+          from: owner
+        }),
         'CMTAT_SnapshotModule_SnapshotAlreadyExists',
         []
       )
@@ -150,11 +185,9 @@ function SnapshotModuleCommonRescheduling (owner, address1, address2, address3) 
       We try to reschedule the previous snapshot
       */
       await expectRevertCustomError(
-        this.cmtat.rescheduleSnapshot(
-          this.snapshotTime,
-          this.newSnapshotTime,
-          { from: owner }
-        ),
+        this.cmtat.rescheduleSnapshot(this.snapshotTime, this.newSnapshotTime, {
+          from: owner
+        }),
         'CMTAT_SnapshotModule_SnapshotNotFound',
         []
       )
@@ -167,27 +200,22 @@ function SnapshotModuleCommonRescheduling (owner, address1, address2, address3) 
     it('reverts when snapshot is not found', async function () {
       const SNAPSHOT_TIME = this.currentTime.add(time.duration.seconds(90))
       await expectRevertCustomError(
-        this.cmtat.rescheduleSnapshot(
-          SNAPSHOT_TIME,
-          this.newSnapshotTime,
-          { from: owner }
-        ),
+        this.cmtat.rescheduleSnapshot(SNAPSHOT_TIME, this.newSnapshotTime, {
+          from: owner
+        }),
         'CMTAT_SnapshotModule_SnapshotNotFound',
         []
       )
     })
 
     it('reverts if no snapshot exits', async function () {
-      this.logs = await this.cmtat.unscheduleLastSnapshot(
-        this.snapshotTime,
-        { from: owner }
-      )
+      this.logs = await this.cmtat.unscheduleLastSnapshot(this.snapshotTime, {
+        from: owner
+      })
       await expectRevertCustomError(
-        this.cmtat.rescheduleSnapshot(
-          this.snapshotTime,
-          this.newSnapshotTime,
-          { from: owner }
-        ),
+        this.cmtat.rescheduleSnapshot(this.snapshotTime, this.newSnapshotTime, {
+          from: owner
+        }),
         'CMTAT_SnapshotModule_NoSnapshotScheduled',
         []
       )
@@ -196,11 +224,9 @@ function SnapshotModuleCommonRescheduling (owner, address1, address2, address3) 
     it('reverts when snapshot has been processed', async function () {
       const SNAPSHOT_TIME = this.currentTime.sub(time.duration.seconds(60))
       await expectRevertCustomError(
-        this.cmtat.rescheduleSnapshot(
-          SNAPSHOT_TIME,
-          this.newSnapshotTime,
-          { from: owner }
-        ),
+        this.cmtat.rescheduleSnapshot(SNAPSHOT_TIME, this.newSnapshotTime, {
+          from: owner
+        }),
         'CMTAT_SnapshotModule_SnapshotAlreadyDone',
         []
       )

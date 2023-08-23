@@ -1,8 +1,16 @@
-const { expectEvent, expectRevert, time } = require('@openzeppelin/test-helpers')
-const { expectRevertCustomError } = require('../../../openzeppelin-contracts-upgradeable/test/helpers/customError')
+const {
+  expectEvent,
+  expectRevert,
+  time
+} = require('@openzeppelin/test-helpers')
+const {
+  expectRevertCustomError
+} = require('../../../openzeppelin-contracts-upgradeable/test/helpers/customError')
 const { SNAPSHOOTER_ROLE } = require('../../utils')
 const { should } = require('chai').should()
-const { checkArraySnapshot } = require('./SnapshotModuleUtils/SnapshotModuleUtils')
+const {
+  checkArraySnapshot
+} = require('./SnapshotModuleUtils/SnapshotModuleUtils')
 
 function SnapshotModuleCommonScheduling (owner, address1, address2, address3) {
   context('Snapshot scheduling', function () {
@@ -12,10 +20,9 @@ function SnapshotModuleCommonScheduling (owner, address1, address2, address3) {
     it('can schedule a snapshot with the snapshoter role', async function () {
       const SNAPSHOT_TIME = this.currentTime.add(time.duration.seconds(60))
       // Act
-      this.logs = await this.cmtat.scheduleSnapshot(
-        SNAPSHOT_TIME,
-        { from: owner }
-      )
+      this.logs = await this.cmtat.scheduleSnapshot(SNAPSHOT_TIME, {
+        from: owner
+      })
       // Assert
       const snapshots = await this.cmtat.getNextSnapshots()
       snapshots.length.should.equal(1)
@@ -74,20 +81,21 @@ function SnapshotModuleCommonScheduling (owner, address1, address2, address3) {
       const SECOND_SNAPSHOT = this.currentTime.add(time.duration.seconds(200))
       const THIRD_SNAPSHOT = this.currentTime.add(time.duration.seconds(15))
       // Arrange
-      this.logs = await this.cmtat.scheduleSnapshot(
-        FIRST_SNAPSHOT,
-        { from: owner }
-      )
-      this.logs = await this.cmtat.scheduleSnapshot(
-        SECOND_SNAPSHOT,
-        { from: owner }
-      )
+      this.logs = await this.cmtat.scheduleSnapshot(FIRST_SNAPSHOT, {
+        from: owner
+      })
+      this.logs = await this.cmtat.scheduleSnapshot(SECOND_SNAPSHOT, {
+        from: owner
+      })
       // Act
       // We schedule the snapshot at the first place
       this.snapshotTime = this.currentTime.add(time.duration.seconds(10))
-      this.logs = await this.cmtat.scheduleSnapshotNotOptimized(THIRD_SNAPSHOT, {
-        from: owner
-      })
+      this.logs = await this.cmtat.scheduleSnapshotNotOptimized(
+        THIRD_SNAPSHOT,
+        {
+          from: owner
+        }
+      )
       // Assert
       const snapshots = await this.cmtat.getNextSnapshots()
       snapshots.length.should.equal(3)
@@ -126,15 +134,21 @@ function SnapshotModuleCommonScheduling (owner, address1, address2, address3) {
       let snapshots = await this.cmtat.getNextSnapshots()
       snapshots.length.should.equal(6)
       snapshots = await this.cmtat.getNextSnapshots()
-      checkArraySnapshot(snapshots, [FIRST_SNAPSHOT, SECOND_SNAPSHOT, RANDOM_SNAPSHOT, THIRD_SNAPSHOT, FOUR_SNAPSHOT, FIVE_SNAPSHOT])
+      checkArraySnapshot(snapshots, [
+        FIRST_SNAPSHOT,
+        SECOND_SNAPSHOT,
+        RANDOM_SNAPSHOT,
+        THIRD_SNAPSHOT,
+        FOUR_SNAPSHOT,
+        FIVE_SNAPSHOT
+      ])
     })
 
     it('schedule a snapshot, which will be in the last position', async function () {
       const SNAPSHOT_TIME = this.currentTime.add(time.duration.seconds(60))
-      this.logs =
-        await this.cmtat.scheduleSnapshotNotOptimized(SNAPSHOT_TIME, {
-          from: owner
-        })
+      this.logs = await this.cmtat.scheduleSnapshotNotOptimized(SNAPSHOT_TIME, {
+        from: owner
+      })
       const snapshots = await this.cmtat.getNextSnapshots()
       snapshots.length.should.equal(1)
 
@@ -148,7 +162,9 @@ function SnapshotModuleCommonScheduling (owner, address1, address2, address3) {
     it('reverts when calling from non-owner', async function () {
       const SNAPSHOT_TIME = this.currentTime.add(time.duration.seconds(60))
       await expectRevertCustomError(
-        this.cmtat.scheduleSnapshotNotOptimized(SNAPSHOT_TIME, { from: address1 }),
+        this.cmtat.scheduleSnapshotNotOptimized(SNAPSHOT_TIME, {
+          from: address1
+        }),
         'AccessControlUnauthorizedAccount',
         [address1, SNAPSHOOTER_ROLE]
       )
@@ -169,17 +185,17 @@ function SnapshotModuleCommonScheduling (owner, address1, address2, address3) {
       const FIRST_SNAPSHOT = this.currentTime.add(time.duration.seconds(10))
       const SECOND_SNAPSHOT = this.currentTime.add(time.duration.seconds(100))
       // Arrange
-      this.logs = await this.cmtat.scheduleSnapshot(
-        FIRST_SNAPSHOT,
-        { from: owner }
-      )
-      this.logs = await this.cmtat.scheduleSnapshot(
-        SECOND_SNAPSHOT,
-        { from: owner }
-      )
+      this.logs = await this.cmtat.scheduleSnapshot(FIRST_SNAPSHOT, {
+        from: owner
+      })
+      this.logs = await this.cmtat.scheduleSnapshot(SECOND_SNAPSHOT, {
+        from: owner
+      })
       // Act
       await expectRevertCustomError(
-        this.cmtat.scheduleSnapshotNotOptimized(FIRST_SNAPSHOT, { from: owner }),
+        this.cmtat.scheduleSnapshotNotOptimized(FIRST_SNAPSHOT, {
+          from: owner
+        }),
         'CMTAT_SnapshotModule_SnapshotAlreadyExists',
         []
       )

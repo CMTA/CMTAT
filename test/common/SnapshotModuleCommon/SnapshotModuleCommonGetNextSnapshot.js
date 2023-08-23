@@ -1,8 +1,15 @@
 const { time } = require('@openzeppelin/test-helpers')
 const { should } = require('chai').should()
-const { checkArraySnapshot } = require('./SnapshotModuleUtils/SnapshotModuleUtils')
+const {
+  checkArraySnapshot
+} = require('./SnapshotModuleUtils/SnapshotModuleUtils')
 
-function SnapshotModuleCommonGetNextSnapshot (owner, address1, address2, address3) {
+function SnapshotModuleCommonGetNextSnapshot (
+  owner,
+  address1,
+  address2,
+  address3
+) {
   context('Snapshot scheduling', function () {
     beforeEach(async function () {
       this.currentTime = await time.latest()
@@ -33,7 +40,13 @@ function SnapshotModuleCommonGetNextSnapshot (owner, address1, address2, address
       const snapshots = await this.cmtat.getNextSnapshots()
       // Assert
       snapshots.length.should.equal(5)
-      checkArraySnapshot(snapshots, [this.snapshotTime1, this.snapshotTime2, this.snapshotTime3, this.snapshotTime4, this.snapshotTime5])
+      checkArraySnapshot(snapshots, [
+        this.snapshotTime1,
+        this.snapshotTime2,
+        this.snapshotTime3,
+        this.snapshotTime4,
+        this.snapshotTime5
+      ])
     })
 
     it('return empty array if all snapshots are in the past', async function () {

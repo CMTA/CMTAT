@@ -1,5 +1,5 @@
 const CreditEventsModuleCommon = require('../../common/CreditEventsModuleCommon')
-const {deployCMTATStandalone} = require('../../deploymentUtils')
+const { deployCMTATStandalone } = require('../../deploymentUtils')
 contract(
   'Standard - CreditEventsModule',
   function ([_, admin, attacker, deployerAddress]) {

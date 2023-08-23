@@ -8,16 +8,13 @@ const timeout = function (ms) {
 
 async function checkSnapshot (time, totalSupply, addresses, balances) {
   // Values before the snapshot
-  (
-    await this.cmtat.snapshotTotalSupply(time)
-  ).should.be.bignumber.equal(totalSupply)
+  (await this.cmtat.snapshotTotalSupply(time)).should.be.bignumber.equal(
+    totalSupply
+  )
 
   for (let i = 0; i < balances.length; ++i) {
     (
-      await this.cmtat.snapshotBalanceOf(
-        time,
-        addresses[i]
-      )
+      await this.cmtat.snapshotBalanceOf(time, addresses[i])
     ).should.be.bignumber.equal(balances[i])
   }
 }
@@ -27,4 +24,9 @@ async function checkArraySnapshot (snapshots, snapshotsValue) {
     snapshots[i].should.be.bignumber.equal(snapshotsValue[i])
   }
 }
-module.exports = { getUnixTimestamp, timeout, checkSnapshot, checkArraySnapshot }
+module.exports = {
+  getUnixTimestamp,
+  timeout,
+  checkSnapshot,
+  checkArraySnapshot
+}

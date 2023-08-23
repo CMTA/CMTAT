@@ -1,6 +1,8 @@
 const { expectEvent } = require('@openzeppelin/test-helpers')
 const { DEFAULT_ADMIN_ROLE } = require('../utils')
-const { expectRevertCustomError } = require('../../openzeppelin-contracts-upgradeable/test/helpers/customError.js');
+const {
+  expectRevertCustomError
+} = require('../../openzeppelin-contracts-upgradeable/test/helpers/customError.js')
 const { should } = require('chai').should()
 
 function BaseModuleCommon (owner, address1, address2, address3, proxyTest) {
@@ -15,7 +17,7 @@ function BaseModuleCommon (owner, address1, address2, address3, proxyTest) {
     })
     it('testAdminCanChangeTokenId', async function () {
       // Arrange
-      (await this.cmtat.tokenId()).should.equal('CMTAT_ISIN');
+      (await this.cmtat.tokenId()).should.equal('CMTAT_ISIN')
       // Act
       this.logs = await this.cmtat.setTokenId('CMTAT_TOKENID', { from: owner });
       // Assert
@@ -39,9 +41,11 @@ function BaseModuleCommon (owner, address1, address2, address3, proxyTest) {
     })
     it('testAdminCanUpdateTerms', async function () {
       // Arrange - Assert
-      (await this.cmtat.terms()).should.equal('https://cmta.ch');
+      (await this.cmtat.terms()).should.equal('https://cmta.ch')
       // Act
-      this.logs = await this.cmtat.setTerms('https://cmta.ch/terms', { from: owner });
+      this.logs = await this.cmtat.setTerms('https://cmta.ch/terms', {
+        from: owner
+      });
       // Assert
       (await this.cmtat.terms()).should.equal('https://cmta.ch/terms')
       expectEvent(this.logs, 'Term', {
@@ -63,9 +67,11 @@ function BaseModuleCommon (owner, address1, address2, address3, proxyTest) {
     })
     it('testAdminCanUpdateInformation', async function () {
       // Arrange - Assert
-      (await this.cmtat.information()).should.equal('CMTAT_info');
+      (await this.cmtat.information()).should.equal('CMTAT_info')
       // Act
-      this.logs = await this.cmtat.setInformation('new info available', { from: owner });
+      this.logs = await this.cmtat.setInformation('new info available', {
+        from: owner
+      });
       // Assert
       (await this.cmtat.information()).should.equal('new info available')
       expectEvent(this.logs, 'Information', {
@@ -87,7 +93,7 @@ function BaseModuleCommon (owner, address1, address2, address3, proxyTest) {
     })
     it('testAdminCanUpdateFlag', async function () {
       // Arrange - Assert
-      (await this.cmtat.flag()).should.be.bignumber.equal(this.flag.toString());
+      (await this.cmtat.flag()).should.be.bignumber.equal(this.flag.toString())
       // Act
       this.logs = await this.cmtat.setFlag(100, { from: owner });
       // Assert

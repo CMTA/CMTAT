@@ -1,5 +1,7 @@
 const { BN, expectEvent, expectRevert } = require('@openzeppelin/test-helpers')
-const { expectRevertCustomError } = require('../../openzeppelin-contracts-upgradeable/test/helpers/customError')
+const {
+  expectRevertCustomError
+} = require('../../openzeppelin-contracts-upgradeable/test/helpers/customError')
 const { should } = require('chai').should()
 
 function BaseModuleCommon (admin, address1, address2, address3, proxyTest) {
@@ -25,7 +27,7 @@ function BaseModuleCommon (admin, address1, address2, address3, proxyTest) {
       // Arrange - Assert
       (
         await this.cmtat.allowance(address1, address3)
-      ).should.be.bignumber.equal('0');
+      ).should.be.bignumber.equal('0')
       // Act
       this.logs = await this.cmtat.approve(address3, AMOUNT_TO_APPROVE, {
         from: address1
@@ -57,9 +59,13 @@ function BaseModuleCommon (admin, address1, address2, address3, proxyTest) {
         await this.cmtat.allowance(address1, address3)
       ).should.be.bignumber.equal(FIRST_APPROVAL)
       // Act
-      this.logs = await this.cmtat.increaseAllowance(address3, SECOND_APPROVAL, {
-        from: address1
-      });
+      this.logs = await this.cmtat.increaseAllowance(
+        address3,
+        SECOND_APPROVAL,
+        {
+          from: address1
+        }
+      );
       // Assert
       (
         await this.cmtat.allowance(address1, address3)
@@ -85,11 +91,15 @@ function BaseModuleCommon (admin, address1, address2, address3, proxyTest) {
       // Arrange - Assert
       (
         await this.cmtat.allowance(address1, address3)
-      ).should.be.bignumber.equal(FIRST_APPROVAL);
+      ).should.be.bignumber.equal(FIRST_APPROVAL)
       // Act
-      this.logs = await this.cmtat.decreaseAllowance(address3, SECOND_APPROVAL_DECREASE, {
-        from: address1
-      });
+      this.logs = await this.cmtat.decreaseAllowance(
+        address3,
+        SECOND_APPROVAL_DECREASE,
+        {
+          from: address1
+        }
+      );
       // Assert
       (
         await this.cmtat.allowance(address1, address3)
@@ -110,11 +120,13 @@ function BaseModuleCommon (admin, address1, address2, address3, proxyTest) {
       (
         await this.cmtat.allowance(address1, address3)
       ).should.be.bignumber.equal('0')
-      await this.cmtat.approve(address3, FIRST_AMOUNT_TO_APPROVE, { from: address1 });
+      await this.cmtat.approve(address3, FIRST_AMOUNT_TO_APPROVE, {
+        from: address1
+      });
       // Arrange - Assert
       (
         await this.cmtat.allowance(address1, address3)
-      ).should.be.bignumber.equal(FIRST_AMOUNT_TO_APPROVE);
+      ).should.be.bignumber.equal(FIRST_AMOUNT_TO_APPROVE)
       // Act
       this.logs = await this.cmtat.approve(address3, AMOUNT_TO_APPROVE, {
         from: address1
@@ -138,15 +150,20 @@ function BaseModuleCommon (admin, address1, address2, address3, proxyTest) {
       (
         await this.cmtat.allowance(address1, address3)
       ).should.be.bignumber.equal('0')
-      await this.cmtat.approve(address3, FIRST_AMOUNT_TO_APPROVE, { from: address1 });
+      await this.cmtat.approve(address3, FIRST_AMOUNT_TO_APPROVE, {
+        from: address1
+      });
       // Arrange - Assert
       (
         await this.cmtat.allowance(address1, address3)
-      ).should.be.bignumber.equal(FIRST_AMOUNT_TO_APPROVE);
+      ).should.be.bignumber.equal(FIRST_AMOUNT_TO_APPROVE)
       // Act
-      this.logs = await this.cmtat.methods[
-        'approve(address,uint256,uint256)'
-      ](address3, AMOUNT_TO_APPROVE, FIRST_AMOUNT_TO_APPROVE, { from: address1 });
+      this.logs = await this.cmtat.methods['approve(address,uint256,uint256)'](
+        address3,
+        AMOUNT_TO_APPROVE,
+        FIRST_AMOUNT_TO_APPROVE,
+        { from: address1 }
+      );
       // Assert
       (
         await this.cmtat.allowance(address1, address3)
@@ -167,7 +184,9 @@ function BaseModuleCommon (admin, address1, address2, address3, proxyTest) {
       (
         await this.cmtat.allowance(address1, address3)
       ).should.be.bignumber.equal('0')
-      await this.cmtat.approve(address3, FIRST_AMOUNT_TO_APPROVE, { from: address1 });
+      await this.cmtat.approve(address3, FIRST_AMOUNT_TO_APPROVE, {
+        from: address1
+      });
       // Arrange - Assert
       (
         await this.cmtat.allowance(address1, address3)
@@ -192,7 +211,9 @@ function BaseModuleCommon (admin, address1, address2, address3, proxyTest) {
 
   context('Transfer', function () {
     const TOKEN_AMOUNTS = [BN(31), BN(32), BN(33)]
-    const TOKEN_INITIAL_SUPPLY = TOKEN_AMOUNTS.reduce((a, b) => { return a.add(b) })
+    const TOKEN_INITIAL_SUPPLY = TOKEN_AMOUNTS.reduce((a, b) => {
+      return a.add(b)
+    })
     beforeEach(async function () {
       await this.cmtat.mint(address1, TOKEN_AMOUNTS[0], { from: admin })
       await this.cmtat.mint(address2, TOKEN_AMOUNTS[1], { from: admin })
@@ -206,10 +227,18 @@ function BaseModuleCommon (admin, address1, address2, address3, proxyTest) {
         from: address1
       });
       // Assert
-      (await this.cmtat.balanceOf(address1)).should.be.bignumber.equal(TOKEN_AMOUNTS[0].sub(AMOUNT_TO_TRANSFER));
-      (await this.cmtat.balanceOf(address2)).should.be.bignumber.equal(TOKEN_AMOUNTS[1].add(AMOUNT_TO_TRANSFER));
-      (await this.cmtat.balanceOf(address3)).should.be.bignumber.equal(TOKEN_AMOUNTS[2]);
-      (await this.cmtat.totalSupply()).should.be.bignumber.equal(TOKEN_INITIAL_SUPPLY)
+      (await this.cmtat.balanceOf(address1)).should.be.bignumber.equal(
+        TOKEN_AMOUNTS[0].sub(AMOUNT_TO_TRANSFER)
+      );
+      (await this.cmtat.balanceOf(address2)).should.be.bignumber.equal(
+        TOKEN_AMOUNTS[1].add(AMOUNT_TO_TRANSFER)
+      );
+      (await this.cmtat.balanceOf(address3)).should.be.bignumber.equal(
+        TOKEN_AMOUNTS[2]
+      );
+      (await this.cmtat.totalSupply()).should.be.bignumber.equal(
+        TOKEN_INITIAL_SUPPLY
+      )
       // emits a Transfer event
       expectEvent(this.logs, 'Transfer', {
         from: address1,
@@ -222,7 +251,7 @@ function BaseModuleCommon (admin, address1, address2, address3, proxyTest) {
     it('testCannotTransferMoreTokensThanOwn', async function () {
       const ADDRESS1_BALANCE = await this.cmtat.balanceOf(address1)
       const AMOUNT_TO_TRANSFER = BN(50)
-       // Act
+      // Act
       await expectRevertCustomError(
         this.cmtat.transfer(address2, AMOUNT_TO_TRANSFER, { from: address1 }),
         'ERC20InsufficientBalance',
@@ -236,20 +265,25 @@ function BaseModuleCommon (admin, address1, address2, address3, proxyTest) {
       const AMOUNT_TO_TRANSFER = BN(11)
       const AMOUNT_TO_APPROVE = 20
       // Arrange
-      await this.cmtat.approve(address3, AMOUNT_TO_APPROVE, { from: address1 });
+      await this.cmtat.approve(address3, AMOUNT_TO_APPROVE, { from: address1 })
       // Act
       // Transfer
-      this.logs = await this.cmtat.transferFrom(
-        address1,
-        address2,
-        11,
-        { from: address3 }
-      );
+      this.logs = await this.cmtat.transferFrom(address1, address2, 11, {
+        from: address3
+      });
       // Assert
-      (await this.cmtat.balanceOf(address1)).should.be.bignumber.equal(TOKEN_AMOUNTS[0].sub(AMOUNT_TO_TRANSFER));
-      (await this.cmtat.balanceOf(address2)).should.be.bignumber.equal(TOKEN_AMOUNTS[1].add(AMOUNT_TO_TRANSFER));
-      (await this.cmtat.balanceOf(address3)).should.be.bignumber.equal(TOKEN_AMOUNTS[2]);
-      (await this.cmtat.totalSupply()).should.be.bignumber.equal(TOKEN_INITIAL_SUPPLY)
+      (await this.cmtat.balanceOf(address1)).should.be.bignumber.equal(
+        TOKEN_AMOUNTS[0].sub(AMOUNT_TO_TRANSFER)
+      );
+      (await this.cmtat.balanceOf(address2)).should.be.bignumber.equal(
+        TOKEN_AMOUNTS[1].add(AMOUNT_TO_TRANSFER)
+      );
+      (await this.cmtat.balanceOf(address3)).should.be.bignumber.equal(
+        TOKEN_AMOUNTS[2]
+      );
+      (await this.cmtat.totalSupply()).should.be.bignumber.equal(
+        TOKEN_INITIAL_SUPPLY
+      )
 
       // emits a Transfer event
       expectEvent(this.logs, 'Transfer', {
@@ -274,7 +308,9 @@ function BaseModuleCommon (admin, address1, address2, address3, proxyTest) {
       (
         await this.cmtat.allowance(address1, address3)
       ).should.be.bignumber.equal('0')
-      await this.cmtat.approve(address3,ALLOWANCE_FOR_ADDRESS3, { from: address1 });
+      await this.cmtat.approve(address3, ALLOWANCE_FOR_ADDRESS3, {
+        from: address1
+      });
       // Arrange - Assert
       (
         await this.cmtat.allowance(address1, address3)
@@ -296,7 +332,9 @@ function BaseModuleCommon (admin, address1, address2, address3, proxyTest) {
       await this.cmtat.approve(address3, 1000, { from: address1 })
       // Act
       await expectRevertCustomError(
-        this.cmtat.transferFrom(address1, address2, AMOUNT_TO_TRANSFER, { from: address3 }),
+        this.cmtat.transferFrom(address1, address2, AMOUNT_TO_TRANSFER, {
+          from: address3
+        }),
         'ERC20InsufficientBalance',
         [address1, ADDRESS1_BALANCE, AMOUNT_TO_TRANSFER]
       )
@@ -305,7 +343,9 @@ function BaseModuleCommon (admin, address1, address2, address3, proxyTest) {
 
   context('transferFrom', function () {
     const TOKEN_AMOUNTS = [BN(31), BN(32), BN(33)]
-    const TOKEN_INITIAL_SUPPLY = TOKEN_AMOUNTS.reduce((a, b) => { return a.add(b) })
+    const TOKEN_INITIAL_SUPPLY = TOKEN_AMOUNTS.reduce((a, b) => {
+      return a.add(b)
+    })
     beforeEach(async function () {
       await this.cmtat.mint(address1, TOKEN_AMOUNTS[0], { from: admin })
       await this.cmtat.mint(address2, TOKEN_AMOUNTS[1], { from: admin })
@@ -319,10 +359,18 @@ function BaseModuleCommon (admin, address1, address2, address3, proxyTest) {
         from: address1
       });
       // Assert
-      (await this.cmtat.balanceOf(address1)).should.be.bignumber.equal(TOKEN_AMOUNTS[0].sub(AMOUNT_TO_TRANSFER));
-      (await this.cmtat.balanceOf(address2)).should.be.bignumber.equal(TOKEN_AMOUNTS[1].add(AMOUNT_TO_TRANSFER));
-      (await this.cmtat.balanceOf(address3)).should.be.bignumber.equal(TOKEN_AMOUNTS[2]);
-      (await this.cmtat.totalSupply()).should.be.bignumber.equal(TOKEN_INITIAL_SUPPLY)
+      (await this.cmtat.balanceOf(address1)).should.be.bignumber.equal(
+        TOKEN_AMOUNTS[0].sub(AMOUNT_TO_TRANSFER)
+      );
+      (await this.cmtat.balanceOf(address2)).should.be.bignumber.equal(
+        TOKEN_AMOUNTS[1].add(AMOUNT_TO_TRANSFER)
+      );
+      (await this.cmtat.balanceOf(address3)).should.be.bignumber.equal(
+        TOKEN_AMOUNTS[2]
+      );
+      (await this.cmtat.totalSupply()).should.be.bignumber.equal(
+        TOKEN_INITIAL_SUPPLY
+      )
       // emits a Transfer event
       expectEvent(this.logs, 'Transfer', {
         from: address1,
@@ -350,17 +398,29 @@ function BaseModuleCommon (admin, address1, address2, address3, proxyTest) {
 
     beforeEach(async function () {
       // Only the admin has tokens
-      await this.cmtat.mint(admin, TOKEN_AMOUNTS.reduce((a, b) => { return a.add(b) }), { from: admin })
+      await this.cmtat.mint(
+        admin,
+        TOKEN_AMOUNTS.reduce((a, b) => {
+          return a.add(b)
+        }),
+        { from: admin }
+      )
     })
 
     it('testTransferBatch', async function () {
       // Act
-      this.logs = await this.cmtat.transferBatch(TOKEN_ADDRESS_TOS, TOKEN_AMOUNTS, {
-        from: admin
-      });
+      this.logs = await this.cmtat.transferBatch(
+        TOKEN_ADDRESS_TOS,
+        TOKEN_AMOUNTS,
+        {
+          from: admin
+        }
+      )
       // Assert
       for (let i = 0; i < TOKEN_ADDRESS_TOS.length; ++i) {
-        (await this.cmtat.balanceOf(TOKEN_ADDRESS_TOS[i])).should.be.bignumber.equal(TOKEN_AMOUNTS[i])
+        (
+          await this.cmtat.balanceOf(TOKEN_ADDRESS_TOS[i])
+        ).should.be.bignumber.equal(TOKEN_AMOUNTS[i])
       }
       // emits a Transfer event
       for (let i = 0; i < TOKEN_ADDRESS_TOS.length; ++i) {
@@ -374,10 +434,16 @@ function BaseModuleCommon (admin, address1, address2, address3, proxyTest) {
 
     // ADDRESS1 -> ADDRESS2
     it('testCannotTransferBatchMoreTokensThanOwn', async function () {
-      const BALANCE_AFTER_FIRST_TRANSFER = (await this.cmtat.balanceOf(admin)).sub(TOKEN_AMOUNTS[0])
+      const BALANCE_AFTER_FIRST_TRANSFER = (
+        await this.cmtat.balanceOf(admin)
+      ).sub(TOKEN_AMOUNTS[0])
       const AMOUNT_TO_TRANSFER_SECOND = BALANCE_AFTER_FIRST_TRANSFER.add(BN(1))
       // Second amount is invalid
-      const TOKEN_AMOUNTS_INVALID = [TOKEN_AMOUNTS[0], AMOUNT_TO_TRANSFER_SECOND, TOKEN_AMOUNTS[2]]
+      const TOKEN_AMOUNTS_INVALID = [
+        TOKEN_AMOUNTS[0],
+        AMOUNT_TO_TRANSFER_SECOND,
+        TOKEN_AMOUNTS[2]
+      ]
       // Act
       await expectRevertCustomError(
         this.cmtat.transferBatch(TOKEN_ADDRESS_TOS, TOKEN_AMOUNTS_INVALID, {
@@ -392,7 +458,9 @@ function BaseModuleCommon (admin, address1, address2, address3, proxyTest) {
       // Number of addresses is insufficient
       const TOKEN_ADDRESS_TOS_INVALID = [address1, address2]
       await expectRevertCustomError(
-        this.cmtat.transferBatch(TOKEN_ADDRESS_TOS_INVALID, TOKEN_AMOUNTS, { from: admin }),
+        this.cmtat.transferBatch(TOKEN_ADDRESS_TOS_INVALID, TOKEN_AMOUNTS, {
+          from: admin
+        }),
         'CMTAT_ERC20BaseModule_TosValueslengthMismatch',
         []
       )
@@ -400,9 +468,16 @@ function BaseModuleCommon (admin, address1, address2, address3, proxyTest) {
 
     it('testCannotTransferBatchIfLengthMismatch_2', async function () {
       // There are too many addresses
-      const TOKEN_ADDRESS_TOS_INVALID = [address1, address2, address1, address1]
+      const TOKEN_ADDRESS_TOS_INVALID = [
+        address1,
+        address2,
+        address1,
+        address1
+      ]
       await expectRevertCustomError(
-        this.cmtat.transferBatch(TOKEN_ADDRESS_TOS_INVALID, TOKEN_AMOUNTS, { from: admin }),
+        this.cmtat.transferBatch(TOKEN_ADDRESS_TOS_INVALID, TOKEN_AMOUNTS, {
+          from: admin
+        }),
         'CMTAT_ERC20BaseModule_TosValueslengthMismatch',
         []
       )
@@ -411,7 +486,9 @@ function BaseModuleCommon (admin, address1, address2, address3, proxyTest) {
     it('testCannotTransferBatchIfTOSIsEmpty', async function () {
       const TOKEN_ADDRESS_TOS_INVALID = []
       await expectRevertCustomError(
-        this.cmtat.transferBatch(TOKEN_ADDRESS_TOS_INVALID, TOKEN_AMOUNTS, { from: admin }),
+        this.cmtat.transferBatch(TOKEN_ADDRESS_TOS_INVALID, TOKEN_AMOUNTS, {
+          from: admin
+        }),
         'CMTAT_ERC20BaseModule_EmptyTos',
         []
       )

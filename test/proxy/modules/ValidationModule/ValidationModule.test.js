@@ -1,6 +1,6 @@
 const CMTAT = artifacts.require('CMTAT_PROXY')
 const ValidationModuleCommon = require('../../../common/ValidationModule/ValidationModuleSetRuleEngineCommon')
-const {deployCMTATProxy} = require('../../../deploymentUtils')
+const { deployCMTATProxy } = require('../../../deploymentUtils')
 const RuleEngineMock = artifacts.require('RuleEngineMock')
 const ADDRESS1_INITIAL_BALANCE = 31
 const ADDRESS2_INITIAL_BALANCE = 32
@@ -12,10 +12,24 @@ contract(
     beforeEach(async function () {
       this.ruleEngineMock = await RuleEngineMock.new({ from: admin })
       this.cmtat = await deployCMTATProxy(_, admin, deployerAddress)
-      await this.cmtat.mint(address1, ADDRESS1_INITIAL_BALANCE, { from: admin })
-      await this.cmtat.mint(address2, ADDRESS2_INITIAL_BALANCE, { from: admin })
-      await this.cmtat.mint(address3, ADDRESS3_INITIAL_BALANCE, { from: admin })
+      await this.cmtat.mint(address1, ADDRESS1_INITIAL_BALANCE, {
+        from: admin
+      })
+      await this.cmtat.mint(address2, ADDRESS2_INITIAL_BALANCE, {
+        from: admin
+      })
+      await this.cmtat.mint(address3, ADDRESS3_INITIAL_BALANCE, {
+        from: admin
+      })
     })
-    ValidationModuleCommon(admin, address1, address2, address3, ADDRESS1_INITIAL_BALANCE, ADDRESS2_INITIAL_BALANCE, ADDRESS3_INITIAL_BALANCE)
+    ValidationModuleCommon(
+      admin,
+      address1,
+      address2,
+      address3,
+      ADDRESS1_INITIAL_BALANCE,
+      ADDRESS2_INITIAL_BALANCE,
+      ADDRESS3_INITIAL_BALANCE
+    )
   }
 )

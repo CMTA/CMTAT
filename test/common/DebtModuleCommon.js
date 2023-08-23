@@ -1,5 +1,7 @@
 const { expectEvent, BN } = require('@openzeppelin/test-helpers')
-const { expectRevertCustomError } = require('../../openzeppelin-contracts-upgradeable/test/helpers/customError.js');
+const {
+  expectRevertCustomError
+} = require('../../openzeppelin-contracts-upgradeable/test/helpers/customError.js')
 const { DEBT_ROLE } = require('../utils')
 const { should } = require('chai').should()
 
@@ -20,35 +22,50 @@ function BaseModuleCommon (owner, attacker) {
       (await this.cmtat.debt()).businessDayConvention.should.equal('');
       (await this.cmtat.debt()).publicHolidaysCalendar.should.equal('');
       (await this.cmtat.debt()).issuanceDate.should.equal('');
-      (await this.cmtat.debt()).couponFrequency.should.equal('');
+      (await this.cmtat.debt()).couponFrequency.should.equal('')
 
       // Act
-      this.logs = await this.cmtat.setDebt({
-        interestRate: INTEREST_RATE.toString(),
-        parValue: ParValue.toString(),
-        guarantor: 'guarantor',
-        bondHolder: 'bondHolder',
-        maturityDate: 'maturityDate',
-        interestScheduleFormat: 'interestScheduleFormat',
-        interestPaymentDate: 'interestPaymentDate',
-        dayCountConvention: 'dayCountConvention',
-        businessDayConvention: 'businessDayConvention',
-        publicHolidaysCalendar: 'publicHolidaysCalendar',
-        issuanceDate: 'issuanceDate',
-        couponFrequency: 'couponFrequency'
-      }, { from: owner });
+      this.logs = await this.cmtat.setDebt(
+        {
+          interestRate: INTEREST_RATE.toString(),
+          parValue: ParValue.toString(),
+          guarantor: 'guarantor',
+          bondHolder: 'bondHolder',
+          maturityDate: 'maturityDate',
+          interestScheduleFormat: 'interestScheduleFormat',
+          interestPaymentDate: 'interestPaymentDate',
+          dayCountConvention: 'dayCountConvention',
+          businessDayConvention: 'businessDayConvention',
+          publicHolidaysCalendar: 'publicHolidaysCalendar',
+          issuanceDate: 'issuanceDate',
+          couponFrequency: 'couponFrequency'
+        },
+        { from: owner }
+      );
       // Assert
       // Value
-      (await this.cmtat.debt()).interestRate.should.be.bignumber.equal(INTEREST_RATE);
+      (await this.cmtat.debt()).interestRate.should.be.bignumber.equal(
+        INTEREST_RATE
+      );
       (await this.cmtat.debt()).parValue.should.be.bignumber.equal(ParValue);
       (await this.cmtat.debt()).guarantor.should.equal('guarantor');
       (await this.cmtat.debt()).bondHolder.should.equal('bondHolder');
       (await this.cmtat.debt()).maturityDate.should.equal('maturityDate');
-      (await this.cmtat.debt()).interestScheduleFormat.should.equal('interestScheduleFormat');
-      (await this.cmtat.debt()).interestPaymentDate.should.equal('interestPaymentDate');
-      (await this.cmtat.debt()).dayCountConvention.should.equal('dayCountConvention');
-      (await this.cmtat.debt()).businessDayConvention.should.equal('businessDayConvention');
-      (await this.cmtat.debt()).publicHolidaysCalendar.should.equal('publicHolidaysCalendar');
+      (await this.cmtat.debt()).interestScheduleFormat.should.equal(
+        'interestScheduleFormat'
+      );
+      (await this.cmtat.debt()).interestPaymentDate.should.equal(
+        'interestPaymentDate'
+      );
+      (await this.cmtat.debt()).dayCountConvention.should.equal(
+        'dayCountConvention'
+      );
+      (await this.cmtat.debt()).businessDayConvention.should.equal(
+        'businessDayConvention'
+      );
+      (await this.cmtat.debt()).publicHolidaysCalendar.should.equal(
+        'publicHolidaysCalendar'
+      );
       (await this.cmtat.debt()).issuanceDate.should.equal('issuanceDate');
       (await this.cmtat.debt()).couponFrequency.should.equal('couponFrequency')
 
@@ -72,7 +89,9 @@ function BaseModuleCommon (owner, attacker) {
         newMaturityDate: 'maturityDate'
       })
       expectEvent(this.logs, 'InterestScheduleFormat', {
-        newInterestScheduleFormatIndexed: web3.utils.sha3('interestScheduleFormat'),
+        newInterestScheduleFormatIndexed: web3.utils.sha3(
+          'interestScheduleFormat'
+        ),
         newInterestScheduleFormat: 'interestScheduleFormat'
       })
       expectEvent(this.logs, 'InterestPaymentDate', {
@@ -84,11 +103,15 @@ function BaseModuleCommon (owner, attacker) {
         newDayCountConvention: 'dayCountConvention'
       })
       expectEvent(this.logs, 'BusinessDayConvention', {
-        newBusinessDayConventionIndexed: web3.utils.sha3('businessDayConvention'),
+        newBusinessDayConventionIndexed: web3.utils.sha3(
+          'businessDayConvention'
+        ),
         newBusinessDayConvention: 'businessDayConvention'
       })
       expectEvent(this.logs, 'PublicHolidaysCalendar', {
-        newPublicHolidaysCalendarIndexed: web3.utils.sha3('publicHolidaysCalendar'),
+        newPublicHolidaysCalendarIndexed: web3.utils.sha3(
+          'publicHolidaysCalendar'
+        ),
         newPublicHolidaysCalendar: 'publicHolidaysCalendar'
       })
       expectEvent(this.logs, 'IssuanceDate', {
@@ -103,7 +126,7 @@ function BaseModuleCommon (owner, attacker) {
 
     it('testAdminCanSetInterestRate', async function () {
       // Arrange
-      (await this.cmtat.debt()).interestRate.should.be.bignumber.equal('0');
+      (await this.cmtat.debt()).interestRate.should.be.bignumber.equal('0')
       // Act
       this.logs = await this.cmtat.setInterestRate(7, { from: owner });
       // Assert
@@ -126,7 +149,7 @@ function BaseModuleCommon (owner, attacker) {
 
     it('testAdminCanSetParValue', async function () {
       // Arrange
-      (await this.cmtat.debt()).parValue.should.be.bignumber.equal('0');
+      (await this.cmtat.debt()).parValue.should.be.bignumber.equal('0')
       // Act
       this.logs = await this.cmtat.setParValue(7, { from: owner });
       // Assert
@@ -149,7 +172,7 @@ function BaseModuleCommon (owner, attacker) {
 
     it('testAdminCanSetGuarantor', async function () {
       // Arrange
-      (await this.cmtat.debt()).guarantor.should.equal('');
+      (await this.cmtat.debt()).guarantor.should.equal('')
       // Act
       this.logs = await this.cmtat.setGuarantor('Test', { from: owner });
       // Assert
@@ -162,7 +185,7 @@ function BaseModuleCommon (owner, attacker) {
 
     it('testAdminCanSetBonHolder', async function () {
       // Arrange
-      (await this.cmtat.debt()).bondHolder.should.equal('');
+      (await this.cmtat.debt()).bondHolder.should.equal('')
       // Act
       this.logs = await this.cmtat.setBondHolder('Test', { from: owner });
       // Assert
@@ -175,7 +198,7 @@ function BaseModuleCommon (owner, attacker) {
 
     it('testAdminCanSetMaturityDate', async function () {
       // Arrange
-      (await this.cmtat.debt()).maturityDate.should.equal('');
+      (await this.cmtat.debt()).maturityDate.should.equal('')
       // Act
       this.logs = await this.cmtat.setMaturityDate('Test', { from: owner });
       // Assert
@@ -188,9 +211,11 @@ function BaseModuleCommon (owner, attacker) {
 
     it('testAdminCanSetInterestScheduleFormat', async function () {
       // Arrange
-      (await this.cmtat.debt()).interestScheduleFormat.should.equal('');
+      (await this.cmtat.debt()).interestScheduleFormat.should.equal('')
       // Act
-      this.logs = await this.cmtat.setInterestScheduleFormat('Test', { from: owner });
+      this.logs = await this.cmtat.setInterestScheduleFormat('Test', {
+        from: owner
+      });
       // Assert
       (await this.cmtat.debt()).interestScheduleFormat.should.equal('Test')
       expectEvent(this.logs, 'InterestScheduleFormat', {
@@ -201,9 +226,11 @@ function BaseModuleCommon (owner, attacker) {
 
     it('testAdminCanSetInterestPaymentDate', async function () {
       // Arrange
-      (await this.cmtat.debt()).interestPaymentDate.should.equal('');
+      (await this.cmtat.debt()).interestPaymentDate.should.equal('')
       // Act
-      this.logs = await this.cmtat.setInterestPaymentDate('Test', { from: owner });
+      this.logs = await this.cmtat.setInterestPaymentDate('Test', {
+        from: owner
+      });
       // Assert
       (await this.cmtat.debt()).interestPaymentDate.should.equal('Test')
       expectEvent(this.logs, 'InterestPaymentDate', {
@@ -214,9 +241,11 @@ function BaseModuleCommon (owner, attacker) {
 
     it('testAdminCanSetDayCountConvention', async function () {
       // Arrange
-      (await this.cmtat.debt()).dayCountConvention.should.equal('');
+      (await this.cmtat.debt()).dayCountConvention.should.equal('')
       // Act
-      this.logs = await this.cmtat.setDayCountConvention('Test', { from: owner });
+      this.logs = await this.cmtat.setDayCountConvention('Test', {
+        from: owner
+      });
       // Assert
       (await this.cmtat.debt()).dayCountConvention.should.equal('Test')
       expectEvent(this.logs, 'DayCountConvention', {
@@ -227,9 +256,11 @@ function BaseModuleCommon (owner, attacker) {
 
     it('testAdminCanSetBusinessDayConvention', async function () {
       // Arrange
-      (await this.cmtat.debt()).businessDayConvention.should.equal('');
+      (await this.cmtat.debt()).businessDayConvention.should.equal('')
       // Act
-      this.logs = await this.cmtat.setBusinessDayConvention('Test', { from: owner });
+      this.logs = await this.cmtat.setBusinessDayConvention('Test', {
+        from: owner
+      });
       // Assert
       (await this.cmtat.debt()).businessDayConvention.should.equal('Test')
       expectEvent(this.logs, 'BusinessDayConvention', {
@@ -240,9 +271,11 @@ function BaseModuleCommon (owner, attacker) {
 
     it('testAdminCanSetPublicHolidaysCalendar', async function () {
       // Arrange
-      (await this.cmtat.debt()).publicHolidaysCalendar.should.equal('');
+      (await this.cmtat.debt()).publicHolidaysCalendar.should.equal('')
       // Act
-      this.logs = await this.cmtat.setPublicHolidaysCalendar('Test', { from: owner });
+      this.logs = await this.cmtat.setPublicHolidaysCalendar('Test', {
+        from: owner
+      });
       // Assert
       (await this.cmtat.debt()).publicHolidaysCalendar.should.equal('Test')
       expectEvent(this.logs, 'PublicHolidaysCalendar', {
@@ -253,7 +286,7 @@ function BaseModuleCommon (owner, attacker) {
 
     it('testAdminCanSetIssuanceDate', async function () {
       // Arrange
-      (await this.cmtat.debt()).issuanceDate.should.equal('');
+      (await this.cmtat.debt()).issuanceDate.should.equal('')
       // Act
       this.logs = await this.cmtat.setIssuanceDate('Test', { from: owner });
       // Assert
@@ -266,7 +299,7 @@ function BaseModuleCommon (owner, attacker) {
 
     it('testAdminCanSetCouponFrequency', async function () {
       // Arrange
-      (await this.cmtat.debt()).couponFrequency.should.equal('');
+      (await this.cmtat.debt()).couponFrequency.should.equal('')
       // Act
       this.logs = await this.cmtat.setCouponFrequency('Test', { from: owner });
       // Assert
@@ -282,20 +315,23 @@ function BaseModuleCommon (owner, attacker) {
     it('testCannotNonAdminSetDebt', async function () {
       // Act
       await expectRevertCustomError(
-        this.cmtat.setDebt({
-          interestRate: 1,
-          parValue: 2,
-          guarantor: 'guarantor',
-          bondHolder: 'bondHolder',
-          maturityDate: 'maturityDate',
-          interestScheduleFormat: 'interestScheduleFormat',
-          interestPaymentDate: 'interestPaymentDate',
-          dayCountConvention: 'dayCountConvention',
-          businessDayConvention: 'businessDayConvention',
-          publicHolidaysCalendar: 'publicHolidaysCalendar',
-          issuanceDate: 'issuanceDate',
-          couponFrequency: 'couponFrequency'
-        }, { from: attacker }),
+        this.cmtat.setDebt(
+          {
+            interestRate: 1,
+            parValue: 2,
+            guarantor: 'guarantor',
+            bondHolder: 'bondHolder',
+            maturityDate: 'maturityDate',
+            interestScheduleFormat: 'interestScheduleFormat',
+            interestPaymentDate: 'interestPaymentDate',
+            dayCountConvention: 'dayCountConvention',
+            businessDayConvention: 'businessDayConvention',
+            publicHolidaysCalendar: 'publicHolidaysCalendar',
+            issuanceDate: 'issuanceDate',
+            couponFrequency: 'couponFrequency'
+          },
+          { from: attacker }
+        ),
         'AccessControlUnauthorizedAccount',
         [attacker, DEBT_ROLE]
       )
@@ -338,7 +374,7 @@ function BaseModuleCommon (owner, attacker) {
     })
 
     it('testCannotNonAdminSetMaturityDate', async function () {
-    // Act
+      // Act
       await expectRevertCustomError(
         this.cmtat.setMaturityDate('Test', { from: attacker }),
         'AccessControlUnauthorizedAccount',
@@ -347,7 +383,7 @@ function BaseModuleCommon (owner, attacker) {
     })
 
     it('testCannotNonAdminSetInterestScheduleFormat', async function () {
-    // Act
+      // Act
       await expectRevertCustomError(
         this.cmtat.setInterestScheduleFormat('Test', { from: attacker }),
         'AccessControlUnauthorizedAccount',
@@ -356,7 +392,7 @@ function BaseModuleCommon (owner, attacker) {
     })
 
     it('testCannotNonAdminSetInterestPaymentDate', async function () {
-    // Act
+      // Act
       await expectRevertCustomError(
         this.cmtat.setInterestPaymentDate('Test', { from: attacker }),
         'AccessControlUnauthorizedAccount',
@@ -365,7 +401,7 @@ function BaseModuleCommon (owner, attacker) {
     })
 
     it('testCannotNonAdminSetDayCountConvention', async function () {
-    // Act
+      // Act
       await expectRevertCustomError(
         this.cmtat.setDayCountConvention('Test', { from: attacker }),
         'AccessControlUnauthorizedAccount',
@@ -374,7 +410,7 @@ function BaseModuleCommon (owner, attacker) {
     })
 
     it('testCannotNonAdminSetBusinessDayConvention', async function () {
-    // Act
+      // Act
       await expectRevertCustomError(
         this.cmtat.setBusinessDayConvention('Test', { from: attacker }),
         'AccessControlUnauthorizedAccount',
@@ -383,7 +419,7 @@ function BaseModuleCommon (owner, attacker) {
     })
 
     it('testCannotNonAdminSetPublicHolidaysCalendar', async function () {
-    // Act
+      // Act
       await expectRevertCustomError(
         this.cmtat.setPublicHolidaysCalendar('Test', { from: attacker }),
         'AccessControlUnauthorizedAccount',
@@ -393,7 +429,7 @@ function BaseModuleCommon (owner, attacker) {
 
     // 'issuanceDate', 'couponFrequency'
     it('testCannotNonAdminSetIssuanceDate', async function () {
-    // Act
+      // Act
       await expectRevertCustomError(
         this.cmtat.setIssuanceDate('Test', { from: attacker }),
         'AccessControlUnauthorizedAccount',
@@ -402,7 +438,7 @@ function BaseModuleCommon (owner, attacker) {
     })
 
     it('testCannotNonAdminSetCouponFrequency', async function () {
-    // Act
+      // Act
       await expectRevertCustomError(
         this.cmtat.setCouponFrequency('Test', { from: attacker }),
         'AccessControlUnauthorizedAccount',

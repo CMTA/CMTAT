@@ -3,7 +3,12 @@ const { should } = require('chai').should()
 const { checkSnapshot } = require('../SnapshotModuleUtils/SnapshotModuleUtils')
 const reason = 'BURN_TEST'
 
-function SnapshotModuleOnePlannedSnapshotTest (admin, address1, address2, address3) {
+function SnapshotModuleOnePlannedSnapshotTest (
+  admin,
+  address1,
+  address2,
+  address3
+) {
   const ADDRESSES = [address1, address2, address3]
   const ADDRESS1_INITIAL_MINT = '31'
   const ADDRESS2_INITIAL_MINT = '32'
@@ -23,37 +28,18 @@ function SnapshotModuleOnePlannedSnapshotTest (admin, address1, address2, addres
     })
 
     it('testCanMintTokens', async function () {
-      const MINT_AMOUNT = '20';
+      const MINT_AMOUNT = '20'
       // Arrange - Assert
-      await checkSnapshot.call(this, await time.latest(), TOTAL_SUPPLY_INITIAL_MINT, ADDRESSES, [ADDRESS1_INITIAL_MINT, ADDRESS2_INITIAL_MINT, ADDRESS3_INITIAL_MINT]);
+      await checkSnapshot.call(
+        this,
+        await time.latest(),
+        TOTAL_SUPPLY_INITIAL_MINT,
+        ADDRESSES,
+        [ADDRESS1_INITIAL_MINT, ADDRESS2_INITIAL_MINT, ADDRESS3_INITIAL_MINT]
+      );
       // Act
       // Gas and gasPrice are fixed arbitrarily
       ({ logs: this.logs } = await this.cmtat.mint(address1, MINT_AMOUNT, {
-        from: admin,
-        gas: 5000000,
-        gasPrice: 500000000
-      }));
-
-      // Assert
-      // Values before the snapshot
-      // await checkSnapshot.call(this, this.beforeSnapshotTime, TOTAL_SUPPLY_INITIAL_MINT, ADDRESSES, [ADDRESS1_INITIAL_MINT, ADDRESS2_INITIAL_MINT, ADDRESS3_INITIAL_MINT])
-      // Value at the time of the snapshot
-      await checkSnapshot.call(this, this.snapshotTime, TOTAL_SUPPLY_INITIAL_MINT, ADDRESSES, [ADDRESS1_INITIAL_MINT, ADDRESS2_INITIAL_MINT, ADDRESS3_INITIAL_MINT])
-      // Values now
-      const address1NewTokensBalance = (Number(ADDRESS1_INITIAL_MINT) + Number(MINT_AMOUNT)).toString()
-      const newTotalSupply = (Number(TOTAL_SUPPLY_INITIAL_MINT) + Number(MINT_AMOUNT)).toString()
-      await checkSnapshot.call(this, await time.latest(), newTotalSupply, ADDRESSES, [address1NewTokensBalance, ADDRESS2_INITIAL_MINT, ADDRESS3_INITIAL_MINT])
-      const snapshots = await this.cmtat.getNextSnapshots()
-      snapshots.length.should.equal(0)
-    })
-
-    it('testCanBurnTokens', async function () {
-      const BURN_AMOUNT = '20'
-      // Arrange - Assert
-      await checkSnapshot.call(this, await time.latest(), TOTAL_SUPPLY_INITIAL_MINT, ADDRESSES, [ADDRESS1_INITIAL_MINT, ADDRESS2_INITIAL_MINT, ADDRESS3_INITIAL_MINT]);
-
-      // Act
-      (await this.cmtat.forceBurn(address1, BURN_AMOUNT, reason, {
         from: admin,
         gas: 5000000,
         gasPrice: 500000000
@@ -63,11 +49,74 @@ function SnapshotModuleOnePlannedSnapshotTest (admin, address1, address2, addres
       // Values before the snapshot
       // await checkSnapshot.call(this, this.beforeSnapshotTime, TOTAL_SUPPLY_INITIAL_MINT, ADDRESSES, [ADDRESS1_INITIAL_MINT, ADDRESS2_INITIAL_MINT, ADDRESS3_INITIAL_MINT])
       // Value at the time of the snapshot
-      await checkSnapshot.call(this, this.snapshotTime, TOTAL_SUPPLY_INITIAL_MINT, ADDRESSES, [ADDRESS1_INITIAL_MINT, ADDRESS2_INITIAL_MINT, ADDRESS3_INITIAL_MINT])
+      await checkSnapshot.call(
+        this,
+        this.snapshotTime,
+        TOTAL_SUPPLY_INITIAL_MINT,
+        ADDRESSES,
+        [ADDRESS1_INITIAL_MINT, ADDRESS2_INITIAL_MINT, ADDRESS3_INITIAL_MINT]
+      )
       // Values now
-      const address1NewTokensBalance = (Number(ADDRESS1_INITIAL_MINT) - Number(BURN_AMOUNT)).toString()
-      const newTotalSupply = (Number(TOTAL_SUPPLY_INITIAL_MINT) - Number(BURN_AMOUNT)).toString()
-      await checkSnapshot.call(this, await time.latest(), newTotalSupply, ADDRESSES, [address1NewTokensBalance, ADDRESS2_INITIAL_MINT, ADDRESS3_INITIAL_MINT])
+      const address1NewTokensBalance = (
+        Number(ADDRESS1_INITIAL_MINT) + Number(MINT_AMOUNT)
+      ).toString()
+      const newTotalSupply = (
+        Number(TOTAL_SUPPLY_INITIAL_MINT) + Number(MINT_AMOUNT)
+      ).toString()
+      await checkSnapshot.call(
+        this,
+        await time.latest(),
+        newTotalSupply,
+        ADDRESSES,
+        [address1NewTokensBalance, ADDRESS2_INITIAL_MINT, ADDRESS3_INITIAL_MINT]
+      )
+      const snapshots = await this.cmtat.getNextSnapshots()
+      snapshots.length.should.equal(0)
+    })
+
+    it('testCanBurnTokens', async function () {
+      const BURN_AMOUNT = '20'
+      // Arrange - Assert
+      await checkSnapshot.call(
+        this,
+        await time.latest(),
+        TOTAL_SUPPLY_INITIAL_MINT,
+        ADDRESSES,
+        [ADDRESS1_INITIAL_MINT, ADDRESS2_INITIAL_MINT, ADDRESS3_INITIAL_MINT]
+      )
+
+      // Act
+      await this.cmtat.forceBurn(address1, BURN_AMOUNT, reason, {
+        from: admin,
+        gas: 5000000,
+        gasPrice: 500000000
+      })
+
+      // Assert
+      // Values before the snapshot
+      // await checkSnapshot.call(this, this.beforeSnapshotTime, TOTAL_SUPPLY_INITIAL_MINT, ADDRESSES, [ADDRESS1_INITIAL_MINT, ADDRESS2_INITIAL_MINT, ADDRESS3_INITIAL_MINT])
+      // Value at the time of the snapshot
+      await checkSnapshot.call(
+        this,
+        this.snapshotTime,
+        TOTAL_SUPPLY_INITIAL_MINT,
+        ADDRESSES,
+        [ADDRESS1_INITIAL_MINT, ADDRESS2_INITIAL_MINT, ADDRESS3_INITIAL_MINT]
+      )
+      // Values now
+      const address1NewTokensBalance = (
+        Number(ADDRESS1_INITIAL_MINT) - Number(BURN_AMOUNT)
+      ).toString()
+      const newTotalSupply = (
+        Number(TOTAL_SUPPLY_INITIAL_MINT) - Number(BURN_AMOUNT)
+      ).toString()
+      await checkSnapshot.call(
+        this,
+        await time.latest(),
+        newTotalSupply,
+        ADDRESSES,
+        [address1NewTokensBalance, ADDRESS2_INITIAL_MINT, ADDRESS3_INITIAL_MINT]
+      )
       const snapshots = await this.cmtat.getNextSnapshots()
       snapshots.length.should.equal(0)
     })
@@ -75,7 +124,13 @@ function SnapshotModuleOnePlannedSnapshotTest (admin, address1, address2, addres
     it('testCanTransferTokens', async function () {
       const TRANSFER_AMOUNT = '20'
       // Arrange - Assert
-      await checkSnapshot.call(this, await time.latest(), TOTAL_SUPPLY_INITIAL_MINT, ADDRESSES, [ADDRESS1_INITIAL_MINT, ADDRESS2_INITIAL_MINT, ADDRESS3_INITIAL_MINT])
+      await checkSnapshot.call(
+        this,
+        await time.latest(),
+        TOTAL_SUPPLY_INITIAL_MINT,
+        ADDRESSES,
+        [ADDRESS1_INITIAL_MINT, ADDRESS2_INITIAL_MINT, ADDRESS3_INITIAL_MINT]
+      )
 
       // Act
       // Gas and gasPrice are fixed arbitrarily
@@ -89,11 +144,31 @@ function SnapshotModuleOnePlannedSnapshotTest (admin, address1, address2, addres
       // Values before the snapshot
       // await checkSnapshot.call(this, this.beforeSnapshotTime, TOTAL_SUPPLY_INITIAL_MINT, ADDRESSES, [ADDRESS1_INITIAL_MINT, ADDRESS2_INITIAL_MINT, ADDRESS3_INITIAL_MINT])
       // Value at the time of the snapshot
-      await checkSnapshot.call(this, this.snapshotTime, TOTAL_SUPPLY_INITIAL_MINT, ADDRESSES, [ADDRESS1_INITIAL_MINT, ADDRESS2_INITIAL_MINT, ADDRESS3_INITIAL_MINT])
+      await checkSnapshot.call(
+        this,
+        this.snapshotTime,
+        TOTAL_SUPPLY_INITIAL_MINT,
+        ADDRESSES,
+        [ADDRESS1_INITIAL_MINT, ADDRESS2_INITIAL_MINT, ADDRESS3_INITIAL_MINT]
+      )
       // Values now
-      const address1NewTokensBalance = (Number(ADDRESS1_INITIAL_MINT) - Number(TRANSFER_AMOUNT)).toString()
-      const address2NewTokensBalance = (Number(ADDRESS2_INITIAL_MINT) + Number(TRANSFER_AMOUNT)).toString()
-      await checkSnapshot.call(this, await time.latest(), TOTAL_SUPPLY_INITIAL_MINT, ADDRESSES, [address1NewTokensBalance, address2NewTokensBalance, ADDRESS3_INITIAL_MINT])
+      const address1NewTokensBalance = (
+        Number(ADDRESS1_INITIAL_MINT) - Number(TRANSFER_AMOUNT)
+      ).toString()
+      const address2NewTokensBalance = (
+        Number(ADDRESS2_INITIAL_MINT) + Number(TRANSFER_AMOUNT)
+      ).toString()
+      await checkSnapshot.call(
+        this,
+        await time.latest(),
+        TOTAL_SUPPLY_INITIAL_MINT,
+        ADDRESSES,
+        [
+          address1NewTokensBalance,
+          address2NewTokensBalance,
+          ADDRESS3_INITIAL_MINT
+        ]
+      )
       const snapshots = await this.cmtat.getNextSnapshots()
       snapshots.length.should.equal(0)
     })

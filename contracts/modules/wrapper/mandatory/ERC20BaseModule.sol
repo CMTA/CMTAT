@@ -69,12 +69,12 @@ abstract contract ERC20BaseModule is ERC20Upgradeable {
         address[] calldata tos,
         uint256[] calldata values
     ) public returns (bool) {
-        if(tos.length == 0) {
+        if (tos.length == 0) {
             revert Errors.CMTAT_ERC20BaseModule_EmptyTos();
         }
         // We do not check that values is not empty since
         // this require will throw an error in this case.
-        if(bool(tos.length != values.length)) {
+        if (bool(tos.length != values.length)) {
             revert Errors.CMTAT_ERC20BaseModule_TosValueslengthMismatch();
         }
 
@@ -122,9 +122,13 @@ abstract contract ERC20BaseModule is ERC20Upgradeable {
     ) public virtual returns (bool) {
         address owner = _msgSender();
         uint256 currentAllowanceFromSmartContract = allowance(owner, spender);
-        if(currentAllowanceFromSmartContract != currentAllowance) {
-            revert Errors.CMTAT_ERC20BaseModule_WrongAllowance(spender, currentAllowanceFromSmartContract, currentAllowance) ;
-       }
+        if (currentAllowanceFromSmartContract != currentAllowance) {
+            revert Errors.CMTAT_ERC20BaseModule_WrongAllowance(
+                spender,
+                currentAllowanceFromSmartContract,
+                currentAllowance
+            );
+        }
         // We call directly the internal function _approve
         // The reason is that the public function adds only the owner address recovery
         ERC20Upgradeable._approve(owner, spender, value);

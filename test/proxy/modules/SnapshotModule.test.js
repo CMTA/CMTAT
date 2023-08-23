@@ -11,7 +11,11 @@ contract(
   'Proxy - SnapshotModule',
   function ([_, admin, address1, address2, address3, deployerAddress]) {
     beforeEach(async function () {
-      this.cmtat = await deployCMTATProxyWithSnapshot(_, admin, deployerAddress)
+      this.cmtat = await deployCMTATProxyWithSnapshot(
+        _,
+        admin,
+        deployerAddress
+      )
     })
     SnapshotModuleMultiplePlannedTest(admin, address1, address2, address3)
     SnapshotModuleOnePlannedSnapshotTest(admin, address1, address2, address3)

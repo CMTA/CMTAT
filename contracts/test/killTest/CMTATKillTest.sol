@@ -188,7 +188,8 @@ contract CMTAT_KILL_TEST is
         address to,
         uint256 amount
     ) internal view override(ERC20Upgradeable) {
-        if(!ValidationModule.validateTransfer(from, to, amount)) revert Errors.CMTAT_InvalidTransfer(from, to, amount);
+        if (!ValidationModule.validateTransfer(from, to, amount))
+            revert Errors.CMTAT_InvalidTransfer(from, to, amount);
         // We call the SnapshotModule only if the transfer is valid
         /*
         SnapshotModule:

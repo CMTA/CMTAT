@@ -18,7 +18,13 @@ function SnapshotModuleCommonGlobal (admin, address1, address2, address3) {
     context('Before any snapshot', function () {
       it('testCanGetBalanceAddress&TotalSupply', async function () {
         // Act + Assert
-        await checkSnapshot.call(this, await time.latest(), TOTAL_SUPPLY_INITIAL_MINT, ADDRESSES, [ADDRESS1_INITIAL_MINT, ADDRESS2_INITIAL_MINT, ADDRESS3_INITIAL_MINT])
+        await checkSnapshot.call(
+          this,
+          await time.latest(),
+          TOTAL_SUPPLY_INITIAL_MINT,
+          ADDRESSES,
+          [ADDRESS1_INITIAL_MINT, ADDRESS2_INITIAL_MINT, ADDRESS3_INITIAL_MINT]
+        )
       })
     })
   })

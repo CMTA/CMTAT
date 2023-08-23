@@ -1,5 +1,7 @@
 const { expectEvent } = require('@openzeppelin/test-helpers')
-const { expectRevertCustomError } = require('../../../openzeppelin-contracts-upgradeable/test/helpers/customError')
+const {
+  expectRevertCustomError
+} = require('../../../openzeppelin-contracts-upgradeable/test/helpers/customError')
 const { PAUSER_ROLE, DEFAULT_ADMIN_ROLE } = require('../../utils')
 const chai = require('chai')
 const should = chai.should()
@@ -8,11 +10,9 @@ function AuthorizationModuleCommon (owner, address1, address2) {
   context('Authorization', function () {
     it('testAdminCanGrantRole', async function () {
       // Act
-      this.logs = await this.cmtat.grantRole(
-        PAUSER_ROLE,
-        address1,
-        { from: owner }
-      );
+      this.logs = await this.cmtat.grantRole(PAUSER_ROLE, address1, {
+        from: owner
+      });
       // Assert
       (await this.cmtat.hasRole(PAUSER_ROLE, address1)).should.equal(true)
       // emits a RoleGranted event
@@ -27,13 +27,11 @@ function AuthorizationModuleCommon (owner, address1, address2) {
       // Arrange
       await this.cmtat.grantRole(PAUSER_ROLE, address1, { from: owner });
       // Arrange - Assert
-      (await this.cmtat.hasRole(PAUSER_ROLE, address1)).should.equal(true);
+      (await this.cmtat.hasRole(PAUSER_ROLE, address1)).should.equal(true)
       // Act
-      this.logs = await this.cmtat.revokeRole(
-        PAUSER_ROLE,
-        address1,
-        { from: owner }
-      );
+      this.logs = await this.cmtat.revokeRole(PAUSER_ROLE, address1, {
+        from: owner
+      });
       // Assert
       (await this.cmtat.hasRole(PAUSER_ROLE, address1)).should.equal(false)
       // emits a RoleRevoked event

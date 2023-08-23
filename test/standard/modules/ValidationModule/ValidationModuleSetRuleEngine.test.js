@@ -1,5 +1,5 @@
 const ValidationModuleSetRuleEngineCommon = require('../../../common/ValidationModule/ValidationModuleSetRuleEngineCommon')
-const {deployCMTATStandalone} = require('../../../deploymentUtils')
+const { deployCMTATStandalone } = require('../../../deploymentUtils')
 contract(
   'Standard - ValidationModule - setRuleEngine',
   function ([_, admin, address1, fakeRuleEngine, deployerAddress]) {

@@ -1,5 +1,5 @@
 const AuthorizationModuleCommon = require('../../../common/AuthorizationModule/AuthorizationModuleCommon')
-const {deployCMTATProxy} = require('../../../deploymentUtils')
+const { deployCMTATProxy } = require('../../../deploymentUtils')
 
 contract(
   'Proxy - AuthorizationModule',

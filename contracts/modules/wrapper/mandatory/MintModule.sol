@@ -8,9 +8,9 @@ import "../../security/AuthorizationModule.sol";
 
 abstract contract MintModule is ERC20Upgradeable, AuthorizationModule {
     /**
-    * @notice Emitted when the specified  `value` amount of new tokens are created and
-    * allocated to the specified `account`.
-    */
+     * @notice Emitted when the specified  `value` amount of new tokens are created and
+     * allocated to the specified `account`.
+     */
     event Mint(address indexed account, uint256 value);
 
     function __MintModule_init(
@@ -40,7 +40,7 @@ abstract contract MintModule is ERC20Upgradeable, AuthorizationModule {
 
     /**
      * @notice  Creates a `value` amount of tokens and assigns them to `account`, by transferring it from address(0)
-     * @dev 
+     * @dev
      * See {OpenZeppelin ERC20-_mint}.
      * Emits a {Mint} event.
      * Emits a {Transfer} event with `from` set to the zero address (emits inside _mint).
@@ -57,7 +57,7 @@ abstract contract MintModule is ERC20Upgradeable, AuthorizationModule {
     /**
      *
      * @notice batch version of {mint}
-     * @dev 
+     * @dev
      * See {OpenZeppelin ERC20-_mint} and {OpenZeppelin ERC1155_mintBatch}.
      *
      * For each mint action:
@@ -73,12 +73,12 @@ abstract contract MintModule is ERC20Upgradeable, AuthorizationModule {
         address[] calldata accounts,
         uint256[] calldata values
     ) public onlyRole(MINTER_ROLE) {
-        if(accounts.length == 0) {
+        if (accounts.length == 0) {
             revert Errors.CMTAT_MintModule_EmptyAccounts();
         }
         // We do not check that values is not empty since
         // this require will throw an error in this case.
-        if(bool(accounts.length != values.length)) {
+        if (bool(accounts.length != values.length)) {
             revert Errors.CMTAT_MintModule_AccountsValueslengthMismatch();
         }
 

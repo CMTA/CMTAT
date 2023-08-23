@@ -1,5 +1,5 @@
 const EnforcementModuleCommon = require('../../common/EnforcementModuleCommon')
-const {deployCMTATStandalone} = require('../../deploymentUtils')
+const { deployCMTATStandalone } = require('../../deploymentUtils')
 contract(
   'Standard - EnforcementModule',
   function ([_, admin, address1, address2, address3, deployerAddress]) {
@@ -8,4 +8,5 @@ contract(
     })
 
     EnforcementModuleCommon(admin, address1, address2, address3)
-  })
+  }
+)

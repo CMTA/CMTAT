@@ -1,6 +1,8 @@
 const { expectEvent, expectRevert } = require('@openzeppelin/test-helpers')
 const { DEBT_CREDIT_EVENT_ROLE } = require('../utils')
-const { expectRevertCustomError } = require('../../openzeppelin-contracts-upgradeable/test/helpers/customError.js');
+const {
+  expectRevertCustomError
+} = require('../../openzeppelin-contracts-upgradeable/test/helpers/customError.js')
 const { should } = require('chai').should()
 
 function CreditEventsModuleCommon (owner, attacker) {
@@ -22,7 +24,7 @@ function CreditEventsModuleCommon (owner, attacker) {
 
     it('testAdminCanSetFlagDefault', async function () {
       // Arrange
-      (await this.cmtat.creditEvents()).flagDefault.should.equal(false);
+      (await this.cmtat.creditEvents()).flagDefault.should.equal(false)
       // Act
       this.logs = await this.cmtat.setFlagDefault(true, { from: owner });
       // Assert
@@ -35,7 +37,9 @@ function CreditEventsModuleCommon (owner, attacker) {
     it('testAdminCanNotSetFlagDefaultWithTheSameValue', async function () {
       // Act + Assert
       await expectRevertCustomError(
-        this.cmtat.setFlagDefault(await this.cmtat.creditEvents().flagDefault, { from: owner }),
+        this.cmtat.setFlagDefault(await this.cmtat.creditEvents().flagDefault, {
+          from: owner
+        }),
         'CMTAT_DebtModule_SameValue',
         []
       )
@@ -43,7 +47,7 @@ function CreditEventsModuleCommon (owner, attacker) {
 
     it('testAdminCanSetFlagRedeemed', async function () {
       // Arrange
-      (await this.cmtat.creditEvents()).flagRedeemed.should.equal(false);
+      (await this.cmtat.creditEvents()).flagRedeemed.should.equal(false)
       // Act
       this.logs = await this.cmtat.setFlagRedeemed(true, { from: owner });
       // Assert
@@ -56,7 +60,10 @@ function CreditEventsModuleCommon (owner, attacker) {
     it('testAdminCanNotSetFlagRedeemedWithTheSameValue', async function () {
       // Act + Assert
       await expectRevertCustomError(
-        this.cmtat.setFlagRedeemed(await this.cmtat.creditEvents().flagRedeemed, { from: owner }),
+        this.cmtat.setFlagRedeemed(
+          await this.cmtat.creditEvents().flagRedeemed,
+          { from: owner }
+        ),
         'CMTAT_DebtModule_SameValue',
         []
       )
@@ -64,7 +71,7 @@ function CreditEventsModuleCommon (owner, attacker) {
 
     it('testAdminCanSetRating', async function () {
       // Arrange
-      (await this.cmtat.creditEvents()).rating.should.equal('');
+      (await this.cmtat.creditEvents()).rating.should.equal('')
       // Act
       this.logs = await this.cmtat.setRating('B++', { from: owner });
       // Assert

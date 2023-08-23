@@ -1,5 +1,5 @@
 const EnforcementModuleCommon = require('../../common/EnforcementModuleCommon')
-const {deployCMTATProxy} = require('../../deploymentUtils')
+const { deployCMTATProxy } = require('../../deploymentUtils')
 
 contract(
   'Proxy - EnforcementModule',

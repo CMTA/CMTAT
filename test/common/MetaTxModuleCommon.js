@@ -1,5 +1,8 @@
 const { BN, time } = require('@openzeppelin/test-helpers')
-const { getDomain, domainType } = require('../../openzeppelin-contracts-upgradeable/test/helpers/eip712');
+const {
+  getDomain,
+  domainType
+} = require('../../openzeppelin-contracts-upgradeable/test/helpers/eip712')
 // TODO : Update the library
 // const ethSigUtil = require('@metamask/eth-sig-util')
 const ethSigUtil = require('eth-sig-util')
@@ -13,7 +16,7 @@ const EIP712Domain = [
   { name: 'version', type: 'string' },
   { name: 'chainId', type: 'uint256' },
   { name: 'verifyingContract', type: 'address' },
-  { name: 'salt', type: 'bytes32' },
+  { name: 'salt', type: 'bytes32' }
 ]
 
 function MetaTxModuleCommon (owner, address1) {
@@ -21,12 +24,14 @@ function MetaTxModuleCommon (owner, address1) {
     const AMOUNT_TO_TRANSFER = new BN(11)
     const ALICE_INITIAL_BALANCE = new BN(31)
     const ADDRESS1_INITIAL_BALANCE = new BN(32)
-    
+
     beforeEach(async function () {
       this.aliceWallet = Wallet.generate()
-      this.aliceAddress = web3.utils.toChecksumAddress(this.aliceWallet.getAddressString())
+      this.aliceAddress = web3.utils.toChecksumAddress(
+        this.aliceWallet.getAddressString()
+      )
 
-      this.domain = await getDomain(this.forwarder); 
+      this.domain = await getDomain(this.forwarder)
 
       this.types = {
         EIP712Domain: domainType(this.domain),
@@ -41,17 +46,21 @@ function MetaTxModuleCommon (owner, address1) {
         ]
       }
 
-      /*this.data = {
+      /* this.data = {
         types: this.types,
         domain: this.domain,
         primaryType: 'ForwardRequest'
-      }*/
+      } */
 
-      await this.cmtat.mint(this.aliceAddress, ALICE_INITIAL_BALANCE, { from: owner })
-      await this.cmtat.mint(address1, ADDRESS1_INITIAL_BALANCE, { from: owner });
+      await this.cmtat.mint(this.aliceAddress, ALICE_INITIAL_BALANCE, {
+        from: owner
+      })
+      await this.cmtat.mint(address1, ADDRESS1_INITIAL_BALANCE, {
+        from: owner
+      });
       (await this.cmtat.balanceOf(this.aliceAddress)).should.be.bignumber.equal(
         ALICE_INITIAL_BALANCE
-      );
+      )
       this.timestamp = await time.latest()
       const data = this.cmtat.contract.methods
         .transfer(address1, AMOUNT_TO_TRANSFER)
@@ -69,11 +78,11 @@ function MetaTxModuleCommon (owner, address1) {
         nonce: (await this.forwarder.nonces(this.aliceAddress)).toString()
       }
 
-      this.forgeData = request => ({
+      this.forgeData = (request) => ({
         types: this.types,
         domain: this.domain,
         primaryType: 'ForwardRequest',
-        message: { ...this.requestData, ...request },
+        message: { ...this.requestData, ...request }
       })
 
       this.sign = (privateKey, request) =>
@@ -85,13 +94,13 @@ function MetaTxModuleCommon (owner, address1) {
     })
 
     it('returns true without altering the nonce', async function () {
-      expect(await this.forwarder.nonces(this.requestData.from)).to.be.bignumber.equal(
-        web3.utils.toBN(this.requestData.nonce),
-      )
+      expect(
+        await this.forwarder.nonces(this.requestData.from)
+      ).to.be.bignumber.equal(web3.utils.toBN(this.requestData.nonce))
       expect(await this.forwarder.verify(this.requestData)).to.be.equal(true)
-      expect(await this.forwarder.nonces(this.requestData.from)).to.be.bignumber.equal(
-        web3.utils.toBN(this.requestData.nonce),
-      )
+      expect(
+        await this.forwarder.nonces(this.requestData.from)
+      ).to.be.bignumber.equal(web3.utils.toBN(this.requestData.nonce))
     })
 
     it('can send a transfer transaction without paying gas', async function () {
@@ -100,12 +109,14 @@ function MetaTxModuleCommon (owner, address1) {
       const balanceEtherBefore = await web3.eth.getBalance(this.aliceAddress);
       (await this.cmtat.balanceOf(this.aliceAddress)).should.be.bignumber.equal(
         ALICE_INITIAL_BALANCE
-      );
+      )
       await this.forwarder.execute(this.requestData);
       (await this.cmtat.balanceOf(this.aliceAddress)).should.be.bignumber.equal(
-        ALICE_INITIAL_BALANCE.sub(AMOUNT_TO_TRANSFER) 
+        ALICE_INITIAL_BALANCE.sub(AMOUNT_TO_TRANSFER)
       );
-      (await this.cmtat.balanceOf(address1)).should.be.bignumber.equal(ADDRESS1_INITIAL_BALANCE.add(AMOUNT_TO_TRANSFER))
+      (await this.cmtat.balanceOf(address1)).should.be.bignumber.equal(
+        ADDRESS1_INITIAL_BALANCE.add(AMOUNT_TO_TRANSFER)
+      )
       const balanceAfter = await web3.eth.getBalance(this.aliceAddress)
       balanceEtherBefore.should.be.bignumber.equal(balanceAfter)
     })

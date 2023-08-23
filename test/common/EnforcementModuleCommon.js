@@ -1,7 +1,9 @@
 const { expectEvent, expectRevert } = require('@openzeppelin/test-helpers')
 const { should } = require('chai').should()
 const { ENFORCER_ROLE } = require('../utils')
-const { expectRevertCustomError } = require('../../openzeppelin-contracts-upgradeable/test/helpers/customError.js')
+const {
+  expectRevertCustomError
+} = require('../../openzeppelin-contracts-upgradeable/test/helpers/customError.js')
 const reasonFreeze = 'testFreeze'
 const reasonUnfreeze = 'testUnfreeze'
 
@@ -43,7 +45,8 @@ function EnforcementModuleCommon (owner, address1, address2, address3) {
         enforcer: owner,
         owner: address1,
         // see https://ethereum.stackexchange.com/questions/35103/keccak-hash-of-null-values-result-in-different-hashes-for-different-types
-        reasonIndexed: '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470',
+        reasonIndexed:
+          '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470',
         reason: ''
       })
     })
@@ -54,7 +57,9 @@ function EnforcementModuleCommon (owner, address1, address2, address3) {
       // Arrange - Assert
       (await this.cmtat.frozen(address1)).should.equal(false);
       // Act
-      ({ logs: this.logs } = await this.cmtat.freeze(address1, reasonFreeze, { from: address2 }));
+      ({ logs: this.logs } = await this.cmtat.freeze(address1, reasonFreeze, {
+        from: address2
+      }));
       // Assert
       (await this.cmtat.frozen(address1)).should.equal(true)
 
@@ -73,9 +78,13 @@ function EnforcementModuleCommon (owner, address1, address2, address3) {
       // Arrange - Assert
       (await this.cmtat.frozen(address1)).should.equal(true);
       // Act
-      ({ logs: this.logs } = await this.cmtat.unfreeze(address1, reasonUnfreeze, {
-        from: owner
-      }));
+      ({ logs: this.logs } = await this.cmtat.unfreeze(
+        address1,
+        reasonUnfreeze,
+        {
+          from: owner
+        }
+      ));
       // Assert
       (await this.cmtat.frozen(address1)).should.equal(false)
       expectEvent.inLogs(this.logs, 'Unfreeze', {
@@ -93,7 +102,11 @@ function EnforcementModuleCommon (owner, address1, address2, address3) {
       // Arrange - Assert
       (await this.cmtat.frozen(address1)).should.equal(true);
       // Act
-      ({ logs: this.logs } = await this.cmtat.unfreeze(address1, reasonUnfreeze, { from: address2 }));
+      ({ logs: this.logs } = await this.cmtat.unfreeze(
+        address1,
+        reasonUnfreeze,
+        { from: address2 }
+      ));
       // Assert
       (await this.cmtat.frozen(address1)).should.equal(false)
       // emits an Unfreeze event
@@ -165,7 +178,9 @@ function EnforcementModuleCommon (owner, address1, address2, address3) {
       )
       const AMOUNT_TO_TRANSFER = 10
       await expectRevertCustomError(
-        this.cmtat.transferFrom(address3, address2, AMOUNT_TO_TRANSFER, { from: address1 }),
+        this.cmtat.transferFrom(address3, address2, AMOUNT_TO_TRANSFER, {
+          from: address1
+        }),
         'CMTAT_InvalidTransfer',
         [address3, address2, AMOUNT_TO_TRANSFER]
       )

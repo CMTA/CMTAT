@@ -41,7 +41,7 @@ abstract contract CMTAT_BASE_SnapshotTest is
     DebtBaseModule,
     CreditEventsModule
 {
-/**
+    /**
     @notice 
     initialize the proxy contract
     The calls to this function will revert if the contract was deployed without a proxy
@@ -120,7 +120,6 @@ abstract contract CMTAT_BASE_SnapshotTest is
         Add this call in case you add the SnapshotModule
         */
         __SnasphotModule_init_unchained();
-        
 
         /* Other modules */
         __DebtBaseModule_init_unchained();
@@ -174,7 +173,8 @@ abstract contract CMTAT_BASE_SnapshotTest is
         uint256 amount
     ) internal override(SnapshotModuleInternal, ERC20Upgradeable) {
         // We call the SnapshotModule only if the transfer is valid
-        if(!ValidationModule.validateTransfer(from, to, amount)) revert Errors.CMTAT_InvalidTransfer(from, to, amount);
+        if (!ValidationModule.validateTransfer(from, to, amount))
+            revert Errors.CMTAT_InvalidTransfer(from, to, amount);
         /*
         We do not call ERC20Upgradeable._update(from, to, amount) here because it is called inside the SnapshotModule
         */

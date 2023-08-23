@@ -1,5 +1,7 @@
 const { expectEvent, expectRevert } = require('@openzeppelin/test-helpers')
-const { expectRevertCustomError } = require('../../openzeppelin-contracts-upgradeable/test/helpers/customError.js');
+const {
+  expectRevertCustomError
+} = require('../../openzeppelin-contracts-upgradeable/test/helpers/customError.js')
 const { PAUSER_ROLE } = require('../utils')
 const { should } = require('chai').should()
 
@@ -27,7 +29,7 @@ function PauseModuleCommon (admin, address1, address2, address3) {
     it('testCanBePausedByPauserRole', async function () {
       const AMOUNT_TO_TRANSFER = 10
       // Arrange
-      await this.cmtat.grantRole(PAUSER_ROLE, address1, { from: admin });
+      await this.cmtat.grantRole(PAUSER_ROLE, address1, { from: admin })
 
       // Act
       this.logs = await this.cmtat.pause({ from: address1 })
@@ -54,7 +56,7 @@ function PauseModuleCommon (admin, address1, address2, address3) {
 
     it('testCanBeUnpausedByAdmin', async function () {
       // Arrange
-      await this.cmtat.pause({ from: admin });
+      await this.cmtat.pause({ from: admin })
 
       // Act
       this.logs = await this.cmtat.unpause({ from: admin })
@@ -69,7 +71,7 @@ function PauseModuleCommon (admin, address1, address2, address3) {
     it('testCanBeUnpausedByANewPauser', async function () {
       // Arrange
       await this.cmtat.pause({ from: admin })
-      await this.cmtat.grantRole(PAUSER_ROLE, address1, { from: admin });
+      await this.cmtat.grantRole(PAUSER_ROLE, address1, { from: admin })
 
       // Act
       this.logs = await this.cmtat.unpause({ from: address1 })
@@ -99,7 +101,11 @@ function PauseModuleCommon (admin, address1, address2, address3) {
       await this.cmtat.pause({ from: admin });
       // Assert
       (
-        await this.cmtat.detectTransferRestriction(address1, address2, AMOUNT_TO_TRANSFER)
+        await this.cmtat.detectTransferRestriction(
+          address1,
+          address2,
+          AMOUNT_TO_TRANSFER
+        )
       ).should.be.bignumber.equal('1');
       (await this.cmtat.messageForTransferRestriction(1)).should.equal(
         'All transfers paused'
@@ -123,13 +129,19 @@ function PauseModuleCommon (admin, address1, address2, address3) {
 
       // Assert
       (
-        await this.cmtat.detectTransferRestriction(address1, address2, AMOUNT_TO_TRANSFER)
+        await this.cmtat.detectTransferRestriction(
+          address1,
+          address2,
+          AMOUNT_TO_TRANSFER
+        )
       ).should.be.bignumber.equal('1');
       (await this.cmtat.messageForTransferRestriction(1)).should.equal(
         'All transfers paused'
       )
       await expectRevertCustomError(
-        this.cmtat.transferFrom(address1, address2, AMOUNT_TO_TRANSFER, { from: address3 }),
+        this.cmtat.transferFrom(address1, address2, AMOUNT_TO_TRANSFER, {
+          from: address3
+        }),
         'CMTAT_InvalidTransfer',
         [address1, address2, AMOUNT_TO_TRANSFER]
       )

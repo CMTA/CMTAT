@@ -1,4 +1,8 @@
-const { expectEvent, expectRevert, time } = require('@openzeppelin/test-helpers')
+const {
+  expectEvent,
+  expectRevert,
+  time
+} = require('@openzeppelin/test-helpers')
 const {
   expectRevertCustomError
 } = require('../../../openzeppelin-contracts-upgradeable/test/helpers/customError')
@@ -9,7 +13,7 @@ const {
   checkArraySnapshot
 } = require('./SnapshotModuleUtils/SnapshotModuleUtils')
 
-function SnapshotModuleCommonUnschedule(owner, address1, address2, address3) {
+function SnapshotModuleCommonUnschedule (owner, address1, address2, address3) {
   context('unscheduleSnapshotNotOptimized', function () {
     beforeEach(async function () {
       this.currentTime = await time.latest()
@@ -166,7 +170,7 @@ function SnapshotModuleCommonUnschedule(owner, address1, address2, address3) {
       this.snapshotTime = this.currentTime.add(time.duration.seconds(60))
       await this.cmtat.scheduleSnapshot(this.snapshotTime, { from: owner })
     })
-    
+
     it('can unschedule a snapshot with the snapshoter role and emits a SnapshotUnschedule event', async function () {
       this.logs = await this.cmtat.unscheduleLastSnapshot(this.snapshotTime, {
         from: owner

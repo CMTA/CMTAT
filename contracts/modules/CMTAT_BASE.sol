@@ -42,19 +42,19 @@ abstract contract CMTAT_BASE is
     CreditEventsModule
 {
     /**
-    * @notice 
-    * initialize the proxy contract
-    * The calls to this function will revert if the contract was deployed without a proxy
-    * @param admin address of the admin of contract (Access Control)
-    * @param nameIrrevocable name of the token
-    * @param symbolIrrevocable name of the symbol
-    * @param decimalsIrrevocable number of decimals of the token, must be 0 to be compliant with Swiss law as per CMTAT specifications (non-zero decimal number may be needed for other use cases)
-    * @param tokenId_ name of the tokenId
-    * @param terms_ terms associated with the token
-    * @param ruleEngine_ address of the ruleEngine to apply rules to transfers
-    * @param information_ additional information to describe the token
-    * @param flag_ add information under the form of bit(0, 1)
-    */
+     * @notice
+     * initialize the proxy contract
+     * The calls to this function will revert if the contract was deployed without a proxy
+     * @param admin address of the admin of contract (Access Control)
+     * @param nameIrrevocable name of the token
+     * @param symbolIrrevocable name of the symbol
+     * @param decimalsIrrevocable number of decimals of the token, must be 0 to be compliant with Swiss law as per CMTAT specifications (non-zero decimal number may be needed for other use cases)
+     * @param tokenId_ name of the tokenId
+     * @param terms_ terms associated with the token
+     * @param ruleEngine_ address of the ruleEngine to apply rules to transfers
+     * @param information_ additional information to describe the token
+     * @param flag_ add information under the form of bit(0, 1)
+     */
     function initialize(
         address admin,
         string memory nameIrrevocable,
@@ -80,8 +80,8 @@ abstract contract CMTAT_BASE is
     }
 
     /**
-    * @dev calls the different initialize functions from the different modules
-    */
+     * @dev calls the different initialize functions from the different modules
+     */
     function __CMTAT_init(
         address admin,
         string memory nameIrrevocable,
@@ -144,8 +144,8 @@ abstract contract CMTAT_BASE is
     }
 
     /**
-    * @notice Returns the number of decimals used to get its user representation.
-    */
+     * @notice Returns the number of decimals used to get its user representation.
+     */
     function decimals()
         public
         view
@@ -169,19 +169,19 @@ abstract contract CMTAT_BASE is
         return ERC20BaseModule.transferFrom(sender, recipient, amount);
     }
 
-    /** 
-    * @dev 
-    * SnapshotModule:
-    * - override SnapshotModuleInternal if you add the SnapshotModule
-    * e.g. override(SnapshotModuleInternal, ERC20Upgradeable)
-    * - remove the keyword view
-    */
+    /**
+     * @dev
+     * SnapshotModule:
+     * - override SnapshotModuleInternal if you add the SnapshotModule
+     * e.g. override(SnapshotModuleInternal, ERC20Upgradeable)
+     * - remove the keyword view
+     */
     function _update(
         address from,
         address to,
         uint256 amount
     ) internal override(ERC20Upgradeable) {
-        if(!ValidationModule.validateTransfer(from, to, amount)) {
+        if (!ValidationModule.validateTransfer(from, to, amount)) {
             revert Errors.CMTAT_InvalidTransfer(from, to, amount);
         }
         ERC20Upgradeable._update(from, to, amount);
@@ -193,9 +193,9 @@ abstract contract CMTAT_BASE is
         */
     }
 
-    /** 
-    * @dev This surcharge is not necessary if you do not use the MetaTxModule
-    */
+    /**
+     * @dev This surcharge is not necessary if you do not use the MetaTxModule
+     */
     function _msgSender()
         internal
         view
@@ -205,9 +205,9 @@ abstract contract CMTAT_BASE is
         return MetaTxModule._msgSender();
     }
 
-    /** 
-    * @dev This surcharge is not necessary if you do not use the MetaTxModule
-    */
+    /**
+     * @dev This surcharge is not necessary if you do not use the MetaTxModule
+     */
     function _msgData()
         internal
         view

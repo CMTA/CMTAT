@@ -13,8 +13,9 @@ abstract contract OnlyDelegateCallModule {
     address private immutable self = address(this);
 
     function checkDelegateCall() private view {
-        if(address(this) == self) {
-            revert Errors.CMTAT_OnlyDelegateCallModule_DirectCallToImplementation();
+        if (address(this) == self) {
+            revert Errors
+                .CMTAT_OnlyDelegateCallModule_DirectCallToImplementation();
         }
     }
 
