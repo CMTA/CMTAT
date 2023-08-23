@@ -1,6 +1,7 @@
 /** @type import('hardhat/config').HardhatUserConfig */
 require('@nomiclabs/hardhat-truffle5')
 require('@openzeppelin/hardhat-upgrades')
+require("hardhat-gas-reporter");
 require("solidity-coverage")
 require('solidity-docgen')
 module.exports = {
