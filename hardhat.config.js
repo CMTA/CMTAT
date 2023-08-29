@@ -4,6 +4,7 @@ require('@openzeppelin/hardhat-upgrades')
 require("hardhat-gas-reporter");
 require("solidity-coverage")
 require('solidity-docgen')
+require("hardhat-contract-sizer");
 module.exports = {
   solidity: {
     version: '0.8.20',
@@ -17,5 +18,12 @@ module.exports = {
       },
       viaIR: false
     }
+  },
+  contractSizer: {
+    alphaSort: true,
+    disambiguatePaths: false,
+    runOnCompile: true,
+    strict: true,
+    //only: [':ERC20$'],
   }
 }
