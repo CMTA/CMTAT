@@ -1,11 +1,13 @@
 //SPDX-License-Identifier: MPL-2.0
 
-pragma solidity ^0.8.17;
+pragma solidity ^0.8.20;
 
 import "../../../openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradeable.sol";
 import "../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
 import "../../../openzeppelin-contracts-upgradeable/contracts/token/ERC20/ERC20Upgradeable.sol";
 import "../../../openzeppelin-contracts-upgradeable/contracts/utils/ArraysUpgradeable.sol";
+
+import "../../libraries/Errors.sol";
 
 /**
  * @dev Snapshot module.
@@ -63,8 +65,8 @@ abstract contract SnapshotModuleInternal is ERC20Upgradeable {
      * @dev Initializes the contract
      */
     function __Snapshot_init(
-        string memory name_,
-        string memory symbol_
+        string calldata name_,
+        string calldata symbol_
     ) internal onlyInitializing {
         __Context_init_unchained();
         __ERC20_init(name_, symbol_);
@@ -82,14 +84,27 @@ abstract contract SnapshotModuleInternal is ERC20Upgradeable {
     */
     function _scheduleSnapshot(uint256 time) internal {
         // Check the time firstly to avoid an useless read of storage
-        require(time > block.timestamp, "Snapshot scheduled in the past");
+        if (time <= block.timestamp) {
+            revert Errors.CMTAT_SnapshotModule_SnapshotScheduledInThePast(
+                time,
+                block.timestamp
+            );
+        }
 
         if (_scheduledSnapshots.length > 0) {
             // We check the last snapshot on the list
-            require(
-                time > _scheduledSnapshots[_scheduledSnapshots.length - 1],
-                "time has to be greater than the last snapshot time"
-            );
+            uint256 nextSnapshotTime = _scheduledSnapshots[
+                _scheduledSnapshots.length - 1
+            ];
+            if (time < nextSnapshotTime) {
+                revert Errors
+                    .CMTAT_SnapshotModule_SnapshotTimestampBeforeLastSnapshot(
+                        time,
+                        nextSnapshotTime
+                    );
+            } else if (time == nextSnapshotTime) {
+                revert Errors.CMTAT_SnapshotModule_SnapshotAlreadyExists();
+            }
         }
         _scheduledSnapshots.push(time);
         emit SnapshotSchedule(0, time);
@@ -99,10 +114,17 @@ abstract contract SnapshotModuleInternal is ERC20Upgradeable {
     @dev schedule a snapshot at the specified time
     */
     function _scheduleSnapshotNotOptimized(uint256 time) internal {
-        require(time > block.timestamp, "Snapshot scheduled in the past");
+        if (time <= block.timestamp) {
+            revert Errors.CMTAT_SnapshotModule_SnapshotScheduledInThePast(
+                time,
+                block.timestamp
+            );
+        }
         (bool isFound, uint256 index) = _findScheduledSnapshotIndex(time);
         // Perfect match
-        require(!isFound, "Snapshot already exists");
+        if (isFound) {
+            revert Errors.CMTAT_SnapshotModule_SnapshotAlreadyExists();
+        }
         // if no upper bound match found, we push the snapshot at the end of the list
         if (index == _scheduledSnapshots.length) {
             _scheduledSnapshots.push(time);
@@ -126,27 +148,42 @@ abstract contract SnapshotModuleInternal is ERC20Upgradeable {
     */
     function _rescheduleSnapshot(uint256 oldTime, uint256 newTime) internal {
         // Check the time firstly to avoid an useless read of storage
-        require(oldTime > block.timestamp, "Snapshot already done");
-        require(newTime > block.timestamp, "Snapshot scheduled in the past");
-        require(_scheduledSnapshots.length > 0, "no scheduled snapshot");
-
+        if (oldTime <= block.timestamp) {
+            revert Errors.CMTAT_SnapshotModule_SnapshotAlreadyDone();
+        }
+        if (newTime <= block.timestamp) {
+            revert Errors.CMTAT_SnapshotModule_SnapshotScheduledInThePast(
+                newTime,
+                block.timestamp
+            );
+        }
+        if (_scheduledSnapshots.length == 0) {
+            revert Errors.CMTAT_SnapshotModule_NoSnapshotScheduled();
+        }
         (bool foundOld, uint256 index) = _findScheduledSnapshotIndex(oldTime);
-        require(foundOld, "Snapshot not found");
-
+        if (!foundOld) {
+            revert Errors.CMTAT_SnapshotModule_SnapshotNotFound();
+        }
         if (index + 1 < _scheduledSnapshots.length) {
-            require(
-                newTime < _scheduledSnapshots[index + 1],
-                "time has to be less than the next snapshot"
-            );
+            uint256 nextSnapshotTime = _scheduledSnapshots[index + 1];
+            if (newTime > nextSnapshotTime) {
+                revert Errors
+                    .CMTAT_SnapshotModule_SnapshotTimestampAfterNextSnapshot(
+                        newTime,
+                        nextSnapshotTime
+                    );
+            } else if (newTime == nextSnapshotTime) {
+                revert Errors.CMTAT_SnapshotModule_SnapshotAlreadyExists();
+            }
         }
-
         if (index > 0) {
-            require(
-                newTime > _scheduledSnapshots[index - 1],
-                "time has to be greater than the previous snapshot"
-            );
+            if (newTime <= _scheduledSnapshots[index - 1])
+                revert Errors
+                    .CMTAT_SnapshotModule_SnapshotTimestampBeforePreviousSnapshot(
+                        newTime,
+                        _scheduledSnapshots[index - 1]
+                    );
         }
-
         _scheduledSnapshots[index] = newTime;
 
         emit SnapshotSchedule(oldTime, newTime);
@@ -157,13 +194,16 @@ abstract contract SnapshotModuleInternal is ERC20Upgradeable {
     */
     function _unscheduleLastSnapshot(uint256 time) internal {
         // Check the time firstly to avoid an useless read of storage
-        require(time > block.timestamp, "Snapshot already done");
-        require(_scheduledSnapshots.length > 0, "No snapshot scheduled");
+        if (time <= block.timestamp) {
+            revert Errors.CMTAT_SnapshotModule_SnapshotAlreadyDone();
+        }
+        if (_scheduledSnapshots.length == 0) {
+            revert Errors.CMTAT_SnapshotModule_NoSnapshotScheduled();
+        }
         // All snapshot time are unique, so we do not check the indice
-        require(
-            time == _scheduledSnapshots[_scheduledSnapshots.length - 1],
-            "Only the last snapshot can be unscheduled"
-        );
+        if (time != _scheduledSnapshots[_scheduledSnapshots.length - 1]) {
+            revert Errors.CMTAT_SnapshotModule_SnapshotNotFound();
+        }
         _scheduledSnapshots.pop();
         emit SnapshotUnschedule(time);
     }
@@ -175,9 +215,13 @@ abstract contract SnapshotModuleInternal is ERC20Upgradeable {
     - Reduce the array size by deleting the last snapshot
     */
     function _unscheduleSnapshotNotOptimized(uint256 time) internal {
-        require(time > block.timestamp, "Snapshot already done");
+        if (time <= block.timestamp) {
+            revert Errors.CMTAT_SnapshotModule_SnapshotAlreadyDone();
+        }
         (bool isFound, uint256 index) = _findScheduledSnapshotIndex(time);
-        require(isFound, "Snapshot not found");
+        if (!isFound) {
+            revert Errors.CMTAT_SnapshotModule_SnapshotNotFound();
+        }
         for (uint256 i = index; i + 1 < _scheduledSnapshots.length; ) {
             _scheduledSnapshots[i] = _scheduledSnapshots[i + 1];
             unchecked {
@@ -210,10 +254,13 @@ abstract contract SnapshotModuleInternal is ERC20Upgradeable {
                         indexLowerBound -
                         1;
                     nextScheduledSnapshot = new uint256[](arraySize);
-                    for (uint256 i = 0; i < nextScheduledSnapshot.length; ++i) {
+                    for (uint256 i; i < arraySize; ) {
                         nextScheduledSnapshot[i] = _scheduledSnapshots[
                             indexLowerBound + 1 + i
                         ];
+                        unchecked {
+                            ++i;
+                        }
                     }
                 }
             }
@@ -262,13 +309,11 @@ abstract contract SnapshotModuleInternal is ERC20Upgradeable {
     @dev Update balance and/or total supply snapshots before the values are modified. This is implemented
     in the _beforeTokenTransfer hook, which is executed for _mint, _burn, and _transfer operations.
     */
-    function _beforeTokenTransfer(
+    function _update(
         address from,
         address to,
         uint256 amount
     ) internal virtual override {
-        super._beforeTokenTransfer(from, to, amount);
-
         _setCurrentSnapshot();
         if (from != address(0)) {
             // for both burn and transfer
@@ -285,6 +330,7 @@ abstract contract SnapshotModuleInternal is ERC20Upgradeable {
             _updateAccountSnapshot(to);
             _updateTotalSupplySnapshot();
         }
+        ERC20Upgradeable._update(from, to, amount);
     }
 
     /**
@@ -389,20 +435,21 @@ abstract contract SnapshotModuleInternal is ERC20Upgradeable {
         uint256 time
     ) private view returns (bool, uint256) {
         uint256 indexFound = _scheduledSnapshots.findUpperBound(time);
+        uint256 _scheduledSnapshotsLength = _scheduledSnapshots.length;
         // Exact match
         if (
-            indexFound != _scheduledSnapshots.length &&
+            indexFound != _scheduledSnapshotsLength &&
             _scheduledSnapshots[indexFound] == time
         ) {
             return (true, indexFound);
         }
         // Upper bound match
-        else if (indexFound != _scheduledSnapshots.length) {
+        else if (indexFound != _scheduledSnapshotsLength) {
             return (false, indexFound);
         }
         // no match
         else {
-            return (false, _scheduledSnapshots.length);
+            return (false, _scheduledSnapshotsLength);
         }
     }
 
@@ -423,15 +470,18 @@ abstract contract SnapshotModuleInternal is ERC20Upgradeable {
         ) {
             return (0, currentArraySize);
         }
-        uint256 mostRecent = 0;
+        uint256 mostRecent;
         index = currentArraySize;
-        for (uint256 i = _currentSnapshotIndex; i < currentArraySize; ++i) {
+        for (uint256 i = _currentSnapshotIndex; i < currentArraySize; ) {
             if (_scheduledSnapshots[i] <= block.timestamp) {
                 mostRecent = _scheduledSnapshots[i];
                 index = i;
             } else {
                 // All snapshot are planned in the futur
                 break;
+            }
+            unchecked {
+                ++i;
             }
         }
         return (mostRecent, index);

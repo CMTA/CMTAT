@@ -1,11 +1,13 @@
 //SPDX-License-Identifier: MPL-2.0
 
-pragma solidity ^0.8.17;
+pragma solidity ^0.8.20;
 
 // required OZ imports here
 import "../../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
 import "../../security/AuthorizationModule.sol";
 import "../../security/OnlyDelegateCallModule.sol";
+
+import "../../../libraries/Errors.sol";
 
 abstract contract BaseModule is AuthorizationModule, OnlyDelegateCallModule {
     // to initialize inside the implementation constructor when deployed with a Proxy
@@ -101,7 +103,9 @@ abstract contract BaseModule is AuthorizationModule, OnlyDelegateCallModule {
     @notice The call will be reverted if the new value of flag is the same as the current one
     */
     function setFlag(uint256 flag_) public onlyRole(DEFAULT_ADMIN_ROLE) {
-        require(flag != flag_, "Same value");
+        if (flag == flag_) {
+            revert Errors.CMTAT_BaseModule_SameValue();
+        }
         flag = flag_;
         emit Flag(flag_);
     }

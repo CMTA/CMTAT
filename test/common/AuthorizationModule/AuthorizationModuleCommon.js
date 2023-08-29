@@ -1,22 +1,22 @@
-const { expectEvent, expectRevert } = require('@openzeppelin/test-helpers')
-const { PAUSER_ROLE } = require('../../utils')
+const { expectEvent } = require('@openzeppelin/test-helpers')
+const {
+  expectRevertCustomError
+} = require('../../../openzeppelin-contracts-upgradeable/test/helpers/customError')
+const { PAUSER_ROLE, DEFAULT_ADMIN_ROLE } = require('../../utils')
 const chai = require('chai')
-const expect = chai.expect
 const should = chai.should()
 
 function AuthorizationModuleCommon (owner, address1, address2) {
   context('Authorization', function () {
     it('testAdminCanGrantRole', async function () {
       // Act
-      ({ logs: this.logs } = await this.cmtat.grantRole(
-        PAUSER_ROLE,
-        address1,
-        { from: owner }
-      ));
+      this.logs = await this.cmtat.grantRole(PAUSER_ROLE, address1, {
+        from: owner
+      });
       // Assert
       (await this.cmtat.hasRole(PAUSER_ROLE, address1)).should.equal(true)
       // emits a RoleGranted event
-      expectEvent.inLogs(this.logs, 'RoleGranted', {
+      expectEvent(this.logs, 'RoleGranted', {
         role: PAUSER_ROLE,
         account: address1,
         sender: owner
@@ -27,17 +27,15 @@ function AuthorizationModuleCommon (owner, address1, address2) {
       // Arrange
       await this.cmtat.grantRole(PAUSER_ROLE, address1, { from: owner });
       // Arrange - Assert
-      (await this.cmtat.hasRole(PAUSER_ROLE, address1)).should.equal(true);
+      (await this.cmtat.hasRole(PAUSER_ROLE, address1)).should.equal(true)
       // Act
-      ({ logs: this.logs } = await this.cmtat.revokeRole(
-        PAUSER_ROLE,
-        address1,
-        { from: owner }
-      ));
+      this.logs = await this.cmtat.revokeRole(PAUSER_ROLE, address1, {
+        from: owner
+      });
       // Assert
       (await this.cmtat.hasRole(PAUSER_ROLE, address1)).should.equal(false)
       // emits a RoleRevoked event
-      expectEvent.inLogs(this.logs, 'RoleRevoked', {
+      expectEvent(this.logs, 'RoleRevoked', {
         role: PAUSER_ROLE,
         account: address1,
         sender: owner
@@ -48,11 +46,10 @@ function AuthorizationModuleCommon (owner, address1, address2) {
       // Arrange - Assert
       (await this.cmtat.hasRole(PAUSER_ROLE, address1)).should.equal(false)
       // Act
-      await expectRevert(
+      await expectRevertCustomError(
         this.cmtat.grantRole(PAUSER_ROLE, address1, { from: address2 }),
-        'AccessControl: account ' +
-          address2.toLowerCase() +
-          ' is missing role 0x0000000000000000000000000000000000000000000000000000000000000000'
+        'AccessControlUnauthorizedAccount',
+        [address2, DEFAULT_ADMIN_ROLE]
       );
       // Assert
       (await this.cmtat.hasRole(PAUSER_ROLE, address1)).should.equal(false)
@@ -65,11 +62,10 @@ function AuthorizationModuleCommon (owner, address1, address2) {
       // Arrange - Assert
       (await this.cmtat.hasRole(PAUSER_ROLE, address1)).should.equal(true)
       // Act
-      await expectRevert(
+      await expectRevertCustomError(
         this.cmtat.revokeRole(PAUSER_ROLE, address1, { from: address2 }),
-        'AccessControl: account ' +
-          address2.toLowerCase() +
-          ' is missing role 0x0000000000000000000000000000000000000000000000000000000000000000'
+        'AccessControlUnauthorizedAccount',
+        [address2, DEFAULT_ADMIN_ROLE]
       );
       // Assert
       (await this.cmtat.hasRole(PAUSER_ROLE, address1)).should.equal(true)

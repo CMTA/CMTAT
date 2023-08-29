@@ -1,11 +1,11 @@
 //SPDX-License-Identifier: MPL-2.0
 
-pragma solidity ^0.8.17;
+pragma solidity ^0.8.20;
 
 // required OZ imports here
 import "../../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
 import "../../../../openzeppelin-contracts-upgradeable/contracts/token/ERC20/ERC20Upgradeable.sol";
-
+import "../../../libraries/Errors.sol";
 
 abstract contract ERC20BaseModule is ERC20Upgradeable {
     /* Events */
@@ -69,16 +69,15 @@ abstract contract ERC20BaseModule is ERC20Upgradeable {
         address[] calldata tos,
         uint256[] calldata values
     ) public returns (bool) {
-        require(
-            tos.length > 0,
-            "CMTAT: tos is empty"
-        );
+        if (tos.length == 0) {
+            revert Errors.CMTAT_ERC20BaseModule_EmptyTos();
+        }
         // We do not check that values is not empty since
         // this require will throw an error in this case.
-        require(
-            tos.length == values.length,
-            "CMTAT: tos and values length mismatch"
-        );
+        if (bool(tos.length != values.length)) {
+            revert Errors.CMTAT_ERC20BaseModule_TosValueslengthMismatch();
+        }
+
         for (uint256 i = 0; i < tos.length; ) {
             // We call directly the internal function transfer
             // The reason is that the public function adds only the owner address recovery
@@ -122,10 +121,14 @@ abstract contract ERC20BaseModule is ERC20Upgradeable {
         uint256 currentAllowance
     ) public virtual returns (bool) {
         address owner = _msgSender();
-        require(
-            allowance(owner, spender) == currentAllowance,
-            "CMTAT: current allowance is not right"
-        );
+        uint256 currentAllowanceFromSmartContract = allowance(owner, spender);
+        if (currentAllowanceFromSmartContract != currentAllowance) {
+            revert Errors.CMTAT_ERC20BaseModule_WrongAllowance(
+                spender,
+                currentAllowanceFromSmartContract,
+                currentAllowance
+            );
+        }
         // We call directly the internal function _approve
         // The reason is that the public function adds only the owner address recovery
         ERC20Upgradeable._approve(owner, spender, value);

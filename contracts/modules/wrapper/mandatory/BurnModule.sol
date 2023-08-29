@@ -1,6 +1,6 @@
 //SPDX-License-Identifier: MPL-2.0
 
-pragma solidity ^0.8.17;
+pragma solidity ^0.8.20;
 
 import "../../../../openzeppelin-contracts-upgradeable/contracts/token/ERC20/ERC20Upgradeable.sol";
 import "../../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
@@ -8,8 +8,8 @@ import "../../security/AuthorizationModule.sol";
 
 abstract contract BurnModule is ERC20Upgradeable, AuthorizationModule {
     /**
-    * @notice Emitted when the specified `value` amount of tokens owned by `owner`are destroyed with the given `reason`
-    */
+     * @notice Emitted when the specified `value` amount of tokens owned by `owner`are destroyed with the given `reason`
+     */
     event Burn(address indexed owner, uint256 value, string reason);
 
     function __BurnModule_init(
@@ -39,7 +39,7 @@ abstract contract BurnModule is ERC20Upgradeable, AuthorizationModule {
 
     /**
      * @notice Destroys a `value` amount of tokens from `account`, by transferring it to address(0).
-     * @dev  
+     * @dev
      * See {ERC20-_burn}
      * Emits a {Burn} event
      * Emits a {Transfer} event with `to` set to the zero address  (emits inside _burn).
@@ -58,7 +58,7 @@ abstract contract BurnModule is ERC20Upgradeable, AuthorizationModule {
     /**
      *
      * @notice batch version of {forceBurn}.
-     * @dev 
+     * @dev
      * See {ERC20-_burn} and {OpenZeppelin ERC1155_burnBatch}.
      *
      * For each burn action:
@@ -74,16 +74,14 @@ abstract contract BurnModule is ERC20Upgradeable, AuthorizationModule {
         uint256[] calldata values,
         string memory reason
     ) public onlyRole(BURNER_ROLE) {
-        require(
-            accounts.length > 0,
-            "CMTAT: accounts is empty"
-        );
+        if (accounts.length == 0) {
+            revert Errors.CMTAT_BurnModule_EmptyAccounts();
+        }
         // We do not check that values is not empty since
         // this require will throw an error in this case.
-        require(
-            accounts.length == values.length,
-            "CMTAT: accounts and values length mismatch"
-        );
+        if (bool(accounts.length != values.length)) {
+            revert Errors.CMTAT_BurnModule_AccountsValueslengthMismatch();
+        }
 
         for (uint256 i = 0; i < accounts.length; ) {
             _burn(accounts[i], values[i]);

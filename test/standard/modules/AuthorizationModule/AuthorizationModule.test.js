@@ -1,5 +1,5 @@
 const AuthorizationModuleCommon = require('../../../common/AuthorizationModule/AuthorizationModuleCommon')
-const {deployCMTATStandalone} = require('../../../deploymentUtils')
+const { deployCMTATStandalone } = require('../../../deploymentUtils')
 
 contract(
   'Standard - AuthorizationModule',

@@ -1,5 +1,5 @@
 const BurnModuleCommon = require('../../common/BurnModuleCommon')
-const {deployCMTATProxy} = require('../../deploymentUtils')
+const { deployCMTATProxy } = require('../../deploymentUtils')
 
 contract(
   'Proxy - BurnModule',

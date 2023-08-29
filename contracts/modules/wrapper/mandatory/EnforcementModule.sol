@@ -1,6 +1,6 @@
 //SPDX-License-Identifier: MPL-2.0
 
-pragma solidity ^0.8.17;
+pragma solidity ^0.8.20;
 
 import "../../../../openzeppelin-contracts-upgradeable/contracts/security/PausableUpgradeable.sol";
 import "../../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
@@ -52,7 +52,7 @@ abstract contract EnforcementModule is
      */
     function freeze(
         address account,
-        string memory reason
+        string calldata reason
     ) public onlyRole(ENFORCER_ROLE) returns (bool) {
         return _freeze(account, reason);
     }
@@ -66,7 +66,7 @@ abstract contract EnforcementModule is
      */
     function unfreeze(
         address account,
-        string memory reason
+        string calldata reason
     ) public onlyRole(ENFORCER_ROLE) returns (bool) {
         return _unfreeze(account, reason);
     }

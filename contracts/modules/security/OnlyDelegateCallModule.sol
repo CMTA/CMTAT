@@ -1,6 +1,8 @@
 //SPDX-License-Identifier: MPL-2.0
 
-pragma solidity ^0.8.17;
+pragma solidity ^0.8.20;
+
+import "../../libraries/Errors.sol";
 
 /**
 @dev When a contract is deployed with a proxy, insure that some functions (e.g. delegatecall and selfdestruct) can only be triggered through proxies 
@@ -11,10 +13,10 @@ abstract contract OnlyDelegateCallModule {
     address private immutable self = address(this);
 
     function checkDelegateCall() private view {
-        require(
-            address(this) != self,
-            "Direct call to the implementation not allowed"
-        );
+        if (address(this) == self) {
+            revert Errors
+                .CMTAT_OnlyDelegateCallModule_DirectCallToImplementation();
+        }
     }
 
     modifier onlyDelegateCall(bool deployedWithProxy) {

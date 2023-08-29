@@ -1,4 +1,7 @@
-const { expectEvent, expectRevert } = require('@openzeppelin/test-helpers')
+const { expectEvent } = require('@openzeppelin/test-helpers')
+const {
+  expectRevertCustomError
+} = require('../../../openzeppelin-contracts-upgradeable/test/helpers/customError.js')
 const { DEFAULT_ADMIN_ROLE } = require('../../utils')
 const { should } = require('chai').should()
 
@@ -6,31 +9,33 @@ function ValidationModuleSetRuleEngineCommon (admin, address1, ruleEngine) {
   context('RuleEngineSetTest', function () {
     it('testCanBeSetByAdmin', async function () {
       // Act
-      ({ logs: this.logs } = await this.cmtat.setRuleEngine(ruleEngine, {
+      this.logs = await this.cmtat.setRuleEngine(ruleEngine, {
         from: admin
-      }))
+      })
       // Assert
       // emits a RuleEngineSet event
-      expectEvent.inLogs(this.logs, 'RuleEngine', {
+      expectEvent(this.logs, 'RuleEngine', {
         newRuleEngine: ruleEngine
       })
     })
 
     it('testCanNotBeSetByAdminWithTheSameValue', async function () {
       // Act
-      await expectRevert(this.cmtat.setRuleEngine(await this.cmtat.ruleEngine(), { from: admin }),
-        'Same value'
+      await expectRevertCustomError(
+        this.cmtat.setRuleEngine(await this.cmtat.ruleEngine(), {
+          from: admin
+        }),
+        'CMTAT_ValidationModule_SameValue',
+        []
       )
     })
 
     it('testCannotBeSetByNonAdmin', async function () {
       // Act
-      await expectRevert(
+      await expectRevertCustomError(
         this.cmtat.setRuleEngine(ruleEngine, { from: address1 }),
-        'AccessControl: account ' +
-            address1.toLowerCase() +
-            ' is missing role ' +
-            DEFAULT_ADMIN_ROLE
+        'AccessControlUnauthorizedAccount',
+        [address1, DEFAULT_ADMIN_ROLE]
       )
     })
 

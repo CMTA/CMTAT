@@ -1,5 +1,8 @@
-const { expectEvent, expectRevert } = require('@openzeppelin/test-helpers')
+const { expectEvent } = require('@openzeppelin/test-helpers')
 const { DEFAULT_ADMIN_ROLE } = require('../utils')
+const {
+  expectRevertCustomError
+} = require('../../openzeppelin-contracts-upgradeable/test/helpers/customError.js')
 const { should } = require('chai').should()
 
 function BaseModuleCommon (owner, address1, address2, address3, proxyTest) {
@@ -14,12 +17,12 @@ function BaseModuleCommon (owner, address1, address2, address3, proxyTest) {
     })
     it('testAdminCanChangeTokenId', async function () {
       // Arrange
-      (await this.cmtat.tokenId()).should.equal('CMTAT_ISIN');
+      (await this.cmtat.tokenId()).should.equal('CMTAT_ISIN')
       // Act
-      ({ logs: this.logs } = await this.cmtat.setTokenId('CMTAT_TOKENID', { from: owner }));
+      this.logs = await this.cmtat.setTokenId('CMTAT_TOKENID', { from: owner });
       // Assert
       (await this.cmtat.tokenId()).should.equal('CMTAT_TOKENID')
-      expectEvent.inLogs(this.logs, 'TokenId', {
+      expectEvent(this.logs, 'TokenId', {
         newTokenIdIndexed: web3.utils.sha3('CMTAT_TOKENID'),
         newTokenId: 'CMTAT_TOKENID'
       })
@@ -28,24 +31,24 @@ function BaseModuleCommon (owner, address1, address2, address3, proxyTest) {
       // Arrange - Assert
       (await this.cmtat.tokenId()).should.equal('CMTAT_ISIN')
       // Act
-      await expectRevert(
+      await expectRevertCustomError(
         this.cmtat.setTokenId('CMTAT_TOKENID', { from: address1 }),
-        'AccessControl: account ' +
-          address1.toLowerCase() +
-          ' is missing role ' +
-          DEFAULT_ADMIN_ROLE
+        'AccessControlUnauthorizedAccount',
+        [address1, DEFAULT_ADMIN_ROLE]
       );
       // Assert
       (await this.cmtat.tokenId()).should.equal('CMTAT_ISIN')
     })
     it('testAdminCanUpdateTerms', async function () {
       // Arrange - Assert
-      (await this.cmtat.terms()).should.equal('https://cmta.ch');
+      (await this.cmtat.terms()).should.equal('https://cmta.ch')
       // Act
-      ({ logs: this.logs } = await this.cmtat.setTerms('https://cmta.ch/terms', { from: owner }));
+      this.logs = await this.cmtat.setTerms('https://cmta.ch/terms', {
+        from: owner
+      });
       // Assert
       (await this.cmtat.terms()).should.equal('https://cmta.ch/terms')
-      expectEvent.inLogs(this.logs, 'Term', {
+      expectEvent(this.logs, 'Term', {
         newTermIndexed: web3.utils.sha3('https://cmta.ch/terms'),
         newTerm: 'https://cmta.ch/terms'
       })
@@ -54,24 +57,24 @@ function BaseModuleCommon (owner, address1, address2, address3, proxyTest) {
       // Arrange - Assert
       (await this.cmtat.terms()).should.equal('https://cmta.ch')
       // Act
-      await expectRevert(
+      await expectRevertCustomError(
         this.cmtat.setTerms('https://cmta.ch/terms', { from: address1 }),
-        'AccessControl: account ' +
-          address1.toLowerCase() +
-          ' is missing role ' +
-          DEFAULT_ADMIN_ROLE
+        'AccessControlUnauthorizedAccount',
+        [address1, DEFAULT_ADMIN_ROLE]
       );
       // Assert
       (await this.cmtat.terms()).should.equal('https://cmta.ch')
     })
     it('testAdminCanUpdateInformation', async function () {
       // Arrange - Assert
-      (await this.cmtat.information()).should.equal('CMTAT_info');
+      (await this.cmtat.information()).should.equal('CMTAT_info')
       // Act
-      ({ logs: this.logs } = await this.cmtat.setInformation('new info available', { from: owner }));
+      this.logs = await this.cmtat.setInformation('new info available', {
+        from: owner
+      });
       // Assert
       (await this.cmtat.information()).should.equal('new info available')
-      expectEvent.inLogs(this.logs, 'Information', {
+      expectEvent(this.logs, 'Information', {
         newInformationIndexed: web3.utils.sha3('new info available'),
         newInformation: 'new info available'
       })
@@ -80,24 +83,22 @@ function BaseModuleCommon (owner, address1, address2, address3, proxyTest) {
       // Arrange - Assert
       (await this.cmtat.information()).should.equal('CMTAT_info')
       // Act
-      await expectRevert(
+      await expectRevertCustomError(
         this.cmtat.setInformation('new info available', { from: address1 }),
-        'AccessControl: account ' +
-          address1.toLowerCase() +
-          ' is missing role ' +
-          DEFAULT_ADMIN_ROLE
+        'AccessControlUnauthorizedAccount',
+        [address1, DEFAULT_ADMIN_ROLE]
       );
       // Assert
       (await this.cmtat.information()).should.equal('CMTAT_info')
     })
     it('testAdminCanUpdateFlag', async function () {
       // Arrange - Assert
-      (await this.cmtat.flag()).should.be.bignumber.equal(this.flag.toString());
+      (await this.cmtat.flag()).should.be.bignumber.equal(this.flag.toString())
       // Act
-      ({ logs: this.logs } = await this.cmtat.setFlag(100, { from: owner }));
+      this.logs = await this.cmtat.setFlag(100, { from: owner });
       // Assert
       (await this.cmtat.flag()).should.be.bignumber.equal('100')
-      expectEvent.inLogs(this.logs, 'Flag', {
+      expectEvent(this.logs, 'Flag', {
         newFlag: '100'
       })
     })
@@ -105,19 +106,20 @@ function BaseModuleCommon (owner, address1, address2, address3, proxyTest) {
       // Arrange - Assert
       (await this.cmtat.flag()).should.be.bignumber.equal(this.flag.toString())
       // Act
-      await expectRevert(this.cmtat.setFlag(this.flag.toString(), { from: owner }),
-        'Same value'
+      await expectRevertCustomError(
+        this.cmtat.setFlag(this.flag.toString(), { from: owner }),
+        'CMTAT_BaseModule_SameValue',
+        []
       )
     })
     it('testCannotNonAdminUpdateFlag', async function () {
       // Arrange - Assert
       (await this.cmtat.flag()).should.be.bignumber.equal(this.flag.toString())
       // Act
-      await expectRevert(this.cmtat.setFlag(25, { from: address1 }),
-        'AccessControl: account ' +
-          address1.toLowerCase() +
-          ' is missing role ' +
-          DEFAULT_ADMIN_ROLE
+      await expectRevertCustomError(
+        this.cmtat.setFlag(25, { from: address1 }),
+        'AccessControlUnauthorizedAccount',
+        [address1, DEFAULT_ADMIN_ROLE]
       );
       // Assert
       (await this.cmtat.flag()).should.be.bignumber.equal(this.flag.toString())
@@ -141,12 +143,10 @@ function BaseModuleCommon (owner, address1, address2, address3, proxyTest) {
     })
     it('testCannotNonAdminKillContract', async function () {
       // Act
-      await expectRevert(
+      await expectRevertCustomError(
         this.cmtat.kill({ from: address1 }),
-        'AccessControl: account ' +
-          address1.toLowerCase() +
-          ' is missing role ' +
-          DEFAULT_ADMIN_ROLE
+        'AccessControlUnauthorizedAccount',
+        [address1, DEFAULT_ADMIN_ROLE]
       );
       // Assert
       (await this.cmtat.terms()).should.equal('https://cmta.ch')

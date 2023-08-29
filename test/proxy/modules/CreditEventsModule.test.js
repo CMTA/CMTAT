@@ -1,5 +1,5 @@
 const CreditEventsModuleCommon = require('../../common/CreditEventsModuleCommon')
-const {deployCMTATProxy} = require('../../deploymentUtils')
+const { deployCMTATProxy } = require('../../deploymentUtils')
 
 contract(
   'Proxy - CreditEventsModule',

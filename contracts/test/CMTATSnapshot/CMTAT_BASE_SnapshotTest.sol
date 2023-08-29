@@ -1,6 +1,6 @@
 //SPDX-License-Identifier: MPL-2.0
 
-pragma solidity ^0.8.17;
+pragma solidity ^0.8.20;
 
 // required OZ imports here
 import "../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
@@ -24,6 +24,8 @@ import "../../modules/wrapper/optional/DebtModule/CreditEventsModule.sol";
 import "../../modules/security/AuthorizationModule.sol";
 import "../../interfaces/IEIP1404/IEIP1404Wrapper.sol";
 
+import "../../libraries/Errors.sol";
+
 abstract contract CMTAT_BASE_SnapshotTest is
     Initializable,
     ContextUpgradeable,
@@ -39,7 +41,7 @@ abstract contract CMTAT_BASE_SnapshotTest is
     DebtBaseModule,
     CreditEventsModule
 {
-/**
+    /**
     @notice 
     initialize the proxy contract
     The calls to this function will revert if the contract was deployed without a proxy
@@ -118,7 +120,6 @@ abstract contract CMTAT_BASE_SnapshotTest is
         Add this call in case you add the SnapshotModule
         */
         __SnasphotModule_init_unchained();
-        
 
         /* Other modules */
         __DebtBaseModule_init_unchained();
@@ -166,21 +167,22 @@ abstract contract CMTAT_BASE_SnapshotTest is
     e.g. override(SnapshotModuleInternal, ERC20Upgradeable)
     - remove the keyword view
     */
-    function _beforeTokenTransfer(
+    function _update(
         address from,
         address to,
         uint256 amount
     ) internal override(SnapshotModuleInternal, ERC20Upgradeable) {
-        require(
-            ValidationModule.validateTransfer(from, to, amount),
-            "CMTAT: transfer rejected by validation module"
-        );
         // We call the SnapshotModule only if the transfer is valid
+        if (!ValidationModule.validateTransfer(from, to, amount))
+            revert Errors.CMTAT_InvalidTransfer(from, to, amount);
+        /*
+        We do not call ERC20Upgradeable._update(from, to, amount) here because it is called inside the SnapshotModule
+        */
         /*
         SnapshotModule:
         Add this call in case you add the SnapshotModule
         */
-        SnapshotModuleInternal._beforeTokenTransfer(from, to, amount);
+        SnapshotModuleInternal._update(from, to, amount);
     }
 
     /** 

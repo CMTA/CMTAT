@@ -1,5 +1,5 @@
 const PauseModuleCommon = require('../../common/PauseModuleCommon')
-const {deployCMTATStandalone} = require('../../deploymentUtils')
+const { deployCMTATStandalone } = require('../../deploymentUtils')
 contract(
   'Standard - PauseModule',
   function ([_, admin, address1, address2, address3, deployerAddress]) {

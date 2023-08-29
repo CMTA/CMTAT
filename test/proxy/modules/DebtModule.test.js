@@ -1,5 +1,5 @@
 const DebtModuleCommon = require('../../common/DebtModuleCommon')
-const {deployCMTATProxy} = require('../../deploymentUtils')
+const { deployCMTATProxy } = require('../../deploymentUtils')
 
 contract(
   'Proxy - DebtModule',

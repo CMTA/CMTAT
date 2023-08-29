@@ -1,5 +1,5 @@
 const ERC20BaseModuleCommon = require('../../common/ERC20BaseModuleCommon')
-const {deployCMTATProxy} = require('../../deploymentUtils')
+const { deployCMTATProxy } = require('../../deploymentUtils')
 
 contract(
   'Proxy - ERC20BaseModule',

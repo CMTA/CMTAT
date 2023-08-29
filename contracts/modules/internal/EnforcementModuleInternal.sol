@@ -1,6 +1,6 @@
 //SPDX-License-Identifier: MPL-2.0
 
-pragma solidity ^0.8.17;
+pragma solidity ^0.8.20;
 
 import "../../../openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradeable.sol";
 import "../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
@@ -64,7 +64,7 @@ abstract contract EnforcementModuleInternal is
      */
     function _freeze(
         address account,
-        string memory reason
+        string calldata reason
     ) internal virtual returns (bool) {
         if (_frozen[account]) return false;
         _frozen[account] = true;
@@ -79,7 +79,7 @@ abstract contract EnforcementModuleInternal is
      */
     function _unfreeze(
         address account,
-        string memory reason
+        string calldata reason
     ) internal virtual returns (bool) {
         if (!_frozen[account]) return false;
         _frozen[account] = false;

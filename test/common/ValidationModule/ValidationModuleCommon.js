@@ -1,14 +1,23 @@
-const { expectEvent, expectRevert } = require('@openzeppelin/test-helpers')
 const { should } = require('chai').should()
-
+const {
+  expectRevertCustomError
+} = require('../../../openzeppelin-contracts-upgradeable/test/helpers/customError')
 const RuleEngineMock = artifacts.require('RuleEngineMock')
 const { RULE_MOCK_AMOUNT_MAX, ZERO_ADDRESS } = require('../../utils')
 
-function ValidationModuleCommon (admin, address1, address2, address3, address1InitialBalance, address2InitialBalance, address3InitialBalance) {
+function ValidationModuleCommon (
+  admin,
+  address1,
+  address2,
+  address3,
+  address1InitialBalance,
+  address2InitialBalance,
+  address3InitialBalance
+) {
   // Transferring with Rule Engine set
   context('RuleEngineTransferTest', function () {
     beforeEach(async function () {
-      if (await this.cmtat.ruleEngine() === ZERO_ADDRESS) {
+      if ((await this.cmtat.ruleEngine()) === ZERO_ADDRESS) {
         this.ruleEngineMock = await RuleEngineMock.new({ from: admin })
         await this.cmtat.setRuleEngine(this.ruleEngineMock.address, {
           from: admin
@@ -33,7 +42,11 @@ function ValidationModuleCommon (admin, address1, address2, address3, address1In
     it('testCanDetectTransferRestrictionWithAmountTooHigh', async function () {
       // Act + Assert
       (
-        await this.cmtat.detectTransferRestriction(address1, address2, RULE_MOCK_AMOUNT_MAX + 1)
+        await this.cmtat.detectTransferRestriction(
+          address1,
+          address2,
+          RULE_MOCK_AMOUNT_MAX + 1
+        )
       ).should.be.bignumber.equal('10')
     })
 
@@ -55,19 +68,29 @@ function ValidationModuleCommon (admin, address1, address2, address3, address1In
     it('testCanTransferAllowedByRule', async function () {
       const AMOUNT_TO_TRANSFER = 11
       // Act
-      await this.cmtat.transfer(address2, AMOUNT_TO_TRANSFER, { from: address1 });
+      await this.cmtat.transfer(address2, AMOUNT_TO_TRANSFER, {
+        from: address1
+      });
       // Assert
-      (await this.cmtat.balanceOf(address1)).should.be.bignumber.equal((address1InitialBalance - AMOUNT_TO_TRANSFER).toString());
-      (await this.cmtat.balanceOf(address2)).should.be.bignumber.equal((address2InitialBalance + AMOUNT_TO_TRANSFER).toString());
-      (await this.cmtat.balanceOf(address3)).should.be.bignumber.equal((address3InitialBalance).toString())
+      (await this.cmtat.balanceOf(address1)).should.be.bignumber.equal(
+        (address1InitialBalance - AMOUNT_TO_TRANSFER).toString()
+      );
+      (await this.cmtat.balanceOf(address2)).should.be.bignumber.equal(
+        (address2InitialBalance + AMOUNT_TO_TRANSFER).toString()
+      );
+      (await this.cmtat.balanceOf(address3)).should.be.bignumber.equal(
+        address3InitialBalance.toString()
+      )
     })
 
     // reverts if ADDRESS1 transfers more tokens than rule allows
     it('testCannotTransferIfNotAllowedByRule', async function () {
+      const AMOUNT_TO_TRANSFER = RULE_MOCK_AMOUNT_MAX + 1
       // Act
-      await expectRevert(
-        this.cmtat.transfer(address2, RULE_MOCK_AMOUNT_MAX + 1, { from: address1 }),
-        'CMTAT: transfer rejected by validation module'
+      await expectRevertCustomError(
+        this.cmtat.transfer(address2, AMOUNT_TO_TRANSFER, { from: address1 }),
+        'CMTAT_InvalidTransfer',
+        [address1, address2, AMOUNT_TO_TRANSFER]
       )
     })
   })

@@ -1,5 +1,8 @@
 const BaseModuleCommon = require('../../common/BaseModuleCommon')
-const {deployCMTATStandalone, DEPLOYMENT_FLAG} = require('../../deploymentUtils')
+const {
+  deployCMTATStandalone,
+  DEPLOYMENT_FLAG
+} = require('../../deploymentUtils')
 contract(
   'Standard - BaseModule',
   function ([_, admin, address1, address2, address3, deployerAddress]) {

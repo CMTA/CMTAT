@@ -1,9 +1,11 @@
 //SPDX-License-Identifier: MPL-2.0
 
-pragma solidity ^0.8.17;
+pragma solidity ^0.8.20;
 
 import "../../../openzeppelin-contracts-upgradeable/contracts/access/AccessControlUpgradeable.sol";
 import "../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
+
+import "../../libraries/Errors.sol";
 
 abstract contract AuthorizationModule is AccessControlUpgradeable {
     // BurnModule
@@ -43,7 +45,9 @@ abstract contract AuthorizationModule is AccessControlUpgradeable {
     function __AuthorizationModule_init_unchained(
         address admin
     ) internal onlyInitializing {
-        require(admin != address(0), "Address 0 not allowed");
+        if (admin == address(0)) {
+            revert Errors.CMTAT_AuthorizationModule_AddressZeroNotAllowed();
+        }
         _grantRole(DEFAULT_ADMIN_ROLE, admin);
     }
 

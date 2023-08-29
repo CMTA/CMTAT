@@ -1,12 +1,14 @@
 //SPDX-License-Identifier: MPL-2.0
 
-pragma solidity ^0.8.17;
+pragma solidity ^0.8.20;
 
 import "../../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
 import "../../security/AuthorizationModule.sol";
 import "../../internal/ValidationModuleInternal.sol";
 import "../mandatory/PauseModule.sol";
 import "../mandatory/EnforcementModule.sol";
+
+import "../../../libraries/Errors.sol";
 
 /**
  * @dev Validation module.
@@ -59,7 +61,8 @@ abstract contract ValidationModule is
     function setRuleEngine(
         IEIP1404Wrapper ruleEngine_
     ) external onlyRole(DEFAULT_ADMIN_ROLE) {
-        require(ruleEngine != ruleEngine_, "Same value");
+        if (ruleEngine == ruleEngine_)
+            revert Errors.CMTAT_ValidationModule_SameValue();
         ruleEngine = ruleEngine_;
         emit RuleEngine(ruleEngine_);
     }

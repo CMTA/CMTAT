@@ -1,6 +1,6 @@
 //SPDX-License-Identifier: MPL-2.0
 
-pragma solidity ^0.8.17;
+pragma solidity ^0.8.20;
 
 // required OZ imports here
 import "../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
@@ -20,6 +20,8 @@ import "../../modules/wrapper/optional/DebtModule/CreditEventsModule.sol";
 import "../../modules/security/AuthorizationModule.sol";
 import "../../modules/security/OnlyDelegateCallModule.sol";
 import "../../interfaces/IEIP1404/IEIP1404Wrapper.sol";
+
+import "../../libraries/Errors.sol";
 
 /**
 @title A CMTAT version only for TESTING
@@ -181,20 +183,18 @@ contract CMTAT_KILL_TEST is
     e.g. override(SnapshotModuleInternal, ERC20Upgradeable)
     - remove the keyword view
     */
-    function _beforeTokenTransfer(
+    function _update(
         address from,
         address to,
         uint256 amount
     ) internal view override(ERC20Upgradeable) {
-        require(
-            ValidationModule.validateTransfer(from, to, amount),
-            "CMTAT: transfer rejected by validation module"
-        );
+        if (!ValidationModule.validateTransfer(from, to, amount))
+            revert Errors.CMTAT_InvalidTransfer(from, to, amount);
         // We call the SnapshotModule only if the transfer is valid
         /*
         SnapshotModule:
         Add this call in case you add the SnapshotModule
-        SnapshotModuleInternal._beforeTokenTransfer(from, to, amount);
+        SnapshotModuleInternal._update(from, to, amount);
         */
     }
 

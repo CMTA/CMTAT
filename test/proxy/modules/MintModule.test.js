@@ -1,7 +1,5 @@
-const CMTAT = artifacts.require('CMTAT_PROXY')
 const MintModuleCommon = require('../../common/MintModuleCommon')
-const { ZERO_ADDRESS } = require('../../utils')
-const {deployCMTATProxy} = require('../../deploymentUtils')
+const { deployCMTATProxy } = require('../../deploymentUtils')
 
 contract(
   'Proxy - MintModule',
