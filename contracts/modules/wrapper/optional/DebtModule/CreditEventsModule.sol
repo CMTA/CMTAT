@@ -22,25 +22,6 @@ abstract contract CreditEventsModule is
     event FlagRedeemed(bool indexed newFlagRedeemed);
     event Rating(string indexed newRatingIndexed, string newRating);
 
-    function __CreditEvents_init(
-        address admin,
-        uint48 initialDelayToAcceptAdminRole) internal onlyInitializing {
-        /* OpenZeppelin */
-        __Context_init_unchained();
-
-        // AccessControlUpgradeable inherits from ERC165Upgradeable
-        __ERC165_init_unchained();
-        // AuthorizationModule inherits from AccessControlUpgradeable
-        __AccessControl_init_unchained();
-        __AccessControlDefaultAdminRules_init_unchained(initialDelayToAcceptAdminRole, admin);
-        /* CMTAT modules */
-        // Security
-        __AuthorizationModule_init_unchained();
-
-        // own function
-        __CreditEvents_init_unchained();
-    }
-
     function __CreditEvents_init_unchained() internal onlyInitializing {
         // no variable to initialize
     }

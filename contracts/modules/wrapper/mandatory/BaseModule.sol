@@ -34,28 +34,6 @@ abstract contract BaseModule is AuthorizationModule, OnlyDelegateCallModule {
      * All two of these values are immutable: they can only be set once during
      * construction.
      */
-    function __Base_init(
-        string memory tokenId_,
-        string memory terms_,
-        string memory information_,
-        uint256 flag_,
-        address admin,
-        uint48 initialDelayToAcceptAdminRole
-    ) internal onlyInitializing {
-        /* OpenZeppelin */
-        __Context_init_unchained();
-        // AccessControlUpgradeable inherits from ERC165Upgradeable
-        __ERC165_init_unchained();
-        // AuthorizationModule inherits from AccessControlUpgradeable
-        __AccessControl_init_unchained();
-        __AccessControlDefaultAdminRules_init_unchained(initialDelayToAcceptAdminRole, admin);
-        /* CMTAT modules */
-        // Security
-        __AuthorizationModule_init_unchained();
-        // own function
-        __Base_init_unchained(tokenId_, terms_, information_, flag_);
-    }
-
     function __Base_init_unchained(
         string memory tokenId_,
         string memory terms_,

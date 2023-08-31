@@ -19,24 +19,11 @@ abstract contract ERC20BaseModule is ERC20Upgradeable {
 
     /* Initializers */
     /**
-     * @dev Sets the values for {name}, {symbol} and decimals.
+     * @dev Sets the values decimals.
      *
      * These values are immutable: they can only be set once during
      * construction/initialization.
      */
-    function __ERC20Module_init(
-        string memory name_,
-        string memory symbol_,
-        uint8 decimals_
-    ) internal onlyInitializing {
-        /* OpenZeppelin */
-        __Context_init_unchained();
-        __ERC20_init(name_, symbol_);
-
-        /* own function */
-        __ERC20Module_init_unchained(decimals_);
-    }
-
     function __ERC20Module_init_unchained(
         uint8 decimals_
     ) internal onlyInitializing {

@@ -24,35 +24,6 @@ abstract contract ValidationModule is
     string constant TEXT_TRANSFER_OK = "No restriction";
     string constant TEXT_UNKNOWN_CODE = "Unknown code";
 
-    function __ValidationModule_init(
-        IEIP1404Wrapper ruleEngine_,
-        address admin,
-        uint48 initialDelayToAcceptAdminRole
-    ) internal onlyInitializing {
-        /* OpenZeppelin */
-        __Context_init_unchained();
-        // AccessControlUpgradeable inherits from ERC165Upgradeable
-        __ERC165_init_unchained();
-        __AccessControl_init_unchained();
-        __AccessControlDefaultAdminRules_init_unchained(initialDelayToAcceptAdminRole, admin);
-
-        __Pausable_init_unchained();
-
-        /* CMTAT modules */
-        // Internal
-        __Validation_init_unchained(ruleEngine_);
-
-        // Security
-        __AuthorizationModule_init_unchained();
-  
-        // Wrapper
-        __PauseModule_init_unchained();
-        __EnforcementModule_init_unchained();
-
-        // own function
-        __ValidationModule_init_unchained();
-    }
-
     function __ValidationModule_init_unchained() internal onlyInitializing {
         // no variable to initialize
     }
