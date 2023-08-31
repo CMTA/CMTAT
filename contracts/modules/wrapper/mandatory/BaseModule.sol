@@ -39,7 +39,8 @@ abstract contract BaseModule is AuthorizationModule, OnlyDelegateCallModule {
         string memory terms_,
         string memory information_,
         uint256 flag_,
-        address admin
+        address admin,
+        uint48 initialDelayToAcceptAdminRole
     ) internal onlyInitializing {
         /* OpenZeppelin */
         __Context_init_unchained();
@@ -47,11 +48,10 @@ abstract contract BaseModule is AuthorizationModule, OnlyDelegateCallModule {
         __ERC165_init_unchained();
         // AuthorizationModule inherits from AccessControlUpgradeable
         __AccessControl_init_unchained();
-
+        __AccessControlDefaultAdminRules_init_unchained(initialDelayToAcceptAdminRole, admin);
         /* CMTAT modules */
         // Security
-        __AuthorizationModule_init_unchained(admin);
-
+        __AuthorizationModule_init_unchained();
         // own function
         __Base_init_unchained(tokenId_, terms_, information_, flag_);
     }

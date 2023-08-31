@@ -1,21 +1,24 @@
 const {
   expectRevertCustomError
 } = require('../../openzeppelin-contracts-upgradeable/test/helpers/customError.js')
+const { time } = require('@openzeppelin/test-helpers')
 const { ZERO_ADDRESS } = require('../utils')
 const {
   deployCMTATProxyWithParameter,
   deployCMTATStandaloneWithParameter
 } = require('../deploymentUtils')
-contract('CMTAT - Deployment', function ([_], admin) {
+contract('CMTAT - Deployment', function ([_], deployer) {
   it('testCannotDeployProxyWithAdminSetToAddressZero', async function () {
+    const delayTime = BigInt(time.duration.days(3))
     this.flag = 5
     const DECIMAL = 0
     // Act + Assert
     await expectRevertCustomError(
       deployCMTATProxyWithParameter(
-        admin,
+        deployer,
         _,
         ZERO_ADDRESS,
+        delayTime,
         'CMTA Token',
         'CMTAT',
         DECIMAL,
@@ -25,8 +28,8 @@ contract('CMTAT - Deployment', function ([_], admin) {
         'CMTAT_info',
         this.flag
       ),
-      'CMTAT_AuthorizationModule_AddressZeroNotAllowed',
-      []
+      'AccessControlInvalidDefaultAdmin',
+      [ZERO_ADDRESS]
     )
   })
   it('testCannotDeployStandaloneWithAdminSetToAddressZero', async function () {
@@ -35,9 +38,10 @@ contract('CMTAT - Deployment', function ([_], admin) {
     // Act + Assert
     await expectRevertCustomError(
       deployCMTATStandaloneWithParameter(
-        admin,
+        deployer,
         _,
         ZERO_ADDRESS,
+        web3.utils.toBN(time.duration.days(3)),
         'CMTA Token',
         'CMTAT',
         DECIMAL,
@@ -47,8 +51,8 @@ contract('CMTAT - Deployment', function ([_], admin) {
         'CMTAT_info',
         this.flag
       ),
-      'CMTAT_AuthorizationModule_AddressZeroNotAllowed',
-      []
+      'AccessControlInvalidDefaultAdmin',
+      [ZERO_ADDRESS]
     )
   })
 })

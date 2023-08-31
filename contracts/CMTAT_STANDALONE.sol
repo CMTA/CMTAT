@@ -22,6 +22,7 @@ contract CMTAT_STANDALONE is CMTAT_BASE {
     constructor(
         address forwarderIrrevocable,
         address admin,
+        uint48 initialDelay, 
         string memory nameIrrevocable,
         string memory symbolIrrevocable,
         uint8 decimalsIrrevocable,
@@ -35,6 +36,7 @@ contract CMTAT_STANDALONE is CMTAT_BASE {
         // Warning : do not initialize the proxy
         initialize(
             admin,
+            initialDelay,
             nameIrrevocable,
             symbolIrrevocable,
             decimalsIrrevocable,

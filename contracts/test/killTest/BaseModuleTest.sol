@@ -49,8 +49,7 @@ abstract contract BaseModuleTest is
         string memory tokenId_,
         string memory terms_,
         string memory information_,
-        uint256 flag_,
-        address admin
+        uint256 flag_
     ) internal onlyInitializing {
         /* OpenZeppelin */
         __Context_init_unchained();
@@ -60,7 +59,8 @@ abstract contract BaseModuleTest is
         __AccessControl_init_unchained();
 
         /* Wrapper */
-        __AuthorizationModule_init_unchained(admin);
+        __AuthorizationModule_init_unchained();
+
 
         /* own function */
         __Base_init_unchained(tokenId_, terms_, information_, flag_);

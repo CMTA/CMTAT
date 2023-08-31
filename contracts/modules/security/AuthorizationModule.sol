@@ -2,12 +2,12 @@
 
 pragma solidity ^0.8.20;
 
-import "../../../openzeppelin-contracts-upgradeable/contracts/access/AccessControlUpgradeable.sol";
+import "../../../openzeppelin-contracts-upgradeable/contracts/access/extensions/AccessControlDefaultAdminRulesUpgradeable.sol";
 import "../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
 
 import "../../libraries/Errors.sol";
 
-abstract contract AuthorizationModule is AccessControlUpgradeable {
+abstract contract AuthorizationModule is AccessControlDefaultAdminRulesUpgradeable {
     // BurnModule
     bytes32 public constant BURNER_ROLE = keccak256("BURNER_ROLE");
     // EnforcementModule
@@ -25,30 +25,29 @@ abstract contract AuthorizationModule is AccessControlUpgradeable {
         keccak256("DEBT_CREDIT_EVENT_ROLE");
 
     function __AuthorizationModule_init(
-        address admin
+        address admin,
+        uint48 initialDelay
     ) internal onlyInitializing {
         /* OpenZeppelin */
         __Context_init_unchained();
         // AccessControlUpgradeable inherits from ERC165Upgradeable
         __ERC165_init_unchained();
         __AccessControl_init_unchained();
+        __AccessControlDefaultAdminRules_init_unchained(initialDelay, admin);
 
         /* own function */
-        __AuthorizationModule_init_unchained(admin);
+        __AuthorizationModule_init_unchained();
     }
 
     /**
-     * @dev Grants the different roles to the
-     * account that deploys the contract.
+     * @dev
+     *
+     * - The grant to the admin role is done by AccessControlDefaultAdminRules
+     * - The control of the zero address is done by AccessControlDefaultAdminRules
      *
      */
     function __AuthorizationModule_init_unchained(
-        address admin
-    ) internal onlyInitializing {
-        if (admin == address(0)) {
-            revert Errors.CMTAT_AuthorizationModule_AddressZeroNotAllowed();
-        }
-        _grantRole(DEFAULT_ADMIN_ROLE, admin);
+    ) internal view onlyInitializing {
     }
 
     /*
@@ -57,7 +56,7 @@ abstract contract AuthorizationModule is AccessControlUpgradeable {
     function hasRole(
         bytes32 role,
         address account
-    ) public view virtual override returns (bool) {
+    ) public view virtual override( IAccessControlUpgradeable,  AccessControlUpgradeable) returns (bool) {
         // The Default Admin has all roles
         if (AccessControlUpgradeable.hasRole(DEFAULT_ADMIN_ROLE, account)) {
             return true;

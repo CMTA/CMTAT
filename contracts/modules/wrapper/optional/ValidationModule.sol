@@ -26,13 +26,16 @@ abstract contract ValidationModule is
 
     function __ValidationModule_init(
         IEIP1404Wrapper ruleEngine_,
-        address admin
+        address admin,
+        uint48 initialDelayToAcceptAdminRole
     ) internal onlyInitializing {
         /* OpenZeppelin */
         __Context_init_unchained();
         // AccessControlUpgradeable inherits from ERC165Upgradeable
         __ERC165_init_unchained();
         __AccessControl_init_unchained();
+        __AccessControlDefaultAdminRules_init_unchained(initialDelayToAcceptAdminRole, admin);
+
         __Pausable_init_unchained();
 
         /* CMTAT modules */
@@ -40,8 +43,8 @@ abstract contract ValidationModule is
         __Validation_init_unchained(ruleEngine_);
 
         // Security
-        __AuthorizationModule_init_unchained(admin);
-
+        __AuthorizationModule_init_unchained();
+  
         // Wrapper
         __PauseModule_init_unchained();
         __EnforcementModule_init_unchained();
