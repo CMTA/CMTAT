@@ -124,35 +124,6 @@ function BaseModuleCommon (owner, address1, address2, address3, proxyTest) {
       // Assert
       (await this.cmtat.flag()).should.be.bignumber.equal(this.flag.toString())
     })
-    it('testAdminCanKillContract', async function () {
-      // Arrange - Assert
-      await web3.eth.getCode(this.cmtat.address).should.not.equal('0x')
-      // Act
-      await this.cmtat.kill({ from: owner });
-      // Assert
-      // TODO: Check if the ethers inside the contract is sent to the right address
-      // A destroyed contract has a bytecode size of 0.
-      (await web3.eth.getCode(this.cmtat.address)).should.equal('0x')
-      try {
-        await this.cmtat.terms()
-      } catch (e) {
-        e.message.should.equal(
-          "Returned values aren't valid, did it run Out of Gas? You might also see this error if you are not using the correct ABI for the contract you are retrieving data from, requesting data from a block number that does not exist, or querying a node which is not fully synced."
-        )
-      }
-    })
-    it('testCannotNonAdminKillContract', async function () {
-      // Act
-      await expectRevertCustomError(
-        this.cmtat.kill({ from: address1 }),
-        'AccessControlUnauthorizedAccount',
-        [address1, DEFAULT_ADMIN_ROLE]
-      );
-      // Assert
-      (await this.cmtat.terms()).should.equal('https://cmta.ch')
-      // The contract is not destroyed, so the contract has a bytecode size different from zero.
-      await web3.eth.getCode(this.cmtat.address).should.not.equal('0x')
-    })
   })
 }
 module.exports = BaseModuleCommon

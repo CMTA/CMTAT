@@ -2,9 +2,9 @@
 
 pragma solidity ^0.8.20;
 
-import "../../../../openzeppelin-contracts-upgradeable/contracts/security/PausableUpgradeable.sol";
-import "../../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
-import "../../security/AuthorizationModule.sol";
+import "../../../openzeppelin-contracts-upgradeable/contracts/security/PausableUpgradeable.sol";
+import "../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
+import "./AuthorizationModule.sol";
 
 /**
  * @dev ERC20 token with pausable token transfers, minting and burning.
@@ -16,6 +16,8 @@ import "../../security/AuthorizationModule.sol";
 abstract contract PauseModule is PausableUpgradeable, AuthorizationModule {
     string internal constant TEXT_TRANSFER_REJECTED_PAUSED =
         "All transfers paused";
+    bool  isDeactivated;
+    event Deactivated(address account);
 
     function __PauseModule_init(address admin) internal onlyInitializing {
         /* OpenZeppelin */
@@ -61,7 +63,24 @@ abstract contract PauseModule is PausableUpgradeable, AuthorizationModule {
      * - the caller must have the `PAUSER_ROLE`.
      */
     function unpause() public onlyRole(PAUSER_ROLE) {
+        if(isDeactivated){
+            revert Errors.CMTAT_PauseModule_ContractIsDeactivated();
+        }
         _unpause();
+    }
+
+        /**
+    @notice destroys the contract and send the remaining ethers in the contract to the sender
+    Warning: the operation is irreversible, be careful
+    */
+    /// @custom:oz-upgrades-unsafe-allow selfdestruct
+    function deactivateContract()
+        public
+        onlyRole(DEFAULT_ADMIN_ROLE)
+    {
+        isDeactivated = true;
+       _pause();
+       emit Deactivated(_msgSender());
     }
 
     uint256[50] private __gap;

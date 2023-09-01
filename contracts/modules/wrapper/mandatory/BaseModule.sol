@@ -5,11 +5,9 @@ pragma solidity ^0.8.20;
 // required OZ imports here
 import "../../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
 import "../../security/AuthorizationModule.sol";
-import "../../security/OnlyDelegateCallModule.sol";
-
 import "../../../libraries/Errors.sol";
 
-abstract contract BaseModule is AuthorizationModule, OnlyDelegateCallModule {
+abstract contract BaseModule is AuthorizationModule {
     // to initialize inside the implementation constructor when deployed with a Proxy
     bool internal deployedWithProxy;
     /* Events */
@@ -26,6 +24,7 @@ abstract contract BaseModule is AuthorizationModule, OnlyDelegateCallModule {
     string public terms;
     string public information;
     uint256 public flag;
+
 
     /* Initializers */
     /**
@@ -108,19 +107,6 @@ abstract contract BaseModule is AuthorizationModule, OnlyDelegateCallModule {
         }
         flag = flag_;
         emit Flag(flag_);
-    }
-
-    /**
-    @notice destroys the contract and send the remaining ethers in the contract to the sender
-    Warning: the operation is irreversible, be careful
-    */
-    /// @custom:oz-upgrades-unsafe-allow selfdestruct
-    function kill()
-        public
-        onlyRole(DEFAULT_ADMIN_ROLE)
-        onlyDelegateCall(deployedWithProxy)
-    {
-        selfdestruct(payable(_msgSender()));
     }
 
     uint256[50] private __gap;

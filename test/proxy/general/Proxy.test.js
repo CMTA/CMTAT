@@ -10,7 +10,7 @@ const {
   expectRevertCustomError
 } = require('../../../openzeppelin-contracts-upgradeable/test/helpers/customError.js')
 const CMTAT = artifacts.require('CMTAT_PROXY')
-const { DEFAULT_ADMIN_ROLE } = require('../../utils')
+const { DEFAULT_ADMIN_ROLE, PAUSER_ROLE } = require('../../utils')
 const { ZERO_ADDRESS } = require('../../utils')
 const DECIMAL = 0
 const { deployCMTATProxy, DEPLOYMENT_FLAG } = require('../../deploymentUtils')
@@ -52,9 +52,9 @@ contract(
           []
         )
         await expectRevertCustomError(
-          this.implementationContract.kill({ from: attacker }),
+          this.implementationContract.pause({ from: attacker }),
           'AccessControlUnauthorizedAccount',
-          [attacker, DEFAULT_ADMIN_ROLE]
+          [attacker, PAUSER_ROLE]
         )
       })
       // Here the argument to indicate if it is deployed with a proxy, set at true by the attacker
@@ -76,20 +76,10 @@ contract(
           []
         )
         await expectRevertCustomError(
-          this.implementationContract.kill({ from: attacker }),
+          this.implementationContract.pause({ from: attacker }),
           'AccessControlUnauthorizedAccount',
-          [attacker, DEFAULT_ADMIN_ROLE]
+          [attacker, PAUSER_ROLE]
         )
-      })
-    })
-    context('Admin', function () {
-      it('testCannotKillTheImplementationContractByAdmin', async function () {
-        await expectRevertCustomError(
-          this.implementationContract.kill({ from: admin }),
-          'AccessControlUnauthorizedAccount',
-          [admin, DEFAULT_ADMIN_ROLE]
-        );
-        (await this.implementationContract.terms()).should.equal('')
       })
     })
   }
