@@ -9,8 +9,7 @@ const {
   expectRevertCustomError
 } = require('../../../openzeppelin-contracts-upgradeable/test/helpers/customError.js')
 const { should } = require('chai').should()
-const { deployProxy, erc1967 } = require('@openzeppelin/truffle-upgrades')
-const { ethers, upgrades } = require('hardhat')
+const { upgrades } = require('hardhat')
 const CMTAT_KILL_TEST = artifacts.require('CMTAT_KILL_TEST')
 
 contract('Proxy - Security Test', function ([_, admin, deployerAddress]) {

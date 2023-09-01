@@ -22,20 +22,20 @@ abstract contract EnforcementModule is
     string internal constant TEXT_TRANSFER_REJECTED_TO_FROZEN =
         "The address TO is frozen";
 
-    function __EnforcementModule_init(address admin) internal onlyInitializing {
+    function __EnforcementModule_init(address admin, uint48 initialDelayToAcceptAdminRole) internal onlyInitializing {
         /* OpenZeppelin */
         __Context_init_unchained();
         // AccessControlUpgradeable inherits from ERC165Upgradeable
         __ERC165_init_unchained();
         // AuthorizationModule inherits from AccessControlUpgradeable
         __AccessControl_init_unchained();
-
+        __AccessControlDefaultAdminRules_init_unchained(initialDelayToAcceptAdminRole, admin);
         /* CMTAT modules */
         // Internal
         __Enforcement_init_unchained();
 
         // Security
-        __AuthorizationModule_init_unchained(admin);
+        __AuthorizationModule_init_unchained();
 
         // own function
         __EnforcementModule_init_unchained();

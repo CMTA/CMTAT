@@ -19,7 +19,8 @@ abstract contract SnapshotModule is
     function __SnasphotModule_init(
         string memory name_,
         string memory symbol_,
-        address admin
+        address admin,
+        uint48 initialDelayToAcceptAdminRole
     ) internal onlyInitializing {
         /* OpenZeppelin */
         __Context_init_unchained();
@@ -29,13 +30,13 @@ abstract contract SnapshotModule is
         __ERC165_init_unchained();
         // AuthorizationModule inherits from AccessControlUpgradeable
         __AccessControl_init_unchained();
-
+        __AccessControlDefaultAdminRules_init_unchained(initialDelayToAcceptAdminRole, admin);
         /* CMTAT modules */
         // Internal
         __Snapshot_init_unchained();
 
         // Security
-        __AuthorizationModule_init_unchained(admin);
+        __AuthorizationModule_init_unchained();
 
         // own function
         __SnasphotModule_init_unchained();

@@ -64,6 +64,7 @@ contract CMTAT_KILL_TEST is
     */
     function initialize(
         address admin,
+        uint48 initialDelayToAcceptAdminRole, 
         string memory nameIrrevocable,
         string memory symbolIrrevocable,
         uint8 decimalsIrrevocable,
@@ -75,6 +76,7 @@ contract CMTAT_KILL_TEST is
     ) public initializer {
         __CMTAT_init(
             admin,
+            initialDelayToAcceptAdminRole,
             nameIrrevocable,
             symbolIrrevocable,
             decimalsIrrevocable,
@@ -91,6 +93,7 @@ contract CMTAT_KILL_TEST is
     */
     function __CMTAT_init(
         address admin,
+        uint48 initialDelayToAcceptAdminRole,
         string memory nameIrrevocable,
         string memory symbolIrrevocable,
         uint8 decimalsIrrevocable,
@@ -108,6 +111,7 @@ contract CMTAT_KILL_TEST is
         __ERC165_init_unchained();
         // AuthorizationModule inherits from AccessControlUpgradeable
         __AccessControl_init_unchained();
+        __AccessControlDefaultAdminRules_init_unchained(initialDelayToAcceptAdminRole, admin);
         __Pausable_init_unchained();
 
         /* Internal Modules */
@@ -121,7 +125,7 @@ contract CMTAT_KILL_TEST is
 
         /* Wrapper */
         // AuthorizationModule_init_unchained is called firstly due to inheritance
-        __AuthorizationModule_init_unchained(admin);
+        __AuthorizationModule_init_unchained();
         __BurnModule_init_unchained();
         __MintModule_init_unchained();
         // EnforcementModule_init_unchained is called before ValidationModule_init_unchained due to inheritance

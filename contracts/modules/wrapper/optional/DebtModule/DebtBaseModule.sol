@@ -55,7 +55,9 @@ abstract contract DebtBaseModule is
         string newCouponFrequency
     );
 
-    function __DebtBaseModule_init(address admin) internal onlyInitializing {
+    function __DebtBaseModule_init(
+        address admin,
+        uint48 initialDelayToAcceptAdminRole) internal onlyInitializing {
         /* OpenZeppelin */
         __Context_init_unchained();
 
@@ -63,10 +65,10 @@ abstract contract DebtBaseModule is
         __ERC165_init_unchained();
         // AuthorizationModule inherits from AccessControlUpgradeable
         __AccessControl_init_unchained();
-
+        __AccessControlDefaultAdminRules_init_unchained(initialDelayToAcceptAdminRole, admin);
         /* CMTAT modules */
         // Security
-        __AuthorizationModule_init_unchained(admin);
+        __AuthorizationModule_init_unchained();
 
         // own function
         __DebtBaseModule_init_unchained();

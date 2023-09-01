@@ -48,6 +48,7 @@ abstract contract CMTAT_BASE_SnapshotTest is
     */
     function initialize(
         address admin,
+        uint48 initialDelayToAcceptAdminRole, 
         string memory nameIrrevocable,
         string memory symbolIrrevocable,
         uint8 decimalsIrrevocable,
@@ -59,6 +60,7 @@ abstract contract CMTAT_BASE_SnapshotTest is
     ) public initializer {
         __CMTAT_init(
             admin,
+            initialDelayToAcceptAdminRole,
             nameIrrevocable,
             symbolIrrevocable,
             decimalsIrrevocable,
@@ -75,6 +77,7 @@ abstract contract CMTAT_BASE_SnapshotTest is
     */
     function __CMTAT_init(
         address admin,
+        uint48 initialDelayToAcceptAdminRole, 
         string memory nameIrrevocable,
         string memory symbolIrrevocable,
         uint8 decimalsIrrevocable,
@@ -99,13 +102,15 @@ abstract contract CMTAT_BASE_SnapshotTest is
         /*
         SnapshotModule:
         Add this call in case you add the SnapshotModule
-        __Snapshot_init_unchained();
         */
+        __Snapshot_init_unchained();
+        
         __Validation_init_unchained(ruleEngine_);
 
         /* Wrapper */
         // AuthorizationModule_init_unchained is called firstly due to inheritance
-        __AuthorizationModule_init_unchained(admin);
+        __AuthorizationModule_init_unchained();
+        __AccessControlDefaultAdminRules_init_unchained(initialDelayToAcceptAdminRole, admin);
         __BurnModule_init_unchained();
         __MintModule_init_unchained();
         // EnforcementModule_init_unchained is called before ValidationModule_init_unchained due to inheritance

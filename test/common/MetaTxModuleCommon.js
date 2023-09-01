@@ -7,17 +7,8 @@ const {
 // const ethSigUtil = require('@metamask/eth-sig-util')
 const ethSigUtil = require('eth-sig-util')
 const Wallet = require('ethereumjs-wallet').default
-const { ERC2771ForwarderDomain } = require('../utils')
 const { should } = require('chai').should()
 const { expect } = require('chai')
-const VERSION = '0.0.1'
-const EIP712Domain = [
-  { name: 'name', type: 'string' },
-  { name: 'version', type: 'string' },
-  { name: 'chainId', type: 'uint256' },
-  { name: 'verifyingContract', type: 'address' },
-  { name: 'salt', type: 'bytes32' }
-]
 
 function MetaTxModuleCommon (owner, address1) {
   context('Transferring without paying gas', function () {

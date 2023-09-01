@@ -1,3 +1,4 @@
+const { time } = require('@openzeppelin/test-helpers')
 const { deployProxy } = require('@openzeppelin/truffle-upgrades')
 const CMTAT = artifacts.require('CMTAT_PROXY')
 const MinimalForwarderMock = artifacts.require('MinimalForwarderMock')
@@ -13,10 +14,12 @@ contract(
       const DECIMAL = 0
       this.forwarder = await MinimalForwarderMock.new()
       await this.forwarder.initialize(ERC2771ForwarderDomain)
+      const delayTime = BigInt(time.duration.days(3))
       this.cmtat = await deployCMTATProxyWithParameter(
         deployerAddress,
         this.forwarder.address,
         admin,
+        delayTime,
         'CMTA Token',
         'CMTAT',
         DECIMAL,
