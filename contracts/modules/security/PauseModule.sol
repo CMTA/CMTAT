@@ -16,7 +16,7 @@ import "./AuthorizationModule.sol";
 abstract contract PauseModule is PausableUpgradeable, AuthorizationModule {
     string internal constant TEXT_TRANSFER_REJECTED_PAUSED =
         "All transfers paused";
-    bool  isDeactivated;
+    bool private isDeactivated;
     event Deactivated(address account);
 
     function __PauseModule_init(address admin) internal onlyInitializing {
@@ -70,7 +70,7 @@ abstract contract PauseModule is PausableUpgradeable, AuthorizationModule {
     }
 
         /**
-    @notice destroys the contract and send the remaining ethers in the contract to the sender
+    @notice p
     Warning: the operation is irreversible, be careful
     */
     /// @custom:oz-upgrades-unsafe-allow selfdestruct
@@ -81,6 +81,10 @@ abstract contract PauseModule is PausableUpgradeable, AuthorizationModule {
         isDeactivated = true;
        _pause();
        emit Deactivated(_msgSender());
+    }
+
+    function deactivated() view public returns (bool){
+        return isDeactivated;
     }
 
     uint256[50] private __gap;

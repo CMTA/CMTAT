@@ -163,6 +163,7 @@ function PauseModuleCommon (admin, address1, address2, address3) {
       this.logs = await this.cmtat.deactivateContract({ from: admin });
 
       // Assert
+      (await this.cmtat.deactivated()).should.equal(true);
       // Contract is in pause state
       (await this.cmtat.paused()).should.equal(true)
       // emits a Deactivated event
@@ -187,7 +188,9 @@ function PauseModuleCommon (admin, address1, address2, address3) {
         this.cmtat.deactivateContract({ from: address1 }),
         'AccessControlUnauthorizedAccount',
         [address1, DEFAULT_ADMIN_ROLE]
-      )
+      );
+      // Assert
+      (await this.cmtat.deactivated()).should.equal(false)
     })
   })
 }
