@@ -7,7 +7,10 @@ import "../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initia
 import "./AuthorizationModule.sol";
 
 /**
- * @dev ERC20 token with pausable token transfers, minting and burning.
+ *
+ * @dev Put in pause or deactivate the contract
+ * The issuer must be able to “pause” the smart contract, 
+ * to prevent execution of transactions on the distributed ledger until the issuer puts an end to the pause. 
  *
  * Useful for scenarios such as preventing trades until the end of an evaluation
  * period, or having an emergency switch for freezing all token transfers in the
@@ -41,22 +44,21 @@ abstract contract PauseModule is PausableUpgradeable, AuthorizationModule {
     }
 
     /**
-     * @dev Pauses all token transfers.
-     *
-     * See {ERC20Pausable} and {Pausable-_pause}.
+     * @notice Pauses all token transfers.
+     * @dev See {ERC20Pausable} and {Pausable-_pause}.
      *
      * Requirements:
      *
      * - the caller must have the `PAUSER_ROLE`.
+     *
      */
     function pause() public onlyRole(PAUSER_ROLE) {
         _pause();
     }
 
     /**
-     * @dev Unpauses all token transfers.
-     *
-     * See {ERC20Pausable} and {Pausable-_unpause}.
+     * @notice Unpauses all token transfers.
+     * @dev See {ERC20Pausable} and {Pausable-_unpause}.
      *
      * Requirements:
      *
@@ -69,9 +71,14 @@ abstract contract PauseModule is PausableUpgradeable, AuthorizationModule {
         _unpause();
     }
 
-        /**
-    @notice p
-    Warning: the operation is irreversible, be careful
+    /**
+    * @notice  deactivate the contract
+    * Warning: the operation is irreversible, be careful
+    * @dev
+    * Emits a {Deactivated} event indicating that the contract has been deactivated.
+    * Requirements:
+    *
+    * - the caller must have the `DEFAULT_ADMIN_ROLE`.
     */
     /// @custom:oz-upgrades-unsafe-allow selfdestruct
     function deactivateContract()
@@ -83,6 +90,9 @@ abstract contract PauseModule is PausableUpgradeable, AuthorizationModule {
        emit Deactivated(_msgSender());
     }
 
+    /**
+    * @notice Returns true if the contract is deactivated, and false otherwise.
+    */
     function deactivated() view public returns (bool){
         return isDeactivated;
     }
