@@ -1,3 +1,4 @@
+const { time } = require('@openzeppelin/test-helpers')
 const ValidationModuleCommon = require('../../../common/ValidationModule/ValidationModuleCommon')
 const RuleEngineMock = artifacts.require('RuleEngineMock')
 const {
@@ -13,10 +14,12 @@ contract(
       this.flag = 5
       const DECIMAL = 0
       this.ruleEngineMock = await RuleEngineMock.new({ from: admin })
+      const delayTime = BigInt(time.duration.days(3))
       this.cmtat = await deployCMTATStandaloneWithParameter(
         deployerAddress,
         _,
         admin,
+        delayTime,
         'CMTA Token',
         'CMTAT',
         DECIMAL,

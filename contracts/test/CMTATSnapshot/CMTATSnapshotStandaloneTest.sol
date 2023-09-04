@@ -21,6 +21,7 @@ contract CMTATSnapshotStandaloneTest is CMTAT_BASE_SnapshotTest {
     constructor(
         address forwarderIrrevocable,
         address admin,
+        uint48 initialDelayToAcceptAdminRole,
         string memory nameIrrevocable,
         string memory symbolIrrevocable,
         uint8 decimalsIrrevocable,
@@ -34,6 +35,7 @@ contract CMTATSnapshotStandaloneTest is CMTAT_BASE_SnapshotTest {
         // Warning : do not initialize the proxy
         initialize(
             admin,
+            initialDelayToAcceptAdminRole,
             nameIrrevocable,
             symbolIrrevocable,
             decimalsIrrevocable,

@@ -6,26 +6,12 @@ const SnapshotModuleCommonGetNextSnapshot = require('../../common/SnapshotModule
 const SnapshotModuleMultiplePlannedTest = require('../../common/SnapshotModuleCommon/global/SnapshotModuleMultiplePlannedTest')
 const SnapshotModuleOnePlannedSnapshotTest = require('../../common/SnapshotModuleCommon/global/SnapshotModuleOnePlannedSnapshotTest')
 const SnapshotModuleZeroPlannedSnapshotTest = require('../../common/SnapshotModuleCommon/global/SnapshotModuleZeroPlannedSnapshot')
-const { ZERO_ADDRESS } = require('../../utils')
-const DECIMAL = 0
+const { deployCMTATStandaloneWithSnapshot } = require('../../deploymentUtils')
 contract(
   'Standard - SnapshotModule',
-  function ([_, admin, address1, address2, address3, randomDeployer]) {
+  function ([_, admin, address1, address2, address3, deployerAddress]) {
     beforeEach(async function () {
-      this.flag = 5
-      this.cmtat = await CMTAT.new(
-        _,
-        admin,
-        'CMTA Token',
-        'CMTAT',
-        DECIMAL,
-        'CMTAT_ISIN',
-        'https://cmta.ch',
-        ZERO_ADDRESS,
-        'CMTAT_info',
-        this.flag,
-        { from: randomDeployer }
-      )
+      this.cmtat = await deployCMTATStandaloneWithSnapshot(_, admin, deployerAddress)
     })
     SnapshotModuleMultiplePlannedTest(admin, address1, address2, address3)
     SnapshotModuleOnePlannedSnapshotTest(admin, address1, address2, address3)

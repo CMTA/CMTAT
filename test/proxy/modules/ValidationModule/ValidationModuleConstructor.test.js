@@ -1,5 +1,4 @@
-const CMTAT = artifacts.require('CMTAT_PROXY')
-const { deployProxy } = require('@openzeppelin/truffle-upgrades')
+const { time } = require('@openzeppelin/test-helpers')
 const ValidationModuleCommon = require('../../../common/ValidationModule/ValidationModuleCommon')
 const { deployCMTATProxyWithParameter } = require('../../../deploymentUtils')
 const RuleEngineMock = artifacts.require('RuleEngineMock')
@@ -14,10 +13,12 @@ contract(
       this.flag = 5
       const DECIMAL = 0
       this.ruleEngineMock = await RuleEngineMock.new({ from: admin })
+      const delayTime = BigInt(time.duration.days(3))
       this.cmtat = await deployCMTATProxyWithParameter(
         deployerAddress,
         _,
         admin,
+        delayTime,
         'CMTA Token',
         'CMTAT',
         DECIMAL,

@@ -1,11 +1,5 @@
-const { expectEvent, expectRevert } = require('@openzeppelin/test-helpers')
+const { time } = require('@openzeppelin/test-helpers')
 const { should } = require('chai').should()
-
-const {
-  deployProxy,
-  upgradeProxy,
-  erc1967
-} = require('@openzeppelin/truffle-upgrades')
 const {
   expectRevertCustomError
 } = require('../../../openzeppelin-contracts-upgradeable/test/helpers/customError.js')
@@ -14,7 +8,7 @@ const { DEFAULT_ADMIN_ROLE, PAUSER_ROLE } = require('../../utils')
 const { ZERO_ADDRESS } = require('../../utils')
 const DECIMAL = 0
 const { deployCMTATProxy, DEPLOYMENT_FLAG } = require('../../deploymentUtils')
-const { ethers, upgrades } = require('hardhat')
+const { upgrades } = require('hardhat')
 contract(
   'Proxy - Security Test',
   function ([_, admin, attacker, deployerAddress]) {
@@ -38,6 +32,7 @@ contract(
         await expectRevertCustomError(
           this.implementationContract.initialize(
             attacker,
+            BigInt(time.duration.days(3)),
             'CMTA Token',
             'CMTAT',
             DECIMAL,
@@ -62,6 +57,7 @@ contract(
         await expectRevertCustomError(
           this.implementationContract.initialize(
             attacker,
+            BigInt(time.duration.days(3)),
             'CMTA Token',
             'CMTAT',
             DECIMAL,

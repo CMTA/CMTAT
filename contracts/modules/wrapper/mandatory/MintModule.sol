@@ -16,7 +16,8 @@ abstract contract MintModule is ERC20Upgradeable, AuthorizationModule {
     function __MintModule_init(
         string memory name_,
         string memory symbol_,
-        address admin
+        address admin,
+        uint48 initialDelayToAcceptAdminRole
     ) internal onlyInitializing {
         /* OpenZeppelin */
         __Context_init_unchained();
@@ -25,10 +26,10 @@ abstract contract MintModule is ERC20Upgradeable, AuthorizationModule {
         __ERC165_init_unchained();
         // AuthorizationModule inherits from AccessControlUpgradeable
         __AccessControl_init_unchained();
-
+        __AccessControlDefaultAdminRules_init_unchained(initialDelayToAcceptAdminRole, admin);
         /* CMTAT modules */
         // Security
-        __AuthorizationModule_init_unchained(admin);
+        __AuthorizationModule_init_unchained();
 
         // own function
         __MintModule_init_unchained();
