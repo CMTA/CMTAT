@@ -16,12 +16,12 @@ SnapshotModule:
 Add this import in case you add the SnapshotModule
 import "./wrapper/optional/SnapshotModule.sol";
 */
-import "./wrapper/mandatory/PauseModule.sol";
 import "./wrapper/optional/ValidationModule.sol";
 import "./wrapper/optional/MetaTxModule.sol";
 import "./wrapper/optional/DebtModule/DebtBaseModule.sol";
 import "./wrapper/optional/DebtModule/CreditEventsModule.sol";
 import "./security/AuthorizationModule.sol";
+import "./security/PauseModule.sol";
 import "../interfaces/IEIP1404/IEIP1404Wrapper.sol";
 
 import "../libraries/Errors.sol";

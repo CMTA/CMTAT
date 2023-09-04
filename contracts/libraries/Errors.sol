@@ -28,9 +28,6 @@ library Errors {
     error CMTAT_SnapshotModule_NoSnapshotScheduled();
     error CMTAT_SnapshotModule_SnapshotNotFound();
 
-    // OnlyDelegateCallModule
-    error CMTAT_OnlyDelegateCallModule_DirectCallToImplementation();
-
     // ERC20BaseModule
     error CMTAT_ERC20BaseModule_WrongAllowance(
         address spender,
@@ -61,4 +58,7 @@ library Errors {
 
     // AuthorizationModule
     error CMTAT_AuthorizationModule_AddressZeroNotAllowed();
+
+    // PauseModule
+    error CMTAT_PauseModule_ContractIsDeactivated();
 }

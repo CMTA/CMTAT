@@ -2,6 +2,7 @@ node_modules
 build
 coverage
 coverage.json
+bin/*
 #exception
 !doc/general/test/coverage
 /.openzeppelin

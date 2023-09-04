@@ -2,12 +2,15 @@
 
 pragma solidity ^0.8.20;
 
-import "../../../../openzeppelin-contracts-upgradeable/contracts/security/PausableUpgradeable.sol";
-import "../../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
-import "../../security/AuthorizationModule.sol";
+import "../../../openzeppelin-contracts-upgradeable/contracts/security/PausableUpgradeable.sol";
+import "../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
+import "./AuthorizationModule.sol";
 
 /**
- * @dev ERC20 token with pausable token transfers, minting and burning.
+ *
+ * @dev Put in pause or deactivate the contract
+ * The issuer must be able to “pause” the smart contract, 
+ * to prevent execution of transactions on the distributed ledger until the issuer puts an end to the pause. 
  *
  * Useful for scenarios such as preventing trades until the end of an evaluation
  * period, or having an emergency switch for freezing all token transfers in the
@@ -16,6 +19,8 @@ import "../../security/AuthorizationModule.sol";
 abstract contract PauseModule is PausableUpgradeable, AuthorizationModule {
     string internal constant TEXT_TRANSFER_REJECTED_PAUSED =
         "All transfers paused";
+    bool private isDeactivated;
+    event Deactivated(address account);
 
     function __PauseModule_init(address admin, uint48 initialDelayToAcceptAdminRole) internal onlyInitializing {
         /* OpenZeppelin */
@@ -39,29 +44,57 @@ abstract contract PauseModule is PausableUpgradeable, AuthorizationModule {
     }
 
     /**
-     * @dev Pauses all token transfers.
-     *
-     * See {ERC20Pausable} and {Pausable-_pause}.
+     * @notice Pauses all token transfers.
+     * @dev See {ERC20Pausable} and {Pausable-_pause}.
      *
      * Requirements:
      *
      * - the caller must have the `PAUSER_ROLE`.
+     *
      */
     function pause() public onlyRole(PAUSER_ROLE) {
         _pause();
     }
 
     /**
-     * @dev Unpauses all token transfers.
-     *
-     * See {ERC20Pausable} and {Pausable-_unpause}.
+     * @notice Unpauses all token transfers.
+     * @dev See {ERC20Pausable} and {Pausable-_unpause}.
      *
      * Requirements:
      *
      * - the caller must have the `PAUSER_ROLE`.
      */
     function unpause() public onlyRole(PAUSER_ROLE) {
+        if(isDeactivated){
+            revert Errors.CMTAT_PauseModule_ContractIsDeactivated();
+        }
         _unpause();
+    }
+
+    /**
+    * @notice  deactivate the contract
+    * Warning: the operation is irreversible, be careful
+    * @dev
+    * Emits a {Deactivated} event indicating that the contract has been deactivated.
+    * Requirements:
+    *
+    * - the caller must have the `DEFAULT_ADMIN_ROLE`.
+    */
+    /// @custom:oz-upgrades-unsafe-allow selfdestruct
+    function deactivateContract()
+        public
+        onlyRole(DEFAULT_ADMIN_ROLE)
+    {
+        isDeactivated = true;
+       _pause();
+       emit Deactivated(_msgSender());
+    }
+
+    /**
+    * @notice Returns true if the contract is deactivated, and false otherwise.
+    */
+    function deactivated() view public returns (bool){
+        return isDeactivated;
     }
 
     uint256[50] private __gap;

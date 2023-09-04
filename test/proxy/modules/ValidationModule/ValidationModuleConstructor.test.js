@@ -14,7 +14,6 @@ contract(
       const DECIMAL = 0
       this.ruleEngineMock = await RuleEngineMock.new({ from: admin })
       const delayTime = BigInt(time.duration.days(3))
-      console.log(delayTime)
       this.cmtat = await deployCMTATProxyWithParameter(
         deployerAddress,
         _,

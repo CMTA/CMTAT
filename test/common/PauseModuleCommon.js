@@ -1,8 +1,8 @@
-const { expectEvent, expectRevert } = require('@openzeppelin/test-helpers')
+const { expectEvent } = require('@openzeppelin/test-helpers')
 const {
   expectRevertCustomError
 } = require('../../openzeppelin-contracts-upgradeable/test/helpers/customError.js')
-const { PAUSER_ROLE } = require('../utils')
+const { PAUSER_ROLE, DEFAULT_ADMIN_ROLE } = require('../utils')
 const { should } = require('chai').should()
 
 function PauseModuleCommon (admin, address1, address2, address3) {
@@ -13,9 +13,10 @@ function PauseModuleCommon (admin, address1, address2, address3) {
     it('testCanBePausedByAdmin', async function () {
       const AMOUNT_TO_TRANSFER = 10
       // Act
-      this.logs = await this.cmtat.pause({ from: admin })
+      this.logs = await this.cmtat.pause({ from: admin });
 
       // Assert
+      (await this.cmtat.paused()).should.equal(true)
       // emits a Paused event
       expectEvent(this.logs, 'Paused', { account: admin })
       // Transfer is reverted
@@ -32,9 +33,10 @@ function PauseModuleCommon (admin, address1, address2, address3) {
       await this.cmtat.grantRole(PAUSER_ROLE, address1, { from: admin })
 
       // Act
-      this.logs = await this.cmtat.pause({ from: address1 })
+      this.logs = await this.cmtat.pause({ from: address1 });
 
       // Assert
+      (await this.cmtat.paused()).should.equal(true)
       // emits a Paused event
       expectEvent(this.logs, 'Paused', { account: address1 })
       // Transfer is reverted
@@ -43,6 +45,7 @@ function PauseModuleCommon (admin, address1, address2, address3) {
         'CMTAT_InvalidTransfer',
         [address1, address2, AMOUNT_TO_TRANSFER]
       )
+      
     })
 
     it('testCannotBePausedByNonPauser', async function () {
@@ -59,9 +62,10 @@ function PauseModuleCommon (admin, address1, address2, address3) {
       await this.cmtat.pause({ from: admin })
 
       // Act
-      this.logs = await this.cmtat.unpause({ from: admin })
+      this.logs = await this.cmtat.unpause({ from: admin });
 
       // Assert
+      (await this.cmtat.paused()).should.equal(false)
       // emits a Unpaused event
       expectEvent(this.logs, 'Unpaused', { account: admin })
       // Transfer works
@@ -74,9 +78,10 @@ function PauseModuleCommon (admin, address1, address2, address3) {
       await this.cmtat.grantRole(PAUSER_ROLE, address1, { from: admin })
 
       // Act
-      this.logs = await this.cmtat.unpause({ from: address1 })
+      this.logs = await this.cmtat.unpause({ from: address1 });
 
       // Assert
+      (await this.cmtat.paused()).should.equal(false)
       // emits a Unpaused event
       expectEvent(this.logs, 'Unpaused', { account: address1 })
       // Transfer works
@@ -145,6 +150,47 @@ function PauseModuleCommon (admin, address1, address2, address3) {
         'CMTAT_InvalidTransfer',
         [address1, address2, AMOUNT_TO_TRANSFER]
       )
+    })
+  })
+
+  context('DeactivateContract', function () {
+    /**
+    The admin is assigned the PAUSER role when the contract is deployed
+    */
+    it('testCanDeactivatedByAdmin', async function () {
+      const AMOUNT_TO_TRANSFER = 10
+      // Act
+      this.logs = await this.cmtat.deactivateContract({ from: admin });
+
+      // Assert
+      (await this.cmtat.deactivated()).should.equal(true);
+      // Contract is in pause state
+      (await this.cmtat.paused()).should.equal(true)
+      // emits a Deactivated event
+      expectEvent(this.logs, 'Deactivated', { account: admin })
+      // Transfer is reverted because contract is in paused state
+      await expectRevertCustomError(
+        this.cmtat.transfer(address2, AMOUNT_TO_TRANSFER, { from: address1 }),
+        'CMTAT_InvalidTransfer',
+        [address1, address2, AMOUNT_TO_TRANSFER]
+      )
+
+      // Unpause is reverted
+      await expectRevertCustomError(this.cmtat.unpause({ from: admin }),
+        'CMTAT_PauseModule_ContractIsDeactivated',
+        []
+      )
+    })
+
+    it('testCannotBeDeactivatedByNonAdmin', async function () {
+      // Act
+      await expectRevertCustomError(
+        this.cmtat.deactivateContract({ from: address1 }),
+        'AccessControlUnauthorizedAccount',
+        [address1, DEFAULT_ADMIN_ROLE]
+      );
+      // Assert
+      (await this.cmtat.deactivated()).should.equal(false)
     })
   })
 }
