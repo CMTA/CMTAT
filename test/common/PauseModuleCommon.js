@@ -45,7 +45,6 @@ function PauseModuleCommon (admin, address1, address2, address3) {
         'CMTAT_InvalidTransfer',
         [address1, address2, AMOUNT_TO_TRANSFER]
       )
-      
     })
 
     it('testCannotBePausedByNonPauser', async function () {

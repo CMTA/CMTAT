@@ -8,13 +8,14 @@ const { time } = require('@openzeppelin/test-helpers')
 const { ethers, upgrades } = require('hardhat')
 const DEPLOYMENT_FLAG = 5
 const DEPLOYMENT_DECIMAL = 0
-
+const DEFAULT_ADMIN_DELAY = 1
+const DEFAULT_ADMIN_DELAY_WEB3 = web3.utils.toBN(time.duration.days(DEFAULT_ADMIN_DELAY))
+const DEFAULT_ADMIN_DELAY_HARDHAT = BigInt(time.duration.days(DEFAULT_ADMIN_DELAY))
 async function deployCMTATStandalone (_, admin, deployerAddress) {
-  const delay = web3.utils.toBN(time.duration.days(3))
   const cmtat = await CMTAT_STANDALONE.new(
     _,
     admin,
-    delay,
+    DEFAULT_ADMIN_DELAY_WEB3,
     'CMTA Token',
     'CMTAT',
     DEPLOYMENT_DECIMAL,
@@ -32,7 +33,7 @@ async function deployCMTATStandaloneWithParameter (
   deployerAddress,
   forwarderIrrevocable,
   admin,
-  initialDelayToAcceptAdminRole,
+  defaultAdminDelay,
   nameIrrevocable,
   symbolIrrevocable,
   decimalsIrrevocable,
@@ -45,7 +46,7 @@ async function deployCMTATStandaloneWithParameter (
   const cmtat = await CMTAT_STANDALONE.new(
     forwarderIrrevocable,
     admin,
-    initialDelayToAcceptAdminRole,
+    defaultAdminDelay,
     nameIrrevocable,
     symbolIrrevocable,
     decimalsIrrevocable,
@@ -60,11 +61,11 @@ async function deployCMTATStandaloneWithParameter (
 }
 
 async function deployCMTATStandaloneWithSnapshot (_, admin, deployerAddress) {
-  const delay = web3.utils.toBN(time.duration.days(3))
+  const DEFAULT_ADMIN_DELAY_WEB3_ = web3.utils.toBN(time.duration.days(3))
   const cmtat = await CMTAT_STANDALONE_SNAPSHOT.new(
     _,
     admin,
-    delay,
+    DEFAULT_ADMIN_DELAY_WEB3_,
     'CMTA Token',
     'CMTAT',
     DEPLOYMENT_DECIMAL,
@@ -87,7 +88,7 @@ async function deployCMTATProxy (_, admin, deployerAddress) {
     ETHERS_CMTAT_PROXY_FACTORY,
     [
       admin,
-      BigInt(time.duration.days(3)),
+      DEFAULT_ADMIN_DELAY_HARDHAT,
       'CMTA Token',
       'CMTAT',
       DEPLOYMENT_DECIMAL,
@@ -115,12 +116,11 @@ async function deployCMTATProxyWithSnapshot (_, admin, deployerAddress) {
   const ETHERS_CMTAT_PROXY_FACTORY = await ethers.getContractFactory(
     'CMTATSnapshotProxyTest'
   )
-  const delayTime = BigInt(time.duration.days(3))
   const ETHERS_CMTAT_PROXY = await upgrades.deployProxy(
     ETHERS_CMTAT_PROXY_FACTORY,
     [
       admin,
-      delayTime,
+      DEFAULT_ADMIN_DELAY_HARDHAT,
       'CMTA Token',
       'CMTAT',
       DEPLOYMENT_DECIMAL,
@@ -152,7 +152,7 @@ async function deployCMTATProxyWithKillTest (_, admin, deployerAddress) {
     ETHERS_CMTAT_PROXY_FACTORY,
     [
       admin,
-      BigInt(time.duration.days(3)),
+      DEFAULT_ADMIN_DELAY_HARDHAT,
       'CMTA Token',
       'CMTAT',
       DEPLOYMENT_DECIMAL,
@@ -179,7 +179,7 @@ async function deployCMTATProxyWithParameter (
   deployerAddress,
   forwarderIrrevocable,
   admin,
-  initialDelayToAcceptAdminRole,
+  defaultAdminDelay,
   nameIrrevocable,
   symbolIrrevocable,
   decimalsIrrevocable,
@@ -197,7 +197,7 @@ async function deployCMTATProxyWithParameter (
     ETHERS_CMTAT_PROXY_FACTORY,
     [
       admin,
-      initialDelayToAcceptAdminRole,
+      defaultAdminDelay,
       nameIrrevocable,
       symbolIrrevocable,
       decimalsIrrevocable,
@@ -229,5 +229,6 @@ module.exports = {
   deployCMTATProxyWithParameter,
   deployCMTATStandaloneWithParameter,
   DEPLOYMENT_FLAG,
-  DEPLOYMENT_DECIMAL
+  DEPLOYMENT_DECIMAL,
+  DEFAULT_ADMIN_DELAY_WEB3
 }
