@@ -6,22 +6,23 @@ pragma solidity ^0.8.20;
 import "../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
 import "../../../openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradeable.sol";
 
-import "../../modules/wrapper/mandatory/BaseModule.sol";
-import "../../modules/wrapper/mandatory/BurnModule.sol";
-import "../../modules/wrapper/mandatory/MintModule.sol";
-import "../../modules/wrapper/mandatory/EnforcementModule.sol";
-import "../../modules/wrapper/mandatory/ERC20BaseModule.sol";
+import "../../modules/wrapper/core/BaseModule.sol";
+import "../../modules/wrapper/core/ERC20BurnModule.sol";
+import "../../modules/wrapper/core/ERC20MintModule.sol";
+import "../../modules/wrapper/core/EnforcementModule.sol";
+import "../../modules/wrapper/core/ERC20BaseModule.sol";
+import "../../modules/wrapper/core/PauseModule.sol";
 /*
 SnapshotModule:
 Add this import in case you add the SnapshotModule
 */
-import "../../modules/wrapper/optional/SnapshotModule.sol";
-import "../../modules/wrapper/optional/ValidationModule.sol";
-import "../../modules/wrapper/optional/MetaTxModule.sol";
-import "../../modules/wrapper/optional/DebtModule/DebtBaseModule.sol";
-import "../../modules/wrapper/optional/DebtModule/CreditEventsModule.sol";
+import "../../modules/wrapper/controller/ValidationModule.sol";
+import "../../modules/wrapper/extensions/ERC20SnapshotModule.sol";
+import "../../modules/wrapper/extensions/MetaTxModule.sol";
+import "../../modules/wrapper/extensions/DebtModule/DebtBaseModule.sol";
+import "../../modules/wrapper/extensions/DebtModule/CreditEventsModule.sol";
 import "../../modules/security/AuthorizationModule.sol";
-import "../../modules/security/PauseModule.sol";
+
 import "../../interfaces/IEIP1404/IEIP1404Wrapper.sol";
 
 import "../../libraries/Errors.sol";

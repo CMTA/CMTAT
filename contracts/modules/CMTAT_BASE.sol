@@ -6,22 +6,23 @@ pragma solidity ^0.8.20;
 import "../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
 import "../../openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradeable.sol";
 
-import "./wrapper/mandatory/BaseModule.sol";
-import "./wrapper/mandatory/BurnModule.sol";
-import "./wrapper/mandatory/MintModule.sol";
-import "./wrapper/mandatory/EnforcementModule.sol";
-import "./wrapper/mandatory/ERC20BaseModule.sol";
+import "./wrapper/core/BaseModule.sol";
+import "./wrapper/core/ERC20BurnModule.sol";
+import "./wrapper/core/ERC20MintModule.sol";
+import "./wrapper/core/EnforcementModule.sol";
+import "./wrapper/core/ERC20BaseModule.sol";
+import "./wrapper/core/PauseModule.sol";
 /*
 SnapshotModule:
 Add this import in case you add the SnapshotModule
 import "./wrapper/optional/SnapshotModule.sol";
 */
-import "./wrapper/optional/ValidationModule.sol";
-import "./wrapper/optional/MetaTxModule.sol";
-import "./wrapper/optional/DebtModule/DebtBaseModule.sol";
-import "./wrapper/optional/DebtModule/CreditEventsModule.sol";
+import "./wrapper/controller/ValidationModule.sol";
+import "./wrapper/extensions/MetaTxModule.sol";
+import "./wrapper/extensions/DebtModule/DebtBaseModule.sol";
+import "./wrapper/extensions/DebtModule/CreditEventsModule.sol";
 import "./security/AuthorizationModule.sol";
-import "./security/PauseModule.sol";
+
 import "../interfaces/IEIP1404/IEIP1404Wrapper.sol";
 
 import "../libraries/Errors.sol";
