@@ -6,13 +6,13 @@ import "../../../../openzeppelin-contracts-upgradeable/contracts/token/ERC20/ERC
 import "../../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
 import "../../security/AuthorizationModule.sol";
 
-abstract contract BurnModule is ERC20Upgradeable, AuthorizationModule {
+abstract contract ERC20BurnModule is ERC20Upgradeable, AuthorizationModule {
     /**
      * @notice Emitted when the specified `value` amount of tokens owned by `owner`are destroyed with the given `reason`
      */
     event Burn(address indexed owner, uint256 value, string reason);
 
-    function __BurnModule_init(
+    function __ERC20BurnModule_init(
         string memory name_,
         string memory symbol_,
         address admin,
@@ -31,10 +31,10 @@ abstract contract BurnModule is ERC20Upgradeable, AuthorizationModule {
         __AuthorizationModule_init_unchained();
 
         // own function
-        __BurnModule_init_unchained();
+        __ERC20BurnModule_init_unchained();
     }
 
-    function __BurnModule_init_unchained() internal onlyInitializing {
+    function __ERC20BurnModule_init_unchained() internal onlyInitializing {
         // no variable to initialize
     }
 

@@ -32,13 +32,13 @@ abstract contract CMTAT_BASE is
     ContextUpgradeable,
     BaseModule,
     PauseModule,
-    MintModule,
-    BurnModule,
+    ERC20MintModule,
+    ERC20BurnModule,
     EnforcementModule,
     ValidationModule,
     MetaTxModule,
     ERC20BaseModule,
-    // SnapshotModule,
+    // ERC20SnapshotModule,
     DebtBaseModule,
     CreditEventsModule
 {
@@ -113,15 +113,15 @@ abstract contract CMTAT_BASE is
         /*
         SnapshotModule:
         Add this call in case you add the SnapshotModule
-        __Snapshot_init_unchained();
+        __ERC20Snapshot_init_unchained();
         */
         __Validation_init_unchained(ruleEngine_);
 
         /* Wrapper */
         // AuthorizationModule_init_unchained is called firstly due to inheritance
         __AuthorizationModule_init_unchained();
-        __BurnModule_init_unchained();
-        __MintModule_init_unchained();
+        __ERC20BurnModule_init_unchained();
+        __ERC20MintModule_init_unchained();
         // EnforcementModule_init_unchained is called before ValidationModule_init_unchained due to inheritance
         __EnforcementModule_init_unchained();
         __ERC20Module_init_unchained(decimalsIrrevocable);
@@ -132,7 +132,7 @@ abstract contract CMTAT_BASE is
         /*
         SnapshotModule:
         Add this call in case you add the SnapshotModule
-        __SnasphotModule_init_unchained();
+        __ERC20SnasphotModule_init_unchained();
         */
 
         /* Other modules */
@@ -178,7 +178,7 @@ abstract contract CMTAT_BASE is
      * @dev
      * SnapshotModule:
      * - override SnapshotModuleInternal if you add the SnapshotModule
-     * e.g. override(SnapshotModuleInternal, ERC20Upgradeable)
+     * e.g. override(ERC20SnapshotModuleInternal, ERC20Upgradeable)
      * - remove the keyword view
      */
     function _update(
@@ -194,7 +194,7 @@ abstract contract CMTAT_BASE is
         /*
         SnapshotModule:
         Add this call in case you add the SnapshotModule
-        SnapshotModuleInternal._update(from, to, amount);
+        ERC20SnapshotModuleInternal._update(from, to, amount);
         */
     }
 

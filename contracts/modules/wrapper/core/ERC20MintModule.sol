@@ -6,14 +6,14 @@ import "../../../../openzeppelin-contracts-upgradeable/contracts/token/ERC20/ERC
 import "../../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
 import "../../security/AuthorizationModule.sol";
 
-abstract contract MintModule is ERC20Upgradeable, AuthorizationModule {
+abstract contract ERC20MintModule is ERC20Upgradeable, AuthorizationModule {
     /**
      * @notice Emitted when the specified  `value` amount of new tokens are created and
      * allocated to the specified `account`.
      */
     event Mint(address indexed account, uint256 value);
 
-    function __MintModule_init(
+    function __ERC20MintModule_init(
         string memory name_,
         string memory symbol_,
         address admin,
@@ -32,10 +32,10 @@ abstract contract MintModule is ERC20Upgradeable, AuthorizationModule {
         __AuthorizationModule_init_unchained();
 
         // own function
-        __MintModule_init_unchained();
+        __ERC20MintModule_init_unchained();
     }
 
-    function __MintModule_init_unchained() internal onlyInitializing {
+    function __ERC20MintModule_init_unchained() internal onlyInitializing {
         // no variable to initialize
     }
 

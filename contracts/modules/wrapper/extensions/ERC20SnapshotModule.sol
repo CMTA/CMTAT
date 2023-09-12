@@ -12,11 +12,11 @@ import "../../internal/ERC20SnapshotModuleInternal.sol";
  * Useful to take a snapshot of token holder balance and total supply at a specific time
  */
 
-abstract contract SnapshotModule is
-    SnapshotModuleInternal,
+abstract contract ERC20SnapshotModule is
+    ERC20SnapshotModuleInternal,
     AuthorizationModule
 {
-    function __SnasphotModule_init(
+    function __ERC20SnasphotModule_init(
         string memory name_,
         string memory symbol_,
         address admin,
@@ -33,16 +33,16 @@ abstract contract SnapshotModule is
         __AccessControlDefaultAdminRules_init_unchained(initialDelayToAcceptAdminRole, admin);
         /* CMTAT modules */
         // Internal
-        __Snapshot_init_unchained();
+        __ERC20Snapshot_init_unchained();
 
         // Security
         __AuthorizationModule_init_unchained();
 
         // own function
-        __SnasphotModule_init_unchained();
+        __ERC20SnasphotModule_init_unchained();
     }
 
-    function __SnasphotModule_init_unchained() internal onlyInitializing {
+    function __ERC20SnasphotModule_init_unchained() internal onlyInitializing {
         // no variable to initialize
     }
 
