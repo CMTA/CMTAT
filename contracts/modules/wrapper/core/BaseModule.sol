@@ -8,6 +8,11 @@ import "../../security/AuthorizationModule.sol";
 import "../../../libraries/Errors.sol";
 
 abstract contract BaseModule is AuthorizationModule {
+    /*
+    @notice 
+    Get the current version of the smart contract
+    */
+    string public constant VERSION = "2.3.1";
     // to initialize inside the implementation constructor when deployed with a Proxy
     bool internal deployedWithProxy;
     /* Events */
