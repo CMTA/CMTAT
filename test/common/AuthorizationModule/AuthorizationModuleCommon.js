@@ -77,26 +77,6 @@ function AuthorizationModuleCommon (admin, address1, address2) {
       (await this.cmtat.hasRole(PAUSER_ROLE, address1)).should.equal(true)
     })
 
-    /*
-    Already tested by OpenZeppelin library
-    */
-    it('testCanTransferAdminship', async function () {
-      // Arrange
-      (await this.cmtat.hasRole(PAUSER_ROLE, address1)).should.equal(false)
-      await this.cmtat.grantRole(PAUSER_ROLE, address1, { from: admin });
-      // Arrange - Assert
-      (await this.cmtat.hasRole(PAUSER_ROLE, address1)).should.equal(true)
-      // Act
-      await expectRevertCustomError(
-        this.cmtat.revokeRole(PAUSER_ROLE, address1, { from: address2 }),
-        'AccessControlUnauthorizedAccount',
-        [address2, DEFAULT_ADMIN_ROLE]
-      );
-      // Assert
-      (await this.cmtat.hasRole(PAUSER_ROLE, address1)).should.equal(true)
-    })
-
-
     it('testCanAdminTransferAdminship', async function () {
       // Arrange - Assert
       (await this.cmtat.owner()).should.equal(admin)
