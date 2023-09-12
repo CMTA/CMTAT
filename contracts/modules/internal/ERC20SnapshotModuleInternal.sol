@@ -18,7 +18,7 @@ import "../../libraries/Errors.sol";
    because overriding this function can break the contract.
  */
 
-abstract contract SnapshotModuleInternal is ERC20Upgradeable {
+abstract contract ERC20SnapshotModuleInternal is ERC20Upgradeable {
     using ArraysUpgradeable for uint256[];
 
     /**
@@ -64,16 +64,16 @@ abstract contract SnapshotModuleInternal is ERC20Upgradeable {
     /**
      * @dev Initializes the contract
      */
-    function __Snapshot_init(
+    function __ERC20Snapshot_init(
         string calldata name_,
         string calldata symbol_
     ) internal onlyInitializing {
         __Context_init_unchained();
         __ERC20_init(name_, symbol_);
-        __Snapshot_init_unchained();
+        __ERC20Snapshot_init_unchained();
     }
 
-    function __Snapshot_init_unchained() internal onlyInitializing {
+    function __ERC20Snapshot_init_unchained() internal onlyInitializing {
         _currentSnapshotTime = 0;
         _currentSnapshotIndex = 0;
     }

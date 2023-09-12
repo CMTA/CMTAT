@@ -10,6 +10,11 @@ import "../../libraries/Errors.sol";
 abstract contract AuthorizationModule is AccessControlDefaultAdminRulesUpgradeable {
     // BurnModule
     bytes32 public constant BURNER_ROLE = keccak256("BURNER_ROLE");
+    // CreditEvents
+    bytes32 public constant DEBT_CREDIT_EVENT_ROLE =
+    keccak256("DEBT_CREDIT_EVENT_ROLE");
+    // DebtModule
+    bytes32 public constant DEBT_ROLE = keccak256("DEBT_ROLE");
     // EnforcementModule
     bytes32 public constant ENFORCER_ROLE = keccak256("ENFORCER_ROLE");
     // MintModule
@@ -18,11 +23,8 @@ abstract contract AuthorizationModule is AccessControlDefaultAdminRulesUpgradeab
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     // SnapshotModule
     bytes32 public constant SNAPSHOOTER_ROLE = keccak256("SNAPSHOOTER_ROLE");
-    // DebtModule
-    bytes32 public constant DEBT_ROLE = keccak256("DEBT_ROLE");
-    // CreditEvents
-    bytes32 public constant DEBT_CREDIT_EVENT_ROLE =
-        keccak256("DEBT_CREDIT_EVENT_ROLE");
+
+   
 
     function __AuthorizationModule_init(
         address admin,
@@ -64,5 +66,16 @@ abstract contract AuthorizationModule is AccessControlDefaultAdminRulesUpgradeab
         return AccessControlUpgradeable.hasRole(role, account);
     }
 
+    /**
+    @notice
+    Warning: this function should be called only in case of necessity (e.g private key leak)
+    Its goal is to transfer the adminship of the contract to a new admin, whithout delay.
+    The prefer way is to use the workflow of AccessControlDefaultAdminRulesUpgradeable
+    */
+    function transferAdminshipDirectly(address newAdmin) public virtual onlyRole(DEFAULT_ADMIN_ROLE) {
+        // we revoke first the admin since we can only have one admin
+        _revokeRole(DEFAULT_ADMIN_ROLE, _msgSender());
+        _grantRole(DEFAULT_ADMIN_ROLE, newAdmin);
+    }
     uint256[50] private __gap;
 }
