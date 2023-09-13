@@ -51,7 +51,9 @@ abstract contract ERC20SnapshotModuleInternal is ERC20Upgradeable {
     /**
     @dev time instead of a counter for OpenZeppelin
     */
+    // Initialized to zero
     uint256 private _currentSnapshotTime;
+    // Initialized to zero
     uint256 private _currentSnapshotIndex;
 
     /** 
@@ -74,8 +76,8 @@ abstract contract ERC20SnapshotModuleInternal is ERC20Upgradeable {
     }
 
     function __ERC20Snapshot_init_unchained() internal onlyInitializing {
-        _currentSnapshotTime = 0;
-        _currentSnapshotIndex = 0;
+        // Nothing to do
+        // _currentSnapshotTime & _currentSnapshotIndex are initialized to zero
     }
 
     /** 
@@ -470,6 +472,7 @@ abstract contract ERC20SnapshotModuleInternal is ERC20Upgradeable {
         ) {
             return (0, currentArraySize);
         }
+        // mostRecent is initialized in the loop
         uint256 mostRecent;
         index = currentArraySize;
         for (uint256 i = _currentSnapshotIndex; i < currentArraySize; ) {
