@@ -63,11 +63,20 @@ Please see the OpenGSN [documentation](https://docs.opengsn.org/contracts/#recei
 ### Kill switch
 
 CMTAT initially supported a `kill()` function relying on the SELFDESTRUCT opcode (which effectively destroyed the contract's storage and code).
-However, Ethereum's [Cancun update](https://github.com/ethereum/execution-specs/blob/master/network-upgrades/mainnet-upgrades/cancun.md) (rolled out in the second half of
-2023) will remove support for SELFDESTRUCT (see
+However, Ethereum's [Cancun update](https://github.com/ethereum/execution-specs/blob/master/network-upgrades/mainnet-upgrades/cancun.md) (rolled out in the second half of 2023)  will remove support for SELFDESTRUCT (see
 [EIP-6780](https://eips.ethereum.org/EIPS/eip-6780)).
 
-The `kill()` function will therefore not behave as it used to once Cancun is deployed.  As an alternative, the token contract can be paused indefinitely, and a new contract deployed (and the proxy modified accordingly).
+The `kill()` function will therefore not behave as it used to once Cancun is deployed.  
+
+The alternative function is the function `deactivateContract`, introduced in the version v2.3.1 inside the PauseModule, to deactivate the contract.
+This function set a boolean state variable `isDeactivated` to true and puts the contract in the pause state.
+The function `unpause`is updated to revert if the previous variable is set to true, thus the contract is in the pause state forever.
+
+The consequences are the following:
+
+- In standalone mode, this operation is irreversible, it is not possible to rollback.
+- With a proxy, it is still possible to rollback by deploying a new implementation.
+  
 
 
 ## Modules
@@ -78,7 +87,7 @@ Here the list of the differents modules with the links towards the documentation
 
 | Name             | Documentation                                                | Main File                                                    |
 | ---------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| ValidationModule | [validation.md](doc/modules/presentation/optional/validation.md) | [ValidationModule.sol](./contracts/modules/wrapper/optional/SnapshotModule.sol) |
+| ValidationModule | [validation.md](doc/modules/presentationcontrollers/validation.md) | [ValidationModule.sol](./contracts/modules/wrapper/optional/SnapshotModule.sol) |
 
 ### Core
 
@@ -86,12 +95,12 @@ Generally, these modules are required to be compliant with the CMTA specificatio
 
 | Name              | Documentation                                                | Main File                                                    |
 | ----------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| BaseModule        | [base.md](doc/modules/presentation/mandatory/base.md)        | [BaseModule.sol](./contracts/modules/wrapper/mandatory/BaseModule.sol) |
-| BurnModule        | [burn.md](doc/modules/presentation/mandatory/burn.md)        | [BurnModule.sol](./contracts/modules/wrapper/mandatory/BurnModule.sol) |
-| EnforcementModule | [enforcement.md](doc/modules/presentation/mandatory/enforcement.md) | [EnforcementModule.sol](./contracts/modules/wrapper/mandatory/EnforcementModule.sol) |
-| ERC20BaseModule   | [erc20base.md](doc/modules/presentation/mandatory/erc20base.md) | [ERC20BaseModule.sol](./contracts/modules/wrapper/mandatory/ERC20BaseModule.sol) |
-| MintModule        | [mint.md](doc/modules/presentation/mandatory/mint.md)        | [MintModule.sol](./contracts/modules/wrapper/mandatory/MintModule.sol) |
-| PauseModule       | [pause.md](doc/modules/presentation/mandatory/pause.md)      | [PauseModule.sol](./contracts/modules/wrapper/mandatory/PauseModule.sol) |
+| BaseModule        | [base.md](doc/modules/presentation/core/base.md)             | [BaseModule.sol](./contracts/modules/wrapper/core/BaseModule.sol) |
+| BurnModule        | [ERC20Burn.md](doc/modules/presentation/core/ERC20Burn.md)   | [ERC20BurnModule.sol](./contracts/modules/wrapper/core/ERC20BurnModule.sol) |
+| EnforcementModule | [enforcement.md](doc/modules/presentation/core/enforcement.md) | [EnforcementModule.sol](./contracts/modules/wrapper/core/EnforcementModule.sol) |
+| ERC20BaseModule   | [erc20base.md](doc/modules/presentation/core/erc20base.md)   | [ERC20BaseModule.sol](./contracts/modules/wrapper/core/ERC20BaseModule.sol) |
+| MintModule        | [ERC20Mint.md](doc/modules/presentation/core/ERC20Mint.md)   | [ERC20MintModule.sol](./contracts/modules/wrapper/core/ERC20MintModule.sol) |
+| PauseModule       | [pause.md](doc/modules/presentation/core/pause.md)           | [PauseModule.sol](./contracts/modules/wrapper/core/PauseModule.sol) |
 
 ### Extensions
 
@@ -99,10 +108,10 @@ Generally, these modules are not required to be compliant with the CMTA specific
 
 | Name              | Documentation                                                | Main File                                                    |
 | ----------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| MetaTxModule      | [metatx.md](doc/modules/presentation/optional/metatx.md)     | [MetaTxModule.sol](./contracts/modules/wrapper/optional/MetaTxModule.sol) |
-| SnapshotModule*   | [snapshot.md](doc/modules/presentation/optional/snapshot.md) | [SnapshotModule.sol](./contracts/modules/wrapper/optional/SnapshotModule.sol) |
-| creditEventModule | [creditEvents.md](doc/modules/presentation/optional/Debt/creditEvents.md) | [CreditEventsModule.sol](./contracts/modules/wrapper/optional/DebtModule/CreditEventsModule.sol) |
-| DebtBaseModule    | [debtBase.md](doc/modules/presentation/optional/Debt/debtBase.md) | [DebtBaseModule.sol](./contracts/modules/wrapper/optional/DebtModule/DebtBaseModule.sol) |
+| MetaTxModule      | [metatx.md](doc/modules/presentation/extensions/metatx.md)   | [MetaTxModule.sol](./contracts/modules/wrapper/extensions/MetaTxModule.sol) |
+| SnapshotModule*   | [snapshot.md](doc/modules/presentation/extensions/snapshot.md) | [SnapshotModule.sol](./contracts/modules/wrapper/extensions/SnapshotModule.sol) |
+| creditEventModule | [creditEvents.md](doc/modules/presentation/extensions/Debt/creditEvents.md) | [CreditEventsModule.sol](./contracts/modules/wrapper/extensions/DebtModule/CreditEventsModule.sol) |
+| DebtBaseModule    | [debtBase.md](doc/modules/presentation/extensions/Debt/debtBase.md) | [DebtBaseModule.sol](./contracts/modules/wrapper/extensions/DebtModule/DebtBaseModule.sol) |
 
 *not imported by default
 
@@ -135,9 +144,6 @@ Please see [SECURITY.md](./SECURITY.MD).
 See the code in [modules/security](./contracts/modules/security).
 
 Access control is managed thanks to the module `AuthorizationModule`.
-
-The module `OnlyDelegateCallModule` is a special module to insure that
-some functions (e.g., such as `delegatecall()` and `selfdestruct`) can only be triggered through proxies when the contract is deployed with a proxy.
 
 ### Audit
 
@@ -186,7 +192,7 @@ Here a summary of the main documents:
 | Documentation of the modules API. | [doc/modules](doc/modules)                                 |
 | Documentation on the toolchain    | [doc/TOOLCHAIN.md](doc/TOOLCHAIN.md)                       |
 | How to use the project            | [doc/USAGE.md](doc/USAGE.md)                               |
-| Project architecture              | [doc/general/architecture.md](doc/general/architecture.md) |
+| Project architecture              | [doc/general/ARCHITECTURE.md](doc/general/ARCHITECTURE.md) |
 
 CMTA providers further documentation describing the CMTAT framework in a platform-agnostic way, and covering legal aspects, see
 

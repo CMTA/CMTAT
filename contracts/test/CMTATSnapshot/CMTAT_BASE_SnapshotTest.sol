@@ -16,7 +16,7 @@ import "../../modules/wrapper/core/PauseModule.sol";
 SnapshotModule:
 Add this import in case you add the SnapshotModule
 */
-import "../../modules/wrapper/controller/ValidationModule.sol";
+import "../../modules/wrapper/controllers/ValidationModule.sol";
 import "../../modules/wrapper/extensions/ERC20SnapshotModule.sol";
 import "../../modules/wrapper/extensions/MetaTxModule.sol";
 import "../../modules/wrapper/extensions/DebtModule/DebtBaseModule.sol";
