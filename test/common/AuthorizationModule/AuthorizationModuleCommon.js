@@ -81,10 +81,12 @@ function AuthorizationModuleCommon (admin, address1, address2) {
       // Arrange - Assert
       (await this.cmtat.owner()).should.equal(admin)
       // Starts an admin transfer
-      await this.cmtat.beginDefaultAdminTransfer(address1, { from: admin });
+      await this.cmtat.beginDefaultAdminTransfer(address1, { from: admin })
 
       // Wait for acceptance
-      const acceptSchedule = web3.utils.toBN(await time.latest()).add(DEFAULT_ADMIN_DELAY_WEB3);
+      const acceptSchedule = web3.utils
+        .toBN(await time.latest())
+        .add(DEFAULT_ADMIN_DELAY_WEB3)
       // We jump into the future
       await time.increase(acceptSchedule.addn(1))
 
@@ -93,7 +95,7 @@ function AuthorizationModuleCommon (admin, address1, address2) {
 
       // Assert
       (await this.cmtat.owner()).should.equal(address1)
-    });
+    })
 
     /*
     Already tested by OpenZeppelin library
@@ -109,7 +111,7 @@ function AuthorizationModuleCommon (admin, address1, address2) {
       );
       // Assert
       (await this.cmtat.owner()).should.equal(admin)
-    });
+    })
 
     it('testCanAdminTransferAdminshipDirectly', async function () {
       // Arrange - Assert
@@ -121,7 +123,7 @@ function AuthorizationModuleCommon (admin, address1, address2) {
 
       // Assert
       (await this.cmtat.owner()).should.equal(address1)
-    });
+    })
 
     it('testCannotNonAdminTransferAdminshipDirectly', async function () {
       // Arrange - Assert
@@ -135,7 +137,7 @@ function AuthorizationModuleCommon (admin, address1, address2) {
 
       // Assert
       (await this.cmtat.owner()).should.equal(admin)
-    });
+    })
   })
 }
 module.exports = AuthorizationModuleCommon

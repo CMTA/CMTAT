@@ -175,7 +175,8 @@ function PauseModuleCommon (admin, address1, address2, address3) {
       )
 
       // Unpause is reverted
-      await expectRevertCustomError(this.cmtat.unpause({ from: admin }),
+      await expectRevertCustomError(
+        this.cmtat.unpause({ from: admin }),
         'CMTAT_PauseModule_ContractIsDeactivated',
         []
       )

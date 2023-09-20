@@ -17,7 +17,7 @@ function EnforcementModuleCommon (owner, address1, address2, address3) {
     /* it('testFreezeReturnFalseIfAddressAlreadyFrozen', async function () {
       // Arrange - Assert
       (await this.cmtat.frozen(address1)).should.equal(false);
-      // Arrange 
+      // Arrange
       this.logs = await this.cmtat.freeze(address1, reasonFreeze, {
         from: owner
       });
@@ -50,7 +50,7 @@ function EnforcementModuleCommon (owner, address1, address2, address3) {
 
     it('testAdminCanFreezeAddress', async function () {
       // Arrange - Assert
-      (await this.cmtat.frozen(address1)).should.equal(false);
+      (await this.cmtat.frozen(address1)).should.equal(false)
       // Act
       this.logs = await this.cmtat.freeze(address1, reasonFreeze, {
         from: owner
@@ -68,7 +68,7 @@ function EnforcementModuleCommon (owner, address1, address2, address3) {
 
     it('testReasonParameterCanBeEmptyString', async function () {
       // Arrange - Assert
-      (await this.cmtat.frozen(address1)).should.equal(false);
+      (await this.cmtat.frozen(address1)).should.equal(false)
       // Act
       this.logs = await this.cmtat.freeze(address1, '', {
         from: owner
@@ -90,7 +90,7 @@ function EnforcementModuleCommon (owner, address1, address2, address3) {
       // Arrange
       await this.cmtat.grantRole(ENFORCER_ROLE, address2, { from: owner });
       // Arrange - Assert
-      (await this.cmtat.frozen(address1)).should.equal(false);
+      (await this.cmtat.frozen(address1)).should.equal(false)
       // Act
       this.logs = await this.cmtat.freeze(address1, reasonFreeze, {
         from: address2
@@ -111,15 +111,11 @@ function EnforcementModuleCommon (owner, address1, address2, address3) {
       // Arrange
       await this.cmtat.freeze(address1, reasonFreeze, { from: owner });
       // Arrange - Assert
-      (await this.cmtat.frozen(address1)).should.equal(true);
+      (await this.cmtat.frozen(address1)).should.equal(true)
       // Act
-      this.logs = await this.cmtat.unfreeze(
-        address1,
-        reasonUnfreeze,
-        {
-          from: owner
-        }
-      );
+      this.logs = await this.cmtat.unfreeze(address1, reasonUnfreeze, {
+        from: owner
+      });
       // Assert
       (await this.cmtat.frozen(address1)).should.equal(false)
       expectEvent(this.logs, 'Unfreeze', {
@@ -135,13 +131,11 @@ function EnforcementModuleCommon (owner, address1, address2, address3) {
       await this.cmtat.freeze(address1, reasonFreeze, { from: owner })
       await this.cmtat.grantRole(ENFORCER_ROLE, address2, { from: owner });
       // Arrange - Assert
-      (await this.cmtat.frozen(address1)).should.equal(true);
+      (await this.cmtat.frozen(address1)).should.equal(true)
       // Act
-      this.logs = await this.cmtat.unfreeze(
-        address1,
-        reasonUnfreeze,
-        { from: address2 }
-      );
+      this.logs = await this.cmtat.unfreeze(address1, reasonUnfreeze, {
+        from: address2
+      });
       // Assert
       (await this.cmtat.frozen(address1)).should.equal(false)
       // emits an Unfreeze event

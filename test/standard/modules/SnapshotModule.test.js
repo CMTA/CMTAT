@@ -11,7 +11,11 @@ contract(
   'Standard - SnapshotModule',
   function ([_, admin, address1, address2, address3, deployerAddress]) {
     beforeEach(async function () {
-      this.cmtat = await deployCMTATStandaloneWithSnapshot(_, admin, deployerAddress)
+      this.cmtat = await deployCMTATStandaloneWithSnapshot(
+        _,
+        admin,
+        deployerAddress
+      )
     })
     SnapshotModuleMultiplePlannedTest(admin, address1, address2, address3)
     SnapshotModuleOnePlannedSnapshotTest(admin, address1, address2, address3)

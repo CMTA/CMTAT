@@ -16,7 +16,7 @@
     "lint:all:fix": "npm run-script lint:js:fix && npm run-script lint:sol:fix",
     "lint:sol:prettier": "npx prettier --write 'contracts/**/*.sol'",
     "lint:js:prettier": "npx prettier --write test",
-    "lint:all:prettier": "npm run-script lint:js:prettier && lint:js:fix && npm run-script lint:sol:prettier",
+    "lint:all:prettier": "npm run-script lint:js:prettier && npm run-script lint:js:fix && npm run-script lint:sol:prettier && npm run-script lint:sol:fix",
     "console": "truffle console",
     "coverage": "npx hardhat coverage",
     "docgen": "npx hardhat docgen",

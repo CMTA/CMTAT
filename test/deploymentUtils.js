@@ -1,6 +1,8 @@
 const { ZERO_ADDRESS } = require('./utils')
 const CMTAT_STANDALONE = artifacts.require('CMTAT_STANDALONE')
-const CMTAT_STANDALONE_SNAPSHOT = artifacts.require('CMTATSnapshotStandaloneTest')
+const CMTAT_STANDALONE_SNAPSHOT = artifacts.require(
+  'CMTATSnapshotStandaloneTest'
+)
 const CMTAT_PROXY = artifacts.require('CMTAT_PROXY')
 const CMTAT_PROXY_SNAPSHOT = artifacts.require('CMTATSnapshotProxyTest')
 const { deployProxy } = require('@openzeppelin/truffle-upgrades')
@@ -9,8 +11,12 @@ const { ethers, upgrades } = require('hardhat')
 const DEPLOYMENT_FLAG = 5
 const DEPLOYMENT_DECIMAL = 0
 const DEFAULT_ADMIN_DELAY = 1
-const DEFAULT_ADMIN_DELAY_WEB3 = web3.utils.toBN(time.duration.days(DEFAULT_ADMIN_DELAY))
-const DEFAULT_ADMIN_DELAY_HARDHAT = BigInt(time.duration.days(DEFAULT_ADMIN_DELAY))
+const DEFAULT_ADMIN_DELAY_WEB3 = web3.utils.toBN(
+  time.duration.days(DEFAULT_ADMIN_DELAY)
+)
+const DEFAULT_ADMIN_DELAY_HARDHAT = BigInt(
+  time.duration.days(DEFAULT_ADMIN_DELAY)
+)
 async function deployCMTATStandalone (_, admin, deployerAddress) {
   const cmtat = await CMTAT_STANDALONE.new(
     _,
