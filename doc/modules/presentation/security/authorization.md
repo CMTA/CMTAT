@@ -24,15 +24,15 @@ The DEFAULT_ADMIN_ROLE has automatically all the roles.
 
 This behavior is implemented by overriding the function `hasRole` from OpenZeppelin
 
-![RBAC-diagram](../../schema/accessControl/RBAC-diagram.svg)
+![RBAC-diagram](../../../schema/accessControl/RBAC-diagram.svg)
 
 ### UML
 
-![AuthorizationModule](../../schema/sol2uml/security/AuthorizationModule.svg)
+![AuthorizationModule](../../../schema/sol2uml/AuthorizationModule.svg)
 
 ### Graph
 
-![surya_graph_AuthorizationModule.sol](../../schema/surya_graph/surya_graph_AuthorizationModule.sol.png)
+![surya_graph_AuthorizationModule.sol](../../../schema/surya_graph/surya_graph_AuthorizationModule.sol.png)
 
 ## Sūrya's Description Report
 

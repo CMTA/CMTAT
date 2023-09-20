@@ -14,11 +14,11 @@ The ERC20Base Module sets forth the ERC20 basic functionalities a token must hav
 
 ### Inheritance
 
-![surya_inheritance_ERC20BaseModule.sol](../../schema/surya_inheritance/surya_inheritance_ERC20BaseModule.sol.png)
+![surya_inheritance_ERC20BaseModule.sol](../../../schema/surya_inheritance/surya_inheritance_ERC20BaseModule.sol.png)
 
 ### UML
 
-![ERC20BaseModule](../../schema/sol2uml/mandatory/ERC20BaseModule.svg)
+![ERC20BaseModule](../../../schema/sol2uml/ERC20BaseModule.svg)
 
 ### Graph
 
@@ -29,9 +29,10 @@ The ERC20Base Module sets forth the ERC20 basic functionalities a token must hav
 ### Files Description Table
 
 
-| File Name                                       | SHA-1 Hash                               |
-| ----------------------------------------------- | ---------------------------------------- |
-| ./modules/wrapper/mandatory/ERC20BaseModule.sol | fdaf8d8a710a4ae6166fb0e491018c559acb4e89 |
+| File Name                                  | SHA-1 Hash                               |
+| ------------------------------------------ | ---------------------------------------- |
+| ./modules/wrapper/core/ERC20BaseModule.sol | 8889ab8d2108f2e86eca040147be7cb9a8c5eb1f |
+
 
 ### Contracts Description Table
 
@@ -211,6 +212,28 @@ The function returns `true` on success, nothing if the parent function return fa
 ###### Requirement
 
 `from` and `to` cannot be the zero address.
+
+
+
+#### `transferBatch(address[],uint256[])  `
+
+##### Definition
+
+```solidity
+ function transferBatch(address[] calldata tos,uint256[] calldata values) 
+ public 
+ returns (bool) 
+```
+
+##### Description
+
+For each address in `tos`, transfer the given `value` amount of tokens from the sender to the given address `to`.
+
+##### Requirements
+
+- `tos` and `values` must have the same length.
+
+- The sender has to own the sum of tokens in `values`.
 
 ### Events
 

@@ -38,6 +38,10 @@ Concats solidity files from Truffle projects with all of their dependencies.
 
 This plugin integrates [Web3.js](https://github.com/ethereum/web3.js) `1.x` into [Hardhat](https://hardhat.org/).
 
+[hardhat-ethers](https://www.npmjs.com/package/@nomicfoundation/hardhat-ethers)
+
+[Hardhat](https://hardhat.org/) plugin for integration with [ethers.js](https://github.com/ethers-io/ethers.js/)
+
 #### Linter
 
 **[eslint](https://eslint.org/)**
@@ -148,6 +152,7 @@ From the version 2.3, this command is not working and generates the following er
 
 | Description                                                  | Command                                |
 | ------------------------------------------------------------ | -------------------------------------- |
+| Generate UML for all modules                                 | `npm run-script uml-all`               |
 | Generate UML for the interfaces EIP1404                      | `npm run-script uml-i-eip1404`         |
 | Generate UML for the contracts CMTAT_STANDALONE, CMTAT_PROXY && CMTAT_BASE | `npm run-script uml-partial`           |
 | Generate UML for mandatory modules                           | `npm run-script uml-modules-mandatory` |

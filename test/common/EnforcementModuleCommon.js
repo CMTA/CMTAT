@@ -13,6 +13,41 @@ function EnforcementModuleCommon (owner, address1, address2, address3) {
       await this.cmtat.mint(address1, 50, { from: owner })
     })
 
+    // TODO: not possible to get the return value of a state modifying function
+    /* it('testFreezeReturnFalseIfAddressAlreadyFrozen', async function () {
+      // Arrange - Assert
+      (await this.cmtat.frozen(address1)).should.equal(false);
+      // Arrange 
+      this.logs = await this.cmtat.freeze(address1, reasonFreeze, {
+        from: owner
+      });
+      //console.log(this.logs);
+      // Act
+      this.logs = (await this.cmtat.freeze(address1, reasonFreeze, {
+        from: owner
+      }));
+      console.log(this.logs.);
+      // Assert
+      (await this.cmtat.frozen(address1)).should.equal(true)
+    })
+
+    it('testUnfreezeReturnFalseIfAddressAlreadyUnfrozen', async function () {
+      // Arrange
+      await this.cmtat.freeze(address1, reasonFreeze, { from: owner });
+      // Arrange - Assert
+      (await this.cmtat.frozen(address1)).should.equal(true);
+      // Act
+      (await this.cmtat.unfreeze(
+        address1,
+        reasonUnfreeze,
+        {
+          from: owner
+        }
+      )).should.equal(false);
+      // Assert
+      (await this.cmtat.frozen(address1)).should.equal(false)
+    }) */
+
     it('testAdminCanFreezeAddress', async function () {
       // Arrange - Assert
       (await this.cmtat.frozen(address1)).should.equal(false);

@@ -1,6 +1,6 @@
-# Mint Module
+# ERC20Mint Module
 
-This document defines Mint Module for the CMTA Token specification.
+This document defines ERC20Mint Module for the CMTA Token specification.
 
 [TOC]
 
@@ -14,15 +14,15 @@ This document defines Mint Module for the CMTA Token specification.
 
 ### Inheritance
 
-![surya_inheritance_MintModule.sol](../../schema/surya_inheritance/surya_inheritance_MintModule.sol.png)
+![surya_inheritance_MintModule.sol](../../../schema/surya_inheritance/surya_inheritance_ERC20MintModule.sol.png)
 
 ### UML
 
-![MintModule](../../schema/sol2uml/mandatory/MintModule.svg)
+![MintModule](../../../schema/sol2uml/ERC20MintModule.svg)
 
 ### Graph
 
-![surya_graph_MintModule.sol](../../schema/surya_graph/surya_graph_MintModule.sol.png)
+![surya_graph_MintModule.sol](../../../schema/surya_graph/surya_graph_ERC20MintModule.sol.png)
 
 
 
@@ -33,23 +33,21 @@ This document defines Mint Module for the CMTA Token specification.
 
 | File Name                                  | SHA-1 Hash                               |
 | ------------------------------------------ | ---------------------------------------- |
-| ./modules/wrapper/mandatory/MintModule.sol | 3d6fa6f2890f85f4f426aee39ea2ee31203f2109 |
+| ./modules/wrapper/core/ERC20MintModule.sol | 163107a3a34a1924a3c84b2d66149fed16ac9cc1 |
 
 
 ### Contracts Description Table
 
 
-|    Contract    |            Type             |                 Bases                 |                |                  |
-| :------------: | :-------------------------: | :-----------------------------------: | :------------: | :--------------: |
-|       └        |      **Function Name**      |            **Visibility**             | **Mutability** |  **Modifiers**   |
-|                |                             |                                       |                |                  |
-| **MintModule** |       Implementation        | ERC20Upgradeable, AuthorizationModule |                |                  |
-|       └        |      __MintModule_init      |              Internal 🔒               |       🛑        | onlyInitializing |
-|       └        | __MintModule_init_unchained |              Internal 🔒               |       🛑        | onlyInitializing |
-|       └        |            mint             |               Public ❗️                |       🛑        |     onlyRole     |
-|       └        |          mintBatch          |               Public ❗️                |       🛑        |     onlyRole     |
-
-
+|      Contract       |               Type               |                 Bases                 |                |                  |
+| :-----------------: | :------------------------------: | :-----------------------------------: | :------------: | :--------------: |
+|          └          |        **Function Name**         |            **Visibility**             | **Mutability** |  **Modifiers**   |
+|                     |                                  |                                       |                |                  |
+| **ERC20MintModule** |          Implementation          | ERC20Upgradeable, AuthorizationModule |                |                  |
+|          └          |      __ERC20MintModule_init      |              Internal 🔒               |       🛑        | onlyInitializing |
+|          └          | __ERC20MintModule_init_unchained |              Internal 🔒               |       🛑        | onlyInitializing |
+|          └          |               mint               |               Public ❗️                |       🛑        |     onlyRole     |
+|          └          |            mintBatch             |               Public ❗️                |       🛑        |     onlyRole     |
 
 
 ### Legend

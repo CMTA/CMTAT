@@ -8,17 +8,17 @@ This document defines DebtBase Module for the CMTA Token specification.
 
 ### Inheritance
 
-![surya_inheritance_DebtBaseModule.sol](../../../schema/surya_inheritance/surya_inheritance_DebtBaseModule.sol.png)
+![surya_inheritance_DebtBaseModule.sol](../../../../schema/surya_inheritance/surya_inheritance_DebtBaseModule.sol.png)
 
 
 
 ### UML
 
-![DebtBaseModule](../../../schema/sol2uml/optional/DebtBaseModule.svg)
+![DebtBaseModule](../../../../schema/sol2uml/DebtBaseModule.svg)
 
 ### Graph
 
-![surya_graph_DebtBaseModule.sol](../../../schema/surya_graph/surya_graph_DebtBaseModule.sol.png)
+![surya_graph_DebtBaseModule.sol](../../../../schema/surya_graph/surya_graph_DebtBaseModule.sol.png)
 
 
 

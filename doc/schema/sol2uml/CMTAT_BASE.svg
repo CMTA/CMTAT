@@ -41,8 +41,8 @@
 </g>
 <g id="clust7" class="cluster">
 <title>cluster_6</title>
-<polygon fill="white" stroke="black" points="799,-785.6 799,-1271.4 5255,-1271.4 5255,-785.6 799,-785.6"/>
-<text text-anchor="middle" x="3027" y="-793.8" font-family="Times,serif" font-size="14.00">contracts/modules/wrapper/core</text>
+<polygon fill="white" stroke="black" points="799,-802.4 799,-1254.6 5255,-1254.6 5255,-802.4 799,-802.4"/>
+<text text-anchor="middle" x="3027" y="-810.6" font-family="Times,serif" font-size="14.00">contracts/modules/wrapper/core</text>
 </g>
 <g id="clust8" class="cluster">
 <title>cluster_7</title>
@@ -216,40 +216,38 @@
 <!-- 26 -->
 <g id="node12" class="node">
 <title>26</title>
-<polygon fill="#f2f2f2" stroke="black" points="2078.75,-818.9 2078.75,-1262.9 3013.25,-1262.9 3013.25,-818.9 2078.75,-818.9"/>
-<text text-anchor="middle" x="2546" y="-1246.3" font-family="Times,serif" font-size="14.00">&lt;&lt;Abstract&gt;&gt;</text>
-<text text-anchor="middle" x="2546" y="-1229.5" font-family="Times,serif" font-size="14.00">BaseModule</text>
-<text text-anchor="middle" x="2546" y="-1212.7" font-family="Times,serif" font-size="14.00">contracts/modules/wrapper/core/BaseModule.sol</text>
-<polyline fill="none" stroke="black" points="2078.75,-1204.5 3013.25,-1204.5 "/>
-<text text-anchor="start" x="2086.75" y="-1187.9" font-family="Times,serif" font-size="14.00">Private:</text>
-<text text-anchor="start" x="2086.75" y="-1171.1" font-family="Times,serif" font-size="14.00"> &#160;&#160;__gap: uint256[50]</text>
-<text text-anchor="start" x="2086.75" y="-1154.3" font-family="Times,serif" font-size="14.00">Internal:</text>
-<text text-anchor="start" x="2086.75" y="-1137.5" font-family="Times,serif" font-size="14.00"> &#160;&#160;deployedWithProxy: bool</text>
-<text text-anchor="start" x="2086.75" y="-1120.7" font-family="Times,serif" font-size="14.00">Public:</text>
-<text text-anchor="start" x="2086.75" y="-1103.9" font-family="Times,serif" font-size="14.00"> &#160;&#160;VERSION: string</text>
-<text text-anchor="start" x="2086.75" y="-1087.1" font-family="Times,serif" font-size="14.00"> &#160;&#160;tokenId: string</text>
-<text text-anchor="start" x="2086.75" y="-1070.3" font-family="Times,serif" font-size="14.00"> &#160;&#160;terms: string</text>
-<text text-anchor="start" x="2086.75" y="-1053.5" font-family="Times,serif" font-size="14.00"> &#160;&#160;information: string</text>
-<text text-anchor="start" x="2086.75" y="-1036.7" font-family="Times,serif" font-size="14.00"> &#160;&#160;flag: uint256</text>
-<polyline fill="none" stroke="black" points="2078.75,-1028.5 3013.25,-1028.5 "/>
-<text text-anchor="start" x="2086.75" y="-1011.9" font-family="Times,serif" font-size="14.00">Internal:</text>
-<text text-anchor="start" x="2086.75" y="-995.1" font-family="Times,serif" font-size="14.00"> &#160;&#160;&#160;__Base_init(tokenId_: string, terms_: string, information_: string, flag_: uint256, admin: address, initialDelayToAcceptAdminRole: uint48) &lt;&lt;onlyInitializing&gt;&gt;</text>
-<text text-anchor="start" x="2086.75" y="-978.3" font-family="Times,serif" font-size="14.00"> &#160;&#160;&#160;__Base_init_unchained(tokenId_: string, terms_: string, information_: string, flag_: uint256) &lt;&lt;onlyInitializing&gt;&gt;</text>
-<text text-anchor="start" x="2086.75" y="-961.5" font-family="Times,serif" font-size="14.00">Public:</text>
-<text text-anchor="start" x="2086.75" y="-944.7" font-family="Times,serif" font-size="14.00"> &#160;&#160;&#160;&lt;&lt;event&gt;&gt; Term(newTermIndexed: string, newTerm: string)</text>
-<text text-anchor="start" x="2086.75" y="-927.9" font-family="Times,serif" font-size="14.00"> &#160;&#160;&#160;&lt;&lt;event&gt;&gt; TokenId(newTokenIdIndexed: string, newTokenId: string)</text>
-<text text-anchor="start" x="2086.75" y="-911.1" font-family="Times,serif" font-size="14.00"> &#160;&#160;&#160;&lt;&lt;event&gt;&gt; Information(newInformationIndexed: string, newInformation: string)</text>
-<text text-anchor="start" x="2086.75" y="-894.3" font-family="Times,serif" font-size="14.00"> &#160;&#160;&#160;&lt;&lt;event&gt;&gt; Flag(newFlag: uint256)</text>
-<text text-anchor="start" x="2086.75" y="-877.5" font-family="Times,serif" font-size="14.00"> &#160;&#160;&#160;setTokenId(tokenId_: string) &lt;&lt;onlyRole&gt;&gt;</text>
-<text text-anchor="start" x="2086.75" y="-860.7" font-family="Times,serif" font-size="14.00"> &#160;&#160;&#160;setTerms(terms_: string) &lt;&lt;onlyRole&gt;&gt;</text>
-<text text-anchor="start" x="2086.75" y="-843.9" font-family="Times,serif" font-size="14.00"> &#160;&#160;&#160;setInformation(information_: string) &lt;&lt;onlyRole&gt;&gt;</text>
-<text text-anchor="start" x="2086.75" y="-827.1" font-family="Times,serif" font-size="14.00"> &#160;&#160;&#160;setFlag(flag_: uint256) &lt;&lt;onlyRole&gt;&gt;</text>
+<polygon fill="#f2f2f2" stroke="black" points="2078.75,-835.7 2078.75,-1246.1 3013.25,-1246.1 3013.25,-835.7 2078.75,-835.7"/>
+<text text-anchor="middle" x="2546" y="-1229.5" font-family="Times,serif" font-size="14.00">&lt;&lt;Abstract&gt;&gt;</text>
+<text text-anchor="middle" x="2546" y="-1212.7" font-family="Times,serif" font-size="14.00">BaseModule</text>
+<text text-anchor="middle" x="2546" y="-1195.9" font-family="Times,serif" font-size="14.00">contracts/modules/wrapper/core/BaseModule.sol</text>
+<polyline fill="none" stroke="black" points="2078.75,-1187.7 3013.25,-1187.7 "/>
+<text text-anchor="start" x="2086.75" y="-1171.1" font-family="Times,serif" font-size="14.00">Private:</text>
+<text text-anchor="start" x="2086.75" y="-1154.3" font-family="Times,serif" font-size="14.00"> &#160;&#160;__gap: uint256[50]</text>
+<text text-anchor="start" x="2086.75" y="-1137.5" font-family="Times,serif" font-size="14.00">Public:</text>
+<text text-anchor="start" x="2086.75" y="-1120.7" font-family="Times,serif" font-size="14.00"> &#160;&#160;VERSION: string</text>
+<text text-anchor="start" x="2086.75" y="-1103.9" font-family="Times,serif" font-size="14.00"> &#160;&#160;tokenId: string</text>
+<text text-anchor="start" x="2086.75" y="-1087.1" font-family="Times,serif" font-size="14.00"> &#160;&#160;terms: string</text>
+<text text-anchor="start" x="2086.75" y="-1070.3" font-family="Times,serif" font-size="14.00"> &#160;&#160;information: string</text>
+<text text-anchor="start" x="2086.75" y="-1053.5" font-family="Times,serif" font-size="14.00"> &#160;&#160;flag: uint256</text>
+<polyline fill="none" stroke="black" points="2078.75,-1045.3 3013.25,-1045.3 "/>
+<text text-anchor="start" x="2086.75" y="-1028.7" font-family="Times,serif" font-size="14.00">Internal:</text>
+<text text-anchor="start" x="2086.75" y="-1011.9" font-family="Times,serif" font-size="14.00"> &#160;&#160;&#160;__Base_init(tokenId_: string, terms_: string, information_: string, flag_: uint256, admin: address, initialDelayToAcceptAdminRole: uint48) &lt;&lt;onlyInitializing&gt;&gt;</text>
+<text text-anchor="start" x="2086.75" y="-995.1" font-family="Times,serif" font-size="14.00"> &#160;&#160;&#160;__Base_init_unchained(tokenId_: string, terms_: string, information_: string, flag_: uint256) &lt;&lt;onlyInitializing&gt;&gt;</text>
+<text text-anchor="start" x="2086.75" y="-978.3" font-family="Times,serif" font-size="14.00">Public:</text>
+<text text-anchor="start" x="2086.75" y="-961.5" font-family="Times,serif" font-size="14.00"> &#160;&#160;&#160;&lt;&lt;event&gt;&gt; Term(newTermIndexed: string, newTerm: string)</text>
+<text text-anchor="start" x="2086.75" y="-944.7" font-family="Times,serif" font-size="14.00"> &#160;&#160;&#160;&lt;&lt;event&gt;&gt; TokenId(newTokenIdIndexed: string, newTokenId: string)</text>
+<text text-anchor="start" x="2086.75" y="-927.9" font-family="Times,serif" font-size="14.00"> &#160;&#160;&#160;&lt;&lt;event&gt;&gt; Information(newInformationIndexed: string, newInformation: string)</text>
+<text text-anchor="start" x="2086.75" y="-911.1" font-family="Times,serif" font-size="14.00"> &#160;&#160;&#160;&lt;&lt;event&gt;&gt; Flag(newFlag: uint256)</text>
+<text text-anchor="start" x="2086.75" y="-894.3" font-family="Times,serif" font-size="14.00"> &#160;&#160;&#160;setTokenId(tokenId_: string) &lt;&lt;onlyRole&gt;&gt;</text>
+<text text-anchor="start" x="2086.75" y="-877.5" font-family="Times,serif" font-size="14.00"> &#160;&#160;&#160;setTerms(terms_: string) &lt;&lt;onlyRole&gt;&gt;</text>
+<text text-anchor="start" x="2086.75" y="-860.7" font-family="Times,serif" font-size="14.00"> &#160;&#160;&#160;setInformation(information_: string) &lt;&lt;onlyRole&gt;&gt;</text>
+<text text-anchor="start" x="2086.75" y="-843.9" font-family="Times,serif" font-size="14.00"> &#160;&#160;&#160;setFlag(flag_: uint256) &lt;&lt;onlyRole&gt;&gt;</text>
 </g>
 <!-- 7&#45;&gt;26 -->
 <g id="edge5" class="edge">
 <title>7&#45;&gt;26</title>
-<path fill="none" stroke="black" d="M3187.26,-317.46C3073.17,-445.99 2900.06,-641.02 2762.44,-796.05"/>
-<polygon fill="none" stroke="black" points="2754.47,-789.22 2742.41,-818.62 2770.18,-803.16 2754.47,-789.22"/>
+<path fill="none" stroke="black" d="M3187.26,-317.46C3069.06,-450.62 2887.51,-655.16 2747.71,-812.65"/>
+<polygon fill="none" stroke="black" points="2739.47,-806.12 2727.4,-835.53 2755.17,-820.06 2739.47,-806.12"/>
 </g>
 <!-- 27 -->
 <g id="node13" class="node">
@@ -598,7 +596,7 @@
 <!-- 26&#45;&gt;18 -->
 <g id="edge22" class="edge">
 <title>26&#45;&gt;18</title>
-<path fill="none" stroke="black" d="M2835.53,-1263.05C2894.91,-1300.99 2958.67,-1336.81 3022,-1363.8 3246.18,-1459.33 3517.94,-1513.56 3719.81,-1543.19"/>
+<path fill="none" stroke="black" d="M2809.69,-1246.24C2876.18,-1290.29 2949.38,-1332.85 3022,-1363.8 3246.18,-1459.33 3517.94,-1513.56 3719.81,-1543.19"/>
 <polygon fill="none" stroke="black" points="3718.52,-1553.61 3749.71,-1547.47 3721.5,-1532.83 3718.52,-1553.61"/>
 </g>
 <!-- 28&#45;&gt;18 -->

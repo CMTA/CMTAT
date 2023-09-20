@@ -74,7 +74,15 @@ The `kill()` function will therefore not behave as it used to once Cancun is dep
 
 Here the list of the differents modules with the links towards the documentation and the main file.
 
-### Mandatory
+### Controller
+
+| Name             | Documentation                                                | Main File                                                    |
+| ---------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| ValidationModule | [validation.md](doc/modules/presentation/optional/validation.md) | [ValidationModule.sol](./contracts/modules/wrapper/optional/SnapshotModule.sol) |
+
+### Core
+
+Generally, these modules are required to be compliant with the CMTA specification.
 
 | Name              | Documentation                                                | Main File                                                    |
 | ----------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
@@ -85,13 +93,14 @@ Here the list of the differents modules with the links towards the documentation
 | MintModule        | [mint.md](doc/modules/presentation/mandatory/mint.md)        | [MintModule.sol](./contracts/modules/wrapper/mandatory/MintModule.sol) |
 | PauseModule       | [pause.md](doc/modules/presentation/mandatory/pause.md)      | [PauseModule.sol](./contracts/modules/wrapper/mandatory/PauseModule.sol) |
 
-### Optional
+### Extensions
+
+Generally, these modules are not required to be compliant with the CMTA specification.
 
 | Name              | Documentation                                                | Main File                                                    |
 | ----------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | MetaTxModule      | [metatx.md](doc/modules/presentation/optional/metatx.md)     | [MetaTxModule.sol](./contracts/modules/wrapper/optional/MetaTxModule.sol) |
 | SnapshotModule*   | [snapshot.md](doc/modules/presentation/optional/snapshot.md) | [SnapshotModule.sol](./contracts/modules/wrapper/optional/SnapshotModule.sol) |
-| ValidationModule  | [validation.md](doc/modules/presentation/optional/validation.md) | [ValidationModule.sol](./contracts/modules/wrapper/optional/SnapshotModule.sol) |
 | creditEventModule | [creditEvents.md](doc/modules/presentation/optional/Debt/creditEvents.md) | [CreditEventsModule.sol](./contracts/modules/wrapper/optional/DebtModule/CreditEventsModule.sol) |
 | DebtBaseModule    | [debtBase.md](doc/modules/presentation/optional/Debt/debtBase.md) | [DebtBaseModule.sol](./contracts/modules/wrapper/optional/DebtModule/DebtBaseModule.sol) |
 
@@ -99,10 +108,9 @@ Here the list of the differents modules with the links towards the documentation
 
 ### Security
 
-| Name                   | Documentation                                                | Main File                                                    |
-| ---------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| AuthorizationModule    | [authorization.md](./doc/modules/presentation/security/authorization.md) | [AuthorizationModule.sol](./contracts/modules/security/AuthorizationModule.sol) |
-| OnlyDelegateCallModule | [onlyDelegateCallModule.md](./doc/modules/presentation/security/onlyDelegateCallModule.md) | [OnlyDelegateCallModule.sol](./contracts/modules/security/OnlyDelegateCallModule.sol) |
+| Name                | Documentation                                                | Main File                                                    |
+| ------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| AuthorizationModule | [authorization.md](./doc/modules/presentation/security/authorization.md) | [AuthorizationModule.sol](./contracts/modules/security/AuthorizationModule.sol) |
 
 
 
@@ -153,7 +161,7 @@ The report is available in [ABDK_CMTA_CMTATRuleEngine_v_1_0.pdf](doc/audits/ABDK
 
 ### Tools
 
-You will find the report produced by [Slither](https://github.com/crytic/slither) in [slither-report.md](doc/audits/tools/slither-report.md). 
+You will find the report produced by [Slither](https://github.com/crytic/slither) in [v2.3.1-slither-report.md](doc/audits/tools/v2.3.1-slither-report.md). 
 
 
 ### Test

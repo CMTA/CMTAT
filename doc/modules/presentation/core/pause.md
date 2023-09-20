@@ -12,24 +12,24 @@ This document defines the Pause Module for the CMTA Token specification.
 
 ### Inheritance
 
-![surya_inheritance_PauseModule.sol](../../schema/surya_inheritance/surya_inheritance_PauseModule.sol.png)
+![surya_inheritance_PauseModule.sol](../../../schema/surya_inheritance/surya_inheritance_PauseModule.sol.png)
 
 ### UML
 
-![PauseModule](../../schema/sol2uml/mandatory/PauseModule.svg)
+![PauseModule](../../../schema/sol2uml/PauseModule.svg)
 
 ### Graph
 
-![surya_graph_PauseModule.sol](../../schema/surya_graph/surya_graph_PauseModule.sol.png)
+![surya_graph_PauseModule.sol](../../../schema/surya_graph/surya_graph_PauseModule.sol.png)
 
 ## Sūrya's Description Report
 
 ### Files Description Table
 
 
-| File Name                                   | SHA-1 Hash                               |
-| ------------------------------------------- | ---------------------------------------- |
-| ./modules/wrapper/mandatory/PauseModule.sol | 0350e2f17f517c70804304a8cf24d3337f951f59 |
+| File Name                              | SHA-1 Hash                               |
+| -------------------------------------- | ---------------------------------------- |
+| ./modules/wrapper/core/PauseModule.sol | 5f48d5b8b0d5e26e5939aa45e58a0bbf035ba8e0 |
 
 
 ### Contracts Description Table
@@ -44,6 +44,8 @@ This document defines the Pause Module for the CMTA Token specification.
 |        └        | __PauseModule_init_unchained |                Internal 🔒                |       🛑        | onlyInitializing |
 |        └        |            pause             |                 Public ❗️                 |       🛑        |     onlyRole     |
 |        └        |           unpause            |                 Public ❗️                 |       🛑        |     onlyRole     |
+|        └        |      deactivateContract      |                 Public ❗️                 |       🛑        |     onlyRole     |
+|        └        |         deactivated          |                 Public ❗️                 |                |       NO❗️        |
 
 
 ### Legend
@@ -85,6 +87,37 @@ public onlyRole(PAUSER_ROLE)
 
 Unpause token transfers.
 Only authorized users are allowed to call this function.
+
+#### `unpause()`
+
+##### Definition:
+
+```solidity
+function unpause() 
+public onlyRole(PAUSER_ROLE)
+```
+
+Unpause token transfers.
+Only authorized users are allowed to call this function.
+
+
+
+`deactivateContract() `
+
+##### Definition:
+
+```solidity
+function deactivateContract()
+public onlyRole(DEFAULT_ADMIN_ROLE)
+```
+
+This function set the variable `isDeactivated` to true.
+In standalone mode, this operation is irreversible, it is not possible to rollback*******.
+
+This function puts also the contract in the pause state
+The variable `isDeactivated` will also have an impact on the function `unpause`. This one will revert if the previous variable is set to true, thus the contract will be in the pause state forever*******.
+
+***With a proxy, it is still possible to rollback by deploying a new implementation.
 
 ### Events
 

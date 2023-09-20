@@ -12,24 +12,24 @@ This document defines the MetaTx Module for the CMTA Token specification. The go
 
 ### Inheritance
 
-![surya_inheritance_MetaTxModule.sol](../../schema/surya_inheritance/surya_inheritance_MetaTxModule.sol.png)
+![surya_inheritance_MetaTxModule.sol](../../../schema/surya_inheritance/surya_inheritance_MetaTxModule.sol.png)
 
 ### UML
 
-![MetaTxModule](../../schema/sol2uml/optional/MetaTxModule.svg)
+![MetaTxModule](../../../schema/sol2uml/MetaTxModule.svg)
 
 ### Graph
 
-![surya_graph_MetaTxModule.sol](../../schema/surya_graph/surya_graph_MetaTxModule.sol.png)
+![surya_graph_MetaTxModule.sol](../../../schema/surya_graph/surya_graph_MetaTxModule.sol.png)
 
 ## Sūrya's Description Report
 
 ### Files Description Table
 
 
-| File Name                                   | SHA-1 Hash                               |
-| ------------------------------------------- | ---------------------------------------- |
-| ./modules/wrapper/optional/MetaTxModule.sol | 8a347f1431a6f387045494ea5c7407e6d89d6772 |
+| File Name                                     | SHA-1 Hash                               |
+| --------------------------------------------- | ---------------------------------------- |
+| ./modules/wrapper/extensions/MetaTxModule.sol | 2e73511096a5a8abc9e0ff129cb15bc946192f37 |
 
 
 ### Contracts Description Table

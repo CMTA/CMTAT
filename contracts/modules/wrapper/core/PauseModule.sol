@@ -80,7 +80,6 @@ abstract contract PauseModule is PausableUpgradeable, AuthorizationModule {
     *
     * - the caller must have the `DEFAULT_ADMIN_ROLE`.
     */
-    /// @custom:oz-upgrades-unsafe-allow selfdestruct
     function deactivateContract()
         public
         onlyRole(DEFAULT_ADMIN_ROLE)

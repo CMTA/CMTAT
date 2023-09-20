@@ -11,12 +11,13 @@ module.exports = {
     settings: {
       optimizer: {
         enabled: true,
-        runs: 500,
+        runs: 200,
         details: {
           yul: true
         }
       },
-      viaIR: false
+      viaIR: false,
+      evmVersion: 'shanghai'
     }
   },
   contractSizer: {

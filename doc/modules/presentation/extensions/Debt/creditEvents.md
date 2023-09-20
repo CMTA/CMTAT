@@ -12,17 +12,46 @@ This document defines CreditEvents Module for the CMTA Token specification.
 
 ### Inheritance
 
-![surya_inheritance_CreditEventsModule.sol](../../../schema/surya_inheritance/surya_inheritance_CreditEventsModule.sol.png)
+![surya_inheritance_CreditEventsModule.sol](../../../../schema/surya_inheritance/surya_inheritance_CreditEventsModule.sol.png)
 
 ### UML
 
-![CreditEventsModule](../../../schema/sol2uml/optional/CreditEventsModule.svg)
+![CreditEventsModule](../../../../schema/sol2uml/CreditEventsModule.svg)
 
 ### Graph
 
-![surya_graph_CreditEventsModule.sol](../../../schema/surya_graph/surya_graph_CreditEventsModule.sol.png)
+![surya_graph_CreditEventsModule.sol](../../../../schema/surya_graph/surya_graph_CreditEventsModule.sol.png)
+
+## Sūrya's Description Report
+
+### Files Description Table
 
 
+| File Name                                  | SHA-1 Hash                               |
+| ------------------------------------------ | ---------------------------------------- |
+| ./modules/security/AuthorizationModule.sol | 652daabbe1ec856e47690c07206fe785f2c4ae8f |
+
+
+### Contracts Description Table
+
+
+|        Contract         |                 Type                 |                   Bases                   |                |                  |
+| :---------------------: | :----------------------------------: | :---------------------------------------: | :------------: | :--------------: |
+|            └            |          **Function Name**           |              **Visibility**               | **Mutability** |  **Modifiers**   |
+|                         |                                      |                                           |                |                  |
+| **AuthorizationModule** |            Implementation            | AccessControlDefaultAdminRulesUpgradeable |                |                  |
+|            └            |      __AuthorizationModule_init      |                Internal 🔒                 |       🛑        | onlyInitializing |
+|            └            | __AuthorizationModule_init_unchained |                Internal 🔒                 |                | onlyInitializing |
+|            └            |               hasRole                |                 Public ❗️                  |                |       NO❗️        |
+|            └            |      transferAdminshipDirectly       |                 Public ❗️                  |       🛑        |     onlyRole     |
+
+
+### Legend
+
+| Symbol | Meaning                   |
+| :----: | ------------------------- |
+|   🛑    | Function can modify state |
+|   💵    | Function is payable       |
 
 ## API for Ethereum
 
@@ -125,4 +154,3 @@ event Rating(string indexed newRatingIndexed, string newRating)
 ##### Description:
 
 Emitted when the attribute `rating` is set.
-

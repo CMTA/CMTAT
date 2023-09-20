@@ -1,6 +1,6 @@
-# Burn Module
+# ERC20Burn Module
 
-This document defines Burn Module for the CMTA Token specification.
+This document defines the ERC20Burn Module for the CMTA Token specification.
 
 [TOC]
 
@@ -14,17 +14,38 @@ This document defines Burn Module for the CMTA Token specification.
 
 ### Inheritance
 
-![surya_inheritance_BurnModule.sol](../../schema/surya_inheritance/surya_inheritance_BurnModule.sol.png)
+![surya_inheritance_BurnModule.sol](../../../schema/surya_inheritance/surya_inheritance_ERC20BurnModule.sol.png)
 
 ### UML
 
-![BurnModule](../../schema/sol2uml/mandatory/BurnModule.svg)
+![BurnModule](../../../schema/sol2uml/ERC20BurnModule.svg)
 
 ### Graph
 
-![surya_graph_BurnModule.sol](../../schema/surya_graph/surya_graph_BurnModule.sol.png)
+![surya_graph_BurnModule.sol](../../../schema/surya_graph/surya_graph_ERC20BurnModule.sol.png)
+
+## Sūrya's Description Report
+
+### Files Description Table
 
 
+| File Name                                  | SHA-1 Hash                               |
+| ------------------------------------------ | ---------------------------------------- |
+| ./modules/wrapper/core/ERC20BurnModule.sol | 127c0419786d6b33f117b4f8dda6e15ef9a04e1e |
+
+
+### Contracts Description Table
+
+
+|      Contract       |               Type               |                 Bases                 |                |                  |
+| :-----------------: | :------------------------------: | :-----------------------------------: | :------------: | :--------------: |
+|          └          |        **Function Name**         |            **Visibility**             | **Mutability** |  **Modifiers**   |
+|                     |                                  |                                       |                |                  |
+| **ERC20BurnModule** |          Implementation          | ERC20Upgradeable, AuthorizationModule |                |                  |
+|          └          |      __ERC20BurnModule_init      |              Internal 🔒               |       🛑        | onlyInitializing |
+|          └          | __ERC20BurnModule_init_unchained |              Internal 🔒               |       🛑        | onlyInitializing |
+|          └          |            forceBurn             |               Public ❗️                |       🛑        |     onlyRole     |
+|          └          |          forceBurnBatch          |               Public ❗️                |       🛑        |     onlyRole     |
 
 
 ### Legend

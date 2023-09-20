@@ -47,15 +47,15 @@ This document defines Enforcement Module for the CMTA Token specification.
 
 ### EnforcementModule
 
-#### Files Description Table
+### Files Description Table
 
 
-| File Name                                         | SHA-1 Hash                               |
-| ------------------------------------------------- | ---------------------------------------- |
-| ./modules/wrapper/mandatory/EnforcementModule.sol | 84318c8ac00b97b8d4c0d264ec01c64efe7bfb0e |
+| File Name                                    | SHA-1 Hash                               |
+| -------------------------------------------- | ---------------------------------------- |
+| ./modules/wrapper/core/EnforcementModule.sol | 8d23b8c60e119a6421150f1bab0cb2061a1e640a |
 
 
-#### Contracts Description Table
+### Contracts Description Table
 
 
 |       Contract        |                Type                |                     Bases                      |                |                  |
@@ -70,15 +70,15 @@ This document defines Enforcement Module for the CMTA Token specification.
 
 ### EnforcementModuleInternal
 
-#### Files Description Table
+### Files Description Table
 
 
 | File Name                                        | SHA-1 Hash                               |
 | ------------------------------------------------ | ---------------------------------------- |
-| ./modules/internal/EnforcementModuleInternal.sol | 53c926de5a246388e569a30d9762a4d26f97de21 |
+| ./modules/internal/EnforcementModuleInternal.sol | 4b56bc3e6903e1a3fd67afcfdd4a6dd936827c0c |
 
 
-#### Contracts Description Table
+### Contracts Description Table
 
 
 |           Contract            |             Type             |               Bases               |                |                  |

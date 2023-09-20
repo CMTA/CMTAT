@@ -2,6 +2,52 @@
 
 Please follow <https://changelog.md/> conventions.
 
+## v2.3.1
+
+### Summary
+**Architecture**
+- The directory `mandatory` is renamed in `core` ([#222](https://github.com/CMTA/CMTAT/pull/222))
+- The directory `optional` is renamed in `extensions` ([#222](https://github.com/CMTA/CMTAT/pull/222))
+- Creation of a directory `controller` which for the moment contains only the ValidationModule ([#222](https://github.com/CMTA/CMTAT/pull/222))
+- Rename contract and init function for ERC20BurnModule, ERC20MintModule, ERC20SnapshotModule to clearly indicate the inheritance from ERC20 interface ([#226](https://github.com/CMTA/CMTAT/pull/226))
+
+**Gas optimization**
+- Add a batch version for the burn, mint and transfer functions (see [#51](https://github.com/CMTA/CMTAT/pull/51))
+- Use custom error instead of string error message ([#217](https://github.com/CMTA/CMTAT/pull/217))
+
+
+**Other**
+- Add ERC20 decimals as an argument of the initialize function ([#213](https://github.com/CMTA/CMTAT/pull/213))
+Until now, the number of decimal was set inside the code to the value 0
+This release changes this behavior to use instead a parameter supplied by the deployer inside the function initialize.
+- Add a constant VERSION to indicate the current version of the token ([#229](https://github.com/CMTA/CMTAT/pull/229))
+- Implement an alternative to the kill function ([#221](https://github.com/CMTA/CMTAT/pull/221))
+--Add a boolean isDeactivated
+--A new function `deactivateContract` , restricted to the admin, can be used to deactivate the contract
+This function set the variable `isDeactivated` to true.
+In standalone mode, this operation is irreversible, it is not possible to rollback.
+With a proxy, it is still possible to rollback by deploying a new implementation.
+This function puts also the contract in the pause state
+The variable `isDeactivated` has also an impact on the function `unpause`. This one will revert if the previous variable is set to true, thus the contract is in the pause state forever.
+
+**Tools**
+
+- Update the Solidity version to 0.8.20, which is a requirement for the new OpenZeppelin version (5.0.0)
+- Run tests with Hardhat instead of Truffle since Truffle does not support custom errors ([#217](https://github.com/CMTA/CMTAT/pull/51))
+- _Update OpenZeppelin to the version 5.0.0_ (not yet done)
+
+**Security**
+- Add new control on the DEFAULT_ADMIN_ROLE by inheriting `AccessControlDefaultAdminRules` ([#220](https://github.com/CMTA/CMTAT/pull/220))
+This contract implements the following risk mitigations on top of [AccessControl](https://docs.openzeppelin.com/contracts/4.x/api/access#AccessControl):
+
+Only one account holds the DEFAULT_ADMIN_ROLE since deployment until it’s potentially renounced.
+
+Enforces a 2-step process to transfer the DEFAULT_ADMIN_ROLE to another account.
+
+Enforces a configurable delay between the two steps, with the ability to cancel before the transfer is accepted.
+
+- Add a function `transferadminshipDirectly` ([#226](https://github.com/CMTA/CMTAT/pull/226))
+
 ## 2.3.0 - 20230609
 
 - Add Truffle CI workflow (Contributor: [diego-G](https://github.com/diego-G) / [21.co](https://github.com/amun))

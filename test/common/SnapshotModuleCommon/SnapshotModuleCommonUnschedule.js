@@ -127,6 +127,27 @@ function SnapshotModuleCommonUnschedule (owner, address1, address2, address3) {
         this.snapshotTime5
       ])
     })
+    
+    it('reverts when calling from non-owner', async function () {
+      // Arrange
+      const SNAPSHOT_TIME = this.currentTime.add(time.duration.seconds(60))
+      this.logs = await this.cmtat.scheduleSnapshot(SNAPSHOT_TIME, {
+        from: owner
+      })
+      let snapshots = await this.cmtat.getNextSnapshots()
+      snapshots.length.should.equal(1)
+      snapshots[0].should.be.bignumber.equal(SNAPSHOT_TIME)
+      // Act
+      await expectRevertCustomError(
+        this.cmtat.unscheduleSnapshotNotOptimized(SNAPSHOT_TIME, { from: address1 }),
+        'AccessControlUnauthorizedAccount',
+        [address1, SNAPSHOOTER_ROLE]
+      )
+      // Assert
+      snapshots = await this.cmtat.getNextSnapshots()
+      snapshots.length.should.equal(1)
+    })
+
     it('can schedule a snaphot after an unschedule', async function () {
       await this.cmtat.scheduleSnapshot(this.snapshotTime1, {
         from: owner

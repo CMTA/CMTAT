@@ -20,9 +20,9 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">55.56% </span>
+        <span class="strong">50% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>5/9</span>
+        <span class='fraction'>5/10</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">62.5% </span>
@@ -30,14 +30,14 @@
         <span class='fraction'>5/8</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">66.67% </span>
+        <span class="strong">75% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>2/3</span>
+        <span class='fraction'>3/4</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">55.56% </span>
+        <span class="strong">50% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>5/9</span>
+        <span class='fraction'>5/10</span>
       </div>
     </div>
   </div>
@@ -105,7 +105,31 @@
 60
 61
 62
-63</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -137,6 +161,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -150,33 +175,53 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">145×</span>
-<span class="cline-any cline-yes">143×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">452×</span>
-<span class="cline-any cline-yes">219×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">233×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1287×</span>
+<span class="cline-any cline-yes">696×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">591×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">//SPDX-License-Identifier: MPL-2.0
 &nbsp;
-pragma solidity ^0.8.17;
+pragma solidity ^0.8.20;
 &nbsp;
-import "../../../openzeppelin-contracts-upgradeable/contracts/access/AccessControlUpgradeable.sol";
+import "../../../openzeppelin-contracts-upgradeable/contracts/access/extensions/AccessControlDefaultAdminRulesUpgradeable.sol";
 import "../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
 &nbsp;
-abstract contract AuthorizationModule is AccessControlUpgradeable {
+import "../../libraries/Errors.sol";
+&nbsp;
+abstract contract AuthorizationModule is AccessControlDefaultAdminRulesUpgradeable {
     // BurnModule
     bytes32 public constant BURNER_ROLE = keccak256("BURNER_ROLE");
+    // CreditEvents
+    bytes32 public constant DEBT_CREDIT_EVENT_ROLE =
+    keccak256("DEBT_CREDIT_EVENT_ROLE");
+    // DebtModule
+    bytes32 public constant DEBT_ROLE = keccak256("DEBT_ROLE");
     // EnforcementModule
     bytes32 public constant ENFORCER_ROLE = keccak256("ENFORCER_ROLE");
     // MintModule
@@ -185,48 +230,60 @@ abstract contract AuthorizationModule is AccessControlUpgradeable {
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     // SnapshotModule
     bytes32 public constant SNAPSHOOTER_ROLE = keccak256("SNAPSHOOTER_ROLE");
-    // DebtModule
-    bytes32 public constant DEBT_ROLE = keccak256("DEBT_ROLE");
-    // CreditEvents
-    bytes32 public constant DEBT_CREDIT_EVENT_ROLE =
-        keccak256("DEBT_CREDIT_EVENT_ROLE");
+&nbsp;
+   
 &nbsp;
 <span class="fstat-no" title="function not covered" >    function __AuthorizationModule_init(</span>
-        address admin
+        address admin,
+        uint48 initialDelay
     ) internal onlyInitializing {
         /* OpenZeppelin */
 <span class="cstat-no" title="statement not covered" >        __Context_init_unchained()</span>;
         // AccessControlUpgradeable inherits from ERC165Upgradeable
 <span class="cstat-no" title="statement not covered" >        __ERC165_init_unchained()</span>;
 <span class="cstat-no" title="statement not covered" >        __AccessControl_init_unchained()</span>;
+<span class="cstat-no" title="statement not covered" >        __AccessControlDefaultAdminRules_init_unchained(initialDelay, admin)</span>;
 &nbsp;
         /* own function */
-<span class="cstat-no" title="statement not covered" >        __AuthorizationModule_init_unchained(admin)</span>;
+<span class="cstat-no" title="statement not covered" >        __AuthorizationModule_init_unchained()</span>;
     }
 &nbsp;
     /**
-     * @dev Grants the different roles to the
-     * account that deploys the contract.
+     * @dev
+     *
+     * - The grant to the admin role is done by AccessControlDefaultAdminRules
+     * - The control of the zero address is done by AccessControlDefaultAdminRules
      *
      */
     function __AuthorizationModule_init_unchained(
-        address admin
-    ) internal <span class="missing-if-branch" title="else path not taken" >E</span>onlyInitializing {
-        require(admin != address(0), "Address 0 not allowed");
-        _grantRole(DEFAULT_ADMIN_ROLE, admin);
+    ) internal view <span class="missing-if-branch" title="else path not taken" >E</span>onlyInitializing {
     }
+&nbsp;
     /*
-    * @dev Returns `true` if `account` has been granted `role`.
+     * @dev Returns `true` if `account` has been granted `role`.
      */
-    function hasRole(bytes32 role, address account) public view virtual override returns (bool) {
+    function hasRole(
+        bytes32 role,
+        address account
+    ) public view virtual override( IAccessControlUpgradeable,  AccessControlUpgradeable) returns (bool) {
         // The Default Admin has all roles
-        if(AccessControlUpgradeable.hasRole(DEFAULT_ADMIN_ROLE, account)){
+        if (AccessControlUpgradeable.hasRole(DEFAULT_ADMIN_ROLE, account)) {
             return true;
         }
         return AccessControlUpgradeable.hasRole(role, account);
     }
 &nbsp;
-&nbsp;
+    /**
+    @notice
+    Warning: this function should be called only in case of necessity (e.g private key leak)
+    Its goal is to transfer the adminship of the contract to a new admin, whithout delay.
+    The prefer way is to use the workflow of AccessControlDefaultAdminRulesUpgradeable
+    */
+    function transferAdminshipDirectly(address newAdmin) public virtual onlyRole(DEFAULT_ADMIN_ROLE) {
+        // we revoke first the admin since we can only have one admin
+        _revokeRole(DEFAULT_ADMIN_ROLE, _msgSender());
+        _grantRole(DEFAULT_ADMIN_ROLE, newAdmin);
+    }
     uint256[50] private __gap;
 }
 &nbsp;</pre></td></tr>
@@ -235,7 +292,7 @@ abstract contract AuthorizationModule is AccessControlUpgradeable {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Tue May 09 2023 12:04:21 GMT+0200 (Central European Summer Time)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Sep 20 2023 15:01:20 GMT+0200 (Central European Summer Time)
 </div>
 </div>
 <script src="../../../prettify.js"></script>
