@@ -43,7 +43,7 @@ contract(
             DEPLOYMENT_FLAG,
             { from: attacker }
           ),
-          'AlreadyInitialized',
+          'InvalidInitialization',
           []
         )
         await expectRevertCustomError(
@@ -68,7 +68,7 @@ contract(
             DEPLOYMENT_FLAG,
             { from: attacker }
           ),
-          'AlreadyInitialized',
+          'InvalidInitialization',
           []
         )
         await expectRevertCustomError(

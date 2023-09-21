@@ -2,8 +2,6 @@
 
 [TOC]
 
-
-
 ## Node.JS  package
 
 This part describe the list of libraries present in the file `package.json`.
@@ -28,19 +26,41 @@ A development environment, testing framework and asset pipeline for blockchains 
 **[Truffle Flattener](https://www.npmjs.com/package/truffle-flattener)**
 Concats solidity files from Truffle projects with all of their dependencies.
 
+**[truffle-contract-size](https://www.npmjs.com/package/truffle-contract-size)**
+
+This [Truffle](https://www.trufflesuite.com/docs/truffle/overview) plugin displays the contract size of all or a selection of your smart contracts in kilobytes.
+
 #### Nomiclabs - Hardhat
 
-[hardhat-truffle5](https://hardhat.org/hardhat-runner/plugins/nomiclabs-hardhat-truffle5)
+**[hardhat-truffle5](https://hardhat.org/hardhat-runner/plugins/nomiclabs-hardhat-truffle5)**
 
 [Hardhat](https://hardhat.org/) plugin for integration with TruffleContract from Truffle 5. This allows tests and scripts written for Truffle to work with Hardhat.
 
-[hardhat-web3](https://hardhat.org/hardhat-runner/plugins/nomiclabs-hardhat-web3)
+**[hardhat-web3](https://hardhat.org/hardhat-runner/plugins/nomiclabs-hardhat-web3)**
 
 This plugin integrates [Web3.js](https://github.com/ethereum/web3.js) `1.x` into [Hardhat](https://hardhat.org/).
 
-[hardhat-ethers](https://www.npmjs.com/package/@nomicfoundation/hardhat-ethers)
+**[hardhat-ethers](https://www.npmjs.com/package/@nomicfoundation/hardhat-ethers)**
 
 [Hardhat](https://hardhat.org/) plugin for integration with [ethers.js](https://github.com/ethers-io/ethers.js/)
+
+**[hardhat-contract-sizer](https://www.npmjs.com/package/hardhat-contract-sizer)**
+
+Output Solidity contract sizes with Hardhat.
+
+**[hardhat-gas-reporter](https://www.npmjs.com/package/hardhat-gas-reporter)**
+
+[eth-gas-reporter](https://github.com/cgewecke/eth-gas-reporter) plugin for [hardhat](http://gethardhat.com/).
+
+#### OpenZeppelin
+
+**[openzeppelin/hardhat-upgrades](openzeppelin/hardhat-upgrades)**
+
+This package adds functions to your Hardhat scripts so you can deploy and upgrade proxies for your contracts
+
+**[openzeppelin/test-helpers](openzeppelin/test-helpers)**
+
+Assertion library for Ethereum smart contract testing
 
 #### Linter
 
@@ -73,12 +93,22 @@ signature, etc.).
 Encode and decode method and event from the smart contract ABI. Warning:
 marked as experimental package on 22.08.2022.
 
+**[eth-gas-reporter](https://www.npmjs.com/package/eth-gas-reporter)**
+
+A Mocha reporter for Ethereum test suites (Truffle)
+
 **[Eth-Sig-Util](https://www.npmjs.com/package/ethereumjs-wallet)**
 A collection of Ethereum signing functions. 
 
 Warning :  
 * Deprecated in favor of : [@metamask/eth-sig-util](https://github.com/MetaMask/eth-sig-util)
 * It was not possible to use the new version of the library because the test "MetaTxModule.test.js" doesn't work with this one. The check of the signature fails.
+
+[keccak256](https://www.npmjs.com/package/keccak256)
+
+A wrapper for the [`keccak`](https://www.npmjs.com/package/keccak) library to compute 256 bit keccak hash in JavaScript.
+
+Use by `openzeppelin-contracts-upgradeable/test/helpers/eip712`imported in `MetaTxModuleCommon.js 
 
 **[solc](https://github.com/ethereum/solc-js)**
 JavaScript bindings for the Solidity compiler.
@@ -144,7 +174,7 @@ npm run-script uml
 
 Warning:
 
-From the version 2.3, this command is not working and generates the following error
+From the version v2.3.0, this command is not working and generates the following error
 
 > Failed to convert dot to SVG. Error: lost 31 26 edge
 
@@ -155,8 +185,8 @@ From the version 2.3, this command is not working and generates the following er
 | Generate UML for all modules                                 | `npm run-script uml-all`               |
 | Generate UML for the interfaces EIP1404                      | `npm run-script uml-i-eip1404`         |
 | Generate UML for the contracts CMTAT_STANDALONE, CMTAT_PROXY && CMTAT_BASE | `npm run-script uml-partial`           |
-| Generate UML for mandatory modules                           | `npm run-script uml-modules-mandatory` |
-| Generate UML for optional modules                            | `npm run-script uml-modules-optional`  |
+| Generate UML for core modules                                | `npm run-script uml-modules-mandatory` |
+| Generate UML for extensions modules                          | `npm run-script uml-modules-optional`  |
 | Generate UML for security modules                            | `npm run-script uml-modules-security`  |
 | Generate UML for mocks                                       | `npm run-script uml-mocks`             |
 

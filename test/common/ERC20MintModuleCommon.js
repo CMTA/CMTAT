@@ -2,10 +2,10 @@ const { BN, expectEvent } = require('@openzeppelin/test-helpers')
 const {
   expectRevertCustomError
 } = require('../../openzeppelin-contracts-upgradeable/test/helpers/customError.js')
-const { ZERO_ADDRESS, MINTER_ROLE } = require('../utils')
+const { ZERO_ADDRESS, MINTER_ROLE } = require('../utils.js')
 const { should } = require('chai').should()
 
-function MintModuleCommon (admin, address1, address2) {
+function ERC20MintModuleCommon (admin, address1, address2) {
   context('Minting', function () {
     const VALUE1 = new BN(20)
     const VALUE2 = new BN(50)
@@ -236,7 +236,7 @@ function MintModuleCommon (admin, address1, address2) {
       )
     })
 
-    it('testCannotMintBatchIfLengthMismatch_1', async function () {
+    it('testCannotMintBatchIfLengthMismatchMissingAddresses', async function () {
       // Number of addresses is insufficient
       const TOKEN_HOLDER_INVALID = [admin, address1]
       const TOKEN_SUPPLY_BY_HOLDERS = [BN(10), BN(100), BN(1000)]
@@ -249,7 +249,7 @@ function MintModuleCommon (admin, address1, address2) {
       )
     })
 
-    it('testCannotMintBatchIfLengthMismatch_2', async function () {
+    it('testCannotMintBatchIfLengthMismatchTooManyAddresses', async function () {
       // There are too many addresses
       const TOKEN_HOLDER_INVALID = [admin, address1, address1, address1]
       const TOKEN_SUPPLY_BY_HOLDERS = [BN(10), BN(100), BN(1000)]
@@ -275,4 +275,4 @@ function MintModuleCommon (admin, address1, address2) {
     })
   })
 }
-module.exports = MintModuleCommon
+module.exports = ERC20MintModuleCommon

@@ -5,7 +5,7 @@ const {
 } = require('../../openzeppelin-contracts-upgradeable/test/helpers/customError.js')
 const { should } = require('chai').should()
 
-function BurnModuleCommon (admin, address1, address2) {
+function ERC20BurnModuleCommon (admin, address1, address2) {
   context('Burn', function () {
     const INITIAL_SUPPLY = new BN(50)
     const REASON = 'BURN_TEST'
@@ -268,7 +268,7 @@ function BurnModuleCommon (admin, address1, address2) {
       )
     })
 
-    it('testCannotBurnIfLengthMismatch_1', async function () {
+    it('testCannotBurnBatchIfLengthMismatchMissingAddresses', async function () {
       // Number of addresses is insufficient
       const TOKEN_HOLDER_INVALID = [admin, address1]
       await expectRevertCustomError(
@@ -283,7 +283,7 @@ function BurnModuleCommon (admin, address1, address2) {
       )
     })
 
-    it('testCannotBurnIfLengthMismatch_2', async function () {
+    it('testCannotBurnBatchIfLengthMismatchTooManyAddresses', async function () {
       // There are too many addresses
       const TOKEN_HOLDER_INVALID = [admin, address1, address1, address1]
       await expectRevertCustomError(
@@ -313,4 +313,4 @@ function BurnModuleCommon (admin, address1, address2) {
     })
   })
 }
-module.exports = BurnModuleCommon
+module.exports = ERC20BurnModuleCommon

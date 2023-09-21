@@ -10,9 +10,9 @@ const { SNAPSHOOTER_ROLE } = require('../../utils')
 const { should } = require('chai').should()
 const {
   checkArraySnapshot
-} = require('./SnapshotModuleUtils/SnapshotModuleUtils')
+} = require('./ERC20SnapshotModuleUtils/ERC20SnapshotModuleUtils')
 
-function SnapshotModuleCommonScheduling (owner, address1, address2, address3) {
+function ERC20SnapshotModuleCommonScheduling (owner, address1, address2, address3) {
   context('Snapshot scheduling', function () {
     beforeEach(async function () {
       this.currentTime = await time.latest()
@@ -206,4 +206,4 @@ function SnapshotModuleCommonScheduling (owner, address1, address2, address3) {
     })
   })
 }
-module.exports = SnapshotModuleCommonScheduling
+module.exports = ERC20SnapshotModuleCommonScheduling

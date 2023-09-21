@@ -13,7 +13,7 @@ are the latest ones that we tested:
 - Solidity 0.8.17 (via solc-js)
 - Node 16.17.0
 - Web3.js 1.9.0
-- OpenZeppelin Contracts Upgradeable (submodule) 5.0.0
+- OpenZeppelin Contracts Upgradeable (submodule) [v5.0.0-rc.0](https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/releases/tag/v5.0.0-rc.0)
 
 ## Installation
 
@@ -54,7 +54,7 @@ See Hardhat's official [documentation](https://hardhat.org) for more information
 
 ### Truffle [partially depreciated]
 
-> Truffle can still be used to compile the contracts but you can no longer be used to run the tests.
+> Truffle can still be used to compile the contracts but you can no longer use it to run the tests.
 
 To use Truffle, the recommended way is to use the version installed as
 part of the node modules, via the `npx` command:

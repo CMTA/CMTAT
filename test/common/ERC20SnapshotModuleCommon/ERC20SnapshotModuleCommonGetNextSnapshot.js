@@ -2,9 +2,9 @@ const { time } = require('@openzeppelin/test-helpers')
 const { should } = require('chai').should()
 const {
   checkArraySnapshot
-} = require('./SnapshotModuleUtils/SnapshotModuleUtils')
+} = require('./ERC20SnapshotModuleUtils/ERC20SnapshotModuleUtils')
 
-function SnapshotModuleCommonGetNextSnapshot (
+function ERC20SnapshotModuleCommonGetNextSnapshot (
   owner,
   address1,
   address2,
@@ -97,4 +97,4 @@ function SnapshotModuleCommonGetNextSnapshot (
     })
   })
 }
-module.exports = SnapshotModuleCommonGetNextSnapshot
+module.exports = ERC20SnapshotModuleCommonGetNextSnapshot

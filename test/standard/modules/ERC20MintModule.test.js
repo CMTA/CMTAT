@@ -1,12 +1,12 @@
-const BurnModuleCommon = require('../../common/BurnModuleCommon')
+const ERC20MintModuleCommon = require('../../common/ERC20MintModuleCommon')
 const { deployCMTATStandalone } = require('../../deploymentUtils')
 contract(
-  'Standard - BurnModule',
+  'Standard - MintModule',
   function ([_, admin, address1, address2, deployerAddress]) {
     beforeEach(async function () {
       this.cmtat = await deployCMTATStandalone(_, admin, deployerAddress)
     })
 
-    BurnModuleCommon(admin, address1, address2)
+    ERC20MintModuleCommon(admin, address1, address2)
   }
 )

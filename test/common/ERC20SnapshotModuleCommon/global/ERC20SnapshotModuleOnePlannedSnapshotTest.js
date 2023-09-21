@@ -1,9 +1,9 @@
 const { time } = require('@openzeppelin/test-helpers')
 const { should } = require('chai').should()
-const { checkSnapshot } = require('../SnapshotModuleUtils/SnapshotModuleUtils')
+const { checkSnapshot } = require('../ERC20SnapshotModuleUtils/ERC20SnapshotModuleUtils')
 const reason = 'BURN_TEST'
 
-function SnapshotModuleOnePlannedSnapshotTest (
+function ERC20SnapshotModuleOnePlannedSnapshotTest (
   admin,
   address1,
   address2,
@@ -174,4 +174,4 @@ function SnapshotModuleOnePlannedSnapshotTest (
     })
   })
 }
-module.exports = SnapshotModuleOnePlannedSnapshotTest
+module.exports = ERC20SnapshotModuleOnePlannedSnapshotTest
