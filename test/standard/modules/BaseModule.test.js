@@ -1,13 +1,14 @@
-const CMTAT = artifacts.require('CMTAT_STANDALONE')
 const BaseModuleCommon = require('../../common/BaseModuleCommon')
-const { ZERO_ADDRESS } = require('../../utils')
-
+const {
+  deployCMTATStandalone,
+  DEPLOYMENT_FLAG
+} = require('../../deploymentUtils')
 contract(
   'Standard - BaseModule',
-  function ([_, admin, address1, address2, address3, randomDeployer]) {
+  function ([_, admin, address1, address2, address3, deployerAddress]) {
     beforeEach(async function () {
-      this.flag = 5
-      this.cmtat = await CMTAT.new(_, admin, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', ZERO_ADDRESS, 'CMTAT_info', this.flag, { from: randomDeployer })
+      this.flag = DEPLOYMENT_FLAG // value used in tests
+      this.cmtat = await deployCMTATStandalone(_, admin, deployerAddress)
     })
 
     BaseModuleCommon(admin, address1, address2, address3, false)

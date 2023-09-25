@@ -10,6 +10,8 @@ The CMTAT was developed by a working group of CMTA's Technical Committee that in
 
 The preferred way to receive comments is through the GitHub issue tracker.  Private comments and questions can be sent to the CMTA secretariat at <a href="mailto:admin@cmta.ch">admin@cmta.ch</a>. For security matters, please see [SECURITY.md](./SECURITY.MD).
 
+Note that CMTAT may be used in other jurisdictions than Switzerland, and for tokenizing various asset types, beyond equity and debt products. 
+
 ## Functionality
 
 ### Overview
@@ -29,7 +31,7 @@ order to support:
 This reference implementation allows the issuance and management of tokens representing equity securities.
 It can however also be used for other forms of financial instruments such as debt securities.
 
-You may modify the token code by adding, removing, or modifying features. However, the mandatory modules must remain in place for compliance with Swiss law.
+You may modify the token code by adding, removing, or modifying features. However, the core modules must remain in place for compliance with Swiss law.
 
 ### Deployment model 
 
@@ -61,46 +63,63 @@ Please see the OpenGSN [documentation](https://docs.opengsn.org/contracts/#recei
 ### Kill switch
 
 CMTAT initially supported a `kill()` function relying on the SELFDESTRUCT opcode (which effectively destroyed the contract's storage and code).
-However, Ethereum's [Cancun update](https://github.com/ethereum/execution-specs/blob/master/network-upgrades/mainnet-upgrades/cancun.md) (rolled out in the second half of
-2023) will remove support for SELFDESTRUCT (see
+However, Ethereum's [Cancun update](https://github.com/ethereum/execution-specs/blob/master/network-upgrades/mainnet-upgrades/cancun.md) (rolled out in the second half of 2023)  will remove support for SELFDESTRUCT (see
 [EIP-6780](https://eips.ethereum.org/EIPS/eip-6780)).
 
-The `kill()` function will therefore not behave as it used to once Cancun is deployed.  As an alternative, the token contract can be paused indefinitely, and a new contract deployed (and the proxy modified accordingly).
+The `kill()` function will therefore not behave as it used to once Cancun is deployed.  
+
+The alternative function is the function `deactivateContract`, introduced in the version v2.3.1 inside the PauseModule, to deactivate the contract.
+This function set a boolean state variable `isDeactivated` to true and puts the contract in the pause state.
+The function `unpause`is updated to revert if the previous variable is set to true, thus the contract is in the pause state "forever".
+
+The consequences are the following:
+
+- In standalone mode, this operation is irreversible, it is not possible to rollback.
+- With a proxy, it is still possible to rollback by deploying a new implementation.
+  
 
 
 ## Modules
 
 Here the list of the differents modules with the links towards the documentation and the main file.
 
-### Mandatory
+### Controller
+
+| Name             | Documentation                                                | Main File                                                    |
+| ---------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| ValidationModule | [validation.md](doc/modules/presentation/controllers/validation.md) | [ValidationModule.sol](./contracts/modules/wrapper/controllers/ValidationModule.sol) |
+
+### Core
+
+Generally, these modules are required to be compliant with the CMTA specification.
 
 | Name              | Documentation                                                | Main File                                                    |
 | ----------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| BaseModule        | [base.md](doc/modules/presentation/mandatory/base.md)        | [BaseModule.sol](./contracts/modules/wrapper/mandatory/BaseModule.sol) |
-| BurnModule        | [burn.md](doc/modules/presentation/mandatory/burn.md)        | [BurnModule.sol](./contracts/modules/wrapper/mandatory/BurnModule.sol) |
-| EnforcementModule | [enforcement.md](doc/modules/presentation/mandatory/enforcement.md) | [EnforcementModule.sol](./contracts/modules/wrapper/mandatory/EnforcementModule.sol) |
-| ERC20BaseModule   | [erc20base.md](doc/modules/presentation/mandatory/erc20base.md) | [ERC20BaseModule.sol](./contracts/modules/wrapper/mandatory/ERC20BaseModule.sol) |
-| MintModule        | [mint.md](doc/modules/presentation/mandatory/mint.md)        | [MintModule.sol](./contracts/modules/wrapper/mandatory/MintModule.sol) |
-| PauseModule       | [pause.md](doc/modules/presentation/mandatory/pause.md)      | [PauseModule.sol](./contracts/modules/wrapper/mandatory/PauseModule.sol) |
+| BaseModule        | [base.md](doc/modules/presentation/core/base.md)             | [BaseModule.sol](./contracts/modules/wrapper/core/BaseModule.sol) |
+| BurnModule        | [ERC20Burn.md](doc/modules/presentation/core/ERC20Burn.md)   | [ERC20BurnModule.sol](./contracts/modules/wrapper/core/ERC20BurnModule.sol) |
+| EnforcementModule | [enforcement.md](doc/modules/presentation/core/enforcement.md) | [EnforcementModule.sol](./contracts/modules/wrapper/core/EnforcementModule.sol) |
+| ERC20BaseModule   | [erc20base.md](doc/modules/presentation/core/erc20base.md)   | [ERC20BaseModule.sol](./contracts/modules/wrapper/core/ERC20BaseModule.sol) |
+| MintModule        | [ERC20Mint.md](doc/modules/presentation/core/ERC20Mint.md)   | [ERC20MintModule.sol](./contracts/modules/wrapper/core/ERC20MintModule.sol) |
+| PauseModule       | [pause.md](doc/modules/presentation/core/pause.md)           | [PauseModule.sol](./contracts/modules/wrapper/core/PauseModule.sol) |
 
-### Optional
+### Extensions
+
+Generally, these modules are not required to be compliant with the CMTA specification.
 
 | Name              | Documentation                                                | Main File                                                    |
 | ----------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| MetaTxModule      | [metatx.md](doc/modules/presentation/optional/metatx.md)     | [MetaTxModule.sol](./contracts/modules/wrapper/optional/MetaTxModule.sol) |
-| SnapshotModule*   | [snapshot.md](doc/modules/presentation/optional/snapshot.md) | [SnapshotModule.sol](./contracts/modules/wrapper/optional/SnapshotModule.sol) |
-| ValidationModule  | [validation.md](doc/modules/presentation/optional/validation.md) | [ValidationModule.sol](./contracts/modules/wrapper/optional/SnapshotModule.sol) |
-| creditEventModule | [creditEvents.md](doc/modules/presentation/optional/Debt/creditEvents.md) | [CreditEventsModule.sol](./contracts/modules/wrapper/optional/DebtModule/CreditEventsModule.sol) |
-| DebtBaseModule    | [debtBase.md](doc/modules/presentation/optional/Debt/debtBase.md) | [DebtBaseModule.sol](./contracts/modules/wrapper/optional/DebtModule/DebtBaseModule.sol) |
+| MetaTxModule      | [metatx.md](doc/modules/presentation/extensions/metatx.md)   | [MetaTxModule.sol](./contracts/modules/wrapper/extensions/MetaTxModule.sol) |
+| SnapshotModule*   | [snapshot.md](doc/modules/presentation/extensions/snapshot.md) | [SnapshotModule.sol](./contracts/modules/wrapper/extensions/SnapshotModule.sol) |
+| creditEventModule | [creditEvents.md](doc/modules/presentation/extensions/Debt/creditEvents.md) | [CreditEventsModule.sol](./contracts/modules/wrapper/extensions/DebtModule/CreditEventsModule.sol) |
+| DebtBaseModule    | [debtBase.md](doc/modules/presentation/extensions/Debt/debtBase.md) | [DebtBaseModule.sol](./contracts/modules/wrapper/extensions/DebtModule/DebtBaseModule.sol) |
 
 *not imported by default
 
 ### Security
 
-| Name                   | Documentation                                                | Main File                                                    |
-| ---------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| AuthorizationModule    | [authorization.md](./doc/modules/presentation/security/authorization.md) | [AuthorizationModule.sol](./contracts/modules/security/AuthorizationModule.sol) |
-| OnlyDelegateCallModule | [onlyDelegateCallModule.md](./doc/modules/presentation/security/onlyDelegateCallModule.md) | [OnlyDelegateCallModule.sol](./contracts/modules/security/OnlyDelegateCallModule.sol) |
+| Name                | Documentation                                                | Main File                                                    |
+| ------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| AuthorizationModule | [authorization.md](./doc/modules/presentation/security/authorization.md) | [AuthorizationModule.sol](./contracts/modules/security/AuthorizationModule.sol) |
 
 
 
@@ -126,15 +145,13 @@ See the code in [modules/security](./contracts/modules/security).
 
 Access control is managed thanks to the module `AuthorizationModule`.
 
-The module `OnlyDelegateCallModule` is a special module to insure that
-some functions (e.g., such as `delegatecall()` and `selfdestruct`) can only be triggered through proxies when the contract is deployed with a proxy.
-
 ### Audit
 
 The contracts have been audited by [ABDKConsulting](https://www.abdk.consulting/), a globally recognized firm specialized in smart contracts security.
 
-
 #### First audit - September 2021
+
+Fixed version : [1.0](https://github.com/CMTA/CMTAT/releases/tag/1.0)
 
 Fixes of security issues discovered by the initial audit were reviewed by ABDK and confirmed to be effective, as certified by the [report released](doc/audits/ABDK-CMTAT-audit-20210910.pdf) on September 10, 2021, covering [version c3afd7b](https://github.com/CMTA/CMTAT/tree/c3afd7b4a2ade160c9b581adb7a44896bfc7aaea) of the contracts.
 Version [1.0](https://github.com/CMTA/CMTAT/releases/tag/1.0) includes additional fixes of minor issues, compared to the version retested.
@@ -143,15 +160,22 @@ A summary of all fixes and decisions taken is available in the file [CMTAT-Audit
 
 #### Second audit - March 2023
 
+Fixed version : [v2.3.0](https://github.com/CMTA/CMTAT/releases/tag/v2.3.0)
+
 The second audit covered version [2.2](https://github.com/CMTA/CMTAT/releases/tag/2.2).
 
-Version 2.3 contains the different fixes and improvements related to this audit.
+Version v2.3.0 contains the different fixes and improvements related to this audit.
 
-The report is available in [ABDK_CMTA_CMTATRuleEngine_v_1_0.pdf](doc/audits/ABDK_CMTA_CMTATRuleEngine_v_1_0.pdf). 
+The report is available in [ABDK_CMTA_CMTATRuleEngine_v_1_0.pdf](doc/audits/ABDK_CMTA_CMTATRuleEngine_v_1_0/ABDK_CMTA_CMTATRuleEngine_v_1_0.pdf). 
 
 ### Tools
 
-You will find the report produced by [Slither](https://github.com/crytic/slither) in [slither-report.md](doc/audits/tools/slither-report.md). 
+You will find the report produced by [Slither](https://github.com/crytic/slither) in 
+
+| Version | File                                                         |
+| ------- | ------------------------------------------------------------ |
+| v2.3.0  | [v2.3.0-slither-report.md](doc/audits/tools/v2.3.0-slither-report.md) |
+| v2.3.1  | [v2.3.1-slither-report.md](doc/audits/tools/v2.3.1-slither-report.md) |
 
 
 ### Test
@@ -176,7 +200,7 @@ Here a summary of the main documents:
 | Documentation of the modules API. | [doc/modules](doc/modules)                                 |
 | Documentation on the toolchain    | [doc/TOOLCHAIN.md](doc/TOOLCHAIN.md)                       |
 | How to use the project            | [doc/USAGE.md](doc/USAGE.md)                               |
-| Project architecture              | [doc/general/architecture.md](doc/general/architecture.md) |
+| Project architecture              | [doc/general/ARCHITECTURE.md](doc/general/ARCHITECTURE.md) |
 
 CMTA providers further documentation describing the CMTAT framework in a platform-agnostic way, and covering legal aspects, see
 

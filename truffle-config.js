@@ -4,7 +4,7 @@ module.exports = {
   networks: {
     ganache: {
       host: "127.0.0.1",
-      port: 8555,
+      port: 8545,
       network_id: "*", // match any network
     },
     live: {
@@ -24,12 +24,13 @@ module.exports = {
   },
   compilers: {
     solc: {
-      version: '0.8.17',
+      version: '0.8.20',
       settings: {
         optimizer: {
           enabled: true,
           runs: 200
-        }
+        },
+        evmVersion: 'shanghai'
       }
     }
   },

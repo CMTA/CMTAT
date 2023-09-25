@@ -1,6 +1,6 @@
 //SPDX-License-Identifier: MPL-2.0
 
-pragma solidity ^0.8.17;
+pragma solidity ^0.8.20;
 
 import "./CMTAT_BASE_SnapshotTest.sol";
 
@@ -21,25 +21,29 @@ contract CMTATSnapshotStandaloneTest is CMTAT_BASE_SnapshotTest {
     constructor(
         address forwarderIrrevocable,
         address admin,
+        uint48 initialDelayToAcceptAdminRole,
         string memory nameIrrevocable,
         string memory symbolIrrevocable,
-        string memory tokenId,
-        string memory terms,
-        IEIP1404Wrapper ruleEngine,
-        string memory information,
-        uint256 flag
+        uint8 decimalsIrrevocable,
+        string memory tokenId_,
+        string memory terms_,
+        IEIP1404Wrapper ruleEngine_,
+        string memory information_,
+        uint256 flag_
     ) MetaTxModule(forwarderIrrevocable) {
         // Initialize the contract to avoid front-running
         // Warning : do not initialize the proxy
         initialize(
             admin,
+            initialDelayToAcceptAdminRole,
             nameIrrevocable,
             symbolIrrevocable,
-            tokenId,
-            terms,
-            ruleEngine,
-            information,
-            flag
+            decimalsIrrevocable,
+            tokenId_,
+            terms_,
+            ruleEngine_,
+            information_,
+            flag_
         );
     }
 

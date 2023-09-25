@@ -1,13 +1,10 @@
-const CMTAT = artifacts.require('CMTAT_STANDALONE')
 const ERC20BaseModuleCommon = require('../../common/ERC20BaseModuleCommon')
-const { ZERO_ADDRESS } = require('../../utils')
-
+const { deployCMTATStandalone } = require('../../deploymentUtils')
 contract(
   'Standard - ERC20BaseModule',
-  function ([_, admin, address1, address2, address3, randomDeployer]) {
+  function ([_, admin, address1, address2, address3, deployerAddress]) {
     beforeEach(async function () {
-      this.flag = 5
-      this.cmtat = await CMTAT.new(_, admin, 'CMTA Token', 'CMTAT', 'CMTAT_ISIN', 'https://cmta.ch', ZERO_ADDRESS, 'CMTAT_info', this.flag, { from: randomDeployer })
+      this.cmtat = await deployCMTATStandalone(_, admin, deployerAddress)
     })
 
     ERC20BaseModuleCommon(admin, address1, address2, address3, false)
