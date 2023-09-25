@@ -45,9 +45,9 @@ abstract contract CreditEventsModule is
         // no variable to initialize
     }
 
-    /*
-    @notice Set all attributes of creditEvents
-    The values of all attributes will be changed even if the new values are the same as the current ones
+    /** 
+    * @notice Set all attributes of creditEvents
+    * The values of all attributes will be changed even if the new values are the same as the current ones
     */
     function setCreditEvents(
         bool flagDefault_,
@@ -60,8 +60,8 @@ abstract contract CreditEventsModule is
         emit Rating(rating_, rating_);
     }
 
-    /*
-    @notice The call will be reverted if the new value of flagDefault is the same as the current one
+    /** 
+    * @notice The call will be reverted if the new value of flagDefault is the same as the current one
     */
     function setFlagDefault(
         bool flagDefault_
@@ -73,8 +73,8 @@ abstract contract CreditEventsModule is
         emit FlagDefault(flagDefault_);
     }
 
-    /*
-    @notice The call will be reverted if the new value of flagRedeemed is the same as the current one
+    /** 
+    * @notice The call will be reverted if the new value of flagRedeemed is the same as the current one
     */
     function setFlagRedeemed(
         bool flagRedeemed_
@@ -86,8 +86,8 @@ abstract contract CreditEventsModule is
         emit FlagRedeemed(flagRedeemed_);
     }
 
-    /*
-    @notice The rating will be changed even if the new value is the same as the current one
+    /** 
+    * @notice The rating will be changed even if the new value is the same as the current one
     */
     function setRating(
         string calldata rating_

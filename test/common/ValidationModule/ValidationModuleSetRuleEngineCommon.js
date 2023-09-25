@@ -45,6 +45,13 @@ function ValidationModuleSetRuleEngineCommon (admin, address1, ruleEngine) {
         'Unknown code'
       )
     })
+
+    it('testCanDetectTransferRestrictionValidTransferWithoutRuleEngine', async function () {
+      // Act + Assert
+      (
+        await this.cmtat.detectTransferRestriction(address1, admin, 11)
+      ).should.be.bignumber.equal('0')
+    })
   })
 }
 module.exports = ValidationModuleSetRuleEngineCommon

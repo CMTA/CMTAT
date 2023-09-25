@@ -45,74 +45,6 @@ function BaseModuleCommon (admin, address1, address2, address3, proxyTest) {
     })
 
     // ADDRESS1 -> ADDRESS3
-    it('testIncreaseAllowance', async function () {
-      const TOTAL_AMOUNT_TO_APPROVE = BN(30)
-      const FIRST_APPROVAL = BN(20)
-      const SECOND_APPROVAL = BN(10);
-      // Arrange
-      (
-        await this.cmtat.allowance(address1, address3)
-      ).should.be.bignumber.equal('0')
-      await this.cmtat.approve(address3, FIRST_APPROVAL, { from: address1 });
-      // Arrange - Assert
-      (
-        await this.cmtat.allowance(address1, address3)
-      ).should.be.bignumber.equal(FIRST_APPROVAL)
-      // Act
-      this.logs = await this.cmtat.increaseAllowance(
-        address3,
-        SECOND_APPROVAL,
-        {
-          from: address1
-        }
-      );
-      // Assert
-      (
-        await this.cmtat.allowance(address1, address3)
-      ).should.be.bignumber.equal(TOTAL_AMOUNT_TO_APPROVE)
-      // emits an Approval event
-      expectEvent(this.logs, 'Approval', {
-        owner: address1,
-        spender: address3,
-        value: TOTAL_AMOUNT_TO_APPROVE
-      })
-    })
-
-    // ADDRESS1 -> ADDRESS3
-    it('testDecreaseAllowance', async function () {
-      const FIRST_APPROVAL = BN(20)
-      const SECOND_APPROVAL_DECREASE = BN(10)
-      const APPROVE_FINAL_AMOUNT = FIRST_APPROVAL.sub(SECOND_APPROVAL_DECREASE);
-      // Arrange
-      (
-        await this.cmtat.allowance(address1, address3)
-      ).should.be.bignumber.equal('0')
-      await this.cmtat.approve(address3, FIRST_APPROVAL, { from: address1 });
-      // Arrange - Assert
-      (
-        await this.cmtat.allowance(address1, address3)
-      ).should.be.bignumber.equal(FIRST_APPROVAL)
-      // Act
-      this.logs = await this.cmtat.decreaseAllowance(
-        address3,
-        SECOND_APPROVAL_DECREASE,
-        {
-          from: address1
-        }
-      );
-      // Assert
-      (
-        await this.cmtat.allowance(address1, address3)
-      ).should.be.bignumber.equal(SECOND_APPROVAL_DECREASE)
-      // emits an Approval event
-      expectEvent(this.logs, 'Approval', {
-        owner: address1,
-        spender: address3,
-        value: APPROVE_FINAL_AMOUNT
-      })
-    })
-
-    // ADDRESS1 -> ADDRESS3
     it('testRedefinedAllowanceWithApprove', async function () {
       const AMOUNT_TO_APPROVE = BN(50)
       const FIRST_AMOUNT_TO_APPROVE = BN(20);
@@ -454,7 +386,7 @@ function BaseModuleCommon (admin, address1, address2, address3, proxyTest) {
       )
     })
 
-    it('testCannotTransferBatchIfLengthMismatch_1', async function () {
+    it('testCannotTransferBatchIfLengthMismatchMissingAddresses', async function () {
       // Number of addresses is insufficient
       const TOKEN_ADDRESS_TOS_INVALID = [address1, address2]
       await expectRevertCustomError(
@@ -466,7 +398,7 @@ function BaseModuleCommon (admin, address1, address2, address3, proxyTest) {
       )
     })
 
-    it('testCannotTransferBatchIfLengthMismatch_2', async function () {
+    it('testCannotTransferBatchIfLengthMismatchTooManyAddresses', async function () {
       // There are too many addresses
       const TOKEN_ADDRESS_TOS_INVALID = [
         address1,

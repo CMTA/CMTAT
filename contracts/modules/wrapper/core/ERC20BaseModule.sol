@@ -10,7 +10,7 @@ import "../../../libraries/Errors.sol";
 abstract contract ERC20BaseModule is ERC20Upgradeable {
     /* Events */
     /**
-    @notice Emitted when the specified `spender` spends the specified `value` tokens owned by the specified `owner` reducing the corresponding allowance.
+    * @notice Emitted when the specified `spender` spends the specified `value` tokens owned by the specified `owner` reducing the corresponding allowance.
     */
     event Spend(address indexed owner, address indexed spender, uint256 value);
 
@@ -93,9 +93,10 @@ abstract contract ERC20BaseModule is ERC20Upgradeable {
 
     /**
      * @notice Transfers `value` amount of tokens from address `from` to address `to`
-     * @inheritdoc ERC20Upgradeable
      * @custom:dev-cmtat
      * Emits a {Spend} event indicating the spended allowance.
+     * @inheritdoc ERC20Upgradeable
+     *
      */
     function transferFrom(
         address from,

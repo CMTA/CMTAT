@@ -13,8 +13,6 @@ contract CMTAT_PROXY is CMTAT_BASE {
     constructor(
         address forwarderIrrevocable
     ) MetaTxModule(forwarderIrrevocable) {
-        // Initialize the variable for the implementation
-        deployedWithProxy = true;
         // Disable the possibility to initialize the implementation
         _disableInitializers();
     }

@@ -28,7 +28,7 @@ contract(
 
     context('Attacker', function () {
       // Here the argument to indicate if it is deployed with a proxy, set at false by the attacker
-      it('testCannotBeTakenControlByAttacker1', async function () {
+      it('testCannotBeTakenControlByAttacker', async function () {
         await expectRevertCustomError(
           this.implementationContract.initialize(
             attacker,
@@ -43,32 +43,7 @@ contract(
             DEPLOYMENT_FLAG,
             { from: attacker }
           ),
-          'AlreadyInitialized',
-          []
-        )
-        await expectRevertCustomError(
-          this.implementationContract.pause({ from: attacker }),
-          'AccessControlUnauthorizedAccount',
-          [attacker, PAUSER_ROLE]
-        )
-      })
-      // Here the argument to indicate if it is deployed with a proxy, set at true by the attacker
-      it('testCannotBeTakenControlByAttacker2', async function () {
-        await expectRevertCustomError(
-          this.implementationContract.initialize(
-            attacker,
-            BigInt(time.duration.days(3)),
-            'CMTA Token',
-            'CMTAT',
-            DECIMAL,
-            'CMTAT_ISIN',
-            'https://cmta.ch',
-            ZERO_ADDRESS,
-            'CMTAT_info',
-            DEPLOYMENT_FLAG,
-            { from: attacker }
-          ),
-          'AlreadyInitialized',
+          'InvalidInitialization',
           []
         )
         await expectRevertCustomError(

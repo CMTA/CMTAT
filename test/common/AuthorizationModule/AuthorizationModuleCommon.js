@@ -80,20 +80,32 @@ function AuthorizationModuleCommon (admin, address1, address2) {
     it('testCanAdminTransferAdminship', async function () {
       // Arrange - Assert
       (await this.cmtat.owner()).should.equal(admin)
+      // Act 1
       // Starts an admin transfer
-      await this.cmtat.beginDefaultAdminTransfer(address1, { from: admin });
+      await this.cmtat.beginDefaultAdminTransfer(address1, { from: admin })
 
       // Wait for acceptance
-      const acceptSchedule = web3.utils.toBN(await time.latest()).add(DEFAULT_ADMIN_DELAY_WEB3);
+      const acceptSchedule = web3.utils
+        .toBN(await time.latest())
+        .add(DEFAULT_ADMIN_DELAY_WEB3)
       // We jump into the future
       await time.increase(acceptSchedule.addn(1))
 
-      // Act
-      await this.cmtat.acceptDefaultAdminTransfer({ from: address1 });
+      // Act 2
+      this.logs = await this.cmtat.acceptDefaultAdminTransfer({ from: address1 });
 
       // Assert
       (await this.cmtat.owner()).should.equal(address1)
-    });
+      // Events
+      expectEvent(this.logs, 'RoleRevoked', {
+        role: DEFAULT_ADMIN_ROLE,
+        account: admin
+      })
+      expectEvent(this.logs, 'RoleGranted', {
+        role: DEFAULT_ADMIN_ROLE,
+        account: address1
+      })
+    })
 
     /*
     Already tested by OpenZeppelin library
@@ -101,6 +113,7 @@ function AuthorizationModuleCommon (admin, address1, address2) {
     it('testCannotNonAdminTransferAdminship', async function () {
       // Arrange - Assert
       (await this.cmtat.owner()).should.equal(admin)
+      // Act
       // Starts an admin transfer
       await expectRevertCustomError(
         this.cmtat.beginDefaultAdminTransfer(address1, { from: address1 }),
@@ -109,7 +122,7 @@ function AuthorizationModuleCommon (admin, address1, address2) {
       );
       // Assert
       (await this.cmtat.owner()).should.equal(admin)
-    });
+    })
 
     it('testCanAdminTransferAdminshipDirectly', async function () {
       // Arrange - Assert
@@ -121,7 +134,16 @@ function AuthorizationModuleCommon (admin, address1, address2) {
 
       // Assert
       (await this.cmtat.owner()).should.equal(address1)
-    });
+      // Events
+      expectEvent(this.logs, 'RoleRevoked', {
+        role: DEFAULT_ADMIN_ROLE,
+        account: admin
+      })
+      expectEvent(this.logs, 'RoleGranted', {
+        role: DEFAULT_ADMIN_ROLE,
+        account: address1
+      })
+    })
 
     it('testCannotNonAdminTransferAdminshipDirectly', async function () {
       // Arrange - Assert
@@ -135,7 +157,7 @@ function AuthorizationModuleCommon (admin, address1, address2) {
 
       // Assert
       (await this.cmtat.owner()).should.equal(admin)
-    });
+    })
   })
 }
 module.exports = AuthorizationModuleCommon

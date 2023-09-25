@@ -17,7 +17,7 @@ SnapshotModule:
 Add this import in case you add the SnapshotModule
 import "./wrapper/optional/SnapshotModule.sol";
 */
-import "./wrapper/controller/ValidationModule.sol";
+import "./wrapper/controllers/ValidationModule.sol";
 import "./wrapper/extensions/MetaTxModule.sol";
 import "./wrapper/extensions/DebtModule/DebtBaseModule.sol";
 import "./wrapper/extensions/DebtModule/CreditEventsModule.sol";

@@ -13,8 +13,6 @@ contract CMTATSnapshotProxyTest is CMTAT_BASE_SnapshotTest {
     constructor(
         address forwarderIrrevocable
     ) MetaTxModule(forwarderIrrevocable) {
-        // Initialize the variable for the implementation
-        deployedWithProxy = true;
         // Disable the possibility to initialize the implementation
         _disableInitializers();
     }

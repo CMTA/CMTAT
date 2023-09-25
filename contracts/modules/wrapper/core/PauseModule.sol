@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.20;
 
-import "../../../../openzeppelin-contracts-upgradeable/contracts/security/PausableUpgradeable.sol";
+import "../../../../openzeppelin-contracts-upgradeable/contracts/utils/PausableUpgradeable.sol";
 import "../../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
 import "../../security/AuthorizationModule.sol";
 
@@ -80,7 +80,6 @@ abstract contract PauseModule is PausableUpgradeable, AuthorizationModule {
     *
     * - the caller must have the `DEFAULT_ADMIN_ROLE`.
     */
-    /// @custom:oz-upgrades-unsafe-allow selfdestruct
     function deactivateContract()
         public
         onlyRole(DEFAULT_ADMIN_ROLE)

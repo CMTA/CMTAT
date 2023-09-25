@@ -5,13 +5,11 @@ development.
 
 ## Toolkit support
 
-> Why do you continue using Truffle instead of migrating to HardHat or Foundry?
+> Which is the main development tool you use ?
 
-Regarding [Hardhat](https://hardhat.org/):
+Until the version v.2.3.1, we used `Truffle` with `web3js` as our main development tool and testing library. Since this version, we use *custom errors* to generate errors inside our smart contracts and this type of errors are not supported by `Truffle` for testing.
 
-- Our tests are not working with Hardhat so to migrate to hardhat, we will have to update our tests which will require a lot of works.
-- Moreover, we do not see a use case where hardhat will be better than Truffle.
-- Hardhat has a lot of plugins, but for example, for the coverage, we can run the coverage without be fully compatible with Hardhat.
+Therefore, we use `Hardhat` with `web3js` to run our tests, but you can compile the contracts with Truffle or Hardhat.
 
 Regarding [Foundry](https://book.getfoundry.sh/):
 
@@ -19,16 +17,15 @@ Regarding [Foundry](https://book.getfoundry.sh/):
 -  The tests for the gasless module (MetaTx) would be difficult to write
    in Solidity, as Foundry requires, see [https://github.com/CMTA/CMTAT/blob/master/test/common/MetaTxModuleCommon.js](https://github.com/CMTA/CMTAT/blob/master/test/common/MetaTxModuleCommon.js)
 - The OpenZeppelin libraries that we use have their tests mainly written in JavaScript, which provides a good basis for our tests
-- Performance wise, we observed that Foundry is superior to Truffle, notably to test the Snapshot module
 - We have a repository [CMTA/CMTAT-Foundry](https://github.com/CMTA/CMTAT-foundry) that provides experimental support for Foundry, but it does not provide complete support and testing for the latest CMTAT version.
 
 
 >  Do you plan to fully support Foundry in the near future? 
 
-For the foreseeable future, we plan to keep Truffle as the main
+For the foreseeable future, we plan to keep Hardhat/Truffle as the main
 development and testing suite.
 
-We have not planned to export all the tests from the Truffle suite to
+We have not planned to export all the tests from the Truffle/Hardhat suite to
 their Solidity version equivalent suitable to Foundry, though some tests
 are already available.
 
@@ -37,9 +34,11 @@ documented in its
 [README](https://github.com/CMTA/CMTAT-Foundry/blob/main/README.md#cmtat---using-the-foundry-suite).
 
 
->  Can Hardhat be used to run tests?
+>  Can Truffle be used to run tests?
 
-No, please use Truffle to run the tests.
+No. Since the version v.2.31 and the use of `custom errors`, the tests no longer work with Truffle.
+
+You can only run the tests with `Hardhat`.
 
 
 ## Modules
@@ -84,7 +83,7 @@ implementation*.
 If you remove the Validation module and want to use the Pause or the
 Enforcement module, you have to call the functions of modules inside the
 main contracts. It was initially the case but we have changed this
-behaviour when addressing an issue reported by a security audit.
+behavior when addressing an issue reported by a security audit.
 Here is an old version:
 [https://github.com/CMTA/CMTAT/blob/ed23bfc69cfacc932945da751485c6472705c975/contracts/CMTAT.sol#L205](https://github.com/CMTA/CMTAT/blob/ed23bfc69cfacc932945da751485c6472705c975/contracts/CMTAT.sol#L205),
 and the relevant Pull [Request](https://github.com/CMTA/CMTAT/pull/153).

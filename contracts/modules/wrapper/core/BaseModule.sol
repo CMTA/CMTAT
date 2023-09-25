@@ -13,8 +13,6 @@ abstract contract BaseModule is AuthorizationModule {
     Get the current version of the smart contract
     */
     string public constant VERSION = "2.3.1";
-    // to initialize inside the implementation constructor when deployed with a Proxy
-    bool internal deployedWithProxy;
     /* Events */
     event Term(string indexed newTermIndexed, string newTerm);
     event TokenId(string indexed newTokenIdIndexed, string newTokenId);

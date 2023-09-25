@@ -66,7 +66,9 @@ abstract contract EnforcementModuleInternal is
         address account,
         string calldata reason
     ) internal virtual returns (bool) {
-        if (_frozen[account]) return false;
+        if (_frozen[account]) {
+            return false;
+        }
         _frozen[account] = true;
         emit Freeze(_msgSender(), account, reason, reason);
         return true;
@@ -81,7 +83,9 @@ abstract contract EnforcementModuleInternal is
         address account,
         string calldata reason
     ) internal virtual returns (bool) {
-        if (!_frozen[account]) return false;
+        if (!_frozen[account]) {
+            return false;
+        }
         _frozen[account] = false;
         emit Unfreeze(_msgSender(), account, reason, reason);
 
