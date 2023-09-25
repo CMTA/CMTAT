@@ -31,7 +31,7 @@ order to support:
 This reference implementation allows the issuance and management of tokens representing equity securities.
 It can however also be used for other forms of financial instruments such as debt securities.
 
-You may modify the token code by adding, removing, or modifying features. However, the mandatory modules must remain in place for compliance with Swiss law.
+You may modify the token code by adding, removing, or modifying features. However, the core modules must remain in place for compliance with Swiss law.
 
 ### Deployment model 
 
@@ -70,7 +70,7 @@ The `kill()` function will therefore not behave as it used to once Cancun is dep
 
 The alternative function is the function `deactivateContract`, introduced in the version v2.3.1 inside the PauseModule, to deactivate the contract.
 This function set a boolean state variable `isDeactivated` to true and puts the contract in the pause state.
-The function `unpause`is updated to revert if the previous variable is set to true, thus the contract is in the pause state forever.
+The function `unpause`is updated to revert if the previous variable is set to true, thus the contract is in the pause state "forever".
 
 The consequences are the following:
 
@@ -87,7 +87,7 @@ Here the list of the differents modules with the links towards the documentation
 
 | Name             | Documentation                                                | Main File                                                    |
 | ---------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| ValidationModule | [validation.md](doc/modules/presentationcontrollers/validation.md) | [ValidationModule.sol](./contracts/modules/wrapper/optional/SnapshotModule.sol) |
+| ValidationModule | [validation.md](doc/modules/presentation/controllers/validation.md) | [ValidationModule.sol](./contracts/modules/wrapper/controllers/ValidationModule.sol) |
 
 ### Core
 
@@ -149,8 +149,9 @@ Access control is managed thanks to the module `AuthorizationModule`.
 
 The contracts have been audited by [ABDKConsulting](https://www.abdk.consulting/), a globally recognized firm specialized in smart contracts security.
 
-
 #### First audit - September 2021
+
+Fixed version : [1.0](https://github.com/CMTA/CMTAT/releases/tag/1.0)
 
 Fixes of security issues discovered by the initial audit were reviewed by ABDK and confirmed to be effective, as certified by the [report released](doc/audits/ABDK-CMTAT-audit-20210910.pdf) on September 10, 2021, covering [version c3afd7b](https://github.com/CMTA/CMTAT/tree/c3afd7b4a2ade160c9b581adb7a44896bfc7aaea) of the contracts.
 Version [1.0](https://github.com/CMTA/CMTAT/releases/tag/1.0) includes additional fixes of minor issues, compared to the version retested.
@@ -159,15 +160,22 @@ A summary of all fixes and decisions taken is available in the file [CMTAT-Audit
 
 #### Second audit - March 2023
 
+Fixed version : [v2.3.0](https://github.com/CMTA/CMTAT/releases/tag/v2.3.0)
+
 The second audit covered version [2.2](https://github.com/CMTA/CMTAT/releases/tag/2.2).
 
-Version 2.3 contains the different fixes and improvements related to this audit.
+Version v2.3.0 contains the different fixes and improvements related to this audit.
 
 The report is available in [ABDK_CMTA_CMTATRuleEngine_v_1_0.pdf](doc/audits/ABDK_CMTA_CMTATRuleEngine_v_1_0/ABDK_CMTA_CMTATRuleEngine_v_1_0.pdf). 
 
 ### Tools
 
-You will find the report produced by [Slither](https://github.com/crytic/slither) in [v2.3.1-slither-report.md](doc/audits/tools/v2.3.1-slither-report.md). 
+You will find the report produced by [Slither](https://github.com/crytic/slither) in 
+
+| Version | File                                                         |
+| ------- | ------------------------------------------------------------ |
+| v2.3.0  | [v2.3.0-slither-report.md](doc/audits/tools/v2.3.0-slither-report.md) |
+| v2.3.1  | [v2.3.1-slither-report.md](doc/audits/tools/v2.3.1-slither-report.md) |
 
 
 ### Test
