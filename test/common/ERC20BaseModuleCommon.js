@@ -386,7 +386,7 @@ function BaseModuleCommon (admin, address1, address2, address3, proxyTest) {
       )
     })
 
-    it('testCannotTransferBatchIfLengthMismatch_1', async function () {
+    it('testCannotTransferBatchIfLengthMismatchMissingAddresses', async function () {
       // Number of addresses is insufficient
       const TOKEN_ADDRESS_TOS_INVALID = [address1, address2]
       await expectRevertCustomError(
@@ -398,7 +398,7 @@ function BaseModuleCommon (admin, address1, address2, address3, proxyTest) {
       )
     })
 
-    it('testCannotTransferBatchIfLengthMismatch_2', async function () {
+    it('testCannotTransferBatchIfLengthMismatchTooManyAddresses', async function () {
       // There are too many addresses
       const TOKEN_ADDRESS_TOS_INVALID = [
         address1,
