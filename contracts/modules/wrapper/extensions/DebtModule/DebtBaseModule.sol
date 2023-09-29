@@ -82,24 +82,8 @@ abstract contract DebtBaseModule is
     @notice Set all attributes of debt
     The values of all attributes will be changed even if the new values are the same as the current ones
     */
-    function setDebt(DebtBase memory debt_) public onlyRole(DEBT_ROLE) {
-        // setGuarantor
-        debt = (
-            DebtBase(
-                debt_.interestRate,
-                debt_.parValue,
-                debt_.guarantor,
-                debt_.bondHolder,
-                debt_.maturityDate,
-                debt_.interestScheduleFormat,
-                debt_.interestPaymentDate,
-                debt_.dayCountConvention,
-                debt_.businessDayConvention,
-                debt_.publicHolidaysCalendar,
-                debt_.issuanceDate,
-                debt_.couponFrequency
-            )
-        );
+    function setDebt(DebtBase calldata debt_) public onlyRole(DEBT_ROLE) {
+        debt = debt_;
         emit InterestRate(debt_.interestRate);
         emit ParValue(debt_.parValue);
         emit Guarantor(debt_.guarantor, debt_.guarantor);

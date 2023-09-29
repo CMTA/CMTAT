@@ -75,7 +75,7 @@ abstract contract BaseModule is AuthorizationModule {
     @notice the tokenId will be changed even if the new value is the same as the current one
     */
     function setTokenId(
-        string memory tokenId_
+        string calldata tokenId_
     ) public onlyRole(DEFAULT_ADMIN_ROLE) {
         tokenId = tokenId_;
         emit TokenId(tokenId_, tokenId_);
@@ -85,7 +85,7 @@ abstract contract BaseModule is AuthorizationModule {
     @notice The terms will be changed even if the new value is the same as the current one
     */
     function setTerms(
-        string memory terms_
+        string calldata terms_
     ) public onlyRole(DEFAULT_ADMIN_ROLE) {
         terms = terms_;
         emit Term(terms_, terms_);
@@ -95,7 +95,7 @@ abstract contract BaseModule is AuthorizationModule {
     @notice The information will be changed even if the new value is the same as the current one
     */
     function setInformation(
-        string memory information_
+        string calldata information_
     ) public onlyRole(DEFAULT_ADMIN_ROLE) {
         information = information_;
         emit Information(information_, information_);
