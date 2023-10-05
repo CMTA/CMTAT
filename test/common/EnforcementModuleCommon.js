@@ -185,9 +185,11 @@ function EnforcementModuleCommon (owner, address1, address2, address3) {
       // Arrange - Assert
       (await this.cmtat.frozen(address1)).should.equal(false)
       // Arrange
-      this.logs = await this.cmtat.freeze(address1, reasonFreeze, {
+      await this.cmtat.freeze(address1, reasonFreeze, {
         from: owner
-      })
+      });
+      // Arrange - Assert
+      (await this.cmtat.frozen(address1)).should.equal(true)
       // Act
       this.logs = await this.cmtat.freeze(address1, reasonFreeze, {
         from: owner
