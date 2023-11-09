@@ -2,9 +2,9 @@
 
 pragma solidity ^0.8.0;
 
-import "../../../interfaces/IEIP1404/IEIP1404Wrapper.sol";
+import "../../../interfaces/draft-IERC1404/draft-IERC1404Wrapper.sol";
 
-interface IRule is IEIP1404Wrapper {
+interface IRule is IERC1404Wrapper {
     /**
      * @dev Returns true if the restriction code exists, and false otherwise.
      */
