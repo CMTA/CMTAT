@@ -19,13 +19,13 @@ abstract contract ValidationModule is
     ValidationModuleInternal,
     PauseModule,
     EnforcementModule,
-    IEIP1404Wrapper
+    IERC1404Wrapper
 {
     string constant TEXT_TRANSFER_OK = "No restriction";
     string constant TEXT_UNKNOWN_CODE = "Unknown code";
 
     function __ValidationModule_init(
-        IEIP1404Wrapper ruleEngine_,
+        IERC1404Wrapper ruleEngine_,
         address admin,
         uint48 initialDelayToAcceptAdminRole
     ) internal onlyInitializing {
@@ -62,7 +62,7 @@ abstract contract ValidationModule is
     @param ruleEngine_ the call will be reverted if the new value of ruleEngine is the same as the current one
     */
     function setRuleEngine(
-        IEIP1404Wrapper ruleEngine_
+        IERC1404Wrapper ruleEngine_
     ) external onlyRole(DEFAULT_ADMIN_ROLE) {
         if (ruleEngine == ruleEngine_)
             revert Errors.CMTAT_ValidationModule_SameValue();

@@ -20,7 +20,7 @@
 
 | File Name                                     | SHA-1 Hash                               |
 | --------------------------------------------- | ---------------------------------------- |
-| ./mocks/RuleEngine/interfaces/IRuleEngine.sol | 0b68f0da2552a2f420d1c120d08845cc1112caf8 |
+| ./mocks/RuleEngine/interfaces/IRuleEngine.sol | 80bd43fefabf7d1d9209b285775377a1d5fb26d6 |
 
 
 #### Contracts Description Table
@@ -30,7 +30,7 @@
 | :-------------: | :---------------: | :-------------: | :------------: | :-----------: |
 |        └        | **Function Name** | **Visibility**  | **Mutability** | **Modifiers** |
 |                 |                   |                 |                |               |
-| **IRuleEngine** |     Interface     | IEIP1404Wrapper |                |               |
+| **IRuleEngine** |     Interface     | IERC1404Wrapper |                |               |
 |        └        |     setRules      |   External ❗️    |       🛑        |      NO❗️      |
 |        └        |    rulesCount     |   External ❗️    |                |      NO❗️      |
 |        └        |       rule        |   External ❗️    |                |      NO❗️      |
@@ -43,20 +43,20 @@
 #### Files Description Table
 
 
-|  File Name  |  SHA-1 Hash  |
-|-------------|--------------|
-| ./mocks/RuleEngine/interfaces/IRule.sol | ba670eb11141a6ff6fb85f83acf2e0bad07e51fd |
+| File Name                               | SHA-1 Hash                               |
+| --------------------------------------- | ---------------------------------------- |
+| ./mocks/RuleEngine/interfaces/IRule.sol | 5ae93a4b64d88e12435538f315d1ca5724bc8718 |
 
 
 #### Contracts Description Table
 
 
-|  Contract  |         Type        |       Bases      |                  |                 |
-|:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
-|     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
-||||||
-| **IRule** | Interface | IEIP1404Wrapper |||
-| └ | canReturnTransferRestrictionCode | External ❗️ |   |NO❗️ |
+| Contract  |               Type               |      Bases      |                |               |
+| :-------: | :------------------------------: | :-------------: | :------------: | :-----------: |
+|     └     |        **Function Name**         | **Visibility**  | **Mutability** | **Modifiers** |
+|           |                                  |                 |                |               |
+| **IRule** |            Interface             | IERC1404Wrapper |                |               |
+|     └     | canReturnTransferRestrictionCode |   External ❗️    |                |      NO❗️      |
 
 
 
