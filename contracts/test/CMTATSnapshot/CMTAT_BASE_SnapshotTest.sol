@@ -23,8 +23,6 @@ import "../../modules/wrapper/extensions/DebtModule/DebtBaseModule.sol";
 import "../../modules/wrapper/extensions/DebtModule/CreditEventsModule.sol";
 import "../../modules/security/AuthorizationModule.sol";
 
-import "../../interfaces/IEIP1404/IEIP1404Wrapper.sol";
-
 import "../../libraries/Errors.sol";
 
 abstract contract CMTAT_BASE_SnapshotTest is
@@ -55,7 +53,7 @@ abstract contract CMTAT_BASE_SnapshotTest is
         uint8 decimalsIrrevocable,
         string memory tokenId_,
         string memory terms_,
-        IEIP1404Wrapper ruleEngine_,
+        IERC1404Wrapper ruleEngine_,
         string memory information_,
         uint256 flag_
     ) public initializer {
@@ -84,7 +82,7 @@ abstract contract CMTAT_BASE_SnapshotTest is
         uint8 decimalsIrrevocable,
         string memory tokenId_,
         string memory terms_,
-        IEIP1404Wrapper ruleEngine_,
+        IERC1404Wrapper ruleEngine_,
         string memory information_,
         uint256 flag_
     ) internal onlyInitializing {
