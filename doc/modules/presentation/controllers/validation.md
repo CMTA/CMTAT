@@ -62,7 +62,7 @@ This document defines the Validation Module for the CMTA Token specification. Th
 | :------------------: | :-------------------------------: | :----------------------------------------------------------: | :------------: | :--------------: |
 |          └           |         **Function Name**         |                        **Visibility**                        | **Mutability** |  **Modifiers**   |
 |                      |                                   |                                                              |                |                  |
-| **ValidationModule** |          Implementation           | ValidationModuleInternal, PauseModule, EnforcementModule, IEIP1404Wrapper |                |                  |
+| **ValidationModule** |          Implementation           | ValidationModuleInternal, PauseModule, EnforcementModule, IERC1404Wrapper |                |                  |
 |          └           |      __ValidationModule_init      |                          Internal 🔒                          |       🛑        | onlyInitializing |
 |          └           | __ValidationModule_init_unchained |                          Internal 🔒                          |       🛑        | onlyInitializing |
 |          └           |           setRuleEngine           |                          External ❗️                          |       🛑        |     onlyRole     |

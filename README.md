@@ -63,7 +63,7 @@ Please see the OpenGSN [documentation](https://docs.opengsn.org/contracts/#recei
 ### Kill switch
 
 CMTAT initially supported a `kill()` function relying on the SELFDESTRUCT opcode (which effectively destroyed the contract's storage and code).
-However, Ethereum's [Cancun update](https://github.com/ethereum/execution-specs/blob/master/network-upgrades/mainnet-upgrades/cancun.md) (rolled out in the second half of 2023)  will remove support for SELFDESTRUCT (see
+However, Ethereum's [Cancun upgrate](https://github.com/ethereum/execution-specs/blob/master/network-upgrades/mainnet-upgrades/cancun.md) (rolled out in Q1 of 2024)  will remove support for SELFDESTRUCT (see
 [EIP-6780](https://eips.ethereum.org/EIPS/eip-6780)).
 
 The `kill()` function will therefore not behave as it used to once Cancun is deployed.  
@@ -206,6 +206,12 @@ CMTA providers further documentation describing the CMTAT framework in a platfor
 
 -  [CMTA Token (CMTAT)](https://cmta.ch/standards/cmta-token-cmtat)
 - [Standard for the tokenization of shares of Swiss corporations using the distributed ledger technology](https://cmta.ch/standards/standard-for-the-tokenization-of-shares-of-swiss-corporations-using-the-distributed-ledger-technology)
+
+
+
+## Contract size
+
+![contract-size](./doc/general/contract-size.png)
 
 ## Intellectual property
 
