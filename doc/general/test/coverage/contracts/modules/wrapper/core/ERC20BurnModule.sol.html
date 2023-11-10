@@ -20,28 +20,28 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">50% </span>
+        <span class="strong">100% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>7/14</span>
+        <span class='fraction'>7/7</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">75% </span>
+        <span class="strong">90% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>9/12</span>
+        <span class='fraction'>9/10</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">75% </span>
+        <span class="strong">100% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>3/4</span>
+        <span class='fraction'>3/3</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">61.11% </span>
+        <span class="strong">100% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>11/18</span>
+        <span class='fraction'>11/11</span>
       </div>
     </div>
   </div>
-  <div class='status-line medium'></div>
+  <div class='status-line high'></div>
 <pre><table class="coverage">
 <tr><td class="line-count quiet">1
 2
@@ -118,29 +118,7 @@
 73
 74
 75
-76
-77
-78
-79
-80
-81
-82
-83
-84
-85
-86
-87
-88
-89
-90
-91
-92
-93
-94
-95
-96
-97
-98</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+76</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -152,28 +130,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -251,28 +207,6 @@ abstract contract ERC20BurnModule is ERC20Upgradeable, AuthorizationModule {
      */
     event Burn(address indexed owner, uint256 value, string reason);
 &nbsp;
-<span class="fstat-no" title="function not covered" >    function __ERC20BurnModule_init(</span>
-        string memory name_,
-        string memory symbol_,
-        address admin,
-        uint48 initialDelayToAcceptAdminRole
-    ) internal onlyInitializing {
-        /* OpenZeppelin */
-<span class="cstat-no" title="statement not covered" >        __Context_init_unchained()</span>;
-<span class="cstat-no" title="statement not covered" >        __ERC20_init_unchained(name_, symbol_)</span>;
-        // AccessControlUpgradeable inherits from ERC165Upgradeable
-<span class="cstat-no" title="statement not covered" >        __ERC165_init_unchained()</span>;
-        // AuthorizationModule inherits from AccessControlUpgradeable
-<span class="cstat-no" title="statement not covered" >        __AccessControl_init_unchained()</span>;
-<span class="cstat-no" title="statement not covered" >        __AccessControlDefaultAdminRules_init_unchained( initialDelayToAcceptAdminRole, admin)</span>;
-        /* CMTAT modules */
-        // Security
-<span class="cstat-no" title="statement not covered" >        __AuthorizationModule_init_unchained()</span>;
-&nbsp;
-        // own function
-<span class="cstat-no" title="statement not covered" >        __ERC20BurnModule_init_unchained()</span>;
-    }
-&nbsp;
     function __ERC20BurnModule_init_unchained() internal <span class="missing-if-branch" title="else path not taken" >E</span>onlyInitializing {
         // no variable to initialize
     }
@@ -289,7 +223,7 @@ abstract contract ERC20BurnModule is ERC20Upgradeable, AuthorizationModule {
     function forceBurn(
         address account,
         uint256 value,
-        string memory reason
+        string calldata reason
     ) public onlyRole(BURNER_ROLE) {
         _burn(account, value);
         emit Burn(account, value, reason);
@@ -312,7 +246,7 @@ abstract contract ERC20BurnModule is ERC20Upgradeable, AuthorizationModule {
     function forceBurnBatch(
         address[] calldata accounts,
         uint256[] calldata values,
-        string memory reason
+        string calldata reason
     ) public onlyRole(BURNER_ROLE) {
         if (accounts.length == 0) {
             revert Errors.CMTAT_BurnModule_EmptyAccounts();
@@ -340,7 +274,7 @@ abstract contract ERC20BurnModule is ERC20Upgradeable, AuthorizationModule {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu Oct 05 2023 13:26:38 GMT+0200 (Central European Summer Time)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Fri Nov 10 2023 14:03:15 GMT+0100 (Central European Standard Time)
 </div>
 </div>
 <script src="../../../../prettify.js"></script>

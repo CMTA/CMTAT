@@ -20,24 +20,24 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">81.25% </span>
+        <span class="strong">100% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>26/32</span>
+        <span class='fraction'>26/26</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">91.18% </span>
+        <span class="strong">96.88% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>31/34</span>
+        <span class='fraction'>31/32</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">93.33% </span>
+        <span class="strong">100% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>14/15</span>
+        <span class='fraction'>14/14</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">87.23% </span>
+        <span class="strong">100% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>41/47</span>
+        <span class='fraction'>41/41</span>
       </div>
     </div>
   </div>
@@ -274,42 +274,7 @@
 229
 230
 231
-232
-233
-234
-235
-236
-237
-238
-239
-240
-241
-242
-243
-244
-245
-246
-247
-248
-249
-250
-251
-252
-253
-254
-255
-256
-257
-258
-259
-260
-261
-262
-263
-264
-265
-266
-267</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+232</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -363,26 +328,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -396,21 +341,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2×</span>
 <span class="cline-any cline-yes">2×</span>
 <span class="cline-any cline-yes">2×</span>
@@ -632,25 +562,6 @@ abstract contract DebtBaseModule is
         string newCouponFrequency
     );
 &nbsp;
-<span class="fstat-no" title="function not covered" >    function __DebtBaseModule_init(</span>
-        address admin,
-        uint48 initialDelayToAcceptAdminRole) internal onlyInitializing {
-        /* OpenZeppelin */
-<span class="cstat-no" title="statement not covered" >        __Context_init_unchained()</span>;
-&nbsp;
-        // AccessControlUpgradeable inherits from ERC165Upgradeable
-<span class="cstat-no" title="statement not covered" >        __ERC165_init_unchained()</span>;
-        // AuthorizationModule inherits from AccessControlUpgradeable
-<span class="cstat-no" title="statement not covered" >        __AccessControl_init_unchained()</span>;
-<span class="cstat-no" title="statement not covered" >        __AccessControlDefaultAdminRules_init_unchained(initialDelayToAcceptAdminRole, admin)</span>;
-        /* CMTAT modules */
-        // Security
-<span class="cstat-no" title="statement not covered" >        __AuthorizationModule_init_unchained()</span>;
-&nbsp;
-        // own function
-<span class="cstat-no" title="statement not covered" >        __DebtBaseModule_init_unchained()</span>;
-    }
-&nbsp;
     function __DebtBaseModule_init_unchained() internal <span class="missing-if-branch" title="else path not taken" >E</span>onlyInitializing {
         // no variable to initialize
     }
@@ -659,24 +570,8 @@ abstract contract DebtBaseModule is
     @notice Set all attributes of debt
     The values of all attributes will be changed even if the new values are the same as the current ones
     */
-    function setDebt(DebtBase memory debt_) public onlyRole(DEBT_ROLE) {
-        // setGuarantor
-        debt = (
-            DebtBase(
-                debt_.interestRate,
-                debt_.parValue,
-                debt_.guarantor,
-                debt_.bondHolder,
-                debt_.maturityDate,
-                debt_.interestScheduleFormat,
-                debt_.interestPaymentDate,
-                debt_.dayCountConvention,
-                debt_.businessDayConvention,
-                debt_.publicHolidaysCalendar,
-                debt_.issuanceDate,
-                debt_.couponFrequency
-            )
-        );
+    function setDebt(DebtBase calldata debt_) public onlyRole(DEBT_ROLE) {
+        debt = debt_;
         emit InterestRate(debt_.interestRate);
         emit ParValue(debt_.parValue);
         emit Guarantor(debt_.guarantor, debt_.guarantor);
@@ -847,7 +742,7 @@ abstract contract DebtBaseModule is
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu Oct 05 2023 13:26:38 GMT+0200 (Central European Summer Time)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Fri Nov 10 2023 14:03:15 GMT+0100 (Central European Standard Time)
 </div>
 </div>
 <script src="../../../../../prettify.js"></script>
