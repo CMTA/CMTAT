@@ -50,7 +50,7 @@ abstract contract ERC20BurnModule is ERC20Upgradeable, AuthorizationModule {
     function forceBurn(
         address account,
         uint256 value,
-        string memory reason
+        string calldata reason
     ) public onlyRole(BURNER_ROLE) {
         _burn(account, value);
         emit Burn(account, value, reason);
@@ -73,7 +73,7 @@ abstract contract ERC20BurnModule is ERC20Upgradeable, AuthorizationModule {
     function forceBurnBatch(
         address[] calldata accounts,
         uint256[] calldata values,
-        string memory reason
+        string calldata reason
     ) public onlyRole(BURNER_ROLE) {
         if (accounts.length == 0) {
             revert Errors.CMTAT_BurnModule_EmptyAccounts();

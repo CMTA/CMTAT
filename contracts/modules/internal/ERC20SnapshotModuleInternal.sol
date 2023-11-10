@@ -67,8 +67,8 @@ abstract contract ERC20SnapshotModuleInternal is ERC20Upgradeable {
      * @dev Initializes the contract
      */
     function __ERC20Snapshot_init(
-        string calldata name_,
-        string calldata symbol_
+        string memory name_,
+        string memory symbol_
     ) internal onlyInitializing {
         __Context_init_unchained();
         __ERC20_init(name_, symbol_);
