@@ -55,25 +55,6 @@ abstract contract DebtBaseModule is
         string newCouponFrequency
     );
 
-    function __DebtBaseModule_init(
-        address admin,
-        uint48 initialDelayToAcceptAdminRole) internal onlyInitializing {
-        /* OpenZeppelin */
-        __Context_init_unchained();
-
-        // AccessControlUpgradeable inherits from ERC165Upgradeable
-        __ERC165_init_unchained();
-        // AuthorizationModule inherits from AccessControlUpgradeable
-        __AccessControl_init_unchained();
-        __AccessControlDefaultAdminRules_init_unchained(initialDelayToAcceptAdminRole, admin);
-        /* CMTAT modules */
-        // Security
-        __AuthorizationModule_init_unchained();
-
-        // own function
-        __DebtBaseModule_init_unchained();
-    }
-
     function __DebtBaseModule_init_unchained() internal onlyInitializing {
         // no variable to initialize
     }
@@ -82,24 +63,8 @@ abstract contract DebtBaseModule is
     @notice Set all attributes of debt
     The values of all attributes will be changed even if the new values are the same as the current ones
     */
-    function setDebt(DebtBase memory debt_) public onlyRole(DEBT_ROLE) {
-        // setGuarantor
-        debt = (
-            DebtBase(
-                debt_.interestRate,
-                debt_.parValue,
-                debt_.guarantor,
-                debt_.bondHolder,
-                debt_.maturityDate,
-                debt_.interestScheduleFormat,
-                debt_.interestPaymentDate,
-                debt_.dayCountConvention,
-                debt_.businessDayConvention,
-                debt_.publicHolidaysCalendar,
-                debt_.issuanceDate,
-                debt_.couponFrequency
-            )
-        );
+    function setDebt(DebtBase calldata debt_) public onlyRole(DEBT_ROLE) {
+        debt = debt_;
         emit InterestRate(debt_.interestRate);
         emit ParValue(debt_.parValue);
         emit Guarantor(debt_.guarantor, debt_.guarantor);

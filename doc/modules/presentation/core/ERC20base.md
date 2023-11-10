@@ -37,17 +37,16 @@ The ERC20Base Module sets forth the ERC20 basic functionalities a token must hav
 ### Contracts Description Table
 
 
-|      Contract       |             Type             |      Bases       |                |                  |
-| :-----------------: | :--------------------------: | :--------------: | :------------: | :--------------: |
-|          └          |      **Function Name**       |  **Visibility**  | **Mutability** |  **Modifiers**   |
-|                     |                              |                  |                |                  |
-| **ERC20BaseModule** |        Implementation        | ERC20Upgradeable |                |                  |
-|          └          |      __ERC20Module_init      |    Internal 🔒    |       🛑        | onlyInitializing |
-|          └          | __ERC20Module_init_unchained |    Internal 🔒    |       🛑        | onlyInitializing |
-|          └          |           decimals           |     Public ❗️     |                |       NO❗️        |
-|          └          |        transferBatch         |     Public ❗️     |       🛑        |       NO❗️        |
-|          └          |         transferFrom         |     Public ❗️     |       🛑        |       NO❗️        |
-|          └          |           approve            |     Public ❗️     |       🛑        |       NO❗️        |
+|      Contract       |               Type               |      Bases       |                |                  |
+| :-----------------: | :------------------------------: | :--------------: | :------------: | :--------------: |
+|          └          |        **Function Name**         |  **Visibility**  | **Mutability** |  **Modifiers**   |
+|                     |                                  |                  |                |                  |
+| **ERC20BaseModule** |          Implementation          | ERC20Upgradeable |                |                  |
+|          └          | __ERC20BaseModule_init_unchained |    Internal 🔒    |       🛑        | onlyInitializing |
+|          └          |             decimals             |     Public ❗️     |                |       NO❗️        |
+|          └          |          transferBatch           |     Public ❗️     |       🛑        |       NO❗️        |
+|          └          |           transferFrom           |     Public ❗️     |       🛑        |       NO❗️        |
+|          └          |             approve              |     Public ❗️     |       🛑        |       NO❗️        |
 
 ### Legend
 

@@ -40,7 +40,6 @@ This document defines the Pause Module for the CMTA Token specification.
 |        └        |      **Function Name**       |              **Visibility**              | **Mutability** |  **Modifiers**   |
 |                 |                              |                                          |                |                  |
 | **PauseModule** |        Implementation        | PausableUpgradeable, AuthorizationModule |                |                  |
-|        └        |      __PauseModule_init      |                Internal 🔒                |       🛑        | onlyInitializing |
 |        └        | __PauseModule_init_unchained |                Internal 🔒                |       🛑        | onlyInitializing |
 |        └        |            pause             |                 Public ❗️                 |       🛑        |     onlyRole     |
 |        └        |           unpause            |                 Public ❗️                 |       🛑        |     onlyRole     |

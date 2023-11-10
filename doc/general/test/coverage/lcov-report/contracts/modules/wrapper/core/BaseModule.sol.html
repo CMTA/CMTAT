@@ -20,28 +20,28 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">45.45% </span>
+        <span class="strong">100% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>5/11</span>
+        <span class='fraction'>5/5</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">78.57% </span>
+        <span class="strong">91.67% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>11/14</span>
+        <span class='fraction'>11/12</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">83.33% </span>
+        <span class="strong">100% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>5/6</span>
+        <span class='fraction'>5/5</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">70% </span>
+        <span class="strong">100% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>14/20</span>
+        <span class='fraction'>14/14</span>
       </div>
     </div>
   </div>
-  <div class='status-line low'></div>
+  <div class='status-line high'></div>
 <pre><table class="coverage">
 <tr><td class="line-count quiet">1
 2
@@ -138,28 +138,7 @@
 93
 94
 95
-96
-97
-98
-99
-100
-101
-102
-103
-104
-105
-106
-107
-108
-109
-110
-111
-112
-113
-114
-115
-116
-117</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+96</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -204,31 +183,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">365×</span>
-<span class="cline-any cline-yes">365×</span>
-<span class="cline-any cline-yes">365×</span>
-<span class="cline-any cline-yes">365×</span>
+<span class="cline-any cline-yes">364×</span>
+<span class="cline-any cline-yes">364×</span>
+<span class="cline-any cline-yes">364×</span>
+<span class="cline-any cline-yes">364×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -306,6 +264,7 @@ abstract contract BaseModule is AuthorizationModule {
     uint256 public flag;
 &nbsp;
 &nbsp;
+&nbsp;
     /* Initializers */
     /**
      * @dev Sets the values for {name} and {symbol}.
@@ -313,28 +272,6 @@ abstract contract BaseModule is AuthorizationModule {
      * All two of these values are immutable: they can only be set once during
      * construction.
      */
-<span class="fstat-no" title="function not covered" >    function __Base_init(</span>
-        string memory tokenId_,
-        string memory terms_,
-        string memory information_,
-        uint256 flag_,
-        address admin,
-        uint48 initialDelayToAcceptAdminRole
-    ) internal onlyInitializing {
-        /* OpenZeppelin */
-<span class="cstat-no" title="statement not covered" >        __Context_init_unchained()</span>;
-        // AccessControlUpgradeable inherits from ERC165Upgradeable
-<span class="cstat-no" title="statement not covered" >        __ERC165_init_unchained()</span>;
-        // AuthorizationModule inherits from AccessControlUpgradeable
-<span class="cstat-no" title="statement not covered" >        __AccessControl_init_unchained()</span>;
-<span class="cstat-no" title="statement not covered" >        __AccessControlDefaultAdminRules_init_unchained(initialDelayToAcceptAdminRole, admin)</span>;
-        /* CMTAT modules */
-        // Security
-<span class="cstat-no" title="statement not covered" >        __AuthorizationModule_init_unchained()</span>;
-        // own function
-<span class="cstat-no" title="statement not covered" >        __Base_init_unchained(tokenId_, terms_, information_, flag_)</span>;
-    }
-&nbsp;
     function __Base_init_unchained(
         string memory tokenId_,
         string memory terms_,
@@ -352,7 +289,7 @@ abstract contract BaseModule is AuthorizationModule {
     @notice the tokenId will be changed even if the new value is the same as the current one
     */
     function setTokenId(
-        string memory tokenId_
+        string calldata tokenId_
     ) public onlyRole(DEFAULT_ADMIN_ROLE) {
         tokenId = tokenId_;
         emit TokenId(tokenId_, tokenId_);
@@ -362,7 +299,7 @@ abstract contract BaseModule is AuthorizationModule {
     @notice The terms will be changed even if the new value is the same as the current one
     */
     function setTerms(
-        string memory terms_
+        string calldata terms_
     ) public onlyRole(DEFAULT_ADMIN_ROLE) {
         terms = terms_;
         emit Term(terms_, terms_);
@@ -372,7 +309,7 @@ abstract contract BaseModule is AuthorizationModule {
     @notice The information will be changed even if the new value is the same as the current one
     */
     function setInformation(
-        string memory information_
+        string calldata information_
     ) public onlyRole(DEFAULT_ADMIN_ROLE) {
         information = information_;
         emit Information(information_, information_);
@@ -397,7 +334,7 @@ abstract contract BaseModule is AuthorizationModule {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Sep 20 2023 15:01:20 GMT+0200 (Central European Summer Time)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Fri Nov 10 2023 14:03:15 GMT+0100 (Central European Standard Time)
 </div>
 </div>
 <script src="../../../../prettify.js"></script>

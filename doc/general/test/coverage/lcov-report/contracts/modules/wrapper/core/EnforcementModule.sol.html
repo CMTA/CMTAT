@@ -20,28 +20,28 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">22.22% </span>
+        <span class="strong">100% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>2/9</span>
+        <span class='fraction'>2/2</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">62.5% </span>
+        <span class="strong">83.33% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>5/8</span>
+        <span class='fraction'>5/6</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">75% </span>
+        <span class="strong">100% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>3/4</span>
+        <span class='fraction'>3/3</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">22.22% </span>
+        <span class="strong">100% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>2/9</span>
+        <span class='fraction'>2/2</span>
       </div>
     </div>
   </div>
-  <div class='status-line low'></div>
+  <div class='status-line high'></div>
 <pre><table class="coverage">
 <tr><td class="line-count quiet">1
 2
@@ -97,28 +97,7 @@
 52
 53
 54
-55
-56
-57
-58
-59
-60
-61
-62
-63
-64
-65
-66
-67
-68
-69
-70
-71
-72
-73
-74
-75
-76</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+55</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -144,21 +123,16 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">22×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -172,23 +146,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">16×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">8×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -197,8 +155,6 @@
 &nbsp;
 pragma solidity ^0.8.20;
 &nbsp;
-import "../../../../openzeppelin-contracts-upgradeable/contracts/security/PausableUpgradeable.sol";
-import "../../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
 import "../../security/AuthorizationModule.sol";
 import "../../internal/EnforcementModuleInternal.sol";
 &nbsp;
@@ -216,25 +172,6 @@ abstract contract EnforcementModule is
 &nbsp;
     string internal constant TEXT_TRANSFER_REJECTED_TO_FROZEN =
         "The address TO is frozen";
-&nbsp;
-<span class="fstat-no" title="function not covered" >    function __EnforcementModule_init(address admin, uint48 initialDelayToAcceptAdminRole) internal onlyInitializing {</span>
-        /* OpenZeppelin */
-<span class="cstat-no" title="statement not covered" >        __Context_init_unchained()</span>;
-        // AccessControlUpgradeable inherits from ERC165Upgradeable
-<span class="cstat-no" title="statement not covered" >        __ERC165_init_unchained()</span>;
-        // AuthorizationModule inherits from AccessControlUpgradeable
-<span class="cstat-no" title="statement not covered" >        __AccessControl_init_unchained()</span>;
-<span class="cstat-no" title="statement not covered" >        __AccessControlDefaultAdminRules_init_unchained(initialDelayToAcceptAdminRole, admin)</span>;
-        /* CMTAT modules */
-        // Internal
-<span class="cstat-no" title="statement not covered" >        __Enforcement_init_unchained()</span>;
-&nbsp;
-        // Security
-<span class="cstat-no" title="statement not covered" >        __AuthorizationModule_init_unchained()</span>;
-&nbsp;
-        // own function
-<span class="cstat-no" title="statement not covered" >        __EnforcementModule_init_unchained()</span>;
-    }
 &nbsp;
     function __EnforcementModule_init_unchained() internal <span class="missing-if-branch" title="else path not taken" >E</span>onlyInitializing {
         // no variable to initialize
@@ -274,7 +211,7 @@ abstract contract EnforcementModule is
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Sep 20 2023 15:01:20 GMT+0200 (Central European Summer Time)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Fri Nov 10 2023 14:03:15 GMT+0100 (Central European Standard Time)
 </div>
 </div>
 <script src="../../../../prettify.js"></script>

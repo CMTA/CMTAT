@@ -29,6 +29,7 @@ abstract contract BaseModule is AuthorizationModule {
     uint256 public flag;
 
 
+
     /* Initializers */
     /**
      * @dev Sets the values for {name} and {symbol}.
@@ -36,28 +37,6 @@ abstract contract BaseModule is AuthorizationModule {
      * All two of these values are immutable: they can only be set once during
      * construction.
      */
-    function __Base_init(
-        string memory tokenId_,
-        string memory terms_,
-        string memory information_,
-        uint256 flag_,
-        address admin,
-        uint48 initialDelayToAcceptAdminRole
-    ) internal onlyInitializing {
-        /* OpenZeppelin */
-        __Context_init_unchained();
-        // AccessControlUpgradeable inherits from ERC165Upgradeable
-        __ERC165_init_unchained();
-        // AuthorizationModule inherits from AccessControlUpgradeable
-        __AccessControl_init_unchained();
-        __AccessControlDefaultAdminRules_init_unchained(initialDelayToAcceptAdminRole, admin);
-        /* CMTAT modules */
-        // Security
-        __AuthorizationModule_init_unchained();
-        // own function
-        __Base_init_unchained(tokenId_, terms_, information_, flag_);
-    }
-
     function __Base_init_unchained(
         string memory tokenId_,
         string memory terms_,
@@ -75,7 +54,7 @@ abstract contract BaseModule is AuthorizationModule {
     @notice the tokenId will be changed even if the new value is the same as the current one
     */
     function setTokenId(
-        string memory tokenId_
+        string calldata tokenId_
     ) public onlyRole(DEFAULT_ADMIN_ROLE) {
         tokenId = tokenId_;
         emit TokenId(tokenId_, tokenId_);
@@ -85,7 +64,7 @@ abstract contract BaseModule is AuthorizationModule {
     @notice The terms will be changed even if the new value is the same as the current one
     */
     function setTerms(
-        string memory terms_
+        string calldata terms_
     ) public onlyRole(DEFAULT_ADMIN_ROLE) {
         terms = terms_;
         emit Term(terms_, terms_);
@@ -95,7 +74,7 @@ abstract contract BaseModule is AuthorizationModule {
     @notice The information will be changed even if the new value is the same as the current one
     */
     function setInformation(
-        string memory information_
+        string calldata information_
     ) public onlyRole(DEFAULT_ADMIN_ROLE) {
         information = information_;
         emit Information(information_, information_);

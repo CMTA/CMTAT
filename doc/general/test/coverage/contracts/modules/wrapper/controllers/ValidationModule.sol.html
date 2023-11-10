@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <title>Code coverage report for contracts/modules/wrapper/controller/ValidationModule.sol</title>
+    <title>Code coverage report for contracts/modules/wrapper/controllers/ValidationModule.sol</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../../../prettify.css" />
     <link rel="stylesheet" href="../../../../base.css" />
@@ -16,32 +16,32 @@
 <div class='wrapper'>
   <div class='pad1'>
     <h1>
-      <a href="../../../../index.html">all files</a> / <a href="index.html">contracts/modules/wrapper/controller/</a> ValidationModule.sol
+      <a href="../../../../index.html">all files</a> / <a href="index.html">contracts/modules/wrapper/controllers/</a> ValidationModule.sol
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">72.97% </span>
+        <span class="strong">100% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>27/37</span>
+        <span class='fraction'>27/27</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">91.18% </span>
+        <span class="strong">96.88% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>31/34</span>
+        <span class='fraction'>31/32</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">83.33% </span>
+        <span class="strong">100% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>5/6</span>
+        <span class='fraction'>5/5</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">68.75% </span>
+        <span class="strong">100% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>22/32</span>
+        <span class='fraction'>22/22</span>
       </div>
     </div>
   </div>
-  <div class='status-line medium'></div>
+  <div class='status-line high'></div>
 <pre><table class="coverage">
 <tr><td class="line-count quiet">1
 2
@@ -159,36 +159,7 @@
 114
 115
 116
-117
-118
-119
-120
-121
-122
-123
-124
-125
-126
-127
-128
-129
-130
-131
-132
-133
-134
-135
-136
-137
-138
-139
-140
-141
-142
-143
-144
-145
-146</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+117</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -212,35 +183,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -322,13 +264,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">421×</span>
+<span class="cline-any cline-yes">425×</span>
 <span class="cline-any cline-yes">28×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">393×</span>
+<span class="cline-any cline-yes">397×</span>
 <span class="cline-any cline-yes">51×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">342×</span>
+<span class="cline-any cline-yes">346×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -354,39 +296,10 @@ abstract contract ValidationModule is
     ValidationModuleInternal,
     PauseModule,
     EnforcementModule,
-    IEIP1404Wrapper
+    IERC1404Wrapper
 {
     string constant TEXT_TRANSFER_OK = "No restriction";
     string constant TEXT_UNKNOWN_CODE = "Unknown code";
-&nbsp;
-<span class="fstat-no" title="function not covered" >    function __ValidationModule_init(</span>
-        IEIP1404Wrapper ruleEngine_,
-        address admin,
-        uint48 initialDelayToAcceptAdminRole
-    ) internal onlyInitializing {
-        /* OpenZeppelin */
-<span class="cstat-no" title="statement not covered" >        __Context_init_unchained()</span>;
-        // AccessControlUpgradeable inherits from ERC165Upgradeable
-<span class="cstat-no" title="statement not covered" >        __ERC165_init_unchained()</span>;
-<span class="cstat-no" title="statement not covered" >        __AccessControl_init_unchained()</span>;
-<span class="cstat-no" title="statement not covered" >        __AccessControlDefaultAdminRules_init_unchained(initialDelayToAcceptAdminRole, admin)</span>;
-&nbsp;
-<span class="cstat-no" title="statement not covered" >        __Pausable_init_unchained()</span>;
-&nbsp;
-        /* CMTAT modules */
-        // Internal
-<span class="cstat-no" title="statement not covered" >        __Validation_init_unchained(ruleEngine_)</span>;
-&nbsp;
-        // Security
-<span class="cstat-no" title="statement not covered" >        __AuthorizationModule_init_unchained()</span>;
-  
-        // Wrapper
-<span class="cstat-no" title="statement not covered" >        __PauseModule_init_unchained()</span>;
-<span class="cstat-no" title="statement not covered" >        __EnforcementModule_init_unchained()</span>;
-&nbsp;
-        // own function
-<span class="cstat-no" title="statement not covered" >        __ValidationModule_init_unchained()</span>;
-    }
 &nbsp;
     function __ValidationModule_init_unchained() internal <span class="missing-if-branch" title="else path not taken" >E</span>onlyInitializing {
         // no variable to initialize
@@ -397,7 +310,7 @@ abstract contract ValidationModule is
     @param ruleEngine_ the call will be reverted if the new value of ruleEngine is the same as the current one
     */
     function setRuleEngine(
-        IEIP1404Wrapper ruleEngine_
+        IERC1404Wrapper ruleEngine_
     ) external onlyRole(DEFAULT_ADMIN_ROLE) {
         if (ruleEngine == ruleEngine_)
             revert Errors.CMTAT_ValidationModule_SameValue();
@@ -484,7 +397,7 @@ abstract contract ValidationModule is
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Sep 20 2023 15:01:20 GMT+0200 (Central European Summer Time)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Fri Nov 10 2023 14:03:15 GMT+0100 (Central European Standard Time)
 </div>
 </div>
 <script src="../../../../prettify.js"></script>

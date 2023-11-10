@@ -42,7 +42,6 @@ This document defines the ERC20Burn Module for the CMTA Token specification.
 |          └          |        **Function Name**         |            **Visibility**             | **Mutability** |  **Modifiers**   |
 |                     |                                  |                                       |                |                  |
 | **ERC20BurnModule** |          Implementation          | ERC20Upgradeable, AuthorizationModule |                |                  |
-|          └          |      __ERC20BurnModule_init      |              Internal 🔒               |       🛑        | onlyInitializing |
 |          └          | __ERC20BurnModule_init_unchained |              Internal 🔒               |       🛑        | onlyInitializing |
 |          └          |            forceBurn             |               Public ❗️                |       🛑        |     onlyRole     |
 |          └          |          forceBurnBatch          |               Public ❗️                |       🛑        |     onlyRole     |

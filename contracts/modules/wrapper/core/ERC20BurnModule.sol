@@ -12,28 +12,6 @@ abstract contract ERC20BurnModule is ERC20Upgradeable, AuthorizationModule {
      */
     event Burn(address indexed owner, uint256 value, string reason);
 
-    function __ERC20BurnModule_init(
-        string memory name_,
-        string memory symbol_,
-        address admin,
-        uint48 initialDelayToAcceptAdminRole
-    ) internal onlyInitializing {
-        /* OpenZeppelin */
-        __Context_init_unchained();
-        __ERC20_init_unchained(name_, symbol_);
-        // AccessControlUpgradeable inherits from ERC165Upgradeable
-        __ERC165_init_unchained();
-        // AuthorizationModule inherits from AccessControlUpgradeable
-        __AccessControl_init_unchained();
-        __AccessControlDefaultAdminRules_init_unchained( initialDelayToAcceptAdminRole, admin);
-        /* CMTAT modules */
-        // Security
-        __AuthorizationModule_init_unchained();
-
-        // own function
-        __ERC20BurnModule_init_unchained();
-    }
-
     function __ERC20BurnModule_init_unchained() internal onlyInitializing {
         // no variable to initialize
     }
@@ -50,7 +28,7 @@ abstract contract ERC20BurnModule is ERC20Upgradeable, AuthorizationModule {
     function forceBurn(
         address account,
         uint256 value,
-        string memory reason
+        string calldata reason
     ) public onlyRole(BURNER_ROLE) {
         _burn(account, value);
         emit Burn(account, value, reason);
@@ -73,7 +51,7 @@ abstract contract ERC20BurnModule is ERC20Upgradeable, AuthorizationModule {
     function forceBurnBatch(
         address[] calldata accounts,
         uint256[] calldata values,
-        string memory reason
+        string calldata reason
     ) public onlyRole(BURNER_ROLE) {
         if (accounts.length == 0) {
             revert Errors.CMTAT_BurnModule_EmptyAccounts();

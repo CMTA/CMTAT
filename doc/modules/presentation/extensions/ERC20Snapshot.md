@@ -73,7 +73,6 @@ Warning:
 |            └            |          **Function Name**           |                  **Visibility**                  | **Mutability** |  **Modifiers**   |
 |                         |                                      |                                                  |                |                  |
 | **ERC20SnapshotModule** |            Implementation            | ERC20SnapshotModuleInternal, AuthorizationModule |                |                  |
-|            └            |      __ERC20SnasphotModule_init      |                    Internal 🔒                    |       🛑        | onlyInitializing |
 |            └            | __ERC20SnasphotModule_init_unchained |                    Internal 🔒                    |       🛑        | onlyInitializing |
 |            └            |           scheduleSnapshot           |                     Public ❗️                     |       🛑        |     onlyRole     |
 |            └            |     scheduleSnapshotNotOptimized     |                     Public ❗️                     |       🛑        |     onlyRole     |
