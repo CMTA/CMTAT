@@ -13,7 +13,7 @@ are the latest ones that we tested:
 - Solidity 0.8.17 (via solc-js)
 - Node 16.17.0
 - Web3.js 1.9.0
-- OpenZeppelin Contracts Upgradeable (submodule) [v5.0.0-rc.0](https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/releases/tag/v5.0.0-rc.0)
+- OpenZeppelin Contracts Upgradeable (submodule) [v5.0.0](https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/releases/tag/v5.0.0)
 
 ## Installation
 
