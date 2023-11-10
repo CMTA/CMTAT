@@ -122,7 +122,7 @@ abstract contract CMTAT_BASE is
         __ERC20MintModule_init_unchained();
         // EnforcementModule_init_unchained is called before ValidationModule_init_unchained due to inheritance
         __EnforcementModule_init_unchained();
-        __ERC20Module_init_unchained(decimalsIrrevocable);
+        __ERC20BaseModule_init_unchained(decimalsIrrevocable);
         // PauseModule_init_unchained is called before ValidationModule_init_unchained due to inheritance
         __PauseModule_init_unchained();
         __ValidationModule_init_unchained();

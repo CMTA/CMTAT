@@ -50,9 +50,9 @@ This document defines the Validation Module for the CMTA Token specification. Th
 #### Files Description Table
 
 
-| File Name                                         | SHA-1 Hash                               |
-| ------------------------------------------------- | ---------------------------------------- |
-| ./modules/wrapper/controller/ValidationModule.sol | 109054150a46ef0f010693889f9c1c44e151719b |
+| File Name                                          | SHA-1 Hash                               |
+| -------------------------------------------------- | ---------------------------------------- |
+| ./modules/wrapper/controllers/ValidationModule.sol | 109054150a46ef0f010693889f9c1c44e151719b |
 
 
 #### Contracts Description Table

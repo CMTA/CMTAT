@@ -63,7 +63,6 @@ This document defines Enforcement Module for the CMTA Token specification.
 |           └           |         **Function Name**          |                 **Visibility**                 | **Mutability** |  **Modifiers**   |
 |                       |                                    |                                                |                |                  |
 | **EnforcementModule** |           Implementation           | EnforcementModuleInternal, AuthorizationModule |                |                  |
-|           └           |      __EnforcementModule_init      |                   Internal 🔒                   |       🛑        | onlyInitializing |
 |           └           | __EnforcementModule_init_unchained |                   Internal 🔒                   |       🛑        | onlyInitializing |
 |           └           |               freeze               |                    Public ❗️                    |       🛑        |     onlyRole     |
 |           └           |              unfreeze              |                    Public ❗️                    |       🛑        |     onlyRole     |

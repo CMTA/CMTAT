@@ -25,7 +25,7 @@ abstract contract ERC20BaseModule is ERC20Upgradeable {
      * this value is immutable: it can only be set once during
      * construction/initialization.
      */
-    function __ERC20Module_init_unchained(
+    function __ERC20BaseModule_init_unchained(
         uint8 decimals_
     ) internal onlyInitializing {
         _decimals = decimals_;

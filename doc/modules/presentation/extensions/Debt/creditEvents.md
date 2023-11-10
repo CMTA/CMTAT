@@ -27,23 +27,24 @@ This document defines CreditEvents Module for the CMTA Token specification.
 ### Files Description Table
 
 
-| File Name                                  | SHA-1 Hash                               |
-| ------------------------------------------ | ---------------------------------------- |
-| ./modules/security/AuthorizationModule.sol | 652daabbe1ec856e47690c07206fe785f2c4ae8f |
+| File Name                                                    | SHA-1 Hash                               |
+| ------------------------------------------------------------ | ---------------------------------------- |
+| ./modules/wrapper/extensions/DebtModule/CreditEventsModule.sol | 166aee930aee560044280eb305ebb8a477fc9c49 |
 
 
 ### Contracts Description Table
 
 
-|        Contract         |                 Type                 |                   Bases                   |                |                  |
-| :---------------------: | :----------------------------------: | :---------------------------------------: | :------------: | :--------------: |
-|            └            |          **Function Name**           |              **Visibility**               | **Mutability** |  **Modifiers**   |
-|                         |                                      |                                           |                |                  |
-| **AuthorizationModule** |            Implementation            | AccessControlDefaultAdminRulesUpgradeable |                |                  |
-|            └            |      __AuthorizationModule_init      |                Internal 🔒                 |       🛑        | onlyInitializing |
-|            └            | __AuthorizationModule_init_unchained |                Internal 🔒                 |                | onlyInitializing |
-|            └            |               hasRole                |                 Public ❗️                  |                |       NO❗️        |
-|            └            |      transferAdminshipDirectly       |                 Public ❗️                  |       🛑        |     onlyRole     |
+|        Contract        |             Type              |                            Bases                             |                |                  |
+| :--------------------: | :---------------------------: | :----------------------------------------------------------: | :------------: | :--------------: |
+|           └            |       **Function Name**       |                        **Visibility**                        | **Mutability** |  **Modifiers**   |
+|                        |                               |                                                              |                |                  |
+| **CreditEventsModule** |        Implementation         | IDebtGlobal, Initializable, ContextUpgradeable, AuthorizationModule |                |                  |
+|           └            | __CreditEvents_init_unchained |                          Internal 🔒                          |       🛑        | onlyInitializing |
+|           └            |        setCreditEvents        |                           Public ❗️                           |       🛑        |     onlyRole     |
+|           └            |        setFlagDefault         |                           Public ❗️                           |       🛑        |     onlyRole     |
+|           └            |        setFlagRedeemed        |                           Public ❗️                           |       🛑        |     onlyRole     |
+|           └            |           setRating           |                           Public ❗️                           |       🛑        |     onlyRole     |
 
 
 ### Legend

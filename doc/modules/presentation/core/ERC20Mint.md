@@ -44,7 +44,6 @@ This document defines ERC20Mint Module for the CMTA Token specification.
 |          └          |        **Function Name**         |            **Visibility**             | **Mutability** |  **Modifiers**   |
 |                     |                                  |                                       |                |                  |
 | **ERC20MintModule** |          Implementation          | ERC20Upgradeable, AuthorizationModule |                |                  |
-|          └          |      __ERC20MintModule_init      |              Internal 🔒               |       🛑        | onlyInitializing |
 |          └          | __ERC20MintModule_init_unchained |              Internal 🔒               |       🛑        | onlyInitializing |
 |          └          |               mint               |               Public ❗️                |       🛑        |     onlyRole     |
 |          └          |            mintBatch             |               Public ❗️                |       🛑        |     onlyRole     |
