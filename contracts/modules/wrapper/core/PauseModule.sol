@@ -22,23 +22,6 @@ abstract contract PauseModule is PausableUpgradeable, AuthorizationModule {
     bool private isDeactivated;
     event Deactivated(address account);
 
-    function __PauseModule_init(address admin, uint48 initialDelayToAcceptAdminRole) internal onlyInitializing {
-        /* OpenZeppelin */
-        __Context_init_unchained();
-        __Pausable_init_unchained();
-        // AccessControlUpgradeable inherits from ERC165Upgradeable
-        __ERC165_init_unchained();
-        // AuthorizationModule inherits from AccessControlUpgradeable
-        __AccessControl_init_unchained();
-        __AccessControlDefaultAdminRules_init_unchained(initialDelayToAcceptAdminRole, admin);
-        /* CMTAT modules */
-        // Security
-        __AuthorizationModule_init_unchained();
-
-        // own function
-        __PauseModule_init_unchained();
-    }
-
     function __PauseModule_init_unchained() internal onlyInitializing {
         // no variable to initialize
     }

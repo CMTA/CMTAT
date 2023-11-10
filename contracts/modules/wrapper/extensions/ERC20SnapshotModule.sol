@@ -16,32 +16,6 @@ abstract contract ERC20SnapshotModule is
     ERC20SnapshotModuleInternal,
     AuthorizationModule
 {
-    function __ERC20SnasphotModule_init(
-        string memory name_,
-        string memory symbol_,
-        address admin,
-        uint48 initialDelayToAcceptAdminRole
-    ) internal onlyInitializing {
-        /* OpenZeppelin */
-        __Context_init_unchained();
-        // SnapshotModuelInternal inherits from ERC20
-        __ERC20_init_unchained(name_, symbol_);
-        // AccessControlUpgradeable inherits from ERC165Upgradeable
-        __ERC165_init_unchained();
-        // AuthorizationModule inherits from AccessControlUpgradeable
-        __AccessControl_init_unchained();
-        __AccessControlDefaultAdminRules_init_unchained(initialDelayToAcceptAdminRole, admin);
-        /* CMTAT modules */
-        // Internal
-        __ERC20Snapshot_init_unchained();
-
-        // Security
-        __AuthorizationModule_init_unchained();
-
-        // own function
-        __ERC20SnasphotModule_init_unchained();
-    }
-
     function __ERC20SnasphotModule_init_unchained() internal onlyInitializing {
         // no variable to initialize
     }
