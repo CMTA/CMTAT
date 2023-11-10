@@ -58,7 +58,7 @@ abstract contract AuthorizationModule is AccessControlDefaultAdminRulesUpgradeab
     function hasRole(
         bytes32 role,
         address account
-    ) public view virtual override( IAccessControlUpgradeable,  AccessControlUpgradeable) returns (bool) {
+    ) public view virtual override( IAccessControl,  AccessControlUpgradeable) returns (bool) {
         // The Default Admin has all roles
         if (AccessControlUpgradeable.hasRole(DEFAULT_ADMIN_ROLE, account)) {
             return true;

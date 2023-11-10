@@ -2,7 +2,20 @@
 
 Please follow <https://changelog.md/> conventions.
 
+The modifications between the version v2.3.0 and this version are not audited !!!
+
+This version contains breaking changes with the version v2.3.0.
+
+- Remove useless functions init in wrapper modules [#230](https://github.com/CMTA/CMTAT/issues/230)
+- Add missing tests in EnforcementModule [#239](https://github.com/CMTA/CMTAT/issues/239)
+- Use calldate instead of memory [#224](https://github.com/CMTA/CMTAT/issues/224)
+- Upgrade OpenZeppelin to the version [v.5.0.0](https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/releases/tag/v5.0.0)
+
 ## 2.3.1-rc.0 - 20230925
+
+The modifications between the version v2.3.0 and this version are not audited !!!
+
+This version contains breaking changes with the version v2.3.0.
 
 ### Summary
 **Architecture**
