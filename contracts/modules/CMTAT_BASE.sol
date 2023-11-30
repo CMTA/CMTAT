@@ -110,9 +110,11 @@ abstract contract CMTAT_BASE is
         __Enforcement_init_unchained();
         /*
         SnapshotModule:
-        Add this call in case you add the SnapshotModule
+        Add these two calls in case you add the SnapshotModule
+       
+        __SnapshotModuleBase_init_unchained();
         __ERC20Snapshot_init_unchained();
-        */
+         */
         __Validation_init_unchained(ruleEngine_);
 
         /* Wrapper */
@@ -174,10 +176,7 @@ abstract contract CMTAT_BASE is
 
     /**
      * @dev
-     * SnapshotModule:
-     * - override SnapshotModuleInternal if you add the SnapshotModule
-     * e.g. override(ERC20SnapshotModuleInternal, ERC20Upgradeable)
-     * - remove the keyword view
+     *
      */
     function _update(
         address from,
@@ -187,13 +186,13 @@ abstract contract CMTAT_BASE is
         if (!ValidationModule.validateTransfer(from, to, amount)) {
             revert Errors.CMTAT_InvalidTransfer(from, to, amount);
         }
-        ERC20Upgradeable._update(from, to, amount);
-        // We call the SnapshotModule only if the transfer is valid
         /*
         SnapshotModule:
-        Add this call in case you add the SnapshotModule
-        ERC20SnapshotModuleInternal._update(from, to, amount);
+        Add this in case you add the SnapshotModule
+        We call the SnapshotModule only if the transfer is valid
         */
+        // ERC20SnapshotModuleInternal._snapshotUpdate(from, to);
+        ERC20Upgradeable._update(from, to, amount);
     }
 
     /**
