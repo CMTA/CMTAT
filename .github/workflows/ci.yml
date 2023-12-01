@@ -24,11 +24,8 @@ jobs:
       - name: Checkout submodules
         run: git submodule update --init --recursive
 
-      - name: Install Truffle
-        run: npm install -g truffle
-
       - name: Install Project Dependencies
         run: npm install
 
-      - name: Run Truffle Test
-        run: npm t
+      - name: Run Hardhat Tests
+        run: npx hardhat coverage
