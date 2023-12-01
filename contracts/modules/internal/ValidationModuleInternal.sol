@@ -5,7 +5,7 @@ pragma solidity ^0.8.20;
 import "../../../openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradeable.sol";
 import "../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
 import "../../interfaces/draft-IERC1404/draft-IERC1404Wrapper.sol";
-
+import "../../interfaces/draft-IERC1404/IRuleEngineCMTAT.sol";
 /**
  * @dev Validation module.
  *
@@ -18,22 +18,12 @@ abstract contract ValidationModuleInternal is
     /**
      * @dev Emitted when a rule engine is set.
      */
-    event RuleEngine(IERC1404Wrapper indexed newRuleEngine);
+    event RuleEngine(IRuleEngineCMTAT indexed newRuleEngine);
 
-    IERC1404Wrapper public ruleEngine;
-
-    /**
-     * @dev Initializes the contract with rule engine.
-     */
-    function __Validation_init(
-        IERC1404Wrapper ruleEngine_
-    ) internal onlyInitializing {
-        __Context_init_unchained();
-        __Validation_init_unchained(ruleEngine_);
-    }
+    IRuleEngineCMTAT public ruleEngine;
 
     function __Validation_init_unchained(
-        IERC1404Wrapper ruleEngine_
+        IRuleEngineCMTAT ruleEngine_
     ) internal onlyInitializing {
         if (address(ruleEngine_) != address(0)) {
             ruleEngine = ruleEngine_;
@@ -70,6 +60,10 @@ abstract contract ValidationModuleInternal is
         uint256 amount
     ) internal view returns (uint8) {
         return ruleEngine.detectTransferRestriction(from, to, amount);
+    }
+
+    function _operateOnTransfer(address from, address to, uint256 amount) virtual internal returns (bool) {
+        return ruleEngine.operateOnTransfer(from, to, amount);
     }
 
     uint256[50] private __gap;

@@ -67,6 +67,16 @@ contract RuleEngineMock is IRuleEngine {
         return detectTransferRestriction(_from, _to, _amount) == 0;
     }
 
+    /*
+    @dev 
+    Warning: if you want to use this mock, you have to restrict the access to this function through an an access control
+    */
+    function operateOnTransfer(  address _from,
+        address _to,
+        uint256 _amount) public override returns (bool){
+        return validateTransfer(_from, _to, _amount);
+    }
+
     /**
     @dev
     For all the rules, each restriction code has to be unique.

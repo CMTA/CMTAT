@@ -28,7 +28,7 @@ contract CMTAT_STANDALONE is CMTAT_BASE {
         uint8 decimalsIrrevocable,
         string memory tokenId_,
         string memory terms_,
-        IERC1404Wrapper ruleEngine_,
+        IRuleEngineCMTAT ruleEngine_,
         string memory information_,
         uint256 flag_
     ) MetaTxModule(forwarderIrrevocable) {

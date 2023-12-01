@@ -24,23 +24,6 @@ abstract contract AuthorizationModule is AccessControlDefaultAdminRulesUpgradeab
     // SnapshotModule
     bytes32 public constant SNAPSHOOTER_ROLE = keccak256("SNAPSHOOTER_ROLE");
 
-   
-
-    function __AuthorizationModule_init(
-        address admin,
-        uint48 initialDelay
-    ) internal onlyInitializing {
-        /* OpenZeppelin */
-        __Context_init_unchained();
-        // AccessControlUpgradeable inherits from ERC165Upgradeable
-        __ERC165_init_unchained();
-        __AccessControl_init_unchained();
-        __AccessControlDefaultAdminRules_init_unchained(initialDelay, admin);
-
-        /* own function */
-        __AuthorizationModule_init_unchained();
-    }
-
     /**
      * @dev
      *

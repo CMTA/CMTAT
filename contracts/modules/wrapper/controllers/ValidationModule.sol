@@ -33,7 +33,7 @@ abstract contract ValidationModule is
     @param ruleEngine_ the call will be reverted if the new value of ruleEngine is the same as the current one
     */
     function setRuleEngine(
-        IERC1404Wrapper ruleEngine_
+        IRuleEngineCMTAT ruleEngine_
     ) external onlyRole(DEFAULT_ADMIN_ROLE) {
         if (ruleEngine == ruleEngine_)
             revert Errors.CMTAT_ValidationModule_SameValue();
@@ -97,17 +97,38 @@ abstract contract ValidationModule is
             return TEXT_UNKNOWN_CODE;
         }
     }
+    
+    function validateTransferByModule(
+        address from,
+        address to,
+        uint256 /*amount*/
+    ) internal view returns (bool) {
+        if (paused() || frozen(from) || frozen(to)) {
+            return false;
+        }
+        return true;
+    }
 
     function validateTransfer(
         address from,
         address to,
         uint256 amount
     ) public view override returns (bool) {
-        if (paused() || frozen(from) || frozen(to)) {
+        if (!validateTransferByModule(from, to, amount)) {
             return false;
         }
         if (address(ruleEngine) != address(0)) {
             return _validateTransfer(from, to, amount);
+        }
+        return true;
+    }
+
+    function _operateOnTransfer(address from, address to, uint256 amount) override internal returns (bool){
+        if (!validateTransferByModule(from, to, amount)){
+            return false;
+        }
+        if (address(ruleEngine) != address(0)) {
+            return ValidationModuleInternal._operateOnTransfer(from, to, amount);
         }
         return true;
     }

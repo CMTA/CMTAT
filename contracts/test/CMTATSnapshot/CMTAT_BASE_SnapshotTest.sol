@@ -53,7 +53,7 @@ abstract contract CMTAT_BASE_SnapshotTest is
         uint8 decimalsIrrevocable,
         string memory tokenId_,
         string memory terms_,
-        IERC1404Wrapper ruleEngine_,
+        IRuleEngineCMTAT ruleEngine_,
         string memory information_,
         uint256 flag_
     ) public initializer {
@@ -82,7 +82,7 @@ abstract contract CMTAT_BASE_SnapshotTest is
         uint8 decimalsIrrevocable,
         string memory tokenId_,
         string memory terms_,
-        IERC1404Wrapper ruleEngine_,
+        IRuleEngineCMTAT ruleEngine_,
         string memory information_,
         uint256 flag_
     ) internal onlyInitializing {
@@ -100,8 +100,9 @@ abstract contract CMTAT_BASE_SnapshotTest is
         __Enforcement_init_unchained();
         /*
         SnapshotModule:
-        Add this call in case you add the SnapshotModule
+        Add these two calls in case you add the SnapshotModule
         */
+        __SnapshotModuleBase_init_unchained();
         __ERC20Snapshot_init_unchained();
         
         __Validation_init_unchained(ruleEngine_);
@@ -175,18 +176,17 @@ abstract contract CMTAT_BASE_SnapshotTest is
         address from,
         address to,
         uint256 amount
-    ) internal override(ERC20SnapshotModuleInternal, ERC20Upgradeable) {
-        // We call the SnapshotModule only if the transfer is valid
-        if (!ValidationModule.validateTransfer(from, to, amount))
+    ) internal override(ERC20Upgradeable) {
+        if (!ValidationModule._operateOnTransfer(from, to, amount)){
             revert Errors.CMTAT_InvalidTransfer(from, to, amount);
-        /*
-        We do not call ERC20Upgradeable._update(from, to, amount) here because it is called inside the SnapshotModule
-        */
+        }
         /*
         SnapshotModule:
-        Add this call in case you add the SnapshotModule
+        Add this in case you add the SnapshotModule
+        We call the SnapshotModule only if the transfer is valid
         */
-        ERC20SnapshotModuleInternal._update(from, to, amount);
+        ERC20SnapshotModuleInternal._snapshotUpdate(from, to);
+        ERC20Upgradeable._update(from, to, amount);
     }
 
     /** 
