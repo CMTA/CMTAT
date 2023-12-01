@@ -52,9 +52,10 @@
   },
   "homepage": "https://github.com/CMTA/CMTAT",
   "devDependencies": {
-    "@nomiclabs/hardhat-truffle5": "^2.0.7",
+    "@nomicfoundation/hardhat-chai-matchers": "^2.0.2",
+    "@nomiclabs/hardhat-etherscan": "^3.1.7",
     "@nomiclabs/hardhat-web3": "^2.0.0",
-    "@openzeppelin/test-helpers": "^0.5.16",
+    "@openzeppelin/hardhat-upgrades": "^2.4.3",
     "chai": "^4.3.7",
     "coveralls": "^3.1.1",
     "dotenv": "^16.0.3",
@@ -68,7 +69,7 @@
     "ethereumjs-util": "^7.1.5",
     "ethjs-abi": "^0.2.1",
     "ethlint": "^1.2.5",
-    "hardhat": "^2.14.1",
+    "hardhat": "^2.19.1",
     "prettier": "^2.8.7",
     "prettier-plugin-solidity": "^1.1.3",
     "sol2uml": "^2.5.4",
@@ -77,15 +78,9 @@
     "solidity-coverage": "^0.8.2",
     "solidity-docgen": "^0.6.0-beta.35",
     "surya": "^0.4.6",
-    "truffle": "^5.9.2",
-    "truffle-contract-size": "^2.0.1",
-    "truffle-flattener": "^1.6.0",
-    "truffle-plugin-verify": "^0.6.3",
     "web3": "^1.10.0"
   },
   "dependencies": {
-    "@metamask/eth-sig-util": "^5.1.0",
-    "@openzeppelin/truffle-upgrades": "^1.19.0",
-    "@truffle/hdwallet-provider": "^1.4.0"
+    "@metamask/eth-sig-util": "^5.1.0"
   }
 }

@@ -1,46 +1,35 @@
-const { expectEvent, expectRevert } = require('@openzeppelin/test-helpers')
-const { should } = require('chai').should()
+const { expect } = require('chai')
+const { ethers, upgrades } = require('hardhat')
 
-const { deployProxy, upgradeProxy, erc1967 } = require('@openzeppelin/truffle-upgrades')
-const CMTAT1 = artifacts.require('CMTAT_BASE')
-const CMTAT2 = artifacts.require('CMTAT_BASE')
+describe('UpgradeableCMTAT - Proxy', function () {
+  let admin, address1, CMTAT_BASE, upgradeableCMTATV2Instance
 
-contract('UpgradeableCMTAT - Proxy', function ([_, admin, address1]) {
-  /*
-  Functions used: balanceOf, totalSupply, mint
-  */
+  before(async function () {
+    [admin, address1] = await ethers.getSigners()
+  })
+
   it('testKeepStorageForTokens', async function () {
-    this.flag = 5
-    // With the first version of CMTAT
-    this.CMTAT_BASE = await deployProxy(CMTAT1, [admin, 'CMTA Token', 'CMTAT', 18, 'CMTAT_ISIN', 'https://cmta.ch', 'CMTAT_info', this.flag])
-    const implementationContractAddress1 = erc1967.getImplementationAddress(this.CMTAT_BASE.address, {
-      from: admin
-    });
-    (await this.CMTAT_BASE.balanceOf(admin)).should.be.bignumber.equal('0');
+    const flag = 5
+
+    const CMTAT1 = await ethers.getContractFactory('CMTAT_BASE')
+    CMTAT_BASE = await upgrades.deployProxy(CMTAT1, [admin.address, 'CMTA Token', 'CMTAT', 18, 'CMTAT_ISIN', 'https://cmta.ch', 'CMTAT_info', flag], { initializer: 'initialize' })
+
+    await expect(await CMTAT_BASE.balanceOf(admin.address)).to.equal(0n)
 
     // Issue 20 and check balances and total supply
-    ({ logs: this.logs1 } = await this.CMTAT_BASE.mint(address1, 20, {
-      from: admin
-    }));
-    (await this.CMTAT_BASE.balanceOf(address1)).should.be.bignumber.equal('20');
-    (await this.CMTAT_BASE.totalSupply()).should.be.bignumber.equal('20')
+    await CMTAT_BASE.connect(admin).mint(address1.address, 20n)
+    await expect(await CMTAT_BASE.balanceOf(address1.address)).to.equal(20n)
+    await expect(await CMTAT_BASE.totalSupply()).to.equal(20n)
 
-    // Upgrade the proxy with a new implementation contract
-    this.upgradeableCMTATV2Instance = await upgradeProxy(this.CMTAT_BASE.address, CMTAT2)
-    // Get the new implementation contract address
-    const implementationContractAddress2 = erc1967.getImplementationAddress(this.CMTAT_BASE.address, {
-      from: admin
-    })
-    // The address of the implementation contract has changed
-    implementationContractAddress1.should.not.be.equal(implementationContractAddress2);
-    // keep the storage
-    (await this.upgradeableCMTATV2Instance.balanceOf(address1)).should.be.bignumber.equal('20');
+    const CMTAT2 = await ethers.getContractFactory('CMTAT_BASE') // Assuming V2 has the same name
+    upgradeableCMTATV2Instance = await upgrades.upgradeProxy((await CMTAT_BASE.getAddress()), CMTAT2)
 
-    // Issue 20 and check balances and total supply
-    ({ logs: this.logs1 } = await this.upgradeableCMTATV2Instance.mint(address1, 20, {
-      from: admin
-    }));
-    (await this.upgradeableCMTATV2Instance.balanceOf(address1)).should.be.bignumber.equal('40');
-    (await this.upgradeableCMTATV2Instance.totalSupply()).should.be.bignumber.equal('40')
+    // Keep the storage
+    await expect(await upgradeableCMTATV2Instance.balanceOf(address1.address)).to.equal(20n)
+
+    // Issue 20 more and check balances and total supply
+    await upgradeableCMTATV2Instance.connect(admin).mint(address1.address, 20n)
+    await expect(await upgradeableCMTATV2Instance.balanceOf(address1.address)).to.equal(40n)
+    await expect(await upgradeableCMTATV2Instance.totalSupply()).to.equal(40n)
   })
 })

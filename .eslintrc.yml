@@ -2,8 +2,17 @@ env:
   browser: true
   commonjs: true
   es2021: true
+  node: true
+  mocha: true
+
 extends: standard
+
+globals:
+  expect: true
+
 overrides: []
+
 parserOptions:
   ecmaVersion: latest
+
 rules: {}
