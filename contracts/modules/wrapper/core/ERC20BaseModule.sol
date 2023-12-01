@@ -100,29 +100,5 @@ abstract contract ERC20BaseModule is ERC20Upgradeable {
         return result;
     }
 
-    /**
-     * @notice Allows `spender` to withdraw from your account multiple times, up to the `value` amount
-     * @dev see {OpenZeppelin ERC20 - approve}
-     */
-    function approve(
-        address spender,
-        uint256 value,
-        uint256 currentAllowance
-    ) public virtual returns (bool) {
-        address owner = _msgSender();
-        uint256 currentAllowanceFromSmartContract = allowance(owner, spender);
-        if (currentAllowanceFromSmartContract != currentAllowance) {
-            revert Errors.CMTAT_ERC20BaseModule_WrongAllowance(
-                spender,
-                currentAllowanceFromSmartContract,
-                currentAllowance
-            );
-        }
-        // We call directly the internal function _approve
-        // The reason is that the public function adds only the owner address recovery
-        ERC20Upgradeable._approve(owner, spender, value);
-        return true;
-    }
-
     uint256[50] private __gap;
 }
