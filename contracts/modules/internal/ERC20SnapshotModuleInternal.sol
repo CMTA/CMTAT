@@ -29,19 +29,6 @@ abstract contract ERC20SnapshotModuleInternal is SnapshotModuleBase, ERC20Upgrad
     */
     uint256[] private _scheduledSnapshots;
 
-    /**
-     * @dev Initializes the contract
-     */
-    function __ERC20Snapshot_init(
-        string memory name_,
-        string memory symbol_
-    ) internal onlyInitializing {
-        __Context_init_unchained();
-        __ERC20_init(name_, symbol_);
-        __SnapshotModuleBase_init_unchained();
-        __ERC20Snapshot_init_unchained();
-    }
-
     function __ERC20Snapshot_init_unchained() internal onlyInitializing {
         // Nothing to do
         // _currentSnapshotTime & _currentSnapshotIndex are initialized to zero

@@ -53,7 +53,7 @@ abstract contract CMTAT_BASE_SnapshotTest is
         uint8 decimalsIrrevocable,
         string memory tokenId_,
         string memory terms_,
-        IERC1404Wrapper ruleEngine_,
+        IRuleEngineCMTAT ruleEngine_,
         string memory information_,
         uint256 flag_
     ) public initializer {
@@ -82,7 +82,7 @@ abstract contract CMTAT_BASE_SnapshotTest is
         uint8 decimalsIrrevocable,
         string memory tokenId_,
         string memory terms_,
-        IERC1404Wrapper ruleEngine_,
+        IRuleEngineCMTAT ruleEngine_,
         string memory information_,
         uint256 flag_
     ) internal onlyInitializing {
@@ -177,8 +177,7 @@ abstract contract CMTAT_BASE_SnapshotTest is
         address to,
         uint256 amount
     ) internal override(ERC20Upgradeable) {
-
-        if (!ValidationModule.validateTransfer(from, to, amount)){
+        if (!ValidationModule._operateOnTransfer(from, to, amount)){
             revert Errors.CMTAT_InvalidTransfer(from, to, amount);
         }
         /*
