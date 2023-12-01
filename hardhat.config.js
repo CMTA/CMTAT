@@ -32,6 +32,12 @@ module.exports = {
       chainId: 137,
       gasPrice: 450000000000
     },
+    mumbai: {
+      url: process.env.MUMBAI_NODE,
+      accounts: [process.env.PRIVATE_KEY],
+      chainId: 80001,
+      gasPrice: 70000000000 // (70 gwei)
+    },
     mainnet: {
       url: process.env.MAINNET_NODE,
       accounts: [process.env.PRIVATE_KEY],
@@ -50,14 +56,18 @@ module.exports = {
   etherscan: {
     apiKey: {
       mainnet: process.env.ETHERSCAN_API_KEY,
+      goerli: process.env.ETHERSCAN_API_KEY,
       polygon: process.env.POLYGONSCAN_API_KEY,
-      goerli: process.env.ETHERSCAN_API_KEY
+      polygonMumbai: process.env.POLYGONSCAN_API_KEY
     }
   },
   gasReporter: {
     // eslint-disable-next-line no-unneeded-ternary
     enabled: (process.env.REPORT_GAS) ? true : false,
+    currency: 'USD',
+    coinmarketcap: process.env.COINMARKETCAP_API_KEY,
     outputFile: 'gas-report.txt',
-    noColors: true
+    noColors: true,
+    token: 'ETH'
   }
 }
