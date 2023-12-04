@@ -1,4 +1,3 @@
-const { time } = require('@openzeppelin/test-helpers')
 const { should } = require('chai').should()
 const {
   expectRevertCustomError
@@ -32,7 +31,7 @@ contract(
         await expectRevertCustomError(
           this.implementationContract.initialize(
             attacker,
-            BigInt(time.duration.days(3)),
+            ZERO_ADDRESS,
             'CMTA Token',
             'CMTAT',
             DECIMAL,

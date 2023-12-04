@@ -6,22 +6,15 @@ const CMTAT_STANDALONE_SNAPSHOT = artifacts.require(
 const CMTAT_PROXY = artifacts.require('CMTAT_PROXY')
 const CMTAT_PROXY_SNAPSHOT = artifacts.require('CMTATSnapshotProxyTest')
 const { deployProxy } = require('@openzeppelin/truffle-upgrades')
-const { time } = require('@openzeppelin/test-helpers')
 const { ethers, upgrades } = require('hardhat')
 const DEPLOYMENT_FLAG = 5
 const DEPLOYMENT_DECIMAL = 0
-const DEFAULT_ADMIN_DELAY = 1
-const DEFAULT_ADMIN_DELAY_WEB3 = web3.utils.toBN(
-  time.duration.days(DEFAULT_ADMIN_DELAY)
-)
-const DEFAULT_ADMIN_DELAY_HARDHAT = BigInt(
-  time.duration.days(DEFAULT_ADMIN_DELAY)
-)
+
 async function deployCMTATStandalone (_, admin, deployerAddress) {
   const cmtat = await CMTAT_STANDALONE.new(
     _,
     admin,
-    DEFAULT_ADMIN_DELAY_WEB3,
+    ZERO_ADDRESS,
     'CMTA Token',
     'CMTAT',
     DEPLOYMENT_DECIMAL,
@@ -39,7 +32,7 @@ async function deployCMTATStandaloneWithParameter (
   deployerAddress,
   forwarderIrrevocable,
   admin,
-  defaultAdminDelay,
+  authorizationEngine,
   nameIrrevocable,
   symbolIrrevocable,
   decimalsIrrevocable,
@@ -52,7 +45,7 @@ async function deployCMTATStandaloneWithParameter (
   const cmtat = await CMTAT_STANDALONE.new(
     forwarderIrrevocable,
     admin,
-    defaultAdminDelay,
+    authorizationEngine,
     nameIrrevocable,
     symbolIrrevocable,
     decimalsIrrevocable,
@@ -67,11 +60,10 @@ async function deployCMTATStandaloneWithParameter (
 }
 
 async function deployCMTATStandaloneWithSnapshot (_, admin, deployerAddress) {
-  const DEFAULT_ADMIN_DELAY_WEB3_ = web3.utils.toBN(time.duration.days(3))
   const cmtat = await CMTAT_STANDALONE_SNAPSHOT.new(
     _,
     admin,
-    DEFAULT_ADMIN_DELAY_WEB3_,
+    ZERO_ADDRESS,
     'CMTA Token',
     'CMTAT',
     DEPLOYMENT_DECIMAL,
@@ -94,7 +86,7 @@ async function deployCMTATProxy (_, admin, deployerAddress) {
     ETHERS_CMTAT_PROXY_FACTORY,
     [
       admin,
-      DEFAULT_ADMIN_DELAY_HARDHAT,
+      ZERO_ADDRESS,
       'CMTA Token',
       'CMTAT',
       DEPLOYMENT_DECIMAL,
@@ -126,7 +118,7 @@ async function deployCMTATProxyWithSnapshot (_, admin, deployerAddress) {
     ETHERS_CMTAT_PROXY_FACTORY,
     [
       admin,
-      DEFAULT_ADMIN_DELAY_HARDHAT,
+      ZERO_ADDRESS,
       'CMTA Token',
       'CMTAT',
       DEPLOYMENT_DECIMAL,
@@ -158,7 +150,7 @@ async function deployCMTATProxyWithKillTest (_, admin, deployerAddress) {
     ETHERS_CMTAT_PROXY_FACTORY,
     [
       admin,
-      DEFAULT_ADMIN_DELAY_HARDHAT,
+      ZERO_ADDRESS,
       'CMTA Token',
       'CMTAT',
       DEPLOYMENT_DECIMAL,
@@ -185,7 +177,7 @@ async function deployCMTATProxyWithParameter (
   deployerAddress,
   forwarderIrrevocable,
   admin,
-  defaultAdminDelay,
+  authorizationEngine,
   nameIrrevocable,
   symbolIrrevocable,
   decimalsIrrevocable,
@@ -203,7 +195,7 @@ async function deployCMTATProxyWithParameter (
     ETHERS_CMTAT_PROXY_FACTORY,
     [
       admin,
-      defaultAdminDelay,
+      authorizationEngine,
       nameIrrevocable,
       symbolIrrevocable,
       decimalsIrrevocable,
@@ -235,6 +227,5 @@ module.exports = {
   deployCMTATProxyWithParameter,
   deployCMTATStandaloneWithParameter,
   DEPLOYMENT_FLAG,
-  DEPLOYMENT_DECIMAL,
-  DEFAULT_ADMIN_DELAY_WEB3
+  DEPLOYMENT_DECIMAL
 }

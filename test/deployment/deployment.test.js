@@ -9,7 +9,6 @@ const {
 } = require('../deploymentUtils')
 contract('CMTAT - Deployment', function ([_], deployer) {
   it('testCannotDeployProxyWithAdminSetToAddressZero', async function () {
-    const delayTime = BigInt(time.duration.days(3))
     this.flag = 5
     const DECIMAL = 0
     // Act + Assert
@@ -18,7 +17,7 @@ contract('CMTAT - Deployment', function ([_], deployer) {
         deployer,
         _,
         ZERO_ADDRESS,
-        delayTime,
+        ZERO_ADDRESS,
         'CMTA Token',
         'CMTAT',
         DECIMAL,
@@ -28,8 +27,8 @@ contract('CMTAT - Deployment', function ([_], deployer) {
         'CMTAT_info',
         this.flag
       ),
-      'AccessControlInvalidDefaultAdmin',
-      [ZERO_ADDRESS]
+      'CMTAT_AuthorizationModule_AddressZeroNotAllowed',
+      []
     )
   })
   it('testCannotDeployStandaloneWithAdminSetToAddressZero', async function () {
@@ -41,7 +40,7 @@ contract('CMTAT - Deployment', function ([_], deployer) {
         deployer,
         _,
         ZERO_ADDRESS,
-        web3.utils.toBN(time.duration.days(3)),
+        ZERO_ADDRESS,
         'CMTA Token',
         'CMTAT',
         DECIMAL,
@@ -51,8 +50,8 @@ contract('CMTAT - Deployment', function ([_], deployer) {
         'CMTAT_info',
         this.flag
       ),
-      'AccessControlInvalidDefaultAdmin',
-      [ZERO_ADDRESS]
+      'CMTAT_AuthorizationModule_AddressZeroNotAllowed',
+      []
     )
   })
 })
