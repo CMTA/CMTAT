@@ -7,12 +7,22 @@ on:
     branches: [dev, master, main, wrapped-assets]
   workflow_dispatch:
 
+env:
+  MAINNET_NODE: ${{ secrets.MAINNET_NODE }}
+  GOERLI_NODE: ${{ secrets.GOERLI_NODE }}
+  POLYGON_NODE: ${{ secrets.POLYGON_NODE }}
+  ETHERSCAN_API_KEY: ${{ secrets.ETHERSCAN_API_KEY }}
+  PRIVATE_KEY: ${{ secrets.DUMMY_PK }}
+
 jobs:
-  build:
+  coverage:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+          fetch-depth: 0
 
       - name: Setup NodeJS 18
         uses: actions/setup-node@v2
@@ -21,9 +31,6 @@ jobs:
 
       - name: Show NodeJS version
         run: npm --version
-
-      - name: Checkout submodules
-        run: git submodule update --init --recursive
 
       - name: Install Project Dependencies
         run: npm install
