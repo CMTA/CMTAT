@@ -32,12 +32,12 @@ module.exports = {
       chainId: 137,
       gasPrice: 450000000000
     },
-    mumbai: {
-      url: process.env.MUMBAI_NODE,
-      accounts: [process.env.PRIVATE_KEY],
-      chainId: 80001,
-      gasPrice: 70000000000 // (70 gwei)
-    },
+    // mumbai: {
+    //   url: process.env.MUMBAI_NODE,
+    //   accounts: [process.env.PRIVATE_KEY],
+    //   chainId: 80001,
+    //   gasPrice: 70000000000 // (70 gwei)
+    // },
     mainnet: {
       url: process.env.MAINNET_NODE,
       accounts: [process.env.PRIVATE_KEY],

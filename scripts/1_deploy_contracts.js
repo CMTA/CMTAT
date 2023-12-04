@@ -46,9 +46,24 @@ async function verifyContract (proxyContract) {
 
   const constructorArguments = getInitializerArguments(await getAdminAddress())
 
-  await verifyProxyContract(proxyContract, constructorArguments)
-  await verifyProxyAdminContract(proxyContract)
-  await verifyImplementationContract(proxyContract)
+  // Helper function for individual verifications
+  async function performVerification (verificationFunction, contractType) {
+    try {
+      await verificationFunction()
+      console.log(`${contractType} contract verified successfully.`)
+    } catch (error) {
+      console.error(`Error verifying ${contractType} contract:`, error)
+    }
+  }
+
+  // Verify Proxy Contract
+  await performVerification(() => verifyProxyContract(proxyContract, constructorArguments), 'Proxy')
+
+  // Verify Proxy Admin Contract
+  await performVerification(() => verifyProxyAdminContract(proxyContract), 'Proxy Admin')
+
+  // Verify Implementation Contract
+  await performVerification(() => verifyImplementationContract(proxyContract), 'Implementation')
 }
 
 // Main function
