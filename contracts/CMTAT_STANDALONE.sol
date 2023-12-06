@@ -9,6 +9,7 @@ contract CMTAT_STANDALONE is CMTAT_BASE {
      * @notice Contract version for standalone deployment
      * @param forwarderIrrevocable address of the forwarder, required for the gasless support
      * @param admin address of the admin of contract (Access Control)
+     * @param authorizationEngineIrrevocable
      * @param nameIrrevocable name of the token
      * @param symbolIrrevocable name of the symbol
      * @param decimalsIrrevocable number of decimals used to get its user representation, should be 0 to be compliant with the CMTAT specifications.
@@ -22,7 +23,7 @@ contract CMTAT_STANDALONE is CMTAT_BASE {
     constructor(
         address forwarderIrrevocable,
         address admin,
-        uint48 initialDelay, 
+        IAuthorizationEngine authorizationEngineIrrevocable, 
         string memory nameIrrevocable,
         string memory symbolIrrevocable,
         uint8 decimalsIrrevocable,
@@ -36,7 +37,7 @@ contract CMTAT_STANDALONE is CMTAT_BASE {
         // Warning : do not initialize the proxy
         initialize(
             admin,
-            initialDelay,
+            authorizationEngineIrrevocable,
             nameIrrevocable,
             symbolIrrevocable,
             decimalsIrrevocable,

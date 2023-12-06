@@ -1,5 +1,6 @@
 const ValidationModuleCommon = require('../../../common/ValidationModule/ValidationModuleCommon')
 const { deployCMTATStandalone } = require('../../../deploymentUtils')
+const { ZERO_ADDRESS } = require('../../../utils')
 const ADDRESS1_INITIAL_BALANCE = 31
 const ADDRESS2_INITIAL_BALANCE = 32
 const ADDRESS3_INITIAL_BALANCE = 33

@@ -47,7 +47,7 @@ abstract contract CMTAT_BASE_SnapshotTest is
     */
     function initialize(
         address admin,
-        uint48 initialDelayToAcceptAdminRole, 
+        IAuthorizationEngine authorizationEngineIrrevocable, 
         string memory nameIrrevocable,
         string memory symbolIrrevocable,
         uint8 decimalsIrrevocable,
@@ -59,7 +59,7 @@ abstract contract CMTAT_BASE_SnapshotTest is
     ) public initializer {
         __CMTAT_init(
             admin,
-            initialDelayToAcceptAdminRole,
+            authorizationEngineIrrevocable,
             nameIrrevocable,
             symbolIrrevocable,
             decimalsIrrevocable,
@@ -76,7 +76,7 @@ abstract contract CMTAT_BASE_SnapshotTest is
     */
     function __CMTAT_init(
         address admin,
-        uint48 initialDelayToAcceptAdminRole, 
+        IAuthorizationEngine authorizationEngineIrrevocable, 
         string memory nameIrrevocable,
         string memory symbolIrrevocable,
         uint8 decimalsIrrevocable,
@@ -109,8 +109,7 @@ abstract contract CMTAT_BASE_SnapshotTest is
 
         /* Wrapper */
         // AuthorizationModule_init_unchained is called firstly due to inheritance
-        __AuthorizationModule_init_unchained();
-        __AccessControlDefaultAdminRules_init_unchained(initialDelayToAcceptAdminRole, admin);
+        __AuthorizationModule_init_unchained(admin, authorizationEngineIrrevocable);
         __ERC20BurnModule_init_unchained();
         __ERC20MintModule_init_unchained();
         // EnforcementModule_init_unchained is called before ValidationModule_init_unchained due to inheritance
