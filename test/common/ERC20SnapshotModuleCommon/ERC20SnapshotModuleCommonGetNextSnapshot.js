@@ -14,7 +14,7 @@ function ERC20SnapshotModuleCommonGetNextSnapshot (
     beforeEach(async function () {
       this.currentTime = await time.latest()
     })
-    it('can get all next snapshots', async function () {
+    it('testCanGetAllNextSnapshots', async function () {
       // Arrange
       this.snapshotTime1 = this.currentTime.add(time.duration.seconds(10))
       this.snapshotTime2 = this.currentTime.add(time.duration.seconds(15))
@@ -49,7 +49,8 @@ function ERC20SnapshotModuleCommonGetNextSnapshot (
       ])
     })
 
-    it('return empty array if all snapshots are in the past', async function () {
+    //
+    it('testCanReturnEmptyArrayIfAllSnapshotsAreInThePast', async function () {
       // Arrange
       this.snapshotTime1 = this.currentTime.add(time.duration.seconds(2))
       this.snapshotTime2 = this.currentTime.add(time.duration.seconds(3))
@@ -71,7 +72,7 @@ function ERC20SnapshotModuleCommonGetNextSnapshot (
       snapshots.length.should.equal(0)
     })
 
-    it('return only future snapshots if some snapshots are in the past', async function () {
+    it('testCanReturnOnlyFutureSnapshotsIfSomeSnapshotsAreInThePast', async function () {
       // Arrange
       this.snapshotTime1 = this.currentTime.add(time.duration.seconds(2))
       this.snapshotTime2 = this.currentTime.add(time.duration.seconds(20))
