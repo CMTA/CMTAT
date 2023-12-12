@@ -44,7 +44,7 @@ function AuthorizationModuleSetAuthorizationEngineCommon(admin, address1, author
     })
 
     // Mock
-    it('testCanTransferAdminIfAuthorized', async function () {
+    it('testCanTransferAdminIfAuthorizedByTheEngine', async function () {
       // Arrange
       await this.authorizationEngineMock.authorizeAdminChange(address1)
       // Act
@@ -58,12 +58,16 @@ function AuthorizationModuleSetAuthorizationEngineCommon(admin, address1, author
     })
 
     // Mock
-    it('testCannotTransferAdminIfNotAuthorized', async function () {
+    it('testCannotTransferAdminIfNotAuthorizedByTheEngine', async function () {
+      // Arrange
+      await this.cmtat.setAuthorizationEngine(this.authorizationEngineMock.address, { from: admin })
       // Act
       await expectRevertCustomError(
-        this.cmtat.setAuthorizationEngine(this.authorizationEngineMock.address, { from: address1 }),
-        'AccessControlUnauthorizedAccount',
-        [address1, DEFAULT_ADMIN_ROLE]
+        this.cmtat.grantRole(DEFAULT_ADMIN_ROLE, address1, {
+          from: admin
+        }),
+        'CMTAT_AuthorizationModule_InvalidAuthorization',
+        []
       )
     })
   })
