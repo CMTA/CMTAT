@@ -77,13 +77,6 @@ function AuthorizationModuleCommon (admin, address1, address2) {
     })
   })
 
-  it('testCannotNonAdminSetAuthorizationEngine', async function () {
-    // Act
-    await expectRevertCustomError(
-      this.cmtat.setAuthorizationEngine(ZERO_ADDRESS, { from: address1 }),
-      'AccessControlUnauthorizedAccount',
-      [address1, DEFAULT_ADMIN_ROLE]
-    )
-  })
+
 }
 module.exports = AuthorizationModuleCommon

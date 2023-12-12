@@ -7,11 +7,11 @@ The instructions below have been tested on Ubuntu 20.04.5 LTS.
 The toolchain includes the following components, where the versions
 are the latest ones that we tested: 
 
-- npm 8.19.2
+- npm 10.2.5
 - Hardhat-web3 2.0.0
 - *Truffle 5.9.3 [depreciated]*
-- Solidity 0.8.17 (via solc-js)
-- Node 16.17.0
+- Solidity 0.8.20 (via solc-js)
+- Node 20.5.0
 - Web3.js 1.9.0
 - OpenZeppelin
   - OpenZeppelin Contracts Upgradeable (submodule) [v5.0.0](https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/releases/tag/v5.0.0)
@@ -30,7 +30,7 @@ Clone the git repository, with the option `--recurse-submodules` to fetch the su
 
 - Node.js version
 
-We recommend to install the [Node Version Manager `nvm`](https://github.com/nvm-sh/nvm) to manage multiple versions of Node.js on your machine. You can then, for example, install the version 16.17.0 of Node.js with the following command: `nvm install 16.17.0`
+We recommend to install the [Node Version Manager `nvm`](https://github.com/nvm-sh/nvm) to manage multiple versions of Node.js on your machine. You can then, for example, install the version 20.5.0 of Node.js with the following command: `nvm install 20.5.0`
 
 The file [.nvmrc](../.nvmrc) at the root of the project set the Node.js version. `nvm use`will automatically use this version if no version is supplied on the command line.
 

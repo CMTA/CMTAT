@@ -3,7 +3,7 @@
 pragma solidity ^0.8.0;
 
 import "./IRule.sol";
-import "../../../interfaces/draft-IERC1404/IRuleEngineCMTAT.sol";
+import "../../../interfaces/engine/IRuleEngineCMTAT.sol";
 
 interface IRuleEngine is IRuleEngineCMTAT {
     /**

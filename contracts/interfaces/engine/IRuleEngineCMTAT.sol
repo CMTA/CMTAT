@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.0;
 
-import "./draft-IERC1404Wrapper.sol";
+import "../draft-IERC1404/draft-IERC1404Wrapper.sol";
 
 interface IRuleEngineCMTAT is IERC1404Wrapper {
     /**
