@@ -3,9 +3,9 @@
 pragma solidity ^0.8.0;
 
 import "./IRule.sol";
-import "../../../interfaces/engine/IRuleEngineCMTAT.sol";
+import "../../../interfaces/engine/IRuleEngine.sol";
 
-interface IRuleEngine is IRuleEngineCMTAT {
+interface IRuleEngineMock is IRuleEngine {
     /**
      * @dev define the rules, the precedent rules will be overwritten
      */

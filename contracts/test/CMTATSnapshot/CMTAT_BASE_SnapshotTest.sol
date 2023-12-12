@@ -53,7 +53,7 @@ abstract contract CMTAT_BASE_SnapshotTest is
         uint8 decimalsIrrevocable,
         string memory tokenId_,
         string memory terms_,
-        IRuleEngineCMTAT ruleEngine_,
+        IRuleEngine ruleEngine_,
         string memory information_,
         uint256 flag_
     ) public initializer {
@@ -82,7 +82,7 @@ abstract contract CMTAT_BASE_SnapshotTest is
         uint8 decimalsIrrevocable,
         string memory tokenId_,
         string memory terms_,
-        IRuleEngineCMTAT ruleEngine_,
+        IRuleEngine ruleEngine_,
         string memory information_,
         uint256 flag_
     ) internal onlyInitializing {
