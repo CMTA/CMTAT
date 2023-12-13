@@ -15,8 +15,9 @@ import "./wrapper/core/PauseModule.sol";
 /*
 SnapshotModule:
 Add this import in case you add the SnapshotModule
-import "./wrapper/optional/SnapshotModule.sol";
 */
+import "./wrapper/extensions/ERC20SnapshotModule.sol";
+
 import "./wrapper/controllers/ValidationModule.sol";
 import "./wrapper/extensions/MetaTxModule.sol";
 import "./wrapper/extensions/DebtModule/DebtBaseModule.sol";
@@ -36,7 +37,7 @@ abstract contract CMTAT_BASE is
     ValidationModule,
     MetaTxModule,
     ERC20BaseModule,
-    // ERC20SnapshotModule,
+    ERC20SnapshotModule,
     DebtBaseModule,
     CreditEventsModule
 {
@@ -110,10 +111,10 @@ abstract contract CMTAT_BASE is
         /*
         SnapshotModule:
         Add these two calls in case you add the SnapshotModule
-       
+            */
         __SnapshotModuleBase_init_unchained();
         __ERC20Snapshot_init_unchained();
-         */
+    
         __Validation_init_unchained(ruleEngine_);
 
         /* Wrapper */
@@ -131,8 +132,9 @@ abstract contract CMTAT_BASE is
         /*
         SnapshotModule:
         Add this call in case you add the SnapshotModule
-        __ERC20SnasphotModule_init_unchained();
         */
+        __ERC20SnasphotModule_init_unchained();
+   
 
         /* Other modules */
         __DebtBaseModule_init_unchained();
@@ -190,7 +192,7 @@ abstract contract CMTAT_BASE is
         Add this in case you add the SnapshotModule
         We call the SnapshotModule only if the transfer is valid
         */
-        // ERC20SnapshotModuleInternal._snapshotUpdate(from, to);
+        ERC20SnapshotModuleInternal._snapshotUpdate(from, to);
         ERC20Upgradeable._update(from, to, amount);
     }
 

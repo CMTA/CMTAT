@@ -51,8 +51,8 @@ abstract contract AuthorizationModule is AccessControlUpgradeable {
 
 
     /*
-    @notice set an authorizationEngine if not already set
-    @dev once an AuthorizationEngine is set, it is not possible to unset it
+    * @notice set an authorizationEngine if not already set
+    * @dev once an AuthorizationEngine is set, it is not possible to unset it
     */
     function setAuthorizationEngine(
         IAuthorizationEngine authorizationEngine_

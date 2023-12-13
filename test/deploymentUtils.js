@@ -1,10 +1,11 @@
 const { ZERO_ADDRESS } = require('./utils')
 const CMTAT_STANDALONE = artifacts.require('CMTAT_STANDALONE')
 const CMTAT_STANDALONE_SNAPSHOT = artifacts.require(
-  'CMTATSnapshotStandaloneTest'
+  'CMTAT_STANDALONE'
 )
 const CMTAT_PROXY = artifacts.require('CMTAT_PROXY')
-const CMTAT_PROXY_SNAPSHOT = artifacts.require('CMTATSnapshotProxyTest')
+// const CMTAT_PROXY_SNAPSHOT_TRUFFLE = artifacts.require('CMTATSnapshotProxyTest')
+const CMTAT_PROXY_SNAPSHOT_TRUFFLE = artifacts.require('CMTAT_PROXY')
 const { deployProxy } = require('@openzeppelin/truffle-upgrades')
 const { ethers, upgrades } = require('hardhat')
 const DEPLOYMENT_FLAG = 5
@@ -102,8 +103,7 @@ async function deployCMTATProxy (_, admin, deployerAddress) {
       from: deployerAddress
     }
   )
-  const TRUFFLE_CMTAT_PROXY = artifacts.require('CMTAT_PROXY')
-  const TRUFFLE_CMTAT_PROXY_ADDRESS = await TRUFFLE_CMTAT_PROXY.at(
+  const TRUFFLE_CMTAT_PROXY_ADDRESS = await CMTAT_PROXY_SNAPSHOT_TRUFFLE.at(
     await ETHERS_CMTAT_PROXY.getAddress()
   )
   return TRUFFLE_CMTAT_PROXY_ADDRESS
@@ -112,7 +112,7 @@ async function deployCMTATProxy (_, admin, deployerAddress) {
 async function deployCMTATProxyWithSnapshot (_, admin, deployerAddress) {
   // Ref: https://forum.openzeppelin.com/t/upgrades-hardhat-truffle5/30883/3
   const ETHERS_CMTAT_PROXY_FACTORY = await ethers.getContractFactory(
-    'CMTATSnapshotProxyTest'
+    'CMTAT_PROXY'
   )
   const ETHERS_CMTAT_PROXY = await upgrades.deployProxy(
     ETHERS_CMTAT_PROXY_FACTORY,
@@ -134,7 +134,7 @@ async function deployCMTATProxyWithSnapshot (_, admin, deployerAddress) {
       from: deployerAddress
     }
   )
-  const TRUFFLE_CMTAT_PROXY = artifacts.require('CMTATSnapshotProxyTest')
+  const TRUFFLE_CMTAT_PROXY = artifacts.require('CMTAT_PROXY')
   const TRUFFLE_CMTAT_PROXY_ADDRESS = await TRUFFLE_CMTAT_PROXY.at(
     await ETHERS_CMTAT_PROXY.getAddress()
   )
