@@ -5,8 +5,8 @@ pragma solidity ^0.8.20;
 import "../../../../openzeppelin-contracts-upgradeable/contracts/token/ERC20/ERC20Upgradeable.sol";
 import "../../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
 import "../../security/AuthorizationModule.sol";
-
-abstract contract ERC20BurnModule is ERC20Upgradeable, AuthorizationModule {
+import "../../../interfaces/ICCIPToken.sol";
+abstract contract ERC20BurnModule is ERC20Upgradeable, ICCIPBurnERC20, AuthorizationModule {
     /**
      * @notice Emitted when the specified `value` amount of tokens owned by `owner`are destroyed with the given `reason`
      */
@@ -25,7 +25,7 @@ abstract contract ERC20BurnModule is ERC20Upgradeable, AuthorizationModule {
      * Requirements:
      * - the caller must have the `BURNER_ROLE`.
      */
-    function forceBurn(
+    function burnWithReason(
         address account,
         uint256 value,
         string calldata reason
@@ -33,6 +33,20 @@ abstract contract ERC20BurnModule is ERC20Upgradeable, AuthorizationModule {
         _burn(account, value);
         emit Burn(account, value, reason);
     }
+
+    /**
+     * @notice burn with empty string as reason
+     * @dev
+     * use to be compatible with CCIP pool system
+     */
+    function burn(
+        address account,
+        uint256 value
+    ) public onlyRole(BURNER_ROLE) {
+        _burn(account, value);
+        emit Burn(account, value, "");
+    }
+
 
     /**
      *

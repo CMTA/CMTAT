@@ -5,8 +5,8 @@ pragma solidity ^0.8.20;
 import "../../../../openzeppelin-contracts-upgradeable/contracts/token/ERC20/ERC20Upgradeable.sol";
 import "../../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
 import "../../security/AuthorizationModule.sol";
-
-abstract contract ERC20MintModule is ERC20Upgradeable, AuthorizationModule {
+import "../../../interfaces/ICCIPToken.sol";
+abstract contract ERC20MintModule is ERC20Upgradeable, ICCIPMintERC20, AuthorizationModule {
     /**
      * @notice Emitted when the specified  `value` amount of new tokens are created and
      * allocated to the specified `account`.
