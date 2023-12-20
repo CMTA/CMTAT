@@ -19,6 +19,8 @@ abstract contract ERC20MintModule is ERC20Upgradeable, ICCIPMintERC20, Authoriza
 
     /**
      * @notice  Creates a `value` amount of tokens and assigns them to `account`, by transferring it from address(0)
+     * @param account token receiver
+     * @param value amount of tokens
      * @dev
      * See {OpenZeppelin ERC20-_mint}.
      * Emits a {Mint} event.

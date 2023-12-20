@@ -264,7 +264,7 @@ function ERC20BurnModuleCommon (admin, address1, address2) {
     it('testCanBeBurntBatchByAdmin', async function () {
       // Act
       // Burn
-      this.logs = await this.cmtat.forceBurnBatch(
+      this.logs = await this.cmtat.burnBatch(
         TOKEN_HOLDER,
         TOKEN_BY_HOLDERS_TO_BURN,
         REASON,
@@ -312,7 +312,7 @@ function ERC20BurnModuleCommon (admin, address1, address2) {
 
       // Act
       // Burn
-      this.logs = await this.cmtat.forceBurnBatch(
+      this.logs = await this.cmtat.burnBatch(
         TOKEN_HOLDER,
         TOKEN_BY_HOLDERS_TO_BURN,
         REASON,
@@ -359,7 +359,7 @@ function ERC20BurnModuleCommon (admin, address1, address2) {
       const ADDRESS2_BALANCE = await this.cmtat.balanceOf(address2)
       // Act
       await expectRevertCustomError(
-        this.cmtat.forceBurnBatch(
+        this.cmtat.burnBatch(
           TOKEN_HOLDER,
           TOKEN_BY_HOLDERS_TO_BURN_FAIL,
           '',
@@ -372,7 +372,7 @@ function ERC20BurnModuleCommon (admin, address1, address2) {
 
     it('testCannotBeBurntWithoutBurnerRole', async function () {
       await expectRevertCustomError(
-        this.cmtat.forceBurnBatch(TOKEN_HOLDER, TOKEN_BY_HOLDERS_TO_BURN, '', {
+        this.cmtat.burnBatch(TOKEN_HOLDER, TOKEN_BY_HOLDERS_TO_BURN, '', {
           from: address2
         }),
         'AccessControlUnauthorizedAccount',
@@ -384,7 +384,7 @@ function ERC20BurnModuleCommon (admin, address1, address2) {
       // Number of addresses is insufficient
       const TOKEN_HOLDER_INVALID = [admin, address1]
       await expectRevertCustomError(
-        this.cmtat.forceBurnBatch(
+        this.cmtat.burnBatch(
           TOKEN_HOLDER_INVALID,
           TOKEN_BY_HOLDERS_TO_BURN,
           REASON,
@@ -399,7 +399,7 @@ function ERC20BurnModuleCommon (admin, address1, address2) {
       // There are too many addresses
       const TOKEN_HOLDER_INVALID = [admin, address1, address1, address1]
       await expectRevertCustomError(
-        this.cmtat.forceBurnBatch(
+        this.cmtat.burnBatch(
           TOKEN_HOLDER_INVALID,
           TOKEN_BY_HOLDERS_TO_BURN,
           REASON,
@@ -413,7 +413,7 @@ function ERC20BurnModuleCommon (admin, address1, address2) {
     it('testCannotBurnBatchIfAccountsIsEmpty', async function () {
       const TOKEN_ADDRESS_TOS_INVALID = []
       await expectRevertCustomError(
-        this.cmtat.forceBurnBatch(
+        this.cmtat.burnBatch(
           TOKEN_ADDRESS_TOS_INVALID,
           TOKEN_BY_HOLDERS_TO_BURN,
           REASON,

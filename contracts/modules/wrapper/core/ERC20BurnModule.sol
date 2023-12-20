@@ -36,8 +36,10 @@ abstract contract ERC20BurnModule is ERC20Upgradeable, ICCIPBurnERC20, Authoriza
 
     /**
      * @notice burn with empty string as reason
+     * @param account token holder
+     * @param value amount of tokens
      * @dev
-     * use to be compatible with CCIP pool system
+     * used to be compatible with CCIP pool system
      */
     function burn(
         address account,
@@ -50,7 +52,7 @@ abstract contract ERC20BurnModule is ERC20Upgradeable, ICCIPBurnERC20, Authoriza
 
     /**
      *
-     * @notice batch version of {forceBurn}.
+     * @notice batch version of {burn}.
      * @dev
      * See {ERC20-_burn} and {OpenZeppelin ERC1155_burnBatch}.
      *
@@ -62,7 +64,7 @@ abstract contract ERC20BurnModule is ERC20Upgradeable, ICCIPBurnERC20, Authoriza
      * - `accounts` and `values` must have the same length
      * - the caller must have the `BURNER_ROLE`.
      */
-    function forceBurnBatch(
+    function burnBatch(
         address[] calldata accounts,
         uint256[] calldata values,
         string calldata reason

@@ -176,6 +176,22 @@ abstract contract CMTAT_BASE is
     }
 
     /**
+    @notice burn and mint atomically
+    @param from current token holder to burn tokens
+    @param to receiver to send the new minted tokens
+    @param amountToBurn number of tokens to burn
+    @param amountToMint number of tokens to mint
+    @dev 
+    - The access control is managed by the functions burn and mint
+    - Input validation is also managed by the functions burn and mint
+    - You can mint more tokens than burnt
+    */
+    function burnAndMint(address from, address to, uint256 amountToBurn, uint256 amountToMint, string calldata reason) public  {
+        burnWithReason(from, amountToBurn, reason);
+        mint(to, amountToMint);
+    }
+
+    /**
      * @dev
      *
      */
