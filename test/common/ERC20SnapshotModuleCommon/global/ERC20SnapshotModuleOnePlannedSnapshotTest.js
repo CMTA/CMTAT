@@ -86,7 +86,7 @@ function ERC20SnapshotModuleOnePlannedSnapshotTest (
       )
 
       // Act
-      await this.cmtat.burnWithReason(address1, BURN_AMOUNT, reason, {
+      await this.cmtat.burn(address1, BURN_AMOUNT, reason, {
         from: admin,
         gas: 5000000,
         gasPrice: 500000000

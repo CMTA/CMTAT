@@ -10,11 +10,11 @@ interface ICCIPMintERC20 {
   function mint(address account, uint256 value) external;
 }
 
-interface ICCIPBurnERC20 {
+interface ICCIPBurnFromERC20 {
   /// @notice Burns tokens from a given address..
   /// @param account The address to burn tokens from.
   /// @param value The number of tokens to be burned.
   /// @dev this function decreases the total supply.
-  function burn(address account, uint256 value) external;
+  function burnFrom(address account, uint256 value) external;
 
 }

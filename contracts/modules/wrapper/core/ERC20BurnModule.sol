@@ -6,12 +6,15 @@ import "../../../../openzeppelin-contracts-upgradeable/contracts/token/ERC20/ERC
 import "../../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
 import "../../security/AuthorizationModule.sol";
 import "../../../interfaces/ICCIPToken.sol";
-abstract contract ERC20BurnModule is ERC20Upgradeable, ICCIPBurnERC20, AuthorizationModule {
+abstract contract ERC20BurnModule is ERC20Upgradeable, ICCIPBurnFromERC20, AuthorizationModule {
     /**
      * @notice Emitted when the specified `value` amount of tokens owned by `owner`are destroyed with the given `reason`
      */
     event Burn(address indexed owner, uint256 value, string reason);
-
+    /**
+    * @notice Emitted when the specified `spender` burns the specified `value` tokens owned by the specified `owner` reducing the corresponding allowance.
+    */
+    event BurnFrom(address indexed owner, address indexed spender, uint256 value);
     function __ERC20BurnModule_init_unchained() internal onlyInitializing {
         // no variable to initialize
     }
@@ -25,28 +28,13 @@ abstract contract ERC20BurnModule is ERC20Upgradeable, ICCIPBurnERC20, Authoriza
      * Requirements:
      * - the caller must have the `BURNER_ROLE`.
      */
-    function burnWithReason(
+    function burn(
         address account,
         uint256 value,
         string calldata reason
     ) public onlyRole(BURNER_ROLE) {
         _burn(account, value);
         emit Burn(account, value, reason);
-    }
-
-    /**
-     * @notice burn with empty string as reason
-     * @param account token holder
-     * @param value amount of tokens
-     * @dev
-     * used to be compatible with CCIP pool system
-     */
-    function burn(
-        address account,
-        uint256 value
-    ) public onlyRole(BURNER_ROLE) {
-        _burn(account, value);
-        emit Burn(account, value, "");
     }
 
 
@@ -85,6 +73,43 @@ abstract contract ERC20BurnModule is ERC20Upgradeable, ICCIPBurnERC20, Authoriza
                 ++i;
             }
         }
+    }
+
+    /**
+     * @notice Destroys `amount` tokens from `account`, deducting from the caller's
+     * allowance.
+     * @dev 
+     * Can be used to authorize a bridge (e.g. CCIP) to burn token owned by the bridge
+     * No string parameter reason to be compatible with Bridge, e.g. CCIP
+     * 
+     * See {ERC20-_burn} and {ERC20-allowance}.
+     *
+     * Requirements:
+     *
+     * - the caller must have allowance for ``accounts``'s tokens of at least
+     * `value`.
+     */
+    function burnFrom(address account, uint256 value)
+        public
+        onlyRole(BURNER_FROM_ROLE)
+    {
+        // Allowance check
+        address sender =  _msgSender();
+        uint256 currentAllowance = allowance(account, sender);
+        if(currentAllowance < value){
+            // ERC-6093
+            revert ERC20InsufficientAllowance(sender, currentAllowance, value);
+        }
+        // Update allowance
+        unchecked {
+            _approve(account, sender, currentAllowance - value);
+        }
+        // burn
+        _burn(account, value);
+        // We also emit a burn event since its a burn operation
+        emit Burn(account, value, "burnFrom");
+        // Specific event for the operation
+        emit BurnFrom(account, sender, value);
     }
 
     uint256[50] private __gap;

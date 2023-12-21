@@ -11,6 +11,7 @@ abstract contract ERC20BaseModule is ERC20Upgradeable {
     /* Events */
     /**
     * @notice Emitted when the specified `spender` spends the specified `value` tokens owned by the specified `owner` reducing the corresponding allowance.
+    * @dev The allowance can be also "spend" with the function BurnFrom, but in this case, the emitted event is BurnFrom.
     */
     event Spend(address indexed owner, address indexed spender, uint256 value);
 

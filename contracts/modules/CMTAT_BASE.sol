@@ -182,12 +182,12 @@ abstract contract CMTAT_BASE is
     @param amountToBurn number of tokens to burn
     @param amountToMint number of tokens to mint
     @dev 
-    - The access control is managed by the functions burn and mint
+    - The access control is managed by the functions burn (ERC20BurnModule) and mint (ERC20MintModule)
     - Input validation is also managed by the functions burn and mint
     - You can mint more tokens than burnt
     */
     function burnAndMint(address from, address to, uint256 amountToBurn, uint256 amountToMint, string calldata reason) public  {
-        burnWithReason(from, amountToBurn, reason);
+        burn(from, amountToBurn, reason);
         mint(to, amountToMint);
     }
 
