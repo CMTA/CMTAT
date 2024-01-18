@@ -8,9 +8,9 @@ import "../../security/AuthorizationModule.sol";
 import "../../../libraries/Errors.sol";
 
 abstract contract BaseModule is AuthorizationModule {
-    /*
-    @notice 
-    Get the current version of the smart contract
+    /** 
+    * @notice 
+    * Get the current version of the smart contract
     */
     string public constant VERSION = "2.4.0";
     /* Events */
@@ -51,8 +51,8 @@ abstract contract BaseModule is AuthorizationModule {
     }
 
     /* Methods */
-    /*
-    @notice the tokenId will be changed even if the new value is the same as the current one
+    /** 
+    * @notice the tokenId will be changed even if the new value is the same as the current one
     */
     function setTokenId(
         string calldata tokenId_
@@ -61,8 +61,8 @@ abstract contract BaseModule is AuthorizationModule {
         emit TokenId(tokenId_, tokenId_);
     }
 
-    /*
-    @notice The terms will be changed even if the new value is the same as the current one
+    /** 
+    * @notice The terms will be changed even if the new value is the same as the current one
     */
     function setTerms(
         string calldata terms_
@@ -71,8 +71,8 @@ abstract contract BaseModule is AuthorizationModule {
         emit Term(terms_, terms_);
     }
 
-    /*
-    @notice The information will be changed even if the new value is the same as the current one
+    /** 
+    * @notice The information will be changed even if the new value is the same as the current one
     */
     function setInformation(
         string calldata information_
@@ -81,8 +81,8 @@ abstract contract BaseModule is AuthorizationModule {
         emit Information(information_, information_);
     }
 
-    /*
-    @notice The call will be reverted if the new value of flag is the same as the current one
+    /** 
+    * @notice The call will be reverted if the new value of flag is the same as the current one
     */
     function setFlag(uint256 flag_) public onlyRole(DEFAULT_ADMIN_ROLE) {
         if (flag == flag_) {

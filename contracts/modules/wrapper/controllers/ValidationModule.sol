@@ -29,8 +29,8 @@ abstract contract ValidationModule is
     }
 
     /*
-    @notice set a RuleEngine
-    @param ruleEngine_ the call will be reverted if the new value of ruleEngine is the same as the current one
+    * @notice set a RuleEngine
+    * @param ruleEngine_ the call will be reverted if the new value of ruleEngine is the same as the current one
     */
     function setRuleEngine(
         IRuleEngine ruleEngine_

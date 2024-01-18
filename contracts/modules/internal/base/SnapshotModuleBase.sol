@@ -25,15 +25,15 @@ abstract contract SnapshotModuleBase is Initializable {
     event SnapshotSchedule(uint256 indexed oldTime, uint256 indexed newTime);
 
     /** 
-    @notice Emitted when the scheduled snapshot with the specified time was cancelled.
+    * @notice Emitted when the scheduled snapshot with the specified time was cancelled.
     */
     event SnapshotUnschedule(uint256 indexed time);
 
     /** 
-    @dev See {OpenZeppelin - ERC20Snapshot}
-    Snapshotted values have arrays of ids (time) and the value corresponding to that id.
-    ids is expected to be sorted in ascending order, and to contain no repeated elements 
-    because we use findUpperBound in the function _valueAt
+    * @dev See {OpenZeppelin - ERC20Snapshot}
+    * Snapshotted values have arrays of ids (time) and the value corresponding to that id.
+    * ids is expected to be sorted in ascending order, and to contain no repeated elements 
+    * because we use findUpperBound in the function _valueAt
     */
     struct Snapshots {
         uint256[] ids;
@@ -41,13 +41,13 @@ abstract contract SnapshotModuleBase is Initializable {
     }
 
     /**
-    @dev See {OpenZeppelin - ERC20Snapshot}
+    * @dev See {OpenZeppelin - ERC20Snapshot}
     */
     mapping(address => Snapshots) internal _accountBalanceSnapshots;
     Snapshots internal _totalSupplySnapshots;
 
     /**
-    @dev time instead of a counter for OpenZeppelin
+    * @dev time instead of a counter for OpenZeppelin
     */
     // Initialized to zero
     uint256 private _currentSnapshotTime;
@@ -55,9 +55,9 @@ abstract contract SnapshotModuleBase is Initializable {
     uint256 private _currentSnapshotIndex;
 
     /** 
-    @dev 
-    list of scheduled snapshot (time)
-    This list is sorted in ascending order
+    * @dev 
+    * list of scheduled snapshot (time)
+    * This list is sorted in ascending order
     */
     uint256[] private _scheduledSnapshots;
 
@@ -67,8 +67,8 @@ abstract contract SnapshotModuleBase is Initializable {
     }
 
     /** 
-    @dev schedule a snapshot at the specified time
-    You can only add a snapshot after the last previous
+    * @dev schedule a snapshot at the specified time
+    * You can only add a snapshot after the last previous
     */
     function _scheduleSnapshot(uint256 time) internal {
         // Check the time firstly to avoid an useless read of storage
@@ -99,7 +99,7 @@ abstract contract SnapshotModuleBase is Initializable {
     }
 
     /** 
-    @dev schedule a snapshot at the specified time
+    * @dev schedule a snapshot at the specified time
     */
     function _scheduleSnapshotNotOptimized(uint256 time) internal {
         if (time <= block.timestamp) {
@@ -132,7 +132,7 @@ abstract contract SnapshotModuleBase is Initializable {
     }
 
     /** 
-    @dev reschedule a scheduled snapshot at the specified newTime
+    * @dev reschedule a scheduled snapshot at the specified newTime
     */
     function _rescheduleSnapshot(uint256 oldTime, uint256 newTime) internal {
         // Check the time firstly to avoid an useless read of storage
@@ -178,7 +178,7 @@ abstract contract SnapshotModuleBase is Initializable {
     }
 
     /**
-    @dev unschedule the last scheduled snapshot
+    * @dev unschedule the last scheduled snapshot
     */
     function _unscheduleLastSnapshot(uint256 time) internal {
         // Check the time firstly to avoid an useless read of storage
@@ -197,10 +197,10 @@ abstract contract SnapshotModuleBase is Initializable {
     }
 
     /** 
-    @dev unschedule (remove) a scheduled snapshot in three steps:
-    - search the snapshot in the list
-    - If found, move all next snapshots one position to the left
-    - Reduce the array size by deleting the last snapshot
+    * @dev unschedule (remove) a scheduled snapshot in three steps:
+    * - search the snapshot in the list
+    * - If found, move all next snapshots one position to the left
+    * - Reduce the array size by deleting the last snapshot
     */
     function _unscheduleSnapshotNotOptimized(uint256 time) internal {
         if (time <= block.timestamp) {
@@ -220,8 +220,8 @@ abstract contract SnapshotModuleBase is Initializable {
     }
 
     /** 
-    @dev 
-    Get the next scheduled snapshots
+    * @dev 
+    * Get the next scheduled snapshots
     */
     function getNextSnapshots() public view returns (uint256[] memory) {
         uint256[] memory nextScheduledSnapshot = new uint256[](0);
@@ -257,8 +257,8 @@ abstract contract SnapshotModuleBase is Initializable {
     }
 
     /** 
-    @dev 
-    Get all snapshots
+    * @dev 
+    * Get all snapshots
     */
     function getAllSnapshots() public view returns (uint256[] memory) {
         return _scheduledSnapshots;
@@ -266,11 +266,11 @@ abstract contract SnapshotModuleBase is Initializable {
 
 
     /**
-    @dev See {OpenZeppelin - ERC20Snapshot}
-    @param time where we want a snapshot
-    @param snapshots the struct where are stored the snapshots
-    @return  snapshotExist true if a snapshot is found, false otherwise
-    value 0 if no snapshot, balance value if a snapshot exists
+    * @dev See {OpenZeppelin - ERC20Snapshot}
+    * @param time where we want a snapshot
+    * @param snapshots the struct where are stored the snapshots
+    * @return  snapshotExist true if a snapshot is found, false otherwise
+    * value 0 if no snapshot, balance value if a snapshot exists
     */
     function _valueAt(
         uint256 time,
@@ -300,10 +300,10 @@ abstract contract SnapshotModuleBase is Initializable {
     }
 
     /** 
-    @dev 
-    Inside a struct Snapshots:
-    - Update the array ids to the current Snapshot time if this one is greater than the snapshot times stored in ids.
-    - Update the value to the corresponding value.
+    * @dev 
+    * Inside a struct Snapshots:
+    * - Update the array ids to the current Snapshot time if this one is greater than the snapshot times stored in ids.
+    * - Update the value to the corresponding value.
     */
     function _updateSnapshot(
         Snapshots storage snapshots,
@@ -317,9 +317,9 @@ abstract contract SnapshotModuleBase is Initializable {
     }
 
     /** 
-    @dev
-    Set the currentSnapshotTime by retrieving the most recent snapshot
-    if a snapshot exists, clear all past scheduled snapshot
+    * @dev
+    * Set the currentSnapshotTime by retrieving the most recent snapshot
+    * if a snapshot exists, clear all past scheduled snapshot
     */
     function _setCurrentSnapshot() internal {
         (
@@ -333,7 +333,7 @@ abstract contract SnapshotModuleBase is Initializable {
     }
 
     /**
-    @return the last snapshot time inside a snapshot ids array
+    * @return the last snapshot time inside a snapshot ids array
     */
     function _lastSnapshot(
         uint256[] storage ids
@@ -346,8 +346,8 @@ abstract contract SnapshotModuleBase is Initializable {
     }
 
     /** 
-    @dev Find the snapshot index at the specified time
-    @return (true, index) if the snapshot exists, (false, 0) otherwise
+    * @dev Find the snapshot index at the specified time
+    * @return (true, index) if the snapshot exists, (false, 0) otherwise
     */
     function _findScheduledSnapshotIndex(
         uint256 time
@@ -372,8 +372,8 @@ abstract contract SnapshotModuleBase is Initializable {
     }
 
     /** 
-    @dev find the most recent past snapshot
-    The complexity of this function is O(N) because we go through the whole list
+    * @dev find the most recent past snapshot
+    * The complexity of this function is O(N) because we go through the whole list
     */
     function _findScheduledMostRecentPastSnapshot()
         private

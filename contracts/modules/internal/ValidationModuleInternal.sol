@@ -32,7 +32,7 @@ abstract contract ValidationModuleInternal is
     }
 
     /**
-    @dev before making a call to this function, you have to check if a ruleEngine is set.
+    * @dev before making a call to this function, you have to check if a ruleEngine is set.
     */
     function _validateTransfer(
         address from,
@@ -43,7 +43,7 @@ abstract contract ValidationModuleInternal is
     }
 
     /**
-    @dev before making a call to this function, you have to check if a ruleEngine is set.
+    * @dev before making a call to this function, you have to check if a ruleEngine is set.
     */
     function _messageForTransferRestriction(
         uint8 restrictionCode
@@ -52,7 +52,7 @@ abstract contract ValidationModuleInternal is
     }
 
     /**
-    @dev before making a call to this function, you have to check if a ruleEngine is set.
+    * @dev before making a call to this function, you have to check if a ruleEngine is set.
     */
     function _detectTransferRestriction(
         address from,

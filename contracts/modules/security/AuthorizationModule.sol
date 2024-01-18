@@ -91,7 +91,7 @@ abstract contract AuthorizationModule is AccessControlUpgradeable {
     }
 
 
-    /*
+    /** 
      * @dev Returns `true` if `account` has been granted `role`.
      */
     function hasRole(
