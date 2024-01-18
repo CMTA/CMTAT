@@ -6,7 +6,7 @@ import "../../../openzeppelin-contracts-upgradeable/contracts/access/AccessContr
 import "../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
 
 import "../../libraries/Errors.sol";
-import "../../interfaces/IAuthorizationEngine.sol";
+import "../../interfaces/engine/IAuthorizationEngine.sol";
 abstract contract AuthorizationModule is AccessControlUpgradeable {
     IAuthorizationEngine private authorizationEngine;
     /**

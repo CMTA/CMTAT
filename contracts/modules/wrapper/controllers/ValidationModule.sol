@@ -33,7 +33,7 @@ abstract contract ValidationModule is
     @param ruleEngine_ the call will be reverted if the new value of ruleEngine is the same as the current one
     */
     function setRuleEngine(
-        IRuleEngineCMTAT ruleEngine_
+        IRuleEngine ruleEngine_
     ) external onlyRole(DEFAULT_ADMIN_ROLE) {
         if (ruleEngine == ruleEngine_)
             revert Errors.CMTAT_ValidationModule_SameValue();
