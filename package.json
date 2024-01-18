@@ -97,7 +97,6 @@
     "ethlint": "^1.2.5",
     "hardhat-contract-sizer": "^2.10.0",
     "hardhat-gas-reporter": "^1.0.9",
-    "install": "^0.13.0",
     "keccak256": "^1.0.6",
     "npm": "^10.2.5",
     "prettier": "^2.8.7",
