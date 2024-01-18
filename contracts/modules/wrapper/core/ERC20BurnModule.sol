@@ -8,8 +8,8 @@ import "../../security/AuthorizationModule.sol";
 import "../../../interfaces/ICCIPToken.sol";
 abstract contract ERC20BurnModule is ERC20Upgradeable, ICCIPBurnFromERC20, AuthorizationModule {
     /**
-     * @notice Emitted when the specified `value` amount of tokens owned by `owner`are destroyed with the given `reason`
-     */
+    * @notice Emitted when the specified `value` amount of tokens owned by `owner`are destroyed with the given `reason`
+    */
     event Burn(address indexed owner, uint256 value, string reason);
     /**
     * @notice Emitted when the specified `spender` burns the specified `value` tokens owned by the specified `owner` reducing the corresponding allowance.

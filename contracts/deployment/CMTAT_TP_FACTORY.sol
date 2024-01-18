@@ -1,39 +1,34 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.20;
 
-import "@openzeppelin/contracts/proxy/beacon/BeaconProxy.sol";
-
-import '@openzeppelin/contracts/proxy/beacon/UpgradeableBeacon.sol';
+import "@openzeppelin/contracts/proxy/transparent/ProxyAdmin.sol";
+import "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
 import "../CMTAT_PROXY.sol";
-import "../modules/CMTAT_BASE.sol";
 import '@openzeppelin/contracts/access/AccessControl.sol';
-contract CMTAT_BEACON_FACTORY is AccessControl {
+contract CMTAT_TP_FACTORY is AccessControl {
     // Private
     mapping(uint256 => address) private cmtats;
-    uint256 private cmtatCounterId;
-    // public
+    uint256 private cmtatID;
+    event CMTAT(address indexed CMTAT, uint256 id);
+    // Public
     /// @dev Role to deploy CMTAT
     bytes32 public constant CMTAT_DEPLOYER_ROLE = keccak256("CMTAT_DEPLOYER_ROLE");
-    UpgradeableBeacon public immutable beacon;
+    address public immutable logic;
     address[] public cmtatsList;
-    event CMTAT(address indexed CMTAT, uint256 id);
+
 
     /**
-    * @param implementation_ contract implementation
+    * @param logic_ contract implementation
     * @param factoryAdmin admin
-    * @param beaconOwner owner
     */
-    constructor(address implementation_, address factoryAdmin, address beaconOwner) {
-        beacon = new UpgradeableBeacon(implementation_, beaconOwner);
+    constructor(address logic_, address factoryAdmin) {
+        logic = logic_;
         _grantRole(DEFAULT_ADMIN_ROLE, factoryAdmin);
         _grantRole(CMTAT_DEPLOYER_ROLE, factoryAdmin);
     }
 
-    /**
-    * @notice deploy CMTAT with a beacon proxy
-    * 
-    */
     function deployCMTAT(
+        address proxyAdminOwner,
         // CMTAT function initialize
         address admin,
         IAuthorizationEngine authorizationEngineIrrevocable,
@@ -45,11 +40,12 @@ contract CMTAT_BEACON_FACTORY is AccessControl {
         IRuleEngine ruleEngine_,
         string memory information_, 
         uint256 flag_
-    ) public onlyRole(CMTAT_DEPLOYER_ROLE) returns(BeaconProxy cmtat)   {
-        cmtat = new BeaconProxy(
-            address(beacon),
+    ) public onlyRole(CMTAT_DEPLOYER_ROLE) returns(TransparentUpgradeableProxy cmtat)   {
+        cmtat = new TransparentUpgradeableProxy(
+            logic,
+            proxyAdminOwner,
             abi.encodeWithSelector(
-                 CMTAT_PROXY(address(0)).initialize.selector,
+                CMTAT_PROXY(address(0)).initialize.selector,
                     admin,
                     authorizationEngineIrrevocable,
                     nameIrrevocable,
@@ -62,9 +58,9 @@ contract CMTAT_BEACON_FACTORY is AccessControl {
                     flag_
             )
         );
-        cmtats[cmtatCounterId] = address(cmtat);
-        emit CMTAT(address(cmtat), cmtatCounterId);
-        cmtatCounterId++;
+        cmtats[cmtatID] = address(cmtat);
+        emit CMTAT(address(cmtat), cmtatID);
+        cmtatID++;
         cmtatsList.push(address(cmtat));
         return cmtat;
     }
@@ -75,13 +71,5 @@ contract CMTAT_BEACON_FACTORY is AccessControl {
     */
     function getAddress(uint256 cmtatID_) external view returns (address) {
         return cmtats[cmtatID_];
-    }
-
-    /**
-    * @notice get the implementation address from the beacon
-    * @return implementation address
-    */
-    function implementation() public view returns (address) {
-        return beacon.implementation();
     }
 }

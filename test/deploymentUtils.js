@@ -29,6 +29,13 @@ async function deployCMTATStandalone (_, admin, deployerAddress) {
   return cmtat
 }
 
+async function deployCMTATProxyImplementation (deployerAddress, forwarderIrrevocable) {
+  const cmtat = await CMTAT_PROXY.new(forwarderIrrevocable,
+    { from: deployerAddress }
+  )
+  return cmtat
+}
+
 async function deployCMTATStandaloneWithParameter (
   deployerAddress,
   forwarderIrrevocable,
@@ -227,5 +234,6 @@ module.exports = {
   deployCMTATProxyWithParameter,
   deployCMTATStandaloneWithParameter,
   DEPLOYMENT_FLAG,
-  DEPLOYMENT_DECIMAL
+  DEPLOYMENT_DECIMAL,
+  deployCMTATProxyImplementation
 }
