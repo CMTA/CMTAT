@@ -26,6 +26,7 @@ abstract contract BaseModule is AuthorizationModule {
     string public tokenId;
     string public terms;
     string public information;
+    // additional attribute to store information as an uint256
     uint256 public flag;
 
 

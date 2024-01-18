@@ -15,6 +15,7 @@ abstract contract AuthorizationModule is AccessControlUpgradeable {
     event AuthorizationEngine(IAuthorizationEngine indexed newAuthorizationEngine);
     // BurnModule
     bytes32 public constant BURNER_ROLE = keccak256("BURNER_ROLE");
+    bytes32 public constant BURNER_FROM_ROLE = keccak256("BURNER_FROM_ROLE");
     // CreditEvents
     bytes32 public constant DEBT_CREDIT_EVENT_ROLE =
     keccak256("DEBT_CREDIT_EVENT_ROLE");
@@ -51,8 +52,8 @@ abstract contract AuthorizationModule is AccessControlUpgradeable {
 
 
     /*
-    @notice set an authorizationEngine if not already set
-    @dev once an AuthorizationEngine is set, it is not possible to unset it
+    * @notice set an authorizationEngine if not already set
+    * @dev once an AuthorizationEngine is set, it is not possible to unset it
     */
     function setAuthorizationEngine(
         IAuthorizationEngine authorizationEngine_

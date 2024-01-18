@@ -3,6 +3,8 @@ module.exports = {
     '0x9f2df0fed2c77648de5860a4cc508cd0818c85b8b8a1ab4ceeef8d981c8956a6', // keccak256("MINTER_ROLE");
   BURNER_ROLE:
     '0x3c11d16cbaffd01df69ce1c404f6340ee057498f5f00246190ea54220576a848', // keccak256("BURNER_ROLE");
+  BURNER_FROM_ROLE:
+    '0x5bfe08abba057c54e6a28bce27ce8c53eb21d7a94376a70d475b5dee60b6c4e2', // keccak256("BURNER_FROM_ROLE");
   ENFORCER_ROLE:
     '0x973ef39d76cc2c6090feab1c030bec6ab5db557f64df047a4c4f9b5953cf1df3', // keccak256("ENFORCER_ROLE");
   PAUSER_ROLE:

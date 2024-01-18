@@ -145,7 +145,7 @@ function EnforcementModuleCommon (owner, address1, address2, address3) {
         await this.cmtat.detectTransferRestriction(address1, address2, 10)
       ).should.be.bignumber.equal('2');
       (await this.cmtat.messageForTransferRestriction(2)).should.equal(
-        'The address FROM is frozen'
+        'Address FROM is frozen'
       )
       const AMOUNT_TO_TRANSFER = 10
       await expectRevertCustomError(
@@ -168,7 +168,7 @@ function EnforcementModuleCommon (owner, address1, address2, address3) {
         await this.cmtat.detectTransferRestriction(address1, address2, 10)
       ).should.be.bignumber.equal('3');
       (await this.cmtat.messageForTransferRestriction(3)).should.equal(
-        'The address TO is frozen'
+        'Address TO is frozen'
       )
       const AMOUNT_TO_TRANSFER = 10
       await expectRevertCustomError(
