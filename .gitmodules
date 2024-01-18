@@ -3,4 +3,4 @@
 	url = https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable
 [submodule "ccip"]
 	path = ccip
-	url = org-25111032@github.com:smartcontractkit/ccip.git
+	url = https://github.com/smartcontractkit/ccip
