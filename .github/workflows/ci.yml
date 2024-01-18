@@ -13,10 +13,10 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Setup NodeJS 16
+      - name: Setup NodeJS 20.5.0
         uses: actions/setup-node@v3
         with:
-          node-version: 16.17.0
+          node-version: 20.5.0
 
       - name: Show NodeJS version
         run: npm --version
