@@ -5,6 +5,10 @@ import "@openzeppelin/contracts/proxy/transparent/ProxyAdmin.sol";
 import "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
 import "../CMTAT_PROXY.sol";
 import '@openzeppelin/contracts/access/AccessControl.sol';
+/**
+* @notice Factory to deploy transparent proxy
+* 
+*/
 contract CMTAT_TP_FACTORY is AccessControl {
     // Private
     mapping(uint256 => address) private cmtats;

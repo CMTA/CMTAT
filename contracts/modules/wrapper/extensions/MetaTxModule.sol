@@ -20,25 +20,5 @@ abstract contract MetaTxModule is ERC2771ContextUpgradeable {
         // Nothing to do
     }
 
-    function _msgSender()
-        internal
-        view
-        virtual
-        override
-        returns (address sender)
-    {
-        return ERC2771ContextUpgradeable._msgSender();
-    }
-
-    function _msgData()
-        internal
-        view
-        virtual
-        override
-        returns (bytes calldata)
-    {
-        return ERC2771ContextUpgradeable._msgData();
-    }
-
     uint256[50] private __gap;
 }

@@ -212,16 +212,26 @@ abstract contract CMTAT_BASE is
         ERC20Upgradeable._update(from, to, amount);
     }
 
+    /************* MetaTx Module *************/
     /**
      * @dev This surcharge is not necessary if you do not use the MetaTxModule
      */
     function _msgSender()
         internal
         view
-        override(MetaTxModule, ContextUpgradeable)
+        override(ERC2771ContextUpgradeable, ContextUpgradeable)
         returns (address sender)
     {
-        return MetaTxModule._msgSender();
+        return ERC2771ContextUpgradeable._msgSender();
+    }
+
+    /**
+     * @dev This surcharge is not necessary if you do not use the MetaTxModule
+     */
+    function _contextSuffixLength() internal view 
+    override(ERC2771ContextUpgradeable, ContextUpgradeable)
+    returns (uint256) {
+         return ERC2771ContextUpgradeable._contextSuffixLength();
     }
 
     /**
@@ -230,10 +240,10 @@ abstract contract CMTAT_BASE is
     function _msgData()
         internal
         view
-        override(MetaTxModule, ContextUpgradeable)
+        override(ERC2771ContextUpgradeable, ContextUpgradeable)
         returns (bytes calldata)
     {
-        return MetaTxModule._msgData();
+        return ERC2771ContextUpgradeable._msgData();
     }
 
     uint256[50] private __gap;

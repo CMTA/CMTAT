@@ -7,6 +7,11 @@ import '@openzeppelin/contracts/proxy/beacon/UpgradeableBeacon.sol';
 import "../CMTAT_PROXY.sol";
 import "../modules/CMTAT_BASE.sol";
 import '@openzeppelin/contracts/access/AccessControl.sol';
+
+/**
+* @notice Factory to deploy beacon proxy
+* 
+*/
 contract CMTAT_BEACON_FACTORY is AccessControl {
     // Private
     mapping(uint256 => address) private cmtats;

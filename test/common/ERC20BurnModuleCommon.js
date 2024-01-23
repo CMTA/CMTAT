@@ -1,11 +1,11 @@
 const { BN, expectEvent } = require('@openzeppelin/test-helpers')
-const { BURNER_ROLE, BURNER_FROM_ROLE, ZERO_ADDRESS } = require('../utils')
+const { BURNER_ROLE, BURNER_FROM_ROLE, MINTER_ROLE, ZERO_ADDRESS } = require('../utils')
 const {
   expectRevertCustomError
 } = require('../../openzeppelin-contracts-upgradeable/test/helpers/customError.js')
 const { should } = require('chai').should()
 
-function ERC20BurnModuleCommon (admin, address1, address2) {
+function ERC20BurnModuleCommon (admin, address1, address2, address3) {
   context('burn', function () {
     const INITIAL_SUPPLY = new BN(50)
     const REASON = 'BURN_TEST'
@@ -165,6 +165,81 @@ function ERC20BurnModuleCommon (admin, address1, address2) {
         [address2, BURNER_FROM_ROLE])
     })
   })
+
+  context('burnAndMint', function () {
+    const INITIAL_SUPPLY = new BN(50)
+    const VALUE1 = new BN(20)
+
+    beforeEach(async function () {
+      await this.cmtat.mint(address1, INITIAL_SUPPLY, { from: admin });
+      (await this.cmtat.totalSupply()).should.be.bignumber.equal(
+        INITIAL_SUPPLY
+      )
+    })
+
+    it('canBeBurnAndMit', async function () {
+      // Arrange
+      const AMOUNT_TO_BURN = BN(20)
+      const AMOUNT_TO_MINT = BN(15)
+      await this.cmtat.grantRole(BURNER_ROLE, address2, { from: admin })
+      await this.cmtat.grantRole(MINTER_ROLE, address2, { from: admin })
+      //await this.cmtat.approve(address2, 50, { from: address1 })
+      // Act
+      this.logs = await this.cmtat.burnAndMint(address1, address3, AMOUNT_TO_BURN, AMOUNT_TO_MINT, "recovery", { from: address2 })
+      // Assert
+      expectEvent(this.logs, 'Transfer', {
+        from: address1,
+        to: ZERO_ADDRESS,
+        value: AMOUNT_TO_BURN
+      })
+      expectEvent(this.logs, 'Transfer', {
+        from: ZERO_ADDRESS,
+        to: address3,
+        value: AMOUNT_TO_MINT
+      })
+      
+      expectEvent(this.logs, 'Burn', {
+        owner: address1,
+        value: AMOUNT_TO_BURN,
+        reason: "recovery" 
+      });
+
+      expectEvent(this.logs, 'Mint', {
+        account: address3,
+        value: AMOUNT_TO_MINT
+      });
+      (await this.cmtat.balanceOf(address1)).should.be.bignumber.equal(INITIAL_SUPPLY.sub(AMOUNT_TO_BURN));
+      (await this.cmtat.balanceOf(address3)).should.be.bignumber.equal(AMOUNT_TO_MINT);
+      (await this.cmtat.totalSupply()).should.be.bignumber.equal(INITIAL_SUPPLY.sub(AMOUNT_TO_BURN).add(AMOUNT_TO_MINT))
+    })
+
+    it('canBeBurnAndMintWithoutMinterRole', async function () {
+      // Arrange
+      const AMOUNT_TO_BURN = BN(20)
+      const AMOUNT_TO_MINT = BN(15)
+      await this.cmtat.grantRole(BURNER_ROLE, address2, { from: admin })
+      //await this.cmtat.approve(address2, 50, { from: address1 })
+      // Act
+      await expectRevertCustomError(
+        this.cmtat.burnAndMint(address1, address3, AMOUNT_TO_BURN, AMOUNT_TO_MINT, "recovery", { from: address2 }),
+        'AccessControlUnauthorizedAccount',
+        [address2, MINTER_ROLE])
+    })
+
+    it('canBeBurnAndMintWithoutBurnerRole', async function () {
+      // Arrange
+      const AMOUNT_TO_BURN = BN(20)
+      const AMOUNT_TO_MINT = BN(15)
+      await this.cmtat.grantRole(MINTER_ROLE, address2, { from: admin })
+      //await this.cmtat.approve(address2, 50, { from: address1 })
+      // Assert
+      await expectRevertCustomError(
+        this.cmtat.burnAndMint(address1, address3, AMOUNT_TO_BURN, AMOUNT_TO_MINT, "recovery", { from: address2 }),
+        'AccessControlUnauthorizedAccount',
+        [address2, BURNER_ROLE])
+    })
+  })
+
 
   context('burnBatch', function () {
     const REASON = 'BURN_TEST'
