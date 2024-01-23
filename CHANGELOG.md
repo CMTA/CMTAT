@@ -4,9 +4,42 @@ Please follow <https://changelog.md/> conventions.
 
 The modifications between the version v2.3.0 and this version are not audited !!!
 
-2.4.0-rc.0 - 20230925
+## 2.4.0-rc.0 - 20230925
 
+**New architecture for the RuleEngine** [#250](https://github.com/CMTA/CMTAT/pull/250)
 
+- A new function `operateOnTransfer` is added and use inside the ValidationModule.
+- Contrary to `validateTransfer`, this function has to be protected by an access control (if not implemented as view or pure)
+- This function can be used to perform operation which modifies the state of the blockchain (storage) by the RuleEngine.
+- The RuleEngine inherits now from *IRuleEngine* wich contains in its interface the function `operateOnTransfer` + IERC-1404
+- The function `validateTransfer` is still available to verify a transfer without performing operation. The behavior is the same than with the previous CMTAT version.
+
+**snapshotModule** [#256](https://github.com/CMTA/CMTAT/pull/256)
+
+- Split the snapshotModuleInternal in two parts : one with the inheritance with ERC-20 and the other part with the base function and does not inherit from ERC-20.
+  Thus, if we want to build a snapshotModule with the RuleEngine, we can use the base contract to avoid the inheritance with ERC-20.
+- Add a function `getSnapshotInfoBatch` to avoid multiple calls when computing debt payment
+
+**AuthorizationEngine** [#254](https://github.com/CMTA/CMTAT/pull/254)
+
+- Add the AuthorizationEngine. With that, it is possible to add supplementary check on the functions `grantRole` and `revokeRole`without modifying the CMTAT.
+
+**BurnModule**
+
+- rename `forceBurn` and `forceBurnBatch` in `burn` and `burnBatch`
+- Add a function `burnFrom` with a specific role (useful for bridge) for compatibility with CCIP [Ccip #260](https://github.com/CMTA/CMTAT/pull/260)
+- Add a function `burnAndMint` to perform a burn/mint operation atomically.
+
+**Gas optimization**
+
+- Add factory contract for deployment with Transparent and beacon proxy [Contract factory #259](https://github.com/CMTA/CMTAT/pull/259)
+- Remove useless init function in internal modules (Done) [remove init functions in wrapper modules #237](https://github.com/CMTA/CMTAT/pull/237)
+
+**Other**
+
+- Remove custom approval function [Remove custom function allowance #225](https://github.com/CMTA/CMTAT/issues/225) (Done)
+- upgrade some JS libraries
+- Upgrade OpenZeppelin to the version [v5.0.1](https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/releases/tag/v5.0.1)
 
 ## 2.3.1
 
