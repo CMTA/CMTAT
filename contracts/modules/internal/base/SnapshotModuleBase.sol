@@ -257,8 +257,8 @@ abstract contract SnapshotModuleBase is Initializable {
     }
 
     /** 
-    * @dev 
-    * Get all snapshots
+    *  
+    * @notice Get all snapshots
     */
     function getAllSnapshots() public view returns (uint256[] memory) {
         return _scheduledSnapshots;

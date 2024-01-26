@@ -60,6 +60,9 @@ function EnforcementModuleCommon (owner, address1, address2, address3) {
       this.logs = await this.cmtat.freeze(address1, reasonFreeze, {
         from: address2
       });
+      // Act + Assert
+      // Act + Assert
+      (await this.cmtat.validateTransfer(address1, address2, 10)).should.be.equal(false);
       // Assert
       (await this.cmtat.frozen(address1)).should.equal(true)
 
@@ -102,7 +105,7 @@ function EnforcementModuleCommon (owner, address1, address2, address3) {
         from: address2
       });
       // Assert
-      (await this.cmtat.frozen(address1)).should.equal(false)
+      (await this.cmtat.frozen(address1)).should.equal(false);
       // emits an Unfreeze event
       expectEvent(this.logs, 'Unfreeze', {
         enforcer: address2,

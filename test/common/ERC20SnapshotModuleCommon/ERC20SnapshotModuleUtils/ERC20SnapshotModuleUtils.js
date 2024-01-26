@@ -24,6 +24,7 @@ async function checkSnapshot (time, totalSupply, addresses, balances) {
 }
 
 async function checkArraySnapshot (snapshots, snapshotsValue) {
+  
   for (let i = 0; i < snapshots.length; ++i) {
     snapshots[i].should.be.bignumber.equal(snapshotsValue[i])
   }

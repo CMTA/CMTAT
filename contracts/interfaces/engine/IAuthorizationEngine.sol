@@ -6,7 +6,14 @@ interface IAuthorizationEngine {
     /**
      * @dev Returns true if the operation is a success, and false otherwise.
      */
-    function operateOnAuthorization(
+    function operateOnGrantRole(
+        bytes32 role, address account
+    ) external returns (bool isValid);
+
+        /**
+     * @dev Returns true if the operation is a success, and false otherwise.
+     */
+    function operateOnRevokeRole(
         bytes32 role, address account
     ) external returns (bool isValid);
    

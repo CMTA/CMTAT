@@ -7,7 +7,7 @@ const {
   deployCMTATProxyWithParameter,
   deployCMTATStandaloneWithParameter
 } = require('../deploymentUtils')
-contract('CMTAT - Deployment', function ([_], deployer) {
+contract('CMTAT - Deployment', function ([_], deployer, address1, address2) {
   it('testCannotDeployProxyWithAdminSetToAddressZero', async function () {
     this.flag = 5
     const DECIMAL = 0
@@ -54,4 +54,4 @@ contract('CMTAT - Deployment', function ([_], deployer) {
       []
     )
   })
-})
+  })

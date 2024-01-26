@@ -50,7 +50,6 @@ abstract contract AuthorizationModule is AccessControlUpgradeable {
 
     }
 
-
     /*
     * @notice set an authorizationEngine if not already set
     * @dev once an AuthorizationEngine is set, it is not possible to unset it
@@ -67,7 +66,7 @@ abstract contract AuthorizationModule is AccessControlUpgradeable {
 
     function grantRole(bytes32 role, address account) public override onlyRole(getRoleAdmin(role)) {
         if (address(authorizationEngine) != address (0)) {
-            bool result = authorizationEngine.operateOnAuthorization(role, account);
+            bool result = authorizationEngine.operateOnGrantRole(role, account);
             if(!result) {
                 // Operation rejected by the authorizationEngine
                revert Errors.CMTAT_AuthorizationModule_InvalidAuthorization();
@@ -76,12 +75,9 @@ abstract contract AuthorizationModule is AccessControlUpgradeable {
         return AccessControlUpgradeable.grantRole(role, account);
     }
 
-
-
-
     function revokeRole(bytes32 role, address account) public override onlyRole(getRoleAdmin(role)) {
         if (address(authorizationEngine) != address (0)) {
-            bool result = authorizationEngine.operateOnAuthorization(role, account);
+            bool result = authorizationEngine.operateOnRevokeRole(role, account);
             if(!result) {
                 // Operation rejected by the authorizationEngine
                revert Errors.CMTAT_AuthorizationModule_InvalidAuthorization();
@@ -89,7 +85,6 @@ abstract contract AuthorizationModule is AccessControlUpgradeable {
         }
         return AccessControlUpgradeable.revokeRole(role, account);
     }
-
 
     /** 
      * @dev Returns `true` if `account` has been granted `role`.

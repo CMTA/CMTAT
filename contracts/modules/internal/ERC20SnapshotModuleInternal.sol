@@ -77,7 +77,7 @@ abstract contract ERC20SnapshotModuleInternal is SnapshotModuleBase, ERC20Upgrad
     }
 
     /**
-    * @notice Return  snapshotBalanceOf and snapshotTotalSupply to avoid multiple calls
+    * @notice Return snapshotBalanceOf and snapshotTotalSupply to avoid multiple calls
     * @return ownerBalance ,  totalSupply - see snapshotBalanceOf and snapshotTotalSupply
     */
     function getSnapshotInfoBatch(uint256 time, address owner) public view returns (uint256 ownerBalance, uint256 totalSupply) {

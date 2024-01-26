@@ -15,13 +15,20 @@ contract(
   'Proxy - Security Test',
   function ([_, admin, attacker, deployerAddress]) {
     beforeEach(async function () {
-      this.CMTAT_PROXY = await deployCMTATProxyImplementation(_, deployerAddress)
-      this.FACTORY = await CMTAT_BEACON_FACTORY.new(this.CMTAT_PROXY.address, admin, admin)
+      this.CMTAT_PROXY_IMPL = await deployCMTATProxyImplementation(_, deployerAddress)
+      this.FACTORY = await CMTAT_BEACON_FACTORY.new(this.CMTAT_PROXY_IMPL.address, admin, admin)
     })
 
-    context('Attacker', function () {
-      // Here the argument to indicate if it is deployed with a proxy, set at false by the attacker
-      it('testCannotBeDeployedByAttacker', async function () {
+    context('FactoryDeployment', function () {
+      it('testCanReturnTheRightImplementation', async function () {
+         // Act + Assert
+        (await this.FACTORY.implementation()).should.equal(this.CMTAT_PROXY_IMPL.address)
+      })
+     
+    })
+
+    context('Deploy CMTAT with Factory', function () {
+    it('testCannotBeDeployedByAttacker', async function () {
       // Act
         await expectRevertCustomError(
           this.FACTORY.deployCMTAT(
@@ -39,9 +46,6 @@ contract(
           [attacker, CMTAT_DEPLOYER_ROLE]
         )
       })
-    })
-
-    context('Deploy CMTAT with Factory', function () {
       // Here the argument to indicate if it is deployed with a proxy, set at false by the attacker
       it('testCanDeployCMTATWithFactory', async function () {
         // Act
@@ -58,10 +62,13 @@ contract(
           DEPLOYMENT_FLAG, {
             from: admin
           });
+
         // Check Id increment
         (this.logs.logs[1].args[1]).should.be.bignumber.equal(BN(0))
         // Assert
-        const CMTAT_ADDRESS = this.logs.logs[1].args[0]
+        const CMTAT_ADDRESS = this.logs.logs[1].args[0];
+        //Check address with ID
+        (await this.FACTORY.getAddress(0)).should.equal(CMTAT_ADDRESS)
         const CMTAT_TRUFFLE = await CMTAT.at(CMTAT_ADDRESS)
         // Act + Assert
         await CMTAT_TRUFFLE.mint(admin, 100, {

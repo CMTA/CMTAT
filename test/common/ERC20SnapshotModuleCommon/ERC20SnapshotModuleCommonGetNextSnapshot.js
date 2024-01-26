@@ -47,6 +47,16 @@ function ERC20SnapshotModuleCommonGetNextSnapshot (
         this.snapshotTime4,
         this.snapshotTime5
       ])
+      // Act
+      const AllSnapshots = await this.cmtat.getAllSnapshots()
+      // Assert
+      checkArraySnapshot(AllSnapshots, [
+        this.snapshotTime1,
+        this.snapshotTime2,
+        this.snapshotTime3,
+        this.snapshotTime4,
+        this.snapshotTime5
+      ])
     })
 
     //

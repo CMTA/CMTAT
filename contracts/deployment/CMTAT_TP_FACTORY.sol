@@ -20,7 +20,6 @@ contract CMTAT_TP_FACTORY is AccessControl {
     address public immutable logic;
     address[] public cmtatsList;
 
-
     /**
     * @param logic_ contract implementation
     * @param factoryAdmin admin

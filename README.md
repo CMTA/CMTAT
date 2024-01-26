@@ -109,11 +109,9 @@ Generally, these modules are not required to be compliant with the CMTA specific
 | Name              | Documentation                                                | Main File                                                    |
 | ----------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | MetaTxModule      | [metatx.md](doc/modules/presentation/extensions/metatx.md)   | [MetaTxModule.sol](./contracts/modules/wrapper/extensions/MetaTxModule.sol) |
-| SnapshotModule*   | [snapshot.md](doc/modules/presentation/extensions/snapshot.md) | [SnapshotModule.sol](./contracts/modules/wrapper/extensions/SnapshotModule.sol) |
+| SnapshotModule    | [snapshot.md](doc/modules/presentation/extensions/snapshot.md) | [SnapshotModule.sol](./contracts/modules/wrapper/extensions/SnapshotModule.sol) |
 | creditEventModule | [creditEvents.md](doc/modules/presentation/extensions/Debt/creditEvents.md) | [CreditEventsModule.sol](./contracts/modules/wrapper/extensions/DebtModule/CreditEventsModule.sol) |
 | DebtBaseModule    | [debtBase.md](doc/modules/presentation/extensions/Debt/debtBase.md) | [DebtBaseModule.sol](./contracts/modules/wrapper/extensions/DebtModule/DebtBaseModule.sol) |
-
-*not imported by default
 
 ### Security
 
@@ -122,14 +120,6 @@ Generally, these modules are not required to be compliant with the CMTA specific
 | AuthorizationModule | [authorization.md](./doc/modules/presentation/security/authorization.md) | [AuthorizationModule.sol](./contracts/modules/security/AuthorizationModule.sol) |
 
 
-
-### SnapshotModule
-
-This module designed for future support of dividend and interest distribution, was not covered by the audit made by ABDK and it is no longer imported by default inside the CMTAT.
-
-If you want to add this module, you have to uncomment the specific lines "SnapshotModule" in [CMTAT_BASE.sol](./contracts/modules/CMTAT_BASE.sol).
-
-A CMTAT version inheriting from the SnapshotModule and used for **testing** purpose is available in [CMTATSnapshotStandaloneTest.sol](./contracts/test/CMTATSnapshot/CMTATSnapshotStandaloneTest.sol) and [CMTATSnapshotProxyTest.sol](./contracts/test/CMTATSnapshot/CMTATSnapshotProxyTest.sol).
 
 
 ## Security
