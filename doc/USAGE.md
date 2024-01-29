@@ -10,7 +10,7 @@ are the latest ones that we tested:
 - npm 10.2.5
 - Hardhat-web3 2.0.0
 - *Truffle 5.9.3 [depreciated]*
-- Solidity 0.8.20 (via solc-js)
+- Solidity 0.8.21 (via solc-js)
 - Node 20.5.0
 - Web3.js 1.9.0
 - OpenZeppelin
