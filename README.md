@@ -52,6 +52,24 @@ Please see the OpenZeppelin [Upgrades plugins](https://docs.openzeppelin.com/upg
 Note that deployment via a proxy is not mandatory, but is recommended by CMTA.
 
 
+
+#### Factory
+
+Factory contracts are available to deploy the CMTAT with a beacon proxy or a transparent proxy.
+
+[CMTAT_BEACON_FACTORY.sol](./contracts/deployment/CMTAT_BEACON_FACTORY.sol)
+
+[CMTAT_TRANSPARENT_FACTORY.sol](./contracts/deployment/CMTAT_TRANSPARENT_FACTORY.sol)
+
+Beacon Proxy factory: the factory will use the same beacon for each beacon proxy. This beacon provides the address of the implementation contract, a CMTAT_PROXY contract. If you upgrade the beacon to point to a new implementation, it will change the implementation contract for all beacon proxy.
+
+![factory-Beacon Factory.drawio](./doc/schema/drawio/factory-Beacon Factory.drawio.png)
+
+Transparent Proxy factory: the factory will use the same implementation for each transparent proxy deployed. Each transparent proxy has its owned proxy admin, deployed inside the constructor of the transparent proxy. Each transparent proxy can upgrade their implementation to a new one independently and without impact on other proxies.
+
+![factory-Transparent Factory.drawio](./doc/schema/drawio/factory-Transparent Factory.drawio.png)
+
+
 ### Gasless support
 
 The CMTAT supports client-side gasless transactions using the [Gas Station Network](https://docs.opengsn.org/#the-problem) (GSN) pattern, the main open standard for transfering fee payment to another account than that of the transaction issuer. The contract uses the OpenZeppelin contract `ERC2771ContextUpgradeable`, which allows a contract to get the original client with `_msgSender()` instead of the fee payer given by `msg.sender` while allowing upgrades on the main contract (see *Deployment via a proxy* above).
