@@ -20,28 +20,28 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">71.43% </span>
+        <span class="strong">100% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>5/7</span>
-      </div>
-      <div class='fl pad1y space-right2'>
-        <span class="strong">50% </span>
-        <span class="quiet">Branches</span>
-        <span class='fraction'>3/6</span>
-      </div>
-      <div class='fl pad1y space-right2'>
-        <span class="strong">80% </span>
-        <span class="quiet">Functions</span>
-        <span class='fraction'>4/5</span>
+        <span class='fraction'>6/6</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">75% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>3/4</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>5/5</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>6/8</span>
+        <span class='fraction'>7/7</span>
       </div>
     </div>
   </div>
-  <div class='status-line medium'></div>
+  <div class='status-line high'></div>
 <pre><table class="coverage">
 <tr><td class="line-count quiet">1
 2
@@ -113,13 +113,7 @@
 68
 69
 70
-71
-72
-73
-74
-75
-76
-77</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+71</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -146,19 +140,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">364×</span>
-<span class="cline-any cline-yes">14×</span>
-<span class="cline-any cline-yes">14×</span>
+<span class="cline-any cline-yes">385×</span>
+<span class="cline-any cline-yes">16×</span>
+<span class="cline-any cline-yes">16×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -170,7 +154,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">51×</span>
+<span class="cline-any cline-yes">12×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -191,6 +175,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">57×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -202,7 +190,7 @@ pragma solidity ^0.8.20;
 import "../../../openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradeable.sol";
 import "../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
 import "../../interfaces/draft-IERC1404/draft-IERC1404Wrapper.sol";
-&nbsp;
+import "../../interfaces/engine/IRuleEngine.sol";
 /**
  * @dev Validation module.
  *
@@ -215,22 +203,12 @@ abstract contract ValidationModuleInternal is
     /**
      * @dev Emitted when a rule engine is set.
      */
-    event RuleEngine(IERC1404Wrapper indexed newRuleEngine);
+    event RuleEngine(IRuleEngine indexed newRuleEngine);
 &nbsp;
-    IERC1404Wrapper public ruleEngine;
-&nbsp;
-    /**
-     * @dev Initializes the contract with rule engine.
-     */
-<span class="fstat-no" title="function not covered" >    function __Validation_init(</span>
-        IERC1404Wrapper ruleEngine_
-    ) internal onlyInitializing {
-<span class="cstat-no" title="statement not covered" >        __Context_init_unchained()</span>;
-<span class="cstat-no" title="statement not covered" >        __Validation_init_unchained(ruleEngine_)</span>;
-    }
+    IRuleEngine public ruleEngine;
 &nbsp;
     function __Validation_init_unchained(
-        IERC1404Wrapper ruleEngine_
+        IRuleEngine ruleEngine_
     ) internal <span class="missing-if-branch" title="else path not taken" >E</span>onlyInitializing {
         if (address(ruleEngine_) != address(0)) {
             ruleEngine = ruleEngine_;
@@ -239,7 +217,7 @@ abstract contract ValidationModuleInternal is
     }
 &nbsp;
     /**
-    @dev before making a call to this function, you have to check if a ruleEngine is set.
+    * @dev before making a call to this function, you have to check if a ruleEngine is set.
     */
     function _validateTransfer(
         address from,
@@ -250,7 +228,7 @@ abstract contract ValidationModuleInternal is
     }
 &nbsp;
     /**
-    @dev before making a call to this function, you have to check if a ruleEngine is set.
+    * @dev before making a call to this function, you have to check if a ruleEngine is set.
     */
     function _messageForTransferRestriction(
         uint8 restrictionCode
@@ -259,7 +237,7 @@ abstract contract ValidationModuleInternal is
     }
 &nbsp;
     /**
-    @dev before making a call to this function, you have to check if a ruleEngine is set.
+    * @dev before making a call to this function, you have to check if a ruleEngine is set.
     */
     function _detectTransferRestriction(
         address from,
@@ -267,6 +245,10 @@ abstract contract ValidationModuleInternal is
         uint256 amount
     ) internal view returns (uint8) {
         return ruleEngine.detectTransferRestriction(from, to, amount);
+    }
+&nbsp;
+    function _operateOnTransfer(address from, address to, uint256 amount) virtual internal returns (bool) {
+        return ruleEngine.operateOnTransfer(from, to, amount);
     }
 &nbsp;
     uint256[50] private __gap;
@@ -277,7 +259,7 @@ abstract contract ValidationModuleInternal is
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Fri Nov 10 2023 14:03:15 GMT+0100 (Central European Standard Time)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Mon Jan 29 2024 10:44:14 GMT+0100 (Central European Standard Time)
 </div>
 </div>
 <script src="../../../prettify.js"></script>
