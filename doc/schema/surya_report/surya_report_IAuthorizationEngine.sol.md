@@ -16,7 +16,8 @@
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
 | **IAuthorizationEngine** | Interface |  |||
-| └ | operateOnAuthorization | External ❗️ | 🛑  |NO❗️ |
+| └ | operateOnGrantRole | External ❗️ | 🛑  |NO❗️ |
+| └ | operateOnRevokeRole | External ❗️ | 🛑  |NO❗️ |
 
 
 ### Legend

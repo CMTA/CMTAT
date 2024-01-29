@@ -5,7 +5,7 @@ const {
 const { DEFAULT_ADMIN_ROLE } = require('../../utils.js')
 const { should } = require('chai').should()
 
-function AuthorizationModuleSetAuthorizationEngineCommon(admin, address1, authorizationEngine) {
+function AuthorizationModuleSetAuthorizationEngineCommon (admin, address1, authorizationEngine) {
   context('AuthorizationEngineSetTest', function () {
     it('testCanBeSetByAdminIfNotAlreadySet', async function () {
       // Act
@@ -48,7 +48,7 @@ function AuthorizationModuleSetAuthorizationEngineCommon(admin, address1, author
       // Arrange
       await this.authorizationEngineMock.authorizeAdminChange(address1)
       // Act
-      await this.cmtat.setAuthorizationEngine(this.authorizationEngineMock.address, { from: admin})
+      await this.cmtat.setAuthorizationEngine(this.authorizationEngineMock.address, { from: admin })
       // Assert
       this.logs = await this.cmtat.grantRole(DEFAULT_ADMIN_ROLE, address1, {
         from: admin
@@ -75,7 +75,7 @@ function AuthorizationModuleSetAuthorizationEngineCommon(admin, address1, author
       // Arrange
       await this.authorizationEngineMock.authorizeAdminChange(address1)
       // Act
-      await this.cmtat.setAuthorizationEngine(this.authorizationEngineMock.address, { from: admin})
+      await this.cmtat.setAuthorizationEngine(this.authorizationEngineMock.address, { from: admin })
       // Assert
       this.logs = await this.cmtat.revokeRole(DEFAULT_ADMIN_ROLE, address1, {
         from: admin
@@ -84,11 +84,11 @@ function AuthorizationModuleSetAuthorizationEngineCommon(admin, address1, author
       (await this.cmtat.hasRole(DEFAULT_ADMIN_ROLE, address1)).should.equal(false)
     })
 
-     // Mock
-     it('testCannotRevokeAdminIfNotAuthorizedByTheEngine', async function () {
+    // Mock
+    it('testCannotRevokeAdminIfNotAuthorizedByTheEngine', async function () {
       // Arrange
       await this.cmtat.setAuthorizationEngine(this.authorizationEngineMock.address, { from: admin })
-      await this.authorizationEngineMock.setRevokeAdminRoleAuthorized(false);
+      await this.authorizationEngineMock.setRevokeAdminRoleAuthorized(false)
       // Act
       await expectRevertCustomError(
         this.cmtat.revokeRole(DEFAULT_ADMIN_ROLE, address1, {

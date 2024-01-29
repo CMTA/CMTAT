@@ -24,6 +24,7 @@
 | └ | burnAndMint | Public ❗️ | 🛑  |NO❗️ |
 | └ | _update | Internal 🔒 | 🛑  | |
 | └ | _msgSender | Internal 🔒 |   | |
+| └ | _contextSuffixLength | Internal 🔒 |   | |
 | └ | _msgData | Internal 🔒 |   | |
 
 

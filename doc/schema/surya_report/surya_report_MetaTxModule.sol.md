@@ -17,8 +17,6 @@
 ||||||
 | **MetaTxModule** | Implementation | ERC2771ContextUpgradeable |||
 | └ | <Constructor> | Public ❗️ | 🛑  | ERC2771ContextUpgradeable |
-| └ | _msgSender | Internal 🔒 |   | |
-| └ | _msgData | Internal 🔒 |   | |
 
 
 ### Legend

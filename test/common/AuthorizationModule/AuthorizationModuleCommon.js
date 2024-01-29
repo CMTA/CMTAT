@@ -76,7 +76,5 @@ function AuthorizationModuleCommon (admin, address1, address2) {
       (await this.cmtat.hasRole(PAUSER_ROLE, address1)).should.equal(true)
     })
   })
-
-
 }
 module.exports = AuthorizationModuleCommon

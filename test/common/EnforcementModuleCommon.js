@@ -105,7 +105,7 @@ function EnforcementModuleCommon (owner, address1, address2, address3) {
         from: address2
       });
       // Assert
-      (await this.cmtat.frozen(address1)).should.equal(false);
+      (await this.cmtat.frozen(address1)).should.equal(false)
       // emits an Unfreeze event
       expectEvent(this.logs, 'Unfreeze', {
         enforcer: address2,

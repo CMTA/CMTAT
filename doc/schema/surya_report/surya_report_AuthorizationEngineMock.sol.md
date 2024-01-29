@@ -18,7 +18,9 @@
 | **AuthorizationEngineMock** | Implementation | IAuthorizationEngine |||
 | └ | <Constructor> | Public ❗️ | 🛑  |NO❗️ |
 | └ | authorizeAdminChange | External ❗️ | 🛑  |NO❗️ |
-| └ | operateOnAuthorization | External ❗️ | 🛑  |NO❗️ |
+| └ | setRevokeAdminRoleAuthorized | External ❗️ | 🛑  |NO❗️ |
+| └ | operateOnGrantRole | External ❗️ | 🛑  |NO❗️ |
+| └ | operateOnRevokeRole | External ❗️ |   |NO❗️ |
 
 
 ### Legend

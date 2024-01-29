@@ -183,9 +183,9 @@ function ERC20BurnModuleCommon (admin, address1, address2, address3) {
       const AMOUNT_TO_MINT = BN(15)
       await this.cmtat.grantRole(BURNER_ROLE, address2, { from: admin })
       await this.cmtat.grantRole(MINTER_ROLE, address2, { from: admin })
-      //await this.cmtat.approve(address2, 50, { from: address1 })
+      // await this.cmtat.approve(address2, 50, { from: address1 })
       // Act
-      this.logs = await this.cmtat.burnAndMint(address1, address3, AMOUNT_TO_BURN, AMOUNT_TO_MINT, "recovery", { from: address2 })
+      this.logs = await this.cmtat.burnAndMint(address1, address3, AMOUNT_TO_BURN, AMOUNT_TO_MINT, 'recovery', { from: address2 })
       // Assert
       expectEvent(this.logs, 'Transfer', {
         from: address1,
@@ -197,12 +197,12 @@ function ERC20BurnModuleCommon (admin, address1, address2, address3) {
         to: address3,
         value: AMOUNT_TO_MINT
       })
-      
+
       expectEvent(this.logs, 'Burn', {
         owner: address1,
         value: AMOUNT_TO_BURN,
-        reason: "recovery" 
-      });
+        reason: 'recovery'
+      })
 
       expectEvent(this.logs, 'Mint', {
         account: address3,
@@ -218,10 +218,10 @@ function ERC20BurnModuleCommon (admin, address1, address2, address3) {
       const AMOUNT_TO_BURN = BN(20)
       const AMOUNT_TO_MINT = BN(15)
       await this.cmtat.grantRole(BURNER_ROLE, address2, { from: admin })
-      //await this.cmtat.approve(address2, 50, { from: address1 })
+      // await this.cmtat.approve(address2, 50, { from: address1 })
       // Act
       await expectRevertCustomError(
-        this.cmtat.burnAndMint(address1, address3, AMOUNT_TO_BURN, AMOUNT_TO_MINT, "recovery", { from: address2 }),
+        this.cmtat.burnAndMint(address1, address3, AMOUNT_TO_BURN, AMOUNT_TO_MINT, 'recovery', { from: address2 }),
         'AccessControlUnauthorizedAccount',
         [address2, MINTER_ROLE])
     })
@@ -231,15 +231,14 @@ function ERC20BurnModuleCommon (admin, address1, address2, address3) {
       const AMOUNT_TO_BURN = BN(20)
       const AMOUNT_TO_MINT = BN(15)
       await this.cmtat.grantRole(MINTER_ROLE, address2, { from: admin })
-      //await this.cmtat.approve(address2, 50, { from: address1 })
+      // await this.cmtat.approve(address2, 50, { from: address1 })
       // Assert
       await expectRevertCustomError(
-        this.cmtat.burnAndMint(address1, address3, AMOUNT_TO_BURN, AMOUNT_TO_MINT, "recovery", { from: address2 }),
+        this.cmtat.burnAndMint(address1, address3, AMOUNT_TO_BURN, AMOUNT_TO_MINT, 'recovery', { from: address2 }),
         'AccessControlUnauthorizedAccount',
         [address2, BURNER_ROLE])
     })
   })
-
 
   context('burnBatch', function () {
     const REASON = 'BURN_TEST'

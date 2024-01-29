@@ -21,14 +21,13 @@ contract(
 
     context('FactoryDeployment', function () {
       it('testCanReturnTheRightImplementation', async function () {
-         // Act + Assert
+        // Act + Assert
         (await this.FACTORY.implementation()).should.equal(this.CMTAT_PROXY_IMPL.address)
       })
-     
     })
 
     context('Deploy CMTAT with Factory', function () {
-    it('testCannotBeDeployedByAttacker', async function () {
+      it('testCannotBeDeployedByAttacker', async function () {
       // Act
         await expectRevertCustomError(
           this.FACTORY.deployCMTAT(
@@ -67,7 +66,7 @@ contract(
         (this.logs.logs[1].args[1]).should.be.bignumber.equal(BN(0))
         // Assert
         const CMTAT_ADDRESS = this.logs.logs[1].args[0];
-        //Check address with ID
+        // Check address with ID
         (await this.FACTORY.getAddress(0)).should.equal(CMTAT_ADDRESS)
         const CMTAT_TRUFFLE = await CMTAT.at(CMTAT_ADDRESS)
         // Act + Assert

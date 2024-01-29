@@ -54,4 +54,4 @@ contract('CMTAT - Deployment', function ([_], deployer, address1, address2) {
       []
     )
   })
-  })
+})

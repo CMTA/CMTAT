@@ -80,7 +80,7 @@ function PauseModuleCommon (admin, address1, address2, address3) {
       this.logs = await this.cmtat.unpause({ from: address1 });
 
       // Assert
-      (await this.cmtat.paused()).should.equal(false);
+      (await this.cmtat.paused()).should.equal(false)
       // emits a Unpaused event
       expectEvent(this.logs, 'Unpaused', { account: address1 })
       // Transfer works
@@ -104,7 +104,7 @@ function PauseModuleCommon (admin, address1, address2, address3) {
       // Act
       await this.cmtat.pause({ from: admin });
       // Act + Assert
-      (await this.cmtat.validateTransfer(address1, address2, AMOUNT_TO_TRANSFER) ).should.be.equal(false);
+      (await this.cmtat.validateTransfer(address1, address2, AMOUNT_TO_TRANSFER)).should.be.equal(false);
       // Assert
       (
         await this.cmtat.detectTransferRestriction(

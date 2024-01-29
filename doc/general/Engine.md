@@ -64,11 +64,23 @@ Main advantages :
 
 ### Implementation
 
-An **AuthorizationEngine** contract has to implement the interface `IAuthorizationEngine`. This interface defines mainly one function.
+An **AuthorizationEngine** contract has to implement the interface `IAuthorizationEngine`. This interface defines mainly twos functions, one to grant a Role and the other one to revole a role.
 
 ```solidity
-function operateOnAuthorization(bytes32 role, address account) 
-external returns (bool)
+    /**
+     * @dev Returns true if the operation is authorized, and false otherwise.
+     */
+    function operateOnGrantRole(
+        bytes32 role, address account
+    ) external returns (bool isValid);
+
+        /**
+     * @dev Returns true if the operation is authorized, and false otherwise.
+     */
+    function operateOnRevokeRole(
+        bytes32 role, address account
+    ) external returns (bool isValid);
+   
 ```
 
 ### Schema
