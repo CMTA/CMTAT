@@ -7,6 +7,9 @@
     "test"
   ],
   "scripts": {
+    "deploy:mainnet": "npx hardhat run scripts/1_deploy_contracts.js --network mainnet",
+    "deploy:holesky": "npx hardhat run scripts/1_deploy_contracts.js --network holesky",
+    "deploy:polygon": "npx hardhat run scripts/1_deploy_contracts.js --network polygon",
     "test": "npx hardhat test",
     "lint:js": "npx eslint .",
     "lint:js:fix": "npx eslint . --fix",
@@ -53,9 +56,9 @@
   "homepage": "https://github.com/CMTA/CMTAT",
   "devDependencies": {
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.2",
-    "@nomicfoundation/hardhat-verify": "^1.1.1",
+    "@nomicfoundation/hardhat-verify": "^2.0.4",
     "@nomiclabs/hardhat-web3": "^2.0.0",
-    "@openzeppelin/hardhat-upgrades": "^2.4.3",
+    "@openzeppelin/hardhat-upgrades": "^3.0.2",
     "chai": "^4.3.7",
     "coveralls": "^3.1.1",
     "dotenv": "^16.0.3",
