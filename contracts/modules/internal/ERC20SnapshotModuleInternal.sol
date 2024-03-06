@@ -8,6 +8,7 @@ import "../../../openzeppelin-contracts-upgradeable/contracts/token/ERC20/ERC20U
 import {Arrays} from '@openzeppelin/contracts/utils/Arrays.sol';
 
 import "../../libraries/Errors.sol";
+import "../../interfaces/ICMTATSnapshot.sol";
 import "./base/SnapshotModuleBase.sol";
 /**
  * @dev Snapshot module internal.
@@ -32,6 +33,56 @@ abstract contract ERC20SnapshotModuleInternal is SnapshotModuleBase, ERC20Upgrad
     function __ERC20Snapshot_init_unchained() internal onlyInitializing {
         // Nothing to do
         // _currentSnapshotTime & _currentSnapshotIndex are initialized to zero
+    }
+
+    /**
+    * @notice Return snapshotBalanceOf and snapshotTotalSupply to avoid multiple calls
+    * @return ownerBalance ,  totalSupply - see snapshotBalanceOf and snapshotTotalSupply
+    */
+    function snapshotInfo(uint256 time, address owner) public view returns (uint256 ownerBalance, uint256 totalSupply) {
+        ownerBalance = snapshotBalanceOf(time, owner);
+        totalSupply = snapshotTotalSupply(time);
+    }
+
+    /**
+    * @notice Return snapshotBalanceOf for each address in an array and the total supply
+    * @return ownerBalances array with the balance of each address, the total supply
+    */
+    function snapshotInfoBatch(uint256 time, address[] calldata addresses) public view returns (uint256[] memory ownerBalances, uint256 totalSupply) {
+        ownerBalances = new uint256[](addresses.length);
+        for(uint256 i = 0; i < addresses.length; ++i){
+             ownerBalances[i]  = snapshotBalanceOf(time, addresses[i]);
+        }
+        totalSupply = snapshotTotalSupply(time);
+    }
+
+    /** 
+    * @notice Return the number of tokens owned by the given owner at the time when the snapshot with the given time was created.
+    * @return value stored in the snapshot, or the actual balance if no snapshot
+    */
+    function snapshotBalanceOf(
+        uint256 time,
+        address owner
+    ) public view returns (uint256) {
+        (bool snapshotted, uint256 value) = _valueAt(
+            time,
+            _accountBalanceSnapshots[owner]
+        );
+
+        return snapshotted ? value : balanceOf(owner);
+    }
+
+    /**
+    * @dev See {OpenZeppelin - ERC20Snapshot}
+    * Retrieves the total supply at the specified time.
+    * @return value stored in the snapshot, or the actual totalSupply if no snapshot
+    */
+    function snapshotTotalSupply(uint256 time) public view returns (uint256) {
+        (bool snapshotted, uint256 value) = _valueAt(
+            time,
+            _totalSupplySnapshots
+        );
+        return snapshotted ? value : totalSupply();
     }
 
 
@@ -61,7 +112,6 @@ abstract contract ERC20SnapshotModuleInternal is SnapshotModuleBase, ERC20Upgrad
         }
     }
 
-
     /**
     * @dev See {OpenZeppelin - ERC20Snapshot}
     */
@@ -74,45 +124,6 @@ abstract contract ERC20SnapshotModuleInternal is SnapshotModuleBase, ERC20Upgrad
     */
     function _updateTotalSupplySnapshot() private {
         _updateSnapshot(_totalSupplySnapshots, totalSupply());
-    }
-
-    /**
-    * @notice Return snapshotBalanceOf and snapshotTotalSupply to avoid multiple calls
-    * @return ownerBalance ,  totalSupply - see snapshotBalanceOf and snapshotTotalSupply
-    */
-    function getSnapshotInfoBatch(uint256 time, address owner) public view returns (uint256 ownerBalance, uint256 totalSupply) {
-        ownerBalance = snapshotBalanceOf(time, owner);
-        totalSupply = snapshotTotalSupply(time);
-    }
-
-
-    /** 
-    * @notice Return the number of tokens owned by the given owner at the time when the snapshot with the given time was created.
-    * @return value stored in the snapshot, or the actual balance if no snapshot
-    */
-    function snapshotBalanceOf(
-        uint256 time,
-        address owner
-    ) public view returns (uint256) {
-        (bool snapshotted, uint256 value) = _valueAt(
-            time,
-            _accountBalanceSnapshots[owner]
-        );
-
-        return snapshotted ? value : balanceOf(owner);
-    }
-
-    /**
-    * @dev See {OpenZeppelin - ERC20Snapshot}
-    * Retrieves the total supply at the specified time.
-    * @return value stored in the snapshot, or the actual totalSupply if no snapshot
-    */
-    function snapshotTotalSupply(uint256 time) public view returns (uint256) {
-        (bool snapshotted, uint256 value) = _valueAt(
-            time,
-            _totalSupplySnapshots
-        );
-        return snapshotted ? value : totalSupply();
     }
 
     uint256[50] private __gap;

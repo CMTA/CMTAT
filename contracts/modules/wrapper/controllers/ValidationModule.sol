@@ -42,32 +42,7 @@ abstract contract ValidationModule is
         emit RuleEngine(ruleEngine_);
     }
 
-    /**
-     * @dev ERC1404 check if _value token can be transferred from _from to _to
-     * @param from address The address which you want to send tokens from
-     * @param to address The address which you want to transfer to
-     * @param amount uint256 the amount of tokens to be transferred
-     * @return code of the rejection reason
-     */
-    function detectTransferRestriction(
-        address from,
-        address to,
-        uint256 amount
-    ) public view override returns (uint8 code) {
-        if (paused()) {
-            return uint8(REJECTED_CODE_BASE.TRANSFER_REJECTED_PAUSED);
-        } else if (frozen(from)) {
-            return uint8(REJECTED_CODE_BASE.TRANSFER_REJECTED_FROM_FROZEN);
-        } else if (frozen(to)) {
-            return uint8(REJECTED_CODE_BASE.TRANSFER_REJECTED_TO_FROZEN);
-        } else if (address(ruleEngine) != address(0)) {
-            return _detectTransferRestriction(from, to, amount);
-        } else {
-            return uint8(REJECTED_CODE_BASE.TRANSFER_OK);
-        }
-    }
-
-    /**
+        /**
      * @dev ERC1404 returns the human readable explaination corresponding to the error code returned by detectTransferRestriction
      * @param restrictionCode The error code returned by detectTransferRestriction
      * @return message The human readable explaination corresponding to the error code returned by detectTransferRestriction
@@ -99,7 +74,46 @@ abstract contract ValidationModule is
         }
     }
     
-    function validateTransferByModule(
+    /**
+     * @dev ERC1404 check if _value token can be transferred from _from to _to
+     * @param from address The address which you want to send tokens from
+     * @param to address The address which you want to transfer to
+     * @param amount uint256 the amount of tokens to be transferred
+     * @return code of the rejection reason
+     */
+    function detectTransferRestriction(
+        address from,
+        address to,
+        uint256 amount
+    ) public view override returns (uint8 code) {
+        if (paused()) {
+            return uint8(REJECTED_CODE_BASE.TRANSFER_REJECTED_PAUSED);
+        } else if (frozen(from)) {
+            return uint8(REJECTED_CODE_BASE.TRANSFER_REJECTED_FROM_FROZEN);
+        } else if (frozen(to)) {
+            return uint8(REJECTED_CODE_BASE.TRANSFER_REJECTED_TO_FROZEN);
+        } else if (address(ruleEngine) != address(0)) {
+            return _detectTransferRestriction(from, to, amount);
+        } else {
+            return uint8(REJECTED_CODE_BASE.TRANSFER_OK);
+        }
+    }
+
+    function validateTransfer(
+        address from,
+        address to,
+        uint256 amount
+    ) public view override returns (bool) {
+        if (!_validateTransferByModule(from, to, amount)) {
+            return false;
+        }
+        if (address(ruleEngine) != address(0)) {
+            return _validateTransfer(from, to, amount);
+        }
+        return true;
+    }
+
+    function _validateTransferByModule(
         address from,
         address to,
         uint256 /*amount*/
@@ -110,22 +124,8 @@ abstract contract ValidationModule is
         return true;
     }
 
-    function validateTransfer(
-        address from,
-        address to,
-        uint256 amount
-    ) public view override returns (bool) {
-        if (!validateTransferByModule(from, to, amount)) {
-            return false;
-        }
-        if (address(ruleEngine) != address(0)) {
-            return _validateTransfer(from, to, amount);
-        }
-        return true;
-    }
-
     function _operateOnTransfer(address from, address to, uint256 amount) override internal returns (bool){
-        if (!validateTransferByModule(from, to, amount)){
+        if (!_validateTransferByModule(from, to, amount)){
             return false;
         }
         if (address(ruleEngine) != address(0)) {

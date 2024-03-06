@@ -66,6 +66,53 @@ abstract contract SnapshotModuleBase is Initializable {
         // _currentSnapshotTime & _currentSnapshotIndex are initialized to zero
     }
 
+
+    /** 
+    *  
+    * @notice Get all snapshots
+    */
+    function getAllSnapshots() public view returns (uint256[] memory) {
+        return _scheduledSnapshots;
+    }
+
+        /** 
+    * @dev 
+    * Get the next scheduled snapshots
+    */
+    function getNextSnapshots() public view returns (uint256[] memory) {
+        uint256[] memory nextScheduledSnapshot = new uint256[](0);
+        // no snapshot were planned
+        if (_scheduledSnapshots.length > 0) {
+            (
+                uint256 timeLowerBound,
+                uint256 indexLowerBound
+            ) = _findScheduledMostRecentPastSnapshot();
+            // All snapshots are situated in the futur
+            if ((timeLowerBound == 0) && (_currentSnapshotTime == 0)) {
+                return _scheduledSnapshots;
+            } else {
+                // There are snapshots situated in the futur
+                if (indexLowerBound + 1 != _scheduledSnapshots.length) {
+                    // All next snapshots are located after the snapshot specified by indexLowerBound
+                    uint256 arraySize = _scheduledSnapshots.length -
+                        indexLowerBound -
+                        1;
+                    nextScheduledSnapshot = new uint256[](arraySize);
+                    for (uint256 i; i < arraySize; ) {
+                        nextScheduledSnapshot[i] = _scheduledSnapshots[
+                            indexLowerBound + 1 + i
+                        ];
+                        unchecked {
+                            ++i;
+                        }
+                    }
+                }
+            }
+        }
+        return nextScheduledSnapshot;
+    }
+
+
     /** 
     * @dev schedule a snapshot at the specified time
     * You can only add a snapshot after the last previous
@@ -218,52 +265,6 @@ abstract contract SnapshotModuleBase is Initializable {
         }
         _scheduledSnapshots.pop();
     }
-
-    /** 
-    * @dev 
-    * Get the next scheduled snapshots
-    */
-    function getNextSnapshots() public view returns (uint256[] memory) {
-        uint256[] memory nextScheduledSnapshot = new uint256[](0);
-        // no snapshot were planned
-        if (_scheduledSnapshots.length > 0) {
-            (
-                uint256 timeLowerBound,
-                uint256 indexLowerBound
-            ) = _findScheduledMostRecentPastSnapshot();
-            // All snapshots are situated in the futur
-            if ((timeLowerBound == 0) && (_currentSnapshotTime == 0)) {
-                return _scheduledSnapshots;
-            } else {
-                // There are snapshots situated in the futur
-                if (indexLowerBound + 1 != _scheduledSnapshots.length) {
-                    // All next snapshots are located after the snapshot specified by indexLowerBound
-                    uint256 arraySize = _scheduledSnapshots.length -
-                        indexLowerBound -
-                        1;
-                    nextScheduledSnapshot = new uint256[](arraySize);
-                    for (uint256 i; i < arraySize; ) {
-                        nextScheduledSnapshot[i] = _scheduledSnapshots[
-                            indexLowerBound + 1 + i
-                        ];
-                        unchecked {
-                            ++i;
-                        }
-                    }
-                }
-            }
-        }
-        return nextScheduledSnapshot;
-    }
-
-    /** 
-    *  
-    * @notice Get all snapshots
-    */
-    function getAllSnapshots() public view returns (uint256[] memory) {
-        return _scheduledSnapshots;
-    }
-
 
     /**
     * @dev See {OpenZeppelin - ERC20Snapshot}
