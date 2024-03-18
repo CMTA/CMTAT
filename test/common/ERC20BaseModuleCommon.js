@@ -4,7 +4,7 @@ const {
 } = require('../../openzeppelin-contracts-upgradeable/test/helpers/customError')
 const { should } = require('chai').should()
 
-function BaseModuleCommon (admin, address1, address2, address3, proxyTest) {
+function ERC20BaseModuleCommon (admin, address1, address2, address3, proxyTest) {
   context('Token structure', function () {
     it('testHasTheDefinedName', async function () {
       // Act + Assert
@@ -17,6 +17,32 @@ function BaseModuleCommon (admin, address1, address2, address3, proxyTest) {
     it('testDecimalsEqual0', async function () {
       // Act + Assert
       (await this.cmtat.decimals()).should.be.bignumber.equal('0')
+    })
+  })
+
+  context('Balance', function () {
+    const TOKEN_AMOUNTS = [BN(31), BN(32), BN(33)]
+    const TOKEN_INITIAL_SUPPLY = TOKEN_AMOUNTS.reduce((a, b) => {
+      return a.add(b)
+    })
+    beforeEach(async function () {
+      await this.cmtat.mint(address1, TOKEN_AMOUNTS[0], { from: admin })
+      await this.cmtat.mint(address2, TOKEN_AMOUNTS[1], { from: admin })
+      await this.cmtat.mint(address3, TOKEN_AMOUNTS[2], { from: admin })
+    })
+    it('testHasTheCorrectBalanceInfo', async function () {
+      // Act + Assert
+      // Assert
+      let result = await this.cmtat.balanceInfo(address1, address2);
+      result[0].should.be.bignumber.equal(
+        TOKEN_AMOUNTS[0]
+      );
+      result[1].should.be.bignumber.equal(
+        TOKEN_AMOUNTS[1]
+      );
+      result[2].should.be.bignumber.equal(
+        TOKEN_INITIAL_SUPPLY
+      );
     })
   })
 
@@ -362,4 +388,4 @@ function BaseModuleCommon (admin, address1, address2, address3, proxyTest) {
     })
   })
 }
-module.exports = BaseModuleCommon
+module.exports = ERC20BaseModuleCommon

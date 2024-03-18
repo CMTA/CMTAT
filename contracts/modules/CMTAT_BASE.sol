@@ -13,8 +13,8 @@ import "./wrapper/core/EnforcementModule.sol";
 import "./wrapper/core/ERC20BaseModule.sol";
 import "./wrapper/core/PauseModule.sol";
 /*
-SnapshotModule:
-Add this import in case you add the SnapshotModule
+* SnapshotModule:
+* Add this import in case you add the SnapshotModule
 */
 import "./wrapper/extensions/ERC20SnapshotModule.sol";
 

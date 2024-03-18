@@ -101,5 +101,16 @@ abstract contract ERC20BaseModule is ERC20Upgradeable {
         return result;
     }
 
+    /**
+    * @param from address
+    * @param to address
+    * @dev useful for the snapshot rule
+    */
+    function balanceInfo(address from, address to) public view returns(uint256 fromBalance, uint256 toBalance, uint256 totalSupply) {
+        fromBalance = ERC20Upgradeable.balanceOf(from);
+        toBalance = ERC20Upgradeable.balanceOf(to);
+        totalSupply = ERC20Upgradeable.totalSupply();
+    }
+
     uint256[50] private __gap;
 }
