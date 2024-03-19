@@ -22,7 +22,6 @@ import "./base/SnapshotModuleBase.sol";
 abstract contract ERC20SnapshotModuleInternal is SnapshotModuleBase, ERC20Upgradeable {
     using Arrays for uint256[];
 
-
     /** 
     * @dev 
     * list of scheduled snapshot (time)
@@ -45,7 +44,7 @@ abstract contract ERC20SnapshotModuleInternal is SnapshotModuleBase, ERC20Upgrad
     }
 
     /**
-    * @notice Return snapshotBalanceOf for each address in an array and the total supply
+    * @notice Return snapshotBalanceOf for each address in the array and the total supply
     * @return ownerBalances array with the balance of each address, the total supply
     */
     function snapshotInfoBatch(uint256 time, address[] calldata addresses) public view returns (uint256[] memory ownerBalances, uint256 totalSupply) {

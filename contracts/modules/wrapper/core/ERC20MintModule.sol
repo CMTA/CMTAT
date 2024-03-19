@@ -62,13 +62,10 @@ abstract contract ERC20MintModule is ERC20Upgradeable, ICCIPMintERC20, Authoriza
         if (bool(accounts.length != values.length)) {
             revert Errors.CMTAT_MintModule_AccountsValueslengthMismatch();
         }
-
-        for (uint256 i = 0; i < accounts.length; ) {
+        // No need of unchecked block since Soliditiy 0.8.22
+        for (uint256 i = 0; i < accounts.length; ++i ) {
             _mint(accounts[i], values[i]);
             emit Mint(accounts[i], values[i]);
-            unchecked {
-                ++i;
-            }
         }
     }
 

@@ -11,6 +11,7 @@ async function checkSnapshot (time, totalSupply, addresses, balances) {
   (await this.cmtat.snapshotTotalSupply(time)).should.be.bignumber.equal(
     totalSupply
   )
+  const result = await this.cmtat.snapshotInfoBatch(time, addresses)
   for (let i = 0; i < balances.length; ++i) {
     (
       await this.cmtat.snapshotBalanceOf(time, addresses[i])
@@ -19,8 +20,10 @@ async function checkSnapshot (time, totalSupply, addresses, balances) {
     const { 0: ownerBalance, 1: totalSupplyGet } = await this.cmtat.snapshotInfo(time, addresses[i])
     // const [ownerBalance, totalSupplyGet]
     ownerBalance.should.be.bignumber.equal(balances[i])
+    result[0][i].should.be.bignumber.equal(balances[i])
     totalSupplyGet.should.be.bignumber.equal(totalSupply)
   }
+  result[1].should.be.bignumber.equal(totalSupply)
 }
 
 async function checkArraySnapshot (snapshots, snapshotsValue) {

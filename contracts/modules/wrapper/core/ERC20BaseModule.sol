@@ -66,14 +66,11 @@ abstract contract ERC20BaseModule is ERC20Upgradeable {
         if (bool(tos.length != values.length)) {
             revert Errors.CMTAT_ERC20BaseModule_TosValueslengthMismatch();
         }
-
-        for (uint256 i = 0; i < tos.length; ) {
+        // No need of unchecked block since Soliditiy 0.8.22
+        for (uint256 i = 0; i < tos.length; ++i) {
             // We call directly the internal function transfer
             // The reason is that the public function adds only the owner address recovery
             ERC20Upgradeable._transfer(_msgSender(), tos[i], values[i]);
-            unchecked {
-                ++i;
-            }
         }
         // not really useful
         // Here only to keep the same behaviour as transfer
@@ -102,13 +99,15 @@ abstract contract ERC20BaseModule is ERC20Upgradeable {
     }
 
     /**
-    * @param from address
-    * @param to address
+    * @param addresses list of address to know their balance
+    * @return balances ,totalSupply array with balance for each address, totalSupply
     * @dev useful for the snapshot rule
     */
-    function balanceInfo(address from, address to) public view returns(uint256 fromBalance, uint256 toBalance, uint256 totalSupply) {
-        fromBalance = ERC20Upgradeable.balanceOf(from);
-        toBalance = ERC20Upgradeable.balanceOf(to);
+    function balanceInfo(address[] calldata addresses) public view returns(uint256[] memory balances , uint256 totalSupply) {
+        balances = new uint256[](addresses.length);
+        for(uint256 i = 0; i < addresses.length; ++i){
+            balances[i] = ERC20Upgradeable.balanceOf(addresses[i]);
+        }
         totalSupply = ERC20Upgradeable.totalSupply();
     }
 

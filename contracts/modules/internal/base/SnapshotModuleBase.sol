@@ -98,13 +98,11 @@ abstract contract SnapshotModuleBase is Initializable {
                         indexLowerBound -
                         1;
                     nextScheduledSnapshot = new uint256[](arraySize);
-                    for (uint256 i; i < arraySize; ) {
+                    // No need of unchecked block since Soliditiy 0.8.22
+                    for (uint256 i; i < arraySize; ++i) {
                         nextScheduledSnapshot[i] = _scheduledSnapshots[
                             indexLowerBound + 1 + i
                         ];
-                        unchecked {
-                            ++i;
-                        }
                     }
                 }
             }
@@ -257,11 +255,9 @@ abstract contract SnapshotModuleBase is Initializable {
         if (!isFound) {
             revert Errors.CMTAT_SnapshotModule_SnapshotNotFound();
         }
-        for (uint256 i = index; i + 1 < _scheduledSnapshots.length; ) {
+        // No need of unchecked block since Soliditiy 0.8.22
+        for (uint256 i = index; i + 1 < _scheduledSnapshots.length; ++i ) {
             _scheduledSnapshots[i] = _scheduledSnapshots[i + 1];
-            unchecked {
-                ++i;
-            }
         }
         _scheduledSnapshots.pop();
     }
@@ -392,16 +388,14 @@ abstract contract SnapshotModuleBase is Initializable {
         // mostRecent is initialized in the loop
         uint256 mostRecent;
         index = currentArraySize;
-        for (uint256 i = _currentSnapshotIndex; i < currentArraySize; ) {
+        // No need of unchecked block since Soliditiy 0.8.22
+        for (uint256 i = _currentSnapshotIndex; i < currentArraySize; ++i ) {
             if (_scheduledSnapshots[i] <= block.timestamp) {
                 mostRecent = _scheduledSnapshots[i];
                 index = i;
             } else {
                 // All snapshot are planned in the futur
                 break;
-            }
-            unchecked {
-                ++i;
             }
         }
         return (mostRecent, index);

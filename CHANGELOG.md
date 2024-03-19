@@ -2,9 +2,31 @@
 
 Please follow <https://changelog.md/> conventions.
 
+## 2.4.0-rc.1 - 20240319
+
 The modifications between the version v2.3.0 and this version are not audited !!!
 
-## 2.4.0-rc.0 - 20230925
+**snapshotModule**
+
+- Create an interface `ICMTATSnapshot` with the main public functions for the SnapshotModule to make easier the calls to a contract including a snapshotModule, useful e.g. for debt payment.
+- Replace `getSnapshotInfoBatch` by `SnapshotInfo`. This function  gets a user's balance specified in parameter and the total supply.
+- Add a new function `SnapshotInfoBatch` to get several user's balances and the total supply.
+
+**ERC20BaseModule**
+Add a function `balanceInfo` to get the balance for a list of addresses and the total supply
+ Useful to perform transfer restriction based on the user's balance (e.g vesting rule or partial lock).
+
+**ValidationModule**
+Create an internal function ` _validateTransferByModule` which performs check with others module (PauseModule & EnforcementModule)
+
+**Other**
+
+- Upgrade OpenZeppelin to the version [v5.0.2](https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/releases/tag/v5.0.2)
+- Upgrade Solidity to the version [0.8.22](https://soliditylang.org/blog/2023/10/25/solidity-0.8.22-release-announcement/) in the truffle and hardhat config files.
+
+## 2.4.0-rc.0 - 20240129
+
+The modifications between the version v2.3.0 and this version are not audited !!!
 
 **New architecture for the RuleEngine** [#250](https://github.com/CMTA/CMTAT/pull/250)
 

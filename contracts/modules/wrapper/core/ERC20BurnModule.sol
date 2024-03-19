@@ -65,13 +65,10 @@ abstract contract ERC20BurnModule is ERC20Upgradeable, ICCIPBurnFromERC20, Autho
         if (bool(accounts.length != values.length)) {
             revert Errors.CMTAT_BurnModule_AccountsValueslengthMismatch();
         }
-
-        for (uint256 i = 0; i < accounts.length; ) {
+        // No need of unchecked block since Soliditiy 0.8.22
+        for (uint256 i = 0; i < accounts.length; ++i ) {
             _burn(accounts[i], values[i]);
             emit Burn(accounts[i], values[i], reason);
-            unchecked {
-                ++i;
-            }
         }
     }
 

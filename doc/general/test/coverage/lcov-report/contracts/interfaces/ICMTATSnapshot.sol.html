@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <title>Code coverage report for contracts/interfaces/ICCIPToken.sol</title>
+    <title>Code coverage report for contracts/interfaces/ICMTATSnapshot.sol</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../prettify.css" />
     <link rel="stylesheet" href="../../base.css" />
@@ -16,7 +16,7 @@
 <div class='wrapper'>
   <div class='pad1'>
     <h1>
-      <a href="../../index.html">all files</a> / <a href="index.html">contracts/interfaces/</a> ICCIPToken.sol
+      <a href="../../index.html">all files</a> / <a href="index.html">contracts/interfaces/</a> ICMTATSnapshot.sol
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
@@ -67,7 +67,13 @@
 22
 23
 24
-25</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+25
+26
+27
+28</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -96,26 +102,29 @@
 pragma solidity ^0.8.0;
 &nbsp;
 /**
-* @notice CCIP Pool with mint
+* @notice interface to represent a CMTAT with snapshot
 */
-interface ICCIPMintERC20 {
-  /// @notice Mints new tokens for a given address.
-  /// @param account The address to mint the new tokens to.
-  /// @param value The number of tokens to be minted.
-  /// @dev this function increases the total supply.
-  function mint(address account, uint256 value) external;
-}
+interface ICMTATSnapshot {
+    /**
+    * @notice Return snapshotBalanceOf and snapshotTotalSupply to avoid multiple calls
+    * @return ownerBalance ,  totalSupply - see snapshotBalanceOf and snapshotTotalSupply
+    */
+    function snapshotInfo(uint256 time, address owner) external view returns (uint256 ownerBalance, uint256 totalSupply);
+    /** 
+    * @notice Return the number of tokens owned by the given owner at the time when the snapshot with the given time was created.
+    * @return value stored in the snapshot, or the actual balance if no snapshot
+    */
+    function snapshotBalanceOf(uint256 time,address owner) external view returns (uint256);
+    /**
+    * @dev See {OpenZeppelin - ERC20Snapshot}
+    * Retrieves the total supply at the specified time.
+    * @return value stored in the snapshot, or the actual totalSupply if no snapshot
+    */
+    function snapshotTotalSupply(uint256 time) external view returns (uint256);
 &nbsp;
-/**
-* @notice CCIP Pool with burnFrom
-*/
-interface ICCIPBurnFromERC20 {
-  /// @notice Burns tokens from a given address..
-  /// @param account The address to burn tokens from.
-  /// @param value The number of tokens to be burned.
-  /// @dev this function decreases the total supply.
-  function burnFrom(address account, uint256 value) external;
-}</pre></td></tr>
+    function snapshotInfoBatch(uint256 time, address[] calldata addresses) external view returns (uint256[] memory ownerBalances, uint256 totalSupply);
+}
+&nbsp;</pre></td></tr>
 </table></pre>
 <div class='push'></div><!-- for sticky footer -->
 </div><!-- /wrapper -->
