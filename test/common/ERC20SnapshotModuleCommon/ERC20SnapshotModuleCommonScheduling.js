@@ -44,6 +44,22 @@ function ERC20SnapshotModuleCommonScheduling (owner, address1, address2, address
       )
     })
 
+    it('reverts when trying to schedule a snapshot before the last snapshot', async function () {
+      const SNAPSHOT_TIME = this.currentTime.add(time.duration.seconds(120))
+      // Act
+      this.logs = await this.cmtat.scheduleSnapshot(SNAPSHOT_TIME, {
+        from: owner
+      })
+      const SNAPSHOT_TIME_INVALID = SNAPSHOT_TIME.sub(time.duration.seconds(60))
+      await expectRevertCustomError(
+        this.cmtat.scheduleSnapshot(SNAPSHOT_TIME_INVALID, {
+          from: owner
+        }),
+        'CMTAT_SnapshotModule_SnapshotTimestampBeforeLastSnapshot',
+        [SNAPSHOT_TIME_INVALID, SNAPSHOT_TIME]
+      )
+    })
+
     it('reverts when trying to schedule a snapshot in the past', async function () {
       const SNAPSHOT_TIME = this.currentTime.sub(time.duration.seconds(60))
       await expectRevertCustomError(

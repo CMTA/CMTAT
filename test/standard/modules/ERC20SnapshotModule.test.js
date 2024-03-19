@@ -1,4 +1,3 @@
-const CMTAT = artifacts.require('CMTATSnapshotStandaloneTest')
 const ERC20SnapshotModuleCommonRescheduling = require('../../common/ERC20SnapshotModuleCommon/ERC20SnapshotModuleCommonRescheduling')
 const ERC20SnapshotModuleCommonScheduling = require('../../common/ERC20SnapshotModuleCommon/ERC20SnapshotModuleCommonScheduling')
 const ERC20SnapshotModuleCommonUnschedule = require('../../common/ERC20SnapshotModuleCommon/ERC20SnapshotModuleCommonUnschedule')

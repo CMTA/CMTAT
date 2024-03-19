@@ -9,7 +9,7 @@ function BaseModuleCommon (owner, address1, address2, address3, proxyTest) {
   context('Token structure', function () {
     it('testHasTheDefinedVersion', async function () {
       // Act + Assert
-      (await this.cmtat.VERSION()).should.equal('2.3.1')
+      (await this.cmtat.VERSION()).should.equal('2.4.0')
     })
     it('testHasTheDefinedTokenId', async function () {
       // Act + Assert

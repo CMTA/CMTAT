@@ -6,7 +6,7 @@ import "./interfaces/IRule.sol";
 import "./CodeList.sol";
 
 /*
-@title a mock for testing, not suitable for production
+* @title a mock for testing, not suitable for production
 */
 contract RuleMock is IRule, CodeList {
     function validateTransfer(
@@ -18,7 +18,7 @@ contract RuleMock is IRule, CodeList {
     }
 
     /**
-    @dev 20 the limit of the maximum amount
+    * @dev 20 the limit of the maximum amount
     */
     function detectTransferRestriction(
         address /* _from */,

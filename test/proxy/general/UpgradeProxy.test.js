@@ -1,4 +1,4 @@
-const { BN, time } = require('@openzeppelin/test-helpers')
+const { BN } = require('@openzeppelin/test-helpers')
 const { should } = require('chai').should()
 const { ZERO_ADDRESS } = require('../../utils')
 const {
@@ -29,7 +29,7 @@ contract(
         ETHERS_CMTAT_PROXY_FACTORY,
         [
           admin,
-          BigInt(time.duration.days(3)),
+          ZERO_ADDRESS,
           'CMTA Token',
           'CMTAT',
           DEPLOYMENT_DECIMAL,

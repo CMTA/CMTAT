@@ -37,14 +37,6 @@ abstract contract EnforcementModuleInternal is
 
     mapping(address => bool) private _frozen;
 
-    /**
-     * @dev Initializes the contract
-     */
-    function __Enforcement_init() internal onlyInitializing {
-        __Context_init_unchained();
-        __Enforcement_init_unchained();
-    }
-
     function __Enforcement_init_unchained() internal onlyInitializing {
         // no variable to initialize
     }

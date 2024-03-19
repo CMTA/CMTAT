@@ -100,5 +100,5 @@ Normally, you can run the test suite and generate a code coverage report with `n
 
 Please clone the repository and open the file inside your browser.
 
-You will find a summary of all automatic tests in
+You will find a list of automatic tests in
 [test.pdf](https://github.com/CMTA/CMTAT/blob/master/doc/general/test/test.pdf).

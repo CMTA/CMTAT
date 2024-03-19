@@ -58,6 +58,8 @@ library Errors {
 
     // AuthorizationModule
     error CMTAT_AuthorizationModule_AddressZeroNotAllowed();
+    error CMTAT_AuthorizationModule_InvalidAuthorization();
+    error CMTAT_AuthorizationModule_AuthorizationEngineAlreadySet(); 
 
     // PauseModule
     error CMTAT_PauseModule_ContractIsDeactivated();

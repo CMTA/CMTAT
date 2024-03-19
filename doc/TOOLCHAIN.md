@@ -176,9 +176,7 @@ Warning:
 
 From the version v2.3.0, this command is not working and generates the following error
 
-> Failed to convert dot to SVG. Error: lost 31 26 edge
-
-
+> RangeError: Maximum call stack size exceeded
 
 | Description                                                  | Command                                |
 | ------------------------------------------------------------ | -------------------------------------- |

@@ -1,4 +1,3 @@
-const { time } = require('@openzeppelin/test-helpers')
 const MinimalForwarderMock = artifacts.require('MinimalForwarderMock')
 const MetaTxModuleCommon = require('../../common/MetaTxModuleCommon')
 const { deployCMTATStandaloneWithParameter } = require('../../deploymentUtils')
@@ -16,7 +15,7 @@ contract(
         deployerAddress,
         this.forwarder.address,
         admin,
-        web3.utils.toBN(time.duration.days(3)),
+        ZERO_ADDRESS,
         'CMTA Token',
         'CMTAT',
         DECIMAL,

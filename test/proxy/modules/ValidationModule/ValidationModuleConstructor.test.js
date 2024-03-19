@@ -1,6 +1,6 @@
-const { time } = require('@openzeppelin/test-helpers')
 const ValidationModuleCommon = require('../../../common/ValidationModule/ValidationModuleCommon')
 const { deployCMTATProxyWithParameter } = require('../../../deploymentUtils')
+const { ZERO_ADDRESS } = require('../../../utils')
 const RuleEngineMock = artifacts.require('RuleEngineMock')
 const ADDRESS1_INITIAL_BALANCE = 17
 const ADDRESS2_INITIAL_BALANCE = 18
@@ -13,12 +13,11 @@ contract(
       this.flag = 5
       const DECIMAL = 0
       this.ruleEngineMock = await RuleEngineMock.new({ from: admin })
-      const delayTime = BigInt(time.duration.days(3))
       this.cmtat = await deployCMTATProxyWithParameter(
         deployerAddress,
         _,
         admin,
-        delayTime,
+        ZERO_ADDRESS,
         'CMTA Token',
         'CMTAT',
         DECIMAL,

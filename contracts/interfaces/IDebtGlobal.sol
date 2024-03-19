@@ -2,6 +2,9 @@
 
 pragma solidity ^0.8.0;
 
+/**
+* @notice interface to represent debt tokens
+*/
 interface IDebtGlobal {
     struct DebtBase {
         uint256 interestRate;

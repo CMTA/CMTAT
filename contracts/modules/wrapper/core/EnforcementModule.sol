@@ -15,10 +15,10 @@ abstract contract EnforcementModule is
     AuthorizationModule
 {
     string internal constant TEXT_TRANSFER_REJECTED_FROM_FROZEN =
-        "The address FROM is frozen";
+        "Address FROM is frozen";
 
     string internal constant TEXT_TRANSFER_REJECTED_TO_FROZEN =
-        "The address TO is frozen";
+        "Address TO is frozen";
 
     function __EnforcementModule_init_unchained() internal onlyInitializing {
         // no variable to initialize
