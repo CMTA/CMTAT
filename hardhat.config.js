@@ -36,6 +36,11 @@ module.exports = {
       url: process.env.MAINNET_NODE,
       accounts: [process.env.PRIVATE_KEY],
       chainId: 1
+    },
+    sepolia: {
+      url: process.env.SEPOLIA_NODE,
+      accounts: [process.env.PRIVATE_KEY],
+      chainId: 11155111
     }
   },
   solidity: {
@@ -51,7 +56,8 @@ module.exports = {
     apiKey: {
       mainnet: process.env.ETHERSCAN_API_KEY,
       holesky: process.env.ETHERSCAN_API_KEY,
-      polygon: process.env.POLYGONSCAN_API_KEY
+      polygon: process.env.POLYGONSCAN_API_KEY,
+      sepolia: process.env.ETHERSCAN_API_KEY
     }
   },
   gasReporter: {

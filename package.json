@@ -7,9 +7,10 @@
     "test"
   ],
   "scripts": {
-    "deploy:mainnet": "npx hardhat run scripts/1_deploy_contracts.js --network mainnet",
     "deploy:holesky": "npx hardhat run scripts/1_deploy_contracts.js --network holesky",
+    "deploy:mainnet": "npx hardhat run scripts/1_deploy_contracts.js --network mainnet",
     "deploy:polygon": "npx hardhat run scripts/1_deploy_contracts.js --network polygon",
+    "deploy:sepolia": "npx hardhat run scripts/1_deploy_contracts.js --network sepolia",
     "test": "npx hardhat test",
     "lint:js": "npx eslint .",
     "lint:js:fix": "npx eslint . --fix",
