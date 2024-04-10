@@ -27,4 +27,12 @@ interface ICMTATSnapshot {
     * @return ownerBalances array with the balance of each address, the total supply
     */
     function snapshotInfoBatch(uint256 time, address[] calldata addresses) external view returns (uint256[] memory ownerBalances, uint256 totalSupply);
+
+    /**
+    * @notice Return snapshotBalanceOf for each address in the array and the total supply
+    * @return ownerBalances array with the balance of each address, the total supply
+    */
+    function snapshotInfoBatch(uint256[] calldata times, address[] calldata addresses) external view returns (uint256[][] memory ownerBalances, uint256[] memory totalSupply);
+
+
 }
