@@ -3,7 +3,7 @@
 pragma solidity ^0.8.0;
 
 /*
-@dev Contrary to the ERC-1404, this interface does not inherit from the ERC20 interface
+* @dev Contrary to the ERC-1404, this interface does not inherit from the ERC20 interface
 */
 interface IERC1404 {
     /**
