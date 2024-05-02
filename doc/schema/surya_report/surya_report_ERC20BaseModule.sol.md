@@ -20,6 +20,7 @@
 | └ | decimals | Public ❗️ |   |NO❗️ |
 | └ | transferBatch | Public ❗️ | 🛑  |NO❗️ |
 | └ | transferFrom | Public ❗️ | 🛑  |NO❗️ |
+| └ | balanceInfo | Public ❗️ |   |NO❗️ |
 
 
 ### Legend

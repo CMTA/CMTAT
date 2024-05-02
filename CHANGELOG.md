@@ -2,6 +2,15 @@
 
 Please follow <https://changelog.md/> conventions.
 
+## 2.4.0
+
+The modifications between the version v2.3.0 and this version are not audited !!!
+
+- Improve tests & update the code
+- `ERC20SnapshotInternal` inherits from `ICMTATSnapshot`
+
+
+
 ## 2.4.0-rc.1 - 20240319
 
 The modifications between the version v2.3.0 and this version are not audited !!!

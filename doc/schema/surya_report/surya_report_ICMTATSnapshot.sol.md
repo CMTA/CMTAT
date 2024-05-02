@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./interfaces/draft-IERC1404/draft-IERC1404Wrapper.sol | [object Promise] |
+| ./interfaces/ICMTATSnapshot.sol | [object Promise] |
 
 
 ### Contracts Description Table
@@ -15,8 +15,12 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **IERC1404Wrapper** | Interface | IERC1404, IERC1404EnumCode |||
-| └ | validateTransfer | External ❗️ |   |NO❗️ |
+| **ICMTATSnapshot** | Interface |  |||
+| └ | snapshotBalanceOf | External ❗️ |   |NO❗️ |
+| └ | snapshotTotalSupply | External ❗️ |   |NO❗️ |
+| └ | snapshotInfo | External ❗️ |   |NO❗️ |
+| └ | snapshotInfoBatch | External ❗️ |   |NO❗️ |
+| └ | snapshotInfoBatch | External ❗️ |   |NO❗️ |
 
 
 ### Legend

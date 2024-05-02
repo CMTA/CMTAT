@@ -1,9 +1,9 @@
 #/bin/bash
 cd '../../'
 DIR=$(pwd)
-DIR_OUT=${DIR}/out/surya_graph
+DIR_OUT=${DIR}/docOut/surya_graph
 if ! [ -d "$DIR_OUT" ]; then
-    mkdir -p ./out/surya_graph
+    mkdir -p ./docOut/surya_graph
 fi
 cd './contracts'
 DIR=$(pwd)
@@ -13,6 +13,6 @@ do
     filename=${i##*/}
     ext=${i##*.}
     if [[ $ext == 'sol' ]]; then
-        npx surya graph $i | dot -Tpng > ../out/surya_graph/surya_graph_$filename.png;
+        npx surya graph $i | dot -Tpng > ../docOut/surya_graph/surya_graph_$filename.png;
     fi
 done;

@@ -15,14 +15,16 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **ERC20SnapshotModuleInternal** | Implementation | SnapshotModuleBase, ERC20Upgradeable |||
+| **ERC20SnapshotModuleInternal** | Implementation | ICMTATSnapshot, SnapshotModuleBase, ERC20Upgradeable |||
 | └ | __ERC20Snapshot_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |
+| └ | snapshotInfo | Public ❗️ |   |NO❗️ |
+| └ | snapshotInfoBatch | Public ❗️ |   |NO❗️ |
+| └ | snapshotInfoBatch | Public ❗️ |   |NO❗️ |
+| └ | snapshotBalanceOf | Public ❗️ |   |NO❗️ |
+| └ | snapshotTotalSupply | Public ❗️ |   |NO❗️ |
 | └ | _snapshotUpdate | Internal 🔒 | 🛑  | |
 | └ | _updateAccountSnapshot | Private 🔐 | 🛑  | |
 | └ | _updateTotalSupplySnapshot | Private 🔐 | 🛑  | |
-| └ | getSnapshotInfoBatch | Public ❗️ |   |NO❗️ |
-| └ | snapshotBalanceOf | Public ❗️ |   |NO❗️ |
-| └ | snapshotTotalSupply | Public ❗️ |   |NO❗️ |
 
 
 ### Legend

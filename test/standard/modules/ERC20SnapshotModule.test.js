@@ -7,7 +7,7 @@ const ERC20SnapshotModuleOnePlannedSnapshotTest = require('../../common/ERC20Sna
 const ERC20SnapshotModuleZeroPlannedSnapshotTest = require('../../common/ERC20SnapshotModuleCommon/global/ERC20SnapshotModuleZeroPlannedSnapshot')
 const { deployCMTATStandaloneWithSnapshot } = require('../../deploymentUtils')
 contract(
-  'Standard - SnapshotModule',
+  'Standard - ERC20SnapshotModule',
   function ([_, admin, address1, address2, address3, deployerAddress]) {
     beforeEach(async function () {
       this.cmtat = await deployCMTATStandaloneWithSnapshot(

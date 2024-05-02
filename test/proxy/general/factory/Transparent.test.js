@@ -2,20 +2,13 @@ const CMTAT_TP_FACTORY = artifacts.require('CMTAT_TP_FACTORY')
 const { should } = require('chai').should()
 const {
   expectRevertCustomError
-} = require('../../../openzeppelin-contracts-upgradeable/test/helpers/customError.js')
+} = require('../../../../openzeppelin-contracts-upgradeable/test/helpers/customError.js')
 const CMTAT = artifacts.require('CMTAT_PROXY')
+const { ZERO_ADDRESS, CMTAT_DEPLOYER_ROLE } = require('../../../utils.js')
 const {
-  DEFAULT_ADMIN_ROLE,
-  PAUSER_ROLE,
-  CMTAT_DEPLOYER_ROLE
-} = require('../../utils.js')
-const { ZERO_ADDRESS } = require('../../utils.js')
-const DECIMAL = 0
-const {
-  deployCMTATProxy,
   DEPLOYMENT_FLAG,
   deployCMTATProxyImplementation
-} = require('../../deploymentUtils.js')
+} = require('../../../deploymentUtils.js')
 const { upgrades } = require('hardhat')
 const DEPLOYMENT_DECIMAL = 0
 const { BN, expectEvent } = require('@openzeppelin/test-helpers')

@@ -2,7 +2,6 @@ const { BN } = require('@openzeppelin/test-helpers')
 const { should } = require('chai').should()
 const { ZERO_ADDRESS } = require('../../utils')
 const {
-  deployCMTATProxy,
   DEPLOYMENT_FLAG,
   DEPLOYMENT_DECIMAL
 } = require('../../deploymentUtils')

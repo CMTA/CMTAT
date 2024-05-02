@@ -8,7 +8,7 @@ const ERC20SnapshotModuleOnePlannedSnapshotTest = require('../../common/ERC20Sna
 const ERC20SnapshotModuleZeroPlannedSnapshotTest = require('../../common/ERC20SnapshotModuleCommon/global/ERC20SnapshotModuleZeroPlannedSnapshot')
 
 contract(
-  'Proxy - SnapshotModule',
+  'Proxy - ERC20SnapshotModule',
   function ([_, admin, address1, address2, address3, deployerAddress]) {
     beforeEach(async function () {
       this.cmtat = await deployCMTATProxyWithSnapshot(

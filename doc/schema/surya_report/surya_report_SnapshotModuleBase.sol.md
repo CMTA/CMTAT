@@ -17,13 +17,13 @@
 ||||||
 | **SnapshotModuleBase** | Implementation | Initializable |||
 | └ | __SnapshotModuleBase_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |
+| └ | getAllSnapshots | Public ❗️ |   |NO❗️ |
+| └ | getNextSnapshots | Public ❗️ |   |NO❗️ |
 | └ | _scheduleSnapshot | Internal 🔒 | 🛑  | |
 | └ | _scheduleSnapshotNotOptimized | Internal 🔒 | 🛑  | |
 | └ | _rescheduleSnapshot | Internal 🔒 | 🛑  | |
 | └ | _unscheduleLastSnapshot | Internal 🔒 | 🛑  | |
 | └ | _unscheduleSnapshotNotOptimized | Internal 🔒 | 🛑  | |
-| └ | getNextSnapshots | Public ❗️ |   |NO❗️ |
-| └ | getAllSnapshots | Public ❗️ |   |NO❗️ |
 | └ | _valueAt | Internal 🔒 |   | |
 | └ | _updateSnapshot | Internal 🔒 | 🛑  | |
 | └ | _setCurrentSnapshot | Internal 🔒 | 🛑  | |

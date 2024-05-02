@@ -2,17 +2,11 @@ const CMTAT_BEACON_FACTORY = artifacts.require('CMTAT_BEACON_FACTORY')
 const { should } = require('chai').should()
 const {
   expectRevertCustomError
-} = require('../../../openzeppelin-contracts-upgradeable/test/helpers/customError.js')
-const CMTAT = artifacts.require('CMTAT_PROXY')
-const { DEFAULT_ADMIN_ROLE, CMTAT_DEPLOYER_ROLE } = require('../../utils.js')
-const { ZERO_ADDRESS } = require('../../utils.js')
+} = require('../../../../openzeppelin-contracts-upgradeable/test/helpers/customError.js')
+const { ZERO_ADDRESS } = require('../../../utils.js')
 const {
-  DEPLOYMENT_FLAG,
   deployCMTATProxyImplementation
-} = require('../../deploymentUtils.js')
-const { upgrades } = require('hardhat')
-const DEPLOYMENT_DECIMAL = 0
-const { BN, expectEvent } = require('@openzeppelin/test-helpers')
+} = require('../../../deploymentUtils.js')
 contract(
   'Deploy Beacon with Factory',
   function ([_, admin, attacker, deployerAddress]) {

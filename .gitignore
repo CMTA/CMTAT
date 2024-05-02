@@ -9,6 +9,7 @@ bin/*
 .vscode/
 #PlantUML
 out
+docOut
 #drawio
 *.bkp
 *.dtmp
