@@ -12,7 +12,12 @@ const {
   checkArraySnapshot
 } = require('./ERC20SnapshotModuleUtils/ERC20SnapshotModuleUtils')
 
-function ERC20SnapshotModuleCommonScheduling (owner, address1, address2, address3) {
+function ERC20SnapshotModuleCommonScheduling (
+  owner,
+  address1,
+  address2,
+  address3
+) {
   context('Snapshot scheduling', function () {
     beforeEach(async function () {
       this.currentTime = await time.latest()
@@ -50,7 +55,9 @@ function ERC20SnapshotModuleCommonScheduling (owner, address1, address2, address
       this.logs = await this.cmtat.scheduleSnapshot(SNAPSHOT_TIME, {
         from: owner
       })
-      const SNAPSHOT_TIME_INVALID = SNAPSHOT_TIME.sub(time.duration.seconds(60))
+      const SNAPSHOT_TIME_INVALID = SNAPSHOT_TIME.sub(
+        time.duration.seconds(60)
+      )
       await expectRevertCustomError(
         this.cmtat.scheduleSnapshot(SNAPSHOT_TIME_INVALID, {
           from: owner

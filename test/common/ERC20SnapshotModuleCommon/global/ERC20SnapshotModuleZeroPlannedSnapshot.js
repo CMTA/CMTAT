@@ -1,6 +1,8 @@
 const { time } = require('@openzeppelin/test-helpers')
 const { should } = require('chai').should()
-const { checkSnapshot } = require('../ERC20SnapshotModuleUtils/ERC20SnapshotModuleUtils')
+const {
+  checkSnapshot
+} = require('../ERC20SnapshotModuleUtils/ERC20SnapshotModuleUtils')
 
 function ERC20SnapshotModuleCommonGlobal (admin, address1, address2, address3) {
   context('zeroPlannedSnapshotTest', function () {

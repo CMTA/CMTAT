@@ -1,5 +1,10 @@
 const { BN, expectEvent } = require('@openzeppelin/test-helpers')
-const { BURNER_ROLE, BURNER_FROM_ROLE, MINTER_ROLE, ZERO_ADDRESS } = require('../utils')
+const {
+  BURNER_ROLE,
+  BURNER_FROM_ROLE,
+  MINTER_ROLE,
+  ZERO_ADDRESS
+} = require('../utils')
 const {
   expectRevertCustomError
 } = require('../../openzeppelin-contracts-upgradeable/test/helpers/customError.js')
@@ -134,7 +139,9 @@ function ERC20BurnModuleCommon (admin, address1, address2, address3) {
       await this.cmtat.grantRole(BURNER_FROM_ROLE, address2, { from: admin })
       await this.cmtat.approve(address2, 50, { from: address1 })
       // Act
-      this.logs = await this.cmtat.burnFrom(address1, AMOUNT_TO_BURN, { from: address2 })
+      this.logs = await this.cmtat.burnFrom(address1, AMOUNT_TO_BURN, {
+        from: address2
+      })
       // Assert
       expectEvent(this.logs, 'Transfer', {
         from: address1,
@@ -155,14 +162,16 @@ function ERC20BurnModuleCommon (admin, address1, address2, address3) {
       await expectRevertCustomError(
         this.cmtat.burnFrom(address1, AMOUNT_TO_BURN, { from: admin }),
         'ERC20InsufficientAllowance',
-        [admin, 0, AMOUNT_TO_BURN])
+        [admin, 0, AMOUNT_TO_BURN]
+      )
     })
 
     it('testCannotBeBurntWithoutBurnerFromRole', async function () {
       await expectRevertCustomError(
         this.cmtat.burnFrom(address1, 20, { from: address2 }),
         'AccessControlUnauthorizedAccount',
-        [address2, BURNER_FROM_ROLE])
+        [address2, BURNER_FROM_ROLE]
+      )
     })
   })
 
@@ -185,7 +194,14 @@ function ERC20BurnModuleCommon (admin, address1, address2, address3) {
       await this.cmtat.grantRole(MINTER_ROLE, address2, { from: admin })
       // await this.cmtat.approve(address2, 50, { from: address1 })
       // Act
-      this.logs = await this.cmtat.burnAndMint(address1, address3, AMOUNT_TO_BURN, AMOUNT_TO_MINT, 'recovery', { from: address2 })
+      this.logs = await this.cmtat.burnAndMint(
+        address1,
+        address3,
+        AMOUNT_TO_BURN,
+        AMOUNT_TO_MINT,
+        'recovery',
+        { from: address2 }
+      )
       // Assert
       expectEvent(this.logs, 'Transfer', {
         from: address1,
@@ -208,9 +224,15 @@ function ERC20BurnModuleCommon (admin, address1, address2, address3) {
         account: address3,
         value: AMOUNT_TO_MINT
       });
-      (await this.cmtat.balanceOf(address1)).should.be.bignumber.equal(INITIAL_SUPPLY.sub(AMOUNT_TO_BURN));
-      (await this.cmtat.balanceOf(address3)).should.be.bignumber.equal(AMOUNT_TO_MINT);
-      (await this.cmtat.totalSupply()).should.be.bignumber.equal(INITIAL_SUPPLY.sub(AMOUNT_TO_BURN).add(AMOUNT_TO_MINT))
+      (await this.cmtat.balanceOf(address1)).should.be.bignumber.equal(
+        INITIAL_SUPPLY.sub(AMOUNT_TO_BURN)
+      );
+      (await this.cmtat.balanceOf(address3)).should.be.bignumber.equal(
+        AMOUNT_TO_MINT
+      );
+      (await this.cmtat.totalSupply()).should.be.bignumber.equal(
+        INITIAL_SUPPLY.sub(AMOUNT_TO_BURN).add(AMOUNT_TO_MINT)
+      )
     })
 
     it('canBeBurnAndMintWithoutMinterRole', async function () {
@@ -221,9 +243,17 @@ function ERC20BurnModuleCommon (admin, address1, address2, address3) {
       // await this.cmtat.approve(address2, 50, { from: address1 })
       // Act
       await expectRevertCustomError(
-        this.cmtat.burnAndMint(address1, address3, AMOUNT_TO_BURN, AMOUNT_TO_MINT, 'recovery', { from: address2 }),
+        this.cmtat.burnAndMint(
+          address1,
+          address3,
+          AMOUNT_TO_BURN,
+          AMOUNT_TO_MINT,
+          'recovery',
+          { from: address2 }
+        ),
         'AccessControlUnauthorizedAccount',
-        [address2, MINTER_ROLE])
+        [address2, MINTER_ROLE]
+      )
     })
 
     it('canBeBurnAndMintWithoutBurnerRole', async function () {
@@ -234,9 +264,17 @@ function ERC20BurnModuleCommon (admin, address1, address2, address3) {
       // await this.cmtat.approve(address2, 50, { from: address1 })
       // Assert
       await expectRevertCustomError(
-        this.cmtat.burnAndMint(address1, address3, AMOUNT_TO_BURN, AMOUNT_TO_MINT, 'recovery', { from: address2 }),
+        this.cmtat.burnAndMint(
+          address1,
+          address3,
+          AMOUNT_TO_BURN,
+          AMOUNT_TO_MINT,
+          'recovery',
+          { from: address2 }
+        ),
         'AccessControlUnauthorizedAccount',
-        [address2, BURNER_ROLE])
+        [address2, BURNER_ROLE]
+      )
     })
   })
 
@@ -371,12 +409,9 @@ function ERC20BurnModuleCommon (admin, address1, address2, address3) {
       const ADDRESS2_BALANCE = await this.cmtat.balanceOf(address2)
       // Act
       await expectRevertCustomError(
-        this.cmtat.burnBatch(
-          TOKEN_HOLDER,
-          TOKEN_BY_HOLDERS_TO_BURN_FAIL,
-          '',
-          { from: admin }
-        ),
+        this.cmtat.burnBatch(TOKEN_HOLDER, TOKEN_BY_HOLDERS_TO_BURN_FAIL, '', {
+          from: admin
+        }),
         'ERC20InsufficientBalance',
         [address2, ADDRESS2_BALANCE, TOKEN_BY_HOLDERS_TO_BURN_FAIL[2]]
       )

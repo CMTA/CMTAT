@@ -1,9 +1,9 @@
-// SPDX-License-Identifier: UNLICENSED
+//SPDX-License-Identifier: MPL-2.0
 pragma solidity ^0.8.20;
 
-import "@openzeppelin/contracts/proxy/transparent/ProxyAdmin.sol";
 import "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
 import "../CMTAT_PROXY.sol";
+import "../libraries/FactoryErrors.sol";
 import '@openzeppelin/contracts/access/AccessControl.sol';
 /**
 * @notice Factory to deploy transparent proxy
@@ -20,11 +20,19 @@ contract CMTAT_TP_FACTORY is AccessControl {
     address public immutable logic;
     address[] public cmtatsList;
 
+  
+
     /**
     * @param logic_ contract implementation
     * @param factoryAdmin admin
     */
     constructor(address logic_, address factoryAdmin) {
+        if(logic_ == address(0)){
+            revert  FactoryErrors.CMTAT_Factory_AddressZeroNotAllowedForLogicContract();
+        }
+        if(factoryAdmin == address(0)){
+            revert  FactoryErrors.CMTAT_Factory_AddressZeroNotAllowedForFactoryAdmin();
+        }
         logic = logic_;
         _grantRole(DEFAULT_ADMIN_ROLE, factoryAdmin);
         _grantRole(CMTAT_DEPLOYER_ROLE, factoryAdmin);

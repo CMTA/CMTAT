@@ -1,8 +1,6 @@
 const { ZERO_ADDRESS } = require('./utils')
 const CMTAT_STANDALONE = artifacts.require('CMTAT_STANDALONE')
-const CMTAT_STANDALONE_SNAPSHOT = artifacts.require(
-  'CMTAT_STANDALONE'
-)
+const CMTAT_STANDALONE_SNAPSHOT = artifacts.require('CMTAT_STANDALONE')
 const CMTAT_PROXY = artifacts.require('CMTAT_PROXY')
 // const CMTAT_PROXY_SNAPSHOT_TRUFFLE = artifacts.require('CMTATSnapshotProxyTest')
 const CMTAT_PROXY_SNAPSHOT_TRUFFLE = artifacts.require('CMTAT_PROXY')
@@ -29,10 +27,13 @@ async function deployCMTATStandalone (_, admin, deployerAddress) {
   return cmtat
 }
 
-async function deployCMTATProxyImplementation (deployerAddress, forwarderIrrevocable) {
-  const cmtat = await CMTAT_PROXY.new(forwarderIrrevocable,
-    { from: deployerAddress }
-  )
+async function deployCMTATProxyImplementation (
+  deployerAddress,
+  forwarderIrrevocable
+) {
+  const cmtat = await CMTAT_PROXY.new(forwarderIrrevocable, {
+    from: deployerAddress
+  })
   return cmtat
 }
 

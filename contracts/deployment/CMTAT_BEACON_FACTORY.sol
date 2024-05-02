@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: UNLICENSED
+//SPDX-License-Identifier: MPL-2.0
 pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/proxy/beacon/BeaconProxy.sol";
@@ -6,6 +6,7 @@ import "@openzeppelin/contracts/proxy/beacon/BeaconProxy.sol";
 import '@openzeppelin/contracts/proxy/beacon/UpgradeableBeacon.sol';
 import "../CMTAT_PROXY.sol";
 import "../modules/CMTAT_BASE.sol";
+import "../libraries/FactoryErrors.sol";
 import '@openzeppelin/contracts/access/AccessControl.sol';
 
 /**
@@ -29,6 +30,15 @@ contract CMTAT_BEACON_FACTORY is AccessControl {
     * @param beaconOwner owner
     */
     constructor(address implementation_, address factoryAdmin, address beaconOwner) {
+        if(factoryAdmin == address(0)){
+            revert  FactoryErrors.CMTAT_Factory_AddressZeroNotAllowedForFactoryAdmin();
+        }
+        if(beaconOwner == address(0)){
+            revert  FactoryErrors.CMTAT_Factory_AddressZeroNotAllowedForBeaconOwner();
+        }
+        if(implementation_ == address(0)){
+            revert  FactoryErrors.CMTAT_Factory_AddressZeroNotAllowedForLogicContract();
+        }
         beacon = new UpgradeableBeacon(implementation_, beaconOwner);
         _grantRole(DEFAULT_ADMIN_ROLE, factoryAdmin);
         _grantRole(CMTAT_DEPLOYER_ROLE, factoryAdmin);

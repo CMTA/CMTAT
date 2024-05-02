@@ -15,6 +15,8 @@ abstract contract DebtBaseModule is
     ContextUpgradeable,
     AuthorizationModule
 {
+    // DebtModule
+    bytes32 public constant DEBT_ROLE = keccak256("DEBT_ROLE");
     DebtBase public debt;
 
     /* Events */

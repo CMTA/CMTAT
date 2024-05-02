@@ -7,7 +7,9 @@ contract(
   function ([_, admin, address1, address2, deployerAddress]) {
     beforeEach(async function () {
       this.cmtat = await deployCMTATProxy(_, admin, deployerAddress)
-      this.authorizationEngineMock = await AuthorizationEngineMock.new({ from: admin })
+      this.authorizationEngineMock = await AuthorizationEngineMock.new({
+        from: admin
+      })
     })
 
     AuthorizationModuleCommon(admin, address1, address2)

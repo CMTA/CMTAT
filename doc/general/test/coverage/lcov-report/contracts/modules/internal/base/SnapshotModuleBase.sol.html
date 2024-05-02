@@ -37,7 +37,7 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>108/108</span>
+        <span class='fraction'>102/102</span>
       </div>
     </div>
   </div>
@@ -448,13 +448,7 @@
 403
 404
 405
-406
-407
-408
-409
-410
-411
-412</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+406</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -554,12 +548,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">8×</span>
 <span class="cline-any cline-yes">12×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">12×</span>
-<span class="cline-any cline-yes">12×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -713,11 +705,9 @@
 <span class="cline-any cline-yes">12×</span>
 <span class="cline-any cline-yes">4×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">8×</span>
 <span class="cline-any cline-yes">16×</span>
-<span class="cline-any cline-yes">16×</span>
-<span class="cline-any cline-yes">16×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">8×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -747,12 +737,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1600×</span>
+<span class="cline-any cline-yes">1920×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1600×</span>
-<span class="cline-any cline-yes">1248×</span>
+<span class="cline-any cline-yes">1920×</span>
+<span class="cline-any cline-yes">1484×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">352×</span>
+<span class="cline-any cline-yes">436×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -848,6 +838,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">86×</span>
 <span class="cline-any cline-yes">86×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">86×</span>
 <span class="cline-any cline-yes">116×</span>
 <span class="cline-any cline-yes">52×</span>
@@ -855,9 +846,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">64×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">52×</span>
-<span class="cline-any cline-yes">52×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">86×</span>
@@ -965,13 +953,11 @@ abstract contract SnapshotModuleBase is Initializable {
                         indexLowerBound -
                         1;
                     nextScheduledSnapshot = new uint256[](arraySize);
-                    for (uint256 i; i &lt; arraySize; ) {
+                    // No need of unchecked block since Soliditiy 0.8.22
+                    for (uint256 i; i &lt; arraySize; ++i) {
                         nextScheduledSnapshot[i] = _scheduledSnapshots[
                             indexLowerBound + 1 + i
                         ];
-                        unchecked {
-                            ++i;
-                        }
                     }
                 }
             }
@@ -1124,11 +1110,9 @@ abstract contract SnapshotModuleBase is Initializable {
         if (!isFound) {
             revert Errors.CMTAT_SnapshotModule_SnapshotNotFound();
         }
-        for (uint256 i = index; i + 1 &lt; _scheduledSnapshots.length; ) {
+        // No need of unchecked block since Soliditiy 0.8.22
+        for (uint256 i = index; i + 1 &lt; _scheduledSnapshots.length; ++i ) {
             _scheduledSnapshots[i] = _scheduledSnapshots[i + 1];
-            unchecked {
-                ++i;
-            }
         }
         _scheduledSnapshots.pop();
     }
@@ -1259,16 +1243,14 @@ abstract contract SnapshotModuleBase is Initializable {
         // mostRecent is initialized in the loop
         uint256 mostRecent;
         index = currentArraySize;
-        for (uint256 i = _currentSnapshotIndex; i &lt; currentArraySize; ) {
+        // No need of unchecked block since Soliditiy 0.8.22
+        for (uint256 i = _currentSnapshotIndex; i &lt; currentArraySize; ++i ) {
             if (_scheduledSnapshots[i] &lt;= block.timestamp) {
                 mostRecent = _scheduledSnapshots[i];
                 index = i;
             } else {
                 // All snapshot are planned in the futur
                 break;
-            }
-            unchecked {
-                ++i;
             }
         }
         return (mostRecent, index);
@@ -1282,7 +1264,7 @@ abstract contract SnapshotModuleBase is Initializable {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Tue Mar 19 2024 16:20:33 GMT+0100 (Central European Standard Time)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu May 02 2024 13:42:17 GMT+0200 (Central European Summer Time)
 </div>
 </div>
 <script src="../../../../prettify.js"></script>

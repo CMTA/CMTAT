@@ -14,6 +14,8 @@ abstract contract EnforcementModule is
     EnforcementModuleInternal,
     AuthorizationModule
 {
+    // EnforcementModule
+    bytes32 public constant ENFORCER_ROLE = keccak256("ENFORCER_ROLE");
     string internal constant TEXT_TRANSFER_REJECTED_FROM_FROZEN =
         "Address FROM is frozen";
 

@@ -15,6 +15,9 @@ abstract contract CreditEventsModule is
     ContextUpgradeable,
     AuthorizationModule
 {
+    // CreditEvents
+    bytes32 public constant DEBT_CREDIT_EVENT_ROLE =
+    keccak256("DEBT_CREDIT_EVENT_ROLE");
     CreditEvents public creditEvents;
 
     /* Events */

@@ -2,14 +2,10 @@
 
 pragma solidity ^0.8.20;
 
-import "../../../openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradeable.sol";
-import "../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
 import "../../../openzeppelin-contracts-upgradeable/contracts/token/ERC20/ERC20Upgradeable.sol";
 import {Arrays} from '@openzeppelin/contracts/utils/Arrays.sol';
-
-import "../../libraries/Errors.sol";
-import "../../interfaces/ICMTATSnapshot.sol";
 import "./base/SnapshotModuleBase.sol";
+import "../../interfaces/ICMTATSnapshot.sol";
 /**
  * @dev Snapshot module internal.
  *
@@ -19,7 +15,7 @@ import "./base/SnapshotModuleBase.sol";
    because overriding this function can break the contract.
  */
 
-abstract contract ERC20SnapshotModuleInternal is SnapshotModuleBase, ERC20Upgradeable {
+abstract contract ERC20SnapshotModuleInternal is ICMTATSnapshot, SnapshotModuleBase, ERC20Upgradeable {
     using Arrays for uint256[];
 
     /** 

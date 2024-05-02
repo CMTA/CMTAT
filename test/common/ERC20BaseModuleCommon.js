@@ -33,26 +33,16 @@ function ERC20BaseModuleCommon (admin, address1, address2, address3, proxyTest) 
     it('testHasTheCorrectBalanceInfo', async function () {
       // Act + Assert
       // Assert
-      let ADDRESSES = [address1, address2, address3 ];
-      let result = await this.cmtat.balanceInfo(ADDRESSES);
-      result[0][0].should.be.bignumber.equal(
-        TOKEN_AMOUNTS[0]
-      );
-      result[0][1].should.be.bignumber.equal(
-        TOKEN_AMOUNTS[1]
-      );
-      result[1].should.be.bignumber.equal(
-        TOKEN_INITIAL_SUPPLY
-      );
+      const ADDRESSES = [address1, address2, address3]
+      let result = await this.cmtat.balanceInfo(ADDRESSES)
+      result[0][0].should.be.bignumber.equal(TOKEN_AMOUNTS[0])
+      result[0][1].should.be.bignumber.equal(TOKEN_AMOUNTS[1])
+      result[1].should.be.bignumber.equal(TOKEN_INITIAL_SUPPLY)
 
-      let ADDRESSES2 = [];
-      result = await this.cmtat.balanceInfo(ADDRESSES2);
-      BN(result[0].length).should.be.bignumber.equal(
-        BN(0)
-      );
-      result[1].should.be.bignumber.equal(
-        TOKEN_INITIAL_SUPPLY
-      )
+      const ADDRESSES2 = []
+      result = await this.cmtat.balanceInfo(ADDRESSES2)
+      BN(result[0].length).should.be.bignumber.equal(BN(0))
+      result[1].should.be.bignumber.equal(TOKEN_INITIAL_SUPPLY)
     })
   })
 

@@ -18,11 +18,26 @@ contract(
       )
     })
     ERC20SnapshotModuleMultiplePlannedTest(admin, address1, address2, address3)
-    ERC20SnapshotModuleOnePlannedSnapshotTest(admin, address1, address2, address3)
-    ERC20SnapshotModuleZeroPlannedSnapshotTest(admin, address1, address2, address3)
+    ERC20SnapshotModuleOnePlannedSnapshotTest(
+      admin,
+      address1,
+      address2,
+      address3
+    )
+    ERC20SnapshotModuleZeroPlannedSnapshotTest(
+      admin,
+      address1,
+      address2,
+      address3
+    )
     ERC20SnapshotModuleCommonRescheduling(admin, address1, address2, address3)
     ERC20SnapshotModuleCommonScheduling(admin, address1, address2, address3)
     ERC20SnapshotModuleCommonUnschedule(admin, address1, address2, address3)
-    ERC20SnapshotModuleCommonGetNextSnapshot(admin, address1, address2, address3)
+    ERC20SnapshotModuleCommonGetNextSnapshot(
+      admin,
+      address1,
+      address2,
+      address3
+    )
   }
 )

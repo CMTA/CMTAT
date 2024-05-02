@@ -3,33 +3,15 @@
 pragma solidity ^0.8.20;
 
 import "../../../openzeppelin-contracts-upgradeable/contracts/access/AccessControlUpgradeable.sol";
-import "../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
-
 import "../../libraries/Errors.sol";
 import "../../interfaces/engine/IAuthorizationEngine.sol";
+
 abstract contract AuthorizationModule is AccessControlUpgradeable {
     IAuthorizationEngine private authorizationEngine;
     /**
      * @dev Emitted when a rule engine is set.
      */
     event AuthorizationEngine(IAuthorizationEngine indexed newAuthorizationEngine);
-    // BurnModule
-    bytes32 public constant BURNER_ROLE = keccak256("BURNER_ROLE");
-    bytes32 public constant BURNER_FROM_ROLE = keccak256("BURNER_FROM_ROLE");
-    // CreditEvents
-    bytes32 public constant DEBT_CREDIT_EVENT_ROLE =
-    keccak256("DEBT_CREDIT_EVENT_ROLE");
-    // DebtModule
-    bytes32 public constant DEBT_ROLE = keccak256("DEBT_ROLE");
-    // EnforcementModule
-    bytes32 public constant ENFORCER_ROLE = keccak256("ENFORCER_ROLE");
-    // MintModule
-    bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
-    // PauseModule
-    bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
-    // SnapshotModule
-    bytes32 public constant SNAPSHOOTER_ROLE = keccak256("SNAPSHOOTER_ROLE");
-
     /**
      * @dev
      *

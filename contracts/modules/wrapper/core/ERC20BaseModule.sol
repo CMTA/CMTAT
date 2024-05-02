@@ -3,7 +3,6 @@
 pragma solidity ^0.8.20;
 
 // required OZ imports here
-import "../../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
 import "../../../../openzeppelin-contracts-upgradeable/contracts/token/ERC20/ERC20Upgradeable.sol";
 import "../../../libraries/Errors.sol";
 

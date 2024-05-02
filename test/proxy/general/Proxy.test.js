@@ -26,7 +26,6 @@ contract(
     })
 
     context('Attacker', function () {
-      // Here the argument to indicate if it is deployed with a proxy, set at false by the attacker
       it('testCannotBeTakenControlByAttacker', async function () {
         // Act
         await expectRevertCustomError(

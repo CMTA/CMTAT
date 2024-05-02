@@ -3,7 +3,6 @@
 pragma solidity ^0.8.20;
 
 // required OZ imports here
-import "../../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
 import "../../security/AuthorizationModule.sol";
 import "../../../libraries/Errors.sol";
 

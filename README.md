@@ -180,18 +180,16 @@ The report is available in [ABDK_CMTA_CMTATRuleEngine_v_1_0.pdf](doc/audits/ABDK
 
 You will find the report produced by [Slither](https://github.com/crytic/slither) in 
 
-| Version | File                                                         |
-| ------- | ------------------------------------------------------------ |
-| v2.3.0  | [v2.3.0-slither-report.md](doc/audits/tools/v2.3.0-slither-report.md) |
-| v2.3.1  | [v2.3.1-slither-report.md](doc/audits/tools/v2.3.1-slither-report.md) |
+| Version      | File                                                         |
+| ------------ | ------------------------------------------------------------ |
+| Last version | [slither-report.md](doc/audits/tools/slither-report.md)      |
+| v2.3.0       | [v2.3.0-slither-report.md](doc/audits/tools/v2.3.0-slither-report.md) |
+| v2.3.1       | [v2.3.1-slither-report.md](doc/audits/tools/v2.3.1-slither-report.md) |
 
 
 ### Test
 
-- A summary of automatic tests is available in [test.pdf](doc/general/test/test.pdf).
-- A code coverage is available in [index.html](doc/general/test/coverage/index.html).
-
-> Note that we do not perform tests on the internal functions `init` of the different modules.
+A code coverage is available in [index.html](doc/general/test/coverage/index.html).
 
 
 ### Remarks

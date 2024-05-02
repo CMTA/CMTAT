@@ -1,6 +1,6 @@
 //SPDX-License-Identifier: MPL-2.0
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.20;
 
 import "../../../interfaces/draft-IERC1404/draft-IERC1404Wrapper.sol";
 

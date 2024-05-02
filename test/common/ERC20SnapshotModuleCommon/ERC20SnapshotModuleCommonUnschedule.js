@@ -13,7 +13,12 @@ const {
   checkArraySnapshot
 } = require('./ERC20SnapshotModuleUtils/ERC20SnapshotModuleUtils')
 
-function ERC20SnapshotModuleCommonUnschedule (owner, address1, address2, address3) {
+function ERC20SnapshotModuleCommonUnschedule (
+  owner,
+  address1,
+  address2,
+  address3
+) {
   context('unscheduleSnapshotNotOptimized', function () {
     beforeEach(async function () {
       this.currentTime = await time.latest()

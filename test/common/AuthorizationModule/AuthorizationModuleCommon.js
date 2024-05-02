@@ -2,7 +2,11 @@ const { expectEvent } = require('@openzeppelin/test-helpers')
 const {
   expectRevertCustomError
 } = require('../../../openzeppelin-contracts-upgradeable/test/helpers/customError')
-const { PAUSER_ROLE, DEFAULT_ADMIN_ROLE, ZERO_ADDRESS } = require('../../utils')
+const {
+  PAUSER_ROLE,
+  DEFAULT_ADMIN_ROLE,
+  ZERO_ADDRESS
+} = require('../../utils')
 const chai = require('chai')
 const should = chai.should()
 function AuthorizationModuleCommon (admin, address1, address2) {

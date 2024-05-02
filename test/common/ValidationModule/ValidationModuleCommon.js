@@ -31,7 +31,9 @@ function ValidationModuleCommon (
         from: admin
       });
       // Act + Assert
-      (await this.cmtat.validateTransfer(address1, address2, 10)).should.be.equal(true)
+      (
+        await this.cmtat.validateTransfer(address1, address2, 10)
+      ).should.be.equal(true)
     })
 
     it('testCanDetectTransferRestrictionValidTransfer', async function () {
@@ -39,7 +41,9 @@ function ValidationModuleCommon (
       (
         await this.cmtat.detectTransferRestriction(address1, address2, 11)
       ).should.be.bignumber.equal('0');
-      (await this.cmtat.validateTransfer(address1, address2, 11)).should.be.equal(true)
+      (
+        await this.cmtat.validateTransfer(address1, address2, 11)
+      ).should.be.equal(true)
     })
 
     it('testCanReturnMessageValidTransfer', async function () {
@@ -59,8 +63,13 @@ function ValidationModuleCommon (
         )
       ).should.be.bignumber.equal('10');
 
-      (await this.cmtat.validateTransfer(address1, address2, RULE_MOCK_AMOUNT_MAX + 1))
-        .should.be.equal(false)
+      (
+        await this.cmtat.validateTransfer(
+          address1,
+          address2,
+          RULE_MOCK_AMOUNT_MAX + 1
+        )
+      ).should.be.equal(false)
     })
 
     it('testCanReturnMessageWithAmountTooHigh', async function () {
@@ -81,7 +90,13 @@ function ValidationModuleCommon (
     it('testCanTransferAllowedByRule', async function () {
       const AMOUNT_TO_TRANSFER = 11;
       // Act
-      (await this.cmtat.validateTransfer(address1, address2, AMOUNT_TO_TRANSFER)).should.be.equal(true)
+      (
+        await this.cmtat.validateTransfer(
+          address1,
+          address2,
+          AMOUNT_TO_TRANSFER
+        )
+      ).should.be.equal(true)
       // Act
       await this.cmtat.transfer(address2, AMOUNT_TO_TRANSFER, {
         from: address1
@@ -102,7 +117,13 @@ function ValidationModuleCommon (
     it('testCannotTransferIfNotAllowedByRule', async function () {
       const AMOUNT_TO_TRANSFER = RULE_MOCK_AMOUNT_MAX + 1;
       // Act
-      (await this.cmtat.validateTransfer(address1, address2, AMOUNT_TO_TRANSFER)).should.be.equal(false)
+      (
+        await this.cmtat.validateTransfer(
+          address1,
+          address2,
+          AMOUNT_TO_TRANSFER
+        )
+      ).should.be.equal(false)
       // Act
       await expectRevertCustomError(
         this.cmtat.transfer(address2, AMOUNT_TO_TRANSFER, { from: address1 }),
