@@ -137,7 +137,48 @@ Generally, these modules are not required to be compliant with the CMTA specific
 | ------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | AuthorizationModule | [authorization.md](./doc/modules/presentation/security/authorization.md) | [AuthorizationModule.sol](./contracts/modules/security/AuthorizationModule.sol) |
 
+## Engine
 
+### RuleEngine
+
+The `RuleEngine` is an external contract used to apply transfer restriction to the CMTAT through whitelisting, blacklisting,..
+
+This contract is defined in the `ValidationModule`.
+
+An example of RuleEngine is also available on [Github](https://github.com/CMTA/RuleEngine).
+
+Here is the list of the different version available for each CMTAT version.
+
+| Name                    | RuleEngine                                                   |
+| ----------------------- | ------------------------------------------------------------ |
+| CMTAT 2.4.0 (unaudited) | Still in development                                         |
+| CMTAT 2.3.0             | [RuleEngine v1.0.2](https://github.com/CMTA/RuleEngine/releases/tag/v1.0.2) |
+| CMTAT 2.0 (unaudited)   | [RuleEngine 1.0](https://github.com/CMTA/RuleEngine/releases/tag/1.0) (unaudited) |
+| CMTAT 1.0               | No ruleEngine available                                      |
+
+This contract acts as a controller and can call different contract rule to apply rule on each transfer.
+
+A possible rule is a whitelist rule where only the address inside the whitelist can perform a transfer
+
+Since the version 2.4.0, the requirement to use a RuleEngine are the following:
+
+While it has been designed for the CMTAT, the ruleEngine can be used with others contracts to apply restriction on transfer.
+
+The `RuleEngine` has to import an implement the interface `IRuleEngine` which declares the function `operateOnTransfer`
+
+This interface can be found in [./contracts/interfaces/engine/IRuleEngine.sol](./contracts/interfaces/engine/IRuleEngine.sol)`CMTAT/contracts/interfaces/engine/IRuleEngine.sol`.
+
+Before each transfer, the CMTAT calls the function `operateOnTransfer` which is the entrypoint for the RuleEngine.
+
+### AuthorizationEngine
+
+The `AuthorizationEngine` is an external contract to add supplementary check on the functions `grantRole` and `revokeRole`from the CMTAT.
+
+This contract is managed in the `AuthorizationModule`.
+
+The `AuthorizationEngine` has to import an implement the interface `IAuthorizationEngine` which declares the functions `operateOnGrantRole` and `operateOnRevokeRole`
+
+This interface can be found in [./contracts/interfaces/engine/IAuthorizationEngine.sol](./contracts/interfaces/engine/IAuthorizationEngine.sol).
 
 
 ## Security
@@ -221,4 +262,4 @@ CMTA providers further documentation describing the CMTAT framework in a platfor
 
 ## Intellectual property
 
-The code is copyright (c) Capital Market and Technology Association, 2018-2023, and is released under [Mozilla Public License 2.0](./LICENSE.md).
+The code is copyright (c) Capital Market and Technology Association, 2018-2024, and is released under [Mozilla Public License 2.0](./LICENSE.md).
