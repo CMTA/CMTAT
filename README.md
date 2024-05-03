@@ -63,11 +63,11 @@ Factory contracts are available to deploy the CMTAT with a beacon proxy or a tra
 
 Beacon Proxy factory: the factory will use the same beacon for each beacon proxy. This beacon provides the address of the implementation contract, a CMTAT_PROXY contract. If you upgrade the beacon to point to a new implementation, it will change the implementation contract for all beacon proxy.
 
-![factory-Beacon Factory.drawio](./doc/schema/drawio/factory-Beacon Factory.drawio.png)
+![factory-Beacon Factory.drawio](./doc/schema/drawio/factory-BeaconFactory.drawio.png)
 
 Transparent Proxy factory: the factory will use the same implementation for each transparent proxy deployed. Each transparent proxy has its owned proxy admin, deployed inside the constructor of the transparent proxy. Each transparent proxy can upgrade their implementation to a new one independently and without impact on other proxies.
 
-![factory-Transparent Factory.drawio](./doc/schema/drawio/factory-Transparent Factory.drawio.png)
+![factory-Transparent Factory.drawio](./doc/schema/drawio/factory-TransparentFactory.drawio.png)
 
 
 ### Gasless support
