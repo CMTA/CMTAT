@@ -8,7 +8,7 @@ const ERC20SnapshotModuleOnePlannedSnapshotTest = require('../../common/ERC20Sna
 const ERC20SnapshotModuleZeroPlannedSnapshotTest = require('../../common/ERC20SnapshotModuleCommon/global/ERC20SnapshotModuleZeroPlannedSnapshot')
 
 contract(
-  'Proxy - SnapshotModule',
+  'Proxy - ERC20SnapshotModule',
   function ([_, admin, address1, address2, address3, deployerAddress]) {
     beforeEach(async function () {
       this.cmtat = await deployCMTATProxyWithSnapshot(
@@ -18,11 +18,26 @@ contract(
       )
     })
     ERC20SnapshotModuleMultiplePlannedTest(admin, address1, address2, address3)
-    ERC20SnapshotModuleOnePlannedSnapshotTest(admin, address1, address2, address3)
-    ERC20SnapshotModuleZeroPlannedSnapshotTest(admin, address1, address2, address3)
+    ERC20SnapshotModuleOnePlannedSnapshotTest(
+      admin,
+      address1,
+      address2,
+      address3
+    )
+    ERC20SnapshotModuleZeroPlannedSnapshotTest(
+      admin,
+      address1,
+      address2,
+      address3
+    )
     ERC20SnapshotModuleCommonRescheduling(admin, address1, address2, address3)
     ERC20SnapshotModuleCommonScheduling(admin, address1, address2, address3)
     ERC20SnapshotModuleCommonUnschedule(admin, address1, address2, address3)
-    ERC20SnapshotModuleCommonGetNextSnapshot(admin, address1, address2, address3)
+    ERC20SnapshotModuleCommonGetNextSnapshot(
+      admin,
+      address1,
+      address2,
+      address3
+    )
   }
 )

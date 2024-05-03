@@ -3,7 +3,6 @@
 pragma solidity ^0.8.20;
 
 import "../../../../openzeppelin-contracts-upgradeable/contracts/metatx/ERC2771ContextUpgradeable.sol";
-import "../../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
 
 /**
  * @dev Meta transaction (gasless) module.
@@ -18,26 +17,6 @@ abstract contract MetaTxModule is ERC2771ContextUpgradeable {
         address trustedForwarder
     ) ERC2771ContextUpgradeable(trustedForwarder) {
         // Nothing to do
-    }
-
-    function _msgSender()
-        internal
-        view
-        virtual
-        override
-        returns (address sender)
-    {
-        return ERC2771ContextUpgradeable._msgSender();
-    }
-
-    function _msgData()
-        internal
-        view
-        virtual
-        override
-        returns (bytes calldata)
-    {
-        return ERC2771ContextUpgradeable._msgData();
     }
 
     uint256[50] private __gap;

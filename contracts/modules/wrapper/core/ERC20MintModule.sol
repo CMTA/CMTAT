@@ -3,10 +3,11 @@
 pragma solidity ^0.8.20;
 
 import "../../../../openzeppelin-contracts-upgradeable/contracts/token/ERC20/ERC20Upgradeable.sol";
-import "../../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
 import "../../security/AuthorizationModule.sol";
-
-abstract contract ERC20MintModule is ERC20Upgradeable, AuthorizationModule {
+import "../../../interfaces/ICCIPToken.sol";
+abstract contract ERC20MintModule is ERC20Upgradeable, ICCIPMintERC20, AuthorizationModule {
+    // MintModule
+    bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     /**
      * @notice Emitted when the specified  `value` amount of new tokens are created and
      * allocated to the specified `account`.
@@ -19,6 +20,8 @@ abstract contract ERC20MintModule is ERC20Upgradeable, AuthorizationModule {
 
     /**
      * @notice  Creates a `value` amount of tokens and assigns them to `account`, by transferring it from address(0)
+     * @param account token receiver
+     * @param value amount of tokens
      * @dev
      * See {OpenZeppelin ERC20-_mint}.
      * Emits a {Mint} event.
@@ -60,13 +63,10 @@ abstract contract ERC20MintModule is ERC20Upgradeable, AuthorizationModule {
         if (bool(accounts.length != values.length)) {
             revert Errors.CMTAT_MintModule_AccountsValueslengthMismatch();
         }
-
-        for (uint256 i = 0; i < accounts.length; ) {
+        // No need of unchecked block since Soliditiy 0.8.22
+        for (uint256 i = 0; i < accounts.length; ++i ) {
             _mint(accounts[i], values[i]);
             emit Mint(accounts[i], values[i]);
-            unchecked {
-                ++i;
-            }
         }
     }
 

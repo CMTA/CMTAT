@@ -3,15 +3,19 @@
 pragma solidity ^0.8.20;
 
 import "../../../../openzeppelin-contracts-upgradeable/contracts/token/ERC20/ERC20Upgradeable.sol";
-import "../../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
 import "../../security/AuthorizationModule.sol";
-
-abstract contract ERC20BurnModule is ERC20Upgradeable, AuthorizationModule {
+import "../../../interfaces/ICCIPToken.sol";
+abstract contract ERC20BurnModule is ERC20Upgradeable, ICCIPBurnFromERC20, AuthorizationModule {
+    bytes32 public constant BURNER_ROLE = keccak256("BURNER_ROLE");
+    bytes32 public constant BURNER_FROM_ROLE = keccak256("BURNER_FROM_ROLE");
     /**
-     * @notice Emitted when the specified `value` amount of tokens owned by `owner`are destroyed with the given `reason`
-     */
+    * @notice Emitted when the specified `value` amount of tokens owned by `owner`are destroyed with the given `reason`
+    */
     event Burn(address indexed owner, uint256 value, string reason);
-
+    /**
+    * @notice Emitted when the specified `spender` burns the specified `value` tokens owned by the specified `owner` reducing the corresponding allowance.
+    */
+    event BurnFrom(address indexed owner, address indexed spender, uint256 value);
     function __ERC20BurnModule_init_unchained() internal onlyInitializing {
         // no variable to initialize
     }
@@ -25,7 +29,7 @@ abstract contract ERC20BurnModule is ERC20Upgradeable, AuthorizationModule {
      * Requirements:
      * - the caller must have the `BURNER_ROLE`.
      */
-    function forceBurn(
+    function burn(
         address account,
         uint256 value,
         string calldata reason
@@ -34,9 +38,10 @@ abstract contract ERC20BurnModule is ERC20Upgradeable, AuthorizationModule {
         emit Burn(account, value, reason);
     }
 
+
     /**
      *
-     * @notice batch version of {forceBurn}.
+     * @notice batch version of {burn}.
      * @dev
      * See {ERC20-_burn} and {OpenZeppelin ERC1155_burnBatch}.
      *
@@ -48,7 +53,7 @@ abstract contract ERC20BurnModule is ERC20Upgradeable, AuthorizationModule {
      * - `accounts` and `values` must have the same length
      * - the caller must have the `BURNER_ROLE`.
      */
-    function forceBurnBatch(
+    function burnBatch(
         address[] calldata accounts,
         uint256[] calldata values,
         string calldata reason
@@ -61,14 +66,48 @@ abstract contract ERC20BurnModule is ERC20Upgradeable, AuthorizationModule {
         if (bool(accounts.length != values.length)) {
             revert Errors.CMTAT_BurnModule_AccountsValueslengthMismatch();
         }
-
-        for (uint256 i = 0; i < accounts.length; ) {
+        // No need of unchecked block since Soliditiy 0.8.22
+        for (uint256 i = 0; i < accounts.length; ++i ) {
             _burn(accounts[i], values[i]);
             emit Burn(accounts[i], values[i], reason);
-            unchecked {
-                ++i;
-            }
         }
+    }
+
+    /**
+     * @notice Destroys `amount` tokens from `account`, deducting from the caller's
+     * allowance.
+     * @dev 
+     * Can be used to authorize a bridge (e.g. CCIP) to burn token owned by the bridge
+     * No string parameter reason to be compatible with Bridge, e.g. CCIP
+     * 
+     * See {ERC20-_burn} and {ERC20-allowance}.
+     *
+     * Requirements:
+     *
+     * - the caller must have allowance for ``accounts``'s tokens of at least
+     * `value`.
+     */
+    function burnFrom(address account, uint256 value)
+        public
+        onlyRole(BURNER_FROM_ROLE)
+    {
+        // Allowance check
+        address sender =  _msgSender();
+        uint256 currentAllowance = allowance(account, sender);
+        if(currentAllowance < value){
+            // ERC-6093
+            revert ERC20InsufficientAllowance(sender, currentAllowance, value);
+        }
+        // Update allowance
+        unchecked {
+            _approve(account, sender, currentAllowance - value);
+        }
+        // burn
+        _burn(account, value);
+        // We also emit a burn event since its a burn operation
+        emit Burn(account, value, "burnFrom");
+        // Specific event for the operation
+        emit BurnFrom(account, sender, value);
     }
 
     uint256[50] private __gap;

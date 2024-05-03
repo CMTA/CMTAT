@@ -7,16 +7,12 @@ require('solidity-docgen')
 require("hardhat-contract-sizer");
 module.exports = {
   solidity: {
-    version: '0.8.20',
+    version: '0.8.22',
     settings: {
       optimizer: {
         enabled: true,
         runs: 200,
-        details: {
-          yul: true
-        }
       },
-      viaIR: false,
       evmVersion: 'shanghai'
     }
   },

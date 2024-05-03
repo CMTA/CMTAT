@@ -1,19 +1,11 @@
 //SPDX-License-Identifier: MPL-2.0
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.20;
 
 import "./draft-IERC1404.sol";
+import "./draft-IERC1404EnumCode.sol";
 
-interface IERC1404Wrapper is IERC1404 {
-    /* 
-    @dev leave the code 4-9 free/unused for further additions in your ruleEngine implementation
-    */
-    enum REJECTED_CODE_BASE {
-        TRANSFER_OK,
-        TRANSFER_REJECTED_PAUSED,
-        TRANSFER_REJECTED_FROM_FROZEN,
-        TRANSFER_REJECTED_TO_FROZEN
-    }
+interface IERC1404Wrapper is IERC1404, IERC1404EnumCode  {
 
     /**
      * @dev Returns true if the transfer is valid, and false otherwise.

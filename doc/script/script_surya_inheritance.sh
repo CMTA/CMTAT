@@ -1,9 +1,9 @@
 #/bin/bash
 cd '../../'
 DIR=$(pwd)
-DIR_OUT=${DIR}/out/inheritance
+DIR_OUT=${DIR}/docOut/inheritance
 if ! [ -d "$DIR_OUT" ]; then
-    mkdir -p ./out/surya_inheritance
+    mkdir -p ./docOut/surya_inheritance
 fi
 cd './contracts'
 DIR=$(pwd)
@@ -12,6 +12,6 @@ do
     filename=${i##*/}
     ext=${i##*.}
     if [[ $ext == 'sol' ]]; then
-        npx surya inheritance $i | dot -Tpng > ../out/surya_inheritance/surya_inheritance_$filename.png;
+        npx surya inheritance $i | dot -Tpng > ../docOut/surya_inheritance/surya_inheritance_$filename.png;
     fi
 done;

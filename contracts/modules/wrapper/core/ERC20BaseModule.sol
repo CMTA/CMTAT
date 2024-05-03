@@ -3,7 +3,6 @@
 pragma solidity ^0.8.20;
 
 // required OZ imports here
-import "../../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
 import "../../../../openzeppelin-contracts-upgradeable/contracts/token/ERC20/ERC20Upgradeable.sol";
 import "../../../libraries/Errors.sol";
 
@@ -11,6 +10,7 @@ abstract contract ERC20BaseModule is ERC20Upgradeable {
     /* Events */
     /**
     * @notice Emitted when the specified `spender` spends the specified `value` tokens owned by the specified `owner` reducing the corresponding allowance.
+    * @dev The allowance can be also "spend" with the function BurnFrom, but in this case, the emitted event is BurnFrom.
     */
     event Spend(address indexed owner, address indexed spender, uint256 value);
 
@@ -65,14 +65,11 @@ abstract contract ERC20BaseModule is ERC20Upgradeable {
         if (bool(tos.length != values.length)) {
             revert Errors.CMTAT_ERC20BaseModule_TosValueslengthMismatch();
         }
-
-        for (uint256 i = 0; i < tos.length; ) {
+        // No need of unchecked block since Soliditiy 0.8.22
+        for (uint256 i = 0; i < tos.length; ++i) {
             // We call directly the internal function transfer
             // The reason is that the public function adds only the owner address recovery
             ERC20Upgradeable._transfer(_msgSender(), tos[i], values[i]);
-            unchecked {
-                ++i;
-            }
         }
         // not really useful
         // Here only to keep the same behaviour as transfer
@@ -101,27 +98,16 @@ abstract contract ERC20BaseModule is ERC20Upgradeable {
     }
 
     /**
-     * @notice Allows `spender` to withdraw from your account multiple times, up to the `value` amount
-     * @dev see {OpenZeppelin ERC20 - approve}
-     */
-    function approve(
-        address spender,
-        uint256 value,
-        uint256 currentAllowance
-    ) public virtual returns (bool) {
-        address owner = _msgSender();
-        uint256 currentAllowanceFromSmartContract = allowance(owner, spender);
-        if (currentAllowanceFromSmartContract != currentAllowance) {
-            revert Errors.CMTAT_ERC20BaseModule_WrongAllowance(
-                spender,
-                currentAllowanceFromSmartContract,
-                currentAllowance
-            );
+    * @param addresses list of address to know their balance
+    * @return balances ,totalSupply array with balance for each address, totalSupply
+    * @dev useful for the snapshot rule
+    */
+    function balanceInfo(address[] calldata addresses) public view returns(uint256[] memory balances , uint256 totalSupply) {
+        balances = new uint256[](addresses.length);
+        for(uint256 i = 0; i < addresses.length; ++i){
+            balances[i] = ERC20Upgradeable.balanceOf(addresses[i]);
         }
-        // We call directly the internal function _approve
-        // The reason is that the public function adds only the owner address recovery
-        ERC20Upgradeable._approve(owner, spender, value);
-        return true;
+        totalSupply = ERC20Upgradeable.totalSupply();
     }
 
     uint256[50] private __gap;

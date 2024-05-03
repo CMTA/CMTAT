@@ -25,11 +25,25 @@ function ValidationModuleCommon (
       }
     })
 
+    it('testCanValidateTransferWithoutRuleEngine', async function () {
+      // Arrange
+      await this.cmtat.setRuleEngine(ZERO_ADDRESS, {
+        from: admin
+      });
+      // Act + Assert
+      (
+        await this.cmtat.validateTransfer(address1, address2, 10)
+      ).should.be.equal(true)
+    })
+
     it('testCanDetectTransferRestrictionValidTransfer', async function () {
       // Act + Assert
       (
         await this.cmtat.detectTransferRestriction(address1, address2, 11)
-      ).should.be.bignumber.equal('0')
+      ).should.be.bignumber.equal('0');
+      (
+        await this.cmtat.validateTransfer(address1, address2, 11)
+      ).should.be.equal(true)
     })
 
     it('testCanReturnMessageValidTransfer', async function () {
@@ -47,7 +61,15 @@ function ValidationModuleCommon (
           address2,
           RULE_MOCK_AMOUNT_MAX + 1
         )
-      ).should.be.bignumber.equal('10')
+      ).should.be.bignumber.equal('10');
+
+      (
+        await this.cmtat.validateTransfer(
+          address1,
+          address2,
+          RULE_MOCK_AMOUNT_MAX + 1
+        )
+      ).should.be.equal(false)
     })
 
     it('testCanReturnMessageWithAmountTooHigh', async function () {
@@ -66,7 +88,15 @@ function ValidationModuleCommon (
 
     // ADDRESS1 may transfer tokens to ADDRESS2
     it('testCanTransferAllowedByRule', async function () {
-      const AMOUNT_TO_TRANSFER = 11
+      const AMOUNT_TO_TRANSFER = 11;
+      // Act
+      (
+        await this.cmtat.validateTransfer(
+          address1,
+          address2,
+          AMOUNT_TO_TRANSFER
+        )
+      ).should.be.equal(true)
       // Act
       await this.cmtat.transfer(address2, AMOUNT_TO_TRANSFER, {
         from: address1
@@ -85,7 +115,15 @@ function ValidationModuleCommon (
 
     // reverts if ADDRESS1 transfers more tokens than rule allows
     it('testCannotTransferIfNotAllowedByRule', async function () {
-      const AMOUNT_TO_TRANSFER = RULE_MOCK_AMOUNT_MAX + 1
+      const AMOUNT_TO_TRANSFER = RULE_MOCK_AMOUNT_MAX + 1;
+      // Act
+      (
+        await this.cmtat.validateTransfer(
+          address1,
+          address2,
+          AMOUNT_TO_TRANSFER
+        )
+      ).should.be.equal(false)
       // Act
       await expectRevertCustomError(
         this.cmtat.transfer(address2, AMOUNT_TO_TRANSFER, { from: address1 }),

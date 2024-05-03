@@ -22,12 +22,12 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>15/15</span>
+        <span class='fraction'>11/11</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">80% </span>
+        <span class="strong">75% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>8/10</span>
+        <span class='fraction'>6/8</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
@@ -37,7 +37,7 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>21/21</span>
+        <span class='fraction'>17/17</span>
       </div>
     </div>
   </div>
@@ -157,21 +157,7 @@
 112
 113
 114
-115
-116
-117
-118
-119
-120
-121
-122
-123
-124
-125
-126
-127
-128
-129</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+115</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -201,7 +187,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">364×</span>
+<span class="cline-any cline-yes">384×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -243,9 +229,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">14×</span>
-<span class="cline-any cline-yes">10×</span>
-<span class="cline-any cline-yes">10×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -279,22 +262,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">6×</span>
-<span class="cline-any cline-yes">6×</span>
-<span class="cline-any cline-yes">6×</span>
 <span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">6×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2×</span>
-<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">4×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -304,7 +276,6 @@
 pragma solidity ^0.8.20;
 &nbsp;
 // required OZ imports here
-import "../../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
 import "../../../../openzeppelin-contracts-upgradeable/contracts/token/ERC20/ERC20Upgradeable.sol";
 import "../../../libraries/Errors.sol";
 &nbsp;
@@ -312,6 +283,7 @@ abstract contract ERC20BaseModule is ERC20Upgradeable {
     /* Events */
     /**
     * @notice Emitted when the specified `spender` spends the specified `value` tokens owned by the specified `owner` reducing the corresponding allowance.
+    * @dev The allowance can be also "spend" with the function BurnFrom, but in this case, the emitted event is BurnFrom.
     */
     event Spend(address indexed owner, address indexed spender, uint256 value);
 &nbsp;
@@ -366,14 +338,11 @@ abstract contract ERC20BaseModule is ERC20Upgradeable {
         if (bool(tos.length != values.length)) {
             revert Errors.CMTAT_ERC20BaseModule_TosValueslengthMismatch();
         }
-&nbsp;
-        for (uint256 i = 0; i &lt; tos.length; ) {
+        // No need of unchecked block since Soliditiy 0.8.22
+        for (uint256 i = 0; i &lt; tos.length; ++i) {
             // We call directly the internal function transfer
             // The reason is that the public function adds only the owner address recovery
             ERC20Upgradeable._transfer(_msgSender(), tos[i], values[i]);
-            unchecked {
-                ++i;
-            }
         }
         // not really useful
         // Here only to keep the same behaviour as transfer
@@ -402,27 +371,16 @@ abstract contract ERC20BaseModule is ERC20Upgradeable {
     }
 &nbsp;
     /**
-     * @notice Allows `spender` to withdraw from your account multiple times, up to the `value` amount
-     * @dev see {OpenZeppelin ERC20 - approve}
-     */
-    function approve(
-        address spender,
-        uint256 value,
-        uint256 currentAllowance
-    ) public virtual returns (bool) {
-        address owner = _msgSender();
-        uint256 currentAllowanceFromSmartContract = allowance(owner, spender);
-        if (currentAllowanceFromSmartContract != currentAllowance) {
-            revert Errors.CMTAT_ERC20BaseModule_WrongAllowance(
-                spender,
-                currentAllowanceFromSmartContract,
-                currentAllowance
-            );
+    * @param addresses list of address to know their balance
+    * @return balances ,totalSupply array with balance for each address, totalSupply
+    * @dev useful for the snapshot rule
+    */
+    function balanceInfo(address[] calldata addresses) public view returns(uint256[] memory balances , uint256 totalSupply) {
+        balances = new uint256[](addresses.length);
+        for(uint256 i = 0; i &lt; addresses.length; ++i){
+            balances[i] = ERC20Upgradeable.balanceOf(addresses[i]);
         }
-        // We call directly the internal function _approve
-        // The reason is that the public function adds only the owner address recovery
-        ERC20Upgradeable._approve(owner, spender, value);
-        return true;
+        totalSupply = ERC20Upgradeable.totalSupply();
     }
 &nbsp;
     uint256[50] private __gap;
@@ -433,7 +391,7 @@ abstract contract ERC20BaseModule is ERC20Upgradeable {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Fri Nov 10 2023 14:03:15 GMT+0100 (Central European Standard Time)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu May 02 2024 13:42:17 GMT+0200 (Central European Summer Time)
 </div>
 </div>
 <script src="../../../../prettify.js"></script>

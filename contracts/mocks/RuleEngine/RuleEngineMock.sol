@@ -3,14 +3,13 @@
 pragma solidity ^0.8.20;
 
 import "./interfaces/IRule.sol";
-import "./interfaces/IRuleEngine.sol";
+import "./interfaces/IRuleEngineMock.sol";
 import "./RuleMock.sol";
-import "./CodeList.sol";
 
 /*
-@title a mock for testing, not suitable for production
+* @title a mock for testing, not suitable for production
 */
-contract RuleEngineMock is IRuleEngine {
+contract RuleEngineMock is IRuleEngineMock {
     IRule[] internal _rules;
 
     constructor() {
@@ -18,8 +17,8 @@ contract RuleEngineMock is IRuleEngine {
     }
 
     /*
-    @dev 
-    Warning: if you want to use this mock, you have to restrict the access to this function through an an access control
+    * @dev 
+    * Warning: if you want to use this mock, you have to restrict the access to this function through an an access control
     */
     function setRules(IRule[] calldata rules_) external override {
         _rules = rules_;
@@ -67,9 +66,19 @@ contract RuleEngineMock is IRuleEngine {
         return detectTransferRestriction(_from, _to, _amount) == 0;
     }
 
+    /*
+    * @dev 
+    * Warning: if you want to use this mock, you have to restrict the access to this function through an an access control
+    */
+    function operateOnTransfer(  address _from,
+        address _to,
+        uint256 _amount) view public override returns (bool){
+        return validateTransfer(_from, _to, _amount);
+    }
+
     /**
-    @dev
-    For all the rules, each restriction code has to be unique.
+    * @dev
+    * For all the rules, each restriction code has to be unique.
     */
     function messageForTransferRestriction(
         uint8 _restrictionCode

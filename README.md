@@ -52,6 +52,24 @@ Please see the OpenZeppelin [Upgrades plugins](https://docs.openzeppelin.com/upg
 Note that deployment via a proxy is not mandatory, but is recommended by CMTA.
 
 
+
+#### Factory
+
+Factory contracts are available to deploy the CMTAT with a beacon proxy or a transparent proxy.
+
+[CMTAT_BEACON_FACTORY.sol](./contracts/deployment/CMTAT_BEACON_FACTORY.sol)
+
+[CMTAT_TRANSPARENT_FACTORY.sol](./contracts/deployment/CMTAT_TRANSPARENT_FACTORY.sol)
+
+Beacon Proxy factory: the factory will use the same beacon for each beacon proxy. This beacon provides the address of the implementation contract, a CMTAT_PROXY contract. If you upgrade the beacon to point to a new implementation, it will change the implementation contract for all beacon proxy.
+
+![factory-Beacon Factory.drawio](./doc/schema/drawio/factory-BeaconFactory.drawio.png)
+
+Transparent Proxy factory: the factory will use the same implementation for each transparent proxy deployed. Each transparent proxy has its owned proxy admin, deployed inside the constructor of the transparent proxy. Each transparent proxy can upgrade their implementation to a new one independently and without impact on other proxies.
+
+![factory-Transparent Factory.drawio](./doc/schema/drawio/factory-TransparentFactory.drawio.png)
+
+
 ### Gasless support
 
 The CMTAT supports client-side gasless transactions using the [Gas Station Network](https://docs.opengsn.org/#the-problem) (GSN) pattern, the main open standard for transfering fee payment to another account than that of the transaction issuer. The contract uses the OpenZeppelin contract `ERC2771ContextUpgradeable`, which allows a contract to get the original client with `_msgSender()` instead of the fee payer given by `msg.sender` while allowing upgrades on the main contract (see *Deployment via a proxy* above).
@@ -109,11 +127,9 @@ Generally, these modules are not required to be compliant with the CMTA specific
 | Name              | Documentation                                                | Main File                                                    |
 | ----------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | MetaTxModule      | [metatx.md](doc/modules/presentation/extensions/metatx.md)   | [MetaTxModule.sol](./contracts/modules/wrapper/extensions/MetaTxModule.sol) |
-| SnapshotModule*   | [snapshot.md](doc/modules/presentation/extensions/snapshot.md) | [SnapshotModule.sol](./contracts/modules/wrapper/extensions/SnapshotModule.sol) |
+| SnapshotModule    | [snapshot.md](doc/modules/presentation/extensions/snapshot.md) | [SnapshotModule.sol](./contracts/modules/wrapper/extensions/SnapshotModule.sol) |
 | creditEventModule | [creditEvents.md](doc/modules/presentation/extensions/Debt/creditEvents.md) | [CreditEventsModule.sol](./contracts/modules/wrapper/extensions/DebtModule/CreditEventsModule.sol) |
 | DebtBaseModule    | [debtBase.md](doc/modules/presentation/extensions/Debt/debtBase.md) | [DebtBaseModule.sol](./contracts/modules/wrapper/extensions/DebtModule/DebtBaseModule.sol) |
-
-*not imported by default
 
 ### Security
 
@@ -121,15 +137,46 @@ Generally, these modules are not required to be compliant with the CMTA specific
 | ------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | AuthorizationModule | [authorization.md](./doc/modules/presentation/security/authorization.md) | [AuthorizationModule.sol](./contracts/modules/security/AuthorizationModule.sol) |
 
+## Engine
 
+### RuleEngine
 
-### SnapshotModule
+The `RuleEngine` is an external contract used to apply transfer restriction to the CMTAT through whitelisting, blacklisting,...
 
-This module designed for future support of dividend and interest distribution, was not covered by the audit made by ABDK and it is no longer imported by default inside the CMTAT.
+This contract is defined in the `ValidationModule`.
 
-If you want to add this module, you have to uncomment the specific lines "SnapshotModule" in [CMTAT_BASE.sol](./contracts/modules/CMTAT_BASE.sol).
+An example of RuleEngine is also available on [Github](https://github.com/CMTA/RuleEngine).
 
-A CMTAT version inheriting from the SnapshotModule and used for **testing** purpose is available in [CMTATSnapshotStandaloneTest.sol](./contracts/test/CMTATSnapshot/CMTATSnapshotStandaloneTest.sol) and [CMTATSnapshotProxyTest.sol](./contracts/test/CMTATSnapshot/CMTATSnapshotProxyTest.sol).
+Here is the list of the different version available for each CMTAT version.
+
+| Name                    | RuleEngine                                                   |
+| ----------------------- | ------------------------------------------------------------ |
+| CMTAT 2.4.0 (unaudited) | Still in development                                         |
+| CMTAT 2.3.0             | [RuleEngine v1.0.2](https://github.com/CMTA/RuleEngine/releases/tag/v1.0.2) |
+| CMTAT 2.0 (unaudited)   | [RuleEngine 1.0](https://github.com/CMTA/RuleEngine/releases/tag/1.0) (unaudited) |
+| CMTAT 1.0               | No ruleEngine available                                      |
+
+This contract acts as a controller and can call different contract rule to apply rule on each transfer.
+
+A possible rule is a whitelist rule where only the address inside the whitelist can perform a transfer
+
+Since the version 2.4.0, the requirement to use a RuleEngine are the following:
+
+The `RuleEngine` has to import an implement the interface `IRuleEngine` which declares the function `operateOnTransfer`.
+
+This interface can be found in [./contracts/interfaces/engine/IRuleEngine.sol](./contracts/interfaces/engine/IRuleEngine.sol).
+
+Before each transfer, the CMTAT calls the function `operateOnTransfer` which is the entrypoint for the RuleEngine.
+
+### AuthorizationEngine
+
+The `AuthorizationEngine` is an external contract to add supplementary check on the functions `grantRole` and `revokeRole`from the CMTAT.
+
+This contract is managed in the `AuthorizationModule`.
+
+The `AuthorizationEngine` has to import an implement the interface `IAuthorizationEngine` which declares the functions `operateOnGrantRole` and `operateOnRevokeRole`
+
+This interface can be found in [./contracts/interfaces/engine/IAuthorizationEngine.sol](./contracts/interfaces/engine/IAuthorizationEngine.sol).
 
 
 ## Security
@@ -172,18 +219,16 @@ The report is available in [ABDK_CMTA_CMTATRuleEngine_v_1_0.pdf](doc/audits/ABDK
 
 You will find the report produced by [Slither](https://github.com/crytic/slither) in 
 
-| Version | File                                                         |
-| ------- | ------------------------------------------------------------ |
-| v2.3.0  | [v2.3.0-slither-report.md](doc/audits/tools/v2.3.0-slither-report.md) |
-| v2.3.1  | [v2.3.1-slither-report.md](doc/audits/tools/v2.3.1-slither-report.md) |
+| Version      | File                                                         |
+| ------------ | ------------------------------------------------------------ |
+| Last version | [slither-report.md](doc/audits/tools/slither-report.md)      |
+| v2.3.0       | [v2.3.0-slither-report.md](doc/audits/tools/v2.3.0-slither-report.md) |
+| v2.3.1       | [v2.3.1-slither-report.md](doc/audits/tools/v2.3.1-slither-report.md) |
 
 
 ### Test
 
-- A summary of automatic tests is available in [test.pdf](doc/general/test/test.pdf).
-- A code coverage is available in [index.html](doc/general/test/coverage/index.html).
-
-> Note that we do not perform tests on the internal functions `init` of the different modules.
+A code coverage is available in [index.html](doc/general/test/coverage/index.html).
 
 
 ### Remarks
@@ -215,4 +260,4 @@ CMTA providers further documentation describing the CMTAT framework in a platfor
 
 ## Intellectual property
 
-The code is copyright (c) Capital Market and Technology Association, 2018-2023, and is released under [Mozilla Public License 2.0](./LICENSE.md).
+The code is copyright (c) Capital Market and Technology Association, 2018-2024, and is released under [Mozilla Public License 2.0](./LICENSE.md).

@@ -1,9 +1,9 @@
 //SPDX-License-Identifier: MPL-2.0
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.20;
 
 /*
-@dev Contrary to the ERC-1404, this interface does not inherit from the ERC20 interface
+* @dev Contrary to the ERC-1404, this interface does not inherit from the ERC20 interface
 */
 interface IERC1404 {
     /**

@@ -1,6 +1,8 @@
 const { time } = require('@openzeppelin/test-helpers')
 const { should } = require('chai').should()
-const { checkSnapshot } = require('../ERC20SnapshotModuleUtils/ERC20SnapshotModuleUtils')
+const {
+  checkSnapshot
+} = require('../ERC20SnapshotModuleUtils/ERC20SnapshotModuleUtils')
 const reason = 'BURN_TEST'
 
 function ERC20SnapshotModuleOnePlannedSnapshotTest (
@@ -86,7 +88,7 @@ function ERC20SnapshotModuleOnePlannedSnapshotTest (
       )
 
       // Act
-      await this.cmtat.forceBurn(address1, BURN_AMOUNT, reason, {
+      await this.cmtat.burn(address1, BURN_AMOUNT, reason, {
         from: admin,
         gas: 5000000,
         gasPrice: 500000000

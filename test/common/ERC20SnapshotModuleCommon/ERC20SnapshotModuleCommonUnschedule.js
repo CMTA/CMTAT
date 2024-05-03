@@ -13,7 +13,12 @@ const {
   checkArraySnapshot
 } = require('./ERC20SnapshotModuleUtils/ERC20SnapshotModuleUtils')
 
-function ERC20SnapshotModuleCommonUnschedule (owner, address1, address2, address3) {
+function ERC20SnapshotModuleCommonUnschedule (
+  owner,
+  address1,
+  address2,
+  address3
+) {
   context('unscheduleSnapshotNotOptimized', function () {
     beforeEach(async function () {
       this.currentTime = await time.latest()
@@ -83,6 +88,18 @@ function ERC20SnapshotModuleCommonUnschedule (owner, address1, address2, address
       snapshots = await this.cmtat.getNextSnapshots()
       snapshots.length.should.equal(0)
     })
+
+    it('testCannotUnscheduleASnapshotInThePast', async function () {
+      const SNAPSHOT_TIME = this.currentTime.sub(time.duration.seconds(60))
+      await expectRevertCustomError(
+        this.cmtat.unscheduleSnapshotNotOptimized(SNAPSHOT_TIME, {
+          from: owner
+        }),
+        'CMTAT_SnapshotModule_SnapshotAlreadyDone',
+        []
+      )
+    })
+
     it('can unschedule a snaphot in a random place', async function () {
       const RANDOM_SNAPSHOT = this.currentTime.add(time.duration.seconds(17))
       await this.cmtat.scheduleSnapshot(this.snapshotTime1, {
@@ -187,6 +204,7 @@ function ERC20SnapshotModuleCommonUnschedule (owner, address1, address2, address
       snapshots.length.should.equal(1)
     })
   })
+
   context('Snapshot unscheduling', function () {
     beforeEach(async function () {
       this.currentTime = await time.latest()

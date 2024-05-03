@@ -22,22 +22,22 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>7/7</span>
+        <span class='fraction'>14/14</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">90% </span>
+        <span class="strong">92.86% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>9/10</span>
+        <span class='fraction'>13/14</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>3/3</span>
+        <span class='fraction'>4/4</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>11/11</span>
+        <span class='fraction'>18/18</span>
       </div>
     </div>
   </div>
@@ -118,7 +118,46 @@
 73
 74
 75
-76</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -150,8 +189,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">12×</span>
-<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">18×</span>
+<span class="cline-any cline-yes">14×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -185,10 +229,44 @@
 <span class="cline-any cline-yes">8×</span>
 <span class="cline-any cline-yes">24×</span>
 <span class="cline-any cline-yes">20×</span>
-<span class="cline-any cline-yes">20×</span>
-<span class="cline-any cline-yes">20×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -198,15 +276,19 @@
 pragma solidity ^0.8.20;
 &nbsp;
 import "../../../../openzeppelin-contracts-upgradeable/contracts/token/ERC20/ERC20Upgradeable.sol";
-import "../../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
 import "../../security/AuthorizationModule.sol";
-&nbsp;
-abstract contract ERC20BurnModule is ERC20Upgradeable, AuthorizationModule {
+import "../../../interfaces/ICCIPToken.sol";
+abstract contract ERC20BurnModule is ERC20Upgradeable, ICCIPBurnFromERC20, AuthorizationModule {
+    bytes32 public constant BURNER_ROLE = keccak256("BURNER_ROLE");
+    bytes32 public constant BURNER_FROM_ROLE = keccak256("BURNER_FROM_ROLE");
     /**
-     * @notice Emitted when the specified `value` amount of tokens owned by `owner`are destroyed with the given `reason`
-     */
+    * @notice Emitted when the specified `value` amount of tokens owned by `owner`are destroyed with the given `reason`
+    */
     event Burn(address indexed owner, uint256 value, string reason);
-&nbsp;
+    /**
+    * @notice Emitted when the specified `spender` burns the specified `value` tokens owned by the specified `owner` reducing the corresponding allowance.
+    */
+    event BurnFrom(address indexed owner, address indexed spender, uint256 value);
     function __ERC20BurnModule_init_unchained() internal <span class="missing-if-branch" title="else path not taken" >E</span>onlyInitializing {
         // no variable to initialize
     }
@@ -220,7 +302,7 @@ abstract contract ERC20BurnModule is ERC20Upgradeable, AuthorizationModule {
      * Requirements:
      * - the caller must have the `BURNER_ROLE`.
      */
-    function forceBurn(
+    function burn(
         address account,
         uint256 value,
         string calldata reason
@@ -229,9 +311,10 @@ abstract contract ERC20BurnModule is ERC20Upgradeable, AuthorizationModule {
         emit Burn(account, value, reason);
     }
 &nbsp;
+&nbsp;
     /**
      *
-     * @notice batch version of {forceBurn}.
+     * @notice batch version of {burn}.
      * @dev
      * See {ERC20-_burn} and {OpenZeppelin ERC1155_burnBatch}.
      *
@@ -243,7 +326,7 @@ abstract contract ERC20BurnModule is ERC20Upgradeable, AuthorizationModule {
      * - `accounts` and `values` must have the same length
      * - the caller must have the `BURNER_ROLE`.
      */
-    function forceBurnBatch(
+    function burnBatch(
         address[] calldata accounts,
         uint256[] calldata values,
         string calldata reason
@@ -256,14 +339,48 @@ abstract contract ERC20BurnModule is ERC20Upgradeable, AuthorizationModule {
         if (bool(accounts.length != values.length)) {
             revert Errors.CMTAT_BurnModule_AccountsValueslengthMismatch();
         }
-&nbsp;
-        for (uint256 i = 0; i &lt; accounts.length; ) {
+        // No need of unchecked block since Soliditiy 0.8.22
+        for (uint256 i = 0; i &lt; accounts.length; ++i ) {
             _burn(accounts[i], values[i]);
             emit Burn(accounts[i], values[i], reason);
-            unchecked {
-                ++i;
-            }
         }
+    }
+&nbsp;
+    /**
+     * @notice Destroys `amount` tokens from `account`, deducting from the caller's
+     * allowance.
+     * @dev 
+     * Can be used to authorize a bridge (e.g. CCIP) to burn token owned by the bridge
+     * No string parameter reason to be compatible with Bridge, e.g. CCIP
+     * 
+     * See {ERC20-_burn} and {ERC20-allowance}.
+     *
+     * Requirements:
+     *
+     * - the caller must have allowance for ``accounts``'s tokens of at least
+     * `value`.
+     */
+    function burnFrom(address account, uint256 value)
+        public
+        onlyRole(BURNER_FROM_ROLE)
+    {
+        // Allowance check
+        address sender =  _msgSender();
+        uint256 currentAllowance = allowance(account, sender);
+        if(currentAllowance &lt; value){
+            // ERC-6093
+            revert ERC20InsufficientAllowance(sender, currentAllowance, value);
+        }
+        // Update allowance
+        unchecked {
+            _approve(account, sender, currentAllowance - value);
+        }
+        // burn
+        _burn(account, value);
+        // We also emit a burn event since its a burn operation
+        emit Burn(account, value, "burnFrom");
+        // Specific event for the operation
+        emit BurnFrom(account, sender, value);
     }
 &nbsp;
     uint256[50] private __gap;
@@ -274,7 +391,7 @@ abstract contract ERC20BurnModule is ERC20Upgradeable, AuthorizationModule {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Fri Nov 10 2023 14:03:15 GMT+0100 (Central European Standard Time)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu May 02 2024 13:42:17 GMT+0200 (Central European Summer Time)
 </div>
 </div>
 <script src="../../../../prettify.js"></script>

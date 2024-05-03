@@ -13,10 +13,11 @@ import "./wrapper/core/EnforcementModule.sol";
 import "./wrapper/core/ERC20BaseModule.sol";
 import "./wrapper/core/PauseModule.sol";
 /*
-SnapshotModule:
-Add this import in case you add the SnapshotModule
-import "./wrapper/optional/SnapshotModule.sol";
+* SnapshotModule:
+* Add this import in case you add the SnapshotModule
 */
+import "./wrapper/extensions/ERC20SnapshotModule.sol";
+
 import "./wrapper/controllers/ValidationModule.sol";
 import "./wrapper/extensions/MetaTxModule.sol";
 import "./wrapper/extensions/DebtModule/DebtBaseModule.sol";
@@ -36,7 +37,7 @@ abstract contract CMTAT_BASE is
     ValidationModule,
     MetaTxModule,
     ERC20BaseModule,
-    // ERC20SnapshotModule,
+    ERC20SnapshotModule,
     DebtBaseModule,
     CreditEventsModule
 {
@@ -56,19 +57,19 @@ abstract contract CMTAT_BASE is
      */
     function initialize(
         address admin,
-        uint48 initialDelayToAcceptAdminRole, 
+        IAuthorizationEngine authorizationEngineIrrevocable,
         string memory nameIrrevocable,
         string memory symbolIrrevocable,
         uint8 decimalsIrrevocable,
         string memory tokenId_,
         string memory terms_,
-        IERC1404Wrapper ruleEngine_,
-        string memory information_,
+        IRuleEngine ruleEngine_,
+        string memory information_, 
         uint256 flag_
     ) public initializer {
         __CMTAT_init(
             admin,
-            initialDelayToAcceptAdminRole, 
+            authorizationEngineIrrevocable, 
             nameIrrevocable,
             symbolIrrevocable,
             decimalsIrrevocable,
@@ -85,13 +86,13 @@ abstract contract CMTAT_BASE is
      */
     function __CMTAT_init(
         address admin,
-        uint48 initialDelayToAcceptAdminRole, 
+        IAuthorizationEngine authorizationEngineIrrevocable, 
         string memory nameIrrevocable,
         string memory symbolIrrevocable,
         uint8 decimalsIrrevocable,
         string memory tokenId_,
         string memory terms_,
-        IERC1404Wrapper ruleEngine_,
+        IRuleEngine ruleEngine_,
         string memory information_,
         uint256 flag_
     ) internal onlyInitializing {
@@ -103,21 +104,22 @@ abstract contract CMTAT_BASE is
         __ERC165_init_unchained();
         // AuthorizationModule inherits from AccessControlUpgradeable
         __AccessControl_init_unchained();
-        __AccessControlDefaultAdminRules_init_unchained(initialDelayToAcceptAdminRole, admin);
         __Pausable_init_unchained();
 
         /* Internal Modules */
         __Enforcement_init_unchained();
         /*
         SnapshotModule:
-        Add this call in case you add the SnapshotModule
+        Add these two calls in case you add the SnapshotModule
+            */
+        __SnapshotModuleBase_init_unchained();
         __ERC20Snapshot_init_unchained();
-        */
+    
         __Validation_init_unchained(ruleEngine_);
 
         /* Wrapper */
         // AuthorizationModule_init_unchained is called firstly due to inheritance
-        __AuthorizationModule_init_unchained();
+        __AuthorizationModule_init_unchained(admin, authorizationEngineIrrevocable);
         __ERC20BurnModule_init_unchained();
         __ERC20MintModule_init_unchained();
         // EnforcementModule_init_unchained is called before ValidationModule_init_unchained due to inheritance
@@ -130,8 +132,9 @@ abstract contract CMTAT_BASE is
         /*
         SnapshotModule:
         Add this call in case you add the SnapshotModule
-        __ERC20SnasphotModule_init_unchained();
         */
+        __ERC20SnasphotModule_init_unchained();
+   
 
         /* Other modules */
         __DebtBaseModule_init_unchained();
@@ -173,39 +176,62 @@ abstract contract CMTAT_BASE is
     }
 
     /**
+    * @notice burn and mint atomically
+    * @param from current token holder to burn tokens
+    * @param to receiver to send the new minted tokens
+    * @param amountToBurn number of tokens to burn
+    * @param amountToMint number of tokens to mint
+    * @dev 
+    * - The access control is managed by the functions burn (ERC20BurnModule) and mint (ERC20MintModule)
+    * - Input validation is also managed by the functions burn and mint
+    * - You can mint more tokens than burnt
+    */
+    function burnAndMint(address from, address to, uint256 amountToBurn, uint256 amountToMint, string calldata reason) public  {
+        burn(from, amountToBurn, reason);
+        mint(to, amountToMint);
+    }
+
+    /**
      * @dev
-     * SnapshotModule:
-     * - override SnapshotModuleInternal if you add the SnapshotModule
-     * e.g. override(ERC20SnapshotModuleInternal, ERC20Upgradeable)
-     * - remove the keyword view
+     *
      */
     function _update(
         address from,
         address to,
         uint256 amount
     ) internal override(ERC20Upgradeable) {
-        if (!ValidationModule.validateTransfer(from, to, amount)) {
+        if (!ValidationModule._operateOnTransfer(from, to, amount)) {
             revert Errors.CMTAT_InvalidTransfer(from, to, amount);
         }
-        ERC20Upgradeable._update(from, to, amount);
-        // We call the SnapshotModule only if the transfer is valid
         /*
         SnapshotModule:
-        Add this call in case you add the SnapshotModule
-        ERC20SnapshotModuleInternal._update(from, to, amount);
+        Add this in case you add the SnapshotModule
+        We call the SnapshotModule only if the transfer is valid
         */
+        ERC20SnapshotModuleInternal._snapshotUpdate(from, to);
+        ERC20Upgradeable._update(from, to, amount);
     }
 
+    /************* MetaTx Module *************/
     /**
      * @dev This surcharge is not necessary if you do not use the MetaTxModule
      */
     function _msgSender()
         internal
         view
-        override(MetaTxModule, ContextUpgradeable)
+        override(ERC2771ContextUpgradeable, ContextUpgradeable)
         returns (address sender)
     {
-        return MetaTxModule._msgSender();
+        return ERC2771ContextUpgradeable._msgSender();
+    }
+
+    /**
+     * @dev This surcharge is not necessary if you do not use the MetaTxModule
+     */
+    function _contextSuffixLength() internal view 
+    override(ERC2771ContextUpgradeable, ContextUpgradeable)
+    returns (uint256) {
+         return ERC2771ContextUpgradeable._contextSuffixLength();
     }
 
     /**
@@ -214,10 +240,10 @@ abstract contract CMTAT_BASE is
     function _msgData()
         internal
         view
-        override(MetaTxModule, ContextUpgradeable)
+        override(ERC2771ContextUpgradeable, ContextUpgradeable)
         returns (bytes calldata)
     {
-        return MetaTxModule._msgData();
+        return ERC2771ContextUpgradeable._msgData();
     }
 
     uint256[50] private __gap;

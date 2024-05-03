@@ -2,7 +2,6 @@
 
 pragma solidity ^0.8.20;
 
-import "../../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
 import "../../security/AuthorizationModule.sol";
 import "../../internal/ERC20SnapshotModuleInternal.sol";
 
@@ -16,6 +15,8 @@ abstract contract ERC20SnapshotModule is
     ERC20SnapshotModuleInternal,
     AuthorizationModule
 {
+    // SnapshotModule
+    bytes32 public constant SNAPSHOOTER_ROLE = keccak256("SNAPSHOOTER_ROLE");
     function __ERC20SnasphotModule_init_unchained() internal onlyInitializing {
         // no variable to initialize
     }

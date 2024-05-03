@@ -2,7 +2,7 @@ const ERC20MintModuleCommon = require('../../common/ERC20MintModuleCommon')
 const { deployCMTATProxy } = require('../../deploymentUtils')
 
 contract(
-  'Proxy - MintModule',
+  'Proxy - ERC20MintModule',
   function ([_, admin, address1, address2, deployerAddress]) {
     beforeEach(async function () {
       this.cmtat = await deployCMTATProxy(_, admin, deployerAddress)

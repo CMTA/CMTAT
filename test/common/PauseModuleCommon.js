@@ -103,6 +103,14 @@ function PauseModuleCommon (admin, address1, address2, address3) {
       const AMOUNT_TO_TRANSFER = 10
       // Act
       await this.cmtat.pause({ from: admin });
+      // Act + Assert
+      (
+        await this.cmtat.validateTransfer(
+          address1,
+          address2,
+          AMOUNT_TO_TRANSFER
+        )
+      ).should.be.equal(false);
       // Assert
       (
         await this.cmtat.detectTransferRestriction(

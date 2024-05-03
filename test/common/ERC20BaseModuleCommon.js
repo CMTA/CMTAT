@@ -4,7 +4,7 @@ const {
 } = require('../../openzeppelin-contracts-upgradeable/test/helpers/customError')
 const { should } = require('chai').should()
 
-function BaseModuleCommon (admin, address1, address2, address3, proxyTest) {
+function ERC20BaseModuleCommon (admin, address1, address2, address3, proxyTest) {
   context('Token structure', function () {
     it('testHasTheDefinedName', async function () {
       // Act + Assert
@@ -17,6 +17,32 @@ function BaseModuleCommon (admin, address1, address2, address3, proxyTest) {
     it('testDecimalsEqual0', async function () {
       // Act + Assert
       (await this.cmtat.decimals()).should.be.bignumber.equal('0')
+    })
+  })
+
+  context('Balance', function () {
+    const TOKEN_AMOUNTS = [BN(31), BN(32), BN(33)]
+    const TOKEN_INITIAL_SUPPLY = TOKEN_AMOUNTS.reduce((a, b) => {
+      return a.add(b)
+    })
+    beforeEach(async function () {
+      await this.cmtat.mint(address1, TOKEN_AMOUNTS[0], { from: admin })
+      await this.cmtat.mint(address2, TOKEN_AMOUNTS[1], { from: admin })
+      await this.cmtat.mint(address3, TOKEN_AMOUNTS[2], { from: admin })
+    })
+    it('testHasTheCorrectBalanceInfo', async function () {
+      // Act + Assert
+      // Assert
+      const ADDRESSES = [address1, address2, address3]
+      let result = await this.cmtat.balanceInfo(ADDRESSES)
+      result[0][0].should.be.bignumber.equal(TOKEN_AMOUNTS[0])
+      result[0][1].should.be.bignumber.equal(TOKEN_AMOUNTS[1])
+      result[1].should.be.bignumber.equal(TOKEN_INITIAL_SUPPLY)
+
+      const ADDRESSES2 = []
+      result = await this.cmtat.balanceInfo(ADDRESSES2)
+      BN(result[0].length).should.be.bignumber.equal(BN(0))
+      result[1].should.be.bignumber.equal(TOKEN_INITIAL_SUPPLY)
     })
   })
 
@@ -73,71 +99,6 @@ function BaseModuleCommon (admin, address1, address2, address3, proxyTest) {
         spender: address3,
         value: AMOUNT_TO_APPROVE
       })
-    })
-
-    it('testDefinedAllowanceByTakingInAccountTheCurrentAllowance', async function () {
-      const AMOUNT_TO_APPROVE = BN(30)
-      const FIRST_AMOUNT_TO_APPROVE = BN(20);
-      // Arrange
-      (
-        await this.cmtat.allowance(address1, address3)
-      ).should.be.bignumber.equal('0')
-      await this.cmtat.approve(address3, FIRST_AMOUNT_TO_APPROVE, {
-        from: address1
-      });
-      // Arrange - Assert
-      (
-        await this.cmtat.allowance(address1, address3)
-      ).should.be.bignumber.equal(FIRST_AMOUNT_TO_APPROVE)
-      // Act
-      this.logs = await this.cmtat.methods['approve(address,uint256,uint256)'](
-        address3,
-        AMOUNT_TO_APPROVE,
-        FIRST_AMOUNT_TO_APPROVE,
-        { from: address1 }
-      );
-      // Assert
-      (
-        await this.cmtat.allowance(address1, address3)
-      ).should.be.bignumber.equal(AMOUNT_TO_APPROVE)
-      // emits an Approval event
-      expectEvent(this.logs, 'Approval', {
-        owner: address1,
-        spender: address3,
-        value: AMOUNT_TO_APPROVE
-      })
-    })
-
-    it('testCannotDefinedAllowanceByTakingInAccountTheWrongCurrentAllowance', async function () {
-      const AMOUNT_TO_APPROVE = BN(30)
-      const FIRST_AMOUNT_TO_APPROVE = BN(20)
-      const WRONG_CURRENT_ALLOWANCE = BN(10);
-      // Arrange
-      (
-        await this.cmtat.allowance(address1, address3)
-      ).should.be.bignumber.equal('0')
-      await this.cmtat.approve(address3, FIRST_AMOUNT_TO_APPROVE, {
-        from: address1
-      });
-      // Arrange - Assert
-      (
-        await this.cmtat.allowance(address1, address3)
-      ).should.be.bignumber.equal(FIRST_AMOUNT_TO_APPROVE)
-      // Act
-      await expectRevertCustomError(
-        this.cmtat.methods['approve(address,uint256,uint256)'](
-          address3,
-          AMOUNT_TO_APPROVE,
-          WRONG_CURRENT_ALLOWANCE,
-          { from: address1 }
-        ),
-        'CMTAT_ERC20BaseModule_WrongAllowance',
-        [address3, FIRST_AMOUNT_TO_APPROVE, WRONG_CURRENT_ALLOWANCE]
-      );
-      // Assert
-      (
-        await this.cmtat.allowance(address1, address3)
-      ).should.be.bignumber.equal(FIRST_AMOUNT_TO_APPROVE)
     })
   })
 
@@ -427,4 +388,4 @@ function BaseModuleCommon (admin, address1, address2, address3, proxyTest) {
     })
   })
 }
-module.exports = BaseModuleCommon
+module.exports = ERC20BaseModuleCommon

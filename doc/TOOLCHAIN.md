@@ -176,9 +176,7 @@ Warning:
 
 From the version v2.3.0, this command is not working and generates the following error
 
-> Failed to convert dot to SVG. Error: lost 31 26 edge
-
-
+> RangeError: Maximum call stack size exceeded
 
 | Description                                                  | Command                                |
 | ------------------------------------------------------------ | -------------------------------------- |
@@ -221,6 +219,6 @@ npm run-script coverage
 Slither is a Solidity static analysis framework written in Python3
 
 ```bash
-slither .  --checklist --filter-paths "openzeppelin-contracts-upgradeable|test" > slither-report.md
+slither .  --checklist --filter-paths "openzeppelin-contracts-upgradeable|openzeppelin-contracts|@openzeppelin|test" > slither-report.md
 ```
 

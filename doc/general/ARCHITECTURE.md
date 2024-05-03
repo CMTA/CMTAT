@@ -14,7 +14,9 @@ These contracts inherit from the same base contract
 [CMTAT_BASE.sol](../contracts/modules/CMTAT_BASE.sol), which inherits of
 the different modules.
 
-The main schema describing the architecture can be found here: [architecture.pdf](schema/drawio/architecture.pdf) 
+The main schema describing the architecture can be found here: [architecture.pdf](../schema/drawio/architecture.pdf) 
+
+Small change with the PDF: the snapshotModule is now included by default.
 
 ## Schema
 
