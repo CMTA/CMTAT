@@ -141,7 +141,7 @@ Generally, these modules are not required to be compliant with the CMTA specific
 
 ### RuleEngine
 
-The `RuleEngine` is an external contract used to apply transfer restriction to the CMTAT through whitelisting, blacklisting,..
+The `RuleEngine` is an external contract used to apply transfer restriction to the CMTAT through whitelisting, blacklisting,...
 
 This contract is defined in the `ValidationModule`.
 
@@ -162,11 +162,9 @@ A possible rule is a whitelist rule where only the address inside the whitelist 
 
 Since the version 2.4.0, the requirement to use a RuleEngine are the following:
 
-While it has been designed for the CMTAT, the ruleEngine can be used with others contracts to apply restriction on transfer.
+The `RuleEngine` has to import an implement the interface `IRuleEngine` which declares the function `operateOnTransfer`.
 
-The `RuleEngine` has to import an implement the interface `IRuleEngine` which declares the function `operateOnTransfer`
-
-This interface can be found in [./contracts/interfaces/engine/IRuleEngine.sol](./contracts/interfaces/engine/IRuleEngine.sol)`CMTAT/contracts/interfaces/engine/IRuleEngine.sol`.
+This interface can be found in [./contracts/interfaces/engine/IRuleEngine.sol](./contracts/interfaces/engine/IRuleEngine.sol).
 
 Before each transfer, the CMTAT calls the function `operateOnTransfer` which is the entrypoint for the RuleEngine.
 
