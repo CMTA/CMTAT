@@ -252,7 +252,10 @@ CMTA providers further documentation describing the CMTAT framework in a platfor
 -  [CMTA Token (CMTAT)](https://cmta.ch/standards/cmta-token-cmtat)
 - [Standard for the tokenization of shares of Swiss corporations using the distributed ledger technology](https://cmta.ch/standards/standard-for-the-tokenization-of-shares-of-swiss-corporations-using-the-distributed-ledger-technology)
 
-
+## Further reading
+(https://cmta.ch/news-articles/a-comparison-of-different-security-token-standards)[CMTA - A comparison of different security token standards]
+(https://www.taurushq.com/blog/security-token-standards-a-closer-look-at-cmtat/)[Taurus - Security Token Standards: A Closer Look at CMTAT]
+(https://www.taurushq.com/blog/equity-tokenization-how-to-pay-dividend-on-chain-using-cmtat/)[Taurus - Equity Tokenization: How to Pay Dividend On-Chain Using CMTAT]
 
 ## Contract size
 
