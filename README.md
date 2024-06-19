@@ -253,9 +253,14 @@ CMTA providers further documentation describing the CMTAT framework in a platfor
 - [Standard for the tokenization of shares of Swiss corporations using the distributed ledger technology](https://cmta.ch/standards/standard-for-the-tokenization-of-shares-of-swiss-corporations-using-the-distributed-ledger-technology)
 
 ## Further reading
-(https://cmta.ch/news-articles/a-comparison-of-different-security-token-standards)[CMTA - A comparison of different security token standards]
-(https://www.taurushq.com/blog/security-token-standards-a-closer-look-at-cmtat/)[Taurus - Security Token Standards: A Closer Look at CMTAT]
-(https://www.taurushq.com/blog/equity-tokenization-how-to-pay-dividend-on-chain-using-cmtat/)[Taurus - Equity Tokenization: How to Pay Dividend On-Chain Using CMTAT]
+- [CMTA - A comparison of different security token standards](https://cmta.ch/news-articles/a-comparison-of-different-security-token-standards)
+- [Taurus - Security Token Standards: A Closer Look at CMTAT](https://www.taurushq.com/blog/security-token-standards-a-closer-look-at-cmtat/)
+- [Taurus - Equity Tokenization: How to Pay Dividend On-Chain Using CMTAT](https://www.taurushq.com/blog/equity-tokenization-how-to-pay-dividend-on-chain-using-cmtat/)
+
+## Others implementations
+Two versions are available for the blockchain [Tezos](https://tezos.com)
+- [CMTAT FA2](https://github.com/CMTA/CMTAT-Tezos-FA2) Official version written in SmartPy
+- [@ligo/cmtat](https://packages.ligolang.org/package/@ligo/cmtat) Unofficial version written in Ligo
 
 ## Contract size
 
