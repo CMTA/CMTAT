@@ -260,7 +260,7 @@ CMTA providers further documentation describing the CMTAT framework in a platfor
 ## Others implementations
 Two versions are available for the blockchain [Tezos](https://tezos.com)
 - [CMTAT FA2](https://github.com/CMTA/CMTAT-Tezos-FA2) Official version written in SmartPy
-- [@ligo/cmtat](https://packages.ligolang.org/package/@ligo/cmtat) Unofficial version written in Ligo
+- [@ligo/cmtat](https://github.com/ligolang/CMTAT-Ligo/) Unofficial version written in Ligo
 
 ## Contract size
 
