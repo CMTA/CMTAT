@@ -61,9 +61,9 @@
   "homepage": "https://github.com/CMTA/CMTAT",
   "devDependencies": {
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.2",
-    "@nomicfoundation/hardhat-verify": "^2.0.4",
+    "@nomicfoundation/hardhat-verify": "^1.1.1",
     "@nomiclabs/hardhat-web3": "^2.0.0",
-    "@openzeppelin/hardhat-upgrades": "^3.0.2",
+    "@openzeppelin/hardhat-upgrades": "^2.4.3",
     "chai": "^4.3.7",
     "coveralls": "^3.1.1",
     "dotenv": "^16.0.3",
