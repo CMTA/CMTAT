@@ -23,7 +23,7 @@ contract(
       this.FACTORY = await CMTAT_TP_FACTORY.new(
         this.CMTAT_PROXY_IMPL.address,
         admin,
-        false
+        true
       )
       this.CMTATArg = [
         admin,
@@ -63,12 +63,6 @@ contract(
         )
       })
       it('testCanDeployCMTATWithFactory', async function () {
-       
-        let computedCMTATAddress = await this.FACTORY.computedProxyAddress(
-          ethers.keccak256(ethers.solidityPacked(["uint256"],[0x0])),
-          admin,
-          this.CMTATArg,
-          );
         // Act
         this.logs = await this.FACTORY.deployCMTAT(
           ethers.encodeBytes32String('test'),
@@ -81,18 +75,16 @@ contract(
         // Assert
         // Check  Id
         this.logs.logs[1].args[1].should.be.bignumber.equal(BN(0))
-        let CMTAT_ADDRESS = this.logs.logs[1].args[0];
+        const CMTAT_ADDRESS = this.logs.logs[1].args[0];
         // Check address with ID
-        (await this.FACTORY.CMTATProxyAddress(0)).should.equal(CMTAT_ADDRESS);
-        (await this.FACTORY.CMTATProxyAddress(0)).should.equal(computedCMTATAddress);
-
+        (await this.FACTORY.CMTATProxyAddress(0)).should.equal(CMTAT_ADDRESS)
         const CMTAT_TRUFFLE = await CMTAT.at(CMTAT_ADDRESS)
         await CMTAT_TRUFFLE.mint(admin, 100, {
           from: admin
         })
         // Second deployment
         this.logs = await this.FACTORY.deployCMTAT(
-          ethers.encodeBytes32String('test'),
+          ethers.encodeBytes32String('test2'),
           admin,
           this.CMTATArg,
           {
@@ -101,15 +93,40 @@ contract(
         )
         // Check Id increment
         this.logs.logs[1].args[1].should.be.bignumber.equal(BN(1))
-
-        // Check address
-        computedCMTATAddress = await this.FACTORY.computedProxyAddress(
-          ethers.keccak256(ethers.solidityPacked(["uint256"],[0x1])),
+        // Revert
+        await expectRevertCustomError(this.FACTORY.deployCMTAT(
+          ethers.encodeBytes32String('test'),
           admin,
-          this.CMTATArg);
-        CMTAT_ADDRESS = this.logs.logs[1].args[0];
-        (await this.FACTORY.CMTATProxyAddress(1)).should.equal(CMTAT_ADDRESS);
-        (await this.FACTORY.CMTATProxyAddress(1)).should.equal(computedCMTATAddress);
+          this.CMTATArg,
+          {
+            from: admin
+          }
+        ),
+        'CMTAT_Factory_SaltAlreadyUsed',
+        [])
+      })
+      it('testCannotDeployCMTATWithFactoryWithSaltAlreadyUsed', async function () {
+        // Arrange
+        await this.FACTORY.deployCMTAT(
+          ethers.encodeBytes32String('test'),
+          admin,
+          this.CMTATArg,
+          {
+            from: admin
+          }
+        )
+       
+        // Act with Revert
+        await expectRevertCustomError(this.FACTORY.deployCMTAT(
+          ethers.encodeBytes32String('test'),
+          admin,
+          this.CMTATArg,
+          {
+            from: admin
+          }
+        ),
+        'CMTAT_Factory_SaltAlreadyUsed',
+        [])
       })
     })
   }
