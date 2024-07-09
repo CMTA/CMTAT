@@ -9,7 +9,6 @@ are the latest ones that we tested:
 
 - npm 10.2.5
 - Hardhat-web3 2.0.0
-- *Truffle 5.9.3 [depreciated]*
 - Solidity 0.8.22 (via solc-js)
 - Node 20.5.0
 - Web3.js 1.9.0
@@ -57,22 +56,9 @@ Alternatively, you can install Truffle [globally](https://trufflesuite.com/docs/
 
 See Hardhat's official [documentation](https://hardhat.org) for more information.
 
-### Truffle [partially depreciated]
+### Truffle [depreciated]
 
-> Truffle can still be used to compile the contracts but you can no longer use it to run the tests.
-
-To use Truffle, the recommended way is to use the version installed as
-part of the node modules, via the `npx` command:
-
-`npx truffle`
-
-Alternatively, you can install Truffle [globally](https://trufflesuite.com/docs/truffle/getting-started/installation/):
-
-`npm install -g truffle` 
-
-See Truffle's official [documentation](https://trufflesuite.com/docs/truffle/getting-started/installation/) for more information.
-
-
+Truffle is no longer supported since it has been sunset by Consensys, see [Consensys Announces the Sunset of Truffle and Ganache and New Hardhat Partnership](https://consensys.io/blog/consensys-announces-the-sunset-of-truffle-and-ganache-and-new-hardhat)
 
 ## Contract size
 
@@ -81,7 +67,6 @@ You can get the size of the contract by running the following commands.
 - Compile the contracts:
 
 ```bash
-npx truffle compile
 npx hardhat compile
 ```
 
@@ -103,22 +88,6 @@ Tests are written in JavaScript by using [web3js](https://web3js.readthedocs.io/
 To use the global hardhat install, use instead `hardhat test`.
 
 Please see the Truffle [JavaScript tests documentation](https://www.trufflesuite.com/docs/truffle/testing/writing-tests-in-javascript) for more information about the writing and running of Truffle tests since the tests were originally written for Truffle.
-
-
-
-[**Depreciated** since the version v2.3.21]
-
-> Since the version v2.3.1, it is no longer possible to run tests with Truffle.
->
-> Truffle does not support custom errors for testing.
-
-Tests are written in JavaScript and run with Truffle as follows:
-
-`npx truffle test`
-
-To use the global Truffle install, use instead `truffle test`.
-
-Please see the Truffle [JavaScript tests documentation](https://www.trufflesuite.com/docs/truffle/testing/writing-tests-in-javascript) for more information about the writing and running of Truffle tests.
 
 
 ## Code style guidelines

@@ -18,18 +18,6 @@ Library used for the tests
 **[Coveralls](https://coveralls.io/)**
 It is used to perform a code coverage
 
-#### Truffle
-
-**[Truffle](https://trufflesuite.com/)**
-A development environment, testing framework and asset pipeline for blockchains using the Ethereum Virtual Machine (EVM).
-
-**[Truffle Flattener](https://www.npmjs.com/package/truffle-flattener)**
-Concats solidity files from Truffle projects with all of their dependencies.
-
-**[truffle-contract-size](https://www.npmjs.com/package/truffle-contract-size)**
-
-This [Truffle](https://www.trufflesuite.com/docs/truffle/overview) plugin displays the contract size of all or a selection of your smart contracts in kilobytes.
-
 #### Nomiclabs - Hardhat
 
 **[hardhat-truffle5](https://hardhat.org/hardhat-runner/plugins/nomiclabs-hardhat-truffle5)**
