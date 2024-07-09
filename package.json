@@ -28,8 +28,7 @@
     "uml-modules-extensions": "npx sol2uml class contracts -c -b DebtBaseModule && npx sol2uml class contracts -c -b CreditEventsModule  && npx sol2uml class contracts -c -b MetaTxModule && npx sol2uml class contracts -c -b ERC20SnapshotModule && npx sol2uml class contracts -c -b ValidationModule",
     "uml-modules-security": "npx sol2uml class contracts -c -b AuthorizationModule && npx sol2uml class contracts -c -b PauseModule",
     "uml-mocks": "npx sol2uml class -c contracts/mocks/RuleEngine",
-    "size": "npx truffle run contract-size",
-    "hardhat:size": "npx hardhat size-contracts",
+    "size": "npx hardhat size-contracts",
     "test:burn": "npx hardhat test test/standard/modules/ERC20BurnModule.test.js test/proxy/modules/ERC20BurnModule.test.js",
     "test:mint": "npx hardhat test test/standard/modules/ERC20MintModule.test.js test/proxy/modules/ERC20MintModule.test.js",
     "test:erc20Base": "npx hardhat test test/standard/modules/ERC20BaseModule.test.js test/proxy/modules/ERC20BaseModule.test.js",
@@ -99,7 +98,6 @@
   },
   "dependencies": {
     "@openzeppelin/contracts": "^5.0.2",
-    "@openzeppelin/truffle-upgrades": "^1.17.1",
     "eth-sig-util": "^3.0.1",
     "ethereumjs-wallet": "^1.0.2"
   }

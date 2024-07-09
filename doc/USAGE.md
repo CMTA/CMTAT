@@ -74,10 +74,9 @@ npx hardhat compile
 
 ```bash
 npm run-script size
-npm run-script hardhat:size
 ```
 
-The script calls the plugin `truffle-contract-size` for Truffle or [hardhat-contract-sizer](https://www.npmjs.com/package/hardhat-contract-sizer) with Hardhat.
+The script calls the plugin [hardhat-contract-sizer](https://www.npmjs.com/package/hardhat-contract-sizer) with Hardhat.
 
 ## Testing
 
