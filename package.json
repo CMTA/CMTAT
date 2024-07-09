@@ -1,6 +1,6 @@
 {
   "name": "CMTAT",
-  "version": "0.1.0",
+  "version": "2.4.1",
   "description": "CMTA smart contracts",
   "files": [
     "contracts",
@@ -53,8 +53,7 @@
     "ethereum",
     "smart",
     "contracts",
-    "security",
-    "scai"
+    "security"
   ],
   "author": "CMTA",
   "license": "MPL",
