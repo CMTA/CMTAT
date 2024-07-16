@@ -3,9 +3,9 @@ name: CI
 on:
   workflow_dispatch:
   push:
-    branches: [dev, master, main, wrapped-assets]
+    branches: [dev, master, main, wrapped-tokens]
   pull_request:
-    branches: [dev, master, main, wrapped-assets]
+    branches: [dev, master, main, wrapped-tokens]
 
 env:
   MAINNET_NODE: ${{ secrets.MAINNET_NODE }}
