@@ -4,6 +4,7 @@ pragma solidity ^0.8.20;
 import "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
 import "../CMTAT_PROXY.sol";
 import "../libraries/FactoryErrors.sol";
+import '@openzeppelin/contracts/utils/Create2.sol';
 import '@openzeppelin/contracts/access/AccessControl.sol';
 
 /**
@@ -60,16 +61,17 @@ contract CMTAT_TP_FACTORY is AccessControl {
     * @notice deploy a transparent proxy with a proxy admin contract
     */
     function deployCMTAT(
-        bytes32 deploymentSalt,
+        bytes32 deploymentSaltInput,
         address proxyAdminOwner,
         // CMTAT function initialize
         CMTAT_ARGUMENT calldata cmtatArgument
     ) public onlyRole(CMTAT_DEPLOYER_ROLE) returns(TransparentUpgradeableProxy cmtat)   {
-        //bytes32 saltBytes = _checkAndDetermineDeploymentSalt(deploymentSalt);
+        bytes32 deploymentSalt = _checkAndDetermineDeploymentSalt(deploymentSaltInput);
         bytes memory bytecode = _getBytecode(proxyAdminOwner,
         // CMTAT function initialize
         cmtatArgument);
-        cmtat = _deployBytecode(bytecode, _checkAndDetermineDeploymentSalt(deploymentSalt));
+        cmtat = _deployBytecode(bytecode,  deploymentSalt);
+        
         return cmtat;
     }
 
@@ -87,18 +89,19 @@ contract CMTAT_TP_FACTORY is AccessControl {
         bytes memory bytecode =  _getBytecode(proxyAdminOwner,
         // CMTAT function initialize
         cmtatArgument);
-        bytes32 hash = computeHash(deploymentSalt, bytecode);
-        return address (uint160(uint(hash)));
+        //bytes32 hash = computeHash(deploymentSalt, bytecode);
+        return Create2.computeAddress(deploymentSalt,  keccak256(bytecode), address(this) );
+        //return address (uint160(uint(hash)));
     }
     
     /**
-    * @param salt used by create2 to compute the contract address
+    * @param deploymentSalt used by create2 to compute the contract address
     * @param bytecode contract bytecode used by create2 to compute the contract address
     */
-    function computeHash(bytes32 salt, bytes memory bytecode) public view returns(bytes32 hash) {
+    function computeHash(bytes32 deploymentSalt, bytes memory bytecode) public view returns(bytes32 hash) {
         hash = keccak256(
             abi.encodePacked(
-                bytes1(0xff), address(this), salt, keccak256(bytecode)
+                bytes1(0xff), address(this), deploymentSalt, keccak256(bytecode)
           )
         );
     }
@@ -132,8 +135,9 @@ contract CMTAT_TP_FACTORY is AccessControl {
     /**
     * @notice Deploy CMTAT and push the created CMTAT in the list
     */
-    function _deployBytecode(bytes memory bytecode, bytes32 saltBytes) internal returns (TransparentUpgradeableProxy cmtat) {
-                    cmtat = TransparentUpgradeableProxy(payable(_deploy(bytecode, saltBytes)));
+    function _deployBytecode(bytes memory bytecode, bytes32  deploymentSalt) internal returns (TransparentUpgradeableProxy cmtat) {
+                    address cmtatAddress = Create2.deploy(0, deploymentSalt, bytecode);
+                    cmtat = TransparentUpgradeableProxy(payable(cmtatAddress));
                     cmtats[cmtatID] = address(cmtat);
                     emit CMTAT(address(cmtat), cmtatID);
                     ++cmtatID;
@@ -187,17 +191,5 @@ contract CMTAT_TP_FACTORY is AccessControl {
                 information_, 
                 flag_
         );
-    }
-
-    /**
-    * @notice deploy smart contract with create2
-    */
-    function _deploy(bytes memory bytecode, bytes32 _salt) internal returns (address contractAddress) {
-        assembly {
-            contractAddress := create2(0, add(bytecode, 0x20), mload(bytecode), _salt)
-            if iszero(extcodesize(contractAddress)) {
-                revert(0, 0)
-            }
-        }
     }
 }
