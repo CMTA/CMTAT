@@ -151,7 +151,7 @@ Here is the list of the different version available for each CMTAT version.
 
 | Name                    | RuleEngine                                                   |
 | ----------------------- | ------------------------------------------------------------ |
-| CMTAT 2.4.0 (unaudited) | Still in development                                         |
+| CMTAT 2.4.0 (unaudited) | RuleEngine >=v2.0.0<br />Last version: [v2.0.2](https://github.com/CMTA/RuleEngine/releases/tag/v2.0.2)(unaudited) |
 | CMTAT 2.3.0             | [RuleEngine v1.0.2](https://github.com/CMTA/RuleEngine/releases/tag/v1.0.2) |
 | CMTAT 2.0 (unaudited)   | [RuleEngine 1.0](https://github.com/CMTA/RuleEngine/releases/tag/1.0) (unaudited) |
 | CMTAT 1.0               | No ruleEngine available                                      |
