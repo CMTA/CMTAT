@@ -89,23 +89,9 @@ contract CMTAT_TP_FACTORY is AccessControl {
         bytes memory bytecode =  _getBytecode(proxyAdminOwner,
         // CMTAT function initialize
         cmtatArgument);
-        //bytes32 hash = computeHash(deploymentSalt, bytecode);
         return Create2.computeAddress(deploymentSalt,  keccak256(bytecode), address(this) );
-        //return address (uint160(uint(hash)));
     }
     
-    /**
-    * @param deploymentSalt used by create2 to compute the contract address
-    * @param bytecode contract bytecode used by create2 to compute the contract address
-    */
-    function computeHash(bytes32 deploymentSalt, bytes memory bytecode) public view returns(bytes32 hash) {
-        hash = keccak256(
-            abi.encodePacked(
-                bytes1(0xff), address(this), deploymentSalt, keccak256(bytecode)
-          )
-        );
-    }
-
     /**
     * @notice get CMTAT proxy address
     *
