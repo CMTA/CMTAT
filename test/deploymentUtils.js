@@ -4,7 +4,6 @@ const CMTAT_STANDALONE_SNAPSHOT = artifacts.require('CMTAT_STANDALONE')
 const CMTAT_PROXY = artifacts.require('CMTAT_PROXY')
 // const CMTAT_PROXY_SNAPSHOT_TRUFFLE = artifacts.require('CMTATSnapshotProxyTest')
 const CMTAT_PROXY_SNAPSHOT_TRUFFLE = artifacts.require('CMTAT_PROXY')
-const { deployProxy } = require('@openzeppelin/truffle-upgrades')
 const { ethers, upgrades } = require('hardhat')
 const DEPLOYMENT_FLAG = 5
 const DEPLOYMENT_DECIMAL = 0

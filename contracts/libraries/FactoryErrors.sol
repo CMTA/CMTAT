@@ -6,4 +6,5 @@ library FactoryErrors {
     error CMTAT_Factory_AddressZeroNotAllowedForFactoryAdmin();
     error CMTAT_Factory_AddressZeroNotAllowedForBeaconOwner();
     error CMTAT_Factory_AddressZeroNotAllowedForLogicContract();
+    error CMTAT_Factory_SaltAlreadyUsed();
 }

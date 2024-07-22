@@ -1,4 +1,3 @@
-const { deployProxy } = require('@openzeppelin/truffle-upgrades')
 const CMTAT = artifacts.require('CMTAT_PROXY')
 const BaseModuleCommon = require('../../common/BaseModuleCommon')
 const { ZERO_ADDRESS } = require('../../utils')
