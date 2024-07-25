@@ -117,12 +117,7 @@ abstract contract SnapshotModuleBase is Initializable {
     */
     function _scheduleSnapshot(uint256 time) internal {
         // Check the time firstly to avoid an useless read of storage
-        if (time <= block.timestamp) {
-            revert Errors.CMTAT_SnapshotModule_SnapshotScheduledInThePast(
-                time,
-                block.timestamp
-            );
-        }
+       _checkTimeInThePast(time);
 
         if (_scheduledSnapshots.length > 0) {
             // We check the last snapshot on the list
@@ -143,16 +138,25 @@ abstract contract SnapshotModuleBase is Initializable {
         emit SnapshotSchedule(0, time);
     }
 
+    function _checkTimeInThePast(uint256 time) internal view{
+        if (time <= block.timestamp) {
+                    revert Errors.CMTAT_SnapshotModule_SnapshotScheduledInThePast(
+                        time,
+                        block.timestamp
+                    );
+                }
+    }
+    function _checkTimeSnapshotAlreadyDone(uint256 time) internal view{
+        if (time <= block.timestamp) {
+            revert Errors.CMTAT_SnapshotModule_SnapshotAlreadyDone();
+        }
+    }
+
     /** 
     * @dev schedule a snapshot at the specified time
     */
     function _scheduleSnapshotNotOptimized(uint256 time) internal {
-        if (time <= block.timestamp) {
-            revert Errors.CMTAT_SnapshotModule_SnapshotScheduledInThePast(
-                time,
-                block.timestamp
-            );
-        }
+        _checkTimeInThePast(time);
         (bool isFound, uint256 index) = _findScheduledSnapshotIndex(time);
         // Perfect match
         if (isFound) {
@@ -181,15 +185,8 @@ abstract contract SnapshotModuleBase is Initializable {
     */
     function _rescheduleSnapshot(uint256 oldTime, uint256 newTime) internal {
         // Check the time firstly to avoid an useless read of storage
-        if (oldTime <= block.timestamp) {
-            revert Errors.CMTAT_SnapshotModule_SnapshotAlreadyDone();
-        }
-        if (newTime <= block.timestamp) {
-            revert Errors.CMTAT_SnapshotModule_SnapshotScheduledInThePast(
-                newTime,
-                block.timestamp
-            );
-        }
+        _checkTimeSnapshotAlreadyDone(oldTime);
+        _checkTimeInThePast(newTime);
         if (_scheduledSnapshots.length == 0) {
             revert Errors.CMTAT_SnapshotModule_NoSnapshotScheduled();
         }
@@ -227,9 +224,7 @@ abstract contract SnapshotModuleBase is Initializable {
     */
     function _unscheduleLastSnapshot(uint256 time) internal {
         // Check the time firstly to avoid an useless read of storage
-        if (time <= block.timestamp) {
-            revert Errors.CMTAT_SnapshotModule_SnapshotAlreadyDone();
-        }
+        _checkTimeSnapshotAlreadyDone(time);
         if (_scheduledSnapshots.length == 0) {
             revert Errors.CMTAT_SnapshotModule_NoSnapshotScheduled();
         }
@@ -248,9 +243,7 @@ abstract contract SnapshotModuleBase is Initializable {
     * - Reduce the array size by deleting the last snapshot
     */
     function _unscheduleSnapshotNotOptimized(uint256 time) internal {
-        if (time <= block.timestamp) {
-            revert Errors.CMTAT_SnapshotModule_SnapshotAlreadyDone();
-        }
+        _checkTimeSnapshotAlreadyDone(time);
         (bool isFound, uint256 index) = _findScheduledSnapshotIndex(time);
         if (!isFound) {
             revert Errors.CMTAT_SnapshotModule_SnapshotNotFound();

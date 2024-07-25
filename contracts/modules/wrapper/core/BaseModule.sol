@@ -5,8 +5,8 @@ pragma solidity ^0.8.20;
 // required OZ imports here
 import "../../security/AuthorizationModule.sol";
 import "../../../libraries/Errors.sol";
-
-abstract contract BaseModule is AuthorizationModule {
+import "../../../interfaces/draft-IERC1643.sol";
+abstract contract BaseModule is IERC1643, AuthorizationModule {
     /** 
     * @notice 
     * Get the current version of the smart contract
@@ -27,6 +27,7 @@ abstract contract BaseModule is AuthorizationModule {
     string public information;
     // additional attribute to store information as an uint256
     uint256 public flag;
+    IERC1643 DocumentEngine;
 
 
 
@@ -80,15 +81,18 @@ abstract contract BaseModule is AuthorizationModule {
         emit Information(information_, information_);
     }
 
-    /** 
-    * @notice The call will be reverted if the new value of flag is the same as the current one
-    */
-    function setFlag(uint256 flag_) public onlyRole(DEFAULT_ADMIN_ROLE) {
-        if (flag == flag_) {
-            revert Errors.CMTAT_BaseModule_SameValue();
+    function getDocument(bytes32 _name) public view returns (string memory, bytes32, uint256){
+        if(address(DocumentEngine) != address(0)){
+            return DocumentEngine.getDocument( _name);
+        } else{
+            return ("",0x0, 0);
         }
-        flag = flag_;
-        emit Flag(flag_);
+    }
+
+    function getAllDocuments() public view returns (bytes32[] memory documents){
+        if(address(DocumentEngine) != address(0)){
+            documents =  DocumentEngine.getAllDocuments();
+        }
     }
 
     uint256[50] private __gap;

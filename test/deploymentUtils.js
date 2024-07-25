@@ -1,16 +1,14 @@
+const { loadFixture } = require('@nomicfoundation/hardhat-network-helpers');
 const { ZERO_ADDRESS } = require('./utils')
-const CMTAT_STANDALONE = artifacts.require('CMTAT_STANDALONE')
-const CMTAT_STANDALONE_SNAPSHOT = artifacts.require('CMTAT_STANDALONE')
-const CMTAT_PROXY = artifacts.require('CMTAT_PROXY')
-// const CMTAT_PROXY_SNAPSHOT_TRUFFLE = artifacts.require('CMTATSnapshotProxyTest')
-const CMTAT_PROXY_SNAPSHOT_TRUFFLE = artifacts.require('CMTAT_PROXY')
 const { ethers, upgrades } = require('hardhat')
-const DEPLOYMENT_FLAG = 5
-const DEPLOYMENT_DECIMAL = 0
-
+const DEPLOYMENT_FLAG = 5n
+const DEPLOYMENT_DECIMAL = 0n
+async function fixture() {
+  const [_, admin, address1, address2, address3, deployerAddress, fakeRuleEngine] = await ethers.getSigners()
+  return {_, admin, address1, address2, address3, deployerAddress, fakeRuleEngine };
+}
 async function deployCMTATStandalone (_, admin, deployerAddress) {
-  const cmtat = await CMTAT_STANDALONE.new(
-    _,
+  const cmtat = await ethers.deployContract("CMTAT_STANDALONE", [ _,
     admin,
     ZERO_ADDRESS,
     'CMTA Token',
@@ -20,9 +18,7 @@ async function deployCMTATStandalone (_, admin, deployerAddress) {
     'https://cmta.ch',
     ZERO_ADDRESS,
     'CMTAT_info',
-    DEPLOYMENT_FLAG,
-    { from: deployerAddress }
-  )
+    DEPLOYMENT_FLAG]);
   return cmtat
 }
 
@@ -30,9 +26,7 @@ async function deployCMTATProxyImplementation (
   deployerAddress,
   forwarderIrrevocable
 ) {
-  const cmtat = await CMTAT_PROXY.new(forwarderIrrevocable, {
-    from: deployerAddress
-  })
+  const cmtat = await ethers.deployContract('CMTAT_PROXY',[forwarderIrrevocable])
   return cmtat
 }
 
@@ -50,7 +44,7 @@ async function deployCMTATStandaloneWithParameter (
   information_,
   flag_
 ) {
-  const cmtat = await CMTAT_STANDALONE.new(
+  const cmtat = await ethers.deployContract('CMTAT_STANDALONE',[
     forwarderIrrevocable,
     admin,
     authorizationEngine,
@@ -62,8 +56,7 @@ async function deployCMTATStandaloneWithParameter (
     ruleEngine_,
     information_,
     flag_,
-    { from: deployerAddress }
-  )
+  ])
   return cmtat
 }
 
@@ -93,7 +86,7 @@ async function deployCMTATProxy (_, admin, deployerAddress) {
   const ETHERS_CMTAT_PROXY = await upgrades.deployProxy(
     ETHERS_CMTAT_PROXY_FACTORY,
     [
-      admin,
+      admin.address,
       ZERO_ADDRESS,
       'CMTA Token',
       'CMTAT',
@@ -106,14 +99,14 @@ async function deployCMTATProxy (_, admin, deployerAddress) {
     ],
     {
       initializer: 'initialize',
-      constructorArgs: [_],
+      constructorArgs: [_.address],
       from: deployerAddress
     }
   )
-  const TRUFFLE_CMTAT_PROXY_ADDRESS = await CMTAT_PROXY_SNAPSHOT_TRUFFLE.at(
+  /*const TRUFFLE_CMTAT_PROXY_ADDRESS = await CMTAT_PROXY_SNAPSHOT_TRUFFLE.at(
     await ETHERS_CMTAT_PROXY.getAddress()
-  )
-  return TRUFFLE_CMTAT_PROXY_ADDRESS
+  )*/
+  return ETHERS_CMTAT_PROXY
 }
 
 async function deployCMTATProxyWithSnapshot (_, admin, deployerAddress) {
@@ -141,11 +134,11 @@ async function deployCMTATProxyWithSnapshot (_, admin, deployerAddress) {
       from: deployerAddress
     }
   )
-  const TRUFFLE_CMTAT_PROXY = artifacts.require('CMTAT_PROXY')
+  /*const TRUFFLE_CMTAT_PROXY = artifacts.require('CMTAT_PROXY')
   const TRUFFLE_CMTAT_PROXY_ADDRESS = await TRUFFLE_CMTAT_PROXY.at(
     await ETHERS_CMTAT_PROXY.getAddress()
-  )
-  return TRUFFLE_CMTAT_PROXY_ADDRESS
+  )*/
+  return ETHERS_CMTAT_PROXY
 }
 
 async function deployCMTATProxyWithKillTest (_, admin, deployerAddress) {
@@ -156,7 +149,7 @@ async function deployCMTATProxyWithKillTest (_, admin, deployerAddress) {
   const ETHERS_CMTAT_PROXY = await upgrades.deployProxy(
     ETHERS_CMTAT_PROXY_FACTORY,
     [
-      admin,
+      admin.address,
       ZERO_ADDRESS,
       'CMTA Token',
       'CMTAT',
@@ -169,15 +162,15 @@ async function deployCMTATProxyWithKillTest (_, admin, deployerAddress) {
     ],
     {
       initializer: 'initialize',
-      constructorArgs: [_],
+      constructorArgs: [_.address],
       from: deployerAddress
     }
   )
-  const TRUFFLE_CMTAT_PROXY = artifacts.require('CMTAT_KILL_TEST')
+  /*const TRUFFLE_CMTAT_PROXY = artifacts.require('CMTAT_KILL_TEST')
   const TRUFFLE_CMTAT_PROXY_ADDRESS = await TRUFFLE_CMTAT_PROXY.at(
     await ETHERS_CMTAT_PROXY.getAddress()
-  )
-  return TRUFFLE_CMTAT_PROXY_ADDRESS
+  )*/
+  return ETHERS_CMTAT_PROXY
 }
 
 async function deployCMTATProxyWithParameter (
@@ -201,7 +194,7 @@ async function deployCMTATProxyWithParameter (
   const ETHERS_CMTAT_PROXY = await upgrades.deployProxy(
     ETHERS_CMTAT_PROXY_FACTORY,
     [
-      admin,
+      admin.address,
       authorizationEngine,
       nameIrrevocable,
       symbolIrrevocable,
@@ -214,15 +207,15 @@ async function deployCMTATProxyWithParameter (
     ],
     {
       initializer: 'initialize',
-      constructorArgs: [forwarderIrrevocable],
+      constructorArgs: [forwarderIrrevocable.address],
       from: deployerAddress
     }
   )
-  const TRUFFLE_CMTAT_PROXY = artifacts.require('CMTAT_PROXY')
+  /*const TRUFFLE_CMTAT_PROXY = artifacts.require('CMTAT_PROXY')
   const TRUFFLE_CMTAT_PROXY_ADDRESS = await TRUFFLE_CMTAT_PROXY.at(
-    await ETHERS_CMTAT_PROXY.getAddress()
-  )
-  return TRUFFLE_CMTAT_PROXY_ADDRESS
+    await 
+  )*/
+  return ETHERS_CMTAT_PROXY.getAddress()
 }
 
 module.exports = {
@@ -235,5 +228,7 @@ module.exports = {
   deployCMTATStandaloneWithParameter,
   DEPLOYMENT_FLAG,
   DEPLOYMENT_DECIMAL,
-  deployCMTATProxyImplementation
+  deployCMTATProxyImplementation,
+  fixture,
+  loadFixture
 }

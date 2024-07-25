@@ -5,7 +5,7 @@ const {
 } = require('../../openzeppelin-contracts-upgradeable/test/helpers/customError.js')
 const { should } = require('chai').should()
 
-function CreditEventsModuleCommon (owner, attacker) {
+function CreditEventsModuleCommon (admin, attacker) {
   context('AdminSetCreditEvents', function () {
     it('testAdminCanSetCreditEvents', async function () {
       // Arrange
@@ -14,7 +14,7 @@ function CreditEventsModuleCommon (owner, attacker) {
       (await this.cmtat.creditEvents()).rating.should.equal('')
 
       // Act
-      await this.cmtat.setCreditEvents(true, true, 'B++', { from: owner });
+      await this.cmtat.connect(this.admin).setCreditEvents(true, true, 'B++');
 
       // Assert
       (await this.cmtat.creditEvents()).flagDefault.should.equal(true);
@@ -26,7 +26,7 @@ function CreditEventsModuleCommon (owner, attacker) {
       // Arrange
       (await this.cmtat.creditEvents()).flagDefault.should.equal(false)
       // Act
-      this.logs = await this.cmtat.setFlagDefault(true, { from: owner });
+      this.logs = await this.cmtat.connect(this.admin).setFlagDefault(true);
       // Assert
       (await this.cmtat.creditEvents()).flagDefault.should.equal(true)
       expectEvent(this.logs, 'FlagDefault', {
@@ -37,9 +37,7 @@ function CreditEventsModuleCommon (owner, attacker) {
     it('testAdminCanNotSetFlagDefaultWithTheSameValue', async function () {
       // Act + Assert
       await expectRevertCustomError(
-        this.cmtat.setFlagDefault(await this.cmtat.creditEvents().flagDefault, {
-          from: owner
-        }),
+        this.cmtat.connect(this.admin).setFlagDefault(await this.cmtat.creditEvents().flagDefault),
         'CMTAT_DebtModule_SameValue',
         []
       )
@@ -49,7 +47,7 @@ function CreditEventsModuleCommon (owner, attacker) {
       // Arrange
       (await this.cmtat.creditEvents()).flagRedeemed.should.equal(false)
       // Act
-      this.logs = await this.cmtat.setFlagRedeemed(true, { from: owner });
+      this.logs = await this.cmtat.connect(this.admin).setFlagRedeemed(true);
       // Assert
       (await this.cmtat.creditEvents()).flagRedeemed.should.equal(true)
       expectEvent(this.logs, 'FlagRedeemed', {
@@ -61,8 +59,7 @@ function CreditEventsModuleCommon (owner, attacker) {
       // Act + Assert
       await expectRevertCustomError(
         this.cmtat.setFlagRedeemed(
-          await this.cmtat.creditEvents().flagRedeemed,
-          { from: owner }
+          await this.cmtat.connect(this.admin).creditEvents().flagRedeemed
         ),
         'CMTAT_DebtModule_SameValue',
         []
@@ -73,7 +70,7 @@ function CreditEventsModuleCommon (owner, attacker) {
       // Arrange
       (await this.cmtat.creditEvents()).rating.should.equal('')
       // Act
-      this.logs = await this.cmtat.setRating('B++', { from: owner });
+      this.logs = await this.cmtat.connect(this.admin).setRating('B++');
       // Assert
       (await this.cmtat.creditEvents()).rating.should.equal('B++')
       expectEvent(this.logs, 'Rating', {
@@ -87,7 +84,7 @@ function CreditEventsModuleCommon (owner, attacker) {
     it('testCannotNonAdminSetCreditEvents', async function () {
       // Act
       await expectRevertCustomError(
-        this.cmtat.setCreditEvents(true, true, 'B++', { from: attacker }),
+        this.cmtat.connect(this.attacker).setCreditEvents(true, true, 'B++'),
         'AccessControlUnauthorizedAccount',
         [attacker, DEBT_CREDIT_EVENT_ROLE]
       )
@@ -96,7 +93,7 @@ function CreditEventsModuleCommon (owner, attacker) {
     it('testCannotNonAdminSetFlagDefault', async function () {
       // Act
       await expectRevertCustomError(
-        this.cmtat.setFlagDefault(true, { from: attacker }),
+        this.cmtat.connect(this.attacker).setFlagDefault(true),
         'AccessControlUnauthorizedAccount',
         [attacker, DEBT_CREDIT_EVENT_ROLE]
       )
@@ -105,7 +102,7 @@ function CreditEventsModuleCommon (owner, attacker) {
     it('testCannotNonAdminSetFlagRedeemed', async function () {
       // Act
       await expectRevertCustomError(
-        this.cmtat.setFlagRedeemed(true, { from: attacker }),
+        this.cmtat.connect(this.attacker).setFlagRedeemed(true),
         'AccessControlUnauthorizedAccount',
         [attacker, DEBT_CREDIT_EVENT_ROLE]
       )
@@ -114,7 +111,7 @@ function CreditEventsModuleCommon (owner, attacker) {
     it('testCannotNonAdminSetRating', async function () {
       // Act
       await expectRevertCustomError(
-        this.cmtat.setRating('B++', { from: attacker }),
+        this.cmtat.connect(this.attacker).setRating('B++'),
         'AccessControlUnauthorizedAccount',
         [attacker, DEBT_CREDIT_EVENT_ROLE]
       )

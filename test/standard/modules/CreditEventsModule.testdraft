@@ -1,13 +1,13 @@
-const ERC20MintModuleCommon = require('../../common/ERC20MintModuleCommon')
+const CreditEventsModuleCommon = require('../../common/CreditEventsModuleCommon')
 const { deployCMTATStandalone, fixture, loadFixture } = require('../../deploymentUtils')
 describe(
-  'Standard - ERC20MintModule',
+  'Standard - CreditEventsModule',
   function () {
     beforeEach(async function () {
       Object.assign(this, await loadFixture(fixture));
       this.cmtat = await deployCMTATStandalone(this._, this.admin, this.deployerAddress)
     })
 
-    ERC20MintModuleCommon()
+    CreditEventsModuleCommon()
   }
 )

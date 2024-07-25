@@ -13,7 +13,7 @@ const {
 } = require('./ERC20SnapshotModuleUtils/ERC20SnapshotModuleUtils')
 
 function ERC20SnapshotModuleCommonScheduling (
-  owner,
+  admin,
   address1,
   address2,
   address3
@@ -25,9 +25,7 @@ function ERC20SnapshotModuleCommonScheduling (
     it('can schedule a snapshot with the snapshoter role', async function () {
       const SNAPSHOT_TIME = this.currentTime.add(time.duration.seconds(60))
       // Act
-      this.logs = await this.cmtat.scheduleSnapshot(SNAPSHOT_TIME, {
-        from: owner
-      })
+      this.logs = await this.cmtat.connect(this.admin).scheduleSnapshot(SNAPSHOT_TIME)
       // Assert
       const snapshots = await this.cmtat.getNextSnapshots()
       snapshots.length.should.equal(1)
@@ -40,10 +38,10 @@ function ERC20SnapshotModuleCommonScheduling (
       })
     })
 
-    it('reverts when calling from non-owner', async function () {
+    it('reverts when calling from non-admin', async function () {
       const SNAPSHOT_TIME = this.currentTime.add(time.duration.seconds(60))
       await expectRevertCustomError(
-        this.cmtat.scheduleSnapshot(SNAPSHOT_TIME, { from: address1 }),
+        this.cmtat.connect(address1).scheduleSnapshot(SNAPSHOT_TIME),
         'AccessControlUnauthorizedAccount',
         [address1, SNAPSHOOTER_ROLE]
       )
@@ -52,16 +50,12 @@ function ERC20SnapshotModuleCommonScheduling (
     it('reverts when trying to schedule a snapshot before the last snapshot', async function () {
       const SNAPSHOT_TIME = this.currentTime.add(time.duration.seconds(120))
       // Act
-      this.logs = await this.cmtat.scheduleSnapshot(SNAPSHOT_TIME, {
-        from: owner
-      })
+      this.logs = await this.cmtat.connect(admin).scheduleSnapshot(SNAPSHOT_TIME)
       const SNAPSHOT_TIME_INVALID = SNAPSHOT_TIME.sub(
         time.duration.seconds(60)
       )
       await expectRevertCustomError(
-        this.cmtat.scheduleSnapshot(SNAPSHOT_TIME_INVALID, {
-          from: owner
-        }),
+        this.cmtat.connect(this.admin).scheduleSnapshot(SNAPSHOT_TIME_INVALID),
         'CMTAT_SnapshotModule_SnapshotTimestampBeforeLastSnapshot',
         [SNAPSHOT_TIME_INVALID, SNAPSHOT_TIME]
       )
@@ -70,9 +64,7 @@ function ERC20SnapshotModuleCommonScheduling (
     it('reverts when trying to schedule a snapshot in the past', async function () {
       const SNAPSHOT_TIME = this.currentTime.sub(time.duration.seconds(60))
       await expectRevertCustomError(
-        this.cmtat.scheduleSnapshot(SNAPSHOT_TIME, {
-          from: owner
-        }),
+        this.cmtat.connect(this.admin).scheduleSnapshot(SNAPSHOT_TIME),
         'CMTAT_SnapshotModule_SnapshotScheduledInThePast',
         [SNAPSHOT_TIME, (await time.latest()).add(time.duration.seconds(1))]
       )
@@ -81,10 +73,10 @@ function ERC20SnapshotModuleCommonScheduling (
     it('reverts when trying to schedule a snapshot with the same time twice', async function () {
       const SNAPSHOT_TIME = this.currentTime.add(time.duration.seconds(60))
       // Arrange
-      await this.cmtat.scheduleSnapshot(SNAPSHOT_TIME, { from: owner })
+      await this.cmtat.connect(this.admin).scheduleSnapshot(SNAPSHOT_TIME)
       // Act
       await expectRevertCustomError(
-        this.cmtat.scheduleSnapshot(SNAPSHOT_TIME, { from: owner }),
+        this.cmtat.connect(this.admin).scheduleSnapshot(SNAPSHOT_TIME),
         'CMTAT_SnapshotModule_SnapshotAlreadyExists',
         []
       )
@@ -104,20 +96,13 @@ function ERC20SnapshotModuleCommonScheduling (
       const SECOND_SNAPSHOT = this.currentTime.add(time.duration.seconds(200))
       const THIRD_SNAPSHOT = this.currentTime.add(time.duration.seconds(15))
       // Arrange
-      this.logs = await this.cmtat.scheduleSnapshot(FIRST_SNAPSHOT, {
-        from: owner
-      })
-      this.logs = await this.cmtat.scheduleSnapshot(SECOND_SNAPSHOT, {
-        from: owner
-      })
+      this.logs = await this.cmtat.connect(this.admin).scheduleSnapshot(FIRST_SNAPSHOT)
+      this.logs = await this.cmtat.connect(this.admin).scheduleSnapshot(SECOND_SNAPSHOT)
       // Act
       // We schedule the snapshot at the first place
       this.snapshotTime = this.currentTime.add(time.duration.seconds(10))
-      this.logs = await this.cmtat.scheduleSnapshotNotOptimized(
-        THIRD_SNAPSHOT,
-        {
-          from: owner
-        }
+      this.logs = await this.cmtat.connect(this.admin).scheduleSnapshotNotOptimized(
+        THIRD_SNAPSHOT
       )
       // Assert
       const snapshots = await this.cmtat.getNextSnapshots()
@@ -134,25 +119,13 @@ function ERC20SnapshotModuleCommonScheduling (
       const FIVE_SNAPSHOT = this.currentTime.add(time.duration.seconds(30))
       // Third position
       const RANDOM_SNAPSHOT = this.currentTime.add(time.duration.seconds(17))
-      await this.cmtat.scheduleSnapshot(FIRST_SNAPSHOT, {
-        from: owner
-      })
-      await this.cmtat.scheduleSnapshot(SECOND_SNAPSHOT, {
-        from: owner
-      })
-      await this.cmtat.scheduleSnapshot(THIRD_SNAPSHOT, {
-        from: owner
-      })
-      await this.cmtat.scheduleSnapshot(FOUR_SNAPSHOT, {
-        from: owner
-      })
-      await this.cmtat.scheduleSnapshot(FIVE_SNAPSHOT, {
-        from: owner
-      })
+      await this.cmtat.connect(this.admin).scheduleSnapshot(FIRST_SNAPSHOT)
+      await this.cmtat.connect(this.admin).scheduleSnapshot(SECOND_SNAPSHOT)
+      await this.cmtat.connect(this.admin).scheduleSnapshot(THIRD_SNAPSHOT)
+      await this.cmtat.connect(this.admin).scheduleSnapshot(FOUR_SNAPSHOT)
+      await this.cmtat.connect(this.admin).scheduleSnapshot(FIVE_SNAPSHOT)
       // Act
-      await this.cmtat.scheduleSnapshotNotOptimized(RANDOM_SNAPSHOT, {
-        from: owner
-      })
+      await this.cmtat.connect(this.admin).scheduleSnapshotNotOptimized(RANDOM_SNAPSHOT)
       // Assert
       let snapshots = await this.cmtat.getNextSnapshots()
       snapshots.length.should.equal(6)
@@ -169,9 +142,7 @@ function ERC20SnapshotModuleCommonScheduling (
 
     it('schedule a snapshot, which will be in the last position', async function () {
       const SNAPSHOT_TIME = this.currentTime.add(time.duration.seconds(60))
-      this.logs = await this.cmtat.scheduleSnapshotNotOptimized(SNAPSHOT_TIME, {
-        from: owner
-      })
+      this.logs = await this.cmtat.connect(this.admin).scheduleSnapshotNotOptimized(SNAPSHOT_TIME)
       const snapshots = await this.cmtat.getNextSnapshots()
       snapshots.length.should.equal(1)
 
@@ -182,12 +153,10 @@ function ERC20SnapshotModuleCommonScheduling (
       })
     })
 
-    it('reverts when calling from non-owner', async function () {
+    it('reverts when calling from non-admin', async function () {
       const SNAPSHOT_TIME = this.currentTime.add(time.duration.seconds(60))
       await expectRevertCustomError(
-        this.cmtat.scheduleSnapshotNotOptimized(SNAPSHOT_TIME, {
-          from: address1
-        }),
+        this.cmtat.connect(address1).scheduleSnapshotNotOptimized(SNAPSHOT_TIME),
         'AccessControlUnauthorizedAccount',
         [address1, SNAPSHOOTER_ROLE]
       )
@@ -196,9 +165,7 @@ function ERC20SnapshotModuleCommonScheduling (
     it('reverts when trying to schedule a snapshot in the past', async function () {
       const SNAPSHOT_TIME = this.currentTime.sub(time.duration.seconds(60))
       await expectRevertCustomError(
-        this.cmtat.scheduleSnapshotNotOptimized(SNAPSHOT_TIME, {
-          from: owner
-        }),
+        this.cmtat.connect(this.admin).scheduleSnapshotNotOptimized(SNAPSHOT_TIME),
         'CMTAT_SnapshotModule_SnapshotScheduledInThePast',
         [SNAPSHOT_TIME, (await time.latest()).add(time.duration.seconds(1))]
       )
@@ -208,17 +175,11 @@ function ERC20SnapshotModuleCommonScheduling (
       const FIRST_SNAPSHOT = this.currentTime.add(time.duration.seconds(10))
       const SECOND_SNAPSHOT = this.currentTime.add(time.duration.seconds(100))
       // Arrange
-      this.logs = await this.cmtat.scheduleSnapshot(FIRST_SNAPSHOT, {
-        from: owner
-      })
-      this.logs = await this.cmtat.scheduleSnapshot(SECOND_SNAPSHOT, {
-        from: owner
-      })
+      this.logs = await this.cmtat.connect(this.admin).scheduleSnapshot(FIRST_SNAPSHOT)
+      this.logs = await this.cmtat.connect(this.admin).scheduleSnapshot(SECOND_SNAPSHOT)
       // Act
       await expectRevertCustomError(
-        this.cmtat.scheduleSnapshotNotOptimized(FIRST_SNAPSHOT, {
-          from: owner
-        }),
+        this.cmtat.connect(this.admin).scheduleSnapshotNotOptimized(FIRST_SNAPSHOT),
         'CMTAT_SnapshotModule_SnapshotAlreadyExists',
         []
       )

@@ -1,13 +1,14 @@
 const ERC20BaseModuleCommon = require('../../common/ERC20BaseModuleCommon')
-const { deployCMTATProxy } = require('../../deploymentUtils')
+const { deployCMTATProxy, fixture, loadFixture } = require('../../deploymentUtils')
 
-contract(
+describe(
   'Proxy - ERC20BaseModule',
-  function ([_, admin, address1, address2, address3, deployerAddress]) {
+  function () {
     beforeEach(async function () {
-      this.cmtat = await deployCMTATProxy(_, admin, deployerAddress)
+      Object.assign(this, await loadFixture(fixture));
+      this.cmtat = await deployCMTATProxy(this._, this.admin, this.deployerAddress)
     })
 
-    ERC20BaseModuleCommon(admin, address1, address2, address3, true)
+    ERC20BaseModuleCommon()
   }
 )

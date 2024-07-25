@@ -6,10 +6,6 @@ const {
 const reason = 'BURN_TEST'
 
 function ERC20SnapshotModuleOnePlannedSnapshotTest (
-  admin,
-  address1,
-  address2,
-  address3
 ) {
   const ADDRESSES = [address1, address2, address3]
   const ADDRESS1_INITIAL_MINT = '31'
@@ -18,13 +14,13 @@ function ERC20SnapshotModuleOnePlannedSnapshotTest (
   const TOTAL_SUPPLY_INITIAL_MINT = '96'
   context('OnePlannedSnapshotTest', function () {
     beforeEach(async function () {
-      await this.cmtat.mint(address1, ADDRESS1_INITIAL_MINT, { from: admin })
-      await this.cmtat.mint(address2, ADDRESS2_INITIAL_MINT, { from: admin })
-      await this.cmtat.mint(address3, ADDRESS3_INITIAL_MINT, { from: admin })
+      await this.cmtat.connect(this.admin).mint(address1, ADDRESS1_INITIAL_MINT)
+      await this.cmtat.connect(this.admin).mint(address2, ADDRESS2_INITIAL_MINT)
+      await this.cmtat.connect(this.admin).mint(address3, ADDRESS3_INITIAL_MINT)
       this.currentTime = await time.latest()
       this.snapshotTime = this.currentTime.add(time.duration.seconds(3))
       this.beforeSnapshotTime = this.currentTime.sub(time.duration.seconds(60))
-      await this.cmtat.scheduleSnapshot(this.snapshotTime, { from: admin })
+      await this.cmtat.connect(this.admin).scheduleSnapshot(this.snapshotTime)
       // We jump into the future
       await time.increase(time.duration.seconds(10))
     })
@@ -41,7 +37,7 @@ function ERC20SnapshotModuleOnePlannedSnapshotTest (
       );
       // Act
       // Gas and gasPrice are fixed arbitrarily
-      ({ logs: this.logs } = await this.cmtat.mint(address1, MINT_AMOUNT, {
+      ({ logs: this.logs } = await this.cmtat.connect(this.admin).mint(address1, MINT_AMOUNT, {
         from: admin,
         gas: 5000000,
         gasPrice: 500000000
@@ -88,7 +84,7 @@ function ERC20SnapshotModuleOnePlannedSnapshotTest (
       )
 
       // Act
-      await this.cmtat.burn(address1, BURN_AMOUNT, reason, {
+      await this.cmtat.connect(this.admin).burn(address1, BURN_AMOUNT, reason, {
         from: admin,
         gas: 5000000,
         gasPrice: 500000000
@@ -136,7 +132,7 @@ function ERC20SnapshotModuleOnePlannedSnapshotTest (
 
       // Act
       // Gas and gasPrice are fixed arbitrarily
-      await this.cmtat.transfer(address2, TRANSFER_AMOUNT, {
+      await this.cmtat.connect(this.address1).cmtat.transfer(address2, TRANSFER_AMOUNT, {
         from: address1,
         gas: 5000000,
         gasPrice: 500000000

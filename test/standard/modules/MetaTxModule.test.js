@@ -1,20 +1,21 @@
-const MinimalForwarderMock = artifacts.require('MinimalForwarderMock')
-const MetaTxModuleCommon = require('../../common/MetaTxModuleCommon')
-const { deployCMTATStandaloneWithParameter } = require('../../deploymentUtils')
-const { ZERO_ADDRESS, ERC2771ForwarderDomain } = require('../../utils')
+const MetaTxModuleCommon = require('../../common/MetaTxModuleCommon.js')
+const { deployCMTATStandaloneWithParameter, fixture, loadFixture } = require('../../deploymentUtils.js')
+const { ZERO_ADDRESS, ERC2771ForwarderDomain } = require('../../utils.js')
 
-contract(
+describe(
   'Standard - MetaTxModule',
-  function ([_, admin, address1, deployerAddress]) {
+  function () {
     beforeEach(async function () {
-      this.flag = 5
-      const DECIMAL = 0
-      this.forwarder = await MinimalForwarderMock.new()
+      Object.assign(this, await loadFixture(fixture));
+      this.flag = 50n
+      const DECIMAL = 0n
+
+      this.forwarder = await ethers.deployContract("MinimalForwarderMock")
       await this.forwarder.initialize(ERC2771ForwarderDomain)
       this.cmtat = await deployCMTATStandaloneWithParameter(
-        deployerAddress,
-        this.forwarder.address,
-        admin,
+        this.deployerAddress,
+        this.forwarder,
+        this.admin,
         ZERO_ADDRESS,
         'CMTA Token',
         'CMTAT',
@@ -27,6 +28,6 @@ contract(
       )
     })
 
-    MetaTxModuleCommon(admin, address1)
+    MetaTxModuleCommon()
   }
 )

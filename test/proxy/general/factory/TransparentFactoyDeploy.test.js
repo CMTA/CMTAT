@@ -7,9 +7,9 @@ const { ZERO_ADDRESS } = require('../../../utils.js')
 const {
   deployCMTATProxyImplementation
 } = require('../../../deploymentUtils.js')
-contract(
+describe(
   'Deploy TP with Factory',
-  function ([_, admin, attacker, deployerAddress]) {
+  function () {
     beforeEach(async function () {
       this.CMTAT_PROXY_IMPL = await deployCMTATProxyImplementation(
         _,
@@ -29,9 +29,9 @@ contract(
 
       it('testCannotDeployIfFactoryAdminIsZero', async function () {
         await expectRevertCustomError(
-          CMTAT_TP_FACTORY.new(this.CMTAT_PROXY_IMPL.address, ZERO_ADDRESS, {
-            from: admin
-          }),
+          await ethers.deployContract('CMTAT_TP_FACTORY', [
+            this.CMTAT_PROXY_IMPL.address, ZERO_ADDRESS
+          ]),
           'CMTAT_Factory_AddressZeroNotAllowedForFactoryAdmin',
           []
         )

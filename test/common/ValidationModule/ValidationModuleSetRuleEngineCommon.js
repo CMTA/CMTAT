@@ -9,9 +9,7 @@ function ValidationModuleSetRuleEngineCommon (admin, address1, ruleEngine) {
   context('RuleEngineSetTest', function () {
     it('testCanBeSetByAdmin', async function () {
       // Act
-      this.logs = await this.cmtat.setRuleEngine(ruleEngine, {
-        from: admin
-      })
+      this.logs = await this.cmtat.connect(this.admin).setRuleEngine(ruleEngine)
       // Assert
       // emits a RuleEngineSet event
       expectEvent(this.logs, 'RuleEngine', {
@@ -22,9 +20,7 @@ function ValidationModuleSetRuleEngineCommon (admin, address1, ruleEngine) {
     it('testCanNotBeSetByAdminWithTheSameValue', async function () {
       // Act
       await expectRevertCustomError(
-        this.cmtat.setRuleEngine(await this.cmtat.ruleEngine(), {
-          from: admin
-        }),
+        this.cmtat.connect(this.admin).setRuleEngine(await this.cmtat.ruleEngine()),
         'CMTAT_ValidationModule_SameValue',
         []
       )
@@ -33,7 +29,7 @@ function ValidationModuleSetRuleEngineCommon (admin, address1, ruleEngine) {
     it('testCannotBeSetByNonAdmin', async function () {
       // Act
       await expectRevertCustomError(
-        this.cmtat.setRuleEngine(ruleEngine, { from: address1 }),
+        this.cmtat.connect(address1).setRuleEngine(ruleEngine),
         'AccessControlUnauthorizedAccount',
         [address1, DEFAULT_ADMIN_ROLE]
       )

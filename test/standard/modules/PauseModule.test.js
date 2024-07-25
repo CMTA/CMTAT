@@ -1,16 +1,14 @@
 const PauseModuleCommon = require('../../common/PauseModuleCommon')
-const { deployCMTATStandalone } = require('../../deploymentUtils')
-contract(
+const { deployCMTATStandalone, fixture, loadFixture } = require('../../deploymentUtils')
+describe(
   'Standard - PauseModule',
-  function ([_, admin, address1, address2, address3, deployerAddress]) {
+  function () {
     beforeEach(async function () {
-      this.cmtat = await deployCMTATStandalone(_, admin, deployerAddress)
+      Object.assign(this, await loadFixture(fixture));
+      this.cmtat = await deployCMTATStandalone(this._, this.admin, this.deployerAddress)
       // Mint tokens to test the transfer
-      await this.cmtat.mint(address1, 20, {
-        from: admin
-      })
+      await this.cmtat.connect(this.admin).mint(this.address1, 20)
     })
-
-    PauseModuleCommon(admin, address1, address2, address3)
+    PauseModuleCommon()
   }
 )

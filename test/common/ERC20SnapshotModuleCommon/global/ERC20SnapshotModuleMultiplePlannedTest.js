@@ -5,10 +5,6 @@ const {
 } = require('../ERC20SnapshotModuleUtils/ERC20SnapshotModuleUtils')
 
 function ERC20SnapshotModuleMultiplePlannedTest (
-  admin,
-  address1,
-  address2,
-  address3
 ) {
   // With multiple planned snapshot
   context('SnapshotMultiplePlannedTest', function () {
@@ -24,9 +20,9 @@ function ERC20SnapshotModuleMultiplePlannedTest (
     const TRANSFER_AMOUNT_2 = BN(10)
     const TRANSFER_AMOUNT_3 = BN(5)
     beforeEach(async function () {
-      await this.cmtat.mint(address1, ADDRESS1_INITIAL_MINT, { from: admin })
-      await this.cmtat.mint(address2, ADDRESS2_INITIAL_MINT, { from: admin })
-      await this.cmtat.mint(address3, ADDRESS3_INITIAL_MINT, { from: admin })
+      await this.cmtat.connect(this.admin).mint(address1, ADDRESS1_INITIAL_MINT)
+      await this.cmtat.connect(this.admin).mint(address2, ADDRESS2_INITIAL_MINT)
+      await this.cmtat.connect(this.admin).mint(address3, ADDRESS3_INITIAL_MINT)
       this.currentTime = await time.latest()
       this.snapshotTime1 = this.currentTime.add(
         time.duration.seconds(FIRST_SNAPSHOT_INTERVAL)
@@ -38,15 +34,9 @@ function ERC20SnapshotModuleMultiplePlannedTest (
         time.duration.seconds(THIRD_SNAPSHOT_INTERVAL)
       )
       this.beforeSnapshotTime = this.currentTime.sub(time.duration.seconds(60))
-      await this.cmtat.scheduleSnapshot(this.snapshotTime1, {
-        from: admin
-      })
-      await this.cmtat.scheduleSnapshot(this.snapshotTime2, {
-        from: admin
-      })
-      await this.cmtat.scheduleSnapshot(this.snapshotTime3, {
-        from: admin
-      })
+      await this.cmtat.connect(this.admin).scheduleSnapshot(this.snapshotTime1)
+      await this.cmtat.connect(this.admin).scheduleSnapshot(this.snapshotTime2)
+      await this.cmtat.connect(this.admin).scheduleSnapshot(this.snapshotTime3)
       // We jump into the future
       await time.increase(FIRST_SNAPSHOT_INTERVAL.add(BN(1)))
     })
@@ -64,7 +54,7 @@ function ERC20SnapshotModuleMultiplePlannedTest (
 
       // Act
       // Gas and gasPrice are fixed arbitrarily
-      await this.cmtat.transfer(address2, TRANSFER_AMOUNT_1, {
+      await this.cmtat.connect(this.address1).transfer(address2, TRANSFER_AMOUNT_1, {
         from: address1,
         gas: 5000000,
         gasPrice: 500000000
@@ -120,7 +110,7 @@ function ERC20SnapshotModuleMultiplePlannedTest (
 
       // Act
       // Gas and gasPrice are fixed arbitrarily
-      await this.cmtat.transfer(address2, TRANSFER_AMOUNT_1, {
+      await this.cmtat.connect(this.address1).transfer(address2, TRANSFER_AMOUNT_1, {
         from: address1,
         gas: 5000000,
         gasPrice: 500000000
@@ -182,7 +172,7 @@ function ERC20SnapshotModuleMultiplePlannedTest (
       )
       // Act
       // Gas and gasPrice are fixed arbitrarily
-      await this.cmtat.transfer(address2, TRANSFER_AMOUNT_1, {
+      await this.cmtat.connect(this.address1).transfer(address2, TRANSFER_AMOUNT_1, {
         from: address1,
         gas: 5000000,
         gasPrice: 500000000
@@ -251,7 +241,7 @@ function ERC20SnapshotModuleMultiplePlannedTest (
 
       // **********Act**************** */
       // Gas and gasPrice are fixed arbitrarily
-      await this.cmtat.transfer(address2, TRANSFER_AMOUNT_1, {
+      await this.cmtat.connect(this.address1).transfer(address2, TRANSFER_AMOUNT_1, {
         from: address1,
         gas: 5000000,
         gasPrice: 500000000
@@ -320,7 +310,7 @@ function ERC20SnapshotModuleMultiplePlannedTest (
 
       // **********Act**************** */
       // Gas and gasPrice are fixed arbitrarily
-      await this.cmtat.transfer(address1, TRANSFER_AMOUNT_2, {
+      await this.cmtat.connect(this.address2).transfer(address1, TRANSFER_AMOUNT_2, {
         from: address2,
         gas: 5000000,
         gasPrice: 500000000
@@ -376,7 +366,7 @@ function ERC20SnapshotModuleMultiplePlannedTest (
       // **********Act**************** */
       // Act
       // Gas and gasPrice are fixed arbitrarily
-      await this.cmtat.transfer(address2, TRANSFER_AMOUNT_3, {
+      await this.cmtat.connect(this.address1).transfer(address2, TRANSFER_AMOUNT_3, {
         from: address1,
         gas: 5000000,
         gasPrice: 500000000

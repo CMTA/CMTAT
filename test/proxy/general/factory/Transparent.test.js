@@ -1,4 +1,3 @@
-const CMTAT_TP_FACTORY = artifacts.require('CMTAT_TP_FACTORY')
 const { should } = require('chai').should()
 const {
   expectRevertCustomError
@@ -9,22 +8,22 @@ const {
   DEPLOYMENT_FLAG,
   deployCMTATProxyImplementation
 } = require('../../../deploymentUtils.js')
-const { upgrades,ethers } = require('hardhat')
+const { ethers } = require('hardhat')
 const DEPLOYMENT_DECIMAL = 0
-const { BN, expectEvent } = require('@openzeppelin/test-helpers')
-contract(
+const { BN } = require('@openzeppelin/test-helpers')
+describe(
   'Deploy TP with Factory',
-  function ([_, admin, attacker, deployerAddress]) {
+  function () {
     beforeEach(async function () {
       this.CMTAT_PROXY_IMPL = await deployCMTATProxyImplementation(
         _,
         deployerAddress
       )
-      this.FACTORY = await CMTAT_TP_FACTORY.new(
+      this.FACTORY = await ethers.deployContract('CMTAT_TP_FACTORY')[
         this.CMTAT_PROXY_IMPL.address,
         admin,
         false
-      )
+      ]
       this.CMTATArg = [
         admin,
         ZERO_ADDRESS,

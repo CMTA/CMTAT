@@ -1,5 +1,4 @@
 const ValidationModuleCommon = require('../../../common/ValidationModule/ValidationModuleCommon')
-const RuleEngineMock = artifacts.require('RuleEngineMock')
 const {
   deployCMTATStandaloneWithParameter
 } = require('../../../deploymentUtils')
@@ -11,9 +10,10 @@ contract(
   'Standard - ValidationModule - Constructor',
   function ([_, admin, address1, address2, address3, deployerAddress]) {
     beforeEach(async function () {
+      Object.assign(this, await loadFixture(fixture));
       this.flag = 5
       const DECIMAL = 0
-      this.ruleEngineMock = await RuleEngineMock.new({ from: admin })
+      this.ruleEngineMock = await ethers.deployContract('RuleEngineMock')
       this.cmtat = await deployCMTATStandaloneWithParameter(
         deployerAddress,
         _,

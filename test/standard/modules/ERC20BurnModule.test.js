@@ -1,12 +1,13 @@
 const ERC20BurnModuleCommon = require('../../common/ERC20BurnModuleCommon')
-const { deployCMTATStandalone } = require('../../deploymentUtils')
-contract(
+const { deployCMTATStandalone, fixture, loadFixture } = require('../../deploymentUtils')
+describe(
   'Standard - ERC20BurnModule',
-  function ([_, admin, address1, address2, address3, deployerAddress]) {
+  function () {
     beforeEach(async function () {
-      this.cmtat = await deployCMTATStandalone(_, admin, deployerAddress)
+      Object.assign(this, await loadFixture(fixture));
+      this.cmtat = await deployCMTATStandalone(this._, this.admin, this.deployerAddress)
     })
 
-    ERC20BurnModuleCommon(admin, address1, address2, address3)
+    ERC20BurnModuleCommon()
   }
 )

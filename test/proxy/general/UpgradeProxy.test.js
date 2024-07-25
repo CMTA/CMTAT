@@ -8,7 +8,7 @@ const {
 const { ethers, upgrades } = require('hardhat')
 contract(
   'UpgradeableCMTAT - Proxy',
-  function ([_, admin, address1, deployerAddress]) {
+  function () {
     /*
   Functions used: balanceOf, totalSupply, mint
   */
@@ -61,16 +61,13 @@ contract(
       ).should.be.bignumber.equal('0');
 
       // Issue 20 and check balances and total supply
-      ({ logs: this.logs1 } = await TRUFFLE_CMTAT_PROXY_ADDRESS.mint(
+      ({ logs: this.logs1 } = await TRUFFLE_CMTAT_PROXY_ADDRESS.connect(this.admin).mint(
         address1,
-        20,
-        {
-          from: admin
-        }
+        20
       ));
 
       (
-        await TRUFFLE_CMTAT_PROXY_ADDRESS.balanceOf(address1)
+        await TRUFFLE_CMTAT_PROXY_ADDRESS.balanceOf(this.address1)
       ).should.be.bignumber.equal('20');
       (
         await TRUFFLE_CMTAT_PROXY_ADDRESS.totalSupply()

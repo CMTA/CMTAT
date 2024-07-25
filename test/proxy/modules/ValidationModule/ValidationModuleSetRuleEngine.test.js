@@ -1,12 +1,13 @@
 const ValidationModuleSetRuleEngineCommon = require('../../../common/ValidationModule/ValidationModuleSetRuleEngineCommon')
-const { deployCMTATProxy } = require('../../../deploymentUtils')
+const { deployCMTATProxy, fixture, loadFixture } = require('../../../deploymentUtils')
 
 contract(
   'Proxy - ValidationModule - setRuleEngine',
-  function ([_, admin, address1, fakeRuleEngine, deployerAddress]) {
+  function () {
     beforeEach(async function () {
-      this.cmtat = await deployCMTATProxy(_, admin, deployerAddress)
+      Object.assign(this, await loadFixture(fixture));
+      this.cmtat = await deployCMTATProxy(this._, this.admin, this.deployerAddress)
     })
-    ValidationModuleSetRuleEngineCommon(admin, address1, fakeRuleEngine)
+    ValidationModuleSetRuleEngineCommon()
   }
 )

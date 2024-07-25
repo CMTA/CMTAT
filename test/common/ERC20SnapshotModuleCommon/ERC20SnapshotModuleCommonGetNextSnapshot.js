@@ -4,12 +4,7 @@ const {
   checkArraySnapshot
 } = require('./ERC20SnapshotModuleUtils/ERC20SnapshotModuleUtils')
 
-function ERC20SnapshotModuleCommonGetNextSnapshot (
-  owner,
-  address1,
-  address2,
-  address3
-) {
+function ERC20SnapshotModuleCommonGetNextSnapshot () {
   context('Snapshot scheduling', function () {
     beforeEach(async function () {
       this.currentTime = await time.latest()
@@ -21,21 +16,11 @@ function ERC20SnapshotModuleCommonGetNextSnapshot (
       this.snapshotTime3 = this.currentTime.add(time.duration.seconds(20))
       this.snapshotTime4 = this.currentTime.add(time.duration.seconds(25))
       this.snapshotTime5 = this.currentTime.add(time.duration.seconds(30))
-      await this.cmtat.scheduleSnapshot(this.snapshotTime1, {
-        from: owner
-      })
-      await this.cmtat.scheduleSnapshot(this.snapshotTime2, {
-        from: owner
-      })
-      await this.cmtat.scheduleSnapshot(this.snapshotTime3, {
-        from: owner
-      })
-      await this.cmtat.scheduleSnapshot(this.snapshotTime4, {
-        from: owner
-      })
-      await this.cmtat.scheduleSnapshot(this.snapshotTime5, {
-        from: owner
-      })
+      await this.cmtat.connect(this.admin).scheduleSnapshot(this.snapshotTime1)
+      await this.cmtat.connect(this.admin).scheduleSnapshot(this.snapshotTime2)
+      await this.cmtat.connect(this.admin).scheduleSnapshot(this.snapshotTime3)
+      await this.cmtat.connect(this.admin).scheduleSnapshot(this.snapshotTime4)
+      await this.cmtat.connect(this.admin).scheduleSnapshot(this.snapshotTime5)
       // Act
       const snapshots = await this.cmtat.getNextSnapshots()
       // Assert
@@ -65,15 +50,9 @@ function ERC20SnapshotModuleCommonGetNextSnapshot (
       this.snapshotTime1 = this.currentTime.add(time.duration.seconds(2))
       this.snapshotTime2 = this.currentTime.add(time.duration.seconds(3))
       this.snapshotTime3 = this.currentTime.add(time.duration.seconds(4))
-      await this.cmtat.scheduleSnapshot(this.snapshotTime1, {
-        from: owner
-      })
-      await this.cmtat.scheduleSnapshot(this.snapshotTime2, {
-        from: owner
-      })
-      await this.cmtat.scheduleSnapshot(this.snapshotTime3, {
-        from: owner
-      })
+      await this.cmtat.connect(this.admin).scheduleSnapshot(this.snapshotTime1)
+      await this.cmtat.connect(this.admin).scheduleSnapshot(this.snapshotTime2)
+      await this.cmtat.connect(this.admin).scheduleSnapshot(this.snapshotTime3)
       // We jump into the future
       await time.increase(4)
       // Act
@@ -87,17 +66,11 @@ function ERC20SnapshotModuleCommonGetNextSnapshot (
       this.snapshotTime1 = this.currentTime.add(time.duration.seconds(2))
       this.snapshotTime2 = this.currentTime.add(time.duration.seconds(20))
       this.snapshotTime3 = this.currentTime.add(time.duration.seconds(300))
-      await this.cmtat.scheduleSnapshot(this.snapshotTime1, {
-        from: owner
-      })
+      await this.cmtat.connect(this.admin).scheduleSnapshot(this.snapshotTime1)
       // We jump into the future
       await time.increase(3)
-      await this.cmtat.scheduleSnapshot(this.snapshotTime2, {
-        from: owner
-      })
-      await this.cmtat.scheduleSnapshot(this.snapshotTime3, {
-        from: owner
-      })
+      await this.cmtat.connect(this.admin).scheduleSnapshot(this.snapshotTime2)
+      await this.cmtat.connect(this.admin).scheduleSnapshot(this.snapshotTime3)
       // Act
       const snapshots = await this.cmtat.getNextSnapshots()
       // Assert

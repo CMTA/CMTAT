@@ -10,15 +10,14 @@ const { deployCMTATProxy, DEPLOYMENT_FLAG } = require('../../deploymentUtils')
 const { upgrades } = require('hardhat')
 contract(
   'Proxy - Security Test',
-  function ([_, admin, attacker, deployerAddress]) {
+  function () {
     beforeEach(async function () {
       this.flag = 5
       // Contract to deploy: CMTAT
-      this.CMTAT_PROXY = await deployCMTATProxy(_, admin, deployerAddress)
+      this.CMTAT_PROXY = await deployCMTATProxy(this._, this.admin, this.deployerAddress)
       const implementationContractAddress =
         await upgrades.erc1967.getImplementationAddress(
-          this.CMTAT_PROXY.address,
-          { from: admin }
+          this.CMTAT_PROXY.address
         )
       this.implementationContract = await CMTAT.at(
         implementationContractAddress
@@ -29,7 +28,7 @@ contract(
       it('testCannotBeTakenControlByAttacker', async function () {
         // Act
         await expectRevertCustomError(
-          this.implementationContract.initialize(
+          this.implementationContract.connect(this.attacker).initialize(
             attacker,
             ZERO_ADDRESS,
             'CMTA Token',
@@ -39,15 +38,14 @@ contract(
             'https://cmta.ch',
             ZERO_ADDRESS,
             'CMTAT_info',
-            DEPLOYMENT_FLAG,
-            { from: attacker }
+            DEPLOYMENT_FLAG
           ),
           'InvalidInitialization',
           []
         )
         // act + assert
         await expectRevertCustomError(
-          this.implementationContract.pause({ from: attacker }),
+          this.implementationContract.connect(this.attacker).pause(),
           'AccessControlUnauthorizedAccount',
           [attacker, PAUSER_ROLE]
         )

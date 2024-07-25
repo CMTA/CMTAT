@@ -1,32 +1,19 @@
 const ValidationModuleCommon = require('../../../common/ValidationModule/ValidationModuleCommon')
-const { deployCMTATStandalone } = require('../../../deploymentUtils')
-const { ZERO_ADDRESS } = require('../../../utils')
-const ADDRESS1_INITIAL_BALANCE = 31
-const ADDRESS2_INITIAL_BALANCE = 32
-const ADDRESS3_INITIAL_BALANCE = 33
-contract(
+const { deployCMTATStandalone, fixture, loadFixture } = require('../../../deploymentUtils')
+describe(
   'Standard - ValidationModule',
-  function ([_, admin, address1, address2, address3, deployerAddress]) {
+  function () {
+    //[_, admin, address1, address2, address3, deployerAddress] =  ethers.getSigners();
     beforeEach(async function () {
-      this.cmtat = await deployCMTATStandalone(_, admin, deployerAddress)
-      await this.cmtat.mint(address1, ADDRESS1_INITIAL_BALANCE, {
-        from: admin
-      })
-      await this.cmtat.mint(address2, ADDRESS2_INITIAL_BALANCE, {
-        from: admin
-      })
-      await this.cmtat.mint(address3, ADDRESS3_INITIAL_BALANCE, {
-        from: admin
-      })
+      this.ADDRESS1_INITIAL_BALANCE = 31n
+      this.ADDRESS2_INITIAL_BALANCE = 32n
+      this.ADDRESS3_INITIAL_BALANCE = 33n
+      Object.assign(this, await loadFixture(fixture));
+      this.cmtat = await deployCMTATStandalone(this._, this.admin, this.deployerAddress)
+      await this.cmtat.connect(this.admin).mint(this.address1, this.ADDRESS1_INITIAL_BALANCE)
+      await this.cmtat.connect(this.admin).mint(this.address2, this.ADDRESS2_INITIAL_BALANCE)
+      await this.cmtat.connect(this.admin).mint(this.address3, this.ADDRESS3_INITIAL_BALANCE)
     })
-    ValidationModuleCommon(
-      admin,
-      address1,
-      address2,
-      address3,
-      ADDRESS1_INITIAL_BALANCE,
-      ADDRESS2_INITIAL_BALANCE,
-      ADDRESS3_INITIAL_BALANCE
-    )
+    ValidationModuleCommon()
   }
 )

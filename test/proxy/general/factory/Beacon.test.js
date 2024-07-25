@@ -1,4 +1,3 @@
-const CMTAT_BEACON_FACTORY = artifacts.require('CMTAT_BEACON_FACTORY')
 const { should } = require('chai').should()
 const {
   expectRevertCustomError
@@ -12,19 +11,19 @@ const {
 } = require('../../../deploymentUtils.js')
 const DEPLOYMENT_DECIMAL = 0
 const { BN, expectEvent } = require('@openzeppelin/test-helpers')
-contract(
+describe(
   'Deploy Beacon with Factory',
-  function ([_, admin, attacker, deployerAddress]) {
+  function () {
     beforeEach(async function () {
       this.CMTAT_PROXY_IMPL = await deployCMTATProxyImplementation(
         _,
         deployerAddress
       )
-      this.FACTORY = await CMTAT_BEACON_FACTORY.new(
+      this.FACTORY = await  ethers.deployContract("CMTAT_BEACON_FACTORY",[
         this.CMTAT_PROXY_IMPL.address,
         admin,
         admin
-      )
+      ])
     })
 
     context('FactoryDeployment', function () {
