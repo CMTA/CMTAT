@@ -1,7 +1,7 @@
 const { expect } = require('chai')
 const { ethers, upgrades } = require('hardhat')
 
-describe('UpgradeableCMTAT - Proxy', function () {
+describe('Proxy - Upgrade', function () {
   let admin, address1, CMTAT_BASE, upgradeableCMTATV2Instance
 
   before(async function () {

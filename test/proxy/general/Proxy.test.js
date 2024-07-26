@@ -2,7 +2,7 @@ const { expect } = require('chai')
 const { ethers, upgrades } = require('hardhat')
 const { DEFAULT_ADMIN_ROLE } = require('../../utils')
 
-describe('Proxy - Security Test', function () {
+describe('Proxy - Security', function () {
   let admin, attacker, proxyContract, implementationContract
 
   before(async function () {

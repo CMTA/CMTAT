@@ -58,7 +58,17 @@ module.exports = {
       holesky: process.env.ETHERSCAN_API_KEY,
       polygon: process.env.POLYGONSCAN_API_KEY,
       sepolia: process.env.ETHERSCAN_API_KEY
-    }
+    },
+    customChains: [
+      {
+        network: 'holesky',
+        chainId: 17000,
+        urls: {
+          apiURL: 'https://api-holesky.etherscan.io/api',
+          browserURL: 'https://holesky.etherscan.io'
+        }
+      }
+    ]
   },
   gasReporter: {
     // eslint-disable-next-line no-unneeded-ternary
