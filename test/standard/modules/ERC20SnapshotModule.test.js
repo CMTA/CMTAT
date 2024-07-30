@@ -13,7 +13,7 @@ describe(
     beforeEach(async function () {
       Object.assign(this, await loadFixture(fixture));
       this.cmtat = await deployCMTATStandaloneWithSnapshot(
-        _,
+        this._,
         this.admin,
         this.deployerAddress
       )

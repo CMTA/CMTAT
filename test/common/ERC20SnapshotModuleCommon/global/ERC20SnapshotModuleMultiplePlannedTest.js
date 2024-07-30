@@ -1,5 +1,5 @@
-const { time, BN } = require('@openzeppelin/test-helpers')
-const { should } = require('chai').should()
+const { time } = require ("@nomicfoundation/hardhat-network-helpers");
+const { expect } = require('chai');
 const {
   checkSnapshot
 } = require('../ERC20SnapshotModuleUtils/ERC20SnapshotModuleUtils')
@@ -8,41 +8,38 @@ function ERC20SnapshotModuleMultiplePlannedTest (
 ) {
   // With multiple planned snapshot
   context('SnapshotMultiplePlannedTest', function () {
-    const ADDRESSES = [address1, address2, address3]
-    const ADDRESS1_INITIAL_MINT = BN(31)
-    const ADDRESS2_INITIAL_MINT = BN(32)
-    const ADDRESS3_INITIAL_MINT = BN(33)
-    const TOTAL_SUPPLY_INITIAL_MINT = BN(96)
-    const FIRST_SNAPSHOT_INTERVAL = BN(4)
-    const SECOND_SNAPSHOT_INTERVAL = BN(10)
-    const THIRD_SNAPSHOT_INTERVAL = BN(20)
-    const TRANSFER_AMOUNT_1 = BN(20)
-    const TRANSFER_AMOUNT_2 = BN(10)
-    const TRANSFER_AMOUNT_3 = BN(5)
+    const ADDRESSES = [this.address1, this.address2, this.address3]
+    const ADDRESS1_INITIAL_MINT = 31n
+    const ADDRESS2_INITIAL_MINT = 32n
+    const ADDRESS3_INITIAL_MINT = 33n
+    const TOTAL_SUPPLY_INITIAL_MINT = 96n
+    const FIRST_SNAPSHOT_INTERVAL = 4
+    const SECOND_SNAPSHOT_INTERVAL = 10
+    const THIRD_SNAPSHOT_INTERVAL = 20
+    const TRANSFER_AMOUNT_1 = 20n
+    const TRANSFER_AMOUNT_2 = 10n
+    const TRANSFER_AMOUNT_3 = 5n
     beforeEach(async function () {
-      await this.cmtat.connect(this.admin).mint(address1, ADDRESS1_INITIAL_MINT)
-      await this.cmtat.connect(this.admin).mint(address2, ADDRESS2_INITIAL_MINT)
-      await this.cmtat.connect(this.admin).mint(address3, ADDRESS3_INITIAL_MINT)
+      await this.cmtat.connect(this.admin).mint(this.address1, ADDRESS1_INITIAL_MINT)
+      await this.cmtat.connect(this.admin).mint(this.address2, ADDRESS2_INITIAL_MINT)
+      await this.cmtat.connect(this.admin).mint(this.address3, ADDRESS3_INITIAL_MINT)
       this.currentTime = await time.latest()
-      this.snapshotTime1 = this.currentTime.add(
+      this.snapshotTime1 = this.currentTime + 
         time.duration.seconds(FIRST_SNAPSHOT_INTERVAL)
-      )
-      this.snapshotTime2 = this.currentTime.add(
+      this.snapshotTime2 = this.currentTime + 
         time.duration.seconds(SECOND_SNAPSHOT_INTERVAL)
-      )
-      this.snapshotTime3 = this.currentTime.add(
+      this.snapshotTime3 = this.currentTime + 
         time.duration.seconds(THIRD_SNAPSHOT_INTERVAL)
-      )
-      this.beforeSnapshotTime = this.currentTime.sub(time.duration.seconds(60))
+      this.beforeSnapshotTime = this.currentTime - time.duration.seconds(60)
       await this.cmtat.connect(this.admin).scheduleSnapshot(this.snapshotTime1)
       await this.cmtat.connect(this.admin).scheduleSnapshot(this.snapshotTime2)
       await this.cmtat.connect(this.admin).scheduleSnapshot(this.snapshotTime3)
       // We jump into the future
-      await time.increase(FIRST_SNAPSHOT_INTERVAL.add(BN(1)))
+      await time.increase(FIRST_SNAPSHOT_INTERVAL + 1)
     })
 
     it('testCanTransferTokensAfterFirstSnapshot', async function () {
-      const TRANSFER_AMOUNT_1 = BN(20)
+      const TRANSFER_AMOUNT_1 = 20n
       // Arrange - Assert
       await checkSnapshot.call(
         this,
@@ -54,8 +51,7 @@ function ERC20SnapshotModuleMultiplePlannedTest (
 
       // Act
       // Gas and gasPrice are fixed arbitrarily
-      await this.cmtat.connect(this.address1).transfer(address2, TRANSFER_AMOUNT_1, {
-        from: address1,
+      await this.cmtat.connect(this.address1).transfer(this.address2, TRANSFER_AMOUNT_1, {
         gas: 5000000,
         gasPrice: 500000000
       })
@@ -77,9 +73,9 @@ function ERC20SnapshotModuleMultiplePlannedTest (
       )
       // values now
       const address1NewTokensBalance =
-        ADDRESS1_INITIAL_MINT.sub(TRANSFER_AMOUNT_1)
+        ADDRESS1_INITIAL_MINT - TRANSFER_AMOUNT_1
       const address2NewTokensBalance =
-        ADDRESS2_INITIAL_MINT.add(TRANSFER_AMOUNT_1)
+        ADDRESS2_INITIAL_MINT + TRANSFER_AMOUNT_1
       await checkSnapshot.call(
         this,
         await time.latest(),
@@ -96,8 +92,7 @@ function ERC20SnapshotModuleMultiplePlannedTest (
     it('testCanTransferAfterSecondSnapshot', async function () {
       // We jump into the future
       await time.increase(
-        SECOND_SNAPSHOT_INTERVAL.sub(FIRST_SNAPSHOT_INTERVAL)
-      )
+        SECOND_SNAPSHOT_INTERVAL - FIRST_SNAPSHOT_INTERVAL)
       // Arrange - Assert
       // No transfer performed since the minting
       await checkSnapshot.call(
@@ -110,8 +105,7 @@ function ERC20SnapshotModuleMultiplePlannedTest (
 
       // Act
       // Gas and gasPrice are fixed arbitrarily
-      await this.cmtat.connect(this.address1).transfer(address2, TRANSFER_AMOUNT_1, {
-        from: address1,
+      await this.cmtat.connect(this.address1).transfer(this.address2, TRANSFER_AMOUNT_1, {
         gas: 5000000,
         gasPrice: 500000000
       })
@@ -141,9 +135,9 @@ function ERC20SnapshotModuleMultiplePlannedTest (
       )
       // values now
       const address1NewTokensBalance =
-        ADDRESS1_INITIAL_MINT.sub(TRANSFER_AMOUNT_1)
+        ADDRESS1_INITIAL_MINT - TRANSFER_AMOUNT_1
       const address2NewTokensBalance =
-        ADDRESS2_INITIAL_MINT.add(TRANSFER_AMOUNT_1)
+        ADDRESS2_INITIAL_MINT + TRANSFER_AMOUNT_1
       await checkSnapshot.call(
         this,
         await time.latest(),
@@ -156,12 +150,12 @@ function ERC20SnapshotModuleMultiplePlannedTest (
         ]
       )
       const snapshots = await this.cmtat.getNextSnapshots()
-      snapshots.length.should.equal(1)
+      expect(snapshots.length).to.equal(1)
     })
 
     it('testCanTransferAfterThirdSnapshot', async function () {
       // We jump into the future
-      await time.increase(THIRD_SNAPSHOT_INTERVAL.sub(FIRST_SNAPSHOT_INTERVAL))
+      await time.increase(THIRD_SNAPSHOT_INTERVAL - FIRST_SNAPSHOT_INTERVAL)
       // Arrange - Assert
       await checkSnapshot.call(
         this,
@@ -172,8 +166,7 @@ function ERC20SnapshotModuleMultiplePlannedTest (
       )
       // Act
       // Gas and gasPrice are fixed arbitrarily
-      await this.cmtat.connect(this.address1).transfer(address2, TRANSFER_AMOUNT_1, {
-        from: address1,
+      await this.cmtat.connect(this.address1).transfer(this.address2, TRANSFER_AMOUNT_1, {
         gas: 5000000,
         gasPrice: 500000000
       })
@@ -211,9 +204,9 @@ function ERC20SnapshotModuleMultiplePlannedTest (
       )
       // Values now
       const address1NewTokensBalance =
-        ADDRESS1_INITIAL_MINT.sub(TRANSFER_AMOUNT_1)
+        ADDRESS1_INITIAL_MINT - TRANSFER_AMOUNT_1
       const address2NewTokensBalance =
-        ADDRESS2_INITIAL_MINT.add(TRANSFER_AMOUNT_1)
+        ADDRESS2_INITIAL_MINT + TRANSFER_AMOUNT_1
       await checkSnapshot.call(
         this,
         await time.latest(),
@@ -226,7 +219,7 @@ function ERC20SnapshotModuleMultiplePlannedTest (
         ]
       )
       const snapshots = await this.cmtat.getNextSnapshots()
-      snapshots.length.should.equal(0)
+      expect(snapshots.length).to.equal(0)
     })
 
     it('testCanTransferTokensMultipleTimes', async function () {
@@ -241,8 +234,7 @@ function ERC20SnapshotModuleMultiplePlannedTest (
 
       // **********Act**************** */
       // Gas and gasPrice are fixed arbitrarily
-      await this.cmtat.connect(this.address1).transfer(address2, TRANSFER_AMOUNT_1, {
-        from: address1,
+      await this.cmtat.connect(this.address1).transfer(this.address2, TRANSFER_AMOUNT_1, {
         gas: 5000000,
         gasPrice: 500000000
       })
@@ -263,9 +255,9 @@ function ERC20SnapshotModuleMultiplePlannedTest (
         [ADDRESS1_INITIAL_MINT, ADDRESS2_INITIAL_MINT, ADDRESS3_INITIAL_MINT]
       )
       const ADDRESS1_BALANCE_AFTER_ONE_TRANSFER =
-        ADDRESS1_INITIAL_MINT.sub(TRANSFER_AMOUNT_1)
+        ADDRESS1_INITIAL_MINT - TRANSFER_AMOUNT_1
       const ADDRESS2_BALANCE_AFTER_TONE_TRANSFER =
-        ADDRESS2_INITIAL_MINT.add(TRANSFER_AMOUNT_1)
+        ADDRESS2_INITIAL_MINT + TRANSFER_AMOUNT_1
       // Values at the time of the second snapshot
       await checkSnapshot.call(
         this,
@@ -302,16 +294,14 @@ function ERC20SnapshotModuleMultiplePlannedTest (
           ADDRESS3_INITIAL_MINT
         ]
       );
-      (await this.cmtat.getNextSnapshots()).length.should.equal(2)
+      expect((await this.cmtat.getNextSnapshots()).length).to.equal(2)
       // We jump into the future
       await time.increase(
-        SECOND_SNAPSHOT_INTERVAL.sub(FIRST_SNAPSHOT_INTERVAL)
-      )
+        SECOND_SNAPSHOT_INTERVAL - FIRST_SNAPSHOT_INTERVAL)
 
       // **********Act**************** */
       // Gas and gasPrice are fixed arbitrarily
-      await this.cmtat.connect(this.address2).transfer(address1, TRANSFER_AMOUNT_2, {
-        from: address2,
+      await this.cmtat.connect(this.address2).transfer(this.address1, TRANSFER_AMOUNT_2, {
         gas: 5000000,
         gasPrice: 500000000
       })
@@ -345,9 +335,9 @@ function ERC20SnapshotModuleMultiplePlannedTest (
       )
       // Values now
       const ADDRESS1_BALANCE_AFTER_TWO_TRANSFER =
-        ADDRESS1_BALANCE_AFTER_ONE_TRANSFER.add(TRANSFER_AMOUNT_2)
+        ADDRESS1_BALANCE_AFTER_ONE_TRANSFER + TRANSFER_AMOUNT_2
       const ADDRESS2_BALANCE_AFTER_TWO_TRANSFER =
-        ADDRESS2_BALANCE_AFTER_TONE_TRANSFER.sub(TRANSFER_AMOUNT_2)
+        ADDRESS2_BALANCE_AFTER_TONE_TRANSFER - TRANSFER_AMOUNT_2
       await checkSnapshot.call(
         this,
         await time.latest(),
@@ -359,15 +349,14 @@ function ERC20SnapshotModuleMultiplePlannedTest (
           ADDRESS3_INITIAL_MINT
         ]
       );
-      (await this.cmtat.getNextSnapshots()).length.should.equal(1)
+      expect((await this.cmtat.getNextSnapshots()).length).to.equal(1)
       // We jump into the future
-      await time.increase(THIRD_SNAPSHOT_INTERVAL.sub(FIRST_SNAPSHOT_INTERVAL))
+      await time.increase(THIRD_SNAPSHOT_INTERVAL - FIRST_SNAPSHOT_INTERVAL)
 
       // **********Act**************** */
       // Act
       // Gas and gasPrice are fixed arbitrarily
-      await this.cmtat.connect(this.address1).transfer(address2, TRANSFER_AMOUNT_3, {
-        from: address1,
+      await this.cmtat.connect(this.address1).transfer(this.address2, TRANSFER_AMOUNT_3, {
         gas: 5000000,
         gasPrice: 500000000
       })
@@ -413,9 +402,9 @@ function ERC20SnapshotModuleMultiplePlannedTest (
       )
       // Values now
       const ADDRESS1_BALANCE_AFTER_THREE_TRANSFER =
-        ADDRESS1_BALANCE_AFTER_ONE_TRANSFER.add(TRANSFER_AMOUNT_3)
+        ADDRESS1_BALANCE_AFTER_ONE_TRANSFER + TRANSFER_AMOUNT_3
       const ADDRESS2_BALANCE_AFTER_THREE_TRANSFER =
-        ADDRESS2_BALANCE_AFTER_TONE_TRANSFER.sub(TRANSFER_AMOUNT_3)
+        ADDRESS2_BALANCE_AFTER_TONE_TRANSFER - TRANSFER_AMOUNT_3
       await checkSnapshot.call(
         this,
         await time.latest(),
@@ -427,7 +416,7 @@ function ERC20SnapshotModuleMultiplePlannedTest (
           ADDRESS3_INITIAL_MINT
         ]
       );
-      (await this.cmtat.getNextSnapshots()).length.should.equal(0)
+      expect((await this.cmtat.getNextSnapshots()).length).to.equal(0)
     })
   })
 }

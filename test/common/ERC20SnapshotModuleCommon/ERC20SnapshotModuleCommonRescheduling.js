@@ -1,14 +1,9 @@
-const {
-  expectEvent,
-  expectRevert,
-  time,
-  BN
-} = require('@openzeppelin/test-helpers')
+const { time } = require ("@nomicfoundation/hardhat-network-helpers");
+const { expect } = require('chai');
 const {
   expectRevertCustomError
 } = require('../../../openzeppelin-contracts-upgradeable/test/helpers/customError')
 const { SNAPSHOOTER_ROLE } = require('../../utils')
-const { should } = require('chai').should()
 const {
   checkArraySnapshot
 } = require('./ERC20SnapshotModuleUtils/ERC20SnapshotModuleUtils')
@@ -17,8 +12,8 @@ function ERC20SnapshotModuleCommonRescheduling () {
   context('Snapshot rescheduling', function () {
     beforeEach(async function () {
       this.currentTime = await time.latest()
-      this.snapshotTime = this.currentTime.add(time.duration.seconds(60))
-      this.newSnapshotTime = this.currentTime.add(time.duration.seconds(200))
+      this.snapshotTime = this.currentTime + time.duration.seconds(60)
+      this.newSnapshotTime = this.currentTime + time.duration.seconds(200)
       await this.cmtat.connect(this.admin).scheduleSnapshot(this.snapshotTime)
     })
 
@@ -27,24 +22,21 @@ function ERC20SnapshotModuleCommonRescheduling () {
         this.snapshotTime,
         this.newSnapshotTime
       )
-      expectEvent(this.logs, 'SnapshotSchedule', {
-        oldTime: this.snapshotTime,
-        newTime: this.newSnapshotTime
-      })
+      await expect(this.logs)
+      .to.emit(this.cmtat, "SnapshotSchedule")
+      .withArgs(this.snapshotTime, this.newSnapshotTime);
       const snapshots = await this.cmtat.getNextSnapshots()
-      snapshots.length.should.equal(1)
-      snapshots[0].should.be.bignumber.equal(this.newSnapshotTime)
+      expect(snapshots.length).to.equal(1)
+      expect(snapshots[0]).to.equal(this.newSnapshotTime)
     })
 
     it('can reschedule a snapshot between a range of snapshot', async function () {
-      const SNAPSHOT_MIDDLE_OLD_TIME = this.snapshotTime.add(
+      const SNAPSHOT_MIDDLE_OLD_TIME = this.snapshotTime + 
         time.duration.seconds(30)
-      )
-      const SNAPSHOT_MIDDLE_NEW_TIME = this.snapshotTime.add(
+      const SNAPSHOT_MIDDLE_NEW_TIME = this.snapshotTime + 
         time.duration.seconds(40)
-      )
-      const FIRST_SNAPSHOT = this.snapshotTime.add(time.duration.seconds(60))
-      const SECOND_SNAPSHOT = this.snapshotTime.add(time.duration.seconds(90))
+      const FIRST_SNAPSHOT = this.snapshotTime + time.duration.seconds(60)
+      const SECOND_SNAPSHOT = this.snapshotTime + time.duration.seconds(90)
       await this.cmtat.connect(this.admin).scheduleSnapshot(SNAPSHOT_MIDDLE_OLD_TIME)
       await this.cmtat.connect(this.admin).scheduleSnapshot(FIRST_SNAPSHOT)
       await this.cmtat.connect(this.admin).scheduleSnapshot(SECOND_SNAPSHOT)
@@ -52,12 +44,11 @@ function ERC20SnapshotModuleCommonRescheduling () {
         SNAPSHOT_MIDDLE_OLD_TIME,
         SNAPSHOT_MIDDLE_NEW_TIME
       )
-      expectEvent(this.logs, 'SnapshotSchedule', {
-        oldTime: SNAPSHOT_MIDDLE_OLD_TIME,
-        newTime: SNAPSHOT_MIDDLE_NEW_TIME
-      })
+      await expect(this.logs)
+      .to.emit(this.cmtat, "SnapshotSchedule")
+      .withArgs(SNAPSHOT_MIDDLE_OLD_TIME, SNAPSHOT_MIDDLE_NEW_TIME);
       const snapshots = await this.cmtat.getNextSnapshots()
-      snapshots.length.should.equal(4)
+      expect(snapshots.length).to.equal(4)
       checkArraySnapshot(snapshots, [
         this.snapshotTime,
         SNAPSHOT_MIDDLE_NEW_TIME,
@@ -67,14 +58,12 @@ function ERC20SnapshotModuleCommonRescheduling () {
     })
 
     it('testCannotRescheduleASnapshotAfterTheNextSnapshot', async function () {
-      const SNAPSHOT_MIDDLE_OLD_TIME = this.snapshotTime.add(
+      const SNAPSHOT_MIDDLE_OLD_TIME = this.snapshotTime + 
         time.duration.seconds(30)
-      )
-      const SNAPSHOT_MIDDLE_NEW_TIME = this.snapshotTime.add(
+      const SNAPSHOT_MIDDLE_NEW_TIME = this.snapshotTime + 
         time.duration.seconds(61)
-      )
-      const FIRST_SNAPSHOT = this.snapshotTime.add(time.duration.seconds(60))
-      const SECOND_SNAPSHOT = this.snapshotTime.add(time.duration.seconds(90))
+      const FIRST_SNAPSHOT = this.snapshotTime + time.duration.seconds(60)
+      const SECOND_SNAPSHOT = this.snapshotTime + time.duration.seconds(90)
       await this.cmtat.connect(this.admin).scheduleSnapshot(SNAPSHOT_MIDDLE_OLD_TIME)
       await this.cmtat.connect(this.admin).scheduleSnapshot(FIRST_SNAPSHOT)
       await this.cmtat.connect(this.admin).scheduleSnapshot(SECOND_SNAPSHOT)
@@ -87,7 +76,7 @@ function ERC20SnapshotModuleCommonRescheduling () {
         [SNAPSHOT_MIDDLE_NEW_TIME, FIRST_SNAPSHOT]
       )
       const snapshots = await this.cmtat.getNextSnapshots()
-      snapshots.length.should.equal(4)
+      expect(snapshots.length).to.equal(4)
       checkArraySnapshot(snapshots, [
         this.snapshotTime,
         SNAPSHOT_MIDDLE_OLD_TIME,
@@ -97,15 +86,13 @@ function ERC20SnapshotModuleCommonRescheduling () {
     })
 
     it('testCannotRescheduleASnapshotBeforeThePreviousSnapshot', async function () {
-      const SNAPSHOT_MIDDLE_OLD_TIME = this.snapshotTime.add(
+      const SNAPSHOT_MIDDLE_OLD_TIME = this.snapshotTime + 
         time.duration.seconds(30)
-      )
-      const SNAPSHOT_MIDDLE_NEW_TIME = this.snapshotTime.sub(
-        time.duration.seconds(1)
-      )
-      const FIRST_SNAPSHOT = this.snapshotTime.add(time.duration.seconds(60))
-      const SECOND_SNAPSHOT = this.snapshotTime.add(time.duration.seconds(90))
-      await this.cmtat.connect(admin).scheduleSnapshot(SNAPSHOT_MIDDLE_OLD_TIME)
+      const SNAPSHOT_MIDDLE_NEW_TIME = this.snapshotTime - time.duration.seconds(1)
+
+      const FIRST_SNAPSHOT = this.snapshotTime + time.duration.seconds(60)
+      const SECOND_SNAPSHOT = this.snapshotTime + time.duration.seconds(90)
+      await this.cmtat.connect(this.admin).scheduleSnapshot(SNAPSHOT_MIDDLE_OLD_TIME)
       await this.cmtat.connect(this.admin).scheduleSnapshot(FIRST_SNAPSHOT)
       await this.cmtat.connect(this.admin).scheduleSnapshot(SECOND_SNAPSHOT)
       await expectRevertCustomError(
@@ -117,7 +104,7 @@ function ERC20SnapshotModuleCommonRescheduling () {
         [SNAPSHOT_MIDDLE_NEW_TIME, this.snapshotTime]
       )
       const snapshots = await this.cmtat.getNextSnapshots()
-      snapshots.length.should.equal(4)
+      expect(snapshots.length).to.equal(4)
       checkArraySnapshot(snapshots, [
         this.snapshotTime,
         SNAPSHOT_MIDDLE_OLD_TIME,
@@ -131,21 +118,21 @@ function ERC20SnapshotModuleCommonRescheduling () {
       await expectRevertCustomError(
         this.cmtat.connect(this.address1).rescheduleSnapshot(this.snapshotTime, this.newSnapshotTime),
         'AccessControlUnauthorizedAccount',
-        [address1, SNAPSHOOTER_ROLE]
+        [this.address1.address, SNAPSHOOTER_ROLE]
       )
     })
 
     it('reverts when trying to reschedule a snapshot in the past', async function () {
-      const NEW_TIME = this.snapshotTime.sub(time.duration.seconds(60))
+      const NEW_TIME = this.snapshotTime - time.duration.seconds(60)
       await expectRevertCustomError(
         this.cmtat.connect(this.admin).rescheduleSnapshot(this.snapshotTime, NEW_TIME),
         'CMTAT_SnapshotModule_SnapshotScheduledInThePast',
-        [NEW_TIME, (await time.latest()).add(time.duration.seconds(1))]
+        [NEW_TIME, (await time.latest()) + time.duration.seconds(1)]
       )
     })
 
     it('reverts when trying to reschedule a snapshot to a snapshot time already existing', async function () {
-      const NEW_TIME = this.snapshotTime.add(time.duration.seconds(60))
+      const NEW_TIME = this.snapshotTime + time.duration.seconds(60)
       await this.cmtat.connect(this.admin).scheduleSnapshot(NEW_TIME)
       await expectRevertCustomError(
         this.cmtat.connect(this.admin).rescheduleSnapshot(this.snapshotTime, NEW_TIME),
@@ -174,12 +161,12 @@ function ERC20SnapshotModuleCommonRescheduling () {
       )
       // Assert
       const snapshots = await this.cmtat.getNextSnapshots()
-      snapshots.length.should.equal(1)
-      snapshots[0].should.be.bignumber.equal(this.newSnapshotTime)
+      expect(snapshots.length).to.equal(1)
+      expect(snapshots[0]).to.equal(this.newSnapshotTime)
     })
 
     it('reverts when snapshot is not found', async function () {
-      const SNAPSHOT_TIME = this.currentTime.add(time.duration.seconds(90))
+      const SNAPSHOT_TIME = this.currentTime + time.duration.seconds(90)
       await expectRevertCustomError(
         this.cmtat.connect(this.admin).rescheduleSnapshot(SNAPSHOT_TIME, this.newSnapshotTime),
         'CMTAT_SnapshotModule_SnapshotNotFound',
@@ -197,7 +184,7 @@ function ERC20SnapshotModuleCommonRescheduling () {
     })
 
     it('reverts when snapshot has been processed', async function () {
-      const SNAPSHOT_TIME = this.currentTime.sub(time.duration.seconds(60))
+      const SNAPSHOT_TIME = this.currentTime - time.duration.seconds(60)
       await expectRevertCustomError(
         this.cmtat.connect(this.admin).rescheduleSnapshot(SNAPSHOT_TIME, this.newSnapshotTime),
         'CMTAT_SnapshotModule_SnapshotAlreadyDone',

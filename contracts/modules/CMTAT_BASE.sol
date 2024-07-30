@@ -37,9 +37,7 @@ abstract contract CMTAT_BASE is
     ValidationModule,
     MetaTxModule,
     ERC20BaseModule,
-    ERC20SnapshotModule,
-    DebtBaseModule,
-    CreditEventsModule
+    ERC20SnapshotModule
 {
     /**
      * @notice
@@ -137,8 +135,6 @@ abstract contract CMTAT_BASE is
    
 
         /* Other modules */
-        __DebtBaseModule_init_unchained();
-        __CreditEvents_init_unchained();
         __Base_init_unchained(tokenId_, terms_, information_, flag_);
 
         /* own function */

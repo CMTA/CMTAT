@@ -126,7 +126,7 @@ function ERC20MintModuleCommon() {
 
       expect(await this.cmtat.totalSupply()).to.equal(
         TOKEN_SUPPLY_BY_HOLDERS.reduce((a, b) => {
-          return a+b;
+          return a + b;
         })
       );
       // Assert event

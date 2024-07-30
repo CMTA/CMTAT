@@ -1,6 +1,6 @@
 const MetaTxModuleCommon = require('../../common/MetaTxModuleCommon.js')
-const { deployCMTATProxyWithParameter, fixture, loadFixture } = require('../../deploymentUtils')
-const { ZERO_ADDRESS, ERC2771ForwarderDomain } = require('../../utils')
+const { deployCMTATProxyWithParameter, fixture, loadFixture } = require('../../deploymentUtils.js')
+const { ZERO_ADDRESS, ERC2771ForwarderDomain } = require('../../utils.js')
 
 describe(
   'Proxy - MetaTxModule',
