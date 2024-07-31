@@ -1,31 +1,31 @@
-const { should } = require('chai').should()
+const { expect } = require('chai');
 const {
   expectRevertCustomError
 } = require('../../../../openzeppelin-contracts-upgradeable/test/helpers/customError.js')
-const CMTAT = artifacts.require('CMTAT_PROXY')
 const { ZERO_ADDRESS, CMTAT_DEPLOYER_ROLE } = require('../../../utils.js')
 const {
   DEPLOYMENT_FLAG,
-  deployCMTATProxyImplementation
+  deployCMTATProxyImplementation,
+    fixture, loadFixture 
 } = require('../../../deploymentUtils.js')
 const { ethers } = require('hardhat')
 const DEPLOYMENT_DECIMAL = 0
-const { BN } = require('@openzeppelin/test-helpers')
 describe(
-  'Deploy TP with Factory',
+  'Deploy TP with Factory - Salt',
   function () {
     beforeEach(async function () {
+      Object.assign(this, await loadFixture(fixture));
       this.CMTAT_PROXY_IMPL = await deployCMTATProxyImplementation(
-        _,
-        deployerAddress
+        this._.address,
+        this.deployerAddress.address
       )
       this.FACTORY =  await ethers.deployContract('CMTAT_TP_FACTORY',[
-        this.CMTAT_PROXY_IMPL.address,
-        admin,
+        this.CMTAT_PROXY_IMPL.target,
+        this.admin,
         true
       ])
       this.CMTATArg = [
-        admin,
+        this.admin,
         ZERO_ADDRESS,
         'CMTA Token',
         'CMTAT',
@@ -41,8 +41,8 @@ describe(
     context('FactoryDeployment', function () {
       it('testCanReturnTheRightImplementation', async function () {
         // Act + Assert
-        (await this.FACTORY.logic()).should.equal(
-          this.CMTAT_PROXY_IMPL.address
+        expect(await this.FACTORY.logic()).to.equal(
+          this.CMTAT_PROXY_IMPL.target
         )
       })
     })
@@ -51,78 +51,69 @@ describe(
       it('testCannotBeDeployedByAttacker', async function () {
         // Act
         await expectRevertCustomError(
-          this.FACTORY.deployCMTAT(
+          this.FACTORY.connect(this.attacker).deployCMTAT(
             ethers.encodeBytes32String('test'),
-            admin,
-            this.CMTATArg,
-            { from: attacker }
+            this.admin,
+            this.CMTATArg
           ),
           'AccessControlUnauthorizedAccount',
-          [attacker, CMTAT_DEPLOYER_ROLE]
+          [this.attacker.address, CMTAT_DEPLOYER_ROLE]
         )
       })
       it('testCanDeployCMTATWithFactory', async function () {
         // Act
-        this.logs = await this.FACTORY.deployCMTAT(
+        this.logs = await this.FACTORY.connect(this.admin).deployCMTAT(
           ethers.encodeBytes32String('test'),
-          admin,
+          this.admin,
           this.CMTATArg,
-          {
-            from: admin
-          }
         )
         // Assert
         // Check  Id
-        this.logs.logs[1].args[1].should.be.bignumber.equal(BN(0))
-        const CMTAT_ADDRESS = this.logs.logs[1].args[0];
+        const receipt = await this.logs.wait();
+        const filter = this.FACTORY.filters.CMTAT;
+        let events = await this.FACTORY.queryFilter(filter, -1);
+        let args = events[0].args;
+        expect(args[1]).to.equal(0)
+        const CMTAT_ADDRESS = args[0];
+        const MyContract = await ethers.getContractFactory("CMTAT_PROXY");
+        const CMTAT_PROXY = MyContract.attach(
+          CMTAT_ADDRESS
+        )
         // Check address with ID
-        (await this.FACTORY.CMTATProxyAddress(0)).should.equal(CMTAT_ADDRESS)
-        const CMTAT_TRUFFLE = await CMTAT.at(CMTAT_ADDRESS)
-        await CMTAT_TRUFFLE.mint(admin, 100, {
-          from: admin
-        })
+        expect((await this.FACTORY.CMTATProxyAddress(0))).to.equal(CMTAT_ADDRESS)
+        await CMTAT_PROXY.connect(this.admin).mint(this.admin, 100)
         // Second deployment
-        this.logs = await this.FACTORY.deployCMTAT(
+        this.logs = await this.FACTORY.connect(this.admin).deployCMTAT(
           ethers.encodeBytes32String('test2'),
-          admin,
+          this.admin,
           this.CMTATArg,
-          {
-            from: admin
-          }
         )
         // Check Id increment
-        this.logs.logs[1].args[1].should.be.bignumber.equal(BN(1))
+        events = await this.FACTORY.queryFilter(filter, -1);
+        args = events[0].args;
+        expect(args[1]).to.equal(1)
         // Revert
-        await expectRevertCustomError(this.FACTORY.deployCMTAT(
+        await expectRevertCustomError(this.FACTORY.connect(this.admin).deployCMTAT(
           ethers.encodeBytes32String('test'),
-          admin,
+          this.admin,
           this.CMTATArg,
-          {
-            from: admin
-          }
         ),
         'CMTAT_Factory_SaltAlreadyUsed',
         [])
       })
       it('testCannotDeployCMTATWithFactoryWithSaltAlreadyUsed', async function () {
         // Arrange
-        await this.FACTORY.deployCMTAT(
+        await this.FACTORY.connect(this.admin).deployCMTAT(
           ethers.encodeBytes32String('test'),
-          admin,
-          this.CMTATArg,
-          {
-            from: admin
-          }
+          this.admin,
+          this.CMTATArg
         )
        
         // Act with Revert
-        await expectRevertCustomError(this.FACTORY.deployCMTAT(
+        await expectRevertCustomError(this.FACTORY.connect(this.admin).deployCMTAT(
           ethers.encodeBytes32String('test'),
-          admin,
-          this.CMTATArg,
-          {
-            from: admin
-          }
+          this.admin,
+          this.CMTATArg
         ),
         'CMTAT_Factory_SaltAlreadyUsed',
         [])

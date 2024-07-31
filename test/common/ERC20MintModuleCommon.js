@@ -103,8 +103,8 @@ function ERC20MintModuleCommon() {
     const TOKEN_SUPPLY_BY_HOLDERS = [10n, 100n, 1000n];
 
     /**
-    The admin is assigned the MINTER role when the contract is deployed
-     */
+    * The admin is assigned the MINTER role when the contract is deployed
+    */
     it("testCanBeMintedBatchByAdmin", async function () {
       const TOKEN_HOLDER = [this.admin, this.address1, this.address2];
       // Arrange - Assert

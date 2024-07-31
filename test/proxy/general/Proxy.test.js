@@ -1,25 +1,28 @@
-const { should } = require('chai').should()
 const {
   expectRevertCustomError
 } = require('../../../openzeppelin-contracts-upgradeable/test/helpers/customError.js')
-const CMTAT = artifacts.require('CMTAT_PROXY')
 const { DEFAULT_ADMIN_ROLE, PAUSER_ROLE } = require('../../utils')
 const { ZERO_ADDRESS } = require('../../utils')
 const DECIMAL = 0
-const { deployCMTATProxy, DEPLOYMENT_FLAG } = require('../../deploymentUtils')
+const { deployCMTATProxy, DEPLOYMENT_FLAG,
+  fixture,
+  loadFixture } = require('../../deploymentUtils')
 const { upgrades } = require('hardhat')
-contract(
+describe(
   'Proxy - Security Test',
   function () {
     beforeEach(async function () {
+      Object.assign(this, await loadFixture(fixture));
       this.flag = 5
       // Contract to deploy: CMTAT
-      this.CMTAT_PROXY = await deployCMTATProxy(this._, this.admin, this.deployerAddress)
+      this.CMTAT_PROXY = await deployCMTATProxy(this._.address, this.admin.address, this.deployerAddress.address)
       const implementationContractAddress =
         await upgrades.erc1967.getImplementationAddress(
-          this.CMTAT_PROXY.address
+          this.CMTAT_PROXY.target
         )
-      this.implementationContract = await CMTAT.at(
+
+      const MyContract = await ethers.getContractFactory("CMTAT_PROXY");
+      this.implementationContract = MyContract.attach(
         implementationContractAddress
       )
     })
@@ -29,7 +32,7 @@ contract(
         // Act
         await expectRevertCustomError(
           this.implementationContract.connect(this.attacker).initialize(
-            attacker,
+            this.attacker,
             ZERO_ADDRESS,
             'CMTA Token',
             'CMTAT',
@@ -47,7 +50,7 @@ contract(
         await expectRevertCustomError(
           this.implementationContract.connect(this.attacker).pause(),
           'AccessControlUnauthorizedAccount',
-          [attacker, PAUSER_ROLE]
+          [this.attacker.address, PAUSER_ROLE]
         )
       })
     })

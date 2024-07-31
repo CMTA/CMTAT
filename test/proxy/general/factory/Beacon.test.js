@@ -1,36 +1,36 @@
-const { should } = require('chai').should()
+const { expect } = require('chai');
 const {
   expectRevertCustomError
 } = require('../../../../openzeppelin-contracts-upgradeable/test/helpers/customError.js')
-const CMTAT = artifacts.require('CMTAT_PROXY')
 const { CMTAT_DEPLOYER_ROLE } = require('../../../utils.js')
 const { ZERO_ADDRESS } = require('../../../utils.js')
 const {
   DEPLOYMENT_FLAG,
-  deployCMTATProxyImplementation
+  deployCMTATProxyImplementation,
+  fixture, loadFixture 
 } = require('../../../deploymentUtils.js')
 const DEPLOYMENT_DECIMAL = 0
-const { BN, expectEvent } = require('@openzeppelin/test-helpers')
 describe(
   'Deploy Beacon with Factory',
   function () {
     beforeEach(async function () {
+      Object.assign(this, await loadFixture(fixture));
       this.CMTAT_PROXY_IMPL = await deployCMTATProxyImplementation(
-        _,
-        deployerAddress
+        this._.address,
+        this.deployerAddress.address
       )
       this.FACTORY = await  ethers.deployContract("CMTAT_BEACON_FACTORY",[
-        this.CMTAT_PROXY_IMPL.address,
-        admin,
-        admin
+        this.CMTAT_PROXY_IMPL.target,
+        this.admin,
+        this.admin
       ])
     })
 
     context('FactoryDeployment', function () {
       it('testCanReturnTheRightImplementation', async function () {
         // Act + Assert
-        (await this.FACTORY.implementation()).should.equal(
-          this.CMTAT_PROXY_IMPL.address
+        expect(await this.FACTORY.implementation()).to.equal(
+          this.CMTAT_PROXY_IMPL.target
         )
       })
     })
@@ -39,8 +39,8 @@ describe(
       it('testCannotBeDeployedByAttacker', async function () {
         // Act
         await expectRevertCustomError(
-          this.FACTORY.deployCMTAT(
-            admin,
+          this.FACTORY.connect(this.attacker).deployCMTAT(
+            this.admin,
             ZERO_ADDRESS,
             'CMTA Token',
             'CMTAT',
@@ -49,17 +49,16 @@ describe(
             'https://cmta.ch',
             ZERO_ADDRESS,
             'CMTAT_info',
-            DEPLOYMENT_FLAG,
-            { from: attacker }
+            DEPLOYMENT_FLAG
           ),
           'AccessControlUnauthorizedAccount',
-          [attacker, CMTAT_DEPLOYER_ROLE]
+          [this.attacker.address, CMTAT_DEPLOYER_ROLE]
         )
       })
       it('testCanDeployCMTATWithFactory', async function () {
         // Act
-        this.logs = await this.FACTORY.deployCMTAT(
-          admin,
+        this.logs = await this.FACTORY.connect(this.admin).deployCMTAT(
+          this.admin,
           ZERO_ADDRESS,
           'CMTA Token',
           'CMTAT',
@@ -68,25 +67,29 @@ describe(
           'https://cmta.ch',
           ZERO_ADDRESS,
           'CMTAT_info',
-          DEPLOYMENT_FLAG,
-          {
-            from: admin
-          }
+          DEPLOYMENT_FLAG
         )
 
+        // https://github.com/ethers-io/ethers.js/discussions/4484#discussioncomment-9890653
+        const receipt = await this.logs.wait();
+        const filter = this.FACTORY.filters.CMTAT;
+        let events = await this.FACTORY.queryFilter(filter, -1);
+        let args = events[0].args;
         // Check Id increment
-        this.logs.logs[1].args[1].should.be.bignumber.equal(BN(0))
+        expect(args[1]).to.equal(0)
         // Assert
-        const CMTAT_ADDRESS = this.logs.logs[1].args[0];
+        const CMTAT_ADDRESS = args[0];
         // Check address with ID
-        (await this.FACTORY.getAddress(0)).should.equal(CMTAT_ADDRESS)
-        const CMTAT_TRUFFLE = await CMTAT.at(CMTAT_ADDRESS)
+        expect(await this.FACTORY.getCMTATAddress(0)).to.equal(CMTAT_ADDRESS)
+        const MyContract = await ethers.getContractFactory("CMTAT_PROXY");
+        const CMTAT_PROXY = MyContract.attach(
+          CMTAT_ADDRESS
+        )
         // Act + Assert
-        await CMTAT_TRUFFLE.mint(admin, 100, {
-          from: admin
-        })
-        this.logs = await this.FACTORY.deployCMTAT(
-          admin,
+        await CMTAT_PROXY.connect(this.admin).mint(this.admin, 100)
+        // Deploy second contract
+        this.logs = await this.FACTORY.connect(this.admin).deployCMTAT(
+          this.admin,
           ZERO_ADDRESS,
           'CMTA Token',
           'CMTAT',
@@ -95,13 +98,12 @@ describe(
           'https://cmta.ch',
           ZERO_ADDRESS,
           'CMTAT_info',
-          DEPLOYMENT_FLAG,
-          {
-            from: admin
-          }
+          DEPLOYMENT_FLAG
         )
         // Check Id increment
-        this.logs.logs[1].args[1].should.be.bignumber.equal(BN(1))
+        events = await this.FACTORY.queryFilter(filter, -1);
+        args = events[0].args;
+        expect(args[1]).to.equal(1)
       })
     })
   }

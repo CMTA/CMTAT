@@ -88,7 +88,7 @@ contract CMTAT_BEACON_FACTORY is AccessControl {
     * @notice get CMTAT proxy address
     *
     */
-    function getAddress(uint256 cmtatID_) external view returns (address) {
+    function getCMTATAddress(uint256 cmtatID_) external view returns (address) {
         return cmtats[cmtatID_];
     }
 

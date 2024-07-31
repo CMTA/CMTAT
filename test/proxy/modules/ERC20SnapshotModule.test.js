@@ -1,4 +1,4 @@
-const { deployCMTATProxyWithSnapshot, fixture, loadFixture } = require('../../deploymentUtils')
+const { deployCMTATProxy, fixture, loadFixture } = require('../../deploymentUtils')
 const ERC20SnapshotModuleCommonRescheduling = require('../../common/ERC20SnapshotModuleCommon/ERC20SnapshotModuleCommonRescheduling')
 const ERC20SnapshotModuleCommonScheduling = require('../../common/ERC20SnapshotModuleCommon/ERC20SnapshotModuleCommonScheduling')
 const ERC20SnapshotModuleCommonUnschedule = require('../../common/ERC20SnapshotModuleCommon/ERC20SnapshotModuleCommonUnschedule')
@@ -12,10 +12,10 @@ describe(
   function () {
     beforeEach(async function () {
       Object.assign(this, await loadFixture(fixture));
-      this.cmtat = await deployCMTATProxyWithSnapshot(
-        this._,
-        this.admin,
-        this.deployerAddress
+      this.cmtat = await deployCMTATProxy(
+        this._.address,
+        this.admin.address,
+        this.deployerAddress.address
       )
     })
     ERC20SnapshotModuleMultiplePlannedTest()

@@ -1,4 +1,4 @@
-const MetaTxModuleCommon = require('../../common/MetaTxModuleCommon.js')
+const MetaTxModuleCommon = require('../../common/MetaTxModuleCommonOld')
 const { deployCMTATProxyWithParameter, fixture, loadFixture } = require('../../deploymentUtils.js')
 const { ZERO_ADDRESS, ERC2771ForwarderDomain } = require('../../utils.js')
 
@@ -13,7 +13,7 @@ describe(
       await this.forwarder.initialize(ERC2771ForwarderDomain)
       this.cmtat = await deployCMTATProxyWithParameter(
         this.deployerAddress,
-        this.forwarder,
+        this.forwarder.address,
         this.admin,
         ZERO_ADDRESS,
         'CMTA Token',

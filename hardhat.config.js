@@ -8,7 +8,7 @@ require("hardhat-contract-sizer");
 require("@nomicfoundation/hardhat-chai-matchers")
 module.exports = {
   solidity: {
-    version: '0.8.24',
+    version: '0.8.26',
     settings: {
       optimizer: {
         enabled: true,

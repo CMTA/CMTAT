@@ -1,0 +1,145 @@
+const helpers = require('@nomicfoundation/hardhat-network-helpers');
+const {
+  getDomain,
+  domainType,
+  ForwardRequest,
+} = require('../../openzeppelin-contracts-upgradeable/test/helpers/eip712')
+/*const {
+  time
+} = require('../../openzeppelin-contracts-upgradeable/test/helpers/time')*/
+const { expect } = require('chai')
+const { waffle} = require("hardhat");
+function MetaTxModuleCommon (owner, address1) {
+  context('Transferring without paying gas', function () {
+    const AMOUNT_TO_TRANSFER = 11n
+    const ADDRESS1_INITIAL_BALANCE = 31n
+    const ADDRESS2_INITIAL_BALANCE = 32n
+
+    beforeEach(async function () {
+      //this.aliceWallet = ethers.Wallet.createRandom()
+      //this.address1 = this.aliceWallet.address
+
+      this.domain = await getDomain(this.forwarder)
+      /*ForwardRequest = {
+        from: 'address',
+        to: 'address',
+        value: 'uint256',
+        gas: 'uint256',
+        nonce: 'uint256',
+        deadline: 'uint48',
+        data: 'bytes',
+      };*/
+      //this.types = { ForwardRequest };
+      //this.types = { ForwardRequest };
+      /*this.types = {
+        EIP712Domain: domainType(this.domain),
+        ForwardRequest: [
+          { name: 'from', type: 'address' },
+          { name: 'to', type: 'address' },
+          { name: 'value', type: 'uint256' },
+          { name: 'gas', type: 'uint256' },
+          { name: 'nonce', type: 'uint256' },
+          { name: 'deadline', type: 'uint48' },
+          { name: 'data', type: 'bytes' }
+        ]
+      }*/
+      this.types = {
+        ForwardRequest: [
+          { name: 'from', type: 'address' },
+          { name: 'to', type: 'address' },
+          { name: 'value', type: 'uint256' },
+          { name: 'gas', type: 'uint256' },
+          { name: 'nonce', type: 'uint256' },
+          { name: 'deadline', type: 'uint48' },
+          { name: 'data', type: 'bytes' }
+        ]
+      }
+      await this.cmtat.connect(this.admin).mint(this.address1, ADDRESS1_INITIAL_BALANCE)
+      await this.cmtat.connect(this.admin).mint(this.address2, ADDRESS2_INITIAL_BALANCE);
+      expect(await this.cmtat.balanceOf(this.address1)).to.equal(
+        ADDRESS1_INITIAL_BALANCE
+      )
+      //this.timestamp = await time.latest()
+      /*const data = this.cmtat.ADDRESS2_INITIAL_BALANCE
+        .transfer(address1, AMOUNT_TO_TRANSFER)
+        .encodeABI()*/
+      this.data = this.cmtat.transfer.populateTransaction(this.address2, AMOUNT_TO_TRANSFER).data
+      this.request = {
+        from: this.address1.address,
+        to: this.cmtat.address,
+        value: 0n,
+        gas: 100000n,
+        data:this.data,
+        deadline: this.timestamp + 180,
+        nonce: (await this.forwarder.nonces(this.address1)),
+        ...{}// 3 minute
+      }
+      /*this.requestData = {
+        ...this.request,
+        nonce: (await this.forwarder.nonces(this.address1)).toString()
+      }*/
+
+      /*this.forgeData = (request) => ({
+        types: this.types,
+        domain: this.domain,
+        primaryType: 'ForwardRequest',
+        message: { ...this.requestData, ...request }
+        
+      })*/
+      //const [sender, refundReceiver, another, ...accounts] = await ethers.getSigners();
+     
+
+      /*this.sign = (privateKey, request) =>
+        ethSigUtil.signTypedMessage(privateKey, {
+          data: this.forgeData(request)
+        })*/
+
+      //this.requestData.signature = this.sign(this.aliceWallet.getPrivateKey())
+      this.forgeRequest = async (override = {}, signer = this.address1) => {
+        const req = {
+          from: await signer.getAddress(),
+          to: this.cmtat.address,
+          value: 0n,
+          data:  this.data,
+          gas: 100000n,
+          deadline: (await helpers.time.latest()) + 60,
+          nonce: await this.forwarder.nonces(this.address1),
+          ...override,
+        };
+        //req.signature = await signer.signTypedData(this.domain, this.types, req);
+        return req;
+      };
+    })
+
+    it('returns true without altering the nonce', async function () {
+      /*expect(
+        await this.forwarder.nonces(this.requestData.from)
+      ).to.equal(web3.utils.toBN(this.requestData.nonce))
+      expect(await this.forwarder.verify(this.requestData)).to.be.equal(true)
+      expect(
+        await this.forwarder.nonces(this.requestData.from)
+      ).to.equal(web3.utils.toBN(this.requestData.nonce))*/
+    })
+
+    it('can send a transfer transaction without paying gas', async function () {
+      // TODO : code for the new version of the library, it doesn't compile
+      // const sign = ethSigUtil.signTypedData( {privateKey  : this.wallet.getPrivateKey(), data: { ...this.data, message: req }, version : 'V4'});
+      const provider =  await ethers.getDefaultProvider();;
+      const balanceEtherBefore = await  provider.getBalance(this.address1);
+      expect(await this.cmtat.balanceOf(this.address1)).to.equal(
+        ADDRESS1_INITIAL_BALANCE
+      )
+      const request = await this.forgeRequest();
+      //await this.forwarder.execute(request);
+      /*expect(await this.cmtat.balanceOf(this.address1)).to.equal(
+        ADDRESS1_INITIAL_BALANCE - AMOUNT_TO_TRANSFER
+      );
+      expect(await this.cmtat.balanceOf(this.address2)).to.equal(
+        ADDRESS2_INITIAL_BALANCE + AMOUNT_TO_TRANSFER
+      )
+      const balanceAfter = await  ethers.getBalance(this.address1)
+      expect(balanceEtherBefore).to.equal(balanceAfter)*/
+    })
+  })
+}
+module.exports = MetaTxModuleCommon
