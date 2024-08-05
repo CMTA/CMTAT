@@ -7,6 +7,7 @@ import "../../../../openzeppelin-contracts-upgradeable/contracts/token/ERC20/ERC
 import "../../../libraries/Errors.sol";
 
 abstract contract ERC20BaseModule is ERC20Upgradeable {
+    
     /* Events */
     /**
     * @notice Emitted when the specified `spender` spends the specified `value` tokens owned by the specified `owner` reducing the corresponding allowance.

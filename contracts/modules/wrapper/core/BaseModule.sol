@@ -5,8 +5,7 @@ pragma solidity ^0.8.20;
 // required OZ imports here
 import "../../security/AuthorizationModule.sol";
 import "../../../libraries/Errors.sol";
-import "../../../interfaces/draft-IERC1643.sol";
-abstract contract BaseModule is IERC1643, AuthorizationModule {
+abstract contract BaseModule is AuthorizationModule {
     /** 
     * @notice 
     * Get the current version of the smart contract
@@ -27,9 +26,6 @@ abstract contract BaseModule is IERC1643, AuthorizationModule {
     string public information;
     // additional attribute to store information as an uint256
     uint256 public flag;
-    IERC1643 DocumentEngine;
-
-
 
     /* Initializers */
     /**
@@ -79,20 +75,6 @@ abstract contract BaseModule is IERC1643, AuthorizationModule {
     ) public onlyRole(DEFAULT_ADMIN_ROLE) {
         information = information_;
         emit Information(information_, information_);
-    }
-
-    function getDocument(bytes32 _name) public view returns (string memory, bytes32, uint256){
-        if(address(DocumentEngine) != address(0)){
-            return DocumentEngine.getDocument( _name);
-        } else{
-            return ("",0x0, 0);
-        }
-    }
-
-    function getAllDocuments() public view returns (bytes32[] memory documents){
-        if(address(DocumentEngine) != address(0)){
-            documents =  DocumentEngine.getAllDocuments();
-        }
     }
 
     uint256[50] private __gap;

@@ -20,8 +20,8 @@ import "./wrapper/extensions/ERC20SnapshotModule.sol";
 
 import "./wrapper/controllers/ValidationModule.sol";
 import "./wrapper/extensions/MetaTxModule.sol";
-import "./wrapper/extensions/DebtModule/DebtBaseModule.sol";
-import "./wrapper/extensions/DebtModule/CreditEventsModule.sol";
+import "./wrapper/extensions/DebtModule.sol";
+import "./wrapper/extensions/DocumentModule.sol";
 import "./security/AuthorizationModule.sol";
 
 import "../libraries/Errors.sol";
@@ -29,15 +29,19 @@ import "../libraries/Errors.sol";
 abstract contract CMTAT_BASE is
     Initializable,
     ContextUpgradeable,
+    // Core
     BaseModule,
     PauseModule,
     ERC20MintModule,
     ERC20BurnModule,
     EnforcementModule,
     ValidationModule,
-    MetaTxModule,
     ERC20BaseModule,
-    ERC20SnapshotModule
+    // Extension
+    MetaTxModule,
+    ERC20SnapshotModule,
+    DebtModule,
+    DocumentModule
 {
     /**
      * @notice
@@ -64,7 +68,7 @@ abstract contract CMTAT_BASE is
         IRuleEngine ruleEngine_,
         string memory information_, 
         uint256 flag_
-    ) public initializer {
+    ) public virtual initializer {
         __CMTAT_init(
             admin,
             authorizationEngineIrrevocable, 

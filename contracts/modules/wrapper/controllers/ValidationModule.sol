@@ -41,7 +41,7 @@ abstract contract ValidationModule is
         emit RuleEngine(ruleEngine_);
     }
 
-        /**
+    /**
      * @dev ERC1404 returns the human readable explaination corresponding to the error code returned by detectTransferRestriction
      * @param restrictionCode The error code returned by detectTransferRestriction
      * @return message The human readable explaination corresponding to the error code returned by detectTransferRestriction

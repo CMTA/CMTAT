@@ -17,7 +17,6 @@ describe(
   Functions used: balanceOf, totalSupply, mint
   */
     it('testKeepStorageForTokens', async function () {
-      /// // ADAPT TRUFFLE TEST TO HARDHAT
       /* Factory & Artefact */
       const ETHERS_CMTAT_PROXY_FACTORY = await ethers.getContractFactory(
         'CMTAT_PROXY'

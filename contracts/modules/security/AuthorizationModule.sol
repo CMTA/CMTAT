@@ -27,9 +27,8 @@ abstract contract AuthorizationModule is AccessControlUpgradeable {
         _grantRole(DEFAULT_ADMIN_ROLE, admin);
         if (address(authorizationEngine) != address (0)) {
             authorizationEngine = authorizationEngine_;
+            emit AuthorizationEngine(authorizationEngine_);
         }
-        
-
     }
 
     /*
