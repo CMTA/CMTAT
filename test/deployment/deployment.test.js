@@ -13,7 +13,6 @@ describe('CMTAT - Deployment', function () {
   })
 
   it('testCannotDeployProxyWithAdminSetToAddressZero', async function () {
-    this.flag = 5
     const DECIMAL = 0
     // Act + Assert
     await expectRevertCustomError(
@@ -21,22 +20,19 @@ describe('CMTAT - Deployment', function () {
         this.deployerAddress.address,
         this._.address,
         ZERO_ADDRESS,
-        ZERO_ADDRESS,
         'CMTA Token',
         'CMTAT',
         DECIMAL,
         'CMTAT_ISIN',
         'https://cmta.ch',
-        ZERO_ADDRESS,
         'CMTAT_info',
-        this.flag
+        [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]
       ),
       'CMTAT_AuthorizationModule_AddressZeroNotAllowed',
       []
     )
   })
   it('testCannotDeployStandaloneWithAdminSetToAddressZero', async function () {
-    this.flag = 5
     const DECIMAL = 0
     // Act + Assert
     await expectRevertCustomError(
@@ -44,15 +40,13 @@ describe('CMTAT - Deployment', function () {
         this.deployerAddress.address,
         this._.address,
         ZERO_ADDRESS,
-        ZERO_ADDRESS,
         'CMTA Token',
         'CMTAT',
         DECIMAL,
         'CMTAT_ISIN',
         'https://cmta.ch',
-        ZERO_ADDRESS,
         'CMTAT_info',
-        this.flag
+        [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]
       ),
       'CMTAT_AuthorizationModule_AddressZeroNotAllowed',
       []

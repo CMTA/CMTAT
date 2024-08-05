@@ -1,24 +1,22 @@
 const { loadFixture } = require('@nomicfoundation/hardhat-network-helpers');
 const { ZERO_ADDRESS } = require('./utils')
 const { ethers, upgrades } = require('hardhat')
-const DEPLOYMENT_FLAG = 5n
 const DEPLOYMENT_DECIMAL = 0n
 async function fixture() {
   const [_, admin, address1, address2, address3, deployerAddress, fakeRuleEngine, ruleEngine, attacker] = await ethers.getSigners()
   return {_, admin, address1, address2, address3, deployerAddress, fakeRuleEngine, ruleEngine, attacker };
 }
 async function deployCMTATStandalone (_, admin, deployerAddress) {
+  
   const cmtat = await ethers.deployContract("CMTAT_STANDALONE", [ _,
     admin,
-    ZERO_ADDRESS,
     'CMTA Token',
     'CMTAT',
     DEPLOYMENT_DECIMAL,
     'CMTAT_ISIN',
     'https://cmta.ch',
-    ZERO_ADDRESS,
     'CMTAT_info',
-    DEPLOYMENT_FLAG]);
+    [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]]);
   return cmtat
 }
 
@@ -34,28 +32,24 @@ async function deployCMTATStandaloneWithParameter (
   deployerAddress,
   forwarderIrrevocable,
   admin,
-  authorizationEngine,
   nameIrrevocable,
   symbolIrrevocable,
   decimalsIrrevocable,
   tokenId_,
   terms_,
-  ruleEngine_,
   information_,
-  flag_
+  engines
 ) {
   const cmtat = await ethers.deployContract('CMTAT_STANDALONE',[
     forwarderIrrevocable,
     admin,
-    authorizationEngine,
     nameIrrevocable,
     symbolIrrevocable,
     decimalsIrrevocable,
     tokenId_,
     terms_,
-    ruleEngine_,
     information_,
-    flag_,
+    engines
   ])
   return cmtat
 }
@@ -69,15 +63,13 @@ async function deployCMTATProxy (_, admin, deployerAddress) {
     ETHERS_CMTAT_PROXY_FACTORY,
     [
       admin,
-      ZERO_ADDRESS,
       'CMTA Token',
       'CMTAT',
       DEPLOYMENT_DECIMAL,
       'CMTAT_ISIN',
       'https://cmta.ch',
-      ZERO_ADDRESS,
       'CMTAT_info',
-      DEPLOYMENT_FLAG
+      [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]
     ],
     {
       initializer: 'initialize',
@@ -92,15 +84,13 @@ async function deployCMTATProxyWithParameter (
   deployerAddress,
   forwarderIrrevocable,
   admin,
-  authorizationEngine,
   nameIrrevocable,
   symbolIrrevocable,
   decimalsIrrevocable,
   tokenId_,
   terms_,
-  ruleEngine_,
   information_,
-  flag_
+  engines
 ) {
   // Ref: https://forum.openzeppelin.com/t/upgrades-hardhat-truffle5/30883/3
   const ETHERS_CMTAT_PROXY_FACTORY = await ethers.getContractFactory(
@@ -110,15 +100,13 @@ async function deployCMTATProxyWithParameter (
     ETHERS_CMTAT_PROXY_FACTORY,
     [
       admin,
-      authorizationEngine,
       nameIrrevocable,
       symbolIrrevocable,
       decimalsIrrevocable,
       tokenId_,
       terms_,
-      ruleEngine_,
       information_,
-      flag_
+      engines
     ],
     {
       initializer: 'initialize',
@@ -135,7 +123,6 @@ module.exports = {
   deployCMTATProxy,
   deployCMTATProxyWithParameter,
   deployCMTATStandaloneWithParameter,
-  DEPLOYMENT_FLAG,
   DEPLOYMENT_DECIMAL,
   deployCMTATProxyImplementation,
   fixture,

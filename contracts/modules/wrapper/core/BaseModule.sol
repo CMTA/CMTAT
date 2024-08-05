@@ -6,6 +6,35 @@ pragma solidity ^0.8.20;
 import "../../security/AuthorizationModule.sol";
 import "../../../libraries/Errors.sol";
 abstract contract BaseModule is AuthorizationModule {
+    struct BaseModuleStorage {
+            string _tokenId;
+            string _terms;
+            string _information;
+    }
+
+    function tokenId() public view virtual returns (string memory) {
+        BaseModuleStorage storage $ = _getBaseModuleStorage();
+        return $._tokenId;
+    }
+
+    function terms() public view virtual returns (string memory) {
+        BaseModuleStorage storage $ = _getBaseModuleStorage();
+        return $._terms;
+    }
+    function information() public view virtual returns (string memory) {
+        BaseModuleStorage storage $ = _getBaseModuleStorage();
+        return $._information;
+    }
+
+// keccak256(abi.encode(uint256(keccak256("CMTAT.storage.BaseModule")) - 1)) & ~bytes32(uint256(0xff))
+    bytes32 private constant BaseModuleStorageLocation = 0xa98e72f7f70574363edb12c42a03ac1feb8cc898a6e0a30f6eefbab7093e0d00;
+
+    function _getBaseModuleStorage() private pure returns (BaseModuleStorage storage $) {
+        assembly {
+            $.slot := BaseModuleStorageLocation
+        }
+    }
+
     /** 
     * @notice 
     * Get the current version of the smart contract
@@ -21,11 +50,7 @@ abstract contract BaseModule is AuthorizationModule {
     event Flag(uint256 indexed newFlag);
 
     /* Variables */
-    string public tokenId;
-    string public terms;
-    string public information;
-    // additional attribute to store information as an uint256
-    uint256 public flag;
+
 
     /* Initializers */
     /**
@@ -37,13 +62,12 @@ abstract contract BaseModule is AuthorizationModule {
     function __Base_init_unchained(
         string memory tokenId_,
         string memory terms_,
-        string memory information_,
-        uint256 flag_
+        string memory information_
     ) internal onlyInitializing {
-        tokenId = tokenId_;
-        terms = terms_;
-        information = information_;
-        flag = flag_;
+        BaseModuleStorage storage $ = _getBaseModuleStorage();
+        $._tokenId = tokenId_;
+        $._terms = terms_;
+        $._information = information_;
     }
 
     /* Methods */
@@ -53,7 +77,8 @@ abstract contract BaseModule is AuthorizationModule {
     function setTokenId(
         string calldata tokenId_
     ) public onlyRole(DEFAULT_ADMIN_ROLE) {
-        tokenId = tokenId_;
+        BaseModuleStorage storage $ = _getBaseModuleStorage();
+        $._tokenId = tokenId_;
         emit TokenId(tokenId_, tokenId_);
     }
 
@@ -63,7 +88,8 @@ abstract contract BaseModule is AuthorizationModule {
     function setTerms(
         string calldata terms_
     ) public onlyRole(DEFAULT_ADMIN_ROLE) {
-        terms = terms_;
+        BaseModuleStorage storage $ = _getBaseModuleStorage();
+        $._terms  = terms_;
         emit Term(terms_, terms_);
     }
 
@@ -73,9 +99,8 @@ abstract contract BaseModule is AuthorizationModule {
     function setInformation(
         string calldata information_
     ) public onlyRole(DEFAULT_ADMIN_ROLE) {
-        information = information_;
+        BaseModuleStorage storage $ = _getBaseModuleStorage();
+        $._information  = information_;
         emit Information(information_, information_);
     }
-
-    uint256[50] private __gap;
 }

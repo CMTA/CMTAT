@@ -10,22 +10,19 @@ describe(
       this.ADDRESS2_INITIAL_BALANCE = 18n
       this.ADDRESS3_INITIAL_BALANCE = 19n
       Object.assign(this, await loadFixture(fixture));
-      this.flag = 5
       const DECIMAL = 0
       this.ruleEngineMock = await ethers.deployContract('RuleEngineMock')
       this.cmtat = await deployCMTATProxyWithParameter(
         this.deployerAddress.address,
         this._.address,
         this.admin.address,
-        ZERO_ADDRESS,
         'CMTA Token',
         'CMTAT',
         DECIMAL,
         'CMTAT_ISIN',
         'https://cmta.ch',
-        this.ruleEngineMock.target,
         'CMTAT_info',
-        this.flag
+        [this.ruleEngineMock.target, ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]
       )
       await this.cmtat.connect(this.admin).mint(this.address1, this.ADDRESS1_INITIAL_BALANCE)
       await this.cmtat.connect(this.admin).mint(this.address2, this.ADDRESS2_INITIAL_BALANCE)

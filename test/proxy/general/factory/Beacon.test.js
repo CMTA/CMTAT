@@ -41,15 +41,13 @@ describe(
         await expectRevertCustomError(
           this.FACTORY.connect(this.attacker).deployCMTAT(
             this.admin,
-            ZERO_ADDRESS,
             'CMTA Token',
             'CMTAT',
             DEPLOYMENT_DECIMAL,
             'CMTAT_ISIN',
             'https://cmta.ch',
-            ZERO_ADDRESS,
             'CMTAT_info',
-            DEPLOYMENT_FLAG
+            [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]
           ),
           'AccessControlUnauthorizedAccount',
           [this.attacker.address, CMTAT_DEPLOYER_ROLE]
@@ -59,15 +57,13 @@ describe(
         // Act
         this.logs = await this.FACTORY.connect(this.admin).deployCMTAT(
           this.admin,
-          ZERO_ADDRESS,
           'CMTA Token',
           'CMTAT',
           DEPLOYMENT_DECIMAL,
           'CMTAT_ISIN',
           'https://cmta.ch',
-          ZERO_ADDRESS,
           'CMTAT_info',
-          DEPLOYMENT_FLAG
+          [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]
         )
 
         // https://github.com/ethers-io/ethers.js/discussions/4484#discussioncomment-9890653
@@ -90,15 +86,13 @@ describe(
         // Deploy second contract
         this.logs = await this.FACTORY.connect(this.admin).deployCMTAT(
           this.admin,
-          ZERO_ADDRESS,
           'CMTA Token',
           'CMTAT',
           DEPLOYMENT_DECIMAL,
           'CMTAT_ISIN',
           'https://cmta.ch',
-          ZERO_ADDRESS,
           'CMTAT_info',
-          DEPLOYMENT_FLAG
+          [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]
         )
         // Check Id increment
         events = await this.FACTORY.queryFilter(filter, -1);

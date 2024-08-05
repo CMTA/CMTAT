@@ -24,15 +24,13 @@ describe("Deploy TP with Factory", function () {
 
     this.CMTATArg = [
       this.admin,
-      ZERO_ADDRESS,
       "CMTA Token",
       "CMTAT",
       DEPLOYMENT_DECIMAL,
       "CMTAT_ISIN",
       "https://cmta.ch",
-      ZERO_ADDRESS,
       "CMTAT_info",
-      DEPLOYMENT_FLAG,
+      [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]
     ];
   });
 

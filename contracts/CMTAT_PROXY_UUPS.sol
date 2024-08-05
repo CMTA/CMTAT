@@ -3,7 +3,7 @@
 pragma solidity ^0.8.20;
 import "../openzeppelin-contracts-upgradeable/contracts/proxy/utils/UUPSUpgradeable.sol";
 import "./modules/CMTAT_BASE.sol";
-
+import "./interfaces/engine/IEngine.sol";
 contract CMTAT_PROXY_UUPS is CMTAT_BASE, UUPSUpgradeable {
     /**
      * @notice Contract version for the deployment with a proxy
@@ -27,30 +27,25 @@ contract CMTAT_PROXY_UUPS is CMTAT_BASE, UUPSUpgradeable {
      * @param decimalsIrrevocable number of decimals of the token, must be 0 to be compliant with Swiss law as per CMTAT specifications (non-zero decimal number may be needed for other use cases)
      * @param tokenId_ name of the tokenId
      * @param terms_ terms associated with the token
-     * @param ruleEngine_ address of the ruleEngine to apply rules to transfers
      * @param information_ additional information to describe the token
-     * @param flag_ add information under the form of bit(0, 1)
+     * @param engines list of engines
      */
     function initialize(  address admin,
-        IAuthorizationEngine authorizationEngineIrrevocable,
         string memory nameIrrevocable,
         string memory symbolIrrevocable,
         uint8 decimalsIrrevocable,
         string memory tokenId_,
         string memory terms_,
-        IRuleEngine ruleEngine_,
-        string memory information_, 
-        uint256 flag_) public override initializer {
+        string memory information_,        
+        IEngine.Engine memory engines) public override initializer {
         CMTAT_BASE.initialize( admin,
-            authorizationEngineIrrevocable, 
             nameIrrevocable,
             symbolIrrevocable,
             decimalsIrrevocable,
             tokenId_,
             terms_,
-            ruleEngine_,
-            information_,
-            flag_);
+            information_,            
+            engines);
         __UUPSUpgradeable_init_unchained();
     }
 

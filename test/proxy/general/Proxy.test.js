@@ -13,7 +13,6 @@ describe(
   function () {
     beforeEach(async function () {
       Object.assign(this, await loadFixture(fixture));
-      this.flag = 5
       // Contract to deploy: CMTAT
       this.CMTAT_PROXY = await deployCMTATProxy(this._.address, this.admin.address, this.deployerAddress.address)
       const implementationContractAddress =
@@ -33,15 +32,13 @@ describe(
         await expectRevertCustomError(
           this.implementationContract.connect(this.attacker).initialize(
             this.attacker,
-            ZERO_ADDRESS,
             'CMTA Token',
             'CMTAT',
             DECIMAL,
             'CMTAT_ISIN',
             'https://cmta.ch',
-            ZERO_ADDRESS,
             'CMTAT_info',
-            DEPLOYMENT_FLAG
+            [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]
           ),
           'InvalidInitialization',
           []

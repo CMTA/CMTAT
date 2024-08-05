@@ -23,7 +23,7 @@ import "./wrapper/extensions/MetaTxModule.sol";
 import "./wrapper/extensions/DebtModule.sol";
 import "./wrapper/extensions/DocumentModule.sol";
 import "./security/AuthorizationModule.sol";
-
+import "../interfaces/engine/IEngine.sol";
 import "../libraries/Errors.sol";
 
 abstract contract CMTAT_BASE is
@@ -53,33 +53,27 @@ abstract contract CMTAT_BASE is
      * @param decimalsIrrevocable number of decimals of the token, must be 0 to be compliant with Swiss law as per CMTAT specifications (non-zero decimal number may be needed for other use cases)
      * @param tokenId_ name of the tokenId
      * @param terms_ terms associated with the token
-     * @param ruleEngine_ address of the ruleEngine to apply rules to transfers
      * @param information_ additional information to describe the token
-     * @param flag_ add information under the form of bit(0, 1)
      */
     function initialize(
         address admin,
-        IAuthorizationEngine authorizationEngineIrrevocable,
         string memory nameIrrevocable,
         string memory symbolIrrevocable,
         uint8 decimalsIrrevocable,
         string memory tokenId_,
         string memory terms_,
-        IRuleEngine ruleEngine_,
-        string memory information_, 
-        uint256 flag_
+        string memory information_,
+        IEngine.Engine memory engines
     ) public virtual initializer {
         __CMTAT_init(
             admin,
-            authorizationEngineIrrevocable, 
             nameIrrevocable,
             symbolIrrevocable,
             decimalsIrrevocable,
             tokenId_,
             terms_,
-            ruleEngine_,
             information_,
-            flag_
+            engines
         );
     }
 
@@ -88,15 +82,13 @@ abstract contract CMTAT_BASE is
      */
     function __CMTAT_init(
         address admin,
-        IAuthorizationEngine authorizationEngineIrrevocable, 
         string memory nameIrrevocable,
         string memory symbolIrrevocable,
         uint8 decimalsIrrevocable,
         string memory tokenId_,
         string memory terms_,
-        IRuleEngine ruleEngine_,
         string memory information_,
-        uint256 flag_
+        IEngine.Engine memory engines
     ) internal onlyInitializing {
         /* OpenZeppelin library */
         // OZ init_unchained functions are called firstly due to inheritance
@@ -117,11 +109,11 @@ abstract contract CMTAT_BASE is
         __SnapshotModuleBase_init_unchained();
         __ERC20Snapshot_init_unchained();
     
-        __Validation_init_unchained(ruleEngine_);
+        __Validation_init_unchained(engines.ruleEngine);
 
         /* Wrapper */
         // AuthorizationModule_init_unchained is called firstly due to inheritance
-        __AuthorizationModule_init_unchained(admin, authorizationEngineIrrevocable);
+        __AuthorizationModule_init_unchained(admin, engines.authorizationEngine);
         __ERC20BurnModule_init_unchained();
         __ERC20MintModule_init_unchained();
         // EnforcementModule_init_unchained is called before ValidationModule_init_unchained due to inheritance
@@ -136,10 +128,11 @@ abstract contract CMTAT_BASE is
         Add this call in case you add the SnapshotModule
         */
         __ERC20SnasphotModule_init_unchained();
-   
+        __DocumentModule_init_unchained(engines.documentEngine);
+        __DebtModule_init_unchained(engines.debtEngine);
 
         /* Other modules */
-        __Base_init_unchained(tokenId_, terms_, information_, flag_);
+        __Base_init_unchained(tokenId_, terms_, information_);
 
         /* own function */
         __CMTAT_init_unchained();

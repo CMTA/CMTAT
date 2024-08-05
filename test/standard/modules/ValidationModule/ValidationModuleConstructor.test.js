@@ -20,15 +20,14 @@ describe(
         this.deployerAddress.address,
         this._.address,
         this.admin.address,
-        ZERO_ADDRESS,
         'CMTA Token',
         'CMTAT',
         DECIMAL,
         'CMTAT_ISIN',
         'https://cmta.ch',
-        this.ruleEngineMock,
         'CMTAT_info',
-        this.flag
+        [this.ruleEngineMock.target, ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]
+  
       )
       await this.cmtat.connect(this.admin).mint(this.address1, this.ADDRESS1_INITIAL_BALANCE)
       await this.cmtat.connect(this.admin).mint(this.address2, this.ADDRESS2_INITIAL_BALANCE)

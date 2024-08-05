@@ -15,15 +15,13 @@ describe(
         this.deployerAddress.address,
         this.forwarder.target,
         this.admin.address,
-        ZERO_ADDRESS,
         'CMTA Token',
         'CMTAT',
         DECIMAL,
         'CMTAT_ISIN',
         'https://cmta.ch',
-        ZERO_ADDRESS,
         'CMTAT_info',
-        this.flag
+        [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]
       )
     })
 

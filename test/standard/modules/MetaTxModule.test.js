@@ -6,7 +6,6 @@ describe(
   function () {
     beforeEach(async function () {
       Object.assign(this, await loadFixture(fixture));
-      this.flag = 50n
       const DECIMAL = 0n
 
       this.forwarder = await ethers.deployContract("MinimalForwarderMock")
@@ -15,15 +14,13 @@ describe(
         this.deployerAddress.address,
         this.forwarder.target,
         this.admin.address,
-        ZERO_ADDRESS,
         'CMTA Token',
         'CMTAT',
         DECIMAL,
         'CMTAT_ISIN',
         'https://cmta.ch',
-        ZERO_ADDRESS,
         'CMTAT_info',
-        this.flag
+        [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]
       )
     })
 

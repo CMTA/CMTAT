@@ -69,6 +69,4 @@ abstract contract ERC20MintModule is ERC20Upgradeable, ICCIPMintERC20, Authoriza
             emit Mint(accounts[i], values[i]);
         }
     }
-
-    uint256[50] private __gap;
 }
