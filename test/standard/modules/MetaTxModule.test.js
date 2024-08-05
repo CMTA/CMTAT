@@ -1,20 +1,20 @@
-const MetaTxModuleCommon = require('../../common/MetaTxModuleCommonOld')
-const { deployCMTATProxyWithParameter, fixture, loadFixture } = require('../../deploymentUtils.js')
+const MetaTxModuleCommon = require('../../common/MetaTxModuleCommon')
+const { deployCMTATStandaloneWithParameter, fixture, loadFixture } = require('../../deploymentUtils.js')
 const { ZERO_ADDRESS, ERC2771ForwarderDomain } = require('../../utils.js')
-
 describe(
-  'Proxy - MetaTxModule',
+  'Standard - MetaTxModule',
   function () {
     beforeEach(async function () {
       Object.assign(this, await loadFixture(fixture));
-      this.flag = 5
-      const DECIMAL = 0
+      this.flag = 50n
+      const DECIMAL = 0n
+
       this.forwarder = await ethers.deployContract("MinimalForwarderMock")
       await this.forwarder.initialize(ERC2771ForwarderDomain)
-      this.cmtat = await deployCMTATProxyWithParameter(
-        this.deployerAddress,
-        this.forwarder.address,
-        this.admin,
+      this.cmtat = await deployCMTATStandaloneWithParameter(
+        this.deployerAddress.address,
+        this.forwarder.target,
+        this.admin.address,
         ZERO_ADDRESS,
         'CMTA Token',
         'CMTAT',

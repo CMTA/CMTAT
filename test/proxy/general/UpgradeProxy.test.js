@@ -91,20 +91,19 @@ describe(
         )
 
       // Just to be sure that the proxy address remains unchanged
-      expect(ETHER_PROXY_ADDRESS).to.equal(PROXY_ADDRESS_V2_INSTANCE)
+      expect(ETHER_PROXY_ADDRESS).to.equal(PROXY_ADDRESS_V2_INSTANCE);
 
       // The address of the implementation contract has changed
-      expect(IMPLEMENTATION_CONTRACT_ADDRESS_V1).not.to.be.equal(
+      expect(IMPLEMENTATION_CONTRACT_ADDRESS_V1).to.not.equal(
         IMPLEMENTATION_CONTRACT_ADDRESS_V2
-      )(
+      );
         // Just to be sure that the proxy address remains unchanged
 
         // TRUFFLE_CMTAT_PROXY_ADDRESS.to.equal(TRUFFLE_CMTAT_PROXY_ADDRESS_2);
 
-        ({ logs: this.logs1 } = await ETHERS_CMTAT_PROXY_V2.balanceOf(
-          this.address1
-        ))
-      );
+      ({ logs: this.logs1 } = await ETHERS_CMTAT_PROXY_V2.balanceOf(
+        this.address1
+      ))
 
       expect(
         await ETHERS_CMTAT_PROXY_V2.balanceOf(this.address1)
@@ -118,10 +117,10 @@ describe(
         20
       ));
       expect(
-        await TRUFFLE_CMTAT_PROXY_ADDRESS_2.balanceOf(this.address1)
+        await ETHERS_CMTAT_PROXY_V2.balanceOf(this.address1)
       ).to.equal('40');
       expect(
-        await TRUFFLE_CMTAT_PROXY_ADDRESS_2.totalSupply()
+        await ETHERS_CMTAT_PROXY_V2.totalSupply()
       ).to.equal('40')
     })
   }
