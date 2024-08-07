@@ -1,46 +1,43 @@
-const { expectEvent } = require('@openzeppelin/test-helpers')
+const { expect } = require('chai');
 const {
   expectRevertCustomError
 } = require('../../../openzeppelin-contracts-upgradeable/test/helpers/customError.js')
 const { DEFAULT_ADMIN_ROLE } = require('../../utils.js')
-const { should } = require('chai').should()
 
-function AuthorizationModuleSetAuthorizationEngineCommon (
-  admin,
-  address1,
-  authorizationEngine
-) {
+function AuthorizationModuleSetAuthorizationEngineCommon () {
   context('AuthorizationEngineSetTest', function () {
     it('testCanBeSetByAdminIfNotAlreadySet', async function () {
-      // Act
-      this.logs = await this.cmtat.setAuthorizationEngine(
-        this.authorizationEngineMock.address,
-        {
-          from: admin
-        }
-      )
-      // Assert
-      // emits a RuleEngineSet event
-      expectEvent(this.logs, 'AuthorizationEngine', {
-        newAuthorizationEngine: this.authorizationEngineMock.address
-      })
+      if(!this.definedAtDeployment){
+            // Act
+        this.logs = await this.cmtat.connect(this.admin).setAuthorizationEngine(
+          this.authorizationEngineMock.target
+        )
+        // Assert
+        // emits a AuthorizationEngin event
+        await expect(this.logs).to.emit(this.cmtat, 'AuthorizationEngine').withArgs(
+          this.authorizationEngineMock);
+      }
+    
     })
+
+    it("testCanReturnTheRightAddressIfSet", async function (){
+      if(this.definedAtDeployment){
+        expect(this.authorizationEngineMock.target).to.equal(await this.cmtat.authorizationEngine());
+      }
+    });
 
     it('testCannotBeSetByAdminIfAlreadySet', async function () {
       // Arrange
-      await this.cmtat.setAuthorizationEngine(
-        this.authorizationEngineMock.address,
-        {
-          from: admin
-        }
-      )
+      if(!this.definedAtDeployment){
+        await this.cmtat.connect(this.admin).setAuthorizationEngine(
+          this.authorizationEngineMock.target
+        )
+      }
+
       // Act
       await expectRevertCustomError(
-        this.cmtat.setAuthorizationEngine(
-          this.authorizationEngineMock.address,
-          {
-            from: admin
-          }
+        this.cmtat.connect(this.admin).setAuthorizationEngine(
+          this.authorizationEngineMock.target
         ),
         'CMTAT_AuthorizationModule_AuthorizationEngineAlreadySet',
         []
@@ -50,30 +47,30 @@ function AuthorizationModuleSetAuthorizationEngineCommon (
     it('testCannotNonAdminSetAuthorizationEngine', async function () {
       // Act
       await expectRevertCustomError(
-        this.cmtat.setAuthorizationEngine(
-          this.authorizationEngineMock.address,
-          { from: address1 }
+        this.cmtat.connect(this.address1).setAuthorizationEngine(
+          this.authorizationEngineMock.target
         ),
         'AccessControlUnauthorizedAccount',
-        [address1, DEFAULT_ADMIN_ROLE]
+        [this.address1.address, DEFAULT_ADMIN_ROLE]
       )
     })
 
     // Mock
     it('testCanTransferAdminIfAuthorizedByTheEngine', async function () {
+  
       // Arrange
-      await this.authorizationEngineMock.authorizeAdminChange(address1)
-      // Act
-      await this.cmtat.setAuthorizationEngine(
-        this.authorizationEngineMock.address,
-        { from: admin }
-      )
+      await this.authorizationEngineMock.authorizeAdminChange(this.address1)
+
+      // Arrange
+      if(!this.definedAtDeployment){
+        await this.cmtat.connect(this.admin).setAuthorizationEngine(
+          this.authorizationEngineMock.target
+        )
+      }
+      // Act + Assert
+      this.logs = await this.cmtat.connect(this.admin).grantRole(DEFAULT_ADMIN_ROLE, this.address1);
       // Assert
-      this.logs = await this.cmtat.grantRole(DEFAULT_ADMIN_ROLE, address1, {
-        from: admin
-      });
-      // Assert
-      (await this.cmtat.hasRole(DEFAULT_ADMIN_ROLE, address1)).should.equal(
+      expect(await this.cmtat.hasRole(DEFAULT_ADMIN_ROLE, this.address1)).to.equal(
         true
       )
     })
@@ -81,15 +78,14 @@ function AuthorizationModuleSetAuthorizationEngineCommon (
     // Mock
     it('testCannotTransferAdminIfNotAuthorizedByTheEngine', async function () {
       // Arrange
-      await this.cmtat.setAuthorizationEngine(
-        this.authorizationEngineMock.address,
-        { from: admin }
-      )
+      if(!this.definedAtDeployment){
+        await this.cmtat.connect(this.admin).setAuthorizationEngine(
+          this.authorizationEngineMock.target
+        )
+      }
       // Act
       await expectRevertCustomError(
-        this.cmtat.grantRole(DEFAULT_ADMIN_ROLE, address1, {
-          from: admin
-        }),
+        this.cmtat.connect(this.admin).grantRole(DEFAULT_ADMIN_ROLE, this.address1),
         'CMTAT_AuthorizationModule_InvalidAuthorization',
         []
       )
@@ -97,18 +93,17 @@ function AuthorizationModuleSetAuthorizationEngineCommon (
 
     it('testCanRevokeAdminIfAuthorizedByTheEngine', async function () {
       // Arrange
-      await this.authorizationEngineMock.authorizeAdminChange(address1)
-      // Act
-      await this.cmtat.setAuthorizationEngine(
-        this.authorizationEngineMock.address,
-        { from: admin }
-      )
+      await this.authorizationEngineMock.authorizeAdminChange(this.address1)
+      // Arrange
+      if(!this.definedAtDeployment){
+        await this.cmtat.connect(this.admin).setAuthorizationEngine(
+          this.authorizationEngineMock.target
+        )
+      }
       // Assert
-      this.logs = await this.cmtat.revokeRole(DEFAULT_ADMIN_ROLE, address1, {
-        from: admin
-      });
+      this.logs = await this.cmtat.connect(this.admin).revokeRole(DEFAULT_ADMIN_ROLE, this.address1);
       // Assert
-      (await this.cmtat.hasRole(DEFAULT_ADMIN_ROLE, address1)).should.equal(
+      expect(await this.cmtat.hasRole(DEFAULT_ADMIN_ROLE, this.address1)).to.equal(
         false
       )
     })
@@ -116,16 +111,16 @@ function AuthorizationModuleSetAuthorizationEngineCommon (
     // Mock
     it('testCannotRevokeAdminIfNotAuthorizedByTheEngine', async function () {
       // Arrange
-      await this.cmtat.setAuthorizationEngine(
-        this.authorizationEngineMock.address,
-        { from: admin }
-      )
+      if(!this.definedAtDeployment){
+        await this.cmtat.connect(this.admin).setAuthorizationEngine(
+          this.authorizationEngineMock.target
+        )
+      }
+
       await this.authorizationEngineMock.setRevokeAdminRoleAuthorized(false)
       // Act
       await expectRevertCustomError(
-        this.cmtat.revokeRole(DEFAULT_ADMIN_ROLE, address1, {
-          from: admin
-        }),
+        this.cmtat.connect(this.admin).revokeRole(DEFAULT_ADMIN_ROLE, this.address1),
         'CMTAT_AuthorizationModule_InvalidAuthorization',
         []
       )

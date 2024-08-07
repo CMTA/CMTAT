@@ -73,6 +73,4 @@ abstract contract ERC20SnapshotModule is
     ) public onlyRole(SNAPSHOOTER_ROLE) {
         _unscheduleSnapshotNotOptimized(time);
     }
-
-    uint256[50] private __gap;
 }

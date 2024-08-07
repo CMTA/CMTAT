@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for contracts/modules/wrapper/extensions/DocumentModule.sol</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../../../prettify.css" />
+    <link rel="stylesheet" href="../../../../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../../../../index.html">all files</a> / <a href="index.html">contracts/modules/wrapper/extensions/</a> DocumentModule.sol
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">92.86% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>13/14</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">75% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>9/12</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>6/6</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">94.74% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>18/19</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line high'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">28×</span>
+<span class="cline-any cline-yes">28×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">76×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">375×</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">16×</span>
+<span class="cline-any cline-yes">16×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">14×</span>
+<span class="cline-any cline-yes">14×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">16×</span>
+<span class="cline-any cline-yes">16×</span>
+<span class="cline-any cline-yes">16×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">//SPDX-License-Identifier: MPL-2.0
+&nbsp;
+pragma solidity ^0.8.20;
+&nbsp;
+import "../../security/AuthorizationModule.sol";
+import "../../../libraries/Errors.sol";
+import "../../../interfaces/engine/draft-IERC1643.sol";
+abstract contract DocumentModule is AuthorizationModule, IERC1643 {
+     bytes32 public constant DOCUMENT_ROLE = keccak256("DOCUMENT_ROLE");
+    // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.DocumentModule")) - 1)) &amp; ~bytes32(uint256(0xff))
+    bytes32 private constant DocumentModuleStorageLocation = 0x5edcb2767f407e647b6a4171ef53e8015a3eff0bb2b6e7765b1a26332bc43000;
+    struct DocumentModuleStorage {
+        IERC1643  _documentEngine;
+    }
+&nbsp;
+    function documentEngine() public view virtual returns (IERC1643) {
+        DocumentModuleStorage storage $ = _getDocumentModuleStorage();
+        return $._documentEngine;
+    }
+&nbsp;
+    function _getDocumentModuleStorage() private pure returns (DocumentModuleStorage storage $) {
+        assembly {
+            $.slot := DocumentModuleStorageLocation
+        }
+    } 
+    /**
+     * @dev Emitted when a rule engine is set.
+     */
+    event DocumentEngine(IERC1643 indexed newDocumentEngine);
+    /**
+     * @dev
+     *
+     * - The grant to the admin role is done by AccessControlDefaultAdminRules
+     * - The control of the zero address is done by AccessControlDefaultAdminRules
+     *
+     */
+    function __DocumentModule_init_unchained(IERC1643 documentEngine_)
+    internal <span class="missing-if-branch" title="else path not taken" >E</span>onlyInitializing {
+        if (address(documentEngine_) != address (0)) {
+            DocumentModuleStorage storage $ = _getDocumentModuleStorage();
+            $._documentEngine = documentEngine_;
+            emit DocumentEngine(documentEngine_);
+        }
+    }
+&nbsp;
+    /*
+    * @notice set an authorizationEngine if not already set
+    * 
+    */
+    function setDocumentEngine(
+        IERC1643 documentEngine_
+    ) external onlyRole(DOCUMENT_ROLE) {
+        DocumentModuleStorage storage $ = _getDocumentModuleStorage();
+        if ($._documentEngine == documentEngine_){
+             revert Errors.CMTAT_DocumentModule_SameValue();
+        }
+        $._documentEngine = documentEngine_;
+        emit DocumentEngine(documentEngine_);
+    }
+&nbsp;
+&nbsp;
+    function getDocument(bytes32 _name) public view returns (string memory, bytes32, uint256){
+        DocumentModuleStorage storage $ = _getDocumentModuleStorage();
+        <span class="missing-if-branch" title="else path not taken" >E</span>if(address($._documentEngine) != address(0)){
+            return $._documentEngine.getDocument( _name);
+        } else{
+<span class="cstat-no" title="statement not covered" >            return ("",0x0, 0);</span>
+        }
+    }
+&nbsp;
+    function getAllDocuments() public view returns (bytes32[] memory documents){
+        DocumentModuleStorage storage $ = _getDocumentModuleStorage();
+        <span class="missing-if-branch" title="else path not taken" >E</span>if(address($._documentEngine) != address(0)){
+            documents =  $._documentEngine.getAllDocuments();
+        }
+    }
+}
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Aug 07 2024 14:16:55 GMT+0200 (Central European Summer Time)
+</div>
+</div>
+<script src="../../../../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../../../../sorter.js"></script>
+</body>
+</html>

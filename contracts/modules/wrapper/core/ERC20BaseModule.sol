@@ -7,15 +7,19 @@ import "../../../../openzeppelin-contracts-upgradeable/contracts/token/ERC20/ERC
 import "../../../libraries/Errors.sol";
 
 abstract contract ERC20BaseModule is ERC20Upgradeable {
+    // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.ERC20BaseModule")) - 1)) & ~bytes32(uint256(0xff))
+    bytes32 private constant ERC20BaseModuleStorageLocation = 0x9bd8d607565c0370ae5f91651ca67fd26d4438022bf72037316600e29e6a3a00;
+    
+    struct ERC20BaseModuleStorage {
+        uint8 _decimals;
+    }
+
     /* Events */
     /**
     * @notice Emitted when the specified `spender` spends the specified `value` tokens owned by the specified `owner` reducing the corresponding allowance.
     * @dev The allowance can be also "spend" with the function BurnFrom, but in this case, the emitted event is BurnFrom.
     */
     event Spend(address indexed owner, address indexed spender, uint256 value);
-
-    /* Variables */
-    uint8 private _decimals;
 
     /* Initializers */
 
@@ -28,7 +32,8 @@ abstract contract ERC20BaseModule is ERC20Upgradeable {
     function __ERC20BaseModule_init_unchained(
         uint8 decimals_
     ) internal onlyInitializing {
-        _decimals = decimals_;
+        ERC20BaseModuleStorage storage $ = _getERC20BaseModuleStorage();
+        $._decimals = decimals_;
     }
 
     /* Methods */
@@ -38,7 +43,8 @@ abstract contract ERC20BaseModule is ERC20Upgradeable {
      * @inheritdoc ERC20Upgradeable
      */
     function decimals() public view virtual override returns (uint8) {
-        return _decimals;
+        ERC20BaseModuleStorage storage $ = _getERC20BaseModuleStorage();
+        return $._decimals;
     }
 
     /**
@@ -110,5 +116,9 @@ abstract contract ERC20BaseModule is ERC20Upgradeable {
         totalSupply = ERC20Upgradeable.totalSupply();
     }
 
-    uint256[50] private __gap;
+    function _getERC20BaseModuleStorage() private pure returns (ERC20BaseModuleStorage storage $) {
+        assembly {
+            $.slot := ERC20BaseModuleStorageLocation
+        }
+    }
 }

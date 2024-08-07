@@ -22,7 +22,7 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>9/9</span>
+        <span class='fraction'>12/12</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">83.33% </span>
@@ -32,12 +32,12 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>4/4</span>
+        <span class='fraction'>5/5</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>11/11</span>
+        <span class='fraction'>15/15</span>
       </div>
     </div>
   </div>
@@ -131,7 +131,21 @@
 86
 87
 88
-89</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -178,7 +192,15 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">974×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">942×</span>
+<span class="cline-any cline-yes">942×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -191,6 +213,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">22×</span>
 <span class="cline-any cline-yes">22×</span>
 <span class="cline-any cline-yes">2×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -209,12 +232,17 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">8×</span>
 <span class="cline-any cline-yes">2×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">6×</span>
 <span class="cline-any cline-yes">6×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">972×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -236,6 +264,9 @@ abstract contract EnforcementModuleInternal is
     Initializable,
     ContextUpgradeable
 {
+    // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.EnforcementModuleInternal")) - 1)) &amp; ~bytes32(uint256(0xff))
+    bytes32 private constant EnforcementModuleInternalStorageLocation = 0x0c7bc8a17be064111d299d7669f49519cb26c58611b72d9f6ccc40a1e1184e00;
+    
     /**
      * @notice Emitted when an address is frozen.
      */
@@ -256,7 +287,11 @@ abstract contract EnforcementModuleInternal is
         string reason
     );
 &nbsp;
-    mapping(address =&gt; bool) private _frozen;
+    /* Variables */
+    struct EnforcementModuleInternalStorage {
+        mapping(address =&gt; bool) _frozen;
+    }
+&nbsp;
 &nbsp;
     function __Enforcement_init_unchained() internal <span class="missing-if-branch" title="else path not taken" >E</span>onlyInitializing {
         // no variable to initialize
@@ -266,7 +301,8 @@ abstract contract EnforcementModuleInternal is
      * @dev Returns true if the account is frozen, and false otherwise.
      */
     function frozen(address account) public view virtual returns (bool) {
-        return _frozen[account];
+        EnforcementModuleInternalStorage storage $ = _getEnforcementModuleInternalStorage();
+        return $._frozen[account];
     }
 &nbsp;
     /**
@@ -279,10 +315,11 @@ abstract contract EnforcementModuleInternal is
         address account,
         string calldata reason
     ) internal virtual returns (bool) {
-        if (_frozen[account]) {
+        EnforcementModuleInternalStorage storage $ = _getEnforcementModuleInternalStorage();
+        if ($._frozen[account]) {
             return false;
         }
-        _frozen[account] = true;
+        $._frozen[account] = true;
         emit Freeze(_msgSender(), account, reason, reason);
         return true;
     }
@@ -296,16 +333,21 @@ abstract contract EnforcementModuleInternal is
         address account,
         string calldata reason
     ) internal virtual returns (bool) {
-        if (!_frozen[account]) {
+        EnforcementModuleInternalStorage storage $ = _getEnforcementModuleInternalStorage();
+        if (!$._frozen[account]) {
             return false;
         }
-        _frozen[account] = false;
+        $._frozen[account] = false;
         emit Unfreeze(_msgSender(), account, reason, reason);
 &nbsp;
         return true;
     }
 &nbsp;
-    uint256[50] private __gap;
+    function _getEnforcementModuleInternalStorage() private pure returns (EnforcementModuleInternalStorage storage $) {
+        assembly {
+            $.slot := EnforcementModuleInternalStorageLocation
+        }
+    }
 }
 &nbsp;</pre></td></tr>
 </table></pre>
@@ -313,7 +355,7 @@ abstract contract EnforcementModuleInternal is
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu May 02 2024 13:42:17 GMT+0200 (Central European Summer Time)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Aug 07 2024 14:16:55 GMT+0200 (Central European Summer Time)
 </div>
 </div>
 <script src="../../../prettify.js"></script>

@@ -18,6 +18,4 @@ abstract contract MetaTxModule is ERC2771ContextUpgradeable {
     ) ERC2771ContextUpgradeable(trustedForwarder) {
         // Nothing to do
     }
-
-    uint256[50] private __gap;
 }

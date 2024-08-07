@@ -1,37 +1,34 @@
-const CMTAT_BEACON_FACTORY = artifacts.require('CMTAT_BEACON_FACTORY')
-const { should } = require('chai').should()
 const {
   expectRevertCustomError
 } = require('../../../../openzeppelin-contracts-upgradeable/test/helpers/customError.js')
 const { ZERO_ADDRESS } = require('../../../utils.js')
 const {
-  deployCMTATProxyImplementation
+  deployCMTATProxyImplementation,
+  fixture, loadFixture 
 } = require('../../../deploymentUtils.js')
-contract(
+describe(
   'Deploy Beacon with Factory',
-  function ([_, admin, attacker, deployerAddress]) {
+  function () {
     beforeEach(async function () {
+      Object.assign(this, await loadFixture(fixture));
       this.CMTAT_PROXY_IMPL = await deployCMTATProxyImplementation(
-        _,
-        deployerAddress
+        this._.address,
+        this.deployerAddress.address
       )
     })
-
     context('BeaconDeployment', function () {
       it('testCannotDeployIfImplementationIsZero', async function () {
         await expectRevertCustomError(
-          CMTAT_BEACON_FACTORY.new(ZERO_ADDRESS, admin, admin, { from: admin }),
+          ethers.deployContract("CMTAT_BEACON_FACTORY",[ZERO_ADDRESS, this.admin.address, this.admin.address]),
           'CMTAT_Factory_AddressZeroNotAllowedForLogicContract',
           []
         )
       })
       it('testCannotDeployIfFactoryAdminIsZero', async function () {
         await expectRevertCustomError(
-          CMTAT_BEACON_FACTORY.new(
-            this.CMTAT_PROXY_IMPL.address,
+          ethers.deployContract("CMTAT_BEACON_FACTORY",[ this.CMTAT_PROXY_IMPL.target,
             ZERO_ADDRESS,
-            admin,
-            { from: admin }
+            this.admin.address]
           ),
           'CMTAT_Factory_AddressZeroNotAllowedForFactoryAdmin',
           []
@@ -39,11 +36,9 @@ contract(
       })
       it('testCannotDeployIfBeaconOwnerIsZero', async function () {
         await expectRevertCustomError(
-          CMTAT_BEACON_FACTORY.new(
-            this.CMTAT_PROXY_IMPL.address,
-            admin,
-            ZERO_ADDRESS,
-            { from: admin }
+          ethers.deployContract("CMTAT_BEACON_FACTORY",[ this.CMTAT_PROXY_IMPL.target,
+            this.admin.address,
+            ZERO_ADDRESS]
           ),
           'CMTAT_Factory_AddressZeroNotAllowedForBeaconOwner',
           []

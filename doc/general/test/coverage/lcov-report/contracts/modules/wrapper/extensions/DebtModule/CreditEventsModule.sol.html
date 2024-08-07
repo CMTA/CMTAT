@@ -20,28 +20,28 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">100% </span>
+        <span class="strong">0% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>8/8</span>
+        <span class='fraction'>0/8</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">92.86% </span>
+        <span class="strong">0% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>13/14</span>
+        <span class='fraction'>0/14</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">100% </span>
+        <span class="strong">0% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>5/5</span>
+        <span class='fraction'>0/5</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">100% </span>
+        <span class="strong">0% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>14/14</span>
+        <span class='fraction'>0/14</span>
       </div>
     </div>
   </div>
-  <div class='status-line high'></div>
+  <div class='status-line low'></div>
 <pre><table class="coverage">
 <tr><td class="line-count quiet">1
 2
@@ -167,10 +167,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2×</span>
-<span class="cline-any cline-yes">2×</span>
-<span class="cline-any cline-yes">2×</span>
-<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -179,24 +179,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">6×</span>
-<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2×</span>
-<span class="cline-any cline-yes">2×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">6×</span>
-<span class="cline-any cline-yes">4×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2×</span>
-<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -205,8 +192,21 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2×</span>
-<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -238,7 +238,7 @@ abstract contract CreditEventsModule is
     event FlagRedeemed(bool indexed newFlagRedeemed);
     event Rating(string indexed newRatingIndexed, string newRating);
 &nbsp;
-    function __CreditEvents_init_unchained() internal <span class="missing-if-branch" title="else path not taken" >E</span>onlyInitializing {
+<span class="fstat-no" title="function not covered" >    function __CreditEvents_init_unchained() internal onlyInitializing {</span>
         // no variable to initialize
     }
 &nbsp;
@@ -246,51 +246,51 @@ abstract contract CreditEventsModule is
     * @notice Set all attributes of creditEvents
     * The values of all attributes will be changed even if the new values are the same as the current ones
     */
-    function setCreditEvents(
+<span class="fstat-no" title="function not covered" >    function setCreditEvents(</span>
         bool flagDefault_,
         bool flagRedeemed_,
         string calldata rating_
     ) public onlyRole(DEBT_CREDIT_EVENT_ROLE) {
         creditEvents = (CreditEvents(flagDefault_, flagRedeemed_, rating_));
-        emit FlagDefault(flagDefault_);
-        emit FlagRedeemed(flagRedeemed_);
-        emit Rating(rating_, rating_);
+<span class="cstat-no" title="statement not covered" >        emit FlagDefault(flagDefault_);</span>
+<span class="cstat-no" title="statement not covered" >        emit FlagRedeemed(flagRedeemed_);</span>
+<span class="cstat-no" title="statement not covered" >        emit Rating(rating_, rating_);</span>
     }
 &nbsp;
     /** 
     * @notice The call will be reverted if the new value of flagDefault is the same as the current one
     */
-    function setFlagDefault(
+<span class="fstat-no" title="function not covered" >    function setFlagDefault(</span>
         bool flagDefault_
     ) public onlyRole(DEBT_CREDIT_EVENT_ROLE) {
-        if (flagDefault_ == creditEvents.flagDefault) {
+<span class="cstat-no" title="statement not covered" >        if (flagDefault_ == creditEvents.flagDefault) {</span>
             revert Errors.CMTAT_DebtModule_SameValue();
         }
         creditEvents.flagDefault = flagDefault_;
-        emit FlagDefault(flagDefault_);
+<span class="cstat-no" title="statement not covered" >        emit FlagDefault(flagDefault_);</span>
     }
 &nbsp;
     /** 
     * @notice The call will be reverted if the new value of flagRedeemed is the same as the current one
     */
-    function setFlagRedeemed(
+<span class="fstat-no" title="function not covered" >    function setFlagRedeemed(</span>
         bool flagRedeemed_
     ) public onlyRole(DEBT_CREDIT_EVENT_ROLE) {
-        if (flagRedeemed_ == creditEvents.flagRedeemed) {
+<span class="cstat-no" title="statement not covered" >        if (flagRedeemed_ == creditEvents.flagRedeemed) {</span>
             revert Errors.CMTAT_DebtModule_SameValue();
         }
         creditEvents.flagRedeemed = flagRedeemed_;
-        emit FlagRedeemed(flagRedeemed_);
+<span class="cstat-no" title="statement not covered" >        emit FlagRedeemed(flagRedeemed_);</span>
     }
 &nbsp;
     /** 
     * @notice The rating will be changed even if the new value is the same as the current one
     */
-    function setRating(
+<span class="fstat-no" title="function not covered" >    function setRating(</span>
         string calldata rating_
     ) public onlyRole(DEBT_CREDIT_EVENT_ROLE) {
         creditEvents.rating = rating_;
-        emit Rating(rating_, rating_);
+<span class="cstat-no" title="statement not covered" >        emit Rating(rating_, rating_);</span>
     }
 &nbsp;
     uint256[50] private __gap;
@@ -301,7 +301,7 @@ abstract contract CreditEventsModule is
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu May 02 2024 13:42:17 GMT+0200 (Central European Summer Time)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Aug 07 2024 11:05:01 GMT+0200 (Central European Summer Time)
 </div>
 </div>
 <script src="../../../../../prettify.js"></script>

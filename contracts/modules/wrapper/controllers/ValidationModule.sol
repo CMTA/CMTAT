@@ -34,14 +34,15 @@ abstract contract ValidationModule is
     function setRuleEngine(
         IRuleEngine ruleEngine_
     ) external onlyRole(DEFAULT_ADMIN_ROLE) {
-        if (ruleEngine == ruleEngine_){
+        ValidationModuleInternalStorage storage $ = _getValidationModuleInternalStorage();
+        if ($._ruleEngine == ruleEngine_){
              revert Errors.CMTAT_ValidationModule_SameValue();
         }
-        ruleEngine = ruleEngine_;
+        $._ruleEngine = ruleEngine_;
         emit RuleEngine(ruleEngine_);
     }
 
-        /**
+    /**
      * @dev ERC1404 returns the human readable explaination corresponding to the error code returned by detectTransferRestriction
      * @param restrictionCode The error code returned by detectTransferRestriction
      * @return message The human readable explaination corresponding to the error code returned by detectTransferRestriction
@@ -49,6 +50,7 @@ abstract contract ValidationModule is
     function messageForTransferRestriction(
         uint8 restrictionCode
     ) external view override returns (string memory message) {
+          ValidationModuleInternalStorage storage $ = _getValidationModuleInternalStorage();
         if (restrictionCode == uint8(REJECTED_CODE_BASE.TRANSFER_OK)) {
             return TEXT_TRANSFER_OK;
         } else if (
@@ -66,7 +68,7 @@ abstract contract ValidationModule is
             uint8(REJECTED_CODE_BASE.TRANSFER_REJECTED_TO_FROZEN)
         ) {
             return TEXT_TRANSFER_REJECTED_TO_FROZEN;
-        } else if (address(ruleEngine) != address(0)) {
+        } else if (address($._ruleEngine) != address(0)) {
             return _messageForTransferRestriction(restrictionCode);
         } else {
             return TEXT_UNKNOWN_CODE;
@@ -85,13 +87,14 @@ abstract contract ValidationModule is
         address to,
         uint256 amount
     ) public view override returns (uint8 code) {
+        ValidationModuleInternalStorage storage $ = _getValidationModuleInternalStorage();
         if (paused()) {
             return uint8(REJECTED_CODE_BASE.TRANSFER_REJECTED_PAUSED);
         } else if (frozen(from)) {
             return uint8(REJECTED_CODE_BASE.TRANSFER_REJECTED_FROM_FROZEN);
         } else if (frozen(to)) {
             return uint8(REJECTED_CODE_BASE.TRANSFER_REJECTED_TO_FROZEN);
-        } else if (address(ruleEngine) != address(0)) {
+        } else if (address($._ruleEngine) != address(0)) {
             return _detectTransferRestriction(from, to, amount);
         } else {
             return uint8(REJECTED_CODE_BASE.TRANSFER_OK);
@@ -106,7 +109,8 @@ abstract contract ValidationModule is
         if (!_validateTransferByModule(from, to, amount)) {
             return false;
         }
-        if (address(ruleEngine) != address(0)) {
+        ValidationModuleInternalStorage storage $ = _getValidationModuleInternalStorage();
+        if (address($._ruleEngine) != address(0)) {
             return _validateTransfer(from, to, amount);
         }
         return true;
@@ -127,11 +131,10 @@ abstract contract ValidationModule is
         if (!_validateTransferByModule(from, to, amount)){
             return false;
         }
-        if (address(ruleEngine) != address(0)) {
+        ValidationModuleInternalStorage storage $ = _getValidationModuleInternalStorage();
+        if (address($._ruleEngine) != address(0)) {
             return ValidationModuleInternal._operateOnTransfer(from, to, amount);
         }
         return true;
     }
-
-    uint256[50] private __gap;
 }

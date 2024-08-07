@@ -16,11 +16,22 @@ import "../../security/AuthorizationModule.sol";
  * event of a large bug.
  */
 abstract contract PauseModule is PausableUpgradeable, AuthorizationModule {
+    // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.ERC20BaseModule")) - 1)) & ~bytes32(uint256(0xff))
+    bytes32 private constant PauseModuleStorageLocation = 0x9bd8d607565c0370ae5f91651ca67fd26d4438022bf72037316600e29e6a3a00;
+    struct PauseModuleStorage {
+        bool _isDeactivated;
+    }
+
+    function _getPauseModuleStorage() private pure returns (PauseModuleStorage storage $) {
+        assembly {
+            $.slot := PauseModuleStorageLocation
+        }
+    }
+
     // PauseModule
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     string internal constant TEXT_TRANSFER_REJECTED_PAUSED =
         "All transfers paused";
-    bool private isDeactivated;
     event Deactivated(address account);
 
     function __PauseModule_init_unchained() internal onlyInitializing {
@@ -49,7 +60,8 @@ abstract contract PauseModule is PausableUpgradeable, AuthorizationModule {
      * - the caller must have the `PAUSER_ROLE`.
      */
     function unpause() public onlyRole(PAUSER_ROLE) {
-        if(isDeactivated){
+        PauseModuleStorage storage $ = _getPauseModuleStorage();
+        if($._isDeactivated){
             revert Errors.CMTAT_PauseModule_ContractIsDeactivated();
         }
         _unpause();
@@ -68,7 +80,8 @@ abstract contract PauseModule is PausableUpgradeable, AuthorizationModule {
         public
         onlyRole(DEFAULT_ADMIN_ROLE)
     {
-        isDeactivated = true;
+        PauseModuleStorage storage $ = _getPauseModuleStorage();
+        $._isDeactivated = true;
        _pause();
        emit Deactivated(_msgSender());
     }
@@ -77,8 +90,7 @@ abstract contract PauseModule is PausableUpgradeable, AuthorizationModule {
     * @notice Returns true if the contract is deactivated, and false otherwise.
     */
     function deactivated() view public returns (bool){
-        return isDeactivated;
+        PauseModuleStorage storage $ = _getPauseModuleStorage();
+        return $._isDeactivated;
     }
-
-    uint256[50] private __gap;
 }

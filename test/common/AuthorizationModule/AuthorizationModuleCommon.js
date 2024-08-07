@@ -1,4 +1,4 @@
-const { expectEvent } = require('@openzeppelin/test-helpers')
+const { expect } = require('chai');
 const {
   expectRevertCustomError
 } = require('../../../openzeppelin-contracts-upgradeable/test/helpers/customError')
@@ -7,77 +7,63 @@ const {
   DEFAULT_ADMIN_ROLE,
   ZERO_ADDRESS
 } = require('../../utils')
-const chai = require('chai')
-const should = chai.should()
-function AuthorizationModuleCommon (admin, address1, address2) {
+function AuthorizationModuleCommon () {
   context('Authorization', function () {
     it('testAdminCanGrantRole', async function () {
       // Act
-      this.logs = await this.cmtat.grantRole(PAUSER_ROLE, address1, {
-        from: admin
-      });
+      this.logs = await this.cmtat.connect(this.admin).grantRole(PAUSER_ROLE, this.address1);
       // Assert
-      (await this.cmtat.hasRole(PAUSER_ROLE, address1)).should.equal(true)
+      expect(await this.cmtat.hasRole(PAUSER_ROLE, this.address1)).to.equal(true)
       // emits a RoleGranted event
-      expectEvent(this.logs, 'RoleGranted', {
-        role: PAUSER_ROLE,
-        account: address1,
-        sender: admin
-      })
+      await expect(this.logs).to.emit(this.cmtat, 'RoleGranted').withArgs( PAUSER_ROLE, this.address1, this.admin);
     })
 
     it('testAdminCanRevokeRole', async function () {
       // Arrange
-      await this.cmtat.grantRole(PAUSER_ROLE, address1, { from: admin });
+      await this.cmtat.connect(this.admin).grantRole(PAUSER_ROLE, this.address1);
       // Arrange - Assert
-      (await this.cmtat.hasRole(PAUSER_ROLE, address1)).should.equal(true)
+      expect(await this.cmtat.hasRole(PAUSER_ROLE, this.address1)).to.equal(true)
       // Act
-      this.logs = await this.cmtat.revokeRole(PAUSER_ROLE, address1, {
-        from: admin
-      });
+      this.logs = await this.cmtat.connect(this.admin).revokeRole(PAUSER_ROLE, this.address1);
       // Assert
-      (await this.cmtat.hasRole(PAUSER_ROLE, address1)).should.equal(false)
+      expect(await this.cmtat.hasRole(PAUSER_ROLE, this.address1)).to.equal(false)
       // emits a RoleRevoked event
-      expectEvent(this.logs, 'RoleRevoked', {
-        role: PAUSER_ROLE,
-        account: address1,
-        sender: admin
-      })
+      await expect(this.logs).to.emit(this.cmtat, 'RoleRevoked').withArgs( PAUSER_ROLE, this.address1, this.admin);
     })
 
     /*
-    Already tested by OpenZeppelin library
+    * Already tested by OpenZeppelin library
     */
     it('testCannotNonAdminGrantRole', async function () {
       // Arrange - Assert
-      (await this.cmtat.hasRole(PAUSER_ROLE, address1)).should.equal(false)
+      expect(await this.cmtat.hasRole(PAUSER_ROLE, this.address1)).to.equal(false)
       // Act
       await expectRevertCustomError(
-        this.cmtat.grantRole(PAUSER_ROLE, address1, { from: address2 }),
+        this.cmtat.connect(this.address2).grantRole(PAUSER_ROLE, this.address1),
         'AccessControlUnauthorizedAccount',
-        [address2, DEFAULT_ADMIN_ROLE]
+        [this.address2.address, DEFAULT_ADMIN_ROLE]
       );
       // Assert
-      (await this.cmtat.hasRole(PAUSER_ROLE, address1)).should.equal(false)
+      expect(await this.cmtat.hasRole(PAUSER_ROLE, this.address1)).to.equal(false)
     })
 
     /*
-    Already tested by OpenZeppelin library
+    * Already tested by OpenZeppelin library
     */
     it('testCannotNonAdminRevokeRole', async function () {
       // Arrange
-      (await this.cmtat.hasRole(PAUSER_ROLE, address1)).should.equal(false)
-      await this.cmtat.grantRole(PAUSER_ROLE, address1, { from: admin });
+      expect(await this.cmtat.hasRole(PAUSER_ROLE, this.address1)).to.equal(false)
+      await this.cmtat.connect(this.admin).grantRole(PAUSER_ROLE, this.address1);
       // Arrange - Assert
-      (await this.cmtat.hasRole(PAUSER_ROLE, address1)).should.equal(true)
+      expect(await this.cmtat.hasRole(PAUSER_ROLE, this.address1)).to.equal(true)
       // Act
       await expectRevertCustomError(
-        this.cmtat.revokeRole(PAUSER_ROLE, address1, { from: address2 }),
+        this.cmtat.connect(this.address2).revokeRole(PAUSER_ROLE, this.address1),
         'AccessControlUnauthorizedAccount',
-        [address2, DEFAULT_ADMIN_ROLE]
+        [this.address2.address, DEFAULT_ADMIN_ROLE]
       );
       // Assert
-      (await this.cmtat.hasRole(PAUSER_ROLE, address1)).should.equal(true)
+      expect(await this.cmtat.hasRole(PAUSER_ROLE, this.address1)).to.equal(true)
     })
   })
 }

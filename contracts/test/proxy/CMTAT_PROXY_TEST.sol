@@ -18,6 +18,4 @@ contract CMTAT_PROXY_TEST is CMTAT_PROXY {
     ) CMTAT_PROXY(forwarderIrrevocable) {
         // Nothing to do
     }
-
-    uint256[50] private __gap;
 }

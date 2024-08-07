@@ -109,6 +109,4 @@ abstract contract ERC20BurnModule is ERC20Upgradeable, ICCIPBurnFromERC20, Autho
         // Specific event for the operation
         emit BurnFrom(account, sender, value);
     }
-
-    uint256[50] private __gap;
 }

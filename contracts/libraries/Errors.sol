@@ -61,6 +61,9 @@ library Errors {
     error CMTAT_AuthorizationModule_InvalidAuthorization();
     error CMTAT_AuthorizationModule_AuthorizationEngineAlreadySet(); 
 
+    // DocumentModule
+    error CMTAT_DocumentModule_SameValue();
+
     // PauseModule
     error CMTAT_PauseModule_ContractIsDeactivated();
 }

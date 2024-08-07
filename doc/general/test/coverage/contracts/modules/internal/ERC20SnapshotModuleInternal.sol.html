@@ -180,11 +180,8 @@
 135
 136
 137
-138
-139
-140
-141
-142</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+138</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -244,11 +241,6 @@
 <span class="cline-any cline-yes">80×</span>
 <span class="cline-any cline-yes">80×</span>
 <span class="cline-any cline-yes">80×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">80×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -291,36 +283,36 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">430×</span>
-<span class="cline-any cline-yes">430×</span>
+<span class="cline-any cline-yes">420×</span>
+<span class="cline-any cline-yes">420×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">99×</span>
-<span class="cline-any cline-yes">99×</span>
+<span class="cline-any cline-yes">77×</span>
+<span class="cline-any cline-yes">77×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">55×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">44×</span>
+<span class="cline-any cline-yes">43×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">331×</span>
-<span class="cline-any cline-yes">331×</span>
+<span class="cline-any cline-yes">34×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">485×</span>
+<span class="cline-any cline-yes">343×</span>
+<span class="cline-any cline-yes">343×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">375×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">463×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">377×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -332,6 +324,7 @@ pragma solidity ^0.8.20;
 import "../../../openzeppelin-contracts-upgradeable/contracts/token/ERC20/ERC20Upgradeable.sol";
 import {Arrays} from '@openzeppelin/contracts/utils/Arrays.sol';
 import "./base/SnapshotModuleBase.sol";
+import "../../interfaces/ICMTATSnapshot.sol";
 /**
  * @dev Snapshot module internal.
  *
@@ -341,7 +334,7 @@ import "./base/SnapshotModuleBase.sol";
    because overriding this function can break the contract.
  */
 &nbsp;
-abstract contract ERC20SnapshotModuleInternal is SnapshotModuleBase, ERC20Upgradeable {
+abstract contract ERC20SnapshotModuleInternal is ICMTATSnapshot, SnapshotModuleBase, ERC20Upgradeable {
     using Arrays for uint256[];
 &nbsp;
     /** 
@@ -385,11 +378,6 @@ abstract contract ERC20SnapshotModuleInternal is SnapshotModuleBase, ERC20Upgrad
         ownerBalances = new uint256[][](times.length);
         totalSupply = new uint256[](times.length);
         for(uint256 iT = 0; iT &lt; times.length; ++iT){
-            /*ownerBalances[iT] = new uint256[](addresses.length);
-            for(uint256 jA = 0; jA &lt; addresses.length; ++jA){
-                ownerBalances[iT][jA]  = snapshotBalanceOf(times[iT], addresses[jA]);
-            }
-            totalSupply[iT] = snapshotTotalSupply(times[iT]);*/
             (ownerBalances[iT], totalSupply[iT]) = snapshotInfoBatch(times[iT],addresses);
         }
     }
@@ -472,7 +460,7 @@ abstract contract ERC20SnapshotModuleInternal is SnapshotModuleBase, ERC20Upgrad
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu May 02 2024 13:42:17 GMT+0200 (Central European Summer Time)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Aug 07 2024 14:16:55 GMT+0200 (Central European Summer Time)
 </div>
 </div>
 <script src="../../../prettify.js"></script>

@@ -1,19 +1,19 @@
-const CMTAT_TP_FACTORY = artifacts.require('CMTAT_TP_FACTORY')
-const { should } = require('chai').should()
 const {
   expectRevertCustomError
 } = require('../../../../openzeppelin-contracts-upgradeable/test/helpers/customError.js')
 const { ZERO_ADDRESS } = require('../../../utils.js')
 const {
-  deployCMTATProxyImplementation
+  deployCMTATProxyImplementation,
+  fixture, loadFixture 
 } = require('../../../deploymentUtils.js')
-contract(
+describe(
   'Deploy TP with Factory',
-  function ([_, admin, attacker, deployerAddress]) {
+  function () {
     beforeEach(async function () {
+      Object.assign(this, await loadFixture(fixture));
       this.CMTAT_PROXY_IMPL = await deployCMTATProxyImplementation(
-        _,
-        deployerAddress
+        this._.address,
+        this.deployerAddress.address
       )
       // this.FACTORY = await CMTAT_TP_FACTORY.new(this.CMTAT_PROXY_IMPL.address, admin)
     })
@@ -21,7 +21,9 @@ contract(
     context('FactoryDeployment', function () {
       it('testCannotDeployIfImplementationIsZero', async function () {
         await expectRevertCustomError(
-          CMTAT_TP_FACTORY.new(ZERO_ADDRESS, admin, { from: admin }),
+          ethers.deployContract('CMTAT_TP_FACTORY',[
+            ZERO_ADDRESS, this.admin
+          ]),
           'CMTAT_Factory_AddressZeroNotAllowedForLogicContract',
           []
         )
@@ -29,9 +31,9 @@ contract(
 
       it('testCannotDeployIfFactoryAdminIsZero', async function () {
         await expectRevertCustomError(
-          CMTAT_TP_FACTORY.new(this.CMTAT_PROXY_IMPL.address, ZERO_ADDRESS, {
-            from: admin
-          }),
+          ethers.deployContract('CMTAT_TP_FACTORY', [
+            this.CMTAT_PROXY_IMPL.target, ZERO_ADDRESS
+          ]),
           'CMTAT_Factory_AddressZeroNotAllowedForFactoryAdmin',
           []
         )

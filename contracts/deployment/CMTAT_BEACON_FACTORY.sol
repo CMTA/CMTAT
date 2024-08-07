@@ -8,6 +8,7 @@ import "../CMTAT_PROXY.sol";
 import "../modules/CMTAT_BASE.sol";
 import "../libraries/FactoryErrors.sol";
 import '@openzeppelin/contracts/access/AccessControl.sol';
+import "../interfaces/engine/IEngine.sol";
 
 /**
 * @notice Factory to deploy beacon proxy
@@ -51,30 +52,26 @@ contract CMTAT_BEACON_FACTORY is AccessControl {
     function deployCMTAT(
         // CMTAT function initialize
         address admin,
-        IAuthorizationEngine authorizationEngineIrrevocable,
         string memory nameIrrevocable,
         string memory symbolIrrevocable,
         uint8 decimalsIrrevocable,
         string memory tokenId_,
         string memory terms_,
-        IRuleEngine ruleEngine_,
         string memory information_, 
-        uint256 flag_
+        IEngine.Engine memory engines
     ) public onlyRole(CMTAT_DEPLOYER_ROLE) returns(BeaconProxy cmtat)   {
         cmtat = new BeaconProxy(
             address(beacon),
             abi.encodeWithSelector(
                  CMTAT_PROXY(address(0)).initialize.selector,
                     admin,
-                    authorizationEngineIrrevocable,
                     nameIrrevocable,
                     symbolIrrevocable,
                     decimalsIrrevocable,
                     tokenId_,
                     terms_,
-                    ruleEngine_,
-                    information_, 
-                    flag_
+                    information_,
+                    engines
             )
         );
         cmtats[cmtatCounterId] = address(cmtat);
@@ -88,7 +85,7 @@ contract CMTAT_BEACON_FACTORY is AccessControl {
     * @notice get CMTAT proxy address
     *
     */
-    function getAddress(uint256 cmtatID_) external view returns (address) {
+    function getCMTATAddress(uint256 cmtatID_) external view returns (address) {
         return cmtats[cmtatID_];
     }
 

@@ -59,11 +59,6 @@ abstract contract ERC20SnapshotModuleInternal is ICMTATSnapshot, SnapshotModuleB
         ownerBalances = new uint256[][](times.length);
         totalSupply = new uint256[](times.length);
         for(uint256 iT = 0; iT < times.length; ++iT){
-            /*ownerBalances[iT] = new uint256[](addresses.length);
-            for(uint256 jA = 0; jA < addresses.length; ++jA){
-                ownerBalances[iT][jA]  = snapshotBalanceOf(times[iT], addresses[jA]);
-            }
-            totalSupply[iT] = snapshotTotalSupply(times[iT]);*/
             (ownerBalances[iT], totalSupply[iT]) = snapshotInfoBatch(times[iT],addresses);
         }
     }

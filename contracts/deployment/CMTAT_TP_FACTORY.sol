@@ -6,6 +6,7 @@ import "../CMTAT_PROXY.sol";
 import "../libraries/FactoryErrors.sol";
 import '@openzeppelin/contracts/utils/Create2.sol';
 import '@openzeppelin/contracts/access/AccessControl.sol';
+import "../interfaces/engine/IEngine.sol";
 
 /**
 * @notice Factory to deploy CMTAT with a transparent proxy
@@ -25,15 +26,13 @@ contract CMTAT_TP_FACTORY is AccessControl {
     
     struct CMTAT_ARGUMENT{
         address CMTATAdmin;
-        IAuthorizationEngine authorizationEngineIrrevocable;
         string nameIrrevocable;
         string symbolIrrevocable;
         uint8 decimalsIrrevocable;
         string tokenId;
         string terms;
-        IRuleEngine ruleEngine;
-        string information; 
-        uint256 flag;
+        string information;
+        IEngine.Engine engines;
     }
     event CMTAT(address indexed CMTAT, uint256 id);
 
@@ -140,42 +139,36 @@ contract CMTAT_TP_FACTORY is AccessControl {
         CMTAT_ARGUMENT calldata cmtatArgument) internal view returns(bytes memory bytecode) {
         bytes memory implementation = _encodeImplementationArgument(
             cmtatArgument.CMTATAdmin,
-            cmtatArgument.authorizationEngineIrrevocable,
             cmtatArgument.nameIrrevocable,
             cmtatArgument.symbolIrrevocable,
             cmtatArgument.decimalsIrrevocable,
             cmtatArgument.tokenId,
             cmtatArgument.terms,
-            cmtatArgument.ruleEngine,
             cmtatArgument.information,
-            cmtatArgument.flag
+            cmtatArgument.engines
             );
         bytecode = abi.encodePacked(type(TransparentUpgradeableProxy).creationCode,  abi.encode(logic, proxyAdminOwner, implementation));
      }
 
 
     function _encodeImplementationArgument(  address admin,
-        IAuthorizationEngine authorizationEngineIrrevocable,
         string memory nameIrrevocable,
         string memory symbolIrrevocable,
         uint8 decimalsIrrevocable,
         string memory tokenId_,
         string memory terms_,
-        IRuleEngine ruleEngine_,
         string memory information_, 
-        uint256 flag_) internal pure returns(bytes memory){
+        IEngine.Engine memory engines) internal pure returns(bytes memory){
         return  abi.encodeWithSelector(
             CMTAT_PROXY(address(0)).initialize.selector,
                 admin,
-                authorizationEngineIrrevocable,
                 nameIrrevocable,
                 symbolIrrevocable,
                 decimalsIrrevocable,
                 tokenId_,
                 terms_,
-                ruleEngine_,
-                information_, 
-                flag_
+                information_,
+                engines
         );
     }
 }

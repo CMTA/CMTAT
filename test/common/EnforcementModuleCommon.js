@@ -1,224 +1,198 @@
-const { expectEvent } = require('@openzeppelin/test-helpers')
-const { should } = require('chai').should()
 const { ENFORCER_ROLE } = require('../utils')
+const { expect } = require('chai');
 const {
   expectRevertCustomError
 } = require('../../openzeppelin-contracts-upgradeable/test/helpers/customError.js')
 const reasonFreeze = 'testFreeze'
 const reasonUnfreeze = 'testUnfreeze'
 
-function EnforcementModuleCommon (owner, address1, address2, address3) {
+function EnforcementModuleCommon () {
   context('Freeze', function () {
     beforeEach(async function () {
-      await this.cmtat.mint(address1, 50, { from: owner })
+      await this.cmtat.connect(this.admin).mint(this.address1, 50)
     })
 
     it('testAdminCanFreezeAddress', async function () {
       // Arrange - Assert
-      (await this.cmtat.frozen(address1)).should.equal(false)
+      expect(await this.cmtat.frozen(this.address1)).to.equal(false)
       // Act
-      this.logs = await this.cmtat.freeze(address1, reasonFreeze, {
-        from: owner
-      });
+      this.logs = await this.cmtat.connect(this.admin).freeze(this.address1, reasonFreeze);
       // Assert
-      (await this.cmtat.frozen(address1)).should.equal(true)
+      expect(await this.cmtat.frozen(this.address1)).to.equal(true)
       // emits a Freeze event
-      expectEvent(this.logs, 'Freeze', {
-        enforcer: owner,
-        owner: address1,
-        reasonIndexed: web3.utils.keccak256(reasonFreeze),
-        reason: reasonFreeze
-      })
+      await expect(this.logs).to.emit(this.cmtat, 'Freeze').withArgs(
+        this.admin,
+        this.address1,
+        reasonFreeze,
+        reasonFreeze);
     })
 
     it('testReasonParameterCanBeEmptyString', async function () {
       // Arrange - Assert
-      (await this.cmtat.frozen(address1)).should.equal(false)
+      expect(await this.cmtat.frozen(this.address1)).to.equal(false)
       // Act
-      this.logs = await this.cmtat.freeze(address1, '', {
-        from: owner
-      });
+      this.logs = await this.cmtat.connect(this.admin).freeze(this.address1, '');
       // Assert
-      (await this.cmtat.frozen(address1)).should.equal(true)
+      expect(await this.cmtat.frozen(this.address1)).to.equal(true)
       // emits a Freeze event
-      expectEvent(this.logs, 'Freeze', {
-        enforcer: owner,
-        owner: address1,
-        // see https://ethereum.stackexchange.com/questions/35103/keccak-hash-of-null-values-result-in-different-hashes-for-different-types
-        reasonIndexed:
-          '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470',
-        reason: ''
-      })
+      await expect(this.logs).to.emit(this.cmtat, 'Freeze').withArgs(
+        this.admin,
+        this.address1,
+        '',
+        '');
     })
 
     it('testEnforcerRoleCanFreezeAddress', async function () {
       // Arrange
-      await this.cmtat.grantRole(ENFORCER_ROLE, address2, { from: owner });
+      await this.cmtat.connect(this.admin).grantRole(ENFORCER_ROLE, this.address2);
       // Arrange - Assert
-      (await this.cmtat.frozen(address1)).should.equal(false)
+      expect(await this.cmtat.frozen(this.address1)).to.equal(false)
       // Act
-      this.logs = await this.cmtat.freeze(address1, reasonFreeze, {
-        from: address2
-      });
+      this.logs = await this.cmtat.connect(this.address2).freeze(this.address1, reasonFreeze);
       // Act + Assert
       // Act + Assert
-      (
-        await this.cmtat.validateTransfer(address1, address2, 10)
-      ).should.be.equal(false);
+      expect(
+        await this.cmtat.validateTransfer(this.address1, this.address2, 10)
+      ).to.equal(false);
       // Assert
-      (await this.cmtat.frozen(address1)).should.equal(true)
+      expect(await this.cmtat.frozen(this.address1)).to.equal(true)
 
       // emits a Freeze event
-      expectEvent(this.logs, 'Freeze', {
-        enforcer: address2,
-        owner: address1,
-        reasonIndexed: web3.utils.keccak256(reasonFreeze),
-        reason: reasonFreeze
-      })
+      await expect(this.logs).to.emit(this.cmtat, 'Freeze').withArgs(
+        this.address2,
+        this.address1,
+        reasonFreeze,
+        reasonFreeze);
     })
 
     it('testAdminCanUnfreezeAddress', async function () {
       // Arrange
-      await this.cmtat.freeze(address1, reasonFreeze, { from: owner });
+      await this.cmtat.connect(this.admin).freeze(this.address1, reasonFreeze);
       // Arrange - Assert
-      (await this.cmtat.frozen(address1)).should.equal(true)
+      expect(await this.cmtat.frozen(this.address1)).to.equal(true)
       // Act
-      this.logs = await this.cmtat.unfreeze(address1, reasonUnfreeze, {
-        from: owner
-      });
+      this.logs = await this.cmtat.connect(this.admin).unfreeze(this.address1, reasonUnfreeze);
       // Assert
-      (await this.cmtat.frozen(address1)).should.equal(false)
-      expectEvent(this.logs, 'Unfreeze', {
-        enforcer: owner,
-        owner: address1,
-        reasonIndexed: web3.utils.keccak256(reasonUnfreeze),
-        reason: reasonUnfreeze
-      })
+      expect(await this.cmtat.frozen(this.address1)).to.equal(false)
+      await expect(this.logs).to.emit(this.cmtat, 'Unfreeze').withArgs(
+        this.admin,
+        this.address1,
+        reasonUnfreeze,
+        reasonUnfreeze);
     })
 
     it('testEnforcerRoleCanUnfreezeAddress', async function () {
       // Arrange
-      await this.cmtat.freeze(address1, reasonFreeze, { from: owner })
-      await this.cmtat.grantRole(ENFORCER_ROLE, address2, { from: owner });
+      await this.cmtat.connect(this.admin).freeze(this.address1, reasonFreeze)
+      await this.cmtat.connect(this.admin).grantRole(ENFORCER_ROLE, this.address2);
       // Arrange - Assert
-      (await this.cmtat.frozen(address1)).should.equal(true)
+      expect(await this.cmtat.frozen(this.address1)).to.equal(true)
       // Act
-      this.logs = await this.cmtat.unfreeze(address1, reasonUnfreeze, {
-        from: address2
-      });
+      this.logs = await this.cmtat.connect(this.address2).unfreeze(this.address1, reasonUnfreeze);
       // Assert
-      (await this.cmtat.frozen(address1)).should.equal(false)
+      expect(await this.cmtat.frozen(this.address1)).to.equal(false)
       // emits an Unfreeze event
-      expectEvent(this.logs, 'Unfreeze', {
-        enforcer: address2,
-        owner: address1,
-        reasonIndexed: web3.utils.keccak256(reasonUnfreeze),
-        reason: reasonUnfreeze
-      })
+      await expect(this.logs).to.emit(this.cmtat, 'Unfreeze').withArgs(
+        this.address2,
+        this.address1,
+        reasonUnfreeze,
+        reasonUnfreeze);
     })
 
     it('testCannotNonEnforcerFreezeAddress', async function () {
       // Act
       await expectRevertCustomError(
-        this.cmtat.freeze(address1, reasonFreeze, { from: address2 }),
+        this.cmtat.connect(this.address2).freeze(this.address1, reasonFreeze),
         'AccessControlUnauthorizedAccount',
-        [address2, ENFORCER_ROLE]
+        [this.address2.address, ENFORCER_ROLE]
       );
       // Assert
-      (await this.cmtat.frozen(address1)).should.equal(false)
+      expect(await this.cmtat.frozen(this.address1)).to.equal(false)
     })
 
     it('testCannotNonEnforcerUnfreezeAddress', async function () {
       // Arrange
-      await this.cmtat.freeze(address1, reasonFreeze, { from: owner })
+      await this.cmtat.connect(this.admin).freeze(this.address1, reasonFreeze)
       // Act
       await expectRevertCustomError(
-        this.cmtat.unfreeze(address1, reasonUnfreeze, { from: address2 }),
+        this.cmtat.connect(this.address2).unfreeze(this.address1, reasonUnfreeze),
         'AccessControlUnauthorizedAccount',
-        [address2, ENFORCER_ROLE]
+        [this.address2.address, ENFORCER_ROLE]
       );
       // Assert
-      (await this.cmtat.frozen(address1)).should.equal(true)
+      expect(await this.cmtat.frozen(this.address1)).to.equal(true)
     })
 
     // reverts if address1 transfers tokens to address2 when paused
     it('testCannotTransferWhenFromIsFrozenWithTransfer', async function () {
       // Act
-      await this.cmtat.freeze(address1, reasonFreeze, { from: owner });
+      await this.cmtat.connect(this.admin).freeze(this.address1, reasonFreeze);
       // Assert
-      (
-        await this.cmtat.detectTransferRestriction(address1, address2, 10)
-      ).should.be.bignumber.equal('2');
-      (await this.cmtat.messageForTransferRestriction(2)).should.equal(
+      expect(
+        await this.cmtat.detectTransferRestriction(this.address1, this.address2, 10)
+      ).to.equal('2');
+      expect(await this.cmtat.messageForTransferRestriction(2)).to.equal(
         'Address FROM is frozen'
       )
       const AMOUNT_TO_TRANSFER = 10
       await expectRevertCustomError(
-        this.cmtat.transfer(address2, AMOUNT_TO_TRANSFER, { from: address1 }),
+        this.cmtat.connect(this.address1).transfer(this.address2, AMOUNT_TO_TRANSFER),
         'CMTAT_InvalidTransfer',
-        [address1, address2, AMOUNT_TO_TRANSFER]
+        [this.address1.address, this.address2.address, AMOUNT_TO_TRANSFER]
       )
     })
 
-    // reverts if address3 transfers tokens from address1 to address2 when paused
+    // reverts if address3 transfers tokens from address1 to this.address2 when paused
     it('testCannotTransferTokenWhenToIsFrozenWithTransferFrom', async function () {
       // Arrange
       // Define allowance
-      await this.cmtat.approve(address1, 20, { from: address3 })
+      await this.cmtat.connect(this.address3).approve(this.address1, 20)
       // Act
-      await this.cmtat.freeze(address2, reasonFreeze, { from: owner });
+      await this.cmtat.connect(this.admin).freeze(this.address2, reasonFreeze);
 
       // Assert
-      (
-        await this.cmtat.detectTransferRestriction(address1, address2, 10)
-      ).should.be.bignumber.equal('3');
-      (await this.cmtat.messageForTransferRestriction(3)).should.equal(
+      expect(
+        await this.cmtat.detectTransferRestriction(this.address1, this.address2, 10)
+      ).to.equal('3');
+      expect(await this.cmtat.messageForTransferRestriction(3)).to.equal(
         'Address TO is frozen'
       )
       const AMOUNT_TO_TRANSFER = 10
       await expectRevertCustomError(
-        this.cmtat.transferFrom(address3, address2, AMOUNT_TO_TRANSFER, {
-          from: address1
-        }),
+        this.cmtat.connect(this.address1).transferFrom(this.address3, this.address2, AMOUNT_TO_TRANSFER),
         'CMTAT_InvalidTransfer',
-        [address3, address2, AMOUNT_TO_TRANSFER]
+        [this.address3.address, this.address2.address, AMOUNT_TO_TRANSFER]
       )
     })
 
     // Improvement: check the return value but it is not possible to get the return value of a state modifying function
     it('testFreezeDoesNotEmitEventIfAddressAlreadyFrozen', async function () {
       // Arrange - Assert
-      (await this.cmtat.frozen(address1)).should.equal(false)
+      expect(await this.cmtat.frozen(this.address1)).to.equal(false)
       // Arrange
-      await this.cmtat.freeze(address1, reasonFreeze, {
-        from: owner
-      });
+      await this.cmtat.connect(this.admin).freeze(this.address1, reasonFreeze);
       // Arrange - Assert
-      (await this.cmtat.frozen(address1)).should.equal(true)
+      expect(await this.cmtat.frozen(this.address1)).to.equal(true)
       // Act
-      this.logs = await this.cmtat.freeze(address1, reasonFreeze, {
-        from: owner
-      })
+      this.logs = await this.cmtat.connect(this.admin).freeze(this.address1, reasonFreeze)
       // Assert
-      expectEvent.notEmitted(this.logs, 'Freeze');
-      (await this.cmtat.frozen(address1)).should.equal(true)
+      await expect(this.logs).to.not.emit(this.cmtat, 'Freeze')
+      expect(await this.cmtat.frozen(this.address1)).to.equal(true)
     })
 
     // Improvement: check the return value but it is not possible to get the return value of a state modifying function
     it('testUnfreezeDoesNotEmitEventIfAddressAlreadyUnfrozen', async function () {
       // Arrange
-      await this.cmtat.freeze(address1, reasonFreeze, { from: owner });
+      await this.cmtat.connect(this.admin).freeze(this.address1, reasonFreeze);
       // Arrange - Assert
-      (await this.cmtat.frozen(address1)).should.equal(true)
-      await this.cmtat.unfreeze(address1, reasonFreeze, { from: owner })
+      expect(await this.cmtat.frozen(this.address1)).to.equal(true)
+      await this.cmtat.connect(this.admin).unfreeze(this.address1, reasonFreeze)
 
       // Act
-      this.logs = await this.cmtat.unfreeze(address1, reasonUnfreeze, {
-        from: owner
-      })
+      this.logs = await this.cmtat.connect(this.admin).unfreeze(this.address1, reasonUnfreeze)
       // Assert
-      expectEvent.notEmitted(this.logs, 'Unfreeze');
-      (await this.cmtat.frozen(address1)).should.equal(false)
+      await expect(this.logs).to.not.emit(this.cmtat, 'Unfreeze')
+      expect(await this.cmtat.frozen(this.address1)).to.equal(false)
     })
   })
 }
