@@ -6,40 +6,21 @@ pragma solidity ^0.8.20;
 import "../../security/AuthorizationModule.sol";
 import "../../../libraries/Errors.sol";
 abstract contract BaseModule is AuthorizationModule {
+    // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.BaseModule")) - 1)) & ~bytes32(uint256(0xff))
+    bytes32 private constant BaseModuleStorageLocation = 0xa98e72f7f70574363edb12c42a03ac1feb8cc898a6e0a30f6eefbab7093e0d00;
+
+    /* Variables */
     struct BaseModuleStorage {
             string _tokenId;
             string _terms;
             string _information;
     }
-
-    function tokenId() public view virtual returns (string memory) {
-        BaseModuleStorage storage $ = _getBaseModuleStorage();
-        return $._tokenId;
-    }
-
-    function terms() public view virtual returns (string memory) {
-        BaseModuleStorage storage $ = _getBaseModuleStorage();
-        return $._terms;
-    }
-    function information() public view virtual returns (string memory) {
-        BaseModuleStorage storage $ = _getBaseModuleStorage();
-        return $._information;
-    }
-
-// keccak256(abi.encode(uint256(keccak256("CMTAT.storage.BaseModule")) - 1)) & ~bytes32(uint256(0xff))
-    bytes32 private constant BaseModuleStorageLocation = 0xa98e72f7f70574363edb12c42a03ac1feb8cc898a6e0a30f6eefbab7093e0d00;
-
-    function _getBaseModuleStorage() private pure returns (BaseModuleStorage storage $) {
-        assembly {
-            $.slot := BaseModuleStorageLocation
-        }
-    }
-
     /** 
     * @notice 
     * Get the current version of the smart contract
     */
     string public constant VERSION = "2.4.1";
+    
     /* Events */
     event Term(string indexed newTermIndexed, string newTerm);
     event TokenId(string indexed newTokenIdIndexed, string newTokenId);
@@ -49,7 +30,6 @@ abstract contract BaseModule is AuthorizationModule {
     );
     event Flag(uint256 indexed newFlag);
 
-    /* Variables */
 
 
     /* Initializers */
@@ -71,6 +51,21 @@ abstract contract BaseModule is AuthorizationModule {
     }
 
     /* Methods */
+
+    function tokenId() public view virtual returns (string memory) {
+        BaseModuleStorage storage $ = _getBaseModuleStorage();
+        return $._tokenId;
+    }
+
+    function terms() public view virtual returns (string memory) {
+        BaseModuleStorage storage $ = _getBaseModuleStorage();
+        return $._terms;
+    }
+    function information() public view virtual returns (string memory) {
+        BaseModuleStorage storage $ = _getBaseModuleStorage();
+        return $._information;
+    }
+
     /** 
     * @notice the tokenId will be changed even if the new value is the same as the current one
     */
@@ -103,4 +98,12 @@ abstract contract BaseModule is AuthorizationModule {
         $._information  = information_;
         emit Information(information_, information_);
     }
+
+
+    function _getBaseModuleStorage() private pure returns (BaseModuleStorage storage $) {
+        assembly {
+            $.slot := BaseModuleStorageLocation
+        }
+    }
+
 }

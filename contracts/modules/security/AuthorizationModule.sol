@@ -7,7 +7,12 @@ import "../../libraries/Errors.sol";
 import "../../interfaces/engine/IAuthorizationEngine.sol";
 
 abstract contract AuthorizationModule is AccessControlUpgradeable {
-    IAuthorizationEngine private authorizationEngine;
+    // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.AuthorizationModule")) - 1)) & ~bytes32(uint256(0xff))
+    bytes32 private constant AuthorizationModuleStorageLocation = 0x59b7f077fa4ad020f9053fd2197fef0113b19f0b11dcfe516e88cbc0e9226d00;
+    /* Variables */
+    struct AuthorizationModuleStorage {
+        IAuthorizationEngine _authorizationEngine;
+    }
     /**
      * @dev Emitted when a rule engine is set.
      */
@@ -25,11 +30,18 @@ abstract contract AuthorizationModule is AccessControlUpgradeable {
             revert Errors.CMTAT_AuthorizationModule_AddressZeroNotAllowed();
         }
         _grantRole(DEFAULT_ADMIN_ROLE, admin);
-        if (address(authorizationEngine) != address (0)) {
-            authorizationEngine = authorizationEngine_;
+        if (address(authorizationEngine_) != address (0)) {
+            AuthorizationModuleStorage storage $ = _getAuthorizationModuleStorage();
+            $._authorizationEngine = authorizationEngine_;
             emit AuthorizationEngine(authorizationEngine_);
         }
     }
+
+    function authorizationEngine() public view virtual returns (IAuthorizationEngine) {
+        AuthorizationModuleStorage storage $ = _getAuthorizationModuleStorage();
+        return $._authorizationEngine;
+    }
+
 
     /*
     * @notice set an authorizationEngine if not already set
@@ -38,16 +50,18 @@ abstract contract AuthorizationModule is AccessControlUpgradeable {
     function setAuthorizationEngine(
         IAuthorizationEngine authorizationEngine_
     ) external onlyRole(DEFAULT_ADMIN_ROLE) {
-        if (address(authorizationEngine) != address (0)){
+        AuthorizationModuleStorage storage $ = _getAuthorizationModuleStorage();
+        if (address($._authorizationEngine) != address (0)){
             revert Errors.CMTAT_AuthorizationModule_AuthorizationEngineAlreadySet();
         }
-        authorizationEngine = authorizationEngine_;
+        $._authorizationEngine = authorizationEngine_;
         emit AuthorizationEngine(authorizationEngine_);
     }
 
     function grantRole(bytes32 role, address account) public override onlyRole(getRoleAdmin(role)) {
-        if (address(authorizationEngine) != address (0)) {
-            bool result = authorizationEngine.operateOnGrantRole(role, account);
+        AuthorizationModuleStorage storage $ = _getAuthorizationModuleStorage();
+        if (address($._authorizationEngine) != address (0)) {
+            bool result = $._authorizationEngine.operateOnGrantRole(role, account);
             if(!result) {
                 // Operation rejected by the authorizationEngine
                revert Errors.CMTAT_AuthorizationModule_InvalidAuthorization();
@@ -57,8 +71,9 @@ abstract contract AuthorizationModule is AccessControlUpgradeable {
     }
 
     function revokeRole(bytes32 role, address account) public override onlyRole(getRoleAdmin(role)) {
-        if (address(authorizationEngine) != address (0)) {
-            bool result = authorizationEngine.operateOnRevokeRole(role, account);
+        AuthorizationModuleStorage storage $ = _getAuthorizationModuleStorage();
+        if (address($._authorizationEngine) != address (0)) {
+            bool result = $._authorizationEngine.operateOnRevokeRole(role, account);
             if(!result) {
                 // Operation rejected by the authorizationEngine
                revert Errors.CMTAT_AuthorizationModule_InvalidAuthorization();
@@ -81,5 +96,9 @@ abstract contract AuthorizationModule is AccessControlUpgradeable {
         return AccessControlUpgradeable.hasRole(role, account);
     }
 
-    uint256[50] private __gap;
+    function _getAuthorizationModuleStorage() private pure returns (AuthorizationModuleStorage storage $) {
+        assembly {
+            $.slot := AuthorizationModuleStorageLocation
+        }
+    }
 }

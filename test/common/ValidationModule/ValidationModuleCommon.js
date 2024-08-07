@@ -13,7 +13,11 @@ function ValidationModuleCommon () {
         await this.cmtat.connect(this.admin).setRuleEngine(this.ruleEngineMock.target)
       }
     })
-
+    it("testCanReturnTheRightAddressIfSet", async function (){
+      if(this.definedAtDeployment){
+        expect(this.ruleEngineMock.target).to.equal(await this.cmtat.ruleEngine());
+      }
+    });
     it('testCanValidateTransferWithoutRuleEngine', async function () {
      // Arrange
      await this.cmtat.connect(this.admin).setRuleEngine(ZERO_ADDRESS);

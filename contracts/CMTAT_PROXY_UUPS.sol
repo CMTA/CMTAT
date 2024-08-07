@@ -5,6 +5,7 @@ import "../openzeppelin-contracts-upgradeable/contracts/proxy/utils/UUPSUpgradea
 import "./modules/CMTAT_BASE.sol";
 import "./interfaces/engine/IEngine.sol";
 contract CMTAT_PROXY_UUPS is CMTAT_BASE, UUPSUpgradeable {
+    bytes32 public constant PROXY_UPGRADE_ROLE = keccak256("PROXY_UPGRADE_ROLE");
     /**
      * @notice Contract version for the deployment with a proxy
      * @param forwarderIrrevocable address of the forwarder, required for the gasless support
@@ -49,7 +50,5 @@ contract CMTAT_PROXY_UUPS is CMTAT_BASE, UUPSUpgradeable {
         __UUPSUpgradeable_init_unchained();
     }
 
-    function _authorizeUpgrade(address) internal override onlyRole("DEFAULT_ADMIN_ROLE") {}
-
-    uint256[50] private __gap;
+    function _authorizeUpgrade(address) internal override onlyRole(PROXY_UPGRADE_ROLE) {}
 }

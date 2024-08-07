@@ -6,6 +6,7 @@ import "../../security/AuthorizationModule.sol";
 import "../../../libraries/Errors.sol";
 import "../../../interfaces/engine/draft-IERC1643.sol";
 abstract contract DocumentModule is AuthorizationModule, IERC1643 {
+     bytes32 public constant DOCUMENT_ROLE = keccak256("DOCUMENT_ROLE");
     // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.DocumentModule")) - 1)) & ~bytes32(uint256(0xff))
     bytes32 private constant DocumentModuleStorageLocation = 0x5edcb2767f407e647b6a4171ef53e8015a3eff0bb2b6e7765b1a26332bc43000;
     struct DocumentModuleStorage {
@@ -21,8 +22,7 @@ abstract contract DocumentModule is AuthorizationModule, IERC1643 {
         assembly {
             $.slot := DocumentModuleStorageLocation
         }
-    }
-    bytes32 public constant DOCUMENT_ROLE = keccak256("DOCUMENT_ROLE");    
+    } 
     /**
      * @dev Emitted when a rule engine is set.
      */
@@ -51,6 +51,9 @@ abstract contract DocumentModule is AuthorizationModule, IERC1643 {
         IERC1643 documentEngine_
     ) external onlyRole(DOCUMENT_ROLE) {
         DocumentModuleStorage storage $ = _getDocumentModuleStorage();
+        if ($._documentEngine == documentEngine_){
+             revert Errors.CMTAT_DocumentModule_SameValue();
+        }
         $._documentEngine = documentEngine_;
         emit DocumentEngine(documentEngine_);
     }
@@ -71,7 +74,4 @@ abstract contract DocumentModule is AuthorizationModule, IERC1643 {
             documents =  $._documentEngine.getAllDocuments();
         }
     }
-
-
-    uint256[50] private __gap;
 }

@@ -22,7 +22,7 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>6/6</span>
+        <span class='fraction'>9/9</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">90% </span>
@@ -32,12 +32,12 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>5/5</span>
+        <span class='fraction'>6/6</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>8/8</span>
+        <span class='fraction'>12/12</span>
       </div>
     </div>
   </div>
@@ -127,7 +127,19 @@
 82
 83
 84
-85</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -142,6 +154,17 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">12×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -178,8 +201,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">8×</span>
-<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">2×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -200,6 +224,7 @@
 <span class="cline-any cline-yes">2×</span>
 <span class="cline-any cline-yes">2×</span>
 <span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -207,8 +232,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">//SPDX-License-Identifier: MPL-2.0
@@ -229,11 +253,22 @@ import "../../security/AuthorizationModule.sol";
  * event of a large bug.
  */
 abstract contract PauseModule is PausableUpgradeable, AuthorizationModule {
+    // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.ERC20BaseModule")) - 1)) &amp; ~bytes32(uint256(0xff))
+    bytes32 private constant PauseModuleStorageLocation = 0x9bd8d607565c0370ae5f91651ca67fd26d4438022bf72037316600e29e6a3a00;
+    struct PauseModuleStorage {
+        bool _isDeactivated;
+    }
+&nbsp;
+    function _getPauseModuleStorage() private pure returns (PauseModuleStorage storage $) {
+        assembly {
+            $.slot := PauseModuleStorageLocation
+        }
+    }
+&nbsp;
     // PauseModule
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     string internal constant TEXT_TRANSFER_REJECTED_PAUSED =
         "All transfers paused";
-    bool private isDeactivated;
     event Deactivated(address account);
 &nbsp;
     function __PauseModule_init_unchained() internal <span class="missing-if-branch" title="else path not taken" >E</span>onlyInitializing {
@@ -262,7 +297,8 @@ abstract contract PauseModule is PausableUpgradeable, AuthorizationModule {
      * - the caller must have the `PAUSER_ROLE`.
      */
     function unpause() public onlyRole(PAUSER_ROLE) {
-        if(isDeactivated){
+        PauseModuleStorage storage $ = _getPauseModuleStorage();
+        if($._isDeactivated){
             revert Errors.CMTAT_PauseModule_ContractIsDeactivated();
         }
         _unpause();
@@ -281,7 +317,8 @@ abstract contract PauseModule is PausableUpgradeable, AuthorizationModule {
         public
         onlyRole(DEFAULT_ADMIN_ROLE)
     {
-        isDeactivated = true;
+        PauseModuleStorage storage $ = _getPauseModuleStorage();
+        $._isDeactivated = true;
        _pause();
        emit Deactivated(_msgSender());
     }
@@ -290,10 +327,9 @@ abstract contract PauseModule is PausableUpgradeable, AuthorizationModule {
     * @notice Returns true if the contract is deactivated, and false otherwise.
     */
     function deactivated() view public returns (bool){
-        return isDeactivated;
+        PauseModuleStorage storage $ = _getPauseModuleStorage();
+        return $._isDeactivated;
     }
-&nbsp;
-    uint256[50] private __gap;
 }
 &nbsp;</pre></td></tr>
 </table></pre>
@@ -301,7 +337,7 @@ abstract contract PauseModule is PausableUpgradeable, AuthorizationModule {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu May 02 2024 13:42:17 GMT+0200 (Central European Summer Time)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Aug 07 2024 14:16:55 GMT+0200 (Central European Summer Time)
 </div>
 </div>
 <script src="../../../../prettify.js"></script>

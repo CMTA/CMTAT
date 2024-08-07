@@ -238,6 +238,4 @@ abstract contract CMTAT_BASE is
     {
         return ERC2771ContextUpgradeable._msgData();
     }
-
-    uint256[50] private __gap;
 }

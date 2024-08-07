@@ -13,9 +13,9 @@ describe(
       this.ADDRESS2_INITIAL_BALANCE = 18n
       this.ADDRESS3_INITIAL_BALANCE = 19n
       Object.assign(this, await loadFixture(fixture));
-      this.flag = 5
       const DECIMAL = 0
       this.ruleEngineMock = await ethers.deployContract('RuleEngineMock')
+      this.definedAtDeployment = true
       this.cmtat = await deployCMTATStandaloneWithParameter(
         this.deployerAddress.address,
         this._.address,

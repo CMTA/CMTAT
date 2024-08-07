@@ -7,10 +7,10 @@ interface IDebtEngine is IDebtGlobal {
     /**
      * @dev Returns true if the operation is authorized, and false otherwise.
      */
-    function debt() external returns(IDebtGlobal.DebtBase memory);
+    function debt() external view returns(IDebtGlobal.DebtBase memory);
     /**
      * @dev Returns true if the operation is authorized, and false otherwise.
      */
-    function creditEvents() external returns(IDebtGlobal.CreditEvents memory);
+    function creditEvents() external view returns(IDebtGlobal.CreditEvents memory);
    
 }

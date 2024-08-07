@@ -4,9 +4,9 @@ const {
 } = require('../../../openzeppelin-contracts-upgradeable/test/helpers/customError')
 const {
   PAUSER_ROLE,
-  DEFAULT_ADMIN_ROLE
+  DEFAULT_ADMIN_ROLE,
+  ZERO_ADDRESS
 } = require('../../utils')
-//const should = chai.should()
 function AuthorizationModuleCommon () {
   context('Authorization', function () {
     it('testAdminCanGrantRole', async function () {
@@ -32,7 +32,7 @@ function AuthorizationModuleCommon () {
     })
 
     /*
-    Already tested by OpenZeppelin library
+    * Already tested by OpenZeppelin library
     */
     it('testCannotNonAdminGrantRole', async function () {
       // Arrange - Assert
@@ -48,7 +48,7 @@ function AuthorizationModuleCommon () {
     })
 
     /*
-    Already tested by OpenZeppelin library
+    * Already tested by OpenZeppelin library
     */
     it('testCannotNonAdminRevokeRole', async function () {
       // Arrange

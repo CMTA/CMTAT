@@ -32,7 +32,6 @@
     "test:erc20Burn": "npx hardhat test test/standard/modules/ERC20BurnModule.test.js test/proxy/modules/ERC20BurnModule.test.js",
     "test:erc20Mint": "npx hardhat test test/standard/modules/ERC20MintModule.test.js test/proxy/modules/ERC20MintModule.test.js",
     "test:erc20Base": "npx hardhat test test/standard/modules/ERC20BaseModule.test.js test/proxy/modules/ERC20BaseModule.test.js",
-    "test:debt": "npx hardhat test test/standard/modules/DebtModule.test.js test/proxy/modules/DebtModule.test.js",
     "test:base": "npx hardhat test test/standard/modules/BaseModule.test.js test/proxy/modules/BaseModule.test.js",
     "test:pause": "npx hardhat test test/standard/modules/PauseModule.test.js test/proxy/modules/PauseModule.test.js",
     "test:creditEvents": "npx hardhat test test/standard/modules/CreditEventsModule.test.js test/proxy/modules/CreditEventsModule.test.js",
@@ -41,8 +40,10 @@
     "test:snapshot": "npx hardhat test test/standard/modules/ERC20SnapshotModule.test.js test/proxy/modules/ERC20SnapshotModule.test.js",
     "test:enforcement": "npx hardhat test test/standard/modules/EnforcementModule.test.js test/proxy/modules/EnforcementModule.test.js",
     "test:metaTx": "npx hardhat test test/standard/modules/MetaTxModule.test.js test/proxy/modules/MetaTxModule.test.js",
-    "test:proxy": "npx hardhat test test/proxy/general/factory/Beacon.test.js test/proxy/general/factory/Transparent.test.js test/proxy/general/factory/TransparentSalt.test.js test/proxy/general/Proxy.test.js test/proxy/general/UpgradeProxy.test.js",
-    "test:deployment": "npx hardhat test test/deployment/deployment.test.js"
+    "test:proxy": "npx hardhat test test/proxy/general/factory/Beacon.test.js test/proxy/general/factory/Transparent.test.js test/proxy/general/factory/TransparentSalt.test.js test/proxy/general/Proxy.test.js test/proxy/general/UpgradeProxy.test.js test/proxy/general/UpgradeProxyUUPS.test.js",
+    "test:deployment": "npx hardhat test test/deployment/deployment.test.js",
+    "test:document": "npx hardhat test test/standard/modules/DocumentModule.test.js",
+    "test:debt": "npx hardhat test test/standard/modules/DebtModule.test.js"
   },
   "repository": {
     "type": "git",

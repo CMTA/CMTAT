@@ -12,6 +12,7 @@ describe(
       Object.assign(this, await loadFixture(fixture));
       const DECIMAL = 0
       this.ruleEngineMock = await ethers.deployContract('RuleEngineMock')
+      this.definedAtDeployment = true
       this.cmtat = await deployCMTATProxyWithParameter(
         this.deployerAddress.address,
         this._.address,

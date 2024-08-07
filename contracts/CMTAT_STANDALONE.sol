@@ -42,6 +42,4 @@ contract CMTAT_STANDALONE is CMTAT_BASE {
             engine_
         );
     }
-
-    // No storage gap because the contract is deployed in standalone mode
 }

@@ -34,12 +34,6 @@ abstract contract PauseModule is PausableUpgradeable, AuthorizationModule {
         "All transfers paused";
     event Deactivated(address account);
 
-    function isDeactivated() public view returns (bool) {
-        PauseModuleStorage storage $ = _getPauseModuleStorage();
-        return $._isDeactivated;
-    }
-
-
     function __PauseModule_init_unchained() internal onlyInitializing {
         // no variable to initialize
     }

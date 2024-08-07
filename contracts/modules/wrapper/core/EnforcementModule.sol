@@ -51,6 +51,4 @@ abstract contract EnforcementModule is
     ) public onlyRole(ENFORCER_ROLE) returns (bool) {
         return _unfreeze(account, reason);
     }
-
-    uint256[50] private __gap;
 }

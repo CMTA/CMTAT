@@ -9,14 +9,9 @@ import "../../../libraries/Errors.sol";
 abstract contract ERC20BaseModule is ERC20Upgradeable {
     // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.ERC20BaseModule")) - 1)) & ~bytes32(uint256(0xff))
     bytes32 private constant ERC20BaseModuleStorageLocation = 0x9bd8d607565c0370ae5f91651ca67fd26d4438022bf72037316600e29e6a3a00;
+    
     struct ERC20BaseModuleStorage {
         uint8 _decimals;
-    }
-
-    function _getERC20BaseModuleStorage() private pure returns (ERC20BaseModuleStorage storage $) {
-        assembly {
-            $.slot := ERC20BaseModuleStorageLocation
-        }
     }
 
     /* Events */
@@ -119,5 +114,11 @@ abstract contract ERC20BaseModule is ERC20Upgradeable {
             balances[i] = ERC20Upgradeable.balanceOf(addresses[i]);
         }
         totalSupply = ERC20Upgradeable.totalSupply();
+    }
+
+    function _getERC20BaseModuleStorage() private pure returns (ERC20BaseModuleStorage storage $) {
+        assembly {
+            $.slot := ERC20BaseModuleStorageLocation
+        }
     }
 }

@@ -16,6 +16,4 @@ contract CMTAT_PROXY is CMTAT_BASE {
         // Disable the possibility to initialize the implementation
         _disableInitializers();
     }
-
-    uint256[50] private __gap;
 }

@@ -6,12 +6,18 @@ import "../../security/AuthorizationModule.sol";
 import "../../../libraries/Errors.sol";
 import "../../../interfaces/engine/IDebtEngine.sol";
 
-abstract contract DebtModule is  AuthorizationModule, IDebtEngine {
+abstract contract DebtModule is AuthorizationModule, IDebtEngine {
     bytes32 public constant DEBT_ROLE = keccak256("DEBT_ROLE");
-    IDebtEngine public debtEngine;
+    // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.DebtModule")) - 1)) & ~bytes32(uint256(0xff))
+    bytes32 private constant DebtModuleStorageLocation = 0xf8a315cc5f2213f6481729acd86e55db7ccc930120ccf9fb78b53dcce75f7c00;
+ 
+    /* Variables */
+    struct DebtModuleStorage {
+        IDebtEngine _debtEngine;
+    }
     /**
-     * @dev Emitted when a rule engine is set.
-     */
+    * @dev Emitted when a rule engine is set.
+    */
     event DebtEngine(IDebtEngine indexed newDebtEngine);
     /**
      * @dev
@@ -23,11 +29,17 @@ abstract contract DebtModule is  AuthorizationModule, IDebtEngine {
     function __DebtModule_init_unchained(IDebtEngine debtEngine_)
     internal onlyInitializing {
         if (address(debtEngine_) != address (0)) {
-            debtEngine = debtEngine_;
+            DebtModuleStorage storage $ = _getDebtModuleStorage();
+            $._debtEngine = debtEngine_;
             emit DebtEngine(debtEngine_);
         }
         
 
+    }
+
+    function debtEngine() public view virtual returns (IDebtEngine) {
+        DebtModuleStorage storage $ = _getDebtModuleStorage();
+        return $._debtEngine;
     }
 
     /*
@@ -37,21 +49,32 @@ abstract contract DebtModule is  AuthorizationModule, IDebtEngine {
     function setDebtEngine(
         IDebtEngine debtEngine_
     ) external onlyRole(DEBT_ROLE) {
-        debtEngine = debtEngine_;
+        DebtModuleStorage storage $ = _getDebtModuleStorage();
+        if ($._debtEngine == debtEngine_){
+            revert Errors.CMTAT_DebtModule_SameValue();
+        }
+        $._debtEngine = debtEngine_;
         emit DebtEngine(debtEngine_);
     }
 
-    function debt() external returns(DebtBase memory debtBaseResult){
-        if(address(debtEngine) != address(0)){
-            debtBaseResult = debtEngine.debt();
+    function debt() public view returns(DebtBase memory debtBaseResult){
+        DebtModuleStorage storage $ = _getDebtModuleStorage();
+        if(address($._debtEngine) != address(0)){
+            debtBaseResult =  $._debtEngine.debt();
         }
     }
 
-    function creditEvents() external returns(CreditEvents memory creditEventsResult){
-        if(address(debtEngine) != address(0)){
-            creditEventsResult = debtEngine.creditEvents();
+    function creditEvents() public view returns(CreditEvents memory creditEventsResult){
+        DebtModuleStorage storage $ = _getDebtModuleStorage();
+        if(address($._debtEngine) != address(0)){
+            creditEventsResult =  $._debtEngine.creditEvents();
         }
     }
 
-    uint256[50] private __gap;
+    function _getDebtModuleStorage() private pure returns (DebtModuleStorage storage $) {
+        assembly {
+            $.slot := DebtModuleStorageLocation
+        }
+    }
+
 }
