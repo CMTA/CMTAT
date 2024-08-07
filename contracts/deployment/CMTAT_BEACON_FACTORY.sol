@@ -8,7 +8,7 @@ import "../CMTAT_PROXY.sol";
 import "../modules/CMTAT_BASE.sol";
 import "../libraries/FactoryErrors.sol";
 import '@openzeppelin/contracts/access/AccessControl.sol';
-import "../interfaces/engine/IEngine.sol";
+import "../interfaces/ICMTATConstructor.sol";
 
 /**
 * @notice Factory to deploy beacon proxy
@@ -24,6 +24,13 @@ contract CMTAT_BEACON_FACTORY is AccessControl {
     UpgradeableBeacon public immutable beacon;
     address[] public cmtatsList;
     event CMTAT(address indexed CMTAT, uint256 id);
+
+    struct CMTAT_ARGUMENT{
+        address CMTATAdmin;
+        ICMTATConstructor.ERC20Attributes ERC20Attributes;
+        ICMTATConstructor.BaseModuleAttributes baseModuleAttributes;
+        ICMTATConstructor.Engine engines;
+    }
 
     /**
     * @param implementation_ contract implementation
@@ -51,27 +58,16 @@ contract CMTAT_BEACON_FACTORY is AccessControl {
     */
     function deployCMTAT(
         // CMTAT function initialize
-        address admin,
-        string memory nameIrrevocable,
-        string memory symbolIrrevocable,
-        uint8 decimalsIrrevocable,
-        string memory tokenId_,
-        string memory terms_,
-        string memory information_, 
-        IEngine.Engine memory engines
+        CMTAT_ARGUMENT calldata cmtatArgument
     ) public onlyRole(CMTAT_DEPLOYER_ROLE) returns(BeaconProxy cmtat)   {
         cmtat = new BeaconProxy(
             address(beacon),
             abi.encodeWithSelector(
                  CMTAT_PROXY(address(0)).initialize.selector,
-                    admin,
-                    nameIrrevocable,
-                    symbolIrrevocable,
-                    decimalsIrrevocable,
-                    tokenId_,
-                    terms_,
-                    information_,
-                    engines
+            cmtatArgument.CMTATAdmin,
+            cmtatArgument.ERC20Attributes,
+            cmtatArgument.baseModuleAttributes,
+            cmtatArgument.engines
             )
         );
         cmtats[cmtatCounterId] = address(cmtat);

@@ -3,10 +3,10 @@ const {
 } = require('../../../openzeppelin-contracts-upgradeable/test/helpers/customError.js')
 const { DEFAULT_ADMIN_ROLE, PAUSER_ROLE } = require('../../utils')
 const { ZERO_ADDRESS } = require('../../utils')
-const DECIMAL = 0
-const { deployCMTATProxy, DEPLOYMENT_FLAG,
+const { deployCMTATProxy,
   fixture,
-  loadFixture } = require('../../deploymentUtils')
+  loadFixture,
+  DEPLOYMENT_DECIMAL } = require('../../deploymentUtils')
 const { upgrades } = require('hardhat')
 describe(
   'Proxy - Security Test',
@@ -32,12 +32,12 @@ describe(
         await expectRevertCustomError(
           this.implementationContract.connect(this.attacker).initialize(
             this.attacker,
-            'CMTA Token',
+            ['CMTA Token',
             'CMTAT',
-            DECIMAL,
-            'CMTAT_ISIN',
+            DEPLOYMENT_DECIMAL],
+            ['CMTAT_ISIN',
             'https://cmta.ch',
-            'CMTAT_info',
+            'CMTAT_info'],
             [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]
           ),
           'InvalidInitialization',

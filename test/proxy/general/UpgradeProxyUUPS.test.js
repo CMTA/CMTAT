@@ -1,6 +1,6 @@
 const { expect } = require("chai");
 const { ethers, upgrades } = require("hardhat");
-const { ZERO_ADDRESS, DEFAULT_ADMIN_ROLE, PROXY_UPGRADE_ROLE } = require('../../utils')
+const { ZERO_ADDRESS, PROXY_UPGRADE_ROLE } = require('../../utils')
 const UpgradeProxyCommon = require('./UpgradeProxyCommon')
 const {
     expectRevertCustomError
@@ -11,8 +11,6 @@ const {
     fixture, loadFixture 
   } = require('../../deploymentUtils')
 describe("CMTAT with UUPS Proxy", function () {
-  let TokenV1, token, TokenV2
-
   beforeEach(async function () {
     Object.assign(this, await loadFixture(fixture));
 
@@ -25,12 +23,12 @@ describe("CMTAT with UUPS Proxy", function () {
       )
     this.IsUUPSProxy = true
     this.CMTAT = await upgrades.deployProxy(CMTAT_PROXY_FACTORY, [this.admin.address,
-        'CMTA Token',
-        'CMTAT',
-        DEPLOYMENT_DECIMAL,
-        'CMTAT_ISIN',
-        'https://cmta.ch',
-        'CMTAT_info',
+      ['CMTA Token',
+      'CMTAT',
+      DEPLOYMENT_DECIMAL],
+      ['CMTAT_ISIN',
+      'https://cmta.ch',
+      'CMTAT_info'],
         [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]], 
     { initializer: 'initialize', kind: 'uups',constructorArgs: [this._.address] });
   })

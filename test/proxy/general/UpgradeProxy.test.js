@@ -24,12 +24,12 @@ describe(
           CMTAT_PROXY_FACTORY,
           [
             this.admin.address,
-            'CMTA Token',
+            ['CMTA Token',
             'CMTAT',
-            DEPLOYMENT_DECIMAL,
-            'CMTAT_ISIN',
+            DEPLOYMENT_DECIMAL],
+            ['CMTAT_ISIN',
             'https://cmta.ch',
-            'CMTAT_info',
+            'CMTAT_info'],
             [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]
           ],
           {

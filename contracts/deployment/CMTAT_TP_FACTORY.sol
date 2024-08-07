@@ -6,7 +6,7 @@ import "../CMTAT_PROXY.sol";
 import "../libraries/FactoryErrors.sol";
 import '@openzeppelin/contracts/utils/Create2.sol';
 import '@openzeppelin/contracts/access/AccessControl.sol';
-import "../interfaces/engine/IEngine.sol";
+import "../interfaces/ICMTATConstructor.sol";
 
 /**
 * @notice Factory to deploy CMTAT with a transparent proxy
@@ -26,13 +26,9 @@ contract CMTAT_TP_FACTORY is AccessControl {
     
     struct CMTAT_ARGUMENT{
         address CMTATAdmin;
-        string nameIrrevocable;
-        string symbolIrrevocable;
-        uint8 decimalsIrrevocable;
-        string tokenId;
-        string terms;
-        string information;
-        IEngine.Engine engines;
+        ICMTATConstructor.ERC20Attributes ERC20Attributes;
+        ICMTATConstructor.BaseModuleAttributes baseModuleAttributes;
+        ICMTATConstructor.Engine engines;
     }
     event CMTAT(address indexed CMTAT, uint256 id);
 
@@ -139,36 +135,23 @@ contract CMTAT_TP_FACTORY is AccessControl {
         CMTAT_ARGUMENT calldata cmtatArgument) internal view returns(bytes memory bytecode) {
         bytes memory implementation = _encodeImplementationArgument(
             cmtatArgument.CMTATAdmin,
-            cmtatArgument.nameIrrevocable,
-            cmtatArgument.symbolIrrevocable,
-            cmtatArgument.decimalsIrrevocable,
-            cmtatArgument.tokenId,
-            cmtatArgument.terms,
-            cmtatArgument.information,
-            cmtatArgument.engines
-            );
+            cmtatArgument.ERC20Attributes,
+            cmtatArgument.baseModuleAttributes,
+            cmtatArgument.engines);
         bytecode = abi.encodePacked(type(TransparentUpgradeableProxy).creationCode,  abi.encode(logic, proxyAdminOwner, implementation));
      }
 
 
     function _encodeImplementationArgument(  address admin,
-        string memory nameIrrevocable,
-        string memory symbolIrrevocable,
-        uint8 decimalsIrrevocable,
-        string memory tokenId_,
-        string memory terms_,
-        string memory information_, 
-        IEngine.Engine memory engines) internal pure returns(bytes memory){
+        ICMTATConstructor.ERC20Attributes memory ERC20Attributes_,
+        ICMTATConstructor.BaseModuleAttributes memory baseModuleAttributes_,
+        ICMTATConstructor.Engine memory engines_  ) internal pure returns(bytes memory){
         return  abi.encodeWithSelector(
             CMTAT_PROXY(address(0)).initialize.selector,
                 admin,
-                nameIrrevocable,
-                symbolIrrevocable,
-                decimalsIrrevocable,
-                tokenId_,
-                terms_,
-                information_,
-                engines
+                ERC20Attributes_,
+                baseModuleAttributes_,
+                engines_
         );
     }
 }

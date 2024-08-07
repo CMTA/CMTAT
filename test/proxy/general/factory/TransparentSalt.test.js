@@ -26,12 +26,12 @@ describe(
       ])
       this.CMTATArg = [
         this.admin,
-        'CMTA Token',
+        ['CMTA Token',
         'CMTAT',
-        DEPLOYMENT_DECIMAL,
-        'CMTAT_ISIN',
+        DEPLOYMENT_DECIMAL],
+        ['CMTAT_ISIN',
         'https://cmta.ch',
-        'CMTAT_info',
+        'CMTAT_info'],
         [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]
       ]
     })

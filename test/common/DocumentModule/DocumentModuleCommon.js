@@ -5,7 +5,6 @@ const {
 const {  ZERO_ADDRESS } = require('../../utils')
 
 function DocumentModuleCommon () {
-  // Transferring with Rule Engine set
   context('Document Module Test', function () {
     beforeEach(async function () {
       if ((await this.cmtat.documentEngine()) === ZERO_ADDRESS) {
