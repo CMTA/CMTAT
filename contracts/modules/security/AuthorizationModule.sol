@@ -2,21 +2,24 @@
 
 pragma solidity ^0.8.20;
 
-import "../../../openzeppelin-contracts-upgradeable/contracts/access/AccessControlUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 import "../../libraries/Errors.sol";
 import "../../interfaces/engine/IAuthorizationEngine.sol";
 
 abstract contract AuthorizationModule is AccessControlUpgradeable {
-    // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.AuthorizationModule")) - 1)) & ~bytes32(uint256(0xff))
-    bytes32 private constant AuthorizationModuleStorageLocation = 0x59b7f077fa4ad020f9053fd2197fef0113b19f0b11dcfe516e88cbc0e9226d00;
-    /* Variables */
-    struct AuthorizationModuleStorage {
-        IAuthorizationEngine _authorizationEngine;
-    }
+    /* ============ Events ============ */
     /**
      * @dev Emitted when a rule engine is set.
      */
     event AuthorizationEngine(IAuthorizationEngine indexed newAuthorizationEngine);
+    /* ============ ERC-7201 ============ */
+    // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.AuthorizationModule")) - 1)) & ~bytes32(uint256(0xff))
+    bytes32 private constant AuthorizationModuleStorageLocation = 0x59b7f077fa4ad020f9053fd2197fef0113b19f0b11dcfe516e88cbc0e9226d00;
+    /* ==== ERC-7201 State Variables === */
+    struct AuthorizationModuleStorage {
+        IAuthorizationEngine _authorizationEngine;
+    }
+    /* ============  Initializer Function ============ */
     /**
      * @dev
      *
@@ -36,6 +39,11 @@ abstract contract AuthorizationModule is AccessControlUpgradeable {
             emit AuthorizationEngine(authorizationEngine_);
         }
     }
+
+
+    /*//////////////////////////////////////////////////////////////
+                            PUBLIC/EXTERNAL FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
 
     function authorizationEngine() public view virtual returns (IAuthorizationEngine) {
         AuthorizationModuleStorage storage $ = _getAuthorizationModuleStorage();
@@ -96,6 +104,13 @@ abstract contract AuthorizationModule is AccessControlUpgradeable {
         return AccessControlUpgradeable.hasRole(role, account);
     }
 
+
+    /*//////////////////////////////////////////////////////////////
+                            INTERNAL/PRIVATE FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
+
+
+    /* ============ ERC-7201 ============ */
     function _getAuthorizationModuleStorage() private pure returns (AuthorizationModuleStorage storage $) {
         assembly {
             $.slot := AuthorizationModuleStorageLocation

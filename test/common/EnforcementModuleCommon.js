@@ -1,8 +1,5 @@
 const { ENFORCER_ROLE } = require('../utils')
 const { expect } = require('chai');
-const {
-  expectRevertCustomError
-} = require('../../openzeppelin-contracts-upgradeable/test/helpers/customError.js')
 const reasonFreeze = 'testFreeze'
 const reasonUnfreeze = 'testUnfreeze'
 
@@ -101,11 +98,9 @@ function EnforcementModuleCommon () {
 
     it('testCannotNonEnforcerFreezeAddress', async function () {
       // Act
-      await expectRevertCustomError(
-        this.cmtat.connect(this.address2).freeze(this.address1, reasonFreeze),
-        'AccessControlUnauthorizedAccount',
-        [this.address2.address, ENFORCER_ROLE]
-      );
+      await expect( this.cmtat.connect(this.address2).freeze(this.address1, reasonFreeze))
+      .to.be.revertedWithCustomError(this.cmtat, 'AccessControlUnauthorizedAccount')
+      .withArgs(this.address2.address, ENFORCER_ROLE);
       // Assert
       expect(await this.cmtat.frozen(this.address1)).to.equal(false)
     })
@@ -114,11 +109,9 @@ function EnforcementModuleCommon () {
       // Arrange
       await this.cmtat.connect(this.admin).freeze(this.address1, reasonFreeze)
       // Act
-      await expectRevertCustomError(
-        this.cmtat.connect(this.address2).unfreeze(this.address1, reasonUnfreeze),
-        'AccessControlUnauthorizedAccount',
-        [this.address2.address, ENFORCER_ROLE]
-      );
+      await expect( this.cmtat.connect(this.address2).unfreeze(this.address1, reasonFreeze))
+      .to.be.revertedWithCustomError(this.cmtat, 'AccessControlUnauthorizedAccount')
+      .withArgs(this.address2.address, ENFORCER_ROLE);
       // Assert
       expect(await this.cmtat.frozen(this.address1)).to.equal(true)
     })
@@ -135,11 +128,9 @@ function EnforcementModuleCommon () {
         'Address FROM is frozen'
       )
       const AMOUNT_TO_TRANSFER = 10
-      await expectRevertCustomError(
-        this.cmtat.connect(this.address1).transfer(this.address2, AMOUNT_TO_TRANSFER),
-        'CMTAT_InvalidTransfer',
-        [this.address1.address, this.address2.address, AMOUNT_TO_TRANSFER]
-      )
+      await expect(  this.cmtat.connect(this.address1).transfer(this.address2, AMOUNT_TO_TRANSFER))
+      .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
+      .withArgs(this.address1.address, this.address2.address, AMOUNT_TO_TRANSFER);
     })
 
     // reverts if address3 transfers tokens from address1 to this.address2 when paused
@@ -158,11 +149,9 @@ function EnforcementModuleCommon () {
         'Address TO is frozen'
       )
       const AMOUNT_TO_TRANSFER = 10
-      await expectRevertCustomError(
-        this.cmtat.connect(this.address1).transferFrom(this.address3, this.address2, AMOUNT_TO_TRANSFER),
-        'CMTAT_InvalidTransfer',
-        [this.address3.address, this.address2.address, AMOUNT_TO_TRANSFER]
-      )
+      await expect(  this.cmtat.connect(this.address1).transferFrom(this.address3, this.address2, AMOUNT_TO_TRANSFER))
+      .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
+      .withArgs(this.address3.address, this.address2.address, AMOUNT_TO_TRANSFER)
     })
 
     // Improvement: check the return value but it is not possible to get the return value of a state modifying function

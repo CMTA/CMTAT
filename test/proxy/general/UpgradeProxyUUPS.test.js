@@ -2,9 +2,6 @@ const { expect } = require("chai");
 const { ethers, upgrades } = require("hardhat");
 const { ZERO_ADDRESS, PROXY_UPGRADE_ROLE } = require('../../utils')
 const UpgradeProxyCommon = require('./UpgradeProxyCommon')
-const {
-    expectRevertCustomError
-  } = require('../../../openzeppelin-contracts-upgradeable/test/helpers/customError.js')
   
 const {
     DEPLOYMENT_DECIMAL,
@@ -45,14 +42,12 @@ describe("CMTAT with UUPS Proxy", function () {
   });
 
   it("testNonAdminCanNotUpgradeProxy", async function () {
-    await expectRevertCustomError(
-        upgrades.upgradeProxy(this.CMTAT.target, this.CMTAT_PROXY_TestFactory.connect(this.address1),
-        {
-          constructorArgs: [this._.address],
-          kind: 'uups'
-        }),
-        'AccessControlUnauthorizedAccount',
-        [this.address1.address, PROXY_UPGRADE_ROLE]
-      );
+    await expect(  upgrades.upgradeProxy(this.CMTAT.target, this.CMTAT_PROXY_TestFactory.connect(this.address1),
+    {
+      constructorArgs: [this._.address],
+      kind: 'uups'
+    }))
+    .to.be.revertedWithCustomError(this.CMTAT, 'AccessControlUnauthorizedAccount')
+    .withArgs(this.address1.address, PROXY_UPGRADE_ROLE)
   });
 });

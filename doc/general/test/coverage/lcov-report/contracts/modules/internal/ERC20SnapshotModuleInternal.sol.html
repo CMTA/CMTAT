@@ -22,7 +22,7 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>16/16</span>
+        <span class='fraction'>20/20</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">90% </span>
@@ -37,7 +37,7 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>24/24</span>
+        <span class='fraction'>28/28</span>
       </div>
     </div>
   </div>
@@ -180,10 +180,9 @@
 135
 136
 137
-138</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+138
+139
+140</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -254,6 +253,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1200×</span>
+<span class="cline-any cline-yes">1200×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -268,6 +268,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">720×</span>
+<span class="cline-any cline-yes">720×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -283,8 +284,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">420×</span>
-<span class="cline-any cline-yes">420×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">421×</span>
+<span class="cline-any cline-yes">421×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">77×</span>
 <span class="cline-any cline-yes">77×</span>
@@ -296,8 +300,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">343×</span>
-<span class="cline-any cline-yes">343×</span>
+<span class="cline-any cline-yes">344×</span>
+<span class="cline-any cline-yes">344×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -305,23 +309,23 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">463×</span>
+<span class="cline-any cline-yes">464×</span>
+<span class="cline-any cline-yes">464×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">377×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">378×</span>
+<span class="cline-any cline-yes">378×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">//SPDX-License-Identifier: MPL-2.0
 &nbsp;
 pragma solidity ^0.8.20;
 &nbsp;
-import "../../../openzeppelin-contracts-upgradeable/contracts/token/ERC20/ERC20Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 import {Arrays} from '@openzeppelin/contracts/utils/Arrays.sol';
 import "./base/SnapshotModuleBase.sol";
 import "../../interfaces/ICMTATSnapshot.sol";
@@ -336,19 +340,16 @@ import "../../interfaces/ICMTATSnapshot.sol";
 &nbsp;
 abstract contract ERC20SnapshotModuleInternal is ICMTATSnapshot, SnapshotModuleBase, ERC20Upgradeable {
     using Arrays for uint256[];
-&nbsp;
-    /** 
-    * @dev 
-    * list of scheduled snapshot (time)
-    * This list is sorted in ascending order
-    */
-    uint256[] private _scheduledSnapshots;
-&nbsp;
+    /* ============  Initializer Function ============ */
     function __ERC20Snapshot_init_unchained() internal <span class="missing-if-branch" title="else path not taken" >E</span>onlyInitializing {
         // Nothing to do
         // _currentSnapshotTime &amp; _currentSnapshotIndex are initialized to zero
     }
 &nbsp;
+&nbsp;
+    /*//////////////////////////////////////////////////////////////
+                            PUBLIC/EXTERNAL FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
     /**
     * @notice Return snapshotBalanceOf and snapshotTotalSupply to avoid multiple calls
     * @return ownerBalance ,  totalSupply - see snapshotBalanceOf and snapshotTotalSupply
@@ -390,9 +391,10 @@ abstract contract ERC20SnapshotModuleInternal is ICMTATSnapshot, SnapshotModuleB
         uint256 time,
         address owner
     ) public view returns (uint256) {
+        SnapshotModuleBaseStorage storage $ = _getSnapshotModuleBaseStorage();
         (bool snapshotted, uint256 value) = _valueAt(
             time,
-            _accountBalanceSnapshots[owner]
+            $._accountBalanceSnapshots[owner]
         );
 &nbsp;
         return snapshotted ? value : balanceOf(owner);
@@ -404,13 +406,17 @@ abstract contract ERC20SnapshotModuleInternal is ICMTATSnapshot, SnapshotModuleB
     * @return value stored in the snapshot, or the actual totalSupply if no snapshot
     */
     function snapshotTotalSupply(uint256 time) public view returns (uint256) {
+        SnapshotModuleBaseStorage storage $ = _getSnapshotModuleBaseStorage();
         (bool snapshotted, uint256 value) = _valueAt(
             time,
-            _totalSupplySnapshots
+            $._totalSupplySnapshots
         );
         return snapshotted ? value : totalSupply();
     }
 &nbsp;
+    /*//////////////////////////////////////////////////////////////
+                            INTERNAL/PRIVATE FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
 &nbsp;
     /** 
     * @dev Update balance and/or total supply snapshots before the values are modified. This is implemented
@@ -442,17 +448,17 @@ abstract contract ERC20SnapshotModuleInternal is ICMTATSnapshot, SnapshotModuleB
     * @dev See {OpenZeppelin - ERC20Snapshot}
     */
     function _updateAccountSnapshot(address account) private {
-        _updateSnapshot(_accountBalanceSnapshots[account], balanceOf(account));
+        SnapshotModuleBaseStorage storage $ = _getSnapshotModuleBaseStorage();
+        _updateSnapshot($._accountBalanceSnapshots[account], balanceOf(account));
     }
 &nbsp;
     /**
     * @dev See {OpenZeppelin - ERC20Snapshot}
     */
     function _updateTotalSupplySnapshot() private {
-        _updateSnapshot(_totalSupplySnapshots, totalSupply());
+        SnapshotModuleBaseStorage storage $ = _getSnapshotModuleBaseStorage();
+        _updateSnapshot($._totalSupplySnapshots, totalSupply());
     }
-&nbsp;
-    uint256[50] private __gap;
 }
 &nbsp;</pre></td></tr>
 </table></pre>
@@ -460,7 +466,7 @@ abstract contract ERC20SnapshotModuleInternal is ICMTATSnapshot, SnapshotModuleB
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Aug 07 2024 14:16:55 GMT+0200 (Central European Summer Time)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Fri Aug 09 2024 14:44:48 GMT+0200 (Central European Summer Time)
 </div>
 </div>
 <script src="../../../prettify.js"></script>

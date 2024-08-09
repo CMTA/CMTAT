@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.20;
 
-import "../../../openzeppelin-contracts-upgradeable/contracts/token/ERC20/ERC20Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 import {Arrays} from '@openzeppelin/contracts/utils/Arrays.sol';
 import "./base/SnapshotModuleBase.sol";
 import "../../interfaces/ICMTATSnapshot.sol";
@@ -17,19 +17,16 @@ import "../../interfaces/ICMTATSnapshot.sol";
 
 abstract contract ERC20SnapshotModuleInternal is ICMTATSnapshot, SnapshotModuleBase, ERC20Upgradeable {
     using Arrays for uint256[];
-
-    /** 
-    * @dev 
-    * list of scheduled snapshot (time)
-    * This list is sorted in ascending order
-    */
-    uint256[] private _scheduledSnapshots;
-
+    /* ============  Initializer Function ============ */
     function __ERC20Snapshot_init_unchained() internal onlyInitializing {
         // Nothing to do
         // _currentSnapshotTime & _currentSnapshotIndex are initialized to zero
     }
 
+
+    /*//////////////////////////////////////////////////////////////
+                            PUBLIC/EXTERNAL FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
     /**
     * @notice Return snapshotBalanceOf and snapshotTotalSupply to avoid multiple calls
     * @return ownerBalance ,  totalSupply - see snapshotBalanceOf and snapshotTotalSupply
@@ -71,9 +68,10 @@ abstract contract ERC20SnapshotModuleInternal is ICMTATSnapshot, SnapshotModuleB
         uint256 time,
         address owner
     ) public view returns (uint256) {
+        SnapshotModuleBaseStorage storage $ = _getSnapshotModuleBaseStorage();
         (bool snapshotted, uint256 value) = _valueAt(
             time,
-            _accountBalanceSnapshots[owner]
+            $._accountBalanceSnapshots[owner]
         );
 
         return snapshotted ? value : balanceOf(owner);
@@ -85,13 +83,17 @@ abstract contract ERC20SnapshotModuleInternal is ICMTATSnapshot, SnapshotModuleB
     * @return value stored in the snapshot, or the actual totalSupply if no snapshot
     */
     function snapshotTotalSupply(uint256 time) public view returns (uint256) {
+        SnapshotModuleBaseStorage storage $ = _getSnapshotModuleBaseStorage();
         (bool snapshotted, uint256 value) = _valueAt(
             time,
-            _totalSupplySnapshots
+            $._totalSupplySnapshots
         );
         return snapshotted ? value : totalSupply();
     }
 
+    /*//////////////////////////////////////////////////////////////
+                            INTERNAL/PRIVATE FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
 
     /** 
     * @dev Update balance and/or total supply snapshots before the values are modified. This is implemented
@@ -123,15 +125,15 @@ abstract contract ERC20SnapshotModuleInternal is ICMTATSnapshot, SnapshotModuleB
     * @dev See {OpenZeppelin - ERC20Snapshot}
     */
     function _updateAccountSnapshot(address account) private {
-        _updateSnapshot(_accountBalanceSnapshots[account], balanceOf(account));
+        SnapshotModuleBaseStorage storage $ = _getSnapshotModuleBaseStorage();
+        _updateSnapshot($._accountBalanceSnapshots[account], balanceOf(account));
     }
 
     /**
     * @dev See {OpenZeppelin - ERC20Snapshot}
     */
     function _updateTotalSupplySnapshot() private {
-        _updateSnapshot(_totalSupplySnapshots, totalSupply());
+        SnapshotModuleBaseStorage storage $ = _getSnapshotModuleBaseStorage();
+        _updateSnapshot($._totalSupplySnapshots, totalSupply());
     }
-
-    uint256[50] private __gap;
 }

@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.20;
 
-import "../../openzeppelin-contracts-upgradeable/contracts/metatx/ERC2771ForwarderUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/metatx/ERC2771ForwarderUpgradeable.sol";
 
 contract MinimalForwarderMock is ERC2771ForwarderUpgradeable {
     function initialize(string memory name) public initializer {

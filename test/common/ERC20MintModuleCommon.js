@@ -1,7 +1,4 @@
 const { expect } = require('chai');
-const {
-  expectRevertCustomError,
-} = require("../../openzeppelin-contracts-upgradeable/test/helpers/customError.js");
 const { ZERO_ADDRESS, MINTER_ROLE } = require("../utils.js");
 
 function ERC20MintModuleCommon() {
@@ -91,11 +88,9 @@ function ERC20MintModuleCommon() {
 
     // reverts when issuing by a non minter
     it("testCannotMintByNonMinter", async function () {
-      await expectRevertCustomError(
-        this.cmtat.connect(this.address1).mint(this.address1, VALUE1),
-        "AccessControlUnauthorizedAccount",
-        [this.address1.address, MINTER_ROLE]
-      );
+      await expect( this.cmtat.connect(this.address1).mint(this.address1, VALUE1))
+      .to.be.revertedWithCustomError(this.cmtat, 'AccessControlUnauthorizedAccount')
+      .withArgs(this.address1.address, MINTER_ROLE);
     });
   });
 
@@ -194,26 +189,21 @@ function ERC20MintModuleCommon() {
     it("testCannotMintBatchByNonMinter", async function () {
       const TOKEN_HOLDER = [this.admin, this.address1, this.address2];
       const TOKEN_SUPPLY_BY_HOLDERS = [10n, 100n, 1000n];
-      await expectRevertCustomError(
-        this.cmtat
-          .connect(this.address1)
-          .mintBatch(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS),
-        "AccessControlUnauthorizedAccount",
-        [this.address1.address, MINTER_ROLE]
-      );
+      await expect(  this.cmtat
+        .connect(this.address1)
+        .mintBatch(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS))
+      .to.be.revertedWithCustomError(this.cmtat, 'AccessControlUnauthorizedAccount')
+      .withArgs(this.address1.address, MINTER_ROLE);
     });
 
     it("testCannotMintBatchIfLengthMismatchMissingAddresses", async function () {
       // Number of addresses is insufficient
       const TOKEN_HOLDER_INVALID = [this.admin, this.address1];
       const TOKEN_SUPPLY_BY_HOLDERS = [10n, 100n, 1000n];
-      await expectRevertCustomError(
-        this.cmtat
-          .connect(this.admin)
-          .mintBatch(TOKEN_HOLDER_INVALID, TOKEN_SUPPLY_BY_HOLDERS),
-        "CMTAT_MintModule_AccountsValueslengthMismatch",
-        []
-      );
+      await expect(  this.cmtat
+        .connect(this.admin)
+        .mintBatch(TOKEN_HOLDER_INVALID, TOKEN_SUPPLY_BY_HOLDERS))
+      .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_MintModule_AccountsValueslengthMismatch')
     });
 
     it("testCannotMintBatchIfLengthMismatchTooManyAddresses", async function () {
@@ -225,25 +215,20 @@ function ERC20MintModuleCommon() {
         this.address1,
       ];
       const TOKEN_SUPPLY_BY_HOLDERS = [10n, 100n, 1000n];
-      await expectRevertCustomError(
-        this.cmtat
-          .connect(this.admin)
-          .mintBatch(TOKEN_HOLDER_INVALID, TOKEN_SUPPLY_BY_HOLDERS),
-        "CMTAT_MintModule_AccountsValueslengthMismatch",
-        []
-      );
+      await expect(  this.cmtat
+        .connect(this.admin)
+        .mintBatch(TOKEN_HOLDER_INVALID, TOKEN_SUPPLY_BY_HOLDERS))
+      .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_MintModule_AccountsValueslengthMismatch')
     });
 
     it("testCannotMintBatchIfTOSIsEmpty", async function () {
       const TOKEN_HOLDER_INVALID = [];
       const TOKEN_SUPPLY_BY_HOLDERS = [];
-      await expectRevertCustomError(
-        this.cmtat
-          .connect(this.admin)
-          .mintBatch(TOKEN_HOLDER_INVALID, TOKEN_SUPPLY_BY_HOLDERS),
-        "CMTAT_MintModule_EmptyAccounts",
-        []
-      );
+      await expect(  this.cmtat
+        .connect(this.admin)
+        .mintBatch(TOKEN_HOLDER_INVALID, TOKEN_SUPPLY_BY_HOLDERS))
+      .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_MintModule_EmptyAccounts')
+
     });
   });
 }

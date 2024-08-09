@@ -1,7 +1,4 @@
 const { expect } = require('chai');
-const {
-  expectRevertCustomError
-} = require('../../../openzeppelin-contracts-upgradeable/test/helpers/customError.js')
 const { DOCUMENT_ROLE } = require('../../utils.js')
 
 function DocumentModuleSetDocumentEngineCommon () {
@@ -18,20 +15,15 @@ function DocumentModuleSetDocumentEngineCommon () {
 
     it('testCanNotBeSetByAdminWithTheSameValue', async function () {
       // Act
-      await expectRevertCustomError(
-        this.cmtat.connect(this.admin).setDocumentEngine(await this.cmtat.documentEngine()),
-        'CMTAT_DocumentModule_SameValue',
-        []
-      )
+      await expect(this.cmtat.connect(this.admin).setDocumentEngine(await this.cmtat.documentEngine()))
+      .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_DocumentModule_SameValue')
     })
 
     it('testCannotBeSetByNonAdmin', async function () {
       // Act
-      await expectRevertCustomError(
-        this.cmtat.connect(this.address1).setDocumentEngine(this.documentEngineMock.target),
-        'AccessControlUnauthorizedAccount',
-        [this.address1.address, DOCUMENT_ROLE]
-      )
+      await expect( this.cmtat.connect(this.address1).setDocumentEngine(this.documentEngineMock.target))
+      .to.be.revertedWithCustomError(this.cmtat, 'AccessControlUnauthorizedAccount')
+      .withArgs(this.address1.address, DOCUMENT_ROLE)
     })
   })
 }

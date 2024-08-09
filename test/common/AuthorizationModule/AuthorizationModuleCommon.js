@@ -1,8 +1,5 @@
 const { expect } = require('chai');
 const {
-  expectRevertCustomError
-} = require('../../../openzeppelin-contracts-upgradeable/test/helpers/customError')
-const {
   PAUSER_ROLE,
   DEFAULT_ADMIN_ROLE,
   ZERO_ADDRESS
@@ -38,11 +35,9 @@ function AuthorizationModuleCommon () {
       // Arrange - Assert
       expect(await this.cmtat.hasRole(PAUSER_ROLE, this.address1)).to.equal(false)
       // Act
-      await expectRevertCustomError(
-        this.cmtat.connect(this.address2).grantRole(PAUSER_ROLE, this.address1),
-        'AccessControlUnauthorizedAccount',
-        [this.address2.address, DEFAULT_ADMIN_ROLE]
-      );
+      await expect(this.cmtat.connect(this.address2).grantRole(PAUSER_ROLE, this.address1))
+      .to.be.revertedWithCustomError(this.cmtat, 'AccessControlUnauthorizedAccount')
+      .withArgs(this.address2.address, DEFAULT_ADMIN_ROLE);
       // Assert
       expect(await this.cmtat.hasRole(PAUSER_ROLE, this.address1)).to.equal(false)
     })
@@ -57,11 +52,9 @@ function AuthorizationModuleCommon () {
       // Arrange - Assert
       expect(await this.cmtat.hasRole(PAUSER_ROLE, this.address1)).to.equal(true)
       // Act
-      await expectRevertCustomError(
-        this.cmtat.connect(this.address2).revokeRole(PAUSER_ROLE, this.address1),
-        'AccessControlUnauthorizedAccount',
-        [this.address2.address, DEFAULT_ADMIN_ROLE]
-      );
+      await expect( this.cmtat.connect(this.address2).revokeRole(PAUSER_ROLE, this.address1))
+      .to.be.revertedWithCustomError(this.cmtat, 'AccessControlUnauthorizedAccount')
+      .withArgs(this.address2.address, DEFAULT_ADMIN_ROLE)
       // Assert
       expect(await this.cmtat.hasRole(PAUSER_ROLE, this.address1)).to.equal(true)
     })

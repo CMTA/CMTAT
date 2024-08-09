@@ -2,9 +2,9 @@
 
 pragma solidity ^0.8.20;
 
-import "../../../openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradeable.sol";
-import "../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
-import "../../../openzeppelin-contracts-upgradeable/contracts/token/ERC20/ERC20Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 
 /**
  * @dev Enforcement module.
@@ -15,9 +15,7 @@ abstract contract EnforcementModuleInternal is
     Initializable,
     ContextUpgradeable
 {
-    // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.EnforcementModuleInternal")) - 1)) & ~bytes32(uint256(0xff))
-    bytes32 private constant EnforcementModuleInternalStorageLocation = 0x0c7bc8a17be064111d299d7669f49519cb26c58611b72d9f6ccc40a1e1184e00;
-    
+    /* ============ Events ============ */
     /**
      * @notice Emitted when an address is frozen.
      */
@@ -38,15 +36,27 @@ abstract contract EnforcementModuleInternal is
         string reason
     );
 
-    /* Variables */
+     /* ============ ERC-7201 ============ */
+    // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.EnforcementModuleInternal")) - 1)) & ~bytes32(uint256(0xff))
+    bytes32 private constant EnforcementModuleInternalStorageLocation = 0x0c7bc8a17be064111d299d7669f49519cb26c58611b72d9f6ccc40a1e1184e00;
+    
+
+    /* ==== ERC-7201 State Variables === */
     struct EnforcementModuleInternalStorage {
         mapping(address => bool) _frozen;
     }
 
 
+    /*//////////////////////////////////////////////////////////////
+                         INITIALIZER FUNCTION
+    //////////////////////////////////////////////////////////////*/
     function __Enforcement_init_unchained() internal onlyInitializing {
         // no variable to initialize
     }
+
+    /*//////////////////////////////////////////////////////////////
+                            PUBLIC/EXTERNAL FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
 
     /**
      * @dev Returns true if the account is frozen, and false otherwise.
@@ -55,6 +65,10 @@ abstract contract EnforcementModuleInternal is
         EnforcementModuleInternalStorage storage $ = _getEnforcementModuleInternalStorage();
         return $._frozen[account];
     }
+
+    /*//////////////////////////////////////////////////////////////
+                            INTERNAL/PRIVATE FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
 
     /**
      * @dev Freezes an address.
@@ -94,6 +108,7 @@ abstract contract EnforcementModuleInternal is
         return true;
     }
 
+    /* ============ ERC-7201 ============ */
     function _getEnforcementModuleInternalStorage() private pure returns (EnforcementModuleInternalStorage storage $) {
         assembly {
             $.slot := EnforcementModuleInternalStorageLocation

@@ -1,7 +1,4 @@
 const { expect } = require('chai');
-const {
-  expectRevertCustomError
-} = require('../../../openzeppelin-contracts-upgradeable/test/helpers/customError')
 const {  ZERO_ADDRESS } = require('../../utils')
 
 function DebtModuleCommon () {

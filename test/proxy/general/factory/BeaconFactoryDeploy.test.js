@@ -1,7 +1,5 @@
-const {
-  expectRevertCustomError
-} = require('../../../../openzeppelin-contracts-upgradeable/test/helpers/customError.js')
 const { ZERO_ADDRESS } = require('../../../utils.js')
+const { expect } = require('chai');
 const {
   deployCMTATProxyImplementation,
   fixture, loadFixture 
@@ -15,34 +13,31 @@ describe(
         this._.address,
         this.deployerAddress.address
       )
+      this.FACTORYCustomError = await  ethers.deployContract("CMTAT_BEACON_FACTORY",[
+        this.CMTAT_PROXY_IMPL.target,
+        this.admin,
+        this.admin,
+        true
+      ])
     })
     context('BeaconDeployment', function () {
       it('testCannotDeployIfImplementationIsZero', async function () {
-        await expectRevertCustomError(
-          ethers.deployContract("CMTAT_BEACON_FACTORY",[ZERO_ADDRESS, this.admin.address, this.admin.address]),
-          'CMTAT_Factory_AddressZeroNotAllowedForLogicContract',
-          []
-        )
+        await expect(ethers.deployContract("CMTAT_BEACON_FACTORY",[ZERO_ADDRESS, this.admin.address, this.admin.address]))
+        .to.be.revertedWithCustomError(this.FACTORYCustomError, 'CMTAT_Factory_AddressZeroNotAllowedForLogicContract')
       })
       it('testCannotDeployIfFactoryAdminIsZero', async function () {
-        await expectRevertCustomError(
-          ethers.deployContract("CMTAT_BEACON_FACTORY",[ this.CMTAT_PROXY_IMPL.target,
-            ZERO_ADDRESS,
-            this.admin.address]
-          ),
-          'CMTAT_Factory_AddressZeroNotAllowedForFactoryAdmin',
-          []
-        )
+        await expect( ethers.deployContract("CMTAT_BEACON_FACTORY",[ this.CMTAT_PROXY_IMPL.target,
+          ZERO_ADDRESS,
+          this.admin.address]
+        ))
+        .to.be.revertedWithCustomError(this.FACTORYCustomError, 'CMTAT_Factory_AddressZeroNotAllowedForFactoryAdmin')
       })
       it('testCannotDeployIfBeaconOwnerIsZero', async function () {
-        await expectRevertCustomError(
-          ethers.deployContract("CMTAT_BEACON_FACTORY",[ this.CMTAT_PROXY_IMPL.target,
-            this.admin.address,
-            ZERO_ADDRESS]
-          ),
-          'CMTAT_Factory_AddressZeroNotAllowedForBeaconOwner',
-          []
-        )
+        await expect(ethers.deployContract("CMTAT_BEACON_FACTORY",[ this.CMTAT_PROXY_IMPL.target,
+          this.admin.address,
+          ZERO_ADDRESS]
+        ))
+        .to.be.revertedWithCustomError(this.FACTORYCustomError, 'CMTAT_Factory_AddressZeroNotAllowedForBeaconOwner')
       })
     })
   }

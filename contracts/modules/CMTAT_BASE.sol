@@ -3,8 +3,8 @@
 pragma solidity ^0.8.20;
 
 // required OZ imports here
-import "../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
-import "../../openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
 
 import "./wrapper/core/BaseModule.sol";
 import "./wrapper/core/ERC20BurnModule.sol";
@@ -42,7 +42,11 @@ abstract contract CMTAT_BASE is
     ERC20SnapshotModule,
     DebtModule,
     DocumentModule
-{
+{   
+
+    /*//////////////////////////////////////////////////////////////
+                         INITIALIZER FUNCTION
+    //////////////////////////////////////////////////////////////*/
     /**
      * @notice
      * initialize the proxy contract
@@ -65,6 +69,7 @@ abstract contract CMTAT_BASE is
             engines_
         );
     }
+
 
     /**
      * @dev calls the different initialize functions from the different modules
@@ -127,6 +132,11 @@ abstract contract CMTAT_BASE is
         // no variable to initialize
     }
 
+
+    /*//////////////////////////////////////////////////////////////
+                            PUBLIC/EXTERNAL FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
+
     /**
      * @notice Returns the number of decimals used to get its user representation.
      */
@@ -169,6 +179,9 @@ abstract contract CMTAT_BASE is
         mint(to, amountToMint);
     }
 
+    /*//////////////////////////////////////////////////////////////
+                            INTERNAL/PRIVATE FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
     /**
      * @dev
      *
@@ -189,8 +202,9 @@ abstract contract CMTAT_BASE is
         ERC20SnapshotModuleInternal._snapshotUpdate(from, to);
         ERC20Upgradeable._update(from, to, amount);
     }
-
-    /************* MetaTx Module *************/
+    /*//////////////////////////////////////////////////////////////
+                            METAXTX MODULE
+    //////////////////////////////////////////////////////////////*/
     /**
      * @dev This surcharge is not necessary if you do not use the MetaTxModule
      */

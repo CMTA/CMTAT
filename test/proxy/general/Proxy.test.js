@@ -1,6 +1,4 @@
-const {
-  expectRevertCustomError
-} = require('../../../openzeppelin-contracts-upgradeable/test/helpers/customError.js')
+const { expect } = require('chai');
 const { DEFAULT_ADMIN_ROLE, PAUSER_ROLE } = require('../../utils')
 const { ZERO_ADDRESS } = require('../../utils')
 const { deployCMTATProxy,
@@ -29,26 +27,21 @@ describe(
     context('Attacker', function () {
       it('testCannotBeTakenControlByAttacker', async function () {
         // Act
-        await expectRevertCustomError(
-          this.implementationContract.connect(this.attacker).initialize(
-            this.attacker,
-            ['CMTA Token',
-            'CMTAT',
-            DEPLOYMENT_DECIMAL],
-            ['CMTAT_ISIN',
-            'https://cmta.ch',
-            'CMTAT_info'],
-            [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]
-          ),
-          'InvalidInitialization',
-          []
-        )
+        await expect(   this.implementationContract.connect(this.attacker).initialize(
+          this.attacker,
+          ['CMTA Token',
+          'CMTAT',
+          DEPLOYMENT_DECIMAL],
+          ['CMTAT_ISIN',
+          'https://cmta.ch',
+          'CMTAT_info'],
+          [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]
+        ))
+        .to.be.revertedWithCustomError(this.implementationContract, 'InvalidInitialization')
         // act + assert
-        await expectRevertCustomError(
-          this.implementationContract.connect(this.attacker).pause(),
-          'AccessControlUnauthorizedAccount',
-          [this.attacker.address, PAUSER_ROLE]
-        )
+        await expect( this.implementationContract.connect(this.attacker).pause())
+        .to.be.revertedWithCustomError(this.implementationContract, 'AccessControlUnauthorizedAccount')
+        .withArgs(this.attacker.address, PAUSER_ROLE)
       })
     })
   }

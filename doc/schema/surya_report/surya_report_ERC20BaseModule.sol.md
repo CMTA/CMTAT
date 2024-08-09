@@ -21,6 +21,7 @@
 | └ | transferBatch | Public ❗️ | 🛑  |NO❗️ |
 | └ | transferFrom | Public ❗️ | 🛑  |NO❗️ |
 | └ | balanceInfo | Public ❗️ |   |NO❗️ |
+| └ | _getERC20BaseModuleStorage | Private 🔐 |   | |
 
 
 ### Legend

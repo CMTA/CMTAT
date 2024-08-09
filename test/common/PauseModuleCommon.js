@@ -1,6 +1,3 @@
-const {
-  expectRevertCustomError,
-} = require("../../openzeppelin-contracts-upgradeable/test/helpers/customError.js");
 const { PAUSER_ROLE, DEFAULT_ADMIN_ROLE } = require("../utils");
 const { expect } = require('chai');
 function PauseModuleCommon() {
@@ -20,13 +17,11 @@ function PauseModuleCommon() {
         .to.emit(this.cmtat, "Paused")
         .withArgs(this.admin);
       // Transfer is reverted
-      await expectRevertCustomError(
-        this.cmtat
-          .connect(this.address1)
-          .transfer(this.address2, AMOUNT_TO_TRANSFER),
-        "CMTAT_InvalidTransfer",
-        [this.address1.address, this.address2.address, AMOUNT_TO_TRANSFER]
-      );
+      await expect(  this.cmtat
+        .connect(this.address1)
+        .transfer(this.address2, AMOUNT_TO_TRANSFER))
+      .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
+      .withArgs(this.address1.address, this.address2.address, AMOUNT_TO_TRANSFER);
     });
 
     it("testCanBePausedByPauserRole", async function () {
@@ -46,20 +41,15 @@ function PauseModuleCommon() {
         .to.emit(this.cmtat, "Paused")
         .withArgs(this.address1);
       // Transfer is reverted
-      await expectRevertCustomError(
-        this.cmtat.connect(this.address1).transfer(this.address2, AMOUNT_TO_TRANSFER),
-        "CMTAT_InvalidTransfer",
-        [this.address1.address, this.address2.address, AMOUNT_TO_TRANSFER]
-      );
+      await expect( this.cmtat.connect(this.address1).transfer(this.address2, AMOUNT_TO_TRANSFER))
+      .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
+      .withArgs(this.address1.address, this.address2.address, AMOUNT_TO_TRANSFER);
     });
 
     it("testCannotBePausedByNonPauser", async function () {
-      // Act
-      await expectRevertCustomError(
-        this.cmtat.connect(this.address1).pause(),
-        "AccessControlUnauthorizedAccount",
-        [this.address1.address, PAUSER_ROLE]
-      );
+      await expect( this.cmtat.connect(this.address1).pause())
+      .to.be.revertedWithCustomError(this.cmtat, 'AccessControlUnauthorizedAccount')
+      .withArgs(this.address1.address, PAUSER_ROLE);
     });
 
     it("testCanBeUnpausedByAdmin", async function () {
@@ -99,11 +89,9 @@ function PauseModuleCommon() {
       // Arrange
       await this.cmtat.connect(this.admin).pause();
       // Act
-      await expectRevertCustomError(
-        this.cmtat.connect(this.address1).unpause(),
-        "AccessControlUnauthorizedAccount",
-        [this.address1.address, PAUSER_ROLE]
-      );
+      await expect( this.cmtat.connect(this.address1).unpause())
+      .to.be.revertedWithCustomError(this.cmtat, 'AccessControlUnauthorizedAccount')
+      .withArgs(this.address1.address, PAUSER_ROLE);
     });
 
     // reverts if address1 transfers tokens to address2 when paused
@@ -130,13 +118,11 @@ function PauseModuleCommon() {
       expect(await this.cmtat.messageForTransferRestriction(1)).to.equal(
         "All transfers paused"
       );
-      await expectRevertCustomError(
-        this.cmtat
-          .connect(this.address1)
-          .transfer(this.address2, AMOUNT_TO_TRANSFER),
-        "CMTAT_InvalidTransfer",
-        [this.address1.address, this.address2.address, AMOUNT_TO_TRANSFER]
-      );
+      await expect( this.cmtat
+        .connect(this.address1)
+        .transfer(this.address2, AMOUNT_TO_TRANSFER))
+      .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
+      .withArgs(this.address1.address, this.address2.address, AMOUNT_TO_TRANSFER);
     });
 
     // reverts if address3 transfers tokens from address1 to address2 when paused
@@ -160,13 +146,11 @@ function PauseModuleCommon() {
       expect(await this.cmtat.messageForTransferRestriction(1)).to.equal(
         "All transfers paused"
       );
-      await expectRevertCustomError(
-        this.cmtat
-          .connect(this.address3)
-          .transferFrom(this.address1, this.address2, AMOUNT_TO_TRANSFER),
-        "CMTAT_InvalidTransfer",
-        [this.address1.address, this.address2.address, AMOUNT_TO_TRANSFER]
-      );
+      await expect( this.cmtat
+        .connect(this.address3)
+        .transferFrom(this.address1, this.address2, AMOUNT_TO_TRANSFER))
+      .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
+      .withArgs(this.address1.address, this.address2.address, AMOUNT_TO_TRANSFER);
     });
   });
 
@@ -186,27 +170,20 @@ function PauseModuleCommon() {
       // emits a Deactivated event
       await expect(this.logs).to.emit(this.cmtat, 'Deactivated').withArgs(this.admin);
       // Transfer is reverted because contract is in paused state
-      await expectRevertCustomError(
-        this.cmtat.connect(this.address1).transfer(this.address2, AMOUNT_TO_TRANSFER),
-        "CMTAT_InvalidTransfer",
-        [this.address1.address, this.address2.address, AMOUNT_TO_TRANSFER]
-      );
+      await expect(this.cmtat.connect(this.address1).transfer(this.address2, AMOUNT_TO_TRANSFER))
+      .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
+      .withArgs(this.address1.address, this.address2.address, AMOUNT_TO_TRANSFER);
 
       // Unpause is reverted
-      await expectRevertCustomError(
-        this.cmtat.connect(this.admin).unpause(),
-        "CMTAT_PauseModule_ContractIsDeactivated",
-        []
-      );
+      await expect( this.cmtat.connect(this.admin).unpause())
+      .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_PauseModule_ContractIsDeactivated')
     });
 
     it("testCannotBeDeactivatedByNonAdmin", async function () {
       // Act
-      await expectRevertCustomError(
-        this.cmtat.connect(this.address1).deactivateContract(),
-        "AccessControlUnauthorizedAccount",
-        [this.address1.address, DEFAULT_ADMIN_ROLE]
-      );
+      await expect( this.cmtat.connect(this.address1).deactivateContract())
+      .to.be.revertedWithCustomError(this.cmtat, 'AccessControlUnauthorizedAccount')
+      .withArgs(this.address1.address, DEFAULT_ADMIN_ROLE);
       // Assert
       expect(await this.cmtat.deactivated()).to.equal(false);
     });

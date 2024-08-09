@@ -4,9 +4,6 @@ const {
   MINTER_ROLE,
   ZERO_ADDRESS
 } = require('../utils')
-const {
-  expectRevertCustomError
-} = require('../../openzeppelin-contracts-upgradeable/test/helpers/customError.js')
 const { expect } = require('chai');
 
 function ERC20BurnModuleCommon () {
@@ -77,19 +74,15 @@ function ERC20BurnModuleCommon () {
       const AMOUNT_TO_BURN = 200n
       const ADDRESS1_BALANCE = await this.cmtat.balanceOf(this.address1)
       // Act
-      await expectRevertCustomError(
-        this.cmtat.connect(this.admin).burn(this.address1, AMOUNT_TO_BURN, ''),
-        'ERC20InsufficientBalance',
-        [this.address1.address, ADDRESS1_BALANCE, AMOUNT_TO_BURN]
-      )
+      await expect(  this.cmtat.connect(this.admin).burn(this.address1, AMOUNT_TO_BURN, ''))
+      .to.be.revertedWithCustomError(this.cmtat, 'ERC20InsufficientBalance')
+      .withArgs(this.address1.address, ADDRESS1_BALANCE, AMOUNT_TO_BURN);
     })
 
     it('testCannotBeBurntWithoutBurnerRole', async function () {
-      await expectRevertCustomError(
-        this.cmtat.connect(this.address2).burn(this.address1, 20n, ''),
-        'AccessControlUnauthorizedAccount',
-        [this.address2.address, BURNER_ROLE]
-      )
+      await expect( this.cmtat.connect(this.address2).burn(this.address1, 20n, ''))
+      .to.be.revertedWithCustomError(this.cmtat, 'AccessControlUnauthorizedAccount')
+      .withArgs(this.address2.address, BURNER_ROLE);
     })
   })
 
@@ -124,19 +117,15 @@ function ERC20BurnModuleCommon () {
 
     it('TestCannotBeBurnWithoutAllowance', async function () {
       const AMOUNT_TO_BURN = 20n
-      await expectRevertCustomError(
-        this.cmtat.connect(this.admin).burnFrom(this.address1, AMOUNT_TO_BURN),
-        'ERC20InsufficientAllowance',
-        [this.admin.address, 0, AMOUNT_TO_BURN]
-      )
+      await expect(  this.cmtat.connect(this.admin).burnFrom(this.address1, AMOUNT_TO_BURN))
+      .to.be.revertedWithCustomError(this.cmtat, 'ERC20InsufficientAllowance')
+      .withArgs(this.admin.address, 0, AMOUNT_TO_BURN);
     })
 
     it('testCannotBeBurntWithoutBurnerFromRole', async function () {
-      await expectRevertCustomError(
-        this.cmtat.connect(this.address2).burnFrom(this.address1, 20n),
-        'AccessControlUnauthorizedAccount',
-        [this.address2.address, BURNER_FROM_ROLE]
-      )
+      await expect(  this.cmtat.connect(this.address2).burnFrom(this.address1, 20n))
+      .to.be.revertedWithCustomError(this.cmtat, 'AccessControlUnauthorizedAccount')
+      .withArgs(this.address2.address, BURNER_FROM_ROLE);
     })
   })
 
@@ -199,17 +188,15 @@ function ERC20BurnModuleCommon () {
       const AMOUNT_TO_MINT = 15n
       await this.cmtat.connect(this.admin).grantRole(BURNER_ROLE, this.address2)
       // Act
-      await expectRevertCustomError(
-        this.cmtat.connect(this.address2).burnAndMint(
-          this.address1,
-          this.address3,
-          AMOUNT_TO_BURN,
-          AMOUNT_TO_MINT,
-          'recovery'
-        ),
-        'AccessControlUnauthorizedAccount',
-        [this.address2.address, MINTER_ROLE]
-      )
+      await expect( this.cmtat.connect(this.address2).burnAndMint(
+        this.address1,
+        this.address3,
+        AMOUNT_TO_BURN,
+        AMOUNT_TO_MINT,
+        'recovery'
+      ))
+      .to.be.revertedWithCustomError(this.cmtat, 'AccessControlUnauthorizedAccount')
+      .withArgs(this.address2.address, MINTER_ROLE);
     })
 
     it('canBeBurnAndMintWithoutBurnerRole', async function () {
@@ -218,17 +205,15 @@ function ERC20BurnModuleCommon () {
       const AMOUNT_TO_MINT = 15n
       await this.cmtat.connect(this.admin).grantRole(MINTER_ROLE, this.address2)
       // Assert
-      await expectRevertCustomError(
-        this.cmtat.connect(this.address2).burnAndMint(
-          this.address1,
-          this.address3,
-          AMOUNT_TO_BURN,
-          AMOUNT_TO_MINT,
-          'recovery'
-        ),
-        'AccessControlUnauthorizedAccount',
-        [this.address2.address, BURNER_ROLE]
-      )
+      await expect( this.cmtat.connect(this.address2).burnAndMint(
+        this.address1,
+        this.address3,
+        AMOUNT_TO_BURN,
+        AMOUNT_TO_MINT,
+        'recovery'
+      ))
+      .to.be.revertedWithCustomError(this.cmtat, 'AccessControlUnauthorizedAccount')
+      .withArgs(this.address2.address, BURNER_ROLE);
     })
   })
 
@@ -342,66 +327,53 @@ function ERC20BurnModuleCommon () {
       )
     })
 
-    it('testCannotBeBurntIfOneBalanceExceeds', async function () {
+    it('testCannotBeBurntBatchIfOneBalanceExceeds', async function () {
       const TOKEN_HOLDER = [this.admin, this.address1, this.address2]
       const TOKEN_BY_HOLDERS_TO_BURN_FAIL = [5n, 50n, 5000000n]
       const ADDRESS2_BALANCE = await this.cmtat.balanceOf(this.address2)
       // Act
-      await expectRevertCustomError(
-        this.cmtat.connect(this.admin).burnBatch(TOKEN_HOLDER, TOKEN_BY_HOLDERS_TO_BURN_FAIL, ''),
-        'ERC20InsufficientBalance',
-        [this.address2.address, ADDRESS2_BALANCE, TOKEN_BY_HOLDERS_TO_BURN_FAIL[2]]
-      )
+      await expect(  this.cmtat.connect(this.admin).burnBatch(TOKEN_HOLDER, TOKEN_BY_HOLDERS_TO_BURN_FAIL, ''))
+      .to.be.revertedWithCustomError(this.cmtat, 'ERC20InsufficientBalance')
+      .withArgs(this.address2.address, ADDRESS2_BALANCE, TOKEN_BY_HOLDERS_TO_BURN_FAIL[2]);
     })
 
-    it('testCannotBeBurntWithoutBurnerRole', async function () {
+    it('testCannotBeBurntBatchWithoutBurnerRole', async function () {
       const TOKEN_HOLDER = [this.admin, this.address1, this.address2]
-      await expectRevertCustomError(
-        this.cmtat.connect(this.address2).burnBatch(TOKEN_HOLDER, TOKEN_BY_HOLDERS_TO_BURN, ''),
-        'AccessControlUnauthorizedAccount',
-        [this.address2.address, BURNER_ROLE]
-      )
+      await expect( this.cmtat.connect(this.address2).burnBatch(TOKEN_HOLDER, TOKEN_BY_HOLDERS_TO_BURN, ''))
+      .to.be.revertedWithCustomError(this.cmtat, 'AccessControlUnauthorizedAccount')
+      .withArgs(this.address2.address, BURNER_ROLE);
     })
 
     it('testCannotburnBatchIfLengthMismatchMissingAddresses', async function () {
       // Number of addresses is insufficient
       const TOKEN_HOLDER_INVALID = [this.admin, this.address1]
-      await expectRevertCustomError(
-        this.cmtat.connect(this.admin).burnBatch(
-          TOKEN_HOLDER_INVALID,
-          TOKEN_BY_HOLDERS_TO_BURN,
-          REASON
-        ),
-        'CMTAT_BurnModule_AccountsValueslengthMismatch',
-        []
-      )
+      await expect(this.cmtat.connect(this.admin).burnBatch(
+        TOKEN_HOLDER_INVALID,
+        TOKEN_BY_HOLDERS_TO_BURN,
+        REASON
+      ))
+      .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_BurnModule_AccountsValueslengthMismatch')
     })
 
     it('testCannotburnBatchIfLengthMismatchTooManyAddresses', async function () {
       // There are too many addresses
       const TOKEN_HOLDER_INVALID = [this.admin, this.address1, this.address1, this.address1]
-      await expectRevertCustomError(
-        this.cmtat.connect(this.admin).burnBatch(
-          TOKEN_HOLDER_INVALID,
-          TOKEN_BY_HOLDERS_TO_BURN,
-          REASON
-        ),
-        'CMTAT_BurnModule_AccountsValueslengthMismatch',
-        []
-      )
+      await expect(this.cmtat.connect(this.admin).burnBatch(
+        TOKEN_HOLDER_INVALID,
+        TOKEN_BY_HOLDERS_TO_BURN,
+        REASON
+      ))
+      .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_BurnModule_AccountsValueslengthMismatch')
     })
 
     it('testCannotburnBatchIfAccountsIsEmpty', async function () {
       const TOKEN_ADDRESS_TOS_INVALID = []
-      await expectRevertCustomError(
-        this.cmtat.connect(this.admin).burnBatch(
-          TOKEN_ADDRESS_TOS_INVALID,
-          TOKEN_BY_HOLDERS_TO_BURN,
-          REASON
-        ),
-        'CMTAT_BurnModule_EmptyAccounts',
-        []
-      )
+      await expect(this.cmtat.connect(this.admin).burnBatch(
+        TOKEN_ADDRESS_TOS_INVALID,
+        TOKEN_BY_HOLDERS_TO_BURN,
+        REASON
+      ))
+      .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_BurnModule_EmptyAccounts')
     })
   })
 }

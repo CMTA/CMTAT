@@ -24,6 +24,14 @@ async function deployCMTATProxyImplementation (
   return cmtat
 }
 
+async function deployCMTATProxyUUPSImplementation (
+  deployerAddress,
+  forwarderIrrevocable
+) {
+  const cmtat = await ethers.deployContract('CMTAT_PROXY_UUPS',[forwarderIrrevocable])
+  return cmtat
+}
+
 async function deployCMTATStandaloneWithParameter (
   deployerAddress,
   forwarderIrrevocable,
@@ -109,6 +117,7 @@ module.exports = {
   deployCMTATStandaloneWithParameter,
   DEPLOYMENT_DECIMAL,
   deployCMTATProxyImplementation,
+  deployCMTATProxyUUPSImplementation,
   fixture,
   loadFixture
 }

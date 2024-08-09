@@ -20,12 +20,19 @@ abstract contract ValidationModule is
     EnforcementModule,
     IERC1404Wrapper
 {
+    /* ============ State Variables ============ */
     string constant TEXT_TRANSFER_OK = "No restriction";
     string constant TEXT_UNKNOWN_CODE = "Unknown code";
 
+    /* ============  Initializer Function ============ */
     function __ValidationModule_init_unchained() internal onlyInitializing {
         // no variable to initialize
     }
+
+
+    /*//////////////////////////////////////////////////////////////
+                            PUBLIC/EXTERNAL FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
 
     /*
     * @notice set a RuleEngine
@@ -116,6 +123,10 @@ abstract contract ValidationModule is
         return true;
     }
 
+
+    /*//////////////////////////////////////////////////////////////
+                            INTERNAL/PRIVATE FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
     function _validateTransferByModule(
         address from,
         address to,

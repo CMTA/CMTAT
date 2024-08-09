@@ -1,7 +1,4 @@
 const { expect } = require('chai');
-const {
-  expectRevertCustomError
-} = require('../../../../openzeppelin-contracts-upgradeable/test/helpers/customError.js')
 const { ZERO_ADDRESS, CMTAT_DEPLOYER_ROLE } = require('../../../utils.js')
 const {
   DEPLOYMENT_FLAG,
@@ -48,15 +45,13 @@ describe(
     context('Deploy CMTAT with Factory', function () {
       it('testCannotBeDeployedByAttacker', async function () {
         // Act
-        await expectRevertCustomError(
-          this.FACTORY.connect(this.attacker).deployCMTAT(
-            ethers.encodeBytes32String('test'),
-            this.admin,
-            this.CMTATArg
-          ),
-          'AccessControlUnauthorizedAccount',
-          [this.attacker.address, CMTAT_DEPLOYER_ROLE]
-        )
+        await expect(  this.FACTORY.connect(this.attacker).deployCMTAT(
+          ethers.encodeBytes32String('test'),
+          this.admin,
+          this.CMTATArg
+        ))
+        .to.be.revertedWithCustomError(this.FACTORY, 'AccessControlUnauthorizedAccount')
+        .withArgs(this.attacker.address, CMTAT_DEPLOYER_ROLE);
       })
       it('testCanDeployCMTATWithFactory', async function () {
         // Act
@@ -91,13 +86,12 @@ describe(
         args = events[0].args;
         expect(args[1]).to.equal(1)
         // Revert
-        await expectRevertCustomError(this.FACTORY.connect(this.admin).deployCMTAT(
+        await expect(this.FACTORY.connect(this.admin).deployCMTAT(
           ethers.encodeBytes32String('test'),
           this.admin,
           this.CMTATArg,
-        ),
-        'CMTAT_Factory_SaltAlreadyUsed',
-        [])
+        ))
+        .to.be.revertedWithCustomError(this.FACTORY, 'CMTAT_Factory_SaltAlreadyUsed')
       })
       it('testCannotDeployCMTATWithFactoryWithSaltAlreadyUsed', async function () {
         // Arrange
@@ -108,13 +102,12 @@ describe(
         )
        
         // Act with Revert
-        await expectRevertCustomError(this.FACTORY.connect(this.admin).deployCMTAT(
+        await expect( this.FACTORY.connect(this.admin).deployCMTAT(
           ethers.encodeBytes32String('test'),
           this.admin,
           this.CMTATArg
-        ),
-        'CMTAT_Factory_SaltAlreadyUsed',
-        [])
+        ))
+        .to.be.revertedWithCustomError(this.FACTORY, 'CMTAT_Factory_SaltAlreadyUsed')
       })
     })
   }

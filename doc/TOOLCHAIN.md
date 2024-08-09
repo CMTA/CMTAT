@@ -101,9 +101,6 @@ Use by `openzeppelin-contracts-upgradeable/test/helpers/eip712`imported in `Meta
 **[solc](https://github.com/ethereum/solc-js)**
 JavaScript bindings for the Solidity compiler.
 
-**[Web3](https://github.com/web3/web3.js)**
-Ethereum JavaScript API.
-
 #### Documentation
 
 **[sol2uml](https://github.com/naddison36/sol2uml)**
@@ -133,8 +130,7 @@ Loads environment variables from a .env file
 
 This section concerns the packages installed in the section `dependencies` of package.json
 
-**[ethereumjs-wallet](https://www.npmjs.com/package/ethereumjs-wallet)**
-A wallet implementation
+
 
 ## Submodule
 

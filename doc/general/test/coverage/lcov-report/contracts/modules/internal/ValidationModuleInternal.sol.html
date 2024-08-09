@@ -132,7 +132,19 @@
 87
 88
 89
-90</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -153,6 +165,21 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">381×</span>
+<span class="cline-any cline-yes">18×</span>
+<span class="cline-any cline-yes">18×</span>
+<span class="cline-any cline-yes">18×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -168,11 +195,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">377×</span>
-<span class="cline-any cline-yes">18×</span>
-<span class="cline-any cline-yes">18×</span>
-<span class="cline-any cline-yes">18×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -216,7 +238,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">627×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">628×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -225,8 +249,8 @@
 &nbsp;
 pragma solidity ^0.8.20;
 &nbsp;
-import "../../../openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradeable.sol";
-import "../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
+import "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "../../interfaces/engine/IRuleEngine.sol";
 /**
  * @dev Validation module.
@@ -237,24 +261,19 @@ abstract contract ValidationModuleInternal is
     Initializable,
     ContextUpgradeable
 {
-    // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.ValidationModuleInternal")) - 1)) &amp; ~bytes32(uint256(0xff))
-    bytes32 private constant ValidationModuleInternalStorageLocation = 0xb3e8f29e401cfa802cad91001b5f9eb50decccdb111d80cb07177ab650b04700;
-    /* Variables */
-    struct ValidationModuleInternalStorage {
-        IRuleEngine _ruleEngine;
-    }
-    /*
-    
+    /* ============ Events ============ */
     /**
      * @dev Emitted when a rule engine is set.
      */
     event RuleEngine(IRuleEngine indexed newRuleEngine);
-&nbsp;
-    function ruleEngine() public view returns(IRuleEngine){
-        ValidationModuleInternalStorage storage $ = _getValidationModuleInternalStorage();
-        return $._ruleEngine;
+    /* ============ ERC-7201 ============ */
+    // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.ValidationModuleInternal")) - 1)) &amp; ~bytes32(uint256(0xff))
+    bytes32 private constant ValidationModuleInternalStorageLocation = 0xb3e8f29e401cfa802cad91001b5f9eb50decccdb111d80cb07177ab650b04700;
+    /* ==== ERC-7201 State Variables === */
+    struct ValidationModuleInternalStorage {
+        IRuleEngine _ruleEngine;
     }
-&nbsp;
+    /* ============  Initializer Function ============ */
     function __Validation_init_unchained(
         IRuleEngine ruleEngine_
     ) internal <span class="missing-if-branch" title="else path not taken" >E</span>onlyInitializing {
@@ -264,6 +283,21 @@ abstract contract ValidationModuleInternal is
             emit RuleEngine(ruleEngine_);
         }
     }
+&nbsp;
+&nbsp;
+    /*//////////////////////////////////////////////////////////////
+                            PUBLIC/EXTERNAL FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
+    
+    function ruleEngine() public view returns(IRuleEngine){
+        ValidationModuleInternalStorage storage $ = _getValidationModuleInternalStorage();
+        return $._ruleEngine;
+    }
+&nbsp;
+&nbsp;
+    /*//////////////////////////////////////////////////////////////
+                            INTERNAL/PRIVATE FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
 &nbsp;
     /**
     * @dev before making a call to this function, you have to check if a ruleEngine is set.
@@ -304,6 +338,8 @@ abstract contract ValidationModuleInternal is
         return $._ruleEngine.operateOnTransfer(from, to, amount);
     }
 &nbsp;
+&nbsp;
+    /* ============ ERC-7201 ============ */
     function _getValidationModuleInternalStorage() internal pure returns (ValidationModuleInternalStorage storage $) {
         assembly {
             $.slot := ValidationModuleInternalStorageLocation
@@ -316,7 +352,7 @@ abstract contract ValidationModuleInternal is
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Aug 07 2024 14:16:55 GMT+0200 (Central European Summer Time)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Fri Aug 09 2024 14:44:48 GMT+0200 (Central European Summer Time)
 </div>
 </div>
 <script src="../../../prettify.js"></script>

@@ -98,7 +98,7 @@
     "surya": "^0.4.11"
   },
   "dependencies": {
-    "@openzeppelin/contracts": "^5.0.2",
-    "ethereumjs-wallet": "^1.0.2"
+    "@openzeppelin/contracts": "5.0.2",
+    "@openzeppelin/contracts-upgradeable": "^5.0.2"
   }
 }

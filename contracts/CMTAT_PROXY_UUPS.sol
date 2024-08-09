@@ -1,7 +1,7 @@
 //SPDX-License-Identifier: MPL-2.0
 
 pragma solidity ^0.8.20;
-import "../openzeppelin-contracts-upgradeable/contracts/proxy/utils/UUPSUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "./modules/CMTAT_BASE.sol";
 contract CMTAT_PROXY_UUPS is CMTAT_BASE, UUPSUpgradeable {
     bytes32 public constant PROXY_UPGRADE_ROLE = keccak256("PROXY_UPGRADE_ROLE");
@@ -16,6 +16,10 @@ contract CMTAT_PROXY_UUPS is CMTAT_BASE, UUPSUpgradeable {
         // Disable the possibility to initialize the implementation
         _disableInitializers();
     }
+
+    /*//////////////////////////////////////////////////////////////
+                            PUBLIC/EXTERNAL FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
     
     /**
      * @notice
@@ -37,5 +41,9 @@ contract CMTAT_PROXY_UUPS is CMTAT_BASE, UUPSUpgradeable {
         __UUPSUpgradeable_init_unchained();
     }
 
+
+    /*//////////////////////////////////////////////////////////////
+                            INTERNAL/PRIVATE FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
     function _authorizeUpgrade(address) internal override onlyRole(PROXY_UPGRADE_ROLE) {}
 }
