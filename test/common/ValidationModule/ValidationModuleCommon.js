@@ -1,7 +1,4 @@
 const { expect } = require('chai');
-const {
-  expectRevertCustomError
-} = require('../../../openzeppelin-contracts-upgradeable/test/helpers/customError')
 const { RULE_MOCK_AMOUNT_MAX, ZERO_ADDRESS } = require('../../utils')
 
 function ValidationModuleCommon () {
@@ -114,11 +111,9 @@ function ValidationModuleCommon () {
         )
       ).to.equal(false)
       // Act
-      await expectRevertCustomError(
-        this.cmtat.connect(this.address1).transfer(this.address2, AMOUNT_TO_TRANSFER),
-        'CMTAT_InvalidTransfer',
-        [this.address1.address, this.address2.address, AMOUNT_TO_TRANSFER]
-      )
+      await expect(this.cmtat.connect(this.address1).transfer(this.address2, AMOUNT_TO_TRANSFER))
+      .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
+      .withArgs(this.address1.address, this.address2.address, AMOUNT_TO_TRANSFER)
     })
   })
 }

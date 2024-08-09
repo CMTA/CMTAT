@@ -15,7 +15,7 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **CMTAT_BASE** | Implementation | Initializable, ContextUpgradeable, BaseModule, PauseModule, ERC20MintModule, ERC20BurnModule, EnforcementModule, ValidationModule, MetaTxModule, ERC20BaseModule, ERC20SnapshotModule, DebtBaseModule, CreditEventsModule |||
+| **CMTAT_BASE** | Implementation | Initializable, ContextUpgradeable, BaseModule, PauseModule, ERC20MintModule, ERC20BurnModule, EnforcementModule, ValidationModule, ERC20BaseModule, MetaTxModule, ERC20SnapshotModule, DebtModule, DocumentModule |||
 | └ | initialize | Public ❗️ | 🛑  | initializer |
 | └ | __CMTAT_init | Internal 🔒 | 🛑  | onlyInitializing |
 | └ | __CMTAT_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |

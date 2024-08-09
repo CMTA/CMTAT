@@ -20,6 +20,7 @@
 | └ | frozen | Public ❗️ |   |NO❗️ |
 | └ | _freeze | Internal 🔒 | 🛑  | |
 | └ | _unfreeze | Internal 🔒 | 🛑  | |
+| └ | _getEnforcementModuleInternalStorage | Private 🔐 |   | |
 
 
 ### Legend

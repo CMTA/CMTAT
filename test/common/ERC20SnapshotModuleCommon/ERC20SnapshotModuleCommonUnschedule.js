@@ -1,8 +1,5 @@
 const { time } = require ("@nomicfoundation/hardhat-network-helpers");
 const { expect } = require('chai');
-const {
-  expectRevertCustomError
-} = require('../../../openzeppelin-contracts-upgradeable/test/helpers/customError')
 const { SNAPSHOOTER_ROLE } = require('../../utils')
 const {
   checkArraySnapshot
@@ -52,22 +49,16 @@ function ERC20SnapshotModuleCommonUnschedule () {
       const SNAPSHOT_TIME = this.currentTime + time.duration.seconds(60)
       let snapshots = await this.cmtat.getNextSnapshots()
       expect(snapshots.length).to.equal(0)
-      await expectRevertCustomError(
-        this.cmtat.connect(this.admin).unscheduleSnapshotNotOptimized(SNAPSHOT_TIME),
-        'CMTAT_SnapshotModule_SnapshotNotFound',
-        []
-      )
+      await expect(this.cmtat.connect(this.admin).unscheduleSnapshotNotOptimized(SNAPSHOT_TIME))
+      .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_SnapshotModule_SnapshotNotFound')
       snapshots = await this.cmtat.getNextSnapshots()
       expect(snapshots.length).to.equal(0)
     })
 
     it('testCannotUnscheduleASnapshotInThePast', async function () {
       const SNAPSHOT_TIME = this.currentTime - time.duration.seconds(60)
-      await expectRevertCustomError(
-        this.cmtat.connect(this.admin).unscheduleSnapshotNotOptimized(SNAPSHOT_TIME),
-        'CMTAT_SnapshotModule_SnapshotAlreadyDone',
-        []
-      )
+      await expect(this.cmtat.connect(this.admin).unscheduleLastSnapshot(SNAPSHOT_TIME))
+      .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_SnapshotModule_SnapshotAlreadyDone')
     })
 
     it('can unschedule a snaphot in a random place', async function () {
@@ -132,11 +123,9 @@ function ERC20SnapshotModuleCommonUnschedule () {
       expect(snapshots.length).to.equal(1)
       expect(snapshots[0]).to.equal(SNAPSHOT_TIME)
       // Act
-      await expectRevertCustomError(
-        this.cmtat.connect(this.address1).unscheduleSnapshotNotOptimized(SNAPSHOT_TIME),
-        'AccessControlUnauthorizedAccount',
-        [this.address1.address, SNAPSHOOTER_ROLE]
-      )
+      await expect( this.cmtat.connect(this.address1).scheduleSnapshotNotOptimized(SNAPSHOT_TIME))
+      .to.be.revertedWithCustomError(this.cmtat, 'AccessControlUnauthorizedAccount')
+      .withArgs(this.address1.address, SNAPSHOOTER_ROLE)
       // Assert
       snapshots = await this.cmtat.getNextSnapshots()
       expect(snapshots.length).to.equal(1)
@@ -160,11 +149,9 @@ function ERC20SnapshotModuleCommonUnschedule () {
     })
 
     it('reverts when calling from non-admin', async function () {
-      await expectRevertCustomError(
-        this.cmtat.connect(this.address1).unscheduleLastSnapshot(this.snapshotTime),
-        'AccessControlUnauthorizedAccount',
-        [this.address1.address, SNAPSHOOTER_ROLE]
-      )
+      await expect( this.cmtat.connect(this.address1).unscheduleLastSnapshot(this.snapshotTime))
+      .to.be.revertedWithCustomError(this.cmtat, 'AccessControlUnauthorizedAccount')
+      .withArgs(this.address1.address, SNAPSHOOTER_ROLE)
     })
 
     it('reverts if no snapshot is scheduled', async function () {
@@ -173,30 +160,21 @@ function ERC20SnapshotModuleCommonUnschedule () {
       // Delete the only snapshot
       this.logs = await this.cmtat.connect(this.admin).unscheduleLastSnapshot(this.snapshotTime)
       // Act
-      await expectRevertCustomError(
-        this.cmtat.connect(this.admin).unscheduleLastSnapshot(SNAPSHOT_TIME),
-        'CMTAT_SnapshotModule_NoSnapshotScheduled',
-        []
-      )
+      await expect(this.cmtat.connect(this.admin).unscheduleLastSnapshot(SNAPSHOT_TIME))
+      .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_SnapshotModule_NoSnapshotScheduled')
     })
 
     it('reverts when snapshot is not found', async function () {
       const SNAPSHOT_TIME = this.currentTime + time.duration.seconds(90)
       // Act
-      await expectRevertCustomError(
-        this.cmtat.connect(this.admin).unscheduleLastSnapshot(SNAPSHOT_TIME),
-        'CMTAT_SnapshotModule_SnapshotNotFound',
-        []
-      )
+      await expect(this.cmtat.connect(this.admin).unscheduleLastSnapshot(SNAPSHOT_TIME))
+      .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_SnapshotModule_SnapshotNotFound')
     })
 
     it('reverts when snapshot has been processed', async function () {
       const SNAPSHOT_TIME = this.currentTime - time.duration.seconds(60)
-      await expectRevertCustomError(
-        this.cmtat.connect(this.admin).unscheduleLastSnapshot(SNAPSHOT_TIME),
-        'CMTAT_SnapshotModule_SnapshotAlreadyDone',
-        []
-      )
+      await expect(this.cmtat.connect(this.admin).unscheduleLastSnapshot(SNAPSHOT_TIME))
+      .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_SnapshotModule_SnapshotAlreadyDone')
     })
   })
 }

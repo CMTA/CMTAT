@@ -5,57 +5,15 @@ import "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.so
 import "../CMTAT_PROXY.sol";
 import "../libraries/FactoryErrors.sol";
 import '@openzeppelin/contracts/utils/Create2.sol';
-import '@openzeppelin/contracts/access/AccessControl.sol';
-import "../interfaces/engine/IEngine.sol";
-
+import "./libraries/CMTATFactoryInvariant.sol";
+import "./libraries/CMTATFactoryBase.sol";
 /**
 * @notice Factory to deploy CMTAT with a transparent proxy
 * 
 */
-contract CMTAT_TP_FACTORY is AccessControl {
-    // Public
-    /// @dev Role to deploy CMTAT
-    bytes32 public constant CMTAT_DEPLOYER_ROLE = keccak256("CMTAT_DEPLOYER_ROLE");
-    address public immutable logic;
-    address[] public cmtatsList;
-    bool public useCustomSalt;
-    uint256 public cmtatID;
-    /// mapping
-    mapping(uint256 => address) private cmtats;
-    mapping(bytes32 => bool) private customSaltUsed;
-    
-    struct CMTAT_ARGUMENT{
-        address CMTATAdmin;
-        string nameIrrevocable;
-        string symbolIrrevocable;
-        uint8 decimalsIrrevocable;
-        string tokenId;
-        string terms;
-        string information;
-        IEngine.Engine engines;
-    }
-    event CMTAT(address indexed CMTAT, uint256 id);
+contract CMTAT_TP_FACTORY is CMTATFactoryInvariant, CMTATFactoryBase {
 
-  
-    /**
-    * @param logic_ contract implementation
-    * @param factoryAdmin admin
-    */
-    constructor(address logic_, address factoryAdmin, bool useCustomSalt_) {
-        if(logic_ == address(0)){
-            revert  FactoryErrors.CMTAT_Factory_AddressZeroNotAllowedForLogicContract();
-        }
-        if(factoryAdmin == address(0)){
-            revert  FactoryErrors.CMTAT_Factory_AddressZeroNotAllowedForFactoryAdmin();
-        }
-        if(useCustomSalt_){
-            useCustomSalt = useCustomSalt_;
-        }
-        logic = logic_;
-        _grantRole(DEFAULT_ADMIN_ROLE, factoryAdmin);
-        _grantRole(CMTAT_DEPLOYER_ROLE, factoryAdmin);
-    }
-    
+    constructor(address logic_, address factoryAdmin, bool useCustomSalt_) CMTATFactoryBase(logic_, factoryAdmin,useCustomSalt_){}
     /**
     * @notice deploy a transparent proxy with a proxy admin contract
     */
@@ -90,32 +48,6 @@ contract CMTAT_TP_FACTORY is AccessControl {
         cmtatArgument);
         return Create2.computeAddress(deploymentSalt,  keccak256(bytecode), address(this) );
     }
-    
-    /**
-    * @notice get CMTAT proxy address
-    *
-    */
-    function CMTATProxyAddress(uint256 cmtatID_) external view returns (address) {
-        return cmtats[cmtatID_];
-    }
-    
-    /**
-    * @param deploymentSalt salt for deployment
-    * @dev 
-    * if useCustomSalt is at false, the salt used is the current value of cmtatId
-    */
-    function _checkAndDetermineDeploymentSalt(bytes32 deploymentSalt) internal returns(bytes32 saltBytes){
-       if(useCustomSalt){
-            if(customSaltUsed[deploymentSalt]){
-                revert FactoryErrors.CMTAT_Factory_SaltAlreadyUsed();
-            }else {
-                customSaltUsed[deploymentSalt] = true;
-                saltBytes = deploymentSalt;
-            }
-        }else{
-            saltBytes = bytes32(keccak256(abi.encodePacked(cmtatID)));
-        }
-    }
 
     /**
     * @notice Deploy CMTAT and push the created CMTAT in the list
@@ -123,9 +55,9 @@ contract CMTAT_TP_FACTORY is AccessControl {
     function _deployBytecode(bytes memory bytecode, bytes32  deploymentSalt) internal returns (TransparentUpgradeableProxy cmtat) {
                     address cmtatAddress = Create2.deploy(0, deploymentSalt, bytecode);
                     cmtat = TransparentUpgradeableProxy(payable(cmtatAddress));
-                    cmtats[cmtatID] = address(cmtat);
-                    emit CMTAT(address(cmtat), cmtatID);
-                    ++cmtatID;
+                    cmtats[cmtatCounterId] = address(cmtat);
+                    emit CMTAT(address(cmtat), cmtatCounterId);
+                    ++cmtatCounterId;
                     cmtatsList.push(address(cmtat));
                     return cmtat;
      }
@@ -137,38 +69,13 @@ contract CMTAT_TP_FACTORY is AccessControl {
      function _getBytecode( address proxyAdminOwner,
         // CMTAT function initialize
         CMTAT_ARGUMENT calldata cmtatArgument) internal view returns(bytes memory bytecode) {
-        bytes memory implementation = _encodeImplementationArgument(
-            cmtatArgument.CMTATAdmin,
-            cmtatArgument.nameIrrevocable,
-            cmtatArgument.symbolIrrevocable,
-            cmtatArgument.decimalsIrrevocable,
-            cmtatArgument.tokenId,
-            cmtatArgument.terms,
-            cmtatArgument.information,
-            cmtatArgument.engines
-            );
+        bytes memory implementation = abi.encodeWithSelector(
+            CMTAT_PROXY(address(0)).initialize.selector,
+                  cmtatArgument.CMTATAdmin,
+                    cmtatArgument.ERC20Attributes,
+                cmtatArgument.baseModuleAttributes,
+                cmtatArgument.engines
+        );
         bytecode = abi.encodePacked(type(TransparentUpgradeableProxy).creationCode,  abi.encode(logic, proxyAdminOwner, implementation));
      }
-
-
-    function _encodeImplementationArgument(  address admin,
-        string memory nameIrrevocable,
-        string memory symbolIrrevocable,
-        uint8 decimalsIrrevocable,
-        string memory tokenId_,
-        string memory terms_,
-        string memory information_, 
-        IEngine.Engine memory engines) internal pure returns(bytes memory){
-        return  abi.encodeWithSelector(
-            CMTAT_PROXY(address(0)).initialize.selector,
-                admin,
-                nameIrrevocable,
-                symbolIrrevocable,
-                decimalsIrrevocable,
-                tokenId_,
-                terms_,
-                information_,
-                engines
-        );
-    }
 }

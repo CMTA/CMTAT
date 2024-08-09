@@ -1,7 +1,4 @@
 const { expect } = require('chai');
-const {
-  expectRevertCustomError,
-} = require("../../../../openzeppelin-contracts-upgradeable/test/helpers/customError.js");
 const { ZERO_ADDRESS, CMTAT_DEPLOYER_ROLE } = require("../../../utils.js");
 const {
   DEPLOYMENT_FLAG,
@@ -24,12 +21,12 @@ describe("Deploy TP with Factory", function () {
 
     this.CMTATArg = [
       this.admin,
-      "CMTA Token",
-      "CMTAT",
-      DEPLOYMENT_DECIMAL,
-      "CMTAT_ISIN",
-      "https://cmta.ch",
-      "CMTAT_info",
+      ['CMTA Token',
+      'CMTAT',
+      DEPLOYMENT_DECIMAL],
+      ['CMTAT_ISIN',
+      'https://cmta.ch',
+      'CMTAT_info'],
       [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]
     ];
   });
@@ -46,18 +43,18 @@ describe("Deploy TP with Factory", function () {
   context("Deploy CMTAT with Factory", function () {
     it("testCannotBeDeployedByAttacker", async function () {
       // Act
-      await expectRevertCustomError(
-        this.FACTORY.connect(this.attacker).deployCMTAT(
-          ethers.encodeBytes32String("test"),
-          this.admin.address,
-          this.CMTATArg
-        ),
-        "AccessControlUnauthorizedAccount",
-        [this.attacker.address, CMTAT_DEPLOYER_ROLE]
-      );
+      await expect( this.FACTORY.connect(this.attacker).deployCMTAT(
+        ethers.encodeBytes32String("test"),
+        this.admin.address,
+        this.CMTATArg
+      ))
+      .to.be.revertedWithCustomError(this.FACTORY, 'AccessControlUnauthorizedAccount').withArgs(
+        this.attacker.address, CMTAT_DEPLOYER_ROLE
+      )
     });
     it("testCanDeployCMTATWithFactory", async function () {
       let computedCMTATAddress = await this.FACTORY.computedProxyAddress(
+        // 0x0 => id counter 0
         ethers.keccak256(ethers.solidityPacked(["uint256"], [0x0])),
         this.admin,
         this.CMTATArg

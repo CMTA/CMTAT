@@ -6,22 +6,14 @@ pragma solidity ^0.8.20;
 import "../../security/AuthorizationModule.sol";
 import "../../../libraries/Errors.sol";
 abstract contract BaseModule is AuthorizationModule {
-    // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.BaseModule")) - 1)) & ~bytes32(uint256(0xff))
-    bytes32 private constant BaseModuleStorageLocation = 0xa98e72f7f70574363edb12c42a03ac1feb8cc898a6e0a30f6eefbab7093e0d00;
-
-    /* Variables */
-    struct BaseModuleStorage {
-            string _tokenId;
-            string _terms;
-            string _information;
-    }
+    /* ============ State Variables ============ */
     /** 
     * @notice 
     * Get the current version of the smart contract
     */
-    string public constant VERSION = "2.4.1";
+    string public constant VERSION = "2.5.0";
     
-    /* Events */
+    /* ============ Events ============ */
     event Term(string indexed newTermIndexed, string newTerm);
     event TokenId(string indexed newTokenIdIndexed, string newTokenId);
     event Information(
@@ -29,10 +21,17 @@ abstract contract BaseModule is AuthorizationModule {
         string newInformation
     );
     event Flag(uint256 indexed newFlag);
+    /* ============ ERC-7201 ============ */
+    // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.BaseModule")) - 1)) & ~bytes32(uint256(0xff))
+    bytes32 private constant BaseModuleStorageLocation = 0xa98e72f7f70574363edb12c42a03ac1feb8cc898a6e0a30f6eefbab7093e0d00;
 
-
-
-    /* Initializers */
+    /* ==== ERC-7201 State Variables === */
+    struct BaseModuleStorage {
+            string _tokenId;
+            string _terms;
+            string _information;
+    }
+    /* ============  Initializer Function ============ */
     /**
      * @dev Sets the values for {name} and {symbol}.
      *
@@ -50,7 +49,9 @@ abstract contract BaseModule is AuthorizationModule {
         $._information = information_;
     }
 
-    /* Methods */
+    /*//////////////////////////////////////////////////////////////
+                            PUBLIC/EXTERNAL FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
 
     function tokenId() public view virtual returns (string memory) {
         BaseModuleStorage storage $ = _getBaseModuleStorage();
@@ -100,6 +101,11 @@ abstract contract BaseModule is AuthorizationModule {
     }
 
 
+    /*//////////////////////////////////////////////////////////////
+                            INTERNAL/PRIVATE FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
+
+    /* ============ ERC-7201 ============ */
     function _getBaseModuleStorage() private pure returns (BaseModuleStorage storage $) {
         assembly {
             $.slot := BaseModuleStorageLocation

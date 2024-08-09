@@ -1,7 +1,4 @@
 const { expect } = require('chai');
-const {
-  expectRevertCustomError,
-} = require("../../openzeppelin-contracts-upgradeable/test/helpers/customError");
 
 function ERC20BaseModuleCommon() {
   context("Token structure", function () {
@@ -141,13 +138,11 @@ function ERC20BaseModuleCommon() {
       const ADDRESS1_BALANCE = await this.cmtat.balanceOf(this.address1);
       const AMOUNT_TO_TRANSFER = 50n;
       // Act
-      await expectRevertCustomError(
-        this.cmtat
-          .connect(this.address1)
-          .transfer(this.address2, AMOUNT_TO_TRANSFER),
-        "ERC20InsufficientBalance",
-        [this.address1.address, ADDRESS1_BALANCE, AMOUNT_TO_TRANSFER]
-      );
+      await expect(  this.cmtat
+        .connect(this.address1)
+        .transfer(this.address2, AMOUNT_TO_TRANSFER))
+      .to.be.revertedWithCustomError(this.cmtat, 'ERC20InsufficientBalance')
+      .withArgs(this.address1.address, ADDRESS1_BALANCE, AMOUNT_TO_TRANSFER)
     });
 
     // allows address3 to transfer tokens from address1 to address2 with the right allowance
@@ -202,13 +197,11 @@ function ERC20BaseModuleCommon() {
       );
       // Act
       // Transfer
-      await expectRevertCustomError(
-        this.cmtat
-          .connect(this.address3)
-          .transferFrom(this.address1, this.address2, 31),
-        "ERC20InsufficientAllowance",
-        [this.address3.address, ALLOWANCE_FOR_ADDRESS3, AMOUNT_TO_TRANSFER]
-      );
+      await expect(  this.cmtat
+        .connect(this.address3)
+        .transferFrom(this.address1, this.address2, 31))
+      .to.be.revertedWithCustomError(this.cmtat, 'ERC20InsufficientAllowance')
+      .withArgs(this.address3.address, ALLOWANCE_FOR_ADDRESS3, AMOUNT_TO_TRANSFER)
     });
 
     // reverts if address3 transfers more tokens than address1 owns from address1 to address2
@@ -218,13 +211,11 @@ function ERC20BaseModuleCommon() {
       const ADDRESS1_BALANCE = await this.cmtat.balanceOf(this.address1);
       await this.cmtat.connect(this.address1).approve(this.address3, 1000);
       // Act
-      await expectRevertCustomError(
-        this.cmtat
-          .connect(this.address3)
-          .transferFrom(this.address1, this.address2, AMOUNT_TO_TRANSFER),
-        "ERC20InsufficientBalance",
-        [this.address1.address, ADDRESS1_BALANCE, AMOUNT_TO_TRANSFER]
-      );
+      await expect(  this.cmtat
+        .connect(this.address3)
+        .transferFrom(this.address1, this.address2, AMOUNT_TO_TRANSFER))
+      .to.be.revertedWithCustomError(this.cmtat, 'ERC20InsufficientBalance')
+      .withArgs(this.address1.address, ADDRESS1_BALANCE, AMOUNT_TO_TRANSFER)
     });
   });
 
@@ -268,13 +259,11 @@ function ERC20BaseModuleCommon() {
       const ADDRESS1_BALANCE = await this.cmtat.balanceOf(this.address1);
       const AMOUNT_TO_TRANSFER = 50n;
       // Act
-      await expectRevertCustomError(
-        this.cmtat
-          .connect(this.address1)
-          .transfer(this.address2, AMOUNT_TO_TRANSFER),
-        "ERC20InsufficientBalance",
-        [this.address1.address, ADDRESS1_BALANCE, AMOUNT_TO_TRANSFER]
-      );
+      await expect(  this.cmtat
+        .connect(this.address1)
+        .transfer(this.address2, AMOUNT_TO_TRANSFER))
+      .to.be.revertedWithCustomError(this.cmtat, 'ERC20InsufficientBalance')
+      .withArgs(this.address1.address, ADDRESS1_BALANCE, AMOUNT_TO_TRANSFER)
     });
   });
 
@@ -325,25 +314,18 @@ function ERC20BaseModuleCommon() {
         TOKEN_AMOUNTS[2],
       ];
       // Act
-      await expectRevertCustomError(
-        this.cmtat
-          .connect(this.admin)
-          .transferBatch(TOKEN_ADDRESS_TOS, TOKEN_AMOUNTS_INVALID),
-        "ERC20InsufficientBalance",
-        [this.admin.address, BALANCE_AFTER_FIRST_TRANSFER, AMOUNT_TO_TRANSFER_SECOND]
-      );
+      await expect(   this.cmtat
+        .connect(this.admin)
+        .transferBatch(TOKEN_ADDRESS_TOS, TOKEN_AMOUNTS_INVALID))
+      .to.be.revertedWithCustomError(this.cmtat, 'ERC20InsufficientBalance')
+      .withArgs(this.admin.address, BALANCE_AFTER_FIRST_TRANSFER, AMOUNT_TO_TRANSFER_SECOND)
     });
 
     it("testCannotTransferBatchIfLengthMismatchMissingAddresses", async function () {
       // Number of addresses is insufficient
       const TOKEN_ADDRESS_TOS_INVALID = [this.address1, this.address2];
-      await expectRevertCustomError(
-        this.cmtat
-          .connect(this.admin)
-          .transferBatch(TOKEN_ADDRESS_TOS_INVALID, TOKEN_AMOUNTS),
-        "CMTAT_ERC20BaseModule_TosValueslengthMismatch",
-        []
-      );
+      await expect(this.cmtat.connect(this.admin).transferBatch(TOKEN_ADDRESS_TOS_INVALID, TOKEN_AMOUNTS))
+      .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_ERC20BaseModule_TosValueslengthMismatch')
     });
 
     it("testCannotTransferBatchIfLengthMismatchTooManyAddresses", async function () {
@@ -354,24 +336,14 @@ function ERC20BaseModuleCommon() {
         this.address1,
         this.address1,
       ];
-      await expectRevertCustomError(
-        this.cmtat
-          .connect(this.admin)
-          .transferBatch(TOKEN_ADDRESS_TOS_INVALID, TOKEN_AMOUNTS),
-        "CMTAT_ERC20BaseModule_TosValueslengthMismatch",
-        []
-      );
+      await expect(this.cmtat.connect(this.admin).transferBatch(TOKEN_ADDRESS_TOS_INVALID, TOKEN_AMOUNTS))
+      .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_ERC20BaseModule_TosValueslengthMismatch')
     });
 
     it("testCannotTransferBatchIfTOSIsEmpty", async function () {
       const TOKEN_ADDRESS_TOS_INVALID = [];
-      await expectRevertCustomError(
-        this.cmtat
-          .connect(this.admin)
-          .transferBatch(TOKEN_ADDRESS_TOS_INVALID, TOKEN_AMOUNTS),
-        "CMTAT_ERC20BaseModule_EmptyTos",
-        []
-      );
+      await expect(this.cmtat.connect(this.admin).transferBatch(TOKEN_ADDRESS_TOS_INVALID, TOKEN_AMOUNTS))
+      .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_ERC20BaseModule_EmptyTos')
     });
   });
 }

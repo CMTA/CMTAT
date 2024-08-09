@@ -1,14 +1,11 @@
 const { expect } = require('chai');
 const { DEFAULT_ADMIN_ROLE } = require('../utils')
-const {
-  expectRevertCustomError
-} = require('../../openzeppelin-contracts-upgradeable/test/helpers/customError.js')
 
 function BaseModuleCommon () {
   context('Token structure', function () {
     it('testHasTheDefinedVersion', async function () {
       // Act + Assert
-      expect(await this.cmtat.VERSION()).to.equal('2.4.1')
+      expect(await this.cmtat.VERSION()).to.equal('2.5.0')
     })
     it('testHasTheDefinedTokenId', async function () {
       // Act + Assert
@@ -31,11 +28,9 @@ function BaseModuleCommon () {
       // Arrange - Assert
       expect(await this.cmtat.tokenId()).to.equal('CMTAT_ISIN')
       // Act
-      await expectRevertCustomError(
-        this.cmtat.connect(this.address1).setTokenId('CMTAT_TOKENID'),
-        'AccessControlUnauthorizedAccount',
-        [this.address1.address, DEFAULT_ADMIN_ROLE]
-      );
+      await expect(  this.cmtat.connect(this.address1).setTokenId('CMTAT_TOKENID'))
+      .to.be.revertedWithCustomError(this.cmtat, 'AccessControlUnauthorizedAccount')
+      .withArgs(this.address1.address, DEFAULT_ADMIN_ROLE);
       // Assert
       expect(await this.cmtat.tokenId()).to.equal('CMTAT_ISIN')
     })
@@ -52,11 +47,9 @@ function BaseModuleCommon () {
       // Arrange - Assert
       expect(await this.cmtat.terms()).to.equal('https://cmta.ch')
       // Act
-      await expectRevertCustomError(
-        this.cmtat.connect(this.address1).setTerms('https://cmta.ch/terms'),
-        'AccessControlUnauthorizedAccount',
-        [this.address1.address, DEFAULT_ADMIN_ROLE]
-      );
+      await expect( this.cmtat.connect(this.address1).setTerms('https://cmta.ch/terms'))
+      .to.be.revertedWithCustomError(this.cmtat, 'AccessControlUnauthorizedAccount')
+      .withArgs(this.address1.address, DEFAULT_ADMIN_ROLE)
       // Assert
       expect(await this.cmtat.terms()).to.equal('https://cmta.ch')
     })
@@ -73,11 +66,9 @@ function BaseModuleCommon () {
       // Arrange - Assert
       expect(await this.cmtat.information()).to.equal('CMTAT_info')
       // Act
-      await expectRevertCustomError(
-        this.cmtat.connect(this.address1).setInformation('new info available'),
-        'AccessControlUnauthorizedAccount',
-        [this.address1.address, DEFAULT_ADMIN_ROLE]
-      );
+      await expect( this.cmtat.connect(this.address1).setInformation('new info available'))
+      .to.be.revertedWithCustomError(this.cmtat, 'AccessControlUnauthorizedAccount')
+      .withArgs(this.address1.address, DEFAULT_ADMIN_ROLE);
       // Assert
       expect(await this.cmtat.information()).to.equal('CMTAT_info')
     })

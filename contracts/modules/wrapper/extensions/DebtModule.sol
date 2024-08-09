@@ -7,18 +7,24 @@ import "../../../libraries/Errors.sol";
 import "../../../interfaces/engine/IDebtEngine.sol";
 
 abstract contract DebtModule is AuthorizationModule, IDebtEngine {
+    /* ============ State Variables ============ */
     bytes32 public constant DEBT_ROLE = keccak256("DEBT_ROLE");
+    /* ============ ERC-7201 ============ */
     // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.DebtModule")) - 1)) & ~bytes32(uint256(0xff))
     bytes32 private constant DebtModuleStorageLocation = 0xf8a315cc5f2213f6481729acd86e55db7ccc930120ccf9fb78b53dcce75f7c00;
  
-    /* Variables */
+    /* ==== ERC-7201 State Variables === */
     struct DebtModuleStorage {
         IDebtEngine _debtEngine;
     }
+    /* ============ Events ============ */
     /**
     * @dev Emitted when a rule engine is set.
     */
     event DebtEngine(IDebtEngine indexed newDebtEngine);
+
+
+    /* ============  Initializer Function ============ */
     /**
      * @dev
      *
@@ -36,7 +42,9 @@ abstract contract DebtModule is AuthorizationModule, IDebtEngine {
         
 
     }
-
+    /*//////////////////////////////////////////////////////////////
+                            PUBLIC/EXTERNAL FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
     function debtEngine() public view virtual returns (IDebtEngine) {
         DebtModuleStorage storage $ = _getDebtModuleStorage();
         return $._debtEngine;
@@ -71,6 +79,12 @@ abstract contract DebtModule is AuthorizationModule, IDebtEngine {
         }
     }
 
+
+    /*//////////////////////////////////////////////////////////////
+                            INTERNAL/PRIVATE FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
+    
+    /* ============ ERC-7201 ============ */
     function _getDebtModuleStorage() private pure returns (DebtModuleStorage storage $) {
         assembly {
             $.slot := DebtModuleStorageLocation

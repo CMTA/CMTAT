@@ -15,12 +15,15 @@ abstract contract ERC20SnapshotModule is
     ERC20SnapshotModuleInternal,
     AuthorizationModule
 {
-    // SnapshotModule
+    /* ============ State Variables ============ */
     bytes32 public constant SNAPSHOOTER_ROLE = keccak256("SNAPSHOOTER_ROLE");
+    /* ============  Initializer Function ============ */
     function __ERC20SnasphotModule_init_unchained() internal onlyInitializing {
         // no variable to initialize
     }
-
+    /*//////////////////////////////////////////////////////////////
+                            PUBLIC/EXTERNAL FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
     /** 
     * @notice 
     * Schedule a snapshot at the given time specified as a number of seconds since epoch.

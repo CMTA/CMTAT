@@ -2,22 +2,28 @@
 
 pragma solidity ^0.8.20;
 
-import "../../../../openzeppelin-contracts-upgradeable/contracts/token/ERC20/ERC20Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 import "../../security/AuthorizationModule.sol";
 import "../../../interfaces/ICCIPToken.sol";
 abstract contract ERC20MintModule is ERC20Upgradeable, ICCIPMintERC20, AuthorizationModule {
-    // MintModule
+    /* ============ State Variables ============ */
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
+    /* ============ Events ============ */
     /**
      * @notice Emitted when the specified  `value` amount of new tokens are created and
      * allocated to the specified `account`.
      */
     event Mint(address indexed account, uint256 value);
 
+
+    /* ============  Initializer Function ============ */
     function __ERC20MintModule_init_unchained() internal onlyInitializing {
         // no variable to initialize
     }
 
+    /*//////////////////////////////////////////////////////////////
+                            PUBLIC/EXTERNAL FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
     /**
      * @notice  Creates a `value` amount of tokens and assigns them to `account`, by transferring it from address(0)
      * @param account token receiver

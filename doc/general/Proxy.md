@@ -15,6 +15,12 @@ As indicated in the [OpenZeppelin documentation](https://docs.openzeppelin.com/c
 >
 > The function `__{ContractName}_init_unchained` found in every contract is the initializer function minus the calls to parent initializers, and can be used to avoid the double initialization problem, but doing this manually is not recommended. We hope to be able to implement safety checks for this in future versions of the Upgrades Plugins.
 
+## ERC-7201
+
+To manage memory and avoid storage collisions, CMTAT implements, like OpenZeppelin, the [ERC-7201](https://eips.ethereum.org/EIPS/eip-7201)
+
+More information on a [RareSkills article](https://www.rareskills.io/post/erc-7201)
+
 ## Deployment with a proxy
 
 The CMTAT supports deployment via a proxy contract.  Furthermore, using a proxy permits to upgrade the contract, using a standard proxy upgrade pattern.
@@ -26,6 +32,3 @@ Please see the OpenZeppelin [upgradeable contracts documentation](https://docs.o
 Please see the OpenZeppelin [Upgrades plugins](https://docs.openzeppelin.com/upgrades-plugins/1.x/) for more information about plugin upgrades in general.
 
 Note that deployment via a proxy is not mandatory, but is recommended by CMTA.
-
-
-### 

@@ -1,6 +1,11 @@
 # Engine
 
-It is possible to add supplementary controls on the CMTAT through two Engines: the `RuleEngine`and the `AuthorizationEngine`
+It is possible to add supplementary controls on the CMTAT through four Engines: 
+
+- The `RuleEngine`
+- The `AuthorizationEngine`
+- The DocumentEngine
+- The DebtEngine
 
 ## RuleEngine
 
@@ -15,10 +20,6 @@ A possible rule is a whitelist rule where only the address inside the whitelist 
 In this example, the token holder calls the function `transfer` which triggers a call to the `RuleEngine` and the different rules associated.
 
 ![RuleEngine](../../doc/schema/drawio/RuleEngine.png)
-
-
-
-
 
 
 

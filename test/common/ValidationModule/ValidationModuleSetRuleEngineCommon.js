@@ -1,7 +1,4 @@
 const { expect } = require('chai');
-const {
-  expectRevertCustomError
-} = require('../../../openzeppelin-contracts-upgradeable/test/helpers/customError.js')
 const { DEFAULT_ADMIN_ROLE } = require('../../utils')
 
 function ValidationModuleSetRuleEngineCommon () {
@@ -18,20 +15,15 @@ function ValidationModuleSetRuleEngineCommon () {
 
     it('testCanNotBeSetByAdminWithTheSameValue', async function () {
       // Act
-      await expectRevertCustomError(
-        this.cmtat.connect(this.admin).setRuleEngine(await this.cmtat.ruleEngine()),
-        'CMTAT_ValidationModule_SameValue',
-        []
-      )
+      await expect(this.cmtat.connect(this.admin).setRuleEngine(await this.cmtat.ruleEngine()))
+      .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_ValidationModule_SameValue')
     })
 
     it('testCannotBeSetByNonAdmin', async function () {
       // Act
-      await expectRevertCustomError(
-        this.cmtat.connect(this.address1).setRuleEngine(this.ruleEngine),
-        'AccessControlUnauthorizedAccount',
-        [this.address1.address, DEFAULT_ADMIN_ROLE]
-      )
+      await expect( this.cmtat.connect(this.address1).setRuleEngine(this.ruleEngine))
+      .to.be.revertedWithCustomError(this.cmtat, 'AccessControlUnauthorizedAccount')
+      .withArgs(this.address1.address, DEFAULT_ADMIN_ROLE);
     })
 
     it('testCanReturnMessageWithNoRuleEngine&UnknownRestrictionCode', async function () {

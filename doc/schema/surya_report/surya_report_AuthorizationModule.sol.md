@@ -17,10 +17,12 @@
 ||||||
 | **AuthorizationModule** | Implementation | AccessControlUpgradeable |||
 | └ | __AuthorizationModule_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |
+| └ | authorizationEngine | Public ❗️ |   |NO❗️ |
 | └ | setAuthorizationEngine | External ❗️ | 🛑  | onlyRole |
 | └ | grantRole | Public ❗️ | 🛑  | onlyRole |
 | └ | revokeRole | Public ❗️ | 🛑  | onlyRole |
 | └ | hasRole | Public ❗️ |   |NO❗️ |
+| └ | _getAuthorizationModuleStorage | Private 🔐 |   | |
 
 
 ### Legend

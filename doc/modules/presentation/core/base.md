@@ -48,7 +48,6 @@ This document defines Base Module for the CMTA Token specification.
 |       └        |      setTokenId       |      Public ❗️       |       🛑        |     onlyRole     |
 |       └        |       setTerms        |      Public ❗️       |       🛑        |     onlyRole     |
 |       └        |    setInformation     |      Public ❗️       |       🛑        |     onlyRole     |
-|       └        |        setFlag        |      Public ❗️       |       🛑        |     onlyRole     |
 
 
 ### Legend
@@ -129,9 +128,6 @@ Only authorized users are allowed to call this function.
 |       └        |    setInformation     |      Public ❗️       |       🛑        |     onlyRole     |
 |       └        |        setFlag        |      Public ❗️       |       🛑        |     onlyRole     |
 
-
-### 
-
 ### Events
 
 #### `Term(string)`
@@ -169,15 +165,3 @@ event Information(string indexed newInformationIndexed, string newInformation)
 ##### Description:
 
 Emitted when the variable `information` is set to `newInformation`.
-
-#### `Flag(uint256)`
-
-##### Definition:
-
-```solidity
-event Flag(uint256 indexed newFlag)
-```
-
-##### Description:
-
-Emitted when the variable `flag` is set to `newFlag`.

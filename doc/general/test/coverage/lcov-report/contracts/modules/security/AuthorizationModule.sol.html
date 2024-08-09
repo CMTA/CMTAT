@@ -147,7 +147,22 @@
 102
 103
 104
-105</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -175,14 +190,22 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">377×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">381×</span>
 <span class="cline-any cline-yes">2×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">375×</span>
-<span class="cline-any cline-yes">375×</span>
+<span class="cline-any cline-yes">379×</span>
+<span class="cline-any cline-yes">379×</span>
 <span class="cline-any cline-yes">16×</span>
 <span class="cline-any cline-yes">16×</span>
 <span class="cline-any cline-yes">16×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -239,10 +262,17 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1275×</span>
-<span class="cline-any cline-yes">758×</span>
+<span class="cline-any cline-yes">1280×</span>
+<span class="cline-any cline-yes">759×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">517×</span>
+<span class="cline-any cline-yes">521×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -255,21 +285,24 @@
 &nbsp;
 pragma solidity ^0.8.20;
 &nbsp;
-import "../../../openzeppelin-contracts-upgradeable/contracts/access/AccessControlUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 import "../../libraries/Errors.sol";
 import "../../interfaces/engine/IAuthorizationEngine.sol";
 &nbsp;
 abstract contract AuthorizationModule is AccessControlUpgradeable {
-    // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.AuthorizationModule")) - 1)) &amp; ~bytes32(uint256(0xff))
-    bytes32 private constant AuthorizationModuleStorageLocation = 0x59b7f077fa4ad020f9053fd2197fef0113b19f0b11dcfe516e88cbc0e9226d00;
-    /* Variables */
-    struct AuthorizationModuleStorage {
-        IAuthorizationEngine _authorizationEngine;
-    }
+    /* ============ Events ============ */
     /**
      * @dev Emitted when a rule engine is set.
      */
     event AuthorizationEngine(IAuthorizationEngine indexed newAuthorizationEngine);
+    /* ============ ERC-7201 ============ */
+    // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.AuthorizationModule")) - 1)) &amp; ~bytes32(uint256(0xff))
+    bytes32 private constant AuthorizationModuleStorageLocation = 0x59b7f077fa4ad020f9053fd2197fef0113b19f0b11dcfe516e88cbc0e9226d00;
+    /* ==== ERC-7201 State Variables === */
+    struct AuthorizationModuleStorage {
+        IAuthorizationEngine _authorizationEngine;
+    }
+    /* ============  Initializer Function ============ */
     /**
      * @dev
      *
@@ -289,6 +322,11 @@ abstract contract AuthorizationModule is AccessControlUpgradeable {
             emit AuthorizationEngine(authorizationEngine_);
         }
     }
+&nbsp;
+&nbsp;
+    /*//////////////////////////////////////////////////////////////
+                            PUBLIC/EXTERNAL FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
 &nbsp;
     function authorizationEngine() public view virtual returns (IAuthorizationEngine) {
         AuthorizationModuleStorage storage $ = _getAuthorizationModuleStorage();
@@ -349,6 +387,13 @@ abstract contract AuthorizationModule is AccessControlUpgradeable {
         return AccessControlUpgradeable.hasRole(role, account);
     }
 &nbsp;
+&nbsp;
+    /*//////////////////////////////////////////////////////////////
+                            INTERNAL/PRIVATE FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
+&nbsp;
+&nbsp;
+    /* ============ ERC-7201 ============ */
     function _getAuthorizationModuleStorage() private pure returns (AuthorizationModuleStorage storage $) {
         assembly {
             $.slot := AuthorizationModuleStorageLocation
@@ -361,7 +406,7 @@ abstract contract AuthorizationModule is AccessControlUpgradeable {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Aug 07 2024 14:16:55 GMT+0200 (Central European Summer Time)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Fri Aug 09 2024 14:44:48 GMT+0200 (Central European Summer Time)
 </div>
 </div>
 <script src="../../../prettify.js"></script>

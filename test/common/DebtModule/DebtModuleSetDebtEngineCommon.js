@@ -1,7 +1,4 @@
 const { expect } = require('chai');
-const {
-  expectRevertCustomError
-} = require('../../../openzeppelin-contracts-upgradeable/test/helpers/customError.js')
 const { DEBT_ROLE } = require('../../utils.js')
 
 function DebtModuleSetDebtEngineCommon () {
@@ -18,20 +15,15 @@ function DebtModuleSetDebtEngineCommon () {
 
     it('testCanNotBeSetByAdminWithTheSameValue', async function () {
       // Act
-      await expectRevertCustomError(
-        this.cmtat.connect(this.admin).setDebtEngine(await this.cmtat.debtEngine()),
-        'CMTAT_DebtModule_SameValue',
-        []
-      )
+      await expect(this.cmtat.connect(this.admin).setDebtEngine(await this.cmtat.debtEngine()))
+      .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_DebtModule_SameValue')
     })
 
     it('testCannotBeSetByNonAdmin', async function () {
       // Act
-      await expectRevertCustomError(
-        this.cmtat.connect(this.address1).setDebtEngine(this.debtEngineMock.target),
-        'AccessControlUnauthorizedAccount',
-        [this.address1.address, DEBT_ROLE]
-      )
+      await expect( this.cmtat.connect(this.address1).setDebtEngine(this.debtEngineMock.target))
+      .to.be.revertedWithCustomError(this.cmtat, 'AccessControlUnauthorizedAccount')
+      .withArgs(this.address1.address, DEBT_ROLE)
     })
   })
 }

@@ -3,8 +3,8 @@
 pragma solidity ^0.8.20;
 
 // required OZ imports here
-import "../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
-import "../../openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
 
 import "./wrapper/core/BaseModule.sol";
 import "./wrapper/core/ERC20BurnModule.sol";
@@ -23,7 +23,7 @@ import "./wrapper/extensions/MetaTxModule.sol";
 import "./wrapper/extensions/DebtModule.sol";
 import "./wrapper/extensions/DocumentModule.sol";
 import "./security/AuthorizationModule.sol";
-import "../interfaces/engine/IEngine.sol";
+import "../interfaces/ICMTATConstructor.sol";
 import "../libraries/Errors.sol";
 
 abstract contract CMTAT_BASE is
@@ -42,58 +42,48 @@ abstract contract CMTAT_BASE is
     ERC20SnapshotModule,
     DebtModule,
     DocumentModule
-{
+{   
+
+    /*//////////////////////////////////////////////////////////////
+                         INITIALIZER FUNCTION
+    //////////////////////////////////////////////////////////////*/
     /**
      * @notice
      * initialize the proxy contract
      * The calls to this function will revert if the contract was deployed without a proxy
      * @param admin address of the admin of contract (Access Control)
-     * @param nameIrrevocable name of the token
-     * @param symbolIrrevocable name of the symbol
-     * @param decimalsIrrevocable number of decimals of the token, must be 0 to be compliant with Swiss law as per CMTAT specifications (non-zero decimal number may be needed for other use cases)
-     * @param tokenId_ name of the tokenId
-     * @param terms_ terms associated with the token
-     * @param information_ additional information to describe the token
+     * @param ERC20Attributes_ ERC20 name, symbol and decimals
+     * @param baseModuleAttributes_ tokenId, terms, information
+     * @param engines_ external contract
      */
     function initialize(
         address admin,
-        string memory nameIrrevocable,
-        string memory symbolIrrevocable,
-        uint8 decimalsIrrevocable,
-        string memory tokenId_,
-        string memory terms_,
-        string memory information_,
-        IEngine.Engine memory engines
+        ICMTATConstructor.ERC20Attributes memory ERC20Attributes_,
+        ICMTATConstructor.BaseModuleAttributes memory baseModuleAttributes_,
+        ICMTATConstructor.Engine memory engines_ 
     ) public virtual initializer {
         __CMTAT_init(
             admin,
-            nameIrrevocable,
-            symbolIrrevocable,
-            decimalsIrrevocable,
-            tokenId_,
-            terms_,
-            information_,
-            engines
+            ERC20Attributes_,
+            baseModuleAttributes_,
+            engines_
         );
     }
+
 
     /**
      * @dev calls the different initialize functions from the different modules
      */
     function __CMTAT_init(
         address admin,
-        string memory nameIrrevocable,
-        string memory symbolIrrevocable,
-        uint8 decimalsIrrevocable,
-        string memory tokenId_,
-        string memory terms_,
-        string memory information_,
-        IEngine.Engine memory engines
+        ICMTATConstructor.ERC20Attributes memory ERC20Attributes_,
+        ICMTATConstructor.BaseModuleAttributes memory baseModuleAttributes_,
+        ICMTATConstructor.Engine memory engines_ 
     ) internal onlyInitializing {
         /* OpenZeppelin library */
         // OZ init_unchained functions are called firstly due to inheritance
         __Context_init_unchained();
-        __ERC20_init_unchained(nameIrrevocable, symbolIrrevocable);
+        __ERC20_init_unchained(ERC20Attributes_.nameIrrevocable, ERC20Attributes_.symbolIrrevocable);
         // AccessControlUpgradeable inherits from ERC165Upgradeable
         __ERC165_init_unchained();
         // AuthorizationModule inherits from AccessControlUpgradeable
@@ -109,16 +99,16 @@ abstract contract CMTAT_BASE is
         __SnapshotModuleBase_init_unchained();
         __ERC20Snapshot_init_unchained();
     
-        __Validation_init_unchained(engines.ruleEngine);
+        __Validation_init_unchained(engines_ .ruleEngine);
 
         /* Wrapper */
         // AuthorizationModule_init_unchained is called firstly due to inheritance
-        __AuthorizationModule_init_unchained(admin, engines.authorizationEngine);
+        __AuthorizationModule_init_unchained(admin, engines_ .authorizationEngine);
         __ERC20BurnModule_init_unchained();
         __ERC20MintModule_init_unchained();
         // EnforcementModule_init_unchained is called before ValidationModule_init_unchained due to inheritance
         __EnforcementModule_init_unchained();
-        __ERC20BaseModule_init_unchained(decimalsIrrevocable);
+        __ERC20BaseModule_init_unchained(ERC20Attributes_.decimalsIrrevocable);
         // PauseModule_init_unchained is called before ValidationModule_init_unchained due to inheritance
         __PauseModule_init_unchained();
         __ValidationModule_init_unchained();
@@ -128,11 +118,11 @@ abstract contract CMTAT_BASE is
         Add this call in case you add the SnapshotModule
         */
         __ERC20SnasphotModule_init_unchained();
-        __DocumentModule_init_unchained(engines.documentEngine);
-        __DebtModule_init_unchained(engines.debtEngine);
+        __DocumentModule_init_unchained(engines_ .documentEngine);
+        __DebtModule_init_unchained(engines_ .debtEngine);
 
         /* Other modules */
-        __Base_init_unchained(tokenId_, terms_, information_);
+        __Base_init_unchained(baseModuleAttributes_.tokenId, baseModuleAttributes_.terms, baseModuleAttributes_.information);
 
         /* own function */
         __CMTAT_init_unchained();
@@ -141,6 +131,11 @@ abstract contract CMTAT_BASE is
     function __CMTAT_init_unchained() internal onlyInitializing {
         // no variable to initialize
     }
+
+
+    /*//////////////////////////////////////////////////////////////
+                            PUBLIC/EXTERNAL FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
 
     /**
      * @notice Returns the number of decimals used to get its user representation.
@@ -184,6 +179,9 @@ abstract contract CMTAT_BASE is
         mint(to, amountToMint);
     }
 
+    /*//////////////////////////////////////////////////////////////
+                            INTERNAL/PRIVATE FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
     /**
      * @dev
      *
@@ -204,8 +202,9 @@ abstract contract CMTAT_BASE is
         ERC20SnapshotModuleInternal._snapshotUpdate(from, to);
         ERC20Upgradeable._update(from, to, amount);
     }
-
-    /************* MetaTx Module *************/
+    /*//////////////////////////////////////////////////////////////
+                            METAXTX MODULE
+    //////////////////////////////////////////////////////////////*/
     /**
      * @dev This surcharge is not necessary if you do not use the MetaTxModule
      */

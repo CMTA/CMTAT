@@ -6,27 +6,22 @@ import "../../security/AuthorizationModule.sol";
 import "../../../libraries/Errors.sol";
 import "../../../interfaces/engine/draft-IERC1643.sol";
 abstract contract DocumentModule is AuthorizationModule, IERC1643 {
-     bytes32 public constant DOCUMENT_ROLE = keccak256("DOCUMENT_ROLE");
-    // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.DocumentModule")) - 1)) & ~bytes32(uint256(0xff))
-    bytes32 private constant DocumentModuleStorageLocation = 0x5edcb2767f407e647b6a4171ef53e8015a3eff0bb2b6e7765b1a26332bc43000;
-    struct DocumentModuleStorage {
-        IERC1643  _documentEngine;
-    }
-
-    function documentEngine() public view virtual returns (IERC1643) {
-        DocumentModuleStorage storage $ = _getDocumentModuleStorage();
-        return $._documentEngine;
-    }
-
-    function _getDocumentModuleStorage() private pure returns (DocumentModuleStorage storage $) {
-        assembly {
-            $.slot := DocumentModuleStorageLocation
-        }
-    } 
+    /* ============ Events ============ */
     /**
      * @dev Emitted when a rule engine is set.
      */
     event DocumentEngine(IERC1643 indexed newDocumentEngine);
+   
+    /* ============ ERC-7201 ============ */
+     bytes32 public constant DOCUMENT_ROLE = keccak256("DOCUMENT_ROLE");
+    // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.DocumentModule")) - 1)) & ~bytes32(uint256(0xff))
+    bytes32 private constant DocumentModuleStorageLocation = 0x5edcb2767f407e647b6a4171ef53e8015a3eff0bb2b6e7765b1a26332bc43000;
+    /* ==== ERC-7201 State Variables === */
+    struct DocumentModuleStorage {
+        IERC1643  _documentEngine;
+    }
+
+    /* ============  Initializer Function ============ */
     /**
      * @dev
      *
@@ -41,6 +36,14 @@ abstract contract DocumentModule is AuthorizationModule, IERC1643 {
             $._documentEngine = documentEngine_;
             emit DocumentEngine(documentEngine_);
         }
+    }
+
+    /*//////////////////////////////////////////////////////////////
+                            PUBLIC/EXTERNAL FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
+    function documentEngine() public view virtual returns (IERC1643) {
+        DocumentModuleStorage storage $ = _getDocumentModuleStorage();
+        return $._documentEngine;
     }
 
     /*
@@ -74,4 +77,16 @@ abstract contract DocumentModule is AuthorizationModule, IERC1643 {
             documents =  $._documentEngine.getAllDocuments();
         }
     }
+
+
+    /*//////////////////////////////////////////////////////////////
+                            INTERNAL/PRIVATE FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
+
+    /* ============ ERC-7201 ============ */
+    function _getDocumentModuleStorage() private pure returns (DocumentModuleStorage storage $) {
+        assembly {
+            $.slot := DocumentModuleStorageLocation
+        }
+    } 
 }

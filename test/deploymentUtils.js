@@ -10,12 +10,8 @@ async function deployCMTATStandalone (_, admin, deployerAddress) {
   
   const cmtat = await ethers.deployContract("CMTAT_STANDALONE", [ _,
     admin,
-    'CMTA Token',
-    'CMTAT',
-    DEPLOYMENT_DECIMAL,
-    'CMTAT_ISIN',
-    'https://cmta.ch',
-    'CMTAT_info',
+    ['CMTA Token',  'CMTAT', DEPLOYMENT_DECIMAL],
+    ['CMTAT_ISIN',  'https://cmta.ch', 'CMTAT_info'],
     [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]]);
   return cmtat
 }
@@ -25,6 +21,14 @@ async function deployCMTATProxyImplementation (
   forwarderIrrevocable
 ) {
   const cmtat = await ethers.deployContract('CMTAT_PROXY',[forwarderIrrevocable])
+  return cmtat
+}
+
+async function deployCMTATProxyUUPSImplementation (
+  deployerAddress,
+  forwarderIrrevocable
+) {
+  const cmtat = await ethers.deployContract('CMTAT_PROXY_UUPS',[forwarderIrrevocable])
   return cmtat
 }
 
@@ -43,12 +47,8 @@ async function deployCMTATStandaloneWithParameter (
   const cmtat = await ethers.deployContract('CMTAT_STANDALONE',[
     forwarderIrrevocable,
     admin,
-    nameIrrevocable,
-    symbolIrrevocable,
-    decimalsIrrevocable,
-    tokenId_,
-    terms_,
-    information_,
+    [ nameIrrevocable,  symbolIrrevocable, decimalsIrrevocable],
+    [tokenId_,  terms_, information_],
     engines
   ])
   return cmtat
@@ -63,12 +63,8 @@ async function deployCMTATProxy (_, admin, deployerAddress) {
     ETHERS_CMTAT_PROXY_FACTORY,
     [
       admin,
-      'CMTA Token',
-      'CMTAT',
-      DEPLOYMENT_DECIMAL,
-      'CMTAT_ISIN',
-      'https://cmta.ch',
-      'CMTAT_info',
+      ['CMTA Token',  'CMTAT', DEPLOYMENT_DECIMAL],
+      ['CMTAT_ISIN',  'https://cmta.ch', 'CMTAT_info'],
       [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]
     ],
     {
@@ -100,12 +96,8 @@ async function deployCMTATProxyWithParameter (
     ETHERS_CMTAT_PROXY_FACTORY,
     [
       admin,
-      nameIrrevocable,
-      symbolIrrevocable,
-      decimalsIrrevocable,
-      tokenId_,
-      terms_,
-      information_,
+      [ nameIrrevocable,  symbolIrrevocable, decimalsIrrevocable],
+      [tokenId_,  terms_, information_],
       engines
     ],
     {
@@ -125,6 +117,7 @@ module.exports = {
   deployCMTATStandaloneWithParameter,
   DEPLOYMENT_DECIMAL,
   deployCMTATProxyImplementation,
+  deployCMTATProxyUUPSImplementation,
   fixture,
   loadFixture
 }

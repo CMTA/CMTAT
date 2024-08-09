@@ -21,6 +21,7 @@
 | └ | unpause | Public ❗️ | 🛑  | onlyRole |
 | └ | deactivateContract | Public ❗️ | 🛑  | onlyRole |
 | └ | deactivated | Public ❗️ |   |NO❗️ |
+| └ | _getPauseModuleStorage | Private 🔐 |   | |
 
 
 ### Legend

@@ -1,7 +1,4 @@
 const { expect } = require('chai');
-const {
-  expectRevertCustomError
-} = require('../../../openzeppelin-contracts-upgradeable/test/helpers/customError.js')
 const { DEFAULT_ADMIN_ROLE } = require('../../utils.js')
 
 function AuthorizationModuleSetAuthorizationEngineCommon () {
@@ -33,25 +30,20 @@ function AuthorizationModuleSetAuthorizationEngineCommon () {
           this.authorizationEngineMock.target
         )
       }
-
       // Act
-      await expectRevertCustomError(
-        this.cmtat.connect(this.admin).setAuthorizationEngine(
-          this.authorizationEngineMock.target
-        ),
-        'CMTAT_AuthorizationModule_AuthorizationEngineAlreadySet',
-        []
-      )
+      await expect( this.cmtat.connect(this.admin).setAuthorizationEngine(
+        this.authorizationEngineMock.target
+      ))
+      .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_AuthorizationModule_AuthorizationEngineAlreadySet')
     })
 
     it('testCannotNonAdminSetAuthorizationEngine', async function () {
       // Act
-      await expectRevertCustomError(
-        this.cmtat.connect(this.address1).setAuthorizationEngine(
-          this.authorizationEngineMock.target
-        ),
-        'AccessControlUnauthorizedAccount',
-        [this.address1.address, DEFAULT_ADMIN_ROLE]
+      await expect( this.cmtat.connect(this.address1).setAuthorizationEngine(
+        this.authorizationEngineMock.target
+      ))
+      .to.be.revertedWithCustomError(this.cmtat, 'AccessControlUnauthorizedAccount').withArgs(
+        this.address1.address, DEFAULT_ADMIN_ROLE
       )
     })
 
@@ -84,11 +76,8 @@ function AuthorizationModuleSetAuthorizationEngineCommon () {
         )
       }
       // Act
-      await expectRevertCustomError(
-        this.cmtat.connect(this.admin).grantRole(DEFAULT_ADMIN_ROLE, this.address1),
-        'CMTAT_AuthorizationModule_InvalidAuthorization',
-        []
-      )
+      await expect( this.cmtat.connect(this.admin).grantRole(DEFAULT_ADMIN_ROLE, this.address1))
+      .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_AuthorizationModule_InvalidAuthorization')
     })
 
     it('testCanRevokeAdminIfAuthorizedByTheEngine', async function () {
@@ -119,11 +108,8 @@ function AuthorizationModuleSetAuthorizationEngineCommon () {
 
       await this.authorizationEngineMock.setRevokeAdminRoleAuthorized(false)
       // Act
-      await expectRevertCustomError(
-        this.cmtat.connect(this.admin).revokeRole(DEFAULT_ADMIN_ROLE, this.address1),
-        'CMTAT_AuthorizationModule_InvalidAuthorization',
-        []
-      )
+      await expect(   this.cmtat.connect(this.admin).revokeRole(DEFAULT_ADMIN_ROLE, this.address1))
+      .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_AuthorizationModule_InvalidAuthorization')
     })
   })
 }

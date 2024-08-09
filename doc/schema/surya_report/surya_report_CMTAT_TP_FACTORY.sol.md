@@ -15,10 +15,12 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **CMTAT_TP_FACTORY** | Implementation | AccessControl |||
-| └ | <Constructor> | Public ❗️ | 🛑  |NO❗️ |
+| **CMTAT_TP_FACTORY** | Implementation | CMTATFactoryInvariant, CMTATFactoryBase |||
+| └ | <Constructor> | Public ❗️ | 🛑  | CMTATFactoryBase |
 | └ | deployCMTAT | Public ❗️ | 🛑  | onlyRole |
-| └ | getAddress | External ❗️ |   |NO❗️ |
+| └ | computedProxyAddress | Public ❗️ |   |NO❗️ |
+| └ | _deployBytecode | Internal 🔒 | 🛑  | |
+| └ | _getBytecode | Internal 🔒 |   | |
 
 
 ### Legend
