@@ -6,6 +6,14 @@ pragma solidity ^0.8.20;
 import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 import "../../../libraries/Errors.sol";
 
+/**
+ * @title ERC20Base module
+ * @dev 
+ *
+ * Contains ERC-20 base functions and extension
+ * Inherits from ERC-20
+ * 
+ */
 abstract contract ERC20BaseModule is ERC20Upgradeable {
     /* ============ Events ============ */
     /**

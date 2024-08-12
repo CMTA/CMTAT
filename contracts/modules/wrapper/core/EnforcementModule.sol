@@ -6,7 +6,8 @@ import "../../security/AuthorizationModule.sol";
 import "../../internal/EnforcementModuleInternal.sol";
 
 /**
- * @dev Enforcement module.
+ * @title Enforcement module.
+ * @dev 
  *
  * Allows the issuer to freeze transfers from a given address
  */

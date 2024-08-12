@@ -6,8 +6,9 @@ import "@openzeppelin/contracts-upgradeable/utils/PausableUpgradeable.sol";
 import "../../security/AuthorizationModule.sol";
 
 /**
- *
- * @dev Put in pause or deactivate the contract
+ * @title Pause Module
+ * @dev 
+ * Put in pause or deactivate the contract
  * The issuer must be able to “pause” the smart contract, 
  * to prevent execution of transactions on the distributed ledger until the issuer puts an end to the pause. 
  *

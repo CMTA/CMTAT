@@ -13,7 +13,7 @@ import "../../../libraries/Errors.sol";
  * Useful to take a snapshot of token holder balance and total supply at a specific time
  * Inspired by Openzeppelin - ERC20Snapshot but use the time as Id instead of a counter.
  * Contrary to OpenZeppelin, the function _getCurrentSnapshotId is not available 
-   because overriding this function can break the contract.
+ *  because overriding this function can break the contract.
  */
 
 abstract contract SnapshotModuleBase is Initializable {

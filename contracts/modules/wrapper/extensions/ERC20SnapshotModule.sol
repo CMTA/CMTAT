@@ -6,7 +6,8 @@ import "../../security/AuthorizationModule.sol";
 import "../../internal/ERC20SnapshotModuleInternal.sol";
 
 /**
- * @dev Snapshot module.
+ * @title Snapshot module
+ * @dev 
  *
  * Useful to take a snapshot of token holder balance and total supply at a specific time
  */

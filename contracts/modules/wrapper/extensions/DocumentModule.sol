@@ -5,6 +5,15 @@ pragma solidity ^0.8.20;
 import "../../security/AuthorizationModule.sol";
 import "../../../libraries/Errors.sol";
 import "../../../interfaces/engine/draft-IERC1643.sol";
+
+
+/**
+ * @title Document module
+ * @dev 
+ *
+ * Retrieve documents from a documentEngine
+ */
+
 abstract contract DocumentModule is AuthorizationModule, IERC1643 {
     /* ============ Events ============ */
     /**

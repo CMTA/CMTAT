@@ -6,6 +6,12 @@ import "../../security/AuthorizationModule.sol";
 import "../../../libraries/Errors.sol";
 import "../../../interfaces/engine/IDebtEngine.sol";
 
+/**
+ * @title Debt module
+ * @dev 
+ *
+ * Retrieve debt and creditEvents information from a debtEngine
+ */
 abstract contract DebtModule is AuthorizationModule, IDebtEngine {
     /* ============ State Variables ============ */
     bytes32 public constant DEBT_ROLE = keccak256("DEBT_ROLE");

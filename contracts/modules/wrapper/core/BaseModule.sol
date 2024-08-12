@@ -5,6 +5,7 @@ pragma solidity ^0.8.20;
 // required OZ imports here
 import "../../security/AuthorizationModule.sol";
 import "../../../libraries/Errors.sol";
+
 abstract contract BaseModule is AuthorizationModule {
     /* ============ State Variables ============ */
     /** 

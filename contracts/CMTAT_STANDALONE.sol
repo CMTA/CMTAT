@@ -4,6 +4,9 @@ pragma solidity ^0.8.20;
 
 import "./modules/CMTAT_BASE.sol";
 
+/**
+* @title CMTAT version for a standalone deployment (without proxy)
+*/
 contract CMTAT_STANDALONE is CMTAT_BASE {
     /**
      * @notice Contract version for standalone deployment
