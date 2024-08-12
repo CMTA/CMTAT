@@ -9,8 +9,9 @@ import "./CMTATFactoryRoot.sol";
 * 
 */
 abstract contract CMTATFactoryBase is CMTATFactoryRoot {
-    // Public
+    /* ============ State Variables ============ */
     address public immutable logic;
+    /* ============ Constructor ============ */
     /**
     * @param logic_ contract implementation
     * @param factoryAdmin admin

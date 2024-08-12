@@ -12,6 +12,7 @@ import "./CMTATFactoryInvariant.sol";
 * 
 */
 abstract contract CMTATFactoryRoot is AccessControl, CMTATFactoryInvariant {
+    /* ============ State Variables ============ */
     // Public
     address[] public cmtatsList;
     bool public useCustomSalt;
@@ -19,6 +20,8 @@ abstract contract CMTATFactoryRoot is AccessControl, CMTATFactoryInvariant {
     /// mapping
     mapping(uint256 => address) internal cmtats;
     mapping(bytes32 => bool) internal customSaltUsed;
+    
+    /* ============ Constructor ============ */
     /**
     * @param factoryAdmin admin
     */
@@ -33,6 +36,11 @@ abstract contract CMTATFactoryRoot is AccessControl, CMTATFactoryInvariant {
         _grantRole(CMTAT_DEPLOYER_ROLE, factoryAdmin);
     }
 
+
+    /*//////////////////////////////////////////////////////////////
+                            PUBLIC/EXTERNAL FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
+
     /**
     * @notice get CMTAT proxy address
     *
@@ -40,6 +48,10 @@ abstract contract CMTATFactoryRoot is AccessControl, CMTATFactoryInvariant {
     function CMTATProxyAddress(uint256 cmtatCounterId_) external view returns (address) {
         return cmtats[cmtatCounterId_];
     }
+
+    /*//////////////////////////////////////////////////////////////
+                            INTERNAL FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
     
     /**
     * @param deploymentSalt salt for deployment

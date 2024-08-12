@@ -1,19 +1,21 @@
 
 // SPDX-License-Identifier: MPL-2.0
 pragma solidity ^0.8.20;
-interface IERC1643Whole {
+import "../interfaces/engine/draft-IERC1643.sol";
+interface IERC1643Whole is IERC1643{
 
     // Document Management
-    function getDocument(bytes32 _name) external view returns (string memory, bytes32, uint256);
     function setDocument(bytes32 _name, string memory _uri, bytes32 _documentHash) external;
     function removeDocument(bytes32 _name) external;
-    function getAllDocuments() external view returns (bytes32[] memory);
 
     // Document Events
     event DocumentRemoved(bytes32 indexed _name, string _uri, bytes32 _documentHash);
     event DocumentUpdated(bytes32 indexed _name, string _uri, bytes32 _documentHash);
 
 }
+/*
+* @title a DocumentEngine mock for testing, not suitable for production
+*/
 contract DocumentEngineMock is IERC1643Whole {
      struct Document {
         string uri;

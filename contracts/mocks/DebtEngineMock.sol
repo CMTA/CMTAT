@@ -7,6 +7,9 @@ interface IDebtEngineMock is IDebtEngine  {
     function setCreditEvents(CreditEvents calldata creditEvents) external;
 }
 
+/*
+* @title a DebtEngine mock for testing, not suitable for production
+*/
 contract DebtEngineMock is IDebtEngineMock {
     DebtBase private _debt;
     CreditEvents private _creditEvents;

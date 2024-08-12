@@ -2,6 +2,9 @@
 
 pragma solidity ^0.8.20;
 
+/*
+* @dev minimum interface to define an AuthorizationEngine
+*/
 interface IAuthorizationEngine {
     /**
      * @dev Returns true if the operation is authorized, and false otherwise.

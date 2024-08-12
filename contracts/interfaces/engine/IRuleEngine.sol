@@ -4,6 +4,9 @@ pragma solidity ^0.8.20;
 
 import "../draft-IERC1404/draft-IERC1404Wrapper.sol";
 
+/*
+* @dev minimum interface to define a RuleEngine
+*/
 interface IRuleEngine is IERC1404Wrapper {
     /**
      * @dev Returns true if the operation is a success, and false otherwise.

@@ -11,10 +11,14 @@ import "./libraries/CMTATFactoryBase.sol";
 * @notice Factory to deploy CMTAT with a transparent proxy
 * 
 */
-contract CMTAT_TP_FACTORY is CMTATFactoryInvariant, CMTATFactoryBase {
+contract CMTAT_TP_FACTORY is CMTATFactoryBase {
 
     constructor(address logic_, address factoryAdmin, bool useCustomSalt_) CMTATFactoryBase(logic_, factoryAdmin,useCustomSalt_){}
-    /**
+
+    /*//////////////////////////////////////////////////////////////
+                            PUBLIC/EXTERNAL FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
+        /**
     * @notice deploy a transparent proxy with a proxy admin contract
     */
     function deployCMTAT(
@@ -48,6 +52,12 @@ contract CMTAT_TP_FACTORY is CMTATFactoryInvariant, CMTATFactoryBase {
         cmtatArgument);
         return Create2.computeAddress(deploymentSalt,  keccak256(bytecode), address(this) );
     }
+
+
+    /*//////////////////////////////////////////////////////////////
+                            INTERNAL FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
+
 
     /**
     * @notice Deploy CMTAT and push the created CMTAT in the list
