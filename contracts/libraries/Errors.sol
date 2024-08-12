@@ -2,6 +2,9 @@
 
 pragma solidity ^0.8.20;
 
+/*
+* @dev CMTAT custom errors
+*/
 library Errors {
     // CMTAT
     error CMTAT_InvalidTransfer(address from, address to, uint256 amount);

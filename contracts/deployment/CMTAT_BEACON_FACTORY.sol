@@ -31,6 +31,9 @@ contract CMTAT_BEACON_FACTORY is AccessControl, CMTATFactoryRoot {
         beacon = new UpgradeableBeacon(implementation_, beaconOwner);
     }
 
+    /*//////////////////////////////////////////////////////////////
+                            PUBLIC/EXTERNAL FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
     /**
     * @notice deploy CMTAT with a beacon proxy
     * 
@@ -64,6 +67,18 @@ contract CMTAT_BEACON_FACTORY is AccessControl, CMTATFactoryRoot {
     }
 
     /**
+    * @notice get the implementation address from the beacon
+    * @return implementation address
+    */
+    function implementation() public view returns (address) {
+        return beacon.implementation();
+    }
+
+    /*//////////////////////////////////////////////////////////////
+                            INTERNAL FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
+
+    /**
     * @notice Deploy CMTAT and push the created CMTAT in the list
     */
     function _deployBytecode(bytes memory bytecode, bytes32  deploymentSalt) internal returns (BeaconProxy cmtat) {
@@ -92,12 +107,4 @@ contract CMTAT_BEACON_FACTORY is AccessControl, CMTATFactoryRoot {
         );
         bytecode = abi.encodePacked(type(BeaconProxy).creationCode,  abi.encode(address(beacon), _implementation));
      }
-
-    /**
-    * @notice get the implementation address from the beacon
-    * @return implementation address
-    */
-    function implementation() public view returns (address) {
-        return beacon.implementation();
-    }
 }

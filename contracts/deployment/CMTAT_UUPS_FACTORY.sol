@@ -12,7 +12,7 @@ import "./libraries/CMTATFactoryBase.sol";
 * @notice Factory to deploy CMTAT with a UUPS proxy
 * 
 */
-contract CMTAT_UUPS_FACTORY is CMTATFactoryInvariant, CMTATFactoryBase {
+contract CMTAT_UUPS_FACTORY is CMTATFactoryBase {
     /**
     * @param logic_ contract implementation
     * @param factoryAdmin admin
@@ -20,6 +20,9 @@ contract CMTAT_UUPS_FACTORY is CMTATFactoryInvariant, CMTATFactoryBase {
     constructor(address logic_, address factoryAdmin, bool useCustomSalt_) CMTATFactoryBase(logic_, factoryAdmin,useCustomSalt_){}
        
     
+    /*//////////////////////////////////////////////////////////////
+                            PUBLIC/EXTERNAL FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
     /**
     * @notice deploy a transparent proxy with a proxy admin contract
     */
