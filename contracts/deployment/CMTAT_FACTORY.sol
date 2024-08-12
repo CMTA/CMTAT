@@ -74,7 +74,7 @@ contract CMTAT_FACTORY is AccessControlUpgradeable {
     ) public view returns (address) {
         bytes memory bytecode = _getBytecode(proxyAdmin, cmtatData);
         bytes32 encodedSaltWithSender = keccak256(
-            abi.encodePacked(
+            abi.encode(
                 msg.sender,
                 salt
             )
@@ -100,7 +100,7 @@ contract CMTAT_FACTORY is AccessControlUpgradeable {
         CMTAT_data calldata cmtatData
     ) public onlyRole(CMTAT_DEPLOYER_ROLE) returns(address cmtat) {
         bytes32 encodedSaltWithSender = keccak256(
-            abi.encodePacked(
+            abi.encode(
                 msg.sender,
                 salt
             )
