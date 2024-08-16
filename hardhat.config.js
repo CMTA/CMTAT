@@ -41,6 +41,16 @@ module.exports = {
       url: process.env.SEPOLIA_NODE,
       accounts: [process.env.PRIVATE_KEY],
       chainId: 11155111
+    },
+    arbitrumTestnet: {
+      url: process.env.ARBITRUMTESTNET_NODE,
+      accounts: [process.env.PRIVATE_KEY],
+      chainId: 421614
+    },
+    baseTestnet: {
+      url: process.env.BASETESTNET_NODE,
+      accounts: [process.env.PRIVATE_KEY],
+      chainId: 84532
     }
   },
   solidity: {
@@ -57,7 +67,9 @@ module.exports = {
       mainnet: process.env.ETHERSCAN_API_KEY,
       holesky: process.env.ETHERSCAN_API_KEY,
       polygon: process.env.POLYGONSCAN_API_KEY,
-      sepolia: process.env.ETHERSCAN_API_KEY
+      sepolia: process.env.ETHERSCAN_API_KEY,
+      arbitrumTestnet: process.env.ARBISCAN_API_KEY,
+      baseTestnet: process.env.BASESCAN_API_KEY
     },
     customChains: [
       {
@@ -66,6 +78,22 @@ module.exports = {
         urls: {
           apiURL: 'https://api-holesky.etherscan.io/api',
           browserURL: 'https://holesky.etherscan.io'
+        }
+      },
+      {
+        network: 'arbitrumTestnet',
+        chainId: 421614,
+        urls: {
+          apiURL: 'https://api-sepolia.arbiscan.io/api',
+          browserURL: 'https://sepolia.arbiscan.io/'
+        }
+      },
+      {
+        network: 'baseTestnet',
+        chainId: 84532,
+        urls: {
+          apiURL: 'https://api-sepolia.basescan.org/api',
+          browserURL: 'https://sepolia.basescan.org/'
         }
       }
     ]
@@ -80,3 +108,4 @@ module.exports = {
     token: 'ETH'
   }
 }
+
