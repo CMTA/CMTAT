@@ -1,0 +1,190 @@
+{
+    "tokens": [
+        {
+            "0x3f67093dfFD4F0aF4f2918703C92B60ACB7AD78b": {
+                "metadata": [
+                    "0x73E3552Cdbe9F4F38A1dDf1262b87Aa208d2225C",
+                    "21.co Wrapped Bitcoin",
+                    "21BTC",
+                    8,
+                    "",
+                    "",
+                    "",
+                    0
+                ],
+                "nonce": 9
+            }
+        },
+        {
+            "0x0d3bd40758dF4F79aaD316707FcB809CD4815Ffe": {
+                "metadata": [
+                    "0x73E3552Cdbe9F4F38A1dDf1262b87Aa208d2225C",
+                    "21.co Wrapped XRP",
+                    "21XRP",
+                    6,
+                    "",
+                    "",
+                    "",
+                    0
+                ],
+                "nonce": 10
+            }
+        },
+        {
+            "0x1bE9d03BfC211D83CFf3ABDb94A75F9Db46e1334": {
+                "metadata": [
+                    "0x73E3552Cdbe9F4F38A1dDf1262b87Aa208d2225C",
+                    "21.co Wrapped BNB",
+                    "21BNB",
+                    8,
+                    "",
+                    "",
+                    "",
+                    0
+                ],
+                "nonce": 11
+            }
+        },
+        {
+            "0x9c05d54645306d4C4EAd6f75846000E1554c0360": {
+                "metadata": [
+                    "0x73E3552Cdbe9F4F38A1dDf1262b87Aa208d2225C",
+                    "21.co Wrapped Cardano",
+                    "21ADA",
+                    6,
+                    "",
+                    "",
+                    "",
+                    0
+                ],
+                "nonce": 12
+            }
+        },
+        {
+            "0xb80a1d87654BEf7aD8eB6BBDa3d2309E31D4e598": {
+                "metadata": [
+                    "0x73E3552Cdbe9F4F38A1dDf1262b87Aa208d2225C",
+                    "21.co Wrapped Solana",
+                    "21SOL",
+                    9,
+                    "",
+                    "",
+                    "",
+                    0
+                ],
+                "nonce": 13
+            }
+        },
+        {
+            "0x9F2825333aa7bC2C98c061924871B6C016e385F3": {
+                "metadata": [
+                    "0x73E3552Cdbe9F4F38A1dDf1262b87Aa208d2225C",
+                    "21.co Wrapped Litecoin",
+                    "21LTC",
+                    8,
+                    "",
+                    "",
+                    "",
+                    0
+                ],
+                "nonce": 14
+            }
+        },
+        {
+            "0xF4ACCD20bFED4dFFe06d4C85A7f9924b1d5dA819": {
+                "metadata": [
+                    "0x73E3552Cdbe9F4F38A1dDf1262b87Aa208d2225C",
+                    "21.co Wrapped Polkadot",
+                    "21DOT",
+                    10,
+                    "",
+                    "",
+                    "",
+                    0
+                ],
+                "nonce": 15
+            }
+        },
+        {
+            "0xFf4927e04c6a01868284F5C3fB9cba7F7ca4aeC0": {
+                "metadata": [
+                    "0x73E3552Cdbe9F4F38A1dDf1262b87Aa208d2225C",
+                    "21.co Wrapped BitcoinCash",
+                    "21BCH",
+                    8,
+                    "",
+                    "",
+                    "",
+                    0
+                ],
+                "nonce": 16
+            }
+        },
+        {
+            "0x399508A43d7E2b4451cd344633108b4d84b33B03": {
+                "metadata": [
+                    "0x73E3552Cdbe9F4F38A1dDf1262b87Aa208d2225C",
+                    "21.co Wrapped AVAX",
+                    "21AVAX",
+                    18,
+                    "",
+                    "",
+                    "",
+                    0
+                ],
+                "nonce": 20
+            }
+        },
+        {
+            "0x73225F88fEEA4E41Fc67E986a95AC61dd7118866": {
+                "metadata": [
+                    "0x73E3552Cdbe9F4F38A1dDf1262b87Aa208d2225C",
+                    "21.co Wrapped Toncoin",
+                    "21TON",
+                    9,
+                    "",
+                    "",
+                    "",
+                    0
+                ],
+                "nonce": 26
+            }
+        },
+        {
+            "0xD2aEE1CE2b4459dE326971DE036E82f1318270AF": {
+                "metadata": [
+                    "0xDb611733293A7ce9Ac51b7ac382C55F96E537968",
+                    "21.co Wrapped Dogecoin",
+                    "21DOGE",
+                    8,
+                    "",
+                    "",
+                    "",
+                    0
+                ],
+                "nonce": 0
+            }
+        }
+    ],
+    "proxyAdmin": {
+        "deployer": "0x73E3552Cdbe9F4F38A1dDf1262b87Aa208d2225C",
+        "nonce": 1
+    },
+    "implementation": {
+        "deployer": "0x73E3552Cdbe9F4F38A1dDf1262b87Aa208d2225C",
+        "nonce": 8
+    },
+    "addresses": [
+        "0x3f67093dfFD4F0aF4f2918703C92B60ACB7AD78b",
+        "0x0d3bd40758dF4F79aaD316707FcB809CD4815Ffe",
+        "0x1bE9d03BfC211D83CFf3ABDb94A75F9Db46e1334",
+        "0x9c05d54645306d4C4EAd6f75846000E1554c0360",
+        "0xb80a1d87654BEf7aD8eB6BBDa3d2309E31D4e598",
+        "0x9F2825333aa7bC2C98c061924871B6C016e385F3",
+        "0xF4ACCD20bFED4dFFe06d4C85A7f9924b1d5dA819",
+        "0xFf4927e04c6a01868284F5C3fB9cba7F7ca4aeC0",
+        "0x399508A43d7E2b4451cd344633108b4d84b33B03",
+        "0x73225F88fEEA4E41Fc67E986a95AC61dd7118866",
+        "0xD2aEE1CE2b4459dE326971DE036E82f1318270AF"
+    ]
+}
