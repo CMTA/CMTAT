@@ -42,15 +42,30 @@ module.exports = {
       accounts: [process.env.PRIVATE_KEY],
       chainId: 11155111
     },
+    arbitrum: {
+      url: process.env.ARBITRUM_NODE,
+      accounts: [process.env.PRIVATE_KEY],
+      chainId: 42161
+    },
     arbitrumTestnet: {
       url: process.env.ARBITRUMTESTNET_NODE,
       accounts: [process.env.PRIVATE_KEY],
       chainId: 421614
     },
+    base: {
+      url: process.env.BASE_NODE,
+      accounts: [process.env.PRIVATE_KEY],
+      chainId: 8453
+    },
     baseTestnet: {
       url: process.env.BASETESTNET_NODE,
       accounts: [process.env.PRIVATE_KEY],
       chainId: 84532
+    },
+    bsc: {
+      url: process.env.BSC_NODE,
+      accounts: [process.env.PRIVATE_KEY],
+      chainId: 56
     }
   },
   solidity: {
@@ -68,8 +83,11 @@ module.exports = {
       holesky: process.env.ETHERSCAN_API_KEY,
       polygon: process.env.POLYGONSCAN_API_KEY,
       sepolia: process.env.ETHERSCAN_API_KEY,
+      arbitrumOne: process.env.ARBISCAN_API_KEY,
       arbitrumTestnet: process.env.ARBISCAN_API_KEY,
-      baseTestnet: process.env.BASESCAN_API_KEY
+      base: process.env.BASESCAN_API_KEY,
+      baseTestnet: process.env.BASESCAN_API_KEY,
+      bsc: process.env.BSCSCAN_API_KEY
     },
     customChains: [
       {

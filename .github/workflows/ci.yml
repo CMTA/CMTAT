@@ -12,8 +12,11 @@ env:
   POLYGON_NODE: ${{ secrets.POLYGON_NODE }}
   HOLESKY_NODE: ${{ secrets.HOLESKY_NODE }}
   SEPOLIA_NODE: ${{ secrets.SEPOLIA_NODE }}
+  ARBITRUM_NODE: ${{ secrets.ARBITRUM_NODE }}
   ARBITRUMTESTNET_NODE: ${{ secrets.ARBITRUMTESTNET_NODE }}
+  BASE_NODE: ${{ secrets.BASE_NODE }}
   BASETESTNET_NODE: ${{ secrets.BASETESTNET_NODE }}
+  BSC_NODE: ${{ secrets.BSC_NODE }}
 
   ETHERSCAN_API_KEY: ${{ secrets.ETHERSCAN_API_KEY }}
   PRIVATE_KEY: ${{ secrets.DUMMY_PK }}

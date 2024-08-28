@@ -109,5 +109,6 @@ module.exports = {
   verifyContract,
   verifyImplementationContract,
   verifyProxyAdminContract,
-  verifyProxyContract
+  verifyProxyContract,
+  verifyOnExplorer
 }
