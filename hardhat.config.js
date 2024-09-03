@@ -66,6 +66,21 @@ module.exports = {
       url: process.env.BSC_NODE,
       accounts: [process.env.PRIVATE_KEY],
       chainId: 56
+    },
+    optimism: {
+      url: process.env.OP_NODE,
+      accounts: [process.env.PRIVATE_KEY],
+      chainId: 10
+    },
+    blast: {
+      url: process.env.BLAST_NODE,
+      accounts: [process.env.PRIVATE_KEY],
+      chainId: 81457
+    },
+    scroll: {
+      url: process.env.SCROLL_NODE,
+      accounts: [process.env.PRIVATE_KEY],
+      chainId: 534352
     }
   },
   solidity: {
@@ -87,7 +102,10 @@ module.exports = {
       arbitrumTestnet: process.env.ARBISCAN_API_KEY,
       base: process.env.BASESCAN_API_KEY,
       baseTestnet: process.env.BASESCAN_API_KEY,
-      bsc: process.env.BSCSCAN_API_KEY
+      bsc: process.env.BSCSCAN_API_KEY,
+      optimisticEthereum: process.env.OPSCAN_API_KEY,
+      blast: process.env.BLASTSCAN_API_KEY,
+      scroll: process.env.SCROLLSCAN_API_KEY
     },
     customChains: [
       {
@@ -112,6 +130,22 @@ module.exports = {
         urls: {
           apiURL: 'https://api-sepolia.basescan.org/api',
           browserURL: 'https://sepolia.basescan.org/'
+        }
+      },
+      {
+        network: 'blast',
+        chainId: 81457,
+        urls: {
+          apiURL: 'https://api.blastscan.io/api',
+          browserURL: 'https://blastscan.io'
+        }
+      },
+      {
+        network: 'scroll',
+        chainId: 534352,
+        urls: {
+          apiURL: 'https://api.scrollscan.com/api',
+          browserURL: 'https://scrollscan.com'
         }
       }
     ]
