@@ -20,6 +20,7 @@ env:
   OP_NODE: ${{ secrets.OP_NODE }}
   BLAST_NODE: ${{ secrets.BLAST_NODE }}
   SCROLL_NODE: ${{ secrets.SCROLL_NODE }}
+  AVAX_NODE: ${{ secrets.AVAX_NODE }}
 
   ETHERSCAN_API_KEY: ${{ secrets.ETHERSCAN_API_KEY }}
   PRIVATE_KEY: ${{ secrets.DUMMY_PK }}

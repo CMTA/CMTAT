@@ -81,6 +81,11 @@ module.exports = {
       url: process.env.SCROLL_NODE,
       accounts: [process.env.PRIVATE_KEY],
       chainId: 534352
+    },
+    avalanche: {
+      url: process.env.AVAX_NODE,
+      accounts: [process.env.PRIVATE_KEY],
+      chainId: 43114
     }
   },
   solidity: {
@@ -105,7 +110,8 @@ module.exports = {
       bsc: process.env.BSCSCAN_API_KEY,
       optimisticEthereum: process.env.OPSCAN_API_KEY,
       blast: process.env.BLASTSCAN_API_KEY,
-      scroll: process.env.SCROLLSCAN_API_KEY
+      scroll: process.env.SCROLLSCAN_API_KEY,
+      avalanche: process.env.AVASCAN_API_KEY
     },
     customChains: [
       {
@@ -160,4 +166,3 @@ module.exports = {
     token: 'ETH'
   }
 }
-
