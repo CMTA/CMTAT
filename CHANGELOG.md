@@ -2,7 +2,7 @@
 
 Please follow <https://changelog.md/> conventions.
 
-## 2.5.0
+## 2.5.0 - 20240910
 
 - Change Solidity version to 0.8.27 (latest)
 - Some slight improvements to the documentation
@@ -25,14 +25,12 @@ Please follow <https://changelog.md/> conventions.
   - use create2 with the library [Create2](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/Create2.sol) from OpenZeppelin:
 - Implement [ERC-7201](https://eips.ethereum.org/EIPS/eip-7201) to manage memory to reduce memory collision when upgrading a proxy to a new implementation. [Use erc-7201 for namespace #272](https://github.com/CMTA/CMTAT/issues/272)
 
-## 2.4.0
+## 2.4.0 - 20240503
 
 The modifications between the version v2.3.0 and this version are not audited !!!
 
 - Improve tests & update the code
 - `ERC20SnapshotInternal` inherits from `ICMTATSnapshot`
-
-
 
 ## 2.4.0-rc.1 - 20240319
 
