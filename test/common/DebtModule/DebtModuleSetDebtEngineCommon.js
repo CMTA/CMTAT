@@ -25,6 +25,14 @@ function DebtModuleSetDebtEngineCommon () {
       .to.be.revertedWithCustomError(this.cmtat, 'AccessControlUnauthorizedAccount')
       .withArgs(this.address1.address, DEBT_ROLE)
     })
+
+    it("testGetEmptyDebtIfNoDebtEngine", async function () {
+      const debt = await this.cmtat.debt();
+      const events = await this.cmtat.creditEvents();
+  
+      expect(events.flagDefault).to.equal(false);
+      expect(debt.interestRate).to.equal(0);
+    });
   })
 }
 module.exports = DebtModuleSetDebtEngineCommon

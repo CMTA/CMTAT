@@ -25,6 +25,21 @@ function DocumentModuleSetDocumentEngineCommon () {
       .to.be.revertedWithCustomError(this.cmtat, 'AccessControlUnauthorizedAccount')
       .withArgs(this.address1.address, DOCUMENT_ROLE)
     })
+
+    it("testGetEmptyDocumentsIfNoDocumentEngine", async function () {
+      const name = ethers.encodeBytes32String("doc1");
+      // act
+      const [storedUri, storedHash, lastModified] = await this.cmtat.getDocument(name);
+      // Assert
+      expect(storedUri).to.equal("");
+      expect(storedHash).to.equal(ethers.encodeBytes32String(""));
+      expect(lastModified).to.equal(0);
+
+      // Act
+      const documentNames = await this.cmtat.getAllDocuments();
+      // Assert
+      expect(documentNames.length).to.equal(0);
+    });
   })
 }
 module.exports = DocumentModuleSetDocumentEngineCommon

@@ -1,10 +1,11 @@
 //SPDX-License-Identifier: MPL-2.0
+pragma solidity ^0.8.20;
 import "./engine/IDebtEngine.sol";
 import "./engine/IRuleEngine.sol";
 import "./engine/IAuthorizationEngine.sol";
 import "./engine/draft-IERC1643.sol";
 
-pragma solidity ^0.8.20;
+
 
 /**
 * @notice interface to represent arguments used for CMTAT constructor / initialize

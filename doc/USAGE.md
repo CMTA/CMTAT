@@ -9,13 +9,11 @@ are the latest ones that we tested:
 
 - npm 10.2.5
 - Hardhat ^2.22.7
-- Solidity 0.8.26 (via solc-js)
+- Solidity 0.8.27 (via solc-js)
 - Node 20.5.0
-- OpenZeppelin
-  - OpenZeppelin Contracts Upgradeable (submodule) [v5.0.2](https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/releases/tag/v5.0.2)
-  - OpenZeppelin Contracts (Node.js module) [v5.0.2](https://github.com/OpenZeppelin/openzeppelin-contracts/releases/tag/v5.0.2) 
-    - Reason n°1: libraries and interfaces are no longer available inside the upgradeable version since the version v5.0.0.
-    - Reason n°2: It is not installed as a github submodule because it will create conflicts with the imports inside OpenZeppelin which use the Node.js version.
+- OpenZeppelin Contracts (Node.js module) [v5.0.2](https://github.com/OpenZeppelin/openzeppelin-contracts/releases/tag/v5.0.2) 
+- OpenZeppelin Contracts Upgradeable (Node.js module) [v5.0.2](https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/releases/tag/v5.0.2)
+- Test: OpenZeppelin Contracts Upgradeable (submodule) [v5.0.2](https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/releases/tag/v5.0.2)
 
 
 ## Installation

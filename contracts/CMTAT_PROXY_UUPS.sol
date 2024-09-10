@@ -4,6 +4,7 @@ pragma solidity ^0.8.20;
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "./modules/CMTAT_BASE.sol";
 
+
 /**
 * @title CMTAT version for a proxy deployment with UUPS proxy
 */

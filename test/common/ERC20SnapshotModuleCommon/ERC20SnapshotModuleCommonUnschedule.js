@@ -123,7 +123,7 @@ function ERC20SnapshotModuleCommonUnschedule () {
       expect(snapshots.length).to.equal(1)
       expect(snapshots[0]).to.equal(SNAPSHOT_TIME)
       // Act
-      await expect( this.cmtat.connect(this.address1).scheduleSnapshotNotOptimized(SNAPSHOT_TIME))
+      await expect( this.cmtat.connect(this.address1).unscheduleSnapshotNotOptimized(SNAPSHOT_TIME))
       .to.be.revertedWithCustomError(this.cmtat, 'AccessControlUnauthorizedAccount')
       .withArgs(this.address1.address, SNAPSHOOTER_ROLE)
       // Assert

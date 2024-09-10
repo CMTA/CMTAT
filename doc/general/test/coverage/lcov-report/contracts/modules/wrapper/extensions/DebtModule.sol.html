@@ -25,9 +25,9 @@
         <span class='fraction'>12/12</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">75% </span>
+        <span class="strong">91.67% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>9/12</span>
+        <span class='fraction'>11/12</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
@@ -137,7 +137,13 @@
 92
 93
 94
-95</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+95
+96
+97
+98
+99
+100
+101</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -173,7 +179,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">379×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">382×</span>
 <span class="cline-any cline-yes">3×</span>
 <span class="cline-any cline-yes">3×</span>
 <span class="cline-any cline-yes">3×</span>
@@ -205,27 +217,27 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2×</span>
-<span class="cline-any cline-yes">2×</span>
-<span class="cline-any cline-yes">2×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2×</span>
-<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
 <span class="cline-any cline-yes">2×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">2×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">20×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">22×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -239,6 +251,12 @@ import "../../security/AuthorizationModule.sol";
 import "../../../libraries/Errors.sol";
 import "../../../interfaces/engine/IDebtEngine.sol";
 &nbsp;
+/**
+ * @title Debt module
+ * @dev 
+ *
+ * Retrieve debt and creditEvents information from a debtEngine
+ */
 abstract contract DebtModule is AuthorizationModule, IDebtEngine {
     /* ============ State Variables ============ */
     bytes32 public constant DEBT_ROLE = keccak256("DEBT_ROLE");
@@ -300,14 +318,14 @@ abstract contract DebtModule is AuthorizationModule, IDebtEngine {
 &nbsp;
     function debt() public view returns(DebtBase memory debtBaseResult){
         DebtModuleStorage storage $ = _getDebtModuleStorage();
-        <span class="missing-if-branch" title="else path not taken" >E</span>if(address($._debtEngine) != address(0)){
+        if(address($._debtEngine) != address(0)){
             debtBaseResult =  $._debtEngine.debt();
         }
     }
 &nbsp;
     function creditEvents() public view returns(CreditEvents memory creditEventsResult){
         DebtModuleStorage storage $ = _getDebtModuleStorage();
-        <span class="missing-if-branch" title="else path not taken" >E</span>if(address($._debtEngine) != address(0)){
+        if(address($._debtEngine) != address(0)){
             creditEventsResult =  $._debtEngine.creditEvents();
         }
     }
@@ -331,7 +349,7 @@ abstract contract DebtModule is AuthorizationModule, IDebtEngine {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Fri Aug 09 2024 14:44:48 GMT+0200 (Central European Summer Time)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Tue Sep 10 2024 15:33:31 GMT+0200 (Central European Summer Time)
 </div>
 </div>
 <script src="../../../../prettify.js"></script>
