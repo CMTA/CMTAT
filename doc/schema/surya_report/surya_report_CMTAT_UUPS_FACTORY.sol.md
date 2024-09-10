@@ -15,7 +15,7 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **CMTAT_UUPS_FACTORY** | Implementation | CMTATFactoryInvariant, CMTATFactoryBase |||
+| **CMTAT_UUPS_FACTORY** | Implementation | CMTATFactoryBase |||
 | └ | <Constructor> | Public ❗️ | 🛑  | CMTATFactoryBase |
 | └ | deployCMTAT | Public ❗️ | 🛑  | onlyRole |
 | └ | computedProxyAddress | Public ❗️ |   |NO❗️ |

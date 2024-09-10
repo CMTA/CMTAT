@@ -15,11 +15,9 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **IERC1643Whole** | Interface |  |||
-| └ | getDocument | External ❗️ |   |NO❗️ |
+| **IERC1643Whole** | Interface | IERC1643 |||
 | └ | setDocument | External ❗️ | 🛑  |NO❗️ |
 | └ | removeDocument | External ❗️ | 🛑  |NO❗️ |
-| └ | getAllDocuments | External ❗️ |   |NO❗️ |
 ||||||
 | **DocumentEngineMock** | Implementation | IERC1643Whole |||
 | └ | getDocument | External ❗️ |   |NO❗️ |

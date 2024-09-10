@@ -1,10 +1,7 @@
 //SPDX-License-Identifier: MPL-2.0
 pragma solidity ^0.8.20;
 
-import "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
-import "../../CMTAT_PROXY.sol";
 import "../../libraries/FactoryErrors.sol";
-import '@openzeppelin/contracts/utils/Create2.sol';
 import '@openzeppelin/contracts/access/AccessControl.sol';
 import "./CMTATFactoryInvariant.sol";
 /**
@@ -15,7 +12,7 @@ abstract contract CMTATFactoryRoot is AccessControl, CMTATFactoryInvariant {
     /* ============ State Variables ============ */
     // Public
     address[] public cmtatsList;
-    bool public useCustomSalt;
+    bool immutable public useCustomSalt;
     uint256 public cmtatCounterId;
     /// mapping
     mapping(uint256 => address) internal cmtats;

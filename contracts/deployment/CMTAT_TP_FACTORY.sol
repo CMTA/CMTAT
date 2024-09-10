@@ -3,7 +3,6 @@ pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
 import "../CMTAT_PROXY.sol";
-import "../libraries/FactoryErrors.sol";
 import '@openzeppelin/contracts/utils/Create2.sol';
 import "./libraries/CMTATFactoryInvariant.sol";
 import "./libraries/CMTATFactoryBase.sol";

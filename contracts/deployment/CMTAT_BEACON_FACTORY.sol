@@ -2,10 +2,9 @@
 pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/proxy/beacon/BeaconProxy.sol";
-
+import '@openzeppelin/contracts/utils/Create2.sol';
 import '@openzeppelin/contracts/proxy/beacon/UpgradeableBeacon.sol';
 import "../CMTAT_PROXY.sol";
-import "../modules/CMTAT_BASE.sol";
 import "./libraries/CMTATFactoryRoot.sol";
 
 

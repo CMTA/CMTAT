@@ -3,9 +3,7 @@ pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
 import "../CMTAT_PROXY_UUPS.sol";
-import "../libraries/FactoryErrors.sol";
 import '@openzeppelin/contracts/utils/Create2.sol';
-import '@openzeppelin/contracts/access/AccessControl.sol';
 import "./libraries/CMTATFactoryInvariant.sol";
 import "./libraries/CMTATFactoryBase.sol";
 /**

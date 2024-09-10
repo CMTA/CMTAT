@@ -19,9 +19,9 @@
 | └ | <Constructor> | Public ❗️ | 🛑  | CMTATFactoryRoot |
 | └ | deployCMTAT | Public ❗️ | 🛑  | onlyRole |
 | └ | computedProxyAddress | Public ❗️ |   |NO❗️ |
+| └ | implementation | Public ❗️ |   |NO❗️ |
 | └ | _deployBytecode | Internal 🔒 | 🛑  | |
 | └ | _getBytecode | Internal 🔒 |   | |
-| └ | implementation | Public ❗️ |   |NO❗️ |
 
 
 ### Legend

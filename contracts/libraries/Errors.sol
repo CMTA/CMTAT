@@ -53,9 +53,6 @@ library Errors {
     // DebtModule
     error CMTAT_DebtModule_SameValue();
 
-    // BaseModule
-    error CMTAT_BaseModule_SameValue();
-
     // ValidationModule
     error CMTAT_ValidationModule_SameValue();
 

@@ -1,5 +1,3 @@
-
-
 # CMTA Token 
 
 > To use the CMTAT, we recommend the latest audited version, from the [Releases](https://github.com/CMTA/CMTAT/releases) page. Currently, it is the version [v2.3.0](https://github.com/CMTA/CMTAT/releases/tag/v2.3.0)
@@ -113,9 +111,9 @@ Generally, these modules are not required to be compliant with the CMTA specific
 | Name           | Documentation                                                | Main File                                                    |
 | -------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | MetaTxModule   | [metatx.md](doc/modules/presentation/extensions/metatx.md)   | [MetaTxModule.sol](./contracts/modules/wrapper/extensions/MetaTxModule.sol) |
-| SnapshotModule | [snapshot.md](doc/modules/presentation/extensions/snapshot.md) | [SnapshotModule.sol](./contracts/modules/wrapper/extensions/SnapshotModule.sol) |
-| DebtModule     | <Todo>                                                       | [DebtModule.sol](./contracts/modules/wrapper/extensions/DebtModule.sol) |
-| DocumentModue  | <Todo>                                                       | [Document.sol](./contracts/modules/wrapper/extensions/DocumentModule.sol) |
+| SnapshotModule | [snapshot.md](doc/modules/presentation/extensions/snapshot.md) | [ERC20SnapshotModule.sol](./contracts/modules/wrapper/extensions/ERC20SnapshotModule.sol) |
+| DebtModule     | [debt.md](doc/modules/presentation/extensions/debt.md)       | [DebtModule.sol](./contracts/modules/wrapper/extensions/DebtModule.sol) |
+| DocumentModue  | [document.md](doc/modules/presentation/extensions/document.md) | [Document.sol](./contracts/modules/wrapper/extensions/DocumentModule.sol) |
 
 ##### Security
 
@@ -139,7 +137,7 @@ The `RuleEngine` is an external contract used to apply transfer restriction to t
 
 This contract is defined in the `ValidationModule`.
 
-An example of RuleEngine is also available on [Github](https://github.com/CMTA/RuleEngine).
+An example of RuleEngine is also available on [GitHub](https://github.com/CMTA/RuleEngine).
 
 Here is the list of the different version available for each CMTAT version.
 
@@ -163,6 +161,8 @@ This interface can be found in [./contracts/interfaces/engine/IRuleEngine.sol](.
 Before each transfer, the CMTAT calls the function `operateOnTransfer` which is the entrypoint for the RuleEngine.
 
 #### AuthorizationEngine
+
+> Warning: this engine may be deleted in the future
 
 The `AuthorizationEngine` is an external contract to add supplementary check on the functions `grantRole` and `revokeRole`from the CMTAT.
 
@@ -190,7 +190,11 @@ Use an external contract provides two advantages:
 - Reduce code size of CMTAT, which is near of the maximal size limit 
 - Allow to manage this information for several different tokens  (CMTAT or not).
 
-Currently, there is no implementation of a DebtEngine available
+Here is the list of the different version available for each CMTAT version.
+
+| Name                     | DebtEngine                                                   |
+| ------------------------ | ------------------------------------------------------------ |
+| CMTAT v2.5.0 (unaudited) | [DebtEngine v0.2.0](https://github.com/CMTA/DebtEngine/releases/tag/v0.2.0) |
 
 #### DocumentEngine (IERC-1643)
 
@@ -218,14 +222,18 @@ Use an external contract provides two advantages:
 - Reduce code size of CMTAT, which is near of the maximal size limit 
 - Allow to manage documents for several different tokens  (CMTAT or not).
 
-Currently, there is no implementation of a DocumentEngine available
+Here is the list of the different version available for each CMTAT version.
+
+| Name                     | DocumentEngine                                               |
+| ------------------------ | ------------------------------------------------------------ |
+| CMTAT v2.5.0 (unaudited) | [DocumentEngine v0.3.0](https://github.com/CMTA/DocumentEngine/releases/tag/v0.3.0) |
 
 ## Deployment model 
 
 | Model                       | Contract                                             |
 | --------------------------- | ---------------------------------------------------- |
 | Standalone                  | [CMTAT_STANDALONE](./contracts/CMTAT_STANDALONE.sol) |
-| Transparent ou Beacon Proxy | [CMTAT_PROXY](./contracts/CMTAT_PROXY.sol)           |
+| Transparent or Beacon Proxy | [CMTAT_PROXY](./contracts/CMTAT_PROXY.sol)           |
 | UUPS Proxy                  | [CMTAT_PROXY_UUPS](./contracts/CMTAT_PROXY_UUPS.sol) |
 
 
@@ -246,8 +254,6 @@ Please see the OpenZeppelin [upgradeable contracts documentation](https://docs.o
 Please see the OpenZeppelin [Upgrades plugins](https://docs.openzeppelin.com/upgrades-plugins/1.x/) for more information about plugin upgrades in general.
 
 Note that deployment via a proxy is not mandatory, but is recommended by CMTA.
-
-
 
 ### Factory
 
@@ -358,11 +364,14 @@ CMTA providers further documentation describing the CMTAT framework in a platfor
 - [Taurus - Security Token Standards: A Closer Look at CMTAT](https://www.taurushq.com/blog/security-token-standards-a-closer-look-at-cmtat/)
 - [Taurus - Equity Tokenization: How to Pay Dividend On-Chain Using CMTAT](https://www.taurushq.com/blog/equity-tokenization-how-to-pay-dividend-on-chain-using-cmtat/)
 - [Taurus - Token Transfer Management: How to Apply Restrictions with CMTAT and ERC-1404](https://www.taurushq.com/blog/token-transfer-management-how-to-apply-restrictions-with-cmtat-and-erc-1404/)
+- [Taurus - Addressing the Privacy and Compliance Challenge in Public Blockchain Token Transactions](https://www.taurushq.com/blog/enhancing-token-transaction-privacy-on-public-blockchains-while-ensuring-compliance/)
 
 ## Others implementations
 Two versions are available for the blockchain [Tezos](https://tezos.com)
 - [CMTAT FA2](https://github.com/CMTA/CMTAT-Tezos-FA2) Official version written in SmartPy
 - [@ligo/cmtat](https://github.com/ligolang/CMTAT-Ligo/) Unofficial version written in Ligo
+  - See also [Tokenization of securities on Tezos by Frank Hillard](https://medium.com/@frank.hillard_62931/tokenization-of-securities-on-tezos-2e3c3e90fc5a)
+
 
 ## Contract size
 

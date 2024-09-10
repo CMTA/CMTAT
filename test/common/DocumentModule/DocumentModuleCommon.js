@@ -49,7 +49,7 @@ function DocumentModuleCommon () {
       const name = ethers.encodeBytes32String("doc1");
       const [storedUri, storedHash, lastModified] = await this.cmtat.getDocument(name);
       expect(storedUri).to.equal("");
-      expect(storedHash).to.equal(ethers.encodeBytes32String(0x0));
+      expect(storedHash).to.equal(ethers.encodeBytes32String(""));
       expect(lastModified).to.equal(0);
     });
   
@@ -63,7 +63,7 @@ function DocumentModuleCommon () {
       
       const [storedUri, storedHash, lastModified] = await this.cmtat.getDocument(name);
       expect(storedUri).to.equal("");
-      expect(storedHash).to.equal(ethers.encodeBytes32String(0x0));
+      expect(storedHash).to.equal(ethers.encodeBytes32String(""));
       expect(lastModified).to.equal(0);
     });
   

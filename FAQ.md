@@ -3,6 +3,40 @@
 This FAQ is intended to developers familiar with smart contracts
 development.
 
+## Cross-chain bridge support
+
+> With which bridge can the CMTAT be used?
+
+We will analyze the three main bridges: [CCIP](https://chain.link/cross-chain) by Chainlink, [LayerZero](https://layerzero.network) and [AxelarNetwork](https://www.axelar.network)
+
+Generally, in term of implementation, it depends of the model to handle cross-chain token transfer. There are three main models: Burn & Mint, Lock & Mint, Lock & Unlock
+
+To use one of these models, you must implement in the token the functions required and used by the bridge (typically burn and mint). The model "lock and lock" is a little different from the first two models because it does not in principle require any particular implementation.
+
+For example the interface for CCIP is available here: [github.com/smartcontractkit/ccip - ERC20/IBurnMintERC20.sol](https://github.com/smartcontractkit/ccip/blob/948882675ad1c6604d4b911071fc3881148abe66/contracts/src/v0.8/shared/token/ERC20/IBurnMintERC20.sol)
+
+Axelar Network has also a similar behavior and requirement to create what they call a custom interchain token: https://docs.axelar.dev/dev/send-tokens/interchain-tokens/create-token#create-a-custom-interchain-token
+
+We haven't done any testing but in principle the functions `burnFrom`and `mint` are available and compatible with the last CMTAT version, see [github.com/CMTA/CMTAT/blob/master/contracts/interfaces/ICCIPToken.sol](https://github.com/CMTA/CMTAT/blob/master/contracts/interfaces/ICCIPToken.sol).
+
+For the public burn function, unfortunately, we currently have a reason argument in the function which is not compatible with bridges because their burn function only have two arguments (account and value): [github.com/CMTA/CMTAT - wrapper/core/ERC20BurnModule.sol#L32](https://github.com/CMTA/CMTAT/blob/master/contracts/modules/wrapper/core/ERC20BurnModule.sol#L32)
+
+### Chainlink CCIP
+
+For chainlink, the difficulty is that for the moment only tokens whitelisted by chainlink (e.g USDC) can use the bridge, which is not the case for Axelar Network.
+
+The ERC-20 interface for CCIP is available here: [github.com/smartcontractkit/ccip - ERC20/IBurnMintERC20.sol](https://github.com/smartcontractkit/ccip/blob/948882675ad1c6604d4b911071fc3881148abe66/contracts/src/v0.8/shared/token/ERC20/IBurnMintERC20.sol)
+
+### LayerZero
+
+There are two possibilities to use LayerZero with a CMTAT:
+
+The first one is to add a module inside CMTAT to include the Omnichain Fungible Token (OFT) Standard; see  [github.com/LayerZero-Labs - OFT.sol](https://github.com/LayerZero-Labs/LayerZero-v2/blob/main/packages/layerzero-v2/evm/oapp/contracts/oft/OFT.sol)
+
+The second possibility is to deploy an OFT Adapter to act as an intermediary lockbox for the token.
+
+More information in LayerZero documentation: [docs.layerzero.network/v2/developers/evm/oft/quickstart](
+
 ## Toolkit support
 
 > Which is the main development tool you use ?
