@@ -111,7 +111,7 @@ Generally, these modules are not required to be compliant with the CMTA specific
 | Name           | Documentation                                                | Main File                                                    |
 | -------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | MetaTxModule   | [metatx.md](doc/modules/presentation/extensions/metatx.md)   | [MetaTxModule.sol](./contracts/modules/wrapper/extensions/MetaTxModule.sol) |
-| SnapshotModule | [snapshot.md](doc/modules/presentation/extensions/snapshot.md) | [ERC20SnapshotModule.sol](./contracts/modules/wrapper/extensions/ERC20SnapshotModule.sol) |
+| SnapshotModule | [ERC20Snapshot.md](doc/modules/presentation/extensions/ERC20Snapshot.md) | [ERC20SnapshotModule.sol](./contracts/modules/wrapper/extensions/ERC20SnapshotModule.sol) |
 | DebtModule     | [debt.md](doc/modules/presentation/extensions/debt.md)       | [DebtModule.sol](./contracts/modules/wrapper/extensions/DebtModule.sol) |
 | DocumentModue  | [document.md](doc/modules/presentation/extensions/document.md) | [Document.sol](./contracts/modules/wrapper/extensions/DocumentModule.sol) |
 
@@ -143,6 +143,7 @@ Here is the list of the different version available for each CMTAT version.
 
 | Name                    | RuleEngine                                                   |
 | ----------------------- | ------------------------------------------------------------ |
+| CMTAT 2.5.0 (unaudited) | RuleEngine >= [v2.0.3](https://github.com/CMTA/RuleEngine/releases/tag/v2.0.3) |
 | CMTAT 2.4.0 (unaudited) | RuleEngine >=v2.0.0<br />Last version: [v2.0.2](https://github.com/CMTA/RuleEngine/releases/tag/v2.0.2)(unaudited) |
 | CMTAT 2.3.0             | [RuleEngine v1.0.2](https://github.com/CMTA/RuleEngine/releases/tag/v1.0.2) |
 | CMTAT 2.0 (unaudited)   | [RuleEngine 1.0](https://github.com/CMTA/RuleEngine/releases/tag/1.0) (unaudited) |
@@ -194,7 +195,7 @@ Here is the list of the different version available for each CMTAT version.
 
 | Name                     | DebtEngine                                                   |
 | ------------------------ | ------------------------------------------------------------ |
-| CMTAT v2.5.0 (unaudited) | [DebtEngine v0.2.0](https://github.com/CMTA/DebtEngine/releases/tag/v0.2.0) |
+| CMTAT v2.5.0 (unaudited) | [DebtEngine v0.2.0](https://github.com/CMTA/DebtEngine/releases/tag/v0.2.0) (unaudited) |
 
 #### DocumentEngine (IERC-1643)
 
@@ -226,7 +227,7 @@ Here is the list of the different version available for each CMTAT version.
 
 | Name                     | DocumentEngine                                               |
 | ------------------------ | ------------------------------------------------------------ |
-| CMTAT v2.5.0 (unaudited) | [DocumentEngine v0.3.0](https://github.com/CMTA/DocumentEngine/releases/tag/v0.3.0) |
+| CMTAT v2.5.0 (unaudited) | [DocumentEngine v0.3.0](https://github.com/CMTA/DocumentEngine/releases/tag/v0.3.0) (unaudited) |
 
 ## Deployment model 
 

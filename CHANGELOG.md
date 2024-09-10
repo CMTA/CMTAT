@@ -5,7 +5,7 @@ Please follow <https://changelog.md/> conventions.
 ## 2.5.0
 
 - Change Solidity version to 0.8.27 (latest)
-- Small improvement in documentation
+- Some slight improvements to the documentation
 
 ## 2.5.0-rc.0 - 20240809
 
