@@ -117,7 +117,18 @@
 72
 73
 74
-75</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -151,8 +162,21 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">277×</span>
-<span class="cline-any cline-yes">277×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">290×</span>
+<span class="cline-any cline-yes">290×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -174,13 +198,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">30×</span>
+<span class="cline-any cline-yes">24×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">22×</span>
 <span class="cline-any cline-yes">4×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">26×</span>
-<span class="cline-any cline-yes">8×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">18×</span>
@@ -189,28 +213,39 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">//SPDX-License-Identifier: MPL-2.0
 &nbsp;
 pragma solidity ^0.8.20;
 &nbsp;
-import "../../../../openzeppelin-contracts-upgradeable/contracts/token/ERC20/ERC20Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 import "../../security/AuthorizationModule.sol";
 import "../../../interfaces/ICCIPToken.sol";
+&nbsp;
+/**
+ * @title ERC20Mint module.
+ * @dev 
+ *
+ * Contains all mint functions, inherits from ERC-20
+ */
 abstract contract ERC20MintModule is ERC20Upgradeable, ICCIPMintERC20, AuthorizationModule {
-    // MintModule
+    /* ============ State Variables ============ */
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
+    /* ============ Events ============ */
     /**
      * @notice Emitted when the specified  `value` amount of new tokens are created and
      * allocated to the specified `account`.
      */
     event Mint(address indexed account, uint256 value);
 &nbsp;
+&nbsp;
+    /* ============  Initializer Function ============ */
     function __ERC20MintModule_init_unchained() internal <span class="missing-if-branch" title="else path not taken" >E</span>onlyInitializing {
         // no variable to initialize
     }
 &nbsp;
+    /*//////////////////////////////////////////////////////////////
+                            PUBLIC/EXTERNAL FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
     /**
      * @notice  Creates a `value` amount of tokens and assigns them to `account`, by transferring it from address(0)
      * @param account token receiver
@@ -262,8 +297,6 @@ abstract contract ERC20MintModule is ERC20Upgradeable, ICCIPMintERC20, Authoriza
             emit Mint(accounts[i], values[i]);
         }
     }
-&nbsp;
-    uint256[50] private __gap;
 }
 &nbsp;</pre></td></tr>
 </table></pre>
@@ -271,7 +304,7 @@ abstract contract ERC20MintModule is ERC20Upgradeable, ICCIPMintERC20, Authoriza
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu May 02 2024 13:42:17 GMT+0200 (Central European Summer Time)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Tue Sep 10 2024 15:33:31 GMT+0200 (Central European Summer Time)
 </div>
 </div>
 <script src="../../../../prettify.js"></script>

@@ -5,38 +5,25 @@ const ERC20SnapshotModuleCommonGetNextSnapshot = require('../../common/ERC20Snap
 const ERC20SnapshotModuleMultiplePlannedTest = require('../../common/ERC20SnapshotModuleCommon/global/ERC20SnapshotModuleMultiplePlannedTest')
 const ERC20SnapshotModuleOnePlannedSnapshotTest = require('../../common/ERC20SnapshotModuleCommon/global/ERC20SnapshotModuleOnePlannedSnapshotTest')
 const ERC20SnapshotModuleZeroPlannedSnapshotTest = require('../../common/ERC20SnapshotModuleCommon/global/ERC20SnapshotModuleZeroPlannedSnapshot')
-const { deployCMTATStandaloneWithSnapshot } = require('../../deploymentUtils')
-contract(
+const { deployCMTATStandalone, fixture, loadFixture } = require('../../deploymentUtils')
+
+describe(
   'Standard - ERC20SnapshotModule',
-  function ([_, admin, address1, address2, address3, deployerAddress]) {
+  function () {
     beforeEach(async function () {
-      this.cmtat = await deployCMTATStandaloneWithSnapshot(
-        _,
-        admin,
-        deployerAddress
+      Object.assign(this, await loadFixture(fixture));
+      this.cmtat = await deployCMTATStandalone(
+        this._.address,
+        this.admin.address,
+        this.deployerAddress.address
       )
     })
-    ERC20SnapshotModuleMultiplePlannedTest(admin, address1, address2, address3)
-    ERC20SnapshotModuleOnePlannedSnapshotTest(
-      admin,
-      address1,
-      address2,
-      address3
-    )
-    ERC20SnapshotModuleZeroPlannedSnapshotTest(
-      admin,
-      address1,
-      address2,
-      address3
-    )
-    ERC20SnapshotModuleCommonRescheduling(admin, address1, address2, address3)
-    ERC20SnapshotModuleCommonScheduling(admin, address1, address2, address3)
-    ERC20SnapshotModuleCommonUnschedule(admin, address1, address2, address3)
-    ERC20SnapshotModuleCommonGetNextSnapshot(
-      admin,
-      address1,
-      address2,
-      address3
-    )
+    ERC20SnapshotModuleMultiplePlannedTest()
+    ERC20SnapshotModuleOnePlannedSnapshotTest()
+    ERC20SnapshotModuleZeroPlannedSnapshotTest()
+    ERC20SnapshotModuleCommonRescheduling()
+    ERC20SnapshotModuleCommonScheduling()
+    ERC20SnapshotModuleCommonUnschedule()
+    ERC20SnapshotModuleCommonGetNextSnapshot()
   }
 )

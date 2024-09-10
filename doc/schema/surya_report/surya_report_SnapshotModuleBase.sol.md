@@ -30,6 +30,10 @@
 | └ | _lastSnapshot | Private 🔐 |   | |
 | └ | _findScheduledSnapshotIndex | Private 🔐 |   | |
 | └ | _findScheduledMostRecentPastSnapshot | Private 🔐 |   | |
+| └ | _findAndRevertScheduledSnapshotIndex | Private 🔐 |   | |
+| └ | _checkTimeInThePast | Internal 🔒 |   | |
+| └ | _checkTimeSnapshotAlreadyDone | Internal 🔒 |   | |
+| └ | _getSnapshotModuleBaseStorage | Internal 🔒 |   | |
 
 
 ### Legend

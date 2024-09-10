@@ -17,10 +17,13 @@
 ||||||
 | **BaseModule** | Implementation | AuthorizationModule |||
 | └ | __Base_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |
+| └ | tokenId | Public ❗️ |   |NO❗️ |
+| └ | terms | Public ❗️ |   |NO❗️ |
+| └ | information | Public ❗️ |   |NO❗️ |
 | └ | setTokenId | Public ❗️ | 🛑  | onlyRole |
 | └ | setTerms | Public ❗️ | 🛑  | onlyRole |
 | └ | setInformation | Public ❗️ | 🛑  | onlyRole |
-| └ | setFlag | Public ❗️ | 🛑  | onlyRole |
+| └ | _getBaseModuleStorage | Private 🔐 |   | |
 
 
 ### Legend

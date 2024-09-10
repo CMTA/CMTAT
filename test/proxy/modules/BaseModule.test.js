@@ -1,17 +1,15 @@
-const { deployProxy } = require('@openzeppelin/truffle-upgrades')
-const CMTAT = artifacts.require('CMTAT_PROXY')
 const BaseModuleCommon = require('../../common/BaseModuleCommon')
-const { ZERO_ADDRESS } = require('../../utils')
-const { deployCMTATProxy, DEPLOYMENT_FLAG } = require('../../deploymentUtils')
+const { deployCMTATProxy, DEPLOYMENT_FLAG, fixture, loadFixture } = require('../../deploymentUtils')
 
-contract(
+describe(
   'Proxy - BaseModule',
-  function ([_, admin, address1, address2, address3, deployerAddress]) {
+  function () {
     beforeEach(async function () {
+      Object.assign(this, await loadFixture(fixture));
       this.flag = DEPLOYMENT_FLAG // value used in tests
-      this.cmtat = await deployCMTATProxy(_, admin, deployerAddress)
+      this.cmtat = await deployCMTATProxy(this._.address, this.admin.address, this.deployerAddress.address)
     })
 
-    BaseModuleCommon(admin, address1, address2, address3, true)
+    BaseModuleCommon()
   }
 )

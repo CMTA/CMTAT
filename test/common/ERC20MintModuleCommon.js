@@ -1,278 +1,235 @@
-const { BN, expectEvent } = require('@openzeppelin/test-helpers')
-const {
-  expectRevertCustomError
-} = require('../../openzeppelin-contracts-upgradeable/test/helpers/customError.js')
-const { ZERO_ADDRESS, MINTER_ROLE } = require('../utils.js')
-const { should } = require('chai').should()
+const { expect } = require('chai');
+const { ZERO_ADDRESS, MINTER_ROLE } = require("../utils.js");
 
-function ERC20MintModuleCommon (admin, address1, address2) {
-  context('Minting', function () {
-    const VALUE1 = new BN(20)
-    const VALUE2 = new BN(50)
+function ERC20MintModuleCommon() {
+  context("Minting", function () {
+    const VALUE1 = 20n;
+    const VALUE2 = 50n;
     /**
     The admin is assigned the MINTER role when the contract is deployed
      */
-    it('testCanBeMintedByAdmin', async function () {
+    it("testCanBeMintedByAdmin", async function () {
       // Arrange
 
       // Arrange - Assert
       // Check first balance
-      (await this.cmtat.balanceOf(admin)).should.be.bignumber.equal(BN(0))
+      expect(await this.cmtat.balanceOf(this.admin)).to.equal(0n);
 
       // Act
       // Issue 20 and check balances and total supply
-      this.logs = await this.cmtat.mint(address1, VALUE1, {
-        from: admin
-      });
+      this.logs = await this.cmtat
+        .connect(this.admin)
+        .mint(this.address1, VALUE1);
 
       // Assert
-      (await this.cmtat.balanceOf(address1)).should.be.bignumber.equal(VALUE1);
-      (await this.cmtat.totalSupply()).should.be.bignumber.equal(VALUE1)
+      expect(await this.cmtat.balanceOf(this.address1)).to.equal(VALUE1);
+      expect(await this.cmtat.totalSupply()).to.equal(VALUE1);
 
       // Assert event
       // emits a Transfer event
-      expectEvent(this.logs, 'Transfer', {
-        from: ZERO_ADDRESS,
-        to: address1,
-        value: VALUE1
-      })
+      await expect(this.logs)
+        .to.emit(this.cmtat, "Transfer")
+        .withArgs(ZERO_ADDRESS, this.address1, VALUE1);
       // emits a Mint event
-      expectEvent(this.logs, 'Mint', {
-        account: address1,
-        value: VALUE1
-      })
+      await expect(this.logs)
+        .to.emit(this.cmtat, "Mint")
+        .withArgs(this.address1, VALUE1);
 
       // Act
       // Issue 50 and check intermediate balances and total supply
-      this.logs = await this.cmtat.mint(address2, VALUE2, {
-        from: admin
-      });
+      this.logs = await this.cmtat
+        .connect(this.admin)
+        .mint(this.address2, VALUE2);
 
       // Assert
-      (await this.cmtat.balanceOf(address2)).should.be.bignumber.equal(VALUE2);
-      (await this.cmtat.totalSupply()).should.be.bignumber.equal(
-        VALUE1.add(VALUE2)
-      )
+      expect(await this.cmtat.balanceOf(this.address2)).to.equal(VALUE2);
+      expect(await this.cmtat.totalSupply()).to.equal(VALUE1 + VALUE2);
 
       // Assert event
       // emits a Transfer event
-      expectEvent(this.logs, 'Transfer', {
-        from: ZERO_ADDRESS,
-        to: address2,
-        value: VALUE2
-      })
+      await expect(this.logs)
+        .to.emit(this.cmtat, "Transfer")
+        .withArgs(ZERO_ADDRESS, this.address2, VALUE2);
       // emits a Mint event
-      expectEvent(this.logs, 'Mint', {
-        account: address2,
-        value: VALUE2
-      })
-    })
+      await expect(this.logs)
+        .to.emit(this.cmtat, "Mint")
+        .withArgs(this.address2, VALUE2);
+    });
 
-    it('testCanMintByANewMinter', async function () {
+    it("testCanMintByANewMinter", async function () {
       // Arrange
-      await this.cmtat.grantRole(MINTER_ROLE, address1, { from: admin });
+      await this.cmtat
+        .connect(this.admin)
+        .grantRole(MINTER_ROLE, this.address1);
       // Arrange - Assert
       // Check first balance
-      (await this.cmtat.balanceOf(admin)).should.be.bignumber.equal(BN(0))
+      expect(await this.cmtat.balanceOf(this.admin)).to.equal(0n);
 
       // Act
       // Issue 20
-      this.logs = await this.cmtat.mint(address1, VALUE1, {
-        from: address1
-      });
+      this.logs = await this.cmtat
+        .connect(this.address1)
+        .mint(this.address1, VALUE1);
       // Assert
       // Check balances and total supply
-      (await this.cmtat.balanceOf(address1)).should.be.bignumber.equal(VALUE1);
-      (await this.cmtat.totalSupply()).should.be.bignumber.equal(VALUE1)
+      expect(await this.cmtat.balanceOf(this.address1)).to.equal(VALUE1);
+      expect(await this.cmtat.totalSupply()).to.equal(VALUE1);
 
       // Assert event
       // emits a Transfer event
-      expectEvent(this.logs, 'Transfer', {
-        from: ZERO_ADDRESS,
-        to: address1,
-        value: VALUE1
-      })
+      await expect(this.logs)
+        .to.emit(this.cmtat, "Transfer")
+        .withArgs(ZERO_ADDRESS, this.address1, VALUE1);
       // emits a Mint event
-      expectEvent(this.logs, 'Mint', {
-        account: address1,
-        value: VALUE1
-      })
-    })
+      await expect(this.logs)
+        .to.emit(this.cmtat, "Mint")
+        .withArgs(this.address1, VALUE1);
+    });
 
     // reverts when issuing by a non minter
-    it('testCannotMintByNonMinter', async function () {
-      await expectRevertCustomError(
-        this.cmtat.mint(address1, VALUE1, { from: address1 }),
-        'AccessControlUnauthorizedAccount',
-        [address1, MINTER_ROLE]
-      )
-    })
-  })
+    it("testCannotMintByNonMinter", async function () {
+      await expect( this.cmtat.connect(this.address1).mint(this.address1, VALUE1))
+      .to.be.revertedWithCustomError(this.cmtat, 'AccessControlUnauthorizedAccount')
+      .withArgs(this.address1.address, MINTER_ROLE);
+    });
+  });
 
-  context('Batch Minting', function () {
-    const TOKEN_HOLDER = [admin, address1, address2]
-    const TOKEN_SUPPLY_BY_HOLDERS = [BN(10), BN(100), BN(1000)]
+  context("Batch Minting", function () {
+    const TOKEN_SUPPLY_BY_HOLDERS = [10n, 100n, 1000n];
 
     /**
-    The admin is assigned the MINTER role when the contract is deployed
-     */
-    it('testCanBeMintedBatchByAdmin', async function () {
+    * The admin is assigned the MINTER role when the contract is deployed
+    */
+    it("testCanBeMintedBatchByAdmin", async function () {
+      const TOKEN_HOLDER = [this.admin, this.address1, this.address2];
       // Arrange - Assert
       // Check first balance
       for (let i = 0; i < TOKEN_HOLDER.length; ++i) {
-        (await this.cmtat.balanceOf(TOKEN_HOLDER[i])).should.be.bignumber.equal(
-          BN(0)
-        )
+        expect(await this.cmtat.balanceOf(TOKEN_HOLDER[i])).to.equal(0n);
       }
 
       // Act
       // Issue 20 and check balances and total supply
-      this.logs = await this.cmtat.mintBatch(
-        TOKEN_HOLDER,
-        TOKEN_SUPPLY_BY_HOLDERS,
-        {
-          from: admin
-        }
-      )
+      this.logs = await this.cmtat.connect(this.admin).mintBatch(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS);
 
       // Assert
       for (let i = 0; i < TOKEN_HOLDER.length; ++i) {
-        (await this.cmtat.balanceOf(TOKEN_HOLDER[i])).should.be.bignumber.equal(
+        expect(await this.cmtat.balanceOf(TOKEN_HOLDER[i])).to.equal(
           TOKEN_SUPPLY_BY_HOLDERS[i]
-        )
+        );
       }
 
-      (await this.cmtat.totalSupply()).should.be.bignumber.equal(
+      expect(await this.cmtat.totalSupply()).to.equal(
         TOKEN_SUPPLY_BY_HOLDERS.reduce((a, b) => {
-          return a.add(b)
+          return a + b;
         })
-      )
-
+      );
       // Assert event
       // emits a Transfer event
       for (let i = 0; i < TOKEN_HOLDER.length; ++i) {
-        // emits a Mint event
-        expectEvent(this.logs, 'Transfer', {
-          from: ZERO_ADDRESS,
-          to: TOKEN_HOLDER[i],
-          value: TOKEN_SUPPLY_BY_HOLDERS[i]
-        })
+        await expect(this.logs)
+          .to.emit(this.cmtat, "Transfer")
+          .withArgs(ZERO_ADDRESS, TOKEN_HOLDER[i], TOKEN_SUPPLY_BY_HOLDERS[i]);
       }
-
       for (let i = 0; i < TOKEN_HOLDER.length; ++i) {
         // emits a Mint event
-        expectEvent(this.logs, 'Mint', {
-          account: TOKEN_HOLDER[i],
-          value: TOKEN_SUPPLY_BY_HOLDERS[i]
-        })
+        await expect(this.logs)
+          .to.emit(this.cmtat, "Mint")
+          .withArgs(TOKEN_HOLDER[i], TOKEN_SUPPLY_BY_HOLDERS[i]);
       }
-    })
+    });
 
-    it('testCanBeMinteBatchdByANewMinter', async function () {
+    it("testCanBeMinteBatchdByANewMinter", async function () {
       // Arrange
-      await this.cmtat.grantRole(MINTER_ROLE, address1, { from: admin })
-      const TOKEN_HOLDER = [admin, address1, address2]
-      const TOKEN_SUPPLY_BY_HOLDERS = [BN(10), BN(100), BN(1000)]
+      await this.cmtat
+        .connect(this.admin)
+        .grantRole(MINTER_ROLE, this.address1);
+      const TOKEN_HOLDER = [this.admin, this.address1, this.address2];
+      const TOKEN_SUPPLY_BY_HOLDERS = [10n, 100n, 1000n];
 
       // Arrange - Assert
       // Check first balance
       for (let i = 0; i < TOKEN_HOLDER.length; ++i) {
-        (await this.cmtat.balanceOf(TOKEN_HOLDER[i])).should.be.bignumber.equal(
-          BN(0)
-        )
+        expect(await this.cmtat.balanceOf(TOKEN_HOLDER[i])).to.equal(0n);
       }
 
       // Act
       // Issue 20 and check balances and total supply
-      this.logs = await this.cmtat.mintBatch(
-        TOKEN_HOLDER,
-        TOKEN_SUPPLY_BY_HOLDERS,
-        {
-          from: address1
-        }
-      )
+      this.logs = await this.cmtat
+        .connect(this.address1)
+        .mintBatch(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS);
 
       // Assert
       for (let i = 0; i < TOKEN_HOLDER.length; ++i) {
-        (await this.cmtat.balanceOf(TOKEN_HOLDER[i])).should.be.bignumber.equal(
+        expect(await this.cmtat.balanceOf(TOKEN_HOLDER[i])).to.equal(
           TOKEN_SUPPLY_BY_HOLDERS[i]
-        )
+        );
       }
 
-      (await this.cmtat.totalSupply()).should.be.bignumber.equal(
+      expect(await this.cmtat.totalSupply()).to.equal(
         TOKEN_SUPPLY_BY_HOLDERS.reduce((a, b) => {
-          return a.add(b)
+          return a+b;
         })
-      )
-
+      );
       // Assert event
       // emits a Transfer event
       for (let i = 0; i < TOKEN_HOLDER.length; ++i) {
-        expectEvent(this.logs, 'Transfer', {
-          from: ZERO_ADDRESS,
-          to: TOKEN_HOLDER[i],
-          value: TOKEN_SUPPLY_BY_HOLDERS[i]
-        })
+        await expect(this.logs)
+        .to.emit(this.cmtat, "Transfer")
+        .withArgs(ZERO_ADDRESS, TOKEN_HOLDER[i], TOKEN_SUPPLY_BY_HOLDERS[i]);
       }
-
       // emits a Mint event
       for (let i = 0; i < TOKEN_HOLDER.length; ++i) {
-        expectEvent(this.logs, 'Mint', {
-          account: TOKEN_HOLDER[i],
-          value: TOKEN_SUPPLY_BY_HOLDERS[i]
-        })
+        await expect(this.logs)
+        .to.emit(this.cmtat, "Mint")
+        .withArgs(TOKEN_HOLDER[i], TOKEN_SUPPLY_BY_HOLDERS[i]);
       }
-    })
+    });
 
-    it('testCannotMintBatchByNonMinter', async function () {
-      const TOKEN_HOLDER = [admin, address1, address2]
-      const TOKEN_SUPPLY_BY_HOLDERS = [BN(10), BN(100), BN(1000)]
-      await expectRevertCustomError(
-        this.cmtat.mintBatch(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS, {
-          from: address1
-        }),
-        'AccessControlUnauthorizedAccount',
-        [address1, MINTER_ROLE]
-      )
-    })
+    it("testCannotMintBatchByNonMinter", async function () {
+      const TOKEN_HOLDER = [this.admin, this.address1, this.address2];
+      const TOKEN_SUPPLY_BY_HOLDERS = [10n, 100n, 1000n];
+      await expect(  this.cmtat
+        .connect(this.address1)
+        .mintBatch(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS))
+      .to.be.revertedWithCustomError(this.cmtat, 'AccessControlUnauthorizedAccount')
+      .withArgs(this.address1.address, MINTER_ROLE);
+    });
 
-    it('testCannotMintBatchIfLengthMismatchMissingAddresses', async function () {
+    it("testCannotMintBatchIfLengthMismatchMissingAddresses", async function () {
       // Number of addresses is insufficient
-      const TOKEN_HOLDER_INVALID = [admin, address1]
-      const TOKEN_SUPPLY_BY_HOLDERS = [BN(10), BN(100), BN(1000)]
-      await expectRevertCustomError(
-        this.cmtat.mintBatch(TOKEN_HOLDER_INVALID, TOKEN_SUPPLY_BY_HOLDERS, {
-          from: admin
-        }),
-        'CMTAT_MintModule_AccountsValueslengthMismatch',
-        []
-      )
-    })
+      const TOKEN_HOLDER_INVALID = [this.admin, this.address1];
+      const TOKEN_SUPPLY_BY_HOLDERS = [10n, 100n, 1000n];
+      await expect(  this.cmtat
+        .connect(this.admin)
+        .mintBatch(TOKEN_HOLDER_INVALID, TOKEN_SUPPLY_BY_HOLDERS))
+      .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_MintModule_AccountsValueslengthMismatch')
+    });
 
-    it('testCannotMintBatchIfLengthMismatchTooManyAddresses', async function () {
+    it("testCannotMintBatchIfLengthMismatchTooManyAddresses", async function () {
       // There are too many addresses
-      const TOKEN_HOLDER_INVALID = [admin, address1, address1, address1]
-      const TOKEN_SUPPLY_BY_HOLDERS = [BN(10), BN(100), BN(1000)]
-      await expectRevertCustomError(
-        this.cmtat.mintBatch(TOKEN_HOLDER_INVALID, TOKEN_SUPPLY_BY_HOLDERS, {
-          from: admin
-        }),
-        'CMTAT_MintModule_AccountsValueslengthMismatch',
-        []
-      )
-    })
+      const TOKEN_HOLDER_INVALID = [
+        this.admin,
+        this.address1,
+        this.address1,
+        this.address1,
+      ];
+      const TOKEN_SUPPLY_BY_HOLDERS = [10n, 100n, 1000n];
+      await expect(  this.cmtat
+        .connect(this.admin)
+        .mintBatch(TOKEN_HOLDER_INVALID, TOKEN_SUPPLY_BY_HOLDERS))
+      .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_MintModule_AccountsValueslengthMismatch')
+    });
 
-    it('testCannotMintBatchIfTOSIsEmpty', async function () {
-      const TOKEN_HOLDER_INVALID = []
-      const TOKEN_SUPPLY_BY_HOLDERS = []
-      await expectRevertCustomError(
-        this.cmtat.mintBatch(TOKEN_HOLDER_INVALID, TOKEN_SUPPLY_BY_HOLDERS, {
-          from: admin
-        }),
-        'CMTAT_MintModule_EmptyAccounts',
-        []
-      )
-    })
-  })
+    it("testCannotMintBatchIfTOSIsEmpty", async function () {
+      const TOKEN_HOLDER_INVALID = [];
+      const TOKEN_SUPPLY_BY_HOLDERS = [];
+      await expect(  this.cmtat
+        .connect(this.admin)
+        .mintBatch(TOKEN_HOLDER_INVALID, TOKEN_SUPPLY_BY_HOLDERS))
+      .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_MintModule_EmptyAccounts')
+
+    });
+  });
 }
-module.exports = ERC20MintModuleCommon
+module.exports = ERC20MintModuleCommon;

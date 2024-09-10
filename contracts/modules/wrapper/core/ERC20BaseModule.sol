@@ -3,24 +3,35 @@
 pragma solidity ^0.8.20;
 
 // required OZ imports here
-import "../../../../openzeppelin-contracts-upgradeable/contracts/token/ERC20/ERC20Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 import "../../../libraries/Errors.sol";
 
+/**
+ * @title ERC20Base module
+ * @dev 
+ *
+ * Contains ERC-20 base functions and extension
+ * Inherits from ERC-20
+ * 
+ */
 abstract contract ERC20BaseModule is ERC20Upgradeable {
-    /* Events */
+    /* ============ Events ============ */
     /**
     * @notice Emitted when the specified `spender` spends the specified `value` tokens owned by the specified `owner` reducing the corresponding allowance.
     * @dev The allowance can be also "spend" with the function BurnFrom, but in this case, the emitted event is BurnFrom.
     */
     event Spend(address indexed owner, address indexed spender, uint256 value);
+    /* ============ ERC-7201 ============ */
+    // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.ERC20BaseModule")) - 1)) & ~bytes32(uint256(0xff))
+    bytes32 private constant ERC20BaseModuleStorageLocation = 0x9bd8d607565c0370ae5f91651ca67fd26d4438022bf72037316600e29e6a3a00;
+    /* ==== ERC-7201 State Variables === */
+    struct ERC20BaseModuleStorage {
+        uint8 _decimals;
+    }
 
-    /* Variables */
-    uint8 private _decimals;
-
-    /* Initializers */
-
+    /* ============  Initializer Function ============ */
     /**
-     * @dev Sets the values for decimals.
+     * @dev Initializers: Sets the values for decimals.
      *
      * this value is immutable: it can only be set once during
      * construction/initialization.
@@ -28,17 +39,20 @@ abstract contract ERC20BaseModule is ERC20Upgradeable {
     function __ERC20BaseModule_init_unchained(
         uint8 decimals_
     ) internal onlyInitializing {
-        _decimals = decimals_;
+        ERC20BaseModuleStorage storage $ = _getERC20BaseModuleStorage();
+        $._decimals = decimals_;
     }
-
-    /* Methods */
+    /*//////////////////////////////////////////////////////////////
+                            PUBLIC/EXTERNAL FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
     /**
      *
      * @notice Returns the number of decimals used to get its user representation.
      * @inheritdoc ERC20Upgradeable
      */
     function decimals() public view virtual override returns (uint8) {
-        return _decimals;
+        ERC20BaseModuleStorage storage $ = _getERC20BaseModuleStorage();
+        return $._decimals;
     }
 
     /**
@@ -110,5 +124,16 @@ abstract contract ERC20BaseModule is ERC20Upgradeable {
         totalSupply = ERC20Upgradeable.totalSupply();
     }
 
-    uint256[50] private __gap;
+
+    /*//////////////////////////////////////////////////////////////
+                            INTERNAL/PRIVATE FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
+
+
+    /* ============ ERC-7201 ============ */
+    function _getERC20BaseModuleStorage() private pure returns (ERC20BaseModuleStorage storage $) {
+        assembly {
+            $.slot := ERC20BaseModuleStorageLocation
+        }
+    }
 }

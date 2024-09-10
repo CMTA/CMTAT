@@ -1,31 +1,20 @@
-const { BN, time } = require('@openzeppelin/test-helpers')
+const helpers = require('@nomicfoundation/hardhat-network-helpers');
 const {
   getDomain,
-  domainType
+  ForwardRequest,
 } = require('../../openzeppelin-contracts-upgradeable/test/helpers/eip712')
-// TODO : Update the library
-// const ethSigUtil = require('@metamask/eth-sig-util')
-const ethSigUtil = require('eth-sig-util')
-const Wallet = require('ethereumjs-wallet').default
-const { should } = require('chai').should()
 const { expect } = require('chai')
-
-function MetaTxModuleCommon (owner, address1) {
+const { waffle} = require("hardhat");
+function MetaTxModuleCommon () {
   context('Transferring without paying gas', function () {
-    const AMOUNT_TO_TRANSFER = new BN(11)
-    const ALICE_INITIAL_BALANCE = new BN(31)
-    const ADDRESS1_INITIAL_BALANCE = new BN(32)
+    const AMOUNT_TO_TRANSFER = 11n
+    const ADDRESS1_INITIAL_BALANCE = 31n
+    const ADDRESS2_INITIAL_BALANCE = 32n
 
     beforeEach(async function () {
-      this.aliceWallet = Wallet.generate()
-      this.aliceAddress = web3.utils.toChecksumAddress(
-        this.aliceWallet.getAddressString()
-      )
-
+      // From https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/test/metatx/ERC2771Forwarder.test.js
       this.domain = await getDomain(this.forwarder)
-
       this.types = {
-        EIP712Domain: domainType(this.domain),
         ForwardRequest: [
           { name: 'from', type: 'address' },
           { name: 'to', type: 'address' },
@@ -36,80 +25,55 @@ function MetaTxModuleCommon (owner, address1) {
           { name: 'data', type: 'bytes' }
         ]
       }
-
-      /* this.data = {
-        types: this.types,
-        domain: this.domain,
-        primaryType: 'ForwardRequest'
-      } */
-
-      await this.cmtat.mint(this.aliceAddress, ALICE_INITIAL_BALANCE, {
-        from: owner
-      })
-      await this.cmtat.mint(address1, ADDRESS1_INITIAL_BALANCE, {
-        from: owner
-      });
-      (await this.cmtat.balanceOf(this.aliceAddress)).should.be.bignumber.equal(
-        ALICE_INITIAL_BALANCE
+      await this.cmtat.connect(this.admin).mint(this.address1, ADDRESS1_INITIAL_BALANCE)
+      await this.cmtat.connect(this.admin).mint(this.address2, ADDRESS2_INITIAL_BALANCE);
+      expect(await this.cmtat.balanceOf(this.address1)).to.equal(
+        ADDRESS1_INITIAL_BALANCE
       )
-      this.timestamp = await time.latest()
-      const data = this.cmtat.contract.methods
-        .transfer(address1, AMOUNT_TO_TRANSFER)
-        .encodeABI()
-      this.request = {
-        from: this.aliceAddress,
-        to: this.cmtat.address,
-        value: '0',
-        gas: '100000',
-        data,
-        deadline: this.timestamp.toNumber() + 180 // 3 minute
-      }
-      this.requestData = {
-        ...this.request,
-        nonce: (await this.forwarder.nonces(this.aliceAddress)).toString()
-      }
-
-      this.forgeData = (request) => ({
-        types: this.types,
-        domain: this.domain,
-        primaryType: 'ForwardRequest',
-        message: { ...this.requestData, ...request }
-      })
-
-      this.sign = (privateKey, request) =>
-        ethSigUtil.signTypedMessage(privateKey, {
-          data: this.forgeData(request)
-        })
-
-      this.requestData.signature = this.sign(this.aliceWallet.getPrivateKey())
+      this.data = this.cmtat.interface.encodeFunctionData('transfer',[this.address2.address, AMOUNT_TO_TRANSFER])
+      this.forgeRequest = async (override = {}, signer = this.address1) => {
+        const req = {
+          from: await signer.getAddress(),
+          to: this.cmtat.target,
+          value: 0n,
+          data:  this.data,
+          gas: 100000n,
+          deadline: (await helpers.time.latest()) + 60,
+          nonce: await this.forwarder.nonces(this.address1),
+          ...override,
+        };
+        req.signature = await signer.signTypedData(this.domain, this.types, req);
+        return req;
+      };
     })
 
     it('returns true without altering the nonce', async function () {
+      const request = await this.forgeRequest();
       expect(
-        await this.forwarder.nonces(this.requestData.from)
-      ).to.be.bignumber.equal(web3.utils.toBN(this.requestData.nonce))
-      expect(await this.forwarder.verify(this.requestData)).to.be.equal(true)
+        await this.forwarder.nonces(request.from)
+      ).to.equal(request.nonce)
+      expect(await this.forwarder.verify(request)).to.be.equal(true)
       expect(
-        await this.forwarder.nonces(this.requestData.from)
-      ).to.be.bignumber.equal(web3.utils.toBN(this.requestData.nonce))
+        await this.forwarder.nonces(request.from)
+      ).to.equal(request.nonce)
     })
 
     it('can send a transfer transaction without paying gas', async function () {
-      // TODO : code for the new version of the library, it doesn't compile
-      // const sign = ethSigUtil.signTypedData( {privateKey  : this.wallet.getPrivateKey(), data: { ...this.data, message: req }, version : 'V4'});
-      const balanceEtherBefore = await web3.eth.getBalance(this.aliceAddress);
-      (await this.cmtat.balanceOf(this.aliceAddress)).should.be.bignumber.equal(
-        ALICE_INITIAL_BALANCE
+      const provider =  await ethers.getDefaultProvider();;
+      const balanceEtherBefore = await  provider.getBalance(this.address1);
+      expect(await this.cmtat.balanceOf(this.address1)).to.equal(
+        ADDRESS1_INITIAL_BALANCE
       )
-      await this.forwarder.execute(this.requestData);
-      (await this.cmtat.balanceOf(this.aliceAddress)).should.be.bignumber.equal(
-        ALICE_INITIAL_BALANCE.sub(AMOUNT_TO_TRANSFER)
+      const request = await this.forgeRequest();
+      await this.forwarder.connect(this.address3).execute(request);
+      expect(await this.cmtat.balanceOf(this.address1)).to.equal(
+        ADDRESS1_INITIAL_BALANCE - AMOUNT_TO_TRANSFER
       );
-      (await this.cmtat.balanceOf(address1)).should.be.bignumber.equal(
-        ADDRESS1_INITIAL_BALANCE.add(AMOUNT_TO_TRANSFER)
+      expect(await this.cmtat.balanceOf(this.address2)).to.equal(
+        ADDRESS2_INITIAL_BALANCE + AMOUNT_TO_TRANSFER
       )
-      const balanceAfter = await web3.eth.getBalance(this.aliceAddress)
-      balanceEtherBefore.should.be.bignumber.equal(balanceAfter)
+      const balanceAfter = await provider.getBalance(this.address1)
+      expect(balanceEtherBefore).to.equal(balanceAfter)
     })
   })
 }

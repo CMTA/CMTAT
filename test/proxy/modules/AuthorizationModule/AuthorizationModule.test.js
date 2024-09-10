@@ -1,18 +1,17 @@
 const AuthorizationModuleCommon = require('../../../common/AuthorizationModule/AuthorizationModuleCommon')
 const AuthorizationModuleSetAuthorizationEngineCommon = require('../../../common/AuthorizationModule/AuthorizationModuleSetAuthorizationEngineCommon')
-const { deployCMTATProxy } = require('../../../deploymentUtils')
-const AuthorizationEngineMock = artifacts.require('AuthorizationEngineMock')
-contract(
+const { deployCMTATProxy, fixture, loadFixture } = require('../../../deploymentUtils')
+
+describe(
   'Proxy - AuthorizationModule',
-  function ([_, admin, address1, address2, deployerAddress]) {
+  function () {
     beforeEach(async function () {
-      this.cmtat = await deployCMTATProxy(_, admin, deployerAddress)
-      this.authorizationEngineMock = await AuthorizationEngineMock.new({
-        from: admin
-      })
+      Object.assign(this, await loadFixture(fixture));
+      this.cmtat = await deployCMTATProxy(this._.address, this.admin.address, this.deployerAddress.address)
+      this.authorizationEngineMock = await ethers.deployContract("AuthorizationEngineMock")
     })
 
-    AuthorizationModuleCommon(admin, address1, address2)
-    AuthorizationModuleSetAuthorizationEngineCommon(admin, address1)
+    AuthorizationModuleCommon()
+    AuthorizationModuleSetAuthorizationEngineCommon()
   }
 )

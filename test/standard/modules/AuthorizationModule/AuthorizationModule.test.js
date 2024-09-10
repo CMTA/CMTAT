@@ -1,13 +1,15 @@
 const AuthorizationModuleCommon = require('../../../common/AuthorizationModule/AuthorizationModuleCommon')
-const { deployCMTATStandalone } = require('../../../deploymentUtils')
-
-contract(
+const AuthorizationModuleSetAuthorizationEngineCommon = require('../../../common/AuthorizationModule/AuthorizationModuleSetAuthorizationEngineCommon')
+const { deployCMTATStandalone, fixture, loadFixture } = require('../../../deploymentUtils')
+describe(
   'Standard - AuthorizationModule',
-  function ([_, admin, address1, address2, deployerAddress]) {
+  function () {
     beforeEach(async function () {
-      this.cmtat = await deployCMTATStandalone(_, admin, deployerAddress)
+      Object.assign(this, await loadFixture(fixture));
+      this.cmtat = await deployCMTATStandalone(this._.address, this.admin.address, this.deployerAddress.address)
+      this.authorizationEngineMock = await ethers.deployContract("AuthorizationEngineMock")
     })
-
-    AuthorizationModuleCommon(admin, address1, address2)
+    AuthorizationModuleCommon()
+    AuthorizationModuleSetAuthorizationEngineCommon()
   }
 )

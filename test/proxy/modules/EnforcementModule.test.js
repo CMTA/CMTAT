@@ -1,13 +1,14 @@
 const EnforcementModuleCommon = require('../../common/EnforcementModuleCommon')
-const { deployCMTATProxy } = require('../../deploymentUtils')
+const { deployCMTATProxy, fixture, loadFixture } = require('../../deploymentUtils')
 
-contract(
+describe(
   'Proxy - EnforcementModule',
-  function ([_, admin, address1, address2, address3, deployerAddress]) {
+  function () {
     beforeEach(async function () {
-      this.cmtat = await deployCMTATProxy(_, admin, deployerAddress)
+      Object.assign(this, await loadFixture(fixture));
+      this.cmtat = await deployCMTATProxy(this._.address, this.admin.address, this.deployerAddress.address)
     })
 
-    EnforcementModuleCommon(admin, address1, address2, address3)
+    EnforcementModuleCommon()
   }
 )

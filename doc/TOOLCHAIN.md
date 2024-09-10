@@ -18,18 +18,6 @@ Library used for the tests
 **[Coveralls](https://coveralls.io/)**
 It is used to perform a code coverage
 
-#### Truffle
-
-**[Truffle](https://trufflesuite.com/)**
-A development environment, testing framework and asset pipeline for blockchains using the Ethereum Virtual Machine (EVM).
-
-**[Truffle Flattener](https://www.npmjs.com/package/truffle-flattener)**
-Concats solidity files from Truffle projects with all of their dependencies.
-
-**[truffle-contract-size](https://www.npmjs.com/package/truffle-contract-size)**
-
-This [Truffle](https://www.trufflesuite.com/docs/truffle/overview) plugin displays the contract size of all or a selection of your smart contracts in kilobytes.
-
 #### Nomiclabs - Hardhat
 
 **[hardhat-truffle5](https://hardhat.org/hardhat-runner/plugins/nomiclabs-hardhat-truffle5)**
@@ -113,9 +101,6 @@ Use by `openzeppelin-contracts-upgradeable/test/helpers/eip712`imported in `Meta
 **[solc](https://github.com/ethereum/solc-js)**
 JavaScript bindings for the Solidity compiler.
 
-**[Web3](https://github.com/web3/web3.js)**
-Ethereum JavaScript API.
-
 #### Documentation
 
 **[sol2uml](https://github.com/naddison36/sol2uml)**
@@ -145,8 +130,7 @@ Loads environment variables from a .env file
 
 This section concerns the packages installed in the section `dependencies` of package.json
 
-**[ethereumjs-wallet](https://www.npmjs.com/package/ethereumjs-wallet)**
-A wallet implementation
+
 
 ## Submodule
 

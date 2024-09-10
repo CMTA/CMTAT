@@ -7,7 +7,7 @@ import "./interfaces/IRuleEngineMock.sol";
 import "./RuleMock.sol";
 
 /*
-* @title a mock for testing, not suitable for production
+* @title a RuleEngine mock for testing, not suitable for production
 */
 contract RuleEngineMock is IRuleEngineMock {
     IRule[] internal _rules;

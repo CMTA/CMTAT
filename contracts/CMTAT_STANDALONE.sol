@@ -4,50 +4,34 @@ pragma solidity ^0.8.20;
 
 import "./modules/CMTAT_BASE.sol";
 
+
+/**
+* @title CMTAT version for a standalone deployment (without proxy)
+*/
 contract CMTAT_STANDALONE is CMTAT_BASE {
     /**
      * @notice Contract version for standalone deployment
      * @param forwarderIrrevocable address of the forwarder, required for the gasless support
      * @param admin address of the admin of contract (Access Control)
-     * @param authorizationEngineIrrevocable
-     * @param nameIrrevocable name of the token
-     * @param symbolIrrevocable name of the symbol
-     * @param decimalsIrrevocable number of decimals used to get its user representation, should be 0 to be compliant with the CMTAT specifications.
-     * @param tokenId_ name of the tokenId
-     * @param terms_ terms associated with the token
-     * @param ruleEngine_ address of the ruleEngine to apply rules to transfers
-     * @param information_ additional information to describe the token
-     * @param flag_ add information under the form of bit(0, 1)
+     * @param ERC20Attributes_ ERC20 name, symbol and decimals
+     * @param baseModuleAttributes_ tokenId, terms, information
+     * @param engines_ external contract
      */
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor(
         address forwarderIrrevocable,
         address admin,
-        IAuthorizationEngine authorizationEngineIrrevocable, 
-        string memory nameIrrevocable,
-        string memory symbolIrrevocable,
-        uint8 decimalsIrrevocable,
-        string memory tokenId_,
-        string memory terms_,
-        IRuleEngine ruleEngine_,
-        string memory information_,
-        uint256 flag_
+        ICMTATConstructor.ERC20Attributes memory ERC20Attributes_,
+        ICMTATConstructor.BaseModuleAttributes memory baseModuleAttributes_,
+        ICMTATConstructor.Engine memory engines_ 
     ) MetaTxModule(forwarderIrrevocable) {
         // Initialize the contract to avoid front-running
         // Warning : do not initialize the proxy
         initialize(
             admin,
-            authorizationEngineIrrevocable,
-            nameIrrevocable,
-            symbolIrrevocable,
-            decimalsIrrevocable,
-            tokenId_,
-            terms_,
-            ruleEngine_,
-            information_,
-            flag_
+            ERC20Attributes_,
+            baseModuleAttributes_,
+            engines_
         );
     }
-
-    // No storage gap because the contract is deployed in standalone mode
 }

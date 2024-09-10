@@ -1,26 +1,25 @@
-const { should } = require('chai').should()
-const {
-  expectRevertCustomError
-} = require('../../../openzeppelin-contracts-upgradeable/test/helpers/customError.js')
-const CMTAT = artifacts.require('CMTAT_PROXY')
+const { expect } = require('chai');
 const { DEFAULT_ADMIN_ROLE, PAUSER_ROLE } = require('../../utils')
 const { ZERO_ADDRESS } = require('../../utils')
-const DECIMAL = 0
-const { deployCMTATProxy, DEPLOYMENT_FLAG } = require('../../deploymentUtils')
+const { deployCMTATProxy,
+  fixture,
+  loadFixture,
+  DEPLOYMENT_DECIMAL } = require('../../deploymentUtils')
 const { upgrades } = require('hardhat')
-contract(
+describe(
   'Proxy - Security Test',
-  function ([_, admin, attacker, deployerAddress]) {
+  function () {
     beforeEach(async function () {
-      this.flag = 5
+      Object.assign(this, await loadFixture(fixture));
       // Contract to deploy: CMTAT
-      this.CMTAT_PROXY = await deployCMTATProxy(_, admin, deployerAddress)
+      this.CMTAT_PROXY = await deployCMTATProxy(this._.address, this.admin.address, this.deployerAddress.address)
       const implementationContractAddress =
         await upgrades.erc1967.getImplementationAddress(
-          this.CMTAT_PROXY.address,
-          { from: admin }
+          this.CMTAT_PROXY.target
         )
-      this.implementationContract = await CMTAT.at(
+
+      const MyContract = await ethers.getContractFactory("CMTAT_PROXY");
+      this.implementationContract = MyContract.attach(
         implementationContractAddress
       )
     })
@@ -28,29 +27,21 @@ contract(
     context('Attacker', function () {
       it('testCannotBeTakenControlByAttacker', async function () {
         // Act
-        await expectRevertCustomError(
-          this.implementationContract.initialize(
-            attacker,
-            ZERO_ADDRESS,
-            'CMTA Token',
-            'CMTAT',
-            DECIMAL,
-            'CMTAT_ISIN',
-            'https://cmta.ch',
-            ZERO_ADDRESS,
-            'CMTAT_info',
-            DEPLOYMENT_FLAG,
-            { from: attacker }
-          ),
-          'InvalidInitialization',
-          []
-        )
+        await expect(   this.implementationContract.connect(this.attacker).initialize(
+          this.attacker,
+          ['CMTA Token',
+          'CMTAT',
+          DEPLOYMENT_DECIMAL],
+          ['CMTAT_ISIN',
+          'https://cmta.ch',
+          'CMTAT_info'],
+          [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]
+        ))
+        .to.be.revertedWithCustomError(this.implementationContract, 'InvalidInitialization')
         // act + assert
-        await expectRevertCustomError(
-          this.implementationContract.pause({ from: attacker }),
-          'AccessControlUnauthorizedAccount',
-          [attacker, PAUSER_ROLE]
-        )
+        await expect( this.implementationContract.connect(this.attacker).pause())
+        .to.be.revertedWithCustomError(this.implementationContract, 'AccessControlUnauthorizedAccount')
+        .withArgs(this.attacker.address, PAUSER_ROLE)
       })
     })
   }

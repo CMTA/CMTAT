@@ -2,6 +2,9 @@
 
 pragma solidity ^0.8.20;
 
+/*
+* @dev CMTAT custom errors
+*/
 library Errors {
     // CMTAT
     error CMTAT_InvalidTransfer(address from, address to, uint256 amount);
@@ -50,9 +53,6 @@ library Errors {
     // DebtModule
     error CMTAT_DebtModule_SameValue();
 
-    // BaseModule
-    error CMTAT_BaseModule_SameValue();
-
     // ValidationModule
     error CMTAT_ValidationModule_SameValue();
 
@@ -60,6 +60,9 @@ library Errors {
     error CMTAT_AuthorizationModule_AddressZeroNotAllowed();
     error CMTAT_AuthorizationModule_InvalidAuthorization();
     error CMTAT_AuthorizationModule_AuthorizationEngineAlreadySet(); 
+
+    // DocumentModule
+    error CMTAT_DocumentModule_SameValue();
 
     // PauseModule
     error CMTAT_PauseModule_ContractIsDeactivated();

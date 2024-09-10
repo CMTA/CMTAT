@@ -8,16 +8,12 @@ The toolchain includes the following components, where the versions
 are the latest ones that we tested: 
 
 - npm 10.2.5
-- Hardhat-web3 2.0.0
-- *Truffle 5.9.3 [depreciated]*
-- Solidity 0.8.22 (via solc-js)
+- Hardhat ^2.22.7
+- Solidity 0.8.27 (via solc-js)
 - Node 20.5.0
-- Web3.js 1.9.0
-- OpenZeppelin
-  - OpenZeppelin Contracts Upgradeable (submodule) [v5.0.2](https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/releases/tag/v5.0.2)
-  - OpenZeppelin Contracts (Node.js module) [v5.0.2](https://github.com/OpenZeppelin/openzeppelin-contracts/releases/tag/v5.0.2) 
-    - Reason n°1: libraries and interfaces are no longer available inside the upgradeable version since the version v5.0.0.
-    - Reason n°2: It is not installed as a github submodule because it will create conflicts with the imports inside OpenZeppelin which use the Node.js version.
+- OpenZeppelin Contracts (Node.js module) [v5.0.2](https://github.com/OpenZeppelin/openzeppelin-contracts/releases/tag/v5.0.2) 
+- OpenZeppelin Contracts Upgradeable (Node.js module) [v5.0.2](https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/releases/tag/v5.0.2)
+- Test: OpenZeppelin Contracts Upgradeable (submodule) [v5.0.2](https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/releases/tag/v5.0.2)
 
 
 ## Installation
@@ -44,35 +40,22 @@ To install the node modules required by CMTAT, run the following command at the 
 
 ### Hardhat
 
-> Since the version v2.3.1, Hardhat is our main development tool and replace Truffle. The reason behind this change is the fact that Truffle does not support custom errors for testing.
+> Since the [sunset of Truffle](https://consensys.io/blog/consensys-announces-the-sunset-of-truffle-and-ganache-and-new-hardhat) by Consensys ,Hardhat is our main development tool and replace Truffle. 
 
 To use Hardhat, the recommended way is to use the version installed as
 part of the node modules, via the `npx` command:
 
 `npx hardhat`
 
-Alternatively, you can install Truffle [globally](https://trufflesuite.com/docs/truffle/getting-started/installation/):
+Alternatively, you can install Hardhat [globally](https://hardhat.org/hardhat-runner/docs/getting-started):
 
 `npm install -g hardhat` 
 
 See Hardhat's official [documentation](https://hardhat.org) for more information.
 
-### Truffle [partially depreciated]
+### Truffle [depreciated]
 
-> Truffle can still be used to compile the contracts but you can no longer use it to run the tests.
-
-To use Truffle, the recommended way is to use the version installed as
-part of the node modules, via the `npx` command:
-
-`npx truffle`
-
-Alternatively, you can install Truffle [globally](https://trufflesuite.com/docs/truffle/getting-started/installation/):
-
-`npm install -g truffle` 
-
-See Truffle's official [documentation](https://trufflesuite.com/docs/truffle/getting-started/installation/) for more information.
-
-
+Truffle is no longer supported since it has been sunset by Consensys, see [Consensys Announces the Sunset of Truffle and Ganache and New Hardhat Partnership](https://consensys.io/blog/consensys-announces-the-sunset-of-truffle-and-ganache-and-new-hardhat)
 
 ## Contract size
 
@@ -81,7 +64,6 @@ You can get the size of the contract by running the following commands.
 - Compile the contracts:
 
 ```bash
-npx truffle compile
 npx hardhat compile
 ```
 
@@ -89,10 +71,9 @@ npx hardhat compile
 
 ```bash
 npm run-script size
-npm run-script hardhat:size
 ```
 
-The script calls the plugin `truffle-contract-size` for Truffle or [hardhat-contract-sizer](https://www.npmjs.com/package/hardhat-contract-sizer) with Hardhat.
+The script calls the plugin [hardhat-contract-sizer](https://www.npmjs.com/package/hardhat-contract-sizer) with Hardhat.
 
 ## Testing
 
@@ -102,23 +83,7 @@ Tests are written in JavaScript by using [web3js](https://web3js.readthedocs.io/
 
 To use the global hardhat install, use instead `hardhat test`.
 
-Please see the Truffle [JavaScript tests documentation](https://www.trufflesuite.com/docs/truffle/testing/writing-tests-in-javascript) for more information about the writing and running of Truffle tests since the tests were originally written for Truffle.
-
-
-
-[**Depreciated** since the version v2.3.21]
-
-> Since the version v2.3.1, it is no longer possible to run tests with Truffle.
->
-> Truffle does not support custom errors for testing.
-
-Tests are written in JavaScript and run with Truffle as follows:
-
-`npx truffle test`
-
-To use the global Truffle install, use instead `truffle test`.
-
-Please see the Truffle [JavaScript tests documentation](https://www.trufflesuite.com/docs/truffle/testing/writing-tests-in-javascript) for more information about the writing and running of Truffle tests.
+Please see the Hardhat [documentation](https://hardhat.org/tutorial/testing-contracts) for more information about the writing and running of  Hardhat.
 
 
 ## Code style guidelines

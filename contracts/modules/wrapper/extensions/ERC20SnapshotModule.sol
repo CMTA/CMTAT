@@ -6,7 +6,8 @@ import "../../security/AuthorizationModule.sol";
 import "../../internal/ERC20SnapshotModuleInternal.sol";
 
 /**
- * @dev Snapshot module.
+ * @title Snapshot module
+ * @dev 
  *
  * Useful to take a snapshot of token holder balance and total supply at a specific time
  */
@@ -15,12 +16,15 @@ abstract contract ERC20SnapshotModule is
     ERC20SnapshotModuleInternal,
     AuthorizationModule
 {
-    // SnapshotModule
+    /* ============ State Variables ============ */
     bytes32 public constant SNAPSHOOTER_ROLE = keccak256("SNAPSHOOTER_ROLE");
+    /* ============  Initializer Function ============ */
     function __ERC20SnasphotModule_init_unchained() internal onlyInitializing {
         // no variable to initialize
     }
-
+    /*//////////////////////////////////////////////////////////////
+                            PUBLIC/EXTERNAL FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
     /** 
     * @notice 
     * Schedule a snapshot at the given time specified as a number of seconds since epoch.
@@ -73,6 +77,4 @@ abstract contract ERC20SnapshotModule is
     ) public onlyRole(SNAPSHOOTER_ROLE) {
         _unscheduleSnapshotNotOptimized(time);
     }
-
-    uint256[50] private __gap;
 }

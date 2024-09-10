@@ -3,7 +3,7 @@
 pragma solidity ^0.8.20;
 
 /**
-* @notice interface to represent a CMTAT with snapshot
+* @notice minimum interface to represent a CMTAT with snapshot
 */
 interface ICMTATSnapshot {
     /** 

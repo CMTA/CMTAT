@@ -2,14 +2,35 @@
 
 Please follow <https://changelog.md/> conventions.
 
-## 2.4.0
+## 2.5.0 - 20240910
+
+- Change Solidity version to 0.8.27 (latest)
+- Some slight improvements to the documentation
+
+## 2.5.0-rc.0 - 20240809
+
+**Features**
+
+- Add ERC-1643 (part of ERC-1400) for document management through an optional external contract called DocumentEngine (not yet available) [Add ERC-1643 support #267](https://github.com/CMTA/CMTAT/issues/267)
+- Externalize the Debt and CreditEvent module to an optional external contract called DebtEngine (not yet available) [Add DebtEngine #271](https://github.com/CMTA/CMTAT/issues/271)
+- CMTAT version compatible with UUPS proxy : more gas efficient than Transparent Proxy + no need of a proxy admin contract. See Upgradable Smart Contracts | What is a Smart Contract Proxy Pattern? [Add UUPS proxy support #270](https://github.com/CMTA/CMTAT/issues/270)
+- Remove [flag](https://github.com/CMTA/CMTAT/blob/master/contracts/modules/wrapper/core/BaseModule.sol#L29) attribute, present since v2.3.0, which was not really used. [ #266](https://github.com/CMTA/CMTAT/issues/266)
+
+**Technical**
+
+- Change Solidity version to 0.8.26 (latest)
+- Change EVM version to Cancun
+- Remove truffle from dependencies, replaced by Hardhat. See [Consensys Announces the Sunset of Truffle and Ganache and New Hardhat Partnership](https://consensys.io/blog/consensys-announces-the-sunset-of-truffle-and-ganache-and-new-hardhat)
+- Proxy Factory
+  - use create2 with the library [Create2](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/Create2.sol) from OpenZeppelin:
+- Implement [ERC-7201](https://eips.ethereum.org/EIPS/eip-7201) to manage memory to reduce memory collision when upgrading a proxy to a new implementation. [Use erc-7201 for namespace #272](https://github.com/CMTA/CMTAT/issues/272)
+
+## 2.4.0 - 20240503
 
 The modifications between the version v2.3.0 and this version are not audited !!!
 
 - Improve tests & update the code
 - `ERC20SnapshotInternal` inherits from `ICMTATSnapshot`
-
-
 
 ## 2.4.0-rc.1 - 20240319
 

@@ -1,4 +1,4 @@
-const { BN } = require('@openzeppelin/test-helpers')
+const { expect } = require('chai');
 const getUnixTimestamp = () => {
   return Math.round(new Date().getTime() / 1000)
 }
@@ -7,38 +7,41 @@ const timeout = function (ms) {
   return new Promise((resolve) => setTimeout(resolve, ms))
 }
 
-async function checkSnapshot (time, totalSupply, addresses, balances) {
+async function checkSnapshot (time, totalSupply, addressese, balances) {
+const  addresses = [this.address1, this.address2, this.address3]
   // Values before the snapshot
-  (await this.cmtat.snapshotTotalSupply(time)).should.be.bignumber.equal(
+  expect(await this.cmtat.snapshotTotalSupply(time)).to.equal(
     totalSupply
   )
-  const result = await this.cmtat.methods[
+  //const result = await this.cmtat.snapshotInfoBatch(time, addresses)
+  const result = await this.cmtat[
     'snapshotInfoBatch(uint256,address[])'
   ](time, addresses)
+  /*methods*/
   const times = [time]
-  const result2 = await this.cmtat.methods[
+  const result2 = await this.cmtat[
     'snapshotInfoBatch(uint256[],address[])'
   ](times, addresses)
   for (let i = 0; i < balances.length; ++i) {
-    (
+    expect(
       await this.cmtat.snapshotBalanceOf(time, addresses[i])
-    ).should.be.bignumber.equal(balances[i])
+    ).to.equal(balances[i])
     await this.cmtat.snapshotInfo(time, addresses[i])
     const { 0: ownerBalance, 1: totalSupplyGet } =
       await this.cmtat.snapshotInfo(time, addresses[i])
     // const [ownerBalance, totalSupplyGet]
-    ownerBalance.should.be.bignumber.equal(balances[i])
-    result[0][i].should.be.bignumber.equal(balances[i])
-    result2[0][0][i].should.be.bignumber.equal(balances[i])
-    totalSupplyGet.should.be.bignumber.equal(totalSupply)
+    expect(ownerBalance).to.equal(balances[i])
+    expect(result[0][i]).to.equal(balances[i])
+    expect(result2[0][0][i]).to.equal(balances[i])
+    expect(totalSupplyGet).to.equal(totalSupply)
   }
-  result[1].should.be.bignumber.equal(totalSupply)
-  result2[1][0].should.be.bignumber.equal(totalSupply)
+  expect(result[1]).to.equal(totalSupply)
+  expect(result2[1][0]).to.equal(totalSupply)
 }
 
 async function checkArraySnapshot (snapshots, snapshotsValue) {
   for (let i = 0; i < snapshots.length; ++i) {
-    snapshots[i].should.be.bignumber.equal(snapshotsValue[i])
+    expect(snapshots[i]).to.equal(snapshotsValue[i])
   }
 }
 module.exports = {

@@ -6,7 +6,8 @@ import "../../security/AuthorizationModule.sol";
 import "../../internal/EnforcementModuleInternal.sol";
 
 /**
- * @dev Enforcement module.
+ * @title Enforcement module.
+ * @dev 
  *
  * Allows the issuer to freeze transfers from a given address
  */
@@ -14,7 +15,7 @@ abstract contract EnforcementModule is
     EnforcementModuleInternal,
     AuthorizationModule
 {
-    // EnforcementModule
+    /* ============ State Variables ============ */
     bytes32 public constant ENFORCER_ROLE = keccak256("ENFORCER_ROLE");
     string internal constant TEXT_TRANSFER_REJECTED_FROM_FROZEN =
         "Address FROM is frozen";
@@ -22,10 +23,14 @@ abstract contract EnforcementModule is
     string internal constant TEXT_TRANSFER_REJECTED_TO_FROZEN =
         "Address TO is frozen";
 
+    /* ============  Initializer Function ============ */
     function __EnforcementModule_init_unchained() internal onlyInitializing {
         // no variable to initialize
     }
 
+    /*//////////////////////////////////////////////////////////////
+                            PUBLIC/EXTERNAL FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
     /**
      * @notice Freezes an address.
      * @param account the account to freeze
@@ -51,6 +56,4 @@ abstract contract EnforcementModule is
     ) public onlyRole(ENFORCER_ROLE) returns (bool) {
         return _unfreeze(account, reason);
     }
-
-    uint256[50] private __gap;
 }

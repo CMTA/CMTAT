@@ -1,132 +1,76 @@
-const { expectEvent } = require('@openzeppelin/test-helpers')
+const { expect } = require('chai');
 const { DEFAULT_ADMIN_ROLE } = require('../utils')
-const {
-  expectRevertCustomError
-} = require('../../openzeppelin-contracts-upgradeable/test/helpers/customError.js')
-const { should } = require('chai').should()
 
-function BaseModuleCommon (owner, address1, address2, address3, proxyTest) {
+function BaseModuleCommon () {
   context('Token structure', function () {
     it('testHasTheDefinedVersion', async function () {
       // Act + Assert
-      (await this.cmtat.VERSION()).should.equal('2.4.0')
+      expect(await this.cmtat.VERSION()).to.equal('2.5.0')
     })
     it('testHasTheDefinedTokenId', async function () {
       // Act + Assert
-      (await this.cmtat.tokenId()).should.equal('CMTAT_ISIN')
+      expect(await this.cmtat.tokenId()).to.equal('CMTAT_ISIN')
     })
     it('testHasTheDefinedTerms', async function () {
       // Act + Assert
-      (await this.cmtat.terms()).should.equal('https://cmta.ch')
+      expect(await this.cmtat.terms()).to.equal('https://cmta.ch')
     })
     it('testAdminCanChangeTokenId', async function () {
       // Arrange
-      (await this.cmtat.tokenId()).should.equal('CMTAT_ISIN')
+      expect(await this.cmtat.tokenId()).to.equal('CMTAT_ISIN')
       // Act
-      this.logs = await this.cmtat.setTokenId('CMTAT_TOKENID', { from: owner });
+      this.logs = await this.cmtat.connect(this.admin).setTokenId('CMTAT_TOKENID');
       // Assert
-      (await this.cmtat.tokenId()).should.equal('CMTAT_TOKENID')
-      expectEvent(this.logs, 'TokenId', {
-        newTokenIdIndexed: web3.utils.sha3('CMTAT_TOKENID'),
-        newTokenId: 'CMTAT_TOKENID'
-      })
+      expect(await this.cmtat.tokenId()).to.equal('CMTAT_TOKENID')
+      await expect(this.logs).to.emit(this.cmtat, 'TokenId').withArgs('CMTAT_TOKENID', 'CMTAT_TOKENID');
     })
     it('testCannotNonAdminChangeTokenId', async function () {
       // Arrange - Assert
-      (await this.cmtat.tokenId()).should.equal('CMTAT_ISIN')
+      expect(await this.cmtat.tokenId()).to.equal('CMTAT_ISIN')
       // Act
-      await expectRevertCustomError(
-        this.cmtat.setTokenId('CMTAT_TOKENID', { from: address1 }),
-        'AccessControlUnauthorizedAccount',
-        [address1, DEFAULT_ADMIN_ROLE]
-      );
+      await expect(  this.cmtat.connect(this.address1).setTokenId('CMTAT_TOKENID'))
+      .to.be.revertedWithCustomError(this.cmtat, 'AccessControlUnauthorizedAccount')
+      .withArgs(this.address1.address, DEFAULT_ADMIN_ROLE);
       // Assert
-      (await this.cmtat.tokenId()).should.equal('CMTAT_ISIN')
+      expect(await this.cmtat.tokenId()).to.equal('CMTAT_ISIN')
     })
     it('testAdminCanUpdateTerms', async function () {
       // Arrange - Assert
-      (await this.cmtat.terms()).should.equal('https://cmta.ch')
+      expect(await this.cmtat.terms()).to.equal('https://cmta.ch')
       // Act
-      this.logs = await this.cmtat.setTerms('https://cmta.ch/terms', {
-        from: owner
-      });
+      this.logs = await this.cmtat.connect(this.admin).setTerms('https://cmta.ch/terms');
       // Assert
-      (await this.cmtat.terms()).should.equal('https://cmta.ch/terms')
-      expectEvent(this.logs, 'Term', {
-        newTermIndexed: web3.utils.sha3('https://cmta.ch/terms'),
-        newTerm: 'https://cmta.ch/terms'
-      })
+      expect(await this.cmtat.terms()).to.equal('https://cmta.ch/terms')
+      await expect(this.logs).to.emit(this.cmtat, 'Term').withArgs('https://cmta.ch/terms', 'https://cmta.ch/terms');
     })
     it('testCannotNonAdminUpdateTerms', async function () {
       // Arrange - Assert
-      (await this.cmtat.terms()).should.equal('https://cmta.ch')
+      expect(await this.cmtat.terms()).to.equal('https://cmta.ch')
       // Act
-      await expectRevertCustomError(
-        this.cmtat.setTerms('https://cmta.ch/terms', { from: address1 }),
-        'AccessControlUnauthorizedAccount',
-        [address1, DEFAULT_ADMIN_ROLE]
-      );
+      await expect( this.cmtat.connect(this.address1).setTerms('https://cmta.ch/terms'))
+      .to.be.revertedWithCustomError(this.cmtat, 'AccessControlUnauthorizedAccount')
+      .withArgs(this.address1.address, DEFAULT_ADMIN_ROLE)
       // Assert
-      (await this.cmtat.terms()).should.equal('https://cmta.ch')
+      expect(await this.cmtat.terms()).to.equal('https://cmta.ch')
     })
     it('testAdminCanUpdateInformation', async function () {
       // Arrange - Assert
-      (await this.cmtat.information()).should.equal('CMTAT_info')
+      expect(await this.cmtat.information()).to.equal('CMTAT_info')
       // Act
-      this.logs = await this.cmtat.setInformation('new info available', {
-        from: owner
-      });
+      this.logs = await this.cmtat.connect(this.admin).setInformation('new info available');
       // Assert
-      (await this.cmtat.information()).should.equal('new info available')
-      expectEvent(this.logs, 'Information', {
-        newInformationIndexed: web3.utils.sha3('new info available'),
-        newInformation: 'new info available'
-      })
+      expect(await this.cmtat.information()).to.equal('new info available')
+      await expect(this.logs).to.emit(this.cmtat, 'Information').withArgs( 'new info available', 'new info available');
     })
     it('testCannotNonAdminUpdateInformation', async function () {
       // Arrange - Assert
-      (await this.cmtat.information()).should.equal('CMTAT_info')
+      expect(await this.cmtat.information()).to.equal('CMTAT_info')
       // Act
-      await expectRevertCustomError(
-        this.cmtat.setInformation('new info available', { from: address1 }),
-        'AccessControlUnauthorizedAccount',
-        [address1, DEFAULT_ADMIN_ROLE]
-      );
+      await expect( this.cmtat.connect(this.address1).setInformation('new info available'))
+      .to.be.revertedWithCustomError(this.cmtat, 'AccessControlUnauthorizedAccount')
+      .withArgs(this.address1.address, DEFAULT_ADMIN_ROLE);
       // Assert
-      (await this.cmtat.information()).should.equal('CMTAT_info')
-    })
-    it('testAdminCanUpdateFlag', async function () {
-      // Arrange - Assert
-      (await this.cmtat.flag()).should.be.bignumber.equal(this.flag.toString())
-      // Act
-      this.logs = await this.cmtat.setFlag(100, { from: owner });
-      // Assert
-      (await this.cmtat.flag()).should.be.bignumber.equal('100')
-      expectEvent(this.logs, 'Flag', {
-        newFlag: '100'
-      })
-    })
-    it('testAdminCanNotUpdateFlagWithTheSameValue', async function () {
-      // Arrange - Assert
-      (await this.cmtat.flag()).should.be.bignumber.equal(this.flag.toString())
-      // Act
-      await expectRevertCustomError(
-        this.cmtat.setFlag(this.flag.toString(), { from: owner }),
-        'CMTAT_BaseModule_SameValue',
-        []
-      )
-    })
-    it('testCannotNonAdminUpdateFlag', async function () {
-      // Arrange - Assert
-      (await this.cmtat.flag()).should.be.bignumber.equal(this.flag.toString())
-      // Act
-      await expectRevertCustomError(
-        this.cmtat.setFlag(25, { from: address1 }),
-        'AccessControlUnauthorizedAccount',
-        [address1, DEFAULT_ADMIN_ROLE]
-      );
-      // Assert
-      (await this.cmtat.flag()).should.be.bignumber.equal(this.flag.toString())
+      expect(await this.cmtat.information()).to.equal('CMTAT_info')
     })
   })
 }

@@ -1,19 +1,20 @@
 /** @type import('hardhat/config').HardhatUserConfig */
-require('@nomiclabs/hardhat-truffle5')
+//require('@nomiclabs/hardhat-truffle5')
 require('@openzeppelin/hardhat-upgrades')
 require("hardhat-gas-reporter");
 require("solidity-coverage")
 require('solidity-docgen')
 require("hardhat-contract-sizer");
+require("@nomicfoundation/hardhat-chai-matchers")
 module.exports = {
   solidity: {
-    version: '0.8.22',
+    version: '0.8.27',
     settings: {
       optimizer: {
         enabled: true,
-        runs: 200,
+        runs: 200
       },
-      evmVersion: 'shanghai'
+      evmVersion: 'cancun'
     }
   },
   contractSizer: {

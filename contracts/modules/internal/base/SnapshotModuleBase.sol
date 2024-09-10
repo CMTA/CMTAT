@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.20;
 
-import "../../../../openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import {Arrays} from '@openzeppelin/contracts/utils/Arrays.sol';
 
 import "../../../libraries/Errors.sol";
@@ -13,22 +13,12 @@ import "../../../libraries/Errors.sol";
  * Useful to take a snapshot of token holder balance and total supply at a specific time
  * Inspired by Openzeppelin - ERC20Snapshot but use the time as Id instead of a counter.
  * Contrary to OpenZeppelin, the function _getCurrentSnapshotId is not available 
-   because overriding this function can break the contract.
+ *  because overriding this function can break the contract.
  */
 
 abstract contract SnapshotModuleBase is Initializable {
     using Arrays for uint256[];
-
-    /**
-    @notice Emitted when the snapshot with the specified oldTime was scheduled or rescheduled at the specified newTime.
-    */
-    event SnapshotSchedule(uint256 indexed oldTime, uint256 indexed newTime);
-
-    /** 
-    * @notice Emitted when the scheduled snapshot with the specified time was cancelled.
-    */
-    event SnapshotUnschedule(uint256 indexed time);
-
+    /* ============ Structs ============ *
     /** 
     * @dev See {OpenZeppelin - ERC20Snapshot}
     * Snapshotted values have arrays of ids (time) and the value corresponding to that id.
@@ -39,68 +29,88 @@ abstract contract SnapshotModuleBase is Initializable {
         uint256[] ids;
         uint256[] values;
     }
-
+    /* ============ Events ============ */
     /**
-    * @dev See {OpenZeppelin - ERC20Snapshot}
+    @notice Emitted when the snapshot with the specified oldTime was scheduled or rescheduled at the specified newTime.
     */
-    mapping(address => Snapshots) internal _accountBalanceSnapshots;
-    Snapshots internal _totalSupplySnapshots;
-
-    /**
-    * @dev time instead of a counter for OpenZeppelin
-    */
-    // Initialized to zero
-    uint256 private _currentSnapshotTime;
-    // Initialized to zero
-    uint256 private _currentSnapshotIndex;
+    event SnapshotSchedule(uint256 indexed oldTime, uint256 indexed newTime);
 
     /** 
-    * @dev 
-    * list of scheduled snapshot (time)
-    * This list is sorted in ascending order
+    * @notice Emitted when the scheduled snapshot with the specified time was cancelled.
     */
-    uint256[] private _scheduledSnapshots;
+    event SnapshotUnschedule(uint256 indexed time);
 
+    /* ============ ERC-7201 ============ */
+    // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.SnapshotModuleBase")) - 1)) & ~bytes32(uint256(0xff))
+    bytes32 private constant SnapshotModuleBaseStorageLocation = 0x649d9af4a0486294740af60c5e3bf61210e7b49108a80b1f369042ea9fd02000;
+    /* ==== ERC-7201 State Variables === */
+    struct SnapshotModuleBaseStorage {
+        /**
+        * @dev See {OpenZeppelin - ERC20Snapshot}
+        */
+        mapping(address => Snapshots) _accountBalanceSnapshots;
+        Snapshots _totalSupplySnapshots;
+        /**
+        * @dev time instead of a counter for OpenZeppelin
+        */
+        // Initialized to zero
+        uint256  _currentSnapshotTime;
+        // Initialized to zero
+        uint256  _currentSnapshotIndex;
+        /** 
+        * @dev 
+        * list of scheduled snapshot (time)
+        * This list is sorted in ascending order
+        */
+        uint256[] _scheduledSnapshots;
+    }
+    /*//////////////////////////////////////////////////////////////
+                         INITIALIZER FUNCTION
+    //////////////////////////////////////////////////////////////*/
     function __SnapshotModuleBase_init_unchained() internal onlyInitializing {
         // Nothing to do
         // _currentSnapshotTime & _currentSnapshotIndex are initialized to zero
     }
 
-
+    /*//////////////////////////////////////////////////////////////
+                            PUBLIC/EXTERNAL FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
     /** 
     *  
     * @notice Get all snapshots
     */
     function getAllSnapshots() public view returns (uint256[] memory) {
-        return _scheduledSnapshots;
+        SnapshotModuleBaseStorage storage $ = _getSnapshotModuleBaseStorage();
+        return $._scheduledSnapshots;
     }
 
-        /** 
+    /** 
     * @dev 
     * Get the next scheduled snapshots
     */
     function getNextSnapshots() public view returns (uint256[] memory) {
+        SnapshotModuleBaseStorage storage $ = _getSnapshotModuleBaseStorage();
         uint256[] memory nextScheduledSnapshot = new uint256[](0);
         // no snapshot were planned
-        if (_scheduledSnapshots.length > 0) {
+        if ($._scheduledSnapshots.length > 0) {
             (
                 uint256 timeLowerBound,
                 uint256 indexLowerBound
             ) = _findScheduledMostRecentPastSnapshot();
             // All snapshots are situated in the futur
-            if ((timeLowerBound == 0) && (_currentSnapshotTime == 0)) {
-                return _scheduledSnapshots;
+            if ((timeLowerBound == 0) && ($._currentSnapshotTime == 0)) {
+                return $._scheduledSnapshots;
             } else {
                 // There are snapshots situated in the futur
-                if (indexLowerBound + 1 != _scheduledSnapshots.length) {
+                if (indexLowerBound + 1 != $._scheduledSnapshots.length) {
                     // All next snapshots are located after the snapshot specified by indexLowerBound
-                    uint256 arraySize = _scheduledSnapshots.length -
+                    uint256 arraySize = $._scheduledSnapshots.length -
                         indexLowerBound -
                         1;
                     nextScheduledSnapshot = new uint256[](arraySize);
                     // No need of unchecked block since Soliditiy 0.8.22
                     for (uint256 i; i < arraySize; ++i) {
-                        nextScheduledSnapshot[i] = _scheduledSnapshots[
+                        nextScheduledSnapshot[i] = $._scheduledSnapshots[
                             indexLowerBound + 1 + i
                         ];
                     }
@@ -110,24 +120,23 @@ abstract contract SnapshotModuleBase is Initializable {
         return nextScheduledSnapshot;
     }
 
+    /*//////////////////////////////////////////////////////////////
+                            INTERNAL/PRIVATE FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
 
     /** 
     * @dev schedule a snapshot at the specified time
     * You can only add a snapshot after the last previous
     */
     function _scheduleSnapshot(uint256 time) internal {
+        SnapshotModuleBaseStorage storage $ = _getSnapshotModuleBaseStorage();
         // Check the time firstly to avoid an useless read of storage
-        if (time <= block.timestamp) {
-            revert Errors.CMTAT_SnapshotModule_SnapshotScheduledInThePast(
-                time,
-                block.timestamp
-            );
-        }
+       _checkTimeInThePast(time);
 
-        if (_scheduledSnapshots.length > 0) {
+        if ($._scheduledSnapshots.length > 0) {
             // We check the last snapshot on the list
-            uint256 nextSnapshotTime = _scheduledSnapshots[
-                _scheduledSnapshots.length - 1
+            uint256 nextSnapshotTime = $._scheduledSnapshots[
+                $._scheduledSnapshots.length - 1
             ];
             if (time < nextSnapshotTime) {
                 revert Errors
@@ -139,7 +148,7 @@ abstract contract SnapshotModuleBase is Initializable {
                 revert Errors.CMTAT_SnapshotModule_SnapshotAlreadyExists();
             }
         }
-        _scheduledSnapshots.push(time);
+        $._scheduledSnapshots.push(time);
         emit SnapshotSchedule(0, time);
     }
 
@@ -147,31 +156,27 @@ abstract contract SnapshotModuleBase is Initializable {
     * @dev schedule a snapshot at the specified time
     */
     function _scheduleSnapshotNotOptimized(uint256 time) internal {
-        if (time <= block.timestamp) {
-            revert Errors.CMTAT_SnapshotModule_SnapshotScheduledInThePast(
-                time,
-                block.timestamp
-            );
-        }
+        SnapshotModuleBaseStorage storage $ = _getSnapshotModuleBaseStorage();
+        _checkTimeInThePast(time);
         (bool isFound, uint256 index) = _findScheduledSnapshotIndex(time);
         // Perfect match
         if (isFound) {
             revert Errors.CMTAT_SnapshotModule_SnapshotAlreadyExists();
         }
         // if no upper bound match found, we push the snapshot at the end of the list
-        if (index == _scheduledSnapshots.length) {
-            _scheduledSnapshots.push(time);
+        if (index == $._scheduledSnapshots.length) {
+            $._scheduledSnapshots.push(time);
         } else {
-            _scheduledSnapshots.push(
-                _scheduledSnapshots[_scheduledSnapshots.length - 1]
+            $._scheduledSnapshots.push(
+                $._scheduledSnapshots[$._scheduledSnapshots.length - 1]
             );
-            for (uint256 i = _scheduledSnapshots.length - 2; i > index; ) {
-                _scheduledSnapshots[i] = _scheduledSnapshots[i - 1];
+            for (uint256 i = $._scheduledSnapshots.length - 2; i > index; ) {
+                $._scheduledSnapshots[i] = $._scheduledSnapshots[i - 1];
                 unchecked {
                     --i;
                 }
             }
-            _scheduledSnapshots[index] = time;
+            $._scheduledSnapshots[index] = time;
         }
         emit SnapshotSchedule(0, time);
     }
@@ -180,25 +185,16 @@ abstract contract SnapshotModuleBase is Initializable {
     * @dev reschedule a scheduled snapshot at the specified newTime
     */
     function _rescheduleSnapshot(uint256 oldTime, uint256 newTime) internal {
+        SnapshotModuleBaseStorage storage $ = _getSnapshotModuleBaseStorage();
         // Check the time firstly to avoid an useless read of storage
-        if (oldTime <= block.timestamp) {
-            revert Errors.CMTAT_SnapshotModule_SnapshotAlreadyDone();
-        }
-        if (newTime <= block.timestamp) {
-            revert Errors.CMTAT_SnapshotModule_SnapshotScheduledInThePast(
-                newTime,
-                block.timestamp
-            );
-        }
-        if (_scheduledSnapshots.length == 0) {
+        _checkTimeSnapshotAlreadyDone(oldTime);
+        _checkTimeInThePast(newTime);
+        if ($._scheduledSnapshots.length == 0) {
             revert Errors.CMTAT_SnapshotModule_NoSnapshotScheduled();
         }
-        (bool foundOld, uint256 index) = _findScheduledSnapshotIndex(oldTime);
-        if (!foundOld) {
-            revert Errors.CMTAT_SnapshotModule_SnapshotNotFound();
-        }
-        if (index + 1 < _scheduledSnapshots.length) {
-            uint256 nextSnapshotTime = _scheduledSnapshots[index + 1];
+        uint256 index = _findAndRevertScheduledSnapshotIndex(oldTime);
+        if (index + 1 < $._scheduledSnapshots.length) {
+            uint256 nextSnapshotTime = $._scheduledSnapshots[index + 1];
             if (newTime > nextSnapshotTime) {
                 revert Errors
                     .CMTAT_SnapshotModule_SnapshotTimestampAfterNextSnapshot(
@@ -210,14 +206,14 @@ abstract contract SnapshotModuleBase is Initializable {
             }
         }
         if (index > 0) {
-            if (newTime <= _scheduledSnapshots[index - 1])
+            if (newTime <= $._scheduledSnapshots[index - 1])
                 revert Errors
                     .CMTAT_SnapshotModule_SnapshotTimestampBeforePreviousSnapshot(
                         newTime,
-                        _scheduledSnapshots[index - 1]
+                        $._scheduledSnapshots[index - 1]
                     );
         }
-        _scheduledSnapshots[index] = newTime;
+        $._scheduledSnapshots[index] = newTime;
 
         emit SnapshotSchedule(oldTime, newTime);
     }
@@ -226,18 +222,17 @@ abstract contract SnapshotModuleBase is Initializable {
     * @dev unschedule the last scheduled snapshot
     */
     function _unscheduleLastSnapshot(uint256 time) internal {
+        SnapshotModuleBaseStorage storage $ = _getSnapshotModuleBaseStorage();
         // Check the time firstly to avoid an useless read of storage
-        if (time <= block.timestamp) {
-            revert Errors.CMTAT_SnapshotModule_SnapshotAlreadyDone();
-        }
-        if (_scheduledSnapshots.length == 0) {
+        _checkTimeSnapshotAlreadyDone(time);
+        if ($._scheduledSnapshots.length == 0) {
             revert Errors.CMTAT_SnapshotModule_NoSnapshotScheduled();
         }
         // All snapshot time are unique, so we do not check the indice
-        if (time != _scheduledSnapshots[_scheduledSnapshots.length - 1]) {
+        if (time !=$._scheduledSnapshots[$._scheduledSnapshots.length - 1]) {
             revert Errors.CMTAT_SnapshotModule_SnapshotNotFound();
         }
-        _scheduledSnapshots.pop();
+        $._scheduledSnapshots.pop();
         emit SnapshotUnschedule(time);
     }
 
@@ -248,18 +243,15 @@ abstract contract SnapshotModuleBase is Initializable {
     * - Reduce the array size by deleting the last snapshot
     */
     function _unscheduleSnapshotNotOptimized(uint256 time) internal {
-        if (time <= block.timestamp) {
-            revert Errors.CMTAT_SnapshotModule_SnapshotAlreadyDone();
-        }
-        (bool isFound, uint256 index) = _findScheduledSnapshotIndex(time);
-        if (!isFound) {
-            revert Errors.CMTAT_SnapshotModule_SnapshotNotFound();
-        }
+        SnapshotModuleBaseStorage storage $ = _getSnapshotModuleBaseStorage();
+        _checkTimeSnapshotAlreadyDone(time);
+        
+        uint256 index = _findAndRevertScheduledSnapshotIndex(time);
         // No need of unchecked block since Soliditiy 0.8.22
-        for (uint256 i = index; i + 1 < _scheduledSnapshots.length; ++i ) {
-            _scheduledSnapshots[i] = _scheduledSnapshots[i + 1];
+        for (uint256 i = index; i + 1 < $._scheduledSnapshots.length; ++i ) {
+            $._scheduledSnapshots[i] = $._scheduledSnapshots[i + 1];
         }
-        _scheduledSnapshots.pop();
+        $._scheduledSnapshots.pop();
     }
 
     /**
@@ -306,7 +298,8 @@ abstract contract SnapshotModuleBase is Initializable {
         Snapshots storage snapshots,
         uint256 currentValue
     ) internal {
-        uint256 current = _currentSnapshotTime;
+        SnapshotModuleBaseStorage storage $ = _getSnapshotModuleBaseStorage();
+        uint256 current = $._currentSnapshotTime;
         if (_lastSnapshot(snapshots.ids) < current) {
             snapshots.ids.push(current);
             snapshots.values.push(currentValue);
@@ -319,13 +312,14 @@ abstract contract SnapshotModuleBase is Initializable {
     * if a snapshot exists, clear all past scheduled snapshot
     */
     function _setCurrentSnapshot() internal {
+        SnapshotModuleBaseStorage storage $ = _getSnapshotModuleBaseStorage();
         (
             uint256 scheduleSnapshotTime,
             uint256 scheduleSnapshotIndex
         ) = _findScheduledMostRecentPastSnapshot();
         if (scheduleSnapshotTime > 0) {
-            _currentSnapshotTime = scheduleSnapshotTime;
-            _currentSnapshotIndex = scheduleSnapshotIndex;
+            $._currentSnapshotTime = scheduleSnapshotTime;
+            $._currentSnapshotIndex = scheduleSnapshotIndex;
         }
     }
 
@@ -349,12 +343,13 @@ abstract contract SnapshotModuleBase is Initializable {
     function _findScheduledSnapshotIndex(
         uint256 time
     ) private view returns (bool, uint256) {
-        uint256 indexFound = _scheduledSnapshots.findUpperBound(time);
-        uint256 _scheduledSnapshotsLength = _scheduledSnapshots.length;
+        SnapshotModuleBaseStorage storage $ = _getSnapshotModuleBaseStorage();
+        uint256 indexFound = $._scheduledSnapshots.findUpperBound(time);
+        uint256 _scheduledSnapshotsLength = $._scheduledSnapshots.length;
         // Exact match
         if (
             indexFound != _scheduledSnapshotsLength &&
-            _scheduledSnapshots[indexFound] == time
+            $._scheduledSnapshots[indexFound] == time
         ) {
             return (true, indexFound);
         }
@@ -377,11 +372,12 @@ abstract contract SnapshotModuleBase is Initializable {
         view
         returns (uint256 time, uint256 index)
     {
-        uint256 currentArraySize = _scheduledSnapshots.length;
+        SnapshotModuleBaseStorage storage $ = _getSnapshotModuleBaseStorage();
+        uint256 currentArraySize = $._scheduledSnapshots.length;
         // no snapshot or the current snapshot already points on the last snapshot
         if (
             currentArraySize == 0 ||
-            ((_currentSnapshotIndex + 1 == currentArraySize) && (time != 0))
+            (($._currentSnapshotIndex + 1 == currentArraySize) && (time != 0))
         ) {
             return (0, currentArraySize);
         }
@@ -389,9 +385,9 @@ abstract contract SnapshotModuleBase is Initializable {
         uint256 mostRecent;
         index = currentArraySize;
         // No need of unchecked block since Soliditiy 0.8.22
-        for (uint256 i = _currentSnapshotIndex; i < currentArraySize; ++i ) {
-            if (_scheduledSnapshots[i] <= block.timestamp) {
-                mostRecent = _scheduledSnapshots[i];
+        for (uint256 i = $._currentSnapshotIndex; i < currentArraySize; ++i ) {
+            if ($._scheduledSnapshots[i] <= block.timestamp) {
+                mostRecent = $._scheduledSnapshots[i];
                 index = i;
             } else {
                 // All snapshot are planned in the futur
@@ -401,5 +397,36 @@ abstract contract SnapshotModuleBase is Initializable {
         return (mostRecent, index);
     }
 
-    uint256[50] private __gap;
+    /* ============ Utility functions ============ */
+
+
+    function _findAndRevertScheduledSnapshotIndex(
+        uint256 time
+    ) private view returns (uint256){
+        (bool isFound, uint256 index) = _findScheduledSnapshotIndex(time);
+        if (!isFound) {
+            revert Errors.CMTAT_SnapshotModule_SnapshotNotFound();
+        }
+        return index;
+    }
+    function _checkTimeInThePast(uint256 time) internal view{
+        if (time <= block.timestamp) {
+                    revert Errors.CMTAT_SnapshotModule_SnapshotScheduledInThePast(
+                        time,
+                        block.timestamp
+                    );
+                }
+    }
+    function _checkTimeSnapshotAlreadyDone(uint256 time) internal view{
+        if (time <= block.timestamp) {
+            revert Errors.CMTAT_SnapshotModule_SnapshotAlreadyDone();
+        }
+    }
+
+    /* ============ ERC-7201 ============ */
+    function _getSnapshotModuleBaseStorage() internal pure returns (SnapshotModuleBaseStorage storage $) {
+        assembly {
+            $.slot := SnapshotModuleBaseStorageLocation
+        }
+    }
 }

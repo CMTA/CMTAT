@@ -1,51 +1,38 @@
 const ValidationModuleCommon = require('../../../common/ValidationModule/ValidationModuleCommon')
-const RuleEngineMock = artifacts.require('RuleEngineMock')
 const {
-  deployCMTATStandaloneWithParameter
+  deployCMTATStandaloneWithParameter, fixture, loadFixture
 } = require('../../../deploymentUtils')
+
 const { ZERO_ADDRESS } = require('../../../utils')
-const ADDRESS1_INITIAL_BALANCE = 17
-const ADDRESS2_INITIAL_BALANCE = 18
-const ADDRESS3_INITIAL_BALANCE = 19
-contract(
+
+describe(
   'Standard - ValidationModule - Constructor',
-  function ([_, admin, address1, address2, address3, deployerAddress]) {
+  function () {
     beforeEach(async function () {
-      this.flag = 5
+      this.ADDRESS1_INITIAL_BALANCE = 17n
+      this.ADDRESS2_INITIAL_BALANCE = 18n
+      this.ADDRESS3_INITIAL_BALANCE = 19n
+      Object.assign(this, await loadFixture(fixture));
       const DECIMAL = 0
-      this.ruleEngineMock = await RuleEngineMock.new({ from: admin })
+      this.ruleEngineMock = await ethers.deployContract('RuleEngineMock')
+      this.definedAtDeployment = true
       this.cmtat = await deployCMTATStandaloneWithParameter(
-        deployerAddress,
-        _,
-        admin,
-        ZERO_ADDRESS,
+        this.deployerAddress.address,
+        this._.address,
+        this.admin.address,
         'CMTA Token',
         'CMTAT',
         DECIMAL,
         'CMTAT_ISIN',
         'https://cmta.ch',
-        this.ruleEngineMock.address,
         'CMTAT_info',
-        this.flag
+        [this.ruleEngineMock.target, ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]
+  
       )
-      await this.cmtat.mint(address1, ADDRESS1_INITIAL_BALANCE, {
-        from: admin
-      })
-      await this.cmtat.mint(address2, ADDRESS2_INITIAL_BALANCE, {
-        from: admin
-      })
-      await this.cmtat.mint(address3, ADDRESS3_INITIAL_BALANCE, {
-        from: admin
-      })
+      await this.cmtat.connect(this.admin).mint(this.address1, this.ADDRESS1_INITIAL_BALANCE)
+      await this.cmtat.connect(this.admin).mint(this.address2, this.ADDRESS2_INITIAL_BALANCE)
+      await this.cmtat.connect(this.admin).mint(this.address3, this.ADDRESS3_INITIAL_BALANCE)
     })
-    ValidationModuleCommon(
-      admin,
-      address1,
-      address2,
-      address3,
-      ADDRESS1_INITIAL_BALANCE,
-      ADDRESS2_INITIAL_BALANCE,
-      ADDRESS3_INITIAL_BALANCE
-    )
+    ValidationModuleCommon()
   }
 )
