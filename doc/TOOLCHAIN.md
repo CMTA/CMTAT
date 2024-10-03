@@ -206,3 +206,22 @@ Slither is a Solidity static analysis framework written in Python3
 slither .  --checklist --filter-paths "openzeppelin-contracts-upgradeable|openzeppelin-contracts|@openzeppelin|test" > slither-report.md
 ```
 
+
+
+
+
+### [Mythril](https://github.com/Consensys/mythril)
+
+- Standalone
+
+```bash
+myth analyze contracts/CMTAT_STANDALONE.sol --solc-json solc_setting.json > myth_standalone_report.md
+```
+
+- With proxy
+
+```bash
+myth analyze contracts/CMTAT_PROXY.sol --solc-json solc_setting.json > myth_proxy_report.md
+```
+
+File path for `solc` is configured in `solc_setting.json`

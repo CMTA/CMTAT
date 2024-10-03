@@ -101,3 +101,10 @@ For Solidity:
 npm run-script lint:sol  
 npm run-script lint:sol:fix
 ```
+
+## Compilation with solc
+
+```bash
+solc --base-path . --include-path ./node_modules/ contracts/CMTAT_STANDALONE.sol
+```
+

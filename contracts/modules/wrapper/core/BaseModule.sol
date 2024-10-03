@@ -10,7 +10,7 @@ abstract contract BaseModule is AuthorizationModule {
     * @notice 
     * Get the current version of the smart contract
     */
-    string public constant VERSION = "2.5.0";
+    string public constant VERSION = "2.5.1";
     
     /* ============ Events ============ */
     event Term(string indexed newTermIndexed, string newTerm);
