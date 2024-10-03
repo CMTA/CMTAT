@@ -1,29 +1,42 @@
-const { expect } = require('chai');
+const { expect } = require('chai')
 const { DEFAULT_ADMIN_ROLE } = require('../../utils')
 
 function ValidationModuleSetRuleEngineCommon () {
   context('RuleEngineSetTest', function () {
     it('testCanBeSetByAdmin', async function () {
       // Act
-      this.logs = await this.cmtat.connect(this.admin).setRuleEngine(this.ruleEngine)
+      this.logs = await this.cmtat
+        .connect(this.admin)
+        .setRuleEngine(this.ruleEngine)
       // Assert
       // emits a RuleEngineSet event
       await expect(this.logs)
-      .to.emit(this.cmtat, "RuleEngine")
-      .withArgs(this.ruleEngine);
+        .to.emit(this.cmtat, 'RuleEngine')
+        .withArgs(this.ruleEngine)
     })
 
     it('testCanNotBeSetByAdminWithTheSameValue', async function () {
       // Act
-      await expect(this.cmtat.connect(this.admin).setRuleEngine(await this.cmtat.ruleEngine()))
-      .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_ValidationModule_SameValue')
+      await expect(
+        this.cmtat
+          .connect(this.admin)
+          .setRuleEngine(await this.cmtat.ruleEngine())
+      ).to.be.revertedWithCustomError(
+        this.cmtat,
+        'CMTAT_ValidationModule_SameValue'
+      )
     })
 
     it('testCannotBeSetByNonAdmin', async function () {
       // Act
-      await expect( this.cmtat.connect(this.address1).setRuleEngine(this.ruleEngine))
-      .to.be.revertedWithCustomError(this.cmtat, 'AccessControlUnauthorizedAccount')
-      .withArgs(this.address1.address, DEFAULT_ADMIN_ROLE);
+      await expect(
+        this.cmtat.connect(this.address1).setRuleEngine(this.ruleEngine)
+      )
+        .to.be.revertedWithCustomError(
+          this.cmtat,
+          'AccessControlUnauthorizedAccount'
+        )
+        .withArgs(this.address1.address, DEFAULT_ADMIN_ROLE)
     })
 
     it('testCanReturnMessageWithNoRuleEngine&UnknownRestrictionCode', async function () {
@@ -36,7 +49,11 @@ function ValidationModuleSetRuleEngineCommon () {
     it('testCanDetectTransferRestrictionValidTransferWithoutRuleEngine', async function () {
       // Act + Assert
       expect(
-        await this.cmtat.detectTransferRestriction(this.address1, this.admin, 11)
+        await this.cmtat.detectTransferRestriction(
+          this.address1,
+          this.admin,
+          11
+        )
       ).to.equal('0')
     })
   })

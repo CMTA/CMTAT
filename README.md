@@ -143,7 +143,7 @@ Here is the list of the different version available for each CMTAT version.
 
 | Name                    | RuleEngine                                                   |
 | ----------------------- | ------------------------------------------------------------ |
-| CMTAT 2.5.0 (unaudited) | RuleEngine >= [v2.0.3](https://github.com/CMTA/RuleEngine/releases/tag/v2.0.3) |
+| CMTAT 2.5.0 (unaudited) | RuleEngine >= [v2.0.3](https://github.com/CMTA/RuleEngine/releases/tag/v2.0.3) (unaudited) |
 | CMTAT 2.4.0 (unaudited) | RuleEngine >=v2.0.0<br />Last version: [v2.0.2](https://github.com/CMTA/RuleEngine/releases/tag/v2.0.2)(unaudited) |
 | CMTAT 2.3.0             | [RuleEngine v1.0.2](https://github.com/CMTA/RuleEngine/releases/tag/v1.0.2) |
 | CMTAT 2.0 (unaudited)   | [RuleEngine 1.0](https://github.com/CMTA/RuleEngine/releases/tag/1.0) (unaudited) |
@@ -254,6 +254,8 @@ Please see the OpenZeppelin [upgradeable contracts documentation](https://docs.o
 
 Please see the OpenZeppelin [Upgrades plugins](https://docs.openzeppelin.com/upgrades-plugins/1.x/) for more information about plugin upgrades in general.
 
+CMTAT also implements the [ERC-7201](https://eips.ethereum.org/EIPS/eip-7201) to manage the storage location.
+
 Note that deployment via a proxy is not mandatory, but is recommended by CMTA.
 
 ### Factory
@@ -324,15 +326,23 @@ The report is available in [ABDK_CMTA_CMTATRuleEngine_v_1_0.pdf](doc/audits/ABDK
 
 ### Tools
 
+#### Slither
+
 You will find the report produced by [Slither](https://github.com/crytic/slither) in 
 
 | Version      | File                                                         |
 | ------------ | ------------------------------------------------------------ |
-| Last version | [slither-report.md](doc/audits/tools/slither-report.md)      |
-| v2.3.0       | [v2.3.0-slither-report.md](doc/audits/tools/v2.3.0-slither-report.md) |
-| v2.3.1       | [v2.3.1-slither-report.md](doc/audits/tools/v2.3.1-slither-report.md) |
-| v2.4.0       | [v2.4.0-slither-report.md](doc/audits/tools/v2.4.0-slither-report.md) |
+| Last version | [slither-report.md](doc/audits/tools/slither//slither-report.md) |
+| v2.3.0       | [v2.3.0-slither-report.md](doc/audits/tools/slither/v2.3.0-slither-report.md) |
+| v2.3.1       | [v2.3.1-slither-report.md](doc/audits/tools/slither/v2.3.1-slither-report.md) |
+| v2.4.0       | [v2.4.0-slither-report.md](doc/audits/tools/slither/v2.4.0-slither-report.md) |
+| v2.5.0       | [v2.5.0-slither-report.md](doc/audits/tools/slither/v2.5.0-slither-report.md) |
 
+#### [Mythril](https://github.com/Consensys/mythril)
+
+| Version      | File                                                         |
+| ------------ | ------------------------------------------------------------ |
+| Last version | [mythril-report-standalone.md](doc/audits/tools/mythril/myth_standalone_report.md)<br />[mythril-report-proxy.md](doc/audits/tools/mythril/myth_proxy_report.md)<br /> |
 
 ### Test
 

@@ -1,18 +1,39 @@
-const { loadFixture } = require('@nomicfoundation/hardhat-network-helpers');
+const { loadFixture } = require('@nomicfoundation/hardhat-network-helpers')
 const { ZERO_ADDRESS } = require('./utils')
 const { ethers, upgrades } = require('hardhat')
 const DEPLOYMENT_DECIMAL = 0n
-async function fixture() {
-  const [_, admin, address1, address2, address3, deployerAddress, fakeRuleEngine, ruleEngine, attacker] = await ethers.getSigners()
-  return {_, admin, address1, address2, address3, deployerAddress, fakeRuleEngine, ruleEngine, attacker };
+async function fixture () {
+  const [
+    _,
+    admin,
+    address1,
+    address2,
+    address3,
+    deployerAddress,
+    fakeRuleEngine,
+    ruleEngine,
+    attacker
+  ] = await ethers.getSigners()
+  return {
+    _,
+    admin,
+    address1,
+    address2,
+    address3,
+    deployerAddress,
+    fakeRuleEngine,
+    ruleEngine,
+    attacker
+  }
 }
 async function deployCMTATStandalone (_, admin, deployerAddress) {
-  
-  const cmtat = await ethers.deployContract("CMTAT_STANDALONE", [ _,
+  const cmtat = await ethers.deployContract('CMTAT_STANDALONE', [
+    _,
     admin,
-    ['CMTA Token',  'CMTAT', DEPLOYMENT_DECIMAL],
-    ['CMTAT_ISIN',  'https://cmta.ch', 'CMTAT_info'],
-    [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]]);
+    ['CMTA Token', 'CMTAT', DEPLOYMENT_DECIMAL],
+    ['CMTAT_ISIN', 'https://cmta.ch', 'CMTAT_info'],
+    [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]
+  ])
   return cmtat
 }
 
@@ -20,7 +41,9 @@ async function deployCMTATProxyImplementation (
   deployerAddress,
   forwarderIrrevocable
 ) {
-  const cmtat = await ethers.deployContract('CMTAT_PROXY',[forwarderIrrevocable])
+  const cmtat = await ethers.deployContract('CMTAT_PROXY', [
+    forwarderIrrevocable
+  ])
   return cmtat
 }
 
@@ -28,7 +51,9 @@ async function deployCMTATProxyUUPSImplementation (
   deployerAddress,
   forwarderIrrevocable
 ) {
-  const cmtat = await ethers.deployContract('CMTAT_PROXY_UUPS',[forwarderIrrevocable])
+  const cmtat = await ethers.deployContract('CMTAT_PROXY_UUPS', [
+    forwarderIrrevocable
+  ])
   return cmtat
 }
 
@@ -44,11 +69,11 @@ async function deployCMTATStandaloneWithParameter (
   information_,
   engines
 ) {
-  const cmtat = await ethers.deployContract('CMTAT_STANDALONE',[
+  const cmtat = await ethers.deployContract('CMTAT_STANDALONE', [
     forwarderIrrevocable,
     admin,
-    [ nameIrrevocable,  symbolIrrevocable, decimalsIrrevocable],
-    [tokenId_,  terms_, information_],
+    [nameIrrevocable, symbolIrrevocable, decimalsIrrevocable],
+    [tokenId_, terms_, information_],
     engines
   ])
   return cmtat
@@ -63,8 +88,8 @@ async function deployCMTATProxy (_, admin, deployerAddress) {
     ETHERS_CMTAT_PROXY_FACTORY,
     [
       admin,
-      ['CMTA Token',  'CMTAT', DEPLOYMENT_DECIMAL],
-      ['CMTAT_ISIN',  'https://cmta.ch', 'CMTAT_info'],
+      ['CMTA Token', 'CMTAT', DEPLOYMENT_DECIMAL],
+      ['CMTAT_ISIN', 'https://cmta.ch', 'CMTAT_info'],
       [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]
     ],
     {
@@ -96,8 +121,8 @@ async function deployCMTATProxyWithParameter (
     ETHERS_CMTAT_PROXY_FACTORY,
     [
       admin,
-      [ nameIrrevocable,  symbolIrrevocable, decimalsIrrevocable],
-      [tokenId_,  terms_, information_],
+      [nameIrrevocable, symbolIrrevocable, decimalsIrrevocable],
+      [tokenId_, terms_, information_],
       engines
     ],
     {
@@ -106,7 +131,7 @@ async function deployCMTATProxyWithParameter (
       from: deployerAddress
     }
   )
-  //return ETHERS_CMTAT_PROXY.getAddress()
+  // return ETHERS_CMTAT_PROXY.getAddress()
   return ETHERS_CMTAT_PROXY
 }
 

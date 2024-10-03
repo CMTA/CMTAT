@@ -14,8 +14,9 @@ import "./libraries/CMTATFactoryBase.sol";
 */
 contract CMTAT_UUPS_FACTORY is CMTATFactoryBase {
     /**
-    * @param logic_ contract implementation
+    * @param logic_ contract implementation, cannot be zero
     * @param factoryAdmin admin
+    * @param useCustomSalt_ custom salt with create2 or not
     */
     constructor(address logic_, address factoryAdmin, bool useCustomSalt_) CMTATFactoryBase(logic_, factoryAdmin,useCustomSalt_){}
        

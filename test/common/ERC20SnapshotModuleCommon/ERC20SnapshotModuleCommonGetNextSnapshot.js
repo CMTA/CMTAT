@@ -1,5 +1,5 @@
-const { time } = require ("@nomicfoundation/hardhat-network-helpers");
-const { expect } = require('chai');
+const { time } = require('@nomicfoundation/hardhat-network-helpers')
+const { expect } = require('chai')
 const {
   checkArraySnapshot
 } = require('./ERC20SnapshotModuleUtils/ERC20SnapshotModuleUtils')
