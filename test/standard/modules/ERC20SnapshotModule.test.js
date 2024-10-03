@@ -5,25 +5,26 @@ const ERC20SnapshotModuleCommonGetNextSnapshot = require('../../common/ERC20Snap
 const ERC20SnapshotModuleMultiplePlannedTest = require('../../common/ERC20SnapshotModuleCommon/global/ERC20SnapshotModuleMultiplePlannedTest')
 const ERC20SnapshotModuleOnePlannedSnapshotTest = require('../../common/ERC20SnapshotModuleCommon/global/ERC20SnapshotModuleOnePlannedSnapshotTest')
 const ERC20SnapshotModuleZeroPlannedSnapshotTest = require('../../common/ERC20SnapshotModuleCommon/global/ERC20SnapshotModuleZeroPlannedSnapshot')
-const { deployCMTATStandalone, fixture, loadFixture } = require('../../deploymentUtils')
+const {
+  deployCMTATStandalone,
+  fixture,
+  loadFixture
+} = require('../../deploymentUtils')
 
-describe(
-  'Standard - ERC20SnapshotModule',
-  function () {
-    beforeEach(async function () {
-      Object.assign(this, await loadFixture(fixture));
-      this.cmtat = await deployCMTATStandalone(
-        this._.address,
-        this.admin.address,
-        this.deployerAddress.address
-      )
-    })
-    ERC20SnapshotModuleMultiplePlannedTest()
-    ERC20SnapshotModuleOnePlannedSnapshotTest()
-    ERC20SnapshotModuleZeroPlannedSnapshotTest()
-    ERC20SnapshotModuleCommonRescheduling()
-    ERC20SnapshotModuleCommonScheduling()
-    ERC20SnapshotModuleCommonUnschedule()
-    ERC20SnapshotModuleCommonGetNextSnapshot()
-  }
-)
+describe('Standard - ERC20SnapshotModule', function () {
+  beforeEach(async function () {
+    Object.assign(this, await loadFixture(fixture))
+    this.cmtat = await deployCMTATStandalone(
+      this._.address,
+      this.admin.address,
+      this.deployerAddress.address
+    )
+  })
+  ERC20SnapshotModuleMultiplePlannedTest()
+  ERC20SnapshotModuleOnePlannedSnapshotTest()
+  ERC20SnapshotModuleZeroPlannedSnapshotTest()
+  ERC20SnapshotModuleCommonRescheduling()
+  ERC20SnapshotModuleCommonScheduling()
+  ERC20SnapshotModuleCommonUnschedule()
+  ERC20SnapshotModuleCommonGetNextSnapshot()
+})

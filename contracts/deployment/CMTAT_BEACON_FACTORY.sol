@@ -13,7 +13,6 @@ import "./libraries/CMTATFactoryRoot.sol";
 * 
 */
 contract CMTAT_BEACON_FACTORY is AccessControl, CMTATFactoryRoot {
-    // public
     UpgradeableBeacon public immutable beacon;
     /**
     * @param implementation_ contract implementation
@@ -25,7 +24,8 @@ contract CMTAT_BEACON_FACTORY is AccessControl, CMTATFactoryRoot {
             revert  FactoryErrors.CMTAT_Factory_AddressZeroNotAllowedForBeaconOwner();
         }
         if(implementation_ == address(0)){
-            revert  FactoryErrors.CMTAT_Factory_AddressZeroNotAllowedForLogicContract();
+           // Forwarder is the zero address if no implementation provided
+           implementation_ = address(new CMTAT_PROXY(address(0)));
         }
         beacon = new UpgradeableBeacon(implementation_, beaconOwner);
     }
