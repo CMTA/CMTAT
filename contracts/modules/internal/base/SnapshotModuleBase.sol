@@ -397,6 +397,54 @@ abstract contract SnapshotModuleBase is Initializable {
         return (mostRecent, index);
     }
 
+    /* ============ Require balance and total supply ============ */
+     /**
+    * @dev See {OpenZeppelin - ERC20Snapshot}
+    */
+    function _updateAccountSnapshot(address account, uint256 accountBalance) internal {
+        SnapshotModuleBaseStorage storage $ = _getSnapshotModuleBaseStorage();
+        _updateSnapshot($._accountBalanceSnapshots[account], accountBalance);
+    }
+
+    /**
+    * @dev See {OpenZeppelin - ERC20Snapshot}
+    */
+    function _updateTotalSupplySnapshot(uint256 totalSupply) internal {
+        SnapshotModuleBaseStorage storage $ = _getSnapshotModuleBaseStorage();
+        _updateSnapshot($._totalSupplySnapshots, totalSupply);
+    }
+
+       /** 
+    * @notice Return the number of tokens owned by the given owner at the time when the snapshot with the given time was created.
+    * @return value stored in the snapshot, or the actual balance if no snapshot
+    */
+    function _snapshotBalanceOf(
+        uint256 time,
+        address owner,
+        uint256 ownerBalance
+    ) internal view returns (uint256) {
+        SnapshotModuleBaseStorage storage $ = _getSnapshotModuleBaseStorage();
+        (bool snapshotted, uint256 value) = _valueAt(
+            time,
+            $._accountBalanceSnapshots[owner]
+        );
+        return snapshotted ? value :  ownerBalance;
+    }
+
+    /**
+    * @dev See {OpenZeppelin - ERC20Snapshot}
+    * Retrieves the total supply at the specified time.
+    * @return value stored in the snapshot, or the actual totalSupply if no snapshot
+    */
+    function _snapshotTotalSupply(uint256 time, uint256 totalSupply) internal view returns (uint256) {
+        SnapshotModuleBaseStorage storage $ = _getSnapshotModuleBaseStorage();
+        (bool snapshotted, uint256 value) = _valueAt(
+            time,
+            $._totalSupplySnapshots
+        );
+        return snapshotted ? value : totalSupply;
+    }
+
     /* ============ Utility functions ============ */
 
 

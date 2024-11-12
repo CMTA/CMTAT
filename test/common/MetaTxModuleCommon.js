@@ -1,10 +1,10 @@
-const helpers = require('@nomicfoundation/hardhat-network-helpers');
+const helpers = require('@nomicfoundation/hardhat-network-helpers')
 const {
   getDomain,
-  ForwardRequest,
+  ForwardRequest
 } = require('../../openzeppelin-contracts-upgradeable/test/helpers/eip712')
 const { expect } = require('chai')
-const { waffle} = require("hardhat");
+const { waffle } = require('hardhat')
 function MetaTxModuleCommon () {
   context('Transferring without paying gas', function () {
     const AMOUNT_TO_TRANSFER = 11n
@@ -25,50 +25,57 @@ function MetaTxModuleCommon () {
           { name: 'data', type: 'bytes' }
         ]
       }
-      await this.cmtat.connect(this.admin).mint(this.address1, ADDRESS1_INITIAL_BALANCE)
-      await this.cmtat.connect(this.admin).mint(this.address2, ADDRESS2_INITIAL_BALANCE);
+      await this.cmtat
+        .connect(this.admin)
+        .mint(this.address1, ADDRESS1_INITIAL_BALANCE)
+      await this.cmtat
+        .connect(this.admin)
+        .mint(this.address2, ADDRESS2_INITIAL_BALANCE)
       expect(await this.cmtat.balanceOf(this.address1)).to.equal(
         ADDRESS1_INITIAL_BALANCE
       )
-      this.data = this.cmtat.interface.encodeFunctionData('transfer',[this.address2.address, AMOUNT_TO_TRANSFER])
+      this.data = this.cmtat.interface.encodeFunctionData('transfer', [
+        this.address2.address,
+        AMOUNT_TO_TRANSFER
+      ])
       this.forgeRequest = async (override = {}, signer = this.address1) => {
         const req = {
           from: await signer.getAddress(),
           to: this.cmtat.target,
           value: 0n,
-          data:  this.data,
+          data: this.data,
           gas: 100000n,
           deadline: (await helpers.time.latest()) + 60,
           nonce: await this.forwarder.nonces(this.address1),
-          ...override,
-        };
-        req.signature = await signer.signTypedData(this.domain, this.types, req);
-        return req;
-      };
+          ...override
+        }
+        req.signature = await signer.signTypedData(
+          this.domain,
+          this.types,
+          req
+        )
+        return req
+      }
     })
 
     it('returns true without altering the nonce', async function () {
-      const request = await this.forgeRequest();
-      expect(
-        await this.forwarder.nonces(request.from)
-      ).to.equal(request.nonce)
+      const request = await this.forgeRequest()
+      expect(await this.forwarder.nonces(request.from)).to.equal(request.nonce)
       expect(await this.forwarder.verify(request)).to.be.equal(true)
-      expect(
-        await this.forwarder.nonces(request.from)
-      ).to.equal(request.nonce)
+      expect(await this.forwarder.nonces(request.from)).to.equal(request.nonce)
     })
 
     it('can send a transfer transaction without paying gas', async function () {
-      const provider =  await ethers.getDefaultProvider();;
-      const balanceEtherBefore = await  provider.getBalance(this.address1);
+      const provider = await ethers.getDefaultProvider()
+      const balanceEtherBefore = await provider.getBalance(this.address1)
       expect(await this.cmtat.balanceOf(this.address1)).to.equal(
         ADDRESS1_INITIAL_BALANCE
       )
-      const request = await this.forgeRequest();
-      await this.forwarder.connect(this.address3).execute(request);
+      const request = await this.forgeRequest()
+      await this.forwarder.connect(this.address3).execute(request)
       expect(await this.cmtat.balanceOf(this.address1)).to.equal(
         ADDRESS1_INITIAL_BALANCE - AMOUNT_TO_TRANSFER
-      );
+      )
       expect(await this.cmtat.balanceOf(this.address2)).to.equal(
         ADDRESS2_INITIAL_BALANCE + AMOUNT_TO_TRANSFER
       )

@@ -2,6 +2,27 @@
 
 Please follow <https://changelog.md/> conventions.
 
+## Checklist
+
+> Before a new release, perform the following tasks
+
+- Code: Update the version name in the base core module, variable VERSION
+- Run linter
+
+> npm run-script lint:all:prettier
+
+- Documentation
+  - Perform a code coverage and update the files in the corresponding directory [./doc/general/test/coverage](./doc/general/test/coverage)
+  - Perform an audit with several audit tools (Mythril and Slither), update the report in the corresponding directory  [./doc/audits/tools](./doc/audits/tools)
+  - Update surya doc by running the 3 scripts in [./doc/script](./doc/script)
+  
+  - Update changelog
+
+## 2.5.1 - 20241003
+
+- Beacon Factory: deploy an implementation inside the constructor if no implementation is provided
+- Run [myhtril](https://github.com/Consensys/mythril)
+
 ## 2.5.0 - 20240910
 
 - Change Solidity version to 0.8.27 (latest)
