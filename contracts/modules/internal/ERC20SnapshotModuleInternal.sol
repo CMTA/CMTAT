@@ -68,13 +68,7 @@ abstract contract ERC20SnapshotModuleInternal is ICMTATSnapshot, SnapshotModuleB
         uint256 time,
         address owner
     ) public view returns (uint256) {
-        SnapshotModuleBaseStorage storage $ = _getSnapshotModuleBaseStorage();
-        (bool snapshotted, uint256 value) = _valueAt(
-            time,
-            $._accountBalanceSnapshots[owner]
-        );
-
-        return snapshotted ? value : balanceOf(owner);
+        return _snapshotBalanceOf(time, owner, balanceOf(owner));
     }
 
     /**
@@ -83,12 +77,7 @@ abstract contract ERC20SnapshotModuleInternal is ICMTATSnapshot, SnapshotModuleB
     * @return value stored in the snapshot, or the actual totalSupply if no snapshot
     */
     function snapshotTotalSupply(uint256 time) public view returns (uint256) {
-        SnapshotModuleBaseStorage storage $ = _getSnapshotModuleBaseStorage();
-        (bool snapshotted, uint256 value) = _valueAt(
-            time,
-            $._totalSupplySnapshots
-        );
-        return snapshotted ? value : totalSupply();
+        return _snapshotTotalSupply(time, totalSupply());
     }
 
     /*//////////////////////////////////////////////////////////////
@@ -106,34 +95,18 @@ abstract contract ERC20SnapshotModuleInternal is ICMTATSnapshot, SnapshotModuleB
         _setCurrentSnapshot();
         if (from != address(0)) {
             // for both burn and transfer
-            _updateAccountSnapshot(from);
+            _updateAccountSnapshot(from, balanceOf(from));
             if (to != address(0)) {
                 // transfer
-                _updateAccountSnapshot(to);
+                _updateAccountSnapshot(to, balanceOf(to));
             } else {
                 // burn
-                _updateTotalSupplySnapshot();
+                _updateTotalSupplySnapshot(totalSupply());
             }
         } else {
             // mint
-            _updateAccountSnapshot(to);
-            _updateTotalSupplySnapshot();
+            _updateAccountSnapshot(to, balanceOf(to));
+            _updateTotalSupplySnapshot(totalSupply());
         }
-    }
-
-    /**
-    * @dev See {OpenZeppelin - ERC20Snapshot}
-    */
-    function _updateAccountSnapshot(address account) private {
-        SnapshotModuleBaseStorage storage $ = _getSnapshotModuleBaseStorage();
-        _updateSnapshot($._accountBalanceSnapshots[account], balanceOf(account));
-    }
-
-    /**
-    * @dev See {OpenZeppelin - ERC20Snapshot}
-    */
-    function _updateTotalSupplySnapshot() private {
-        SnapshotModuleBaseStorage storage $ = _getSnapshotModuleBaseStorage();
-        _updateSnapshot($._totalSupplySnapshots, totalSupply());
     }
 }
