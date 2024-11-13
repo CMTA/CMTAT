@@ -17,6 +17,7 @@ import "../../interfaces/ICMTATSnapshot.sol";
 
 abstract contract ERC20SnapshotModuleInternal is ICMTATSnapshot, SnapshotModuleBase, ERC20Upgradeable {
     using Arrays for uint256[];
+  
     /* ============  Initializer Function ============ */
     function __ERC20Snapshot_init_unchained() internal onlyInitializing {
         // Nothing to do
