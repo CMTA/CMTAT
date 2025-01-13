@@ -19,6 +19,9 @@ describe('Proxy - ERC20SnapshotModule', function () {
       this.admin.address,
       this.deployerAddress.address
     )
+    this.transferEngineMock = await ethers.deployContract('TransferEngineMock', [
+      this.cmtat.target, this.admin])
+      this.cmtat.connect(this.admin).setTransferEngine(this.transferEngineMock)
   })
   ERC20SnapshotModuleMultiplePlannedTest()
   ERC20SnapshotModuleOnePlannedSnapshotTest()

@@ -71,16 +71,16 @@ abstract contract DocumentModule is AuthorizationModule, IERC1643 {
     }
 
 
-    function getDocument(bytes32 _name) public view returns (string memory, bytes32, uint256){
+    function getDocument(string memory name) public view returns (Document memory document){
         DocumentModuleStorage storage $ = _getDocumentModuleStorage();
         if(address($._documentEngine) != address(0)){
-            return $._documentEngine.getDocument( _name);
+            return $._documentEngine.getDocument(name);
         } else{
-            return ("",0x0, 0);
+            return Document("", 0x0, 0);
         }
     }
 
-    function getAllDocuments() public view returns (bytes32[] memory documents){
+    function getAllDocuments() public view returns (string[] memory documents){
         DocumentModuleStorage storage $ = _getDocumentModuleStorage();
         if(address($._documentEngine) != address(0)){
             documents =  $._documentEngine.getAllDocuments();

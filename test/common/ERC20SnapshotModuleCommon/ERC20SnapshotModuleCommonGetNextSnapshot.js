@@ -16,13 +16,13 @@ function ERC20SnapshotModuleCommonGetNextSnapshot () {
       this.snapshotTime3 = this.currentTime + time.duration.seconds(20)
       this.snapshotTime4 = this.currentTime + time.duration.seconds(25)
       this.snapshotTime5 = this.currentTime + time.duration.seconds(30)
-      await this.cmtat.connect(this.admin).scheduleSnapshot(this.snapshotTime1)
-      await this.cmtat.connect(this.admin).scheduleSnapshot(this.snapshotTime2)
-      await this.cmtat.connect(this.admin).scheduleSnapshot(this.snapshotTime3)
-      await this.cmtat.connect(this.admin).scheduleSnapshot(this.snapshotTime4)
-      await this.cmtat.connect(this.admin).scheduleSnapshot(this.snapshotTime5)
+      await this.transferEngineMock.connect(this.admin).scheduleSnapshot(this.snapshotTime1)
+      await this.transferEngineMock.connect(this.admin).scheduleSnapshot(this.snapshotTime2)
+      await this.transferEngineMock.connect(this.admin).scheduleSnapshot(this.snapshotTime3)
+      await this.transferEngineMock.connect(this.admin).scheduleSnapshot(this.snapshotTime4)
+      await this.transferEngineMock.connect(this.admin).scheduleSnapshot(this.snapshotTime5)
       // Act
-      const snapshots = await this.cmtat.getNextSnapshots()
+      const snapshots = await this.transferEngineMock.getNextSnapshots()
       // Assert
       expect(snapshots.length).to.equal(5)
       checkArraySnapshot(snapshots, [
@@ -33,7 +33,7 @@ function ERC20SnapshotModuleCommonGetNextSnapshot () {
         this.snapshotTime5
       ])
       // Act
-      const AllSnapshots = await this.cmtat.getAllSnapshots()
+      const AllSnapshots = await this.transferEngineMock.getAllSnapshots()
       // Assert
       checkArraySnapshot(AllSnapshots, [
         this.snapshotTime1,
@@ -47,32 +47,32 @@ function ERC20SnapshotModuleCommonGetNextSnapshot () {
     //
     it('testCanReturnEmptyArrayIfAllSnapshotsAreInThePast', async function () {
       // Arrange
-      this.snapshotTime1 = this.currentTime + time.duration.seconds(2)
-      this.snapshotTime2 = this.currentTime + time.duration.seconds(3)
-      this.snapshotTime3 = this.currentTime + time.duration.seconds(4)
-      await this.cmtat.connect(this.admin).scheduleSnapshot(this.snapshotTime1)
-      await this.cmtat.connect(this.admin).scheduleSnapshot(this.snapshotTime2)
-      await this.cmtat.connect(this.admin).scheduleSnapshot(this.snapshotTime3)
+      this.snapshotTime1 = this.currentTime + time.duration.seconds(3)
+      this.snapshotTime2 = this.currentTime + time.duration.seconds(4)
+      this.snapshotTime3 = this.currentTime + time.duration.seconds(5)
+      await this.transferEngineMock.connect(this.admin).scheduleSnapshot(this.snapshotTime1)
+      await this.transferEngineMock.connect(this.admin).scheduleSnapshot(this.snapshotTime2)
+      await this.transferEngineMock.connect(this.admin).scheduleSnapshot(this.snapshotTime3)
       // We jump into the future
       await time.increase(4)
       // Act
-      const snapshots = await this.cmtat.getNextSnapshots()
+      const snapshots = await this.transferEngineMock.getNextSnapshots()
       // Assert
       expect(snapshots.length).to.equal(0)
     })
 
     it('testCanReturnOnlyFutureSnapshotsIfSomeSnapshotsAreInThePast', async function () {
       // Arrange
-      this.snapshotTime1 = this.currentTime + time.duration.seconds(2)
+      this.snapshotTime1 = this.currentTime + time.duration.seconds(3)
       this.snapshotTime2 = this.currentTime + time.duration.seconds(20)
       this.snapshotTime3 = this.currentTime + time.duration.seconds(300)
-      await this.cmtat.connect(this.admin).scheduleSnapshot(this.snapshotTime1)
+      await this.transferEngineMock.connect(this.admin).scheduleSnapshot(this.snapshotTime1)
       // We jump into the future
       await time.increase(3)
-      await this.cmtat.connect(this.admin).scheduleSnapshot(this.snapshotTime2)
-      await this.cmtat.connect(this.admin).scheduleSnapshot(this.snapshotTime3)
+      await this.transferEngineMock.connect(this.admin).scheduleSnapshot(this.snapshotTime2)
+      await this.transferEngineMock.connect(this.admin).scheduleSnapshot(this.snapshotTime3)
       // Act
-      const snapshots = await this.cmtat.getNextSnapshots()
+      const snapshots = await this.transferEngineMock.getNextSnapshots()
       // Assert
       expect(snapshots.length).to.equal(2)
       checkArraySnapshot(snapshots, [this.snapshotTime2, this.snapshotTime3])

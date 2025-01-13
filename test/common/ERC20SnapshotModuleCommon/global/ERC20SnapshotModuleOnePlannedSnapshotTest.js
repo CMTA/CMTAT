@@ -25,7 +25,7 @@ function ERC20SnapshotModuleOnePlannedSnapshotTest () {
       this.currentTime = await time.latest()
       this.snapshotTime = this.currentTime + time.duration.seconds(3)
       this.beforeSnapshotTime = this.currentTime - time.duration.seconds(60)
-      await this.cmtat.connect(this.admin).scheduleSnapshot(this.snapshotTime)
+      await this.transferEngineMock.connect(this.admin).scheduleSnapshot(this.snapshotTime)
       // We jump into the future
       await time.increase(time.duration.seconds(10))
     })
@@ -74,7 +74,7 @@ function ERC20SnapshotModuleOnePlannedSnapshotTest () {
         ADDRESSES,
         [address1NewTokensBalance, ADDRESS2_INITIAL_MINT, ADDRESS3_INITIAL_MINT]
       )
-      const snapshots = await this.cmtat.getNextSnapshots()
+      const snapshots = await this.transferEngineMock.getNextSnapshots()
       expect(snapshots.length).to.equal(0)
     })
 
@@ -122,7 +122,7 @@ function ERC20SnapshotModuleOnePlannedSnapshotTest () {
         ADDRESSES,
         [address1NewTokensBalance, ADDRESS2_INITIAL_MINT, ADDRESS3_INITIAL_MINT]
       )
-      const snapshots = await this.cmtat.getNextSnapshots()
+      const snapshots = await this.transferEngineMock.getNextSnapshots()
       expect(snapshots.length).to.equal(0)
     })
 
@@ -175,7 +175,7 @@ function ERC20SnapshotModuleOnePlannedSnapshotTest () {
           ADDRESS3_INITIAL_MINT
         ]
       )
-      const snapshots = await this.cmtat.getNextSnapshots()
+      const snapshots = await this.transferEngineMock.getNextSnapshots()
       expect(snapshots.length).to.equal(0)
     })
   })

@@ -22,13 +22,16 @@ import "./wrapper/controllers/ValidationModule.sol";
 import "./wrapper/extensions/MetaTxModule.sol";
 import "./wrapper/extensions/DebtModule.sol";
 import "./wrapper/extensions/DocumentModule.sol";
+import "./wrapper/extensions/TransferEngineModule.sol";
 import "./security/AuthorizationModule.sol";
 import "../interfaces/ICMTATConstructor.sol";
+import "../interfaces/engine/ITransferEngine.sol";
 import "../libraries/Errors.sol";
 
 abstract contract CMTAT_BASE is
     Initializable,
     ContextUpgradeable,
+    TransferEngineModule,
     // Core
     BaseModule,
     PauseModule,
@@ -39,7 +42,7 @@ abstract contract CMTAT_BASE is
     ERC20BaseModule,
     // Extension
     MetaTxModule,
-    ERC20SnapshotModule,
+    //ERC20SnapshotModule,
     DebtModule,
     DocumentModule
 {   
@@ -96,8 +99,8 @@ abstract contract CMTAT_BASE is
         SnapshotModule:
         Add these two calls in case you add the SnapshotModule
             */
-        __SnapshotModuleBase_init_unchained();
-        __ERC20Snapshot_init_unchained();
+        //__SnapshotModuleBase_init_unchained();
+        //__ERC20Snapshot_init_unchained();
     
         __Validation_init_unchained(engines_ .ruleEngine);
 
@@ -117,7 +120,7 @@ abstract contract CMTAT_BASE is
         SnapshotModule:
         Add this call in case you add the SnapshotModule
         */
-        __ERC20SnasphotModule_init_unchained();
+        //__ERC20SnasphotModule_init_unchained();
         __DocumentModule_init_unchained(engines_ .documentEngine);
         __DebtModule_init_unchained(engines_ .debtEngine);
 
@@ -199,7 +202,10 @@ abstract contract CMTAT_BASE is
         Add this in case you add the SnapshotModule
         We call the SnapshotModule only if the transfer is valid
         */
-        ERC20SnapshotModuleInternal._snapshotUpdate(from, to);
+        //ERC20SnapshotModuleInternal._snapshotUpdate(from, to);
+        if(address(transferEngine()) != address(0)){
+            transferEngine().operateOnTransfer(from, to, balanceOf(from), balanceOf(to), totalSupply());
+        }
         ERC20Upgradeable._update(from, to, amount);
     }
     /*//////////////////////////////////////////////////////////////
