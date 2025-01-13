@@ -10,25 +10,25 @@ const timeout = function (ms) {
 async function checkSnapshot (time, totalSupply, addressese, balances) {
   const addresses = [this.address1, this.address2, this.address3]
   // Values before the snapshot
-  expect(await this.cmtat.snapshotTotalSupply(time)).to.equal(totalSupply)
+  expect(await this.transferEngineMock.snapshotTotalSupply(time)).to.equal(totalSupply)
   // const result = await this.cmtat.snapshotInfoBatch(time, addresses)
-  const result = await this.cmtat['snapshotInfoBatch(uint256,address[])'](
+  const result = await this.transferEngineMock['snapshotInfoBatch(uint256,address[])'](
     time,
     addresses
   )
   /* methods */
   const times = [time]
-  const result2 = await this.cmtat['snapshotInfoBatch(uint256[],address[])'](
+  const result2 = await this.transferEngineMock['snapshotInfoBatch(uint256[],address[])'](
     times,
     addresses
   )
   for (let i = 0; i < balances.length; ++i) {
-    expect(await this.cmtat.snapshotBalanceOf(time, addresses[i])).to.equal(
+    expect(await this.transferEngineMock.snapshotBalanceOf(time, addresses[i])).to.equal(
       balances[i]
     )
-    await this.cmtat.snapshotInfo(time, addresses[i])
+    await this.transferEngineMock.snapshotInfo(time, addresses[i])
     const { 0: ownerBalance, 1: totalSupplyGet } =
-      await this.cmtat.snapshotInfo(time, addresses[i])
+      await this.transferEngineMock.snapshotInfo(time, addresses[i])
     // const [ownerBalance, totalSupplyGet]
     expect(ownerBalance).to.equal(balances[i])
     expect(result[0][i]).to.equal(balances[i])

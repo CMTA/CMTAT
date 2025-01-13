@@ -398,7 +398,8 @@ abstract contract SnapshotModuleBase is Initializable {
     }
 
     /* ============ Require balance and total supply ============ */
-     /**
+
+    /**
     * @dev See {OpenZeppelin - ERC20Snapshot}
     */
     function _updateAccountSnapshot(address account, uint256 accountBalance) internal {
