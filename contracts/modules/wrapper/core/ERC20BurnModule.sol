@@ -2,10 +2,10 @@
 
 pragma solidity ^0.8.20;
 
-import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
-import "../../security/AuthorizationModule.sol";
-import "../../../interfaces/ICCIPToken.sol";
-
+import {ERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
+import {AuthorizationModule} from "../../security/AuthorizationModule.sol";
+import {ICCIPBurnFromERC20} from "../../../interfaces/ICCIPToken.sol";
+import {Errors} from "../../../libraries/Errors.sol";
 /**
  * @title ERC20Burn module.
  * @dev 

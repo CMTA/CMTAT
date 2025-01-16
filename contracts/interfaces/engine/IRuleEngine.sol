@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.20;
 
-import "../draft-IERC1404/draft-IERC1404Wrapper.sol";
+import {IERC1404Wrapper} from "../draft-IERC1404/draft-IERC1404Wrapper.sol";
 
 /*
 * @dev minimum interface to define a RuleEngine

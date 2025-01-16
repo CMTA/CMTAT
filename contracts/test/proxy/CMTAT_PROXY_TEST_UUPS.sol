@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.20;
 
-import "../../CMTAT_PROXY_UUPS.sol";
+import {CMTAT_PROXY_UUPS} from "../../CMTAT_PROXY_UUPS.sol";
 
 
 /**

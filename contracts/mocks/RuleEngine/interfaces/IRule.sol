@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.20;
 
-import "../../../interfaces/draft-IERC1404/draft-IERC1404Wrapper.sol";
+import {IERC1404Wrapper} from "../../../interfaces/draft-IERC1404/draft-IERC1404Wrapper.sol";
 
 interface IRule is IERC1404Wrapper {
     /**

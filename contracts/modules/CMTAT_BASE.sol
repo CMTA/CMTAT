@@ -3,35 +3,32 @@
 pragma solidity ^0.8.20;
 
 // required OZ imports here
-import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
-import "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
+import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import {ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
 
-import "./wrapper/core/BaseModule.sol";
-import "./wrapper/core/ERC20BurnModule.sol";
-import "./wrapper/core/ERC20MintModule.sol";
-import "./wrapper/core/EnforcementModule.sol";
-import "./wrapper/core/ERC20BaseModule.sol";
-import "./wrapper/core/PauseModule.sol";
-/*
-* SnapshotModule:
-* Add this import in case you add the SnapshotModule
-*/
-import "./wrapper/extensions/ERC20SnapshotModule.sol";
+import {BaseModule} from "./wrapper/core/BaseModule.sol";
+import {ERC20BurnModule} from "./wrapper/core/ERC20BurnModule.sol";
+import {ERC20MintModule} from "./wrapper/core/ERC20MintModule.sol";
+import {EnforcementModule} from "./wrapper/core/EnforcementModule.sol";
+import {ERC20BaseModule, ERC20Upgradeable} from "./wrapper/core/ERC20BaseModule.sol";
+import {PauseModule} from "./wrapper/core/PauseModule.sol";
 
-import "./wrapper/controllers/ValidationModule.sol";
-import "./wrapper/extensions/MetaTxModule.sol";
-import "./wrapper/extensions/DebtModule.sol";
-import "./wrapper/extensions/DocumentModule.sol";
-import "./wrapper/extensions/TransferEngineModule.sol";
-import "./security/AuthorizationModule.sol";
-import "../interfaces/ICMTATConstructor.sol";
-import "../interfaces/engine/ITransferEngine.sol";
-import "../libraries/Errors.sol";
+import {ERC20SnapshotModule} from "./wrapper/extensions/ERC20SnapshotModule.sol";
+
+import {ValidationModule} from "./wrapper/controllers/ValidationModule.sol";
+import {MetaTxModule, ERC2771ContextUpgradeable} from "./wrapper/extensions/MetaTxModule.sol";
+import {DebtModule} from "./wrapper/extensions/DebtModule.sol";
+import {DocumentModule} from "./wrapper/extensions/DocumentModule.sol";
+import {SnapshotEngineModule} from "./wrapper/extensions/SnapshotEngineModule.sol";
+import {AuthorizationModule} from "./security/AuthorizationModule.sol";
+import {ICMTATConstructor} from "../interfaces/ICMTATConstructor.sol";
+import {ISnapshotEngine} from "../interfaces/engine/ISnapshotEngine.sol";
+import {Errors} from "../libraries/Errors.sol";
 
 abstract contract CMTAT_BASE is
     Initializable,
     ContextUpgradeable,
-    TransferEngineModule,
+    SnapshotEngineModule,
     // Core
     BaseModule,
     PauseModule,
@@ -203,8 +200,8 @@ abstract contract CMTAT_BASE is
         We call the SnapshotModule only if the transfer is valid
         */
         //ERC20SnapshotModuleInternal._snapshotUpdate(from, to);
-        if(address(transferEngine()) != address(0)){
-            transferEngine().operateOnTransfer(from, to, balanceOf(from), balanceOf(to), totalSupply());
+        if(address(snapshotEngine()) != address(0)){
+            snapshotEngine().operateOnTransfer(from, to, balanceOf(from), balanceOf(to), totalSupply());
         }
         ERC20Upgradeable._update(from, to, amount);
     }

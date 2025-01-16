@@ -2,8 +2,8 @@
 
 pragma solidity ^0.8.20;
 
-import "../../security/AuthorizationModule.sol";
-import "../../internal/EnforcementModuleInternal.sol";
+import {AuthorizationModule} from "../../security/AuthorizationModule.sol";
+import {EnforcementModuleInternal} from "../../internal/EnforcementModuleInternal.sol";
 
 /**
  * @title Enforcement module.

@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.20;
 
-import "../../security/AuthorizationModule.sol";
+import {AuthorizationModule} from "../../security/AuthorizationModule.sol";
 
 abstract contract BaseModule is AuthorizationModule {
     /* ============ State Variables ============ */

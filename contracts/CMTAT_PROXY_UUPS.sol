@@ -1,8 +1,8 @@
 //SPDX-License-Identifier: MPL-2.0
 
 pragma solidity ^0.8.20;
-import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
-import "./modules/CMTAT_BASE.sol";
+import {UUPSUpgradeable} from "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
+import {CMTAT_BASE, MetaTxModule, ICMTATConstructor} from "./modules/CMTAT_BASE.sol";
 
 
 /**

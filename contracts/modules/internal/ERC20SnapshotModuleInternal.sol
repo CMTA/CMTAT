@@ -2,10 +2,10 @@
 
 pragma solidity ^0.8.20;
 
-import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
+import {ERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 import {Arrays} from '@openzeppelin/contracts/utils/Arrays.sol';
-import "./base/SnapshotModuleBase.sol";
-import "../../interfaces/ICMTATSnapshot.sol";
+import {SnapshotModuleBase} from "./base/SnapshotModuleBase.sol";
+import {ICMTATSnapshot} from "../../interfaces/ICMTATSnapshot.sol";
 /**
  * @dev Snapshot module internal.
  *

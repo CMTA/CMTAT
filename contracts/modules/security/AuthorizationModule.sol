@@ -2,9 +2,9 @@
 
 pragma solidity ^0.8.20;
 
-import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
-import "../../libraries/Errors.sol";
-import "../../interfaces/engine/IAuthorizationEngine.sol";
+import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
+import {Errors} from "../../libraries/Errors.sol";
+import {IAuthorizationEngine} from "../../interfaces/engine/IAuthorizationEngine.sol";
 
 abstract contract AuthorizationModule is AccessControlUpgradeable {
     /* ============ Events ============ */

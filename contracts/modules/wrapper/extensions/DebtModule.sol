@@ -2,9 +2,9 @@
 
 pragma solidity ^0.8.20;
 
-import "../../security/AuthorizationModule.sol";
-import "../../../libraries/Errors.sol";
-import "../../../interfaces/engine/IDebtEngine.sol";
+import {AuthorizationModule} from "../../security/AuthorizationModule.sol";
+import {Errors} from "../../../libraries/Errors.sol";
+import {IDebtEngine} from "../../../interfaces/engine/IDebtEngine.sol";
 
 /**
  * @title Debt module

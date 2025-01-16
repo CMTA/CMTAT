@@ -3,8 +3,8 @@
 pragma solidity ^0.8.20;
 
 // required OZ imports here
-import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
-import "../../../libraries/Errors.sol";
+import {ERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
+import {Errors} from "../../../libraries/Errors.sol";
 
 /**
  * @title ERC20Base module

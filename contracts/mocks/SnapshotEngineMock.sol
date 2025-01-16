@@ -1,15 +1,15 @@
 //SPDX-License-Identifier: MPL-2.0
 
 pragma solidity ^0.8.20;
-import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
-import "../modules/internal/base/SnapshotModuleBase.sol";
-import "../interfaces/ICMTATSnapshot.sol";
-import "../interfaces/engine/ITransferEngine.sol";
+import {ERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
+import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
+import {SnapshotModuleBase} from "../modules/internal/base/SnapshotModuleBase.sol";
+import {ICMTATSnapshot} from "../interfaces/ICMTATSnapshot.sol";
+import {ISnapshotEngine} from "../interfaces/engine/ISnapshotEngine.sol";
 /*
 * @title a RuleEngine mock for testing, not suitable for production
 */
-contract TransferEngineMock is SnapshotModuleBase, AccessControlUpgradeable, ITransferEngine {
+contract SnapshotEngineMock is SnapshotModuleBase, AccessControlUpgradeable, ISnapshotEngine {
     ERC20Upgradeable erc20;
     constructor(ERC20Upgradeable erc20_, address admin) {
         erc20 = erc20_;

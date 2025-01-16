@@ -2,9 +2,9 @@
 
 pragma solidity ^0.8.20;
 
-import "@openzeppelin/contracts-upgradeable/utils/PausableUpgradeable.sol";
-import "../../security/AuthorizationModule.sol";
-
+import {PausableUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/PausableUpgradeable.sol";
+import {AuthorizationModule} from "../../security/AuthorizationModule.sol";
+import {Errors} from "../../../libraries/Errors.sol";
 /**
  * @title Pause Module
  * @dev 

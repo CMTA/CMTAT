@@ -2,8 +2,8 @@
 
 pragma solidity ^0.8.20;
 
-import "./interfaces/IRule.sol";
-import "./CodeList.sol";
+import {IRule} from "./interfaces/IRule.sol";
+import {CodeList} from "./CodeList.sol";
 
 
 /*

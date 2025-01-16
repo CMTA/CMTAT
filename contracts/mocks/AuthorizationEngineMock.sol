@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.20;
 
-import "../interfaces/engine/IAuthorizationEngine.sol";
+import {IAuthorizationEngine} from "../interfaces/engine/IAuthorizationEngine.sol";
 
 
 /*

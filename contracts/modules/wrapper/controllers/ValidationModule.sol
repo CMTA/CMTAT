@@ -2,13 +2,13 @@
 
 pragma solidity ^0.8.20;
 
-import "../../security/AuthorizationModule.sol";
-import "../../internal/ValidationModuleInternal.sol";
-import "../core/PauseModule.sol";
-import "../core/EnforcementModule.sol";
-
-import "../../../libraries/Errors.sol";
-
+import {AuthorizationModule} from "../../security/AuthorizationModule.sol";
+import {ValidationModuleInternal, IRuleEngine} from "../../internal/ValidationModuleInternal.sol";
+import {PauseModule}  from "../core/PauseModule.sol";
+import {EnforcementModule} from "../core/EnforcementModule.sol";
+import {Errors} from "../../../libraries/Errors.sol";
+import {IERC1404Wrapper} from "../../../interfaces/draft-IERC1404/draft-IERC1404Wrapper.sol";
+///import {IRuleEngine} from "../../../interfaces/engine/IRuleEngine.sol";
 /**
  * @dev Validation module.
  *
