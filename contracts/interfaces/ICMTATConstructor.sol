@@ -2,7 +2,7 @@
 pragma solidity ^0.8.20;
 import "./engine/IDebtEngine.sol";
 import "./engine/IRuleEngine.sol";
-import "./engine/IAuthorizationEngine.sol";
+import "./engine/ISnapshotEngine.sol";
 import "./engine/draft-IERC1643.sol";
 
 
@@ -14,7 +14,7 @@ interface ICMTATConstructor {
     struct Engine {
         IRuleEngine ruleEngine;
         IDebtEngine debtEngine;
-        IAuthorizationEngine authorizationEngine;
+        ISnapshotEngine snapshotEngine;
         IERC1643 documentEngine;
     }
     struct ERC20Attributes {

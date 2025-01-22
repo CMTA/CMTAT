@@ -103,7 +103,7 @@ abstract contract CMTAT_BASE is
 
         /* Wrapper */
         // AuthorizationModule_init_unchained is called firstly due to inheritance
-        __AuthorizationModule_init_unchained(admin, engines_ .authorizationEngine);
+        __AuthorizationModule_init_unchained(admin);
         __ERC20BurnModule_init_unchained();
         __ERC20MintModule_init_unchained();
         // EnforcementModule_init_unchained is called before ValidationModule_init_unchained due to inheritance
@@ -113,11 +113,7 @@ abstract contract CMTAT_BASE is
         __PauseModule_init_unchained();
         __ValidationModule_init_unchained();
 
-        /*
-        SnapshotModule:
-        Add this call in case you add the SnapshotModule
-        */
-        //__ERC20SnasphotModule_init_unchained();
+        __SnapshotModule_init_unchained(engines_.snapshotEngine);
         __DocumentModule_init_unchained(engines_ .documentEngine);
         __DebtModule_init_unchained(engines_ .debtEngine);
 
