@@ -3,7 +3,7 @@
 pragma solidity ^0.8.20;
 
 import {AuthorizationModule} from "../../security/AuthorizationModule.sol";
-import {EnforcementModuleInternal} from "../../internal/EnforcementModuleInternal.sol";
+import {ERC20EnforcementModuleInternal} from "../../internal/ERC20EnforcementModuleInternal.sol";
 
 /**
  * @title Enforcement module.
@@ -12,11 +12,12 @@ import {EnforcementModuleInternal} from "../../internal/EnforcementModuleInterna
  * Allows the issuer to freeze transfers from a given address
  */
 abstract contract EnforcementModule is
-    EnforcementModuleInternal,
+    ERC20EnforcementModuleInternal,
     AuthorizationModule
 {
     /* ============ State Variables ============ */
     bytes32 public constant ENFORCER_ROLE = keccak256("ENFORCER_ROLE");
+    bytes32 public constant ENFORCER_ROLE_TRANSFER = keccak256("ENFORCER_ROLE_TRANSFER");
     string internal constant TEXT_TRANSFER_REJECTED_FROM_FROZEN =
         "Address FROM is frozen";
 
@@ -56,4 +57,14 @@ abstract contract EnforcementModule is
     ) public onlyRole(ENFORCER_ROLE) returns (bool) {
         return _unfreeze(account, reason);
     }
+
+
+    /**
+    * @notice Triggers a forced transfer.
+    *
+    */
+  function enforceTransfer(address account, address destination, uint256 value, string calldata reason) public onlyRole(ENFORCER_ROLE_TRANSFER) {
+        _enforceTransfer(account, destination, value, reason);
+  }
+
 }

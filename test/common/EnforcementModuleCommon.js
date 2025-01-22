@@ -1,9 +1,75 @@
-const { ENFORCER_ROLE } = require('../utils')
+const { ENFORCER_ROLE, ENFORCER_ROLE_TRANSFER } = require('../utils')
 const { expect } = require('chai')
 const reasonFreeze = 'testFreeze'
 const reasonUnfreeze = 'testUnfreeze'
 
 function EnforcementModuleCommon () {
+
+  context('Enforcement', function () {
+    beforeEach(async function () {
+      await this.cmtat.connect(this.admin).mint(this.address1, 50)
+    });
+
+    it('testCanForceTransferFromAddress1ToAddress2AsAdmin', async function () {
+    const AMOUNT_TO_TRANSFER = 20
+    const REASON = 'Bad guy'
+      // Act
+    this.logs = await this.cmtat
+      .connect(this.admin)
+      .enforceTransfer(this.address1, this.address2, AMOUNT_TO_TRANSFER, REASON)
+    // Assert
+      expect(await this.cmtat.balanceOf(this.address1)).to.equal(
+        '30'
+      )
+      expect(await this.cmtat.balanceOf(this.address2)).to.equal(
+        '20'
+      )
+      // Events
+      await expect(this.logs)
+        .to.emit(this.cmtat, 'Enforcement')
+        .withArgs(this.admin, this.address1, AMOUNT_TO_TRANSFER,  REASON)
+        await expect(this.logs)
+        .to.emit(this.cmtat, 'Transfer')
+        .withArgs(this.address1, this.address2, AMOUNT_TO_TRANSFER)
+    }); 
+
+    it('testCanForceTransferFromAddress1ToAddress2AsEnforcerTransferRole', async function () {
+      const AMOUNT_TO_TRANSFER = 20
+      const REASON = 'Bad guy'
+      // Arrange - Assert
+      await this.cmtat.connect(this.admin).grantRole(ENFORCER_ROLE_TRANSFER, this.address3);
+      // Act
+      this.logs = await this.cmtat
+        .connect(this.admin)
+        .enforceTransfer(this.address1, this.address2, AMOUNT_TO_TRANSFER, REASON)
+        // Assert
+        expect(await this.cmtat.balanceOf(this.address1)).to.equal(
+          50 - AMOUNT_TO_TRANSFER
+        )
+        expect(await this.cmtat.balanceOf(this.address2)).to.equal(
+          AMOUNT_TO_TRANSFER
+        )
+        await expect(this.logs)
+        .to.emit(this.cmtat, 'Enforcement')
+        .withArgs(this.admin, this.address1, AMOUNT_TO_TRANSFER,  REASON)
+        await expect(this.logs)
+        .to.emit(this.cmtat, 'Transfer')
+        .withArgs(this.address1, this.address2, AMOUNT_TO_TRANSFER)
+      }); 
+
+    it('testCannotNonEnforcerTransferFunds', async function () {
+      // Act
+      await expect(
+        this.cmtat.connect(this.address2).enforceTransfer(this.address1, this.address2, 20, 'Bad guy')
+      )
+        .to.be.revertedWithCustomError(
+          this.cmtat,
+          'AccessControlUnauthorizedAccount'
+        )
+        .withArgs(this.address2.address, ENFORCER_ROLE_TRANSFER)
+    })
+  });
+
   context('Freeze', function () {
     beforeEach(async function () {
       await this.cmtat.connect(this.admin).mint(this.address1, 50)

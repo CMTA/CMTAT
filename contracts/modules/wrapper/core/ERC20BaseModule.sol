@@ -124,7 +124,6 @@ abstract contract ERC20BaseModule is ERC20Upgradeable {
         totalSupply = ERC20Upgradeable.totalSupply();
     }
 
-
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/

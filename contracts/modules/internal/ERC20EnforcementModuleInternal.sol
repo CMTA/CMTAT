@@ -5,15 +5,15 @@ pragma solidity ^0.8.20;
 import {ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
 import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import {ERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
-
 /**
  * @dev Enforcement module.
  *
  * Allows the issuer to freeze transfers from a given address
  */
-abstract contract EnforcementModuleInternal is
+abstract contract ERC20EnforcementModuleInternal is
     Initializable,
-    ContextUpgradeable
+    ContextUpgradeable,
+     ERC20Upgradeable
 {
     /* ============ Events ============ */
     /**
@@ -36,13 +36,18 @@ abstract contract EnforcementModuleInternal is
         string reason
     );
 
+    /**
+     * @notice Emitted when a transfer is forced.
+     */
+    event Enforcement (address indexed enforcer, address indexed account, uint256 amount, string reason);
+
      /* ============ ERC-7201 ============ */
-    // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.EnforcementModuleInternal")) - 1)) & ~bytes32(uint256(0xff))
-    bytes32 private constant EnforcementModuleInternalStorageLocation = 0x0c7bc8a17be064111d299d7669f49519cb26c58611b72d9f6ccc40a1e1184e00;
+    // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.ERC20EnforcementModuleInternal")) - 1)) & ~bytes32(uint256(0xff))
+    bytes32 private constant ERC20EnforcementModuleInternalStorageLocation = 0x3f8bb8b8091c756b4423e8d10de8c6b7534e765f399b3f3409d2bed57af75e00;
     
 
     /* ==== ERC-7201 State Variables === */
-    struct EnforcementModuleInternalStorage {
+    struct ERC20EnforcementModuleInternalStorage {
         mapping(address => bool) _frozen;
     }
 
@@ -50,7 +55,7 @@ abstract contract EnforcementModuleInternal is
     /*//////////////////////////////////////////////////////////////
                          INITIALIZER FUNCTION
     //////////////////////////////////////////////////////////////*/
-    function __Enforcement_init_unchained() internal onlyInitializing {
+    function __ERC20Enforcement_init_unchained() internal onlyInitializing {
         // no variable to initialize
     }
 
@@ -62,7 +67,7 @@ abstract contract EnforcementModuleInternal is
      * @dev Returns true if the account is frozen, and false otherwise.
      */
     function frozen(address account) public view virtual returns (bool) {
-        EnforcementModuleInternalStorage storage $ = _getEnforcementModuleInternalStorage();
+        ERC20EnforcementModuleInternalStorage storage $ = _getERC20EnforcementModuleInternalStorage();
         return $._frozen[account];
     }
 
@@ -80,7 +85,7 @@ abstract contract EnforcementModuleInternal is
         address account,
         string calldata reason
     ) internal virtual returns (bool) {
-        EnforcementModuleInternalStorage storage $ = _getEnforcementModuleInternalStorage();
+        ERC20EnforcementModuleInternalStorage storage $ = _getERC20EnforcementModuleInternalStorage();
         if ($._frozen[account]) {
             return false;
         }
@@ -98,7 +103,7 @@ abstract contract EnforcementModuleInternal is
         address account,
         string calldata reason
     ) internal virtual returns (bool) {
-        EnforcementModuleInternalStorage storage $ = _getEnforcementModuleInternalStorage();
+        ERC20EnforcementModuleInternalStorage storage $ = _getERC20EnforcementModuleInternalStorage();
         if (!$._frozen[account]) {
             return false;
         }
@@ -108,10 +113,19 @@ abstract contract EnforcementModuleInternal is
         return true;
     }
 
+    /**
+     * @dev Triggers a forced transfer.
+     *
+     */
+    function _enforceTransfer(address account, address destination, uint256 value, string calldata reason) internal virtual {
+        _transfer(account, destination, value);
+        emit Enforcement(_msgSender(), account, value, reason);
+    }
+
     /* ============ ERC-7201 ============ */
-    function _getEnforcementModuleInternalStorage() private pure returns (EnforcementModuleInternalStorage storage $) {
+    function _getERC20EnforcementModuleInternalStorage() private pure returns (ERC20EnforcementModuleInternalStorage storage $) {
         assembly {
-            $.slot := EnforcementModuleInternalStorageLocation
+            $.slot := ERC20EnforcementModuleInternalStorageLocation
         }
     }
 }

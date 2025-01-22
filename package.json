@@ -7,7 +7,7 @@
     "test"
   ],
   "scripts": {
-    "test": "npx truffle test",
+    "test": "npx hardhat test",
     "lint:js": "npx eslint test",
     "lint:js:fix": "npx eslint test --fix",
     "lint:sol": "npx solium -d contracts",
@@ -17,7 +17,6 @@
     "lint:sol:prettier": "npx prettier --write 'contracts/**/*.sol'",
     "lint:js:prettier": "npx prettier --write test",
     "lint:all:prettier": "npm run-script lint:js:prettier && npm run-script lint:js:fix && npm run-script lint:sol:prettier && npm run-script lint:sol:fix",
-    "console": "truffle console",
     "coverage": "npx hardhat coverage",
     "docgen": "npx hardhat docgen",
     "uml-all": "npm run-script uml-partial && npm run-script uml-i-draft-erc1404 && npm run-script uml-modules-core && npm run-script uml-modules-extensions && npm run-script uml-modules-security && npm run-script uml-mocks",

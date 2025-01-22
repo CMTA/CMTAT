@@ -91,7 +91,7 @@ abstract contract CMTAT_BASE is
         __Pausable_init_unchained();
 
         /* Internal Modules */
-        __Enforcement_init_unchained();
+        __ERC20Enforcement_init_unchained();
         /*
         SnapshotModule:
         Add these two calls in case you add the SnapshotModule
