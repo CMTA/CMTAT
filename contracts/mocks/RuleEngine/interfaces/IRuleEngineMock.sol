@@ -2,8 +2,8 @@
 
 pragma solidity ^0.8.20;
 
-import "./IRule.sol";
-import "../../../interfaces/engine/IRuleEngine.sol";
+import {IRule} from "./IRule.sol";
+import {IRuleEngine} from "../../../interfaces/engine/IRuleEngine.sol";
 
 interface IRuleEngineMock is IRuleEngine {
     /**

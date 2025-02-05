@@ -2,9 +2,9 @@
 
 pragma solidity ^0.8.20;
 
-import "./interfaces/IRule.sol";
-import "./interfaces/IRuleEngineMock.sol";
-import "./RuleMock.sol";
+import {IRule} from "./interfaces/IRule.sol";
+import {IRuleEngineMock} from "./interfaces/IRuleEngineMock.sol";
+import {RuleMock} from "./RuleMock.sol";
 
 /*
 * @title a RuleEngine mock for testing, not suitable for production

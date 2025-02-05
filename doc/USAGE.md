@@ -1,6 +1,6 @@
 # Usage instructions
 
-The instructions below have been tested on Ubuntu 20.04.5 LTS.
+The instructions below have been tested on Ubuntu 22.04.5 LTS.
 
 ## Dependencies
 
@@ -9,11 +9,11 @@ are the latest ones that we tested:
 
 - npm 10.2.5
 - Hardhat ^2.22.7
-- Solidity 0.8.27 (via solc-js)
+- Solidity 0.8.28 (via solc-js)
 - Node 20.5.0
-- OpenZeppelin Contracts (Node.js module) [v5.0.2](https://github.com/OpenZeppelin/openzeppelin-contracts/releases/tag/v5.0.2) 
-- OpenZeppelin Contracts Upgradeable (Node.js module) [v5.0.2](https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/releases/tag/v5.0.2)
-- Test: OpenZeppelin Contracts Upgradeable (submodule) [v5.0.2](https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/releases/tag/v5.0.2)
+- OpenZeppelin Contracts (Node.js module) [v5.2.0](https://github.com/OpenZeppelin/openzeppelin-contracts/releases/tag/v5.2.0) 
+- OpenZeppelin Contracts Upgradeable (Node.js module) [v5.2.0](https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/releases/tag/v5.0.2)
+- Test: OpenZeppelin Contracts Upgradeable (submodule) [v5.2.0](https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/releases/tag/v5.2.0)
 
 
 ## Installation

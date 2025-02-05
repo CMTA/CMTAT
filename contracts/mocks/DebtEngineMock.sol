@@ -1,7 +1,7 @@
 
 // SPDX-License-Identifier: MPL-2.0
 pragma solidity ^0.8.20;
-import "../interfaces/engine/IDebtEngine.sol";
+import {IDebtEngine} from "../interfaces/engine/IDebtEngine.sol";
 interface IDebtEngineMock is IDebtEngine  {
     function setDebt(DebtBase calldata debt_) external;
     function setCreditEvents(CreditEvents calldata creditEvents) external;

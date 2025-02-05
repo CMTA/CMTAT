@@ -5,7 +5,7 @@ pragma solidity ^0.8.20;
 /*
 * @dev minimum interface to define a RuleEngine
 */
-interface ITransferEngine {
+interface ISnapshotEngine {
     /**
      * @dev Returns true if the operation is a success, and false otherwise.
      */

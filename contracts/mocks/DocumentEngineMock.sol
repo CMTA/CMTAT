@@ -1,7 +1,7 @@
 
 // SPDX-License-Identifier: MPL-2.0
 pragma solidity ^0.8.20;
-import "../interfaces/engine/draft-IERC1643.sol";
+import {IERC1643} from "../interfaces/engine/draft-IERC1643.sol";
 interface IERC1643Whole is IERC1643{
     /// uri The URI of the document
     /// @return documentHash The hash of the document contents

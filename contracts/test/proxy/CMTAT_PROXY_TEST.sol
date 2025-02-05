@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.20;
 
-import "../../CMTAT_PROXY.sol";
+import {CMTAT_PROXY} from "../../CMTAT_PROXY.sol";
 
 
 /**
