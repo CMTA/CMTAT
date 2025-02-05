@@ -1,5 +1,5 @@
 const { expect } = require('chai')
-const { DEFAULT_ADMIN_ROLE, PAUSER_ROLE } = require('../../utils')
+const { PAUSER_ROLE } = require('../../utils')
 const { ZERO_ADDRESS } = require('../../utils')
 const {
   deployCMTATProxy,

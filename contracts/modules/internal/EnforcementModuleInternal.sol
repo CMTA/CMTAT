@@ -10,7 +10,7 @@ import {ERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/
  *
  * Allows the issuer to freeze transfers from a given address
  */
-abstract contract ERC20EnforcementModuleInternal is
+abstract contract EnforcementModuleInternal is
     Initializable,
     ContextUpgradeable,
      ERC20Upgradeable
@@ -36,18 +36,13 @@ abstract contract ERC20EnforcementModuleInternal is
         string reason
     );
 
-    /**
-     * @notice Emitted when a transfer is forced.
-     */
-    event Enforcement (address indexed enforcer, address indexed account, uint256 amount, string reason);
-
      /* ============ ERC-7201 ============ */
-    // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.ERC20EnforcementModuleInternal")) - 1)) & ~bytes32(uint256(0xff))
-    bytes32 private constant ERC20EnforcementModuleInternalStorageLocation = 0x3f8bb8b8091c756b4423e8d10de8c6b7534e765f399b3f3409d2bed57af75e00;
+    // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.EnforcementModuleInternal")) - 1)) & ~bytes32(uint256(0xff))
+    bytes32 private constant EnforcementModuleInternalStorageLocation = 0x3f8bb8b8091c756b4423e8d10de8c6b7534e765f399b3f3409d2bed57af75e00;
     
 
     /* ==== ERC-7201 State Variables === */
-    struct ERC20EnforcementModuleInternalStorage {
+    struct EnforcementModuleInternalStorage {
         mapping(address => bool) _frozen;
     }
 
@@ -55,7 +50,7 @@ abstract contract ERC20EnforcementModuleInternal is
     /*//////////////////////////////////////////////////////////////
                          INITIALIZER FUNCTION
     //////////////////////////////////////////////////////////////*/
-    function __ERC20Enforcement_init_unchained() internal onlyInitializing {
+    function __Enforcement_init_unchained() internal onlyInitializing {
         // no variable to initialize
     }
 
@@ -67,7 +62,7 @@ abstract contract ERC20EnforcementModuleInternal is
      * @dev Returns true if the account is frozen, and false otherwise.
      */
     function frozen(address account) public view virtual returns (bool) {
-        ERC20EnforcementModuleInternalStorage storage $ = _getERC20EnforcementModuleInternalStorage();
+        EnforcementModuleInternalStorage storage $ = _getEnforcementModuleInternalStorage();
         return $._frozen[account];
     }
 
@@ -85,7 +80,7 @@ abstract contract ERC20EnforcementModuleInternal is
         address account,
         string calldata reason
     ) internal virtual returns (bool) {
-        ERC20EnforcementModuleInternalStorage storage $ = _getERC20EnforcementModuleInternalStorage();
+        EnforcementModuleInternalStorage storage $ = _getEnforcementModuleInternalStorage();
         if ($._frozen[account]) {
             return false;
         }
@@ -103,7 +98,7 @@ abstract contract ERC20EnforcementModuleInternal is
         address account,
         string calldata reason
     ) internal virtual returns (bool) {
-        ERC20EnforcementModuleInternalStorage storage $ = _getERC20EnforcementModuleInternalStorage();
+        EnforcementModuleInternalStorage storage $ = _getEnforcementModuleInternalStorage();
         if (!$._frozen[account]) {
             return false;
         }
@@ -113,19 +108,10 @@ abstract contract ERC20EnforcementModuleInternal is
         return true;
     }
 
-    /**
-     * @dev Triggers a forced transfer.
-     *
-     */
-    function _enforceTransfer(address account, address destination, uint256 value, string calldata reason) internal virtual {
-        _transfer(account, destination, value);
-        emit Enforcement(_msgSender(), account, value, reason);
-    }
-
     /* ============ ERC-7201 ============ */
-    function _getERC20EnforcementModuleInternalStorage() private pure returns (ERC20EnforcementModuleInternalStorage storage $) {
+    function _getEnforcementModuleInternalStorage() private pure returns (EnforcementModuleInternalStorage storage $) {
         assembly {
-            $.slot := ERC20EnforcementModuleInternalStorageLocation
+            $.slot := EnforcementModuleInternalStorageLocation
         }
     }
 }

@@ -18,10 +18,10 @@ interface ICMTATConstructor {
         IERC1643 documentEngine;
     }
     struct ERC20Attributes {
-        // name of the token,
-        string nameIrrevocable;
-        // name of the symbol
-        string symbolIrrevocable;
+        // token name,
+        string name;
+        // token symbol
+        string symbol;
         // number of decimals of the token, must be 0 to be compliant with Swiss law as per CMTAT specifications (non-zero decimal number may be needed for other use cases)
         uint8 decimalsIrrevocable;
     }

@@ -1,4 +1,4 @@
-const ValidationModuleCommon = require('../../../common/ValidationModule/ValidationModuleSetRuleEngineCommon')
+const ValidationModuleCommon = require('../../../common/ValidationModule/ValidationModuleCommon')
 const {
   deployCMTATProxy,
   fixture,

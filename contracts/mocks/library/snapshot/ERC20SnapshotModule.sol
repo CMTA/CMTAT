@@ -2,8 +2,8 @@
 
 pragma solidity ^0.8.20;
 
-import {AuthorizationModule} from "../../security/AuthorizationModule.sol";
-import {ERC20SnapshotModuleInternal} from "../../internal/ERC20SnapshotModuleInternal.sol";
+import {AuthorizationModule} from "../../../modules/security/AuthorizationModule.sol";
+import {ERC20SnapshotModuleInternal} from ".//ERC20SnapshotModuleInternal.sol";
 
 /**
  * @title Snapshot module

@@ -9,8 +9,4 @@ import {ERC2771ForwarderUpgradeable} from "@openzeppelin/contracts-upgradeable/m
 * @title a MinimalForwarderMock for testing, not suitable for production
 */
 contract MinimalForwarderMock is ERC2771ForwarderUpgradeable {
-    function initialize(string memory name) public initializer {
-        __EIP712_init_unchained(name, "1");
-        __ERC2771Forwarder_init_unchained("");
-    }
 }

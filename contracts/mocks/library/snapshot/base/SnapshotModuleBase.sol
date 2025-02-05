@@ -5,7 +5,7 @@ pragma solidity ^0.8.20;
 import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import {Arrays} from '@openzeppelin/contracts/utils/Arrays.sol';
 
-import {Errors} from "../../../libraries/Errors.sol";
+import {Errors} from "../../../../libraries/Errors.sol";
 
 /**
  * @dev Base for the Snapshot module
