@@ -111,9 +111,9 @@ Generally, these modules are not required to be compliant with the CMTA specific
 | Name           | Documentation                                                | Main File                                                    |
 | -------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | MetaTxModule   | [metatx.md](doc/modules/presentation/extensions/metatx.md)   | [MetaTxModule.sol](./contracts/modules/wrapper/extensions/MetaTxModule.sol) |
-| SnapshotModule | [ERC20Snapshot.md](doc/modules/presentation/extensions/ERC20Snapshot.md) | [ERC20SnapshotModule.sol](./contracts/modules/wrapper/extensions/ERC20SnapshotModule.sol) |
 | DebtModule     | [debt.md](doc/modules/presentation/extensions/debt.md)       | [DebtModule.sol](./contracts/modules/wrapper/extensions/DebtModule.sol) |
-| DocumentModue  | [document.md](doc/modules/presentation/extensions/document.md) | [Document.sol](./contracts/modules/wrapper/extensions/DocumentModule.sol) |
+| DocumentModule | [document.md](doc/modules/presentation/extensions/document.md) | [Document.sol](./contracts/modules/wrapper/extensions/DocumentModule.sol) |
+| SnapshotModule | [ERC20Snapshot.md](https://github.com/CMTA/CMTAT/blob/dev/doc/modules/presentation/extensions/ERC20Snapshot.md) | [ERC20SnapshotModule.sol](https://github.com/CMTA/CMTAT/blob/dev/contracts/modules/wrapper/extensions/ERC20SnapshotModule.sol) |
 
 ##### Security
 
@@ -141,7 +141,7 @@ An example of RuleEngine is also available on [GitHub](https://github.com/CMTA/R
 
 Here is the list of the different version available for each CMTAT version.
 
-| Name                    | RuleEngine                                                   |
+| CMTAT version           | RuleEngine                                                   |
 | ----------------------- | ------------------------------------------------------------ |
 | CMTAT 2.5.0 (unaudited) | RuleEngine >= [v2.0.3](https://github.com/CMTA/RuleEngine/releases/tag/v2.0.3) (unaudited) |
 | CMTAT 2.4.0 (unaudited) | RuleEngine >=v2.0.0<br />Last version: [v2.0.2](https://github.com/CMTA/RuleEngine/releases/tag/v2.0.2)(unaudited) |
@@ -161,17 +161,11 @@ This interface can be found in [./contracts/interfaces/engine/IRuleEngine.sol](.
 
 Before each transfer, the CMTAT calls the function `operateOnTransfer` which is the entrypoint for the RuleEngine.
 
-#### AuthorizationEngine
+Further reading: [Taurus - Token Transfer Management: How to Apply Restrictions with CMTAT and ERC-1404](https://www.taurushq.com/blog/token-transfer-management-how-to-apply-restrictions-with-cmtat-and-erc-1404/) (version used CMTAT v2.4.0)
 
-> Warning: this engine may be deleted in the future
+#### SnapshotEngine
 
-The `AuthorizationEngine` is an external contract to add supplementary check on the functions `grantRole` and `revokeRole`from the CMTAT.
-
-This contract is managed in the `AuthorizationModule`.
-
-The `AuthorizationEngine` has to import an implement the interface [IAuthorizationEngine.sol](./contracts/interfaces/engine/IAuthorizationEngine.sol) which declares the functions `operateOnGrantRole` and `operateOnRevokeRole`
-
-Currently, there is only a prototype available: [CMTA/AuthorizationEngine](https://github.com/CMTA/AuthorizationEngine)
+Engine to perform snapshot on-chain.
 
 #### DebtEngine
 
@@ -193,7 +187,7 @@ Use an external contract provides two advantages:
 
 Here is the list of the different version available for each CMTAT version.
 
-| Name                     | DebtEngine                                                   |
+| CMTAT version            | DebtEngine                                                   |
 | ------------------------ | ------------------------------------------------------------ |
 | CMTAT v2.5.0 (unaudited) | [DebtEngine v0.2.0](https://github.com/CMTA/DebtEngine/releases/tag/v0.2.0) (unaudited) |
 
@@ -225,9 +219,30 @@ Use an external contract provides two advantages:
 
 Here is the list of the different version available for each CMTAT version.
 
-| Name                     | DocumentEngine                                               |
+| CMTAT version            | DocumentEngine                                               |
 | ------------------------ | ------------------------------------------------------------ |
 | CMTAT v2.5.0 (unaudited) | [DocumentEngine v0.3.0](https://github.com/CMTA/DocumentEngine/releases/tag/v0.3.0) (unaudited) |
+
+#### AuthorizationEngine (Deprecated)
+
+> Warning: this engine has been removed since CMTAT v3.0.0
+
+The `AuthorizationEngine` was an external contract to add supplementary check on the functions `grantRole` and `revokeRole`from the CMTAT. Since delegating access rights to an external contract is complicated and it is better to manage access control directly in CMTAT, we removed it in version 3.0.0.
+
+**Details**
+
+This contract was managed in the `AuthorizationModule`.
+
+The `AuthorizationEngine` has to import an implement the interface [IAuthorizationEngine.sol](./contracts/interfaces/engine/IAuthorizationEngine.sol) which declares the functions `operateOnGrantRole` and `operateOnRevokeRole`
+
+There was only one prototype available: [CMTA/AuthorizationEngine](https://github.com/CMTA/AuthorizationEngine)
+
+| CMTAT version                          | AuthorizationEngine                    |
+| -------------------------------------- | -------------------------------------- |
+| CMTAT v3.0.0                           | Removed                                |
+| CMTAT v2.4.0, 2.5.0, 2.5.1 (unaudited) | AuthorizationEngine v1.0.0 (unaudited) |
+| CMTAT 2.3.0 (audited)                  | Not available                          |
+| CMTAT 1.0 (audited)                    | Not available                          |
 
 ## Deployment model 
 
@@ -262,31 +277,16 @@ Note that deployment via a proxy is not mandatory, but is recommended by CMTA.
 
 Factory contracts are available to deploy the CMTAT with a beacon proxy, a transparent proxy or an UUPS proxy.
 
-- [CMTAT_BEACON_FACTORY.sol](./contracts/deployment/CMTAT_BEACON_FACTORY.sol)
+These contract have now their own GitHub project: [CMTAT Factory](https://github.com/CMTA/CMTATFactory)
 
-- [CMTAT_TRANSPARENT_FACTORY.sol](./contracts/deployment/CMTAT_TP_FACTORY.sol)
-- [CMTAT_UUPS_FACTORY.sol](./contracts/deployment/CMTAT_UUPS_FACTORY.sol)
+| CMTAT version                     | CMTAT Factory                                                |
+| --------------------------------- | ------------------------------------------------------------ |
+| CMTAT v3.0.0                      | CMTAT Factory v0.1.0 (unaudited)                             |
+| CMTAT v2.5.0 / v2.5.1 (unaudited) | Available within CMTAT <br />see contracts/deployment<br />(unaudited) |
+| CMTAT 2.3.0 (audited)             | Not available                                                |
+| CMTAT 1.0 (audited)               | Not available                                                |
 
-#### Beacon Proxy Factory
-
-The factory will use the same beacon for each beacon proxy. This beacon provides the address of the implementation contract, a CMTAT_PROXY contract. If you upgrade the beacon to point to a new implementation, it will change the implementation contract for all beacon proxy.
-
-![factory-Beacon Factory.drawio](./doc/schema/drawio/factory-BeaconFactory.drawio.png)
-
-#### Transparent Proxy Factory
-
-The factory will use the same implementation for each transparent proxy deployed. Each transparent proxy has its owned proxy admin, deployed inside the constructor of the transparent proxy. Each transparent proxy can upgrade their implementation to a new one independently and without impact on other proxies.
-
-![factory-Transparent Factory.drawio](./doc/schema/drawio/factory-TransparentFactory.drawio.png)
-
-#### UUPS ProxyFactory
-
-The factory will use the same implementation for each UUPS proxy deployed. Each UUPS proxy can upgrade their implementation to a new one independently and without impact on other proxies.
-
-Contrary to the Transparent Proxy, the logic to upgrade the proxy is situated in the implementation and not in the proxy.
-
-This is the reason whey there is a specific CMTAT contract which includes this logic to use: [CMTAT_PROXY_UUPS.sol](./contracts/CMTAT_PROXY_UUPS.sol)
-
+Further reading: [Taurus - Making CMTAT Tokenization More Scalable and Cost-Effective with Proxy and Factory Contracts](https://www.taurushq.com/blog/cmtat-tokenization-deployment-with-proxy-and-factory/) (version used CMTAT v2.5.1)
 
 ## Security
 
@@ -373,15 +373,18 @@ CMTA providers further documentation describing the CMTAT framework in a platfor
 ### Further reading
 - [CMTA - A comparison of different security token standards](https://cmta.ch/news-articles/a-comparison-of-different-security-token-standards)
 - [Taurus - Security Token Standards: A Closer Look at CMTAT](https://www.taurushq.com/blog/security-token-standards-a-closer-look-at-cmtat/)
-- [Taurus - Equity Tokenization: How to Pay Dividend On-Chain Using CMTAT](https://www.taurushq.com/blog/equity-tokenization-how-to-pay-dividend-on-chain-using-cmtat/)
-- [Taurus - Token Transfer Management: How to Apply Restrictions with CMTAT and ERC-1404](https://www.taurushq.com/blog/token-transfer-management-how-to-apply-restrictions-with-cmtat-and-erc-1404/)
-- [Taurus - Addressing the Privacy and Compliance Challenge in Public Blockchain Token Transactions](https://www.taurushq.com/blog/enhancing-token-transaction-privacy-on-public-blockchains-while-ensuring-compliance/)
+- [Taurus - Equity Tokenization: How to Pay Dividend On-Chain Using CMTAT](https://www.taurushq.com/blog/equity-tokenization-how-to-pay-dividend-on-chain-using-cmtat/) (CMTAT v2.4.0)
+- [Taurus - Token Transfer Management: How to Apply Restrictions with CMTAT and ERC-1404](https://www.taurushq.com/blog/token-transfer-management-how-to-apply-restrictions-with-cmtat-and-erc-1404/) (CMTAT v2.4.0)
+- [Taurus - Making CMTAT Tokenization More Scalable and Cost-Effective with Proxy and Factory Contracts](https://www.taurushq.com/blog/cmtat-tokenization-deployment-with-proxy-and-factory/) (CMTAT v2.5.1)
+- [Taurus - Addressing the Privacy and Compliance Challenge in Public Blockchain Token Transactions](https://www.taurushq.com/blog/enhancing-token-transaction-privacy-on-public-blockchains-while-ensuring-compliance/) (Aztec)
 
 ## Others implementations
 Two versions are available for the blockchain [Tezos](https://tezos.com)
 - [CMTAT FA2](https://github.com/CMTA/CMTAT-Tezos-FA2) Official version written in SmartPy
 - [@ligo/cmtat](https://github.com/ligolang/CMTAT-Ligo/) Unofficial version written in Ligo
   - See also [Tokenization of securities on Tezos by Frank Hillard](https://medium.com/@frank.hillard_62931/tokenization-of-securities-on-tezos-2e3c3e90fc5a)
+
+For [Aztec](https://aztec.network), see [Taurus - Addressing the Privacy and Compliance Challenge in Public Blockchain Token Transactions](https://www.taurushq.com/blog/enhancing-token-transaction-privacy-on-public-blockchains-while-ensuring-compliance/) 
 
 
 ## Contract size
