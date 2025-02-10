@@ -13,6 +13,8 @@ The preferred way to receive comments is through the GitHub issue tracker.  Priv
 
 Note that CMTAT may be used in other jurisdictions than Switzerland, and for tokenizing various asset types, beyond equity and debt products. 
 
+
+
 ## Functionality
 
 ### Overview
@@ -57,6 +59,8 @@ The CMTAT supports client-side gasless transactions using the [Gas Station Netwo
 At deployment, the parameter  `forwarder` inside the  CMTAT contract constructor has to be set  with the defined address of the forwarder. Please note that the forwarder can not be changed after deployment, and with a proxy architecture, its value is stored inside the implementation contract bytecode instead of the storage of the proxy.
 
 Please see the OpenGSN [documentation](https://docs.opengsn.org/contracts/#receiving-a-relayed-call) for more details on what is done to support GSN in the contract.
+
+-----
 
 ## Architecture
 
@@ -113,7 +117,7 @@ Generally, these modules are not required to be compliant with the CMTA specific
 | MetaTxModule   | [metatx.md](doc/modules/presentation/extensions/metatx.md)   | [MetaTxModule.sol](./contracts/modules/wrapper/extensions/MetaTxModule.sol) |
 | DebtModule     | [debt.md](doc/modules/presentation/extensions/debt.md)       | [DebtModule.sol](./contracts/modules/wrapper/extensions/DebtModule.sol) |
 | DocumentModule | [document.md](doc/modules/presentation/extensions/document.md) | [Document.sol](./contracts/modules/wrapper/extensions/DocumentModule.sol) |
-| SnapshotModule | [ERC20Snapshot.md](https://github.com/CMTA/CMTAT/blob/dev/doc/modules/presentation/extensions/ERC20Snapshot.md) | [ERC20SnapshotModule.sol](https://github.com/CMTA/CMTAT/blob/dev/contracts/modules/wrapper/extensions/ERC20SnapshotModule.sol) |
+| SnapshotModule | [ERC20Snapshot.md](doc/modules/presentation/extensions/ERC20Snapshot.md) | [ERC20SnapshotModule.sol](./contracts/modules/wrapper/extensions//ERC20SnapshotModule.sol) |
 
 ##### Security
 
@@ -165,11 +169,39 @@ Further reading: [Taurus - Token Transfer Management: How to Apply Restrictions 
 
 #### SnapshotEngine
 
-Engine to perform snapshot on-chain.
+Engine to perform snapshot on-chain. This engine is defined in the module `SnapshotModule`.
+
+CMTAT implements only one function defined in the interface [ISnapshotEngine](./contracts/interfaces/engine/ISnapshotEngine.sol)
+
+After each transfer, the CMTAT calls the function `operateOnTransfer` which is the entrypoint for the SnapshotEngine.
+
+```solidity
+/*
+* @dev minimum interface to define a SnapshotEngine
+*/
+interface ISnapshotEngine {
+    /**
+     * @dev Returns true if the operation is a success, and false otherwise.
+     */
+    function operateOnTransfer(address from, address to, uint256 balanceFrom, uint256 balanceTo, uint256 totalSupply) external;
+}
+```
+
+
+
+| CMTAT                            | SnapshotEngine                                               |
+| -------------------------------- | ------------------------------------------------------------ |
+| CMTAT v2.3.0                     | SnapshotEngine v0.1.0 (unaudited)                            |
+| CMTAT v2.4.0, v2.5.0 (unaudited) | Include inside SnapshotModule (unaudited)                    |
+| CMTAT v2.3.0                     | Include inside SnapshotModule (unaudited)                    |
+| CMTAT v1.0.0                     | Include inside SnapshotModule, but not gas efficient (audited) |
 
 #### DebtEngine
 
-This engine replaces the modules Debt and Credit included since CMTAT version.
+This engine:
+
+- Replaces the modules Debt and Credit included since CMTAT version.
+- Is defined in the `DebtModule`.
 
 CMTAT only implements two functions , available in the interface [IDebtEngine](./contracts/interfaces/engine/IDebtEngine.sol) to get information from the debtEngine.
 
@@ -194,6 +226,8 @@ Here is the list of the different version available for each CMTAT version.
 #### DocumentEngine (IERC-1643)
 
 The `DocumentEngine` is an external contract to support [*ERC-1643*](https://github.com/ethereum/EIPs/issues/1643) inside CMTAT, a standard proposition to manage document on-chain. This standard is notably used by [ERC-1400](https://github.com/ethereum/eips/issues/1411) from Polymath. 
+
+This engine is defined in the module `DocumentModule`
 
 This EIP defines a document with three attributes:
 
@@ -244,6 +278,8 @@ There was only one prototype available: [CMTA/AuthorizationEngine](https://githu
 | CMTAT 2.3.0 (audited)                  | Not available                          |
 | CMTAT 1.0 (audited)                    | Not available                          |
 
+----
+
 ## Deployment model 
 
 | Model                       | Contract                                             |
@@ -251,8 +287,6 @@ There was only one prototype available: [CMTA/AuthorizationEngine](https://githu
 | Standalone                  | [CMTAT_STANDALONE](./contracts/CMTAT_STANDALONE.sol) |
 | Transparent or Beacon Proxy | [CMTAT_PROXY](./contracts/CMTAT_PROXY.sol)           |
 | UUPS Proxy                  | [CMTAT_PROXY_UUPS](./contracts/CMTAT_PROXY_UUPS.sol) |
-
-
 
 ### Standalone
 
@@ -287,6 +321,8 @@ These contract have now their own GitHub project: [CMTAT Factory](https://github
 | CMTAT 1.0 (audited)               | Not available                                                |
 
 Further reading: [Taurus - Making CMTAT Tokenization More Scalable and Cost-Effective with Proxy and Factory Contracts](https://www.taurushq.com/blog/cmtat-tokenization-deployment-with-proxy-and-factory/) (version used CMTAT v2.5.1)
+
+------
 
 ## Security
 
@@ -353,6 +389,8 @@ A code coverage is available in [index.html](doc/general/test/coverage/index.htm
 
 As with any token contract, access to the owner key must be adequately restricted.
 Likewise, access to the proxy contract must be restricted and seggregated from the token contract.
+
+------
 
 ## Documentation
 

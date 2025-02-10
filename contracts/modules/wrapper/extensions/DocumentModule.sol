@@ -22,7 +22,7 @@ abstract contract DocumentModule is AuthorizationModule, IERC1643 {
     event DocumentEngine(IERC1643 indexed newDocumentEngine);
    
     /* ============ ERC-7201 ============ */
-     bytes32 public constant DOCUMENT_ROLE = keccak256("DOCUMENT_ROLE");
+    bytes32 public constant DOCUMENT_ROLE = keccak256("DOCUMENT_ROLE");
     // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.DocumentModule")) - 1)) & ~bytes32(uint256(0xff))
     bytes32 private constant DocumentModuleStorageLocation = 0x5edcb2767f407e647b6a4171ef53e8015a3eff0bb2b6e7765b1a26332bc43000;
     /* ==== ERC-7201 State Variables === */

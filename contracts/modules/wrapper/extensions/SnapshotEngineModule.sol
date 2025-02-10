@@ -7,6 +7,8 @@ import {Errors} from "../../../libraries/Errors.sol";
 import {ISnapshotEngine} from "../../../interfaces/engine/ISnapshotEngine.sol";
 
 abstract contract SnapshotEngineModule is AuthorizationModule {
+    /* ============ State Variables ============ */
+    bytes32 public constant SNAPSHOOTER_ROLE = keccak256("SNAPSHOOTER_ROLE");
     /* ============ Events ============ */
     /**
      * @dev Emitted when a rule engine is set.
@@ -52,8 +54,11 @@ abstract contract SnapshotEngineModule is AuthorizationModule {
     */
     function setSnapshotEngine(
         ISnapshotEngine snapshotEngine_
-    ) external onlyRole(DEFAULT_ADMIN_ROLE) {
+    ) external onlyRole(SNAPSHOOTER_ROLE) {
         SnapshotEngineModuleStorage storage $ = _getSnapshotEngineModuleStorage();
+        if ($._snapshotEngine == snapshotEngine_){
+             revert Errors.CMTAT_SnapshotModule_SameValue();
+        }
         $._snapshotEngine = snapshotEngine_;
         emit SnapshotEngine(snapshotEngine_);
     }

@@ -5,7 +5,7 @@ pragma solidity ^0.8.20;
 import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import {Arrays} from '@openzeppelin/contracts/utils/Arrays.sol';
 
-import {Errors} from "../../../../libraries/Errors.sol";
+import {SnapshotErrors} from "./SnapshotErrors.sol";
 
 /**
  * @dev Base for the Snapshot module
@@ -139,13 +139,13 @@ abstract contract SnapshotModuleBase is Initializable {
                 $._scheduledSnapshots.length - 1
             ];
             if (time < nextSnapshotTime) {
-                revert Errors
+                revert SnapshotErrors
                     .CMTAT_SnapshotModule_SnapshotTimestampBeforeLastSnapshot(
                         time,
                         nextSnapshotTime
                     );
             } else if (time == nextSnapshotTime) {
-                revert Errors.CMTAT_SnapshotModule_SnapshotAlreadyExists();
+                revert SnapshotErrors.CMTAT_SnapshotModule_SnapshotAlreadyExists();
             }
         }
         $._scheduledSnapshots.push(time);
@@ -161,7 +161,7 @@ abstract contract SnapshotModuleBase is Initializable {
         (bool isFound, uint256 index) = _findScheduledSnapshotIndex(time);
         // Perfect match
         if (isFound) {
-            revert Errors.CMTAT_SnapshotModule_SnapshotAlreadyExists();
+            revert SnapshotErrors.CMTAT_SnapshotModule_SnapshotAlreadyExists();
         }
         // if no upper bound match found, we push the snapshot at the end of the list
         if (index == $._scheduledSnapshots.length) {
@@ -190,24 +190,24 @@ abstract contract SnapshotModuleBase is Initializable {
         _checkTimeSnapshotAlreadyDone(oldTime);
         _checkTimeInThePast(newTime);
         if ($._scheduledSnapshots.length == 0) {
-            revert Errors.CMTAT_SnapshotModule_NoSnapshotScheduled();
+            revert SnapshotErrors.CMTAT_SnapshotModule_NoSnapshotScheduled();
         }
         uint256 index = _findAndRevertScheduledSnapshotIndex(oldTime);
         if (index + 1 < $._scheduledSnapshots.length) {
             uint256 nextSnapshotTime = $._scheduledSnapshots[index + 1];
             if (newTime > nextSnapshotTime) {
-                revert Errors
+                revert SnapshotErrors
                     .CMTAT_SnapshotModule_SnapshotTimestampAfterNextSnapshot(
                         newTime,
                         nextSnapshotTime
                     );
             } else if (newTime == nextSnapshotTime) {
-                revert Errors.CMTAT_SnapshotModule_SnapshotAlreadyExists();
+                revert SnapshotErrors.CMTAT_SnapshotModule_SnapshotAlreadyExists();
             }
         }
         if (index > 0) {
             if (newTime <= $._scheduledSnapshots[index - 1])
-                revert Errors
+                revert SnapshotErrors
                     .CMTAT_SnapshotModule_SnapshotTimestampBeforePreviousSnapshot(
                         newTime,
                         $._scheduledSnapshots[index - 1]
@@ -226,11 +226,11 @@ abstract contract SnapshotModuleBase is Initializable {
         // Check the time firstly to avoid an useless read of storage
         _checkTimeSnapshotAlreadyDone(time);
         if ($._scheduledSnapshots.length == 0) {
-            revert Errors.CMTAT_SnapshotModule_NoSnapshotScheduled();
+            revert SnapshotErrors.CMTAT_SnapshotModule_NoSnapshotScheduled();
         }
         // All snapshot time are unique, so we do not check the indice
         if (time !=$._scheduledSnapshots[$._scheduledSnapshots.length - 1]) {
-            revert Errors.CMTAT_SnapshotModule_SnapshotNotFound();
+            revert SnapshotErrors.CMTAT_SnapshotModule_SnapshotNotFound();
         }
         $._scheduledSnapshots.pop();
         emit SnapshotUnschedule(time);
@@ -454,13 +454,13 @@ abstract contract SnapshotModuleBase is Initializable {
     ) private view returns (uint256){
         (bool isFound, uint256 index) = _findScheduledSnapshotIndex(time);
         if (!isFound) {
-            revert Errors.CMTAT_SnapshotModule_SnapshotNotFound();
+            revert SnapshotErrors.CMTAT_SnapshotModule_SnapshotNotFound();
         }
         return index;
     }
     function _checkTimeInThePast(uint256 time) internal view{
         if (time <= block.timestamp) {
-                    revert Errors.CMTAT_SnapshotModule_SnapshotScheduledInThePast(
+                    revert SnapshotErrors.CMTAT_SnapshotModule_SnapshotScheduledInThePast(
                         time,
                         block.timestamp
                     );
@@ -468,7 +468,7 @@ abstract contract SnapshotModuleBase is Initializable {
     }
     function _checkTimeSnapshotAlreadyDone(uint256 time) internal view{
         if (time <= block.timestamp) {
-            revert Errors.CMTAT_SnapshotModule_SnapshotAlreadyDone();
+            revert SnapshotErrors.CMTAT_SnapshotModule_SnapshotAlreadyDone();
         }
     }
 
