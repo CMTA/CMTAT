@@ -20,10 +20,6 @@ It is used to perform a code coverage
 
 #### Nomiclabs - Hardhat
 
-**[hardhat-truffle5](https://hardhat.org/hardhat-runner/plugins/nomiclabs-hardhat-truffle5)**
-
-[Hardhat](https://hardhat.org/) plugin for integration with TruffleContract from Truffle 5. This allows tests and scripts written for Truffle to work with Hardhat.
-
 **[hardhat-web3](https://hardhat.org/hardhat-runner/plugins/nomiclabs-hardhat-web3)**
 
 This plugin integrates [Web3.js](https://github.com/ethereum/web3.js) `1.x` into [Hardhat](https://hardhat.org/).
@@ -85,13 +81,6 @@ marked as experimental package on 22.08.2022.
 
 A Mocha reporter for Ethereum test suites (Truffle)
 
-**[Eth-Sig-Util](https://www.npmjs.com/package/ethereumjs-wallet)**
-A collection of Ethereum signing functions. 
-
-Warning :  
-* Deprecated in favor of : [@metamask/eth-sig-util](https://github.com/MetaMask/eth-sig-util)
-* It was not possible to use the new version of the library because the test "MetaTxModule.test.js" doesn't work with this one. The check of the signature fails.
-
 [keccak256](https://www.npmjs.com/package/keccak256)
 
 A wrapper for the [`keccak`](https://www.npmjs.com/package/keccak) library to compute 256 bit keccak hash in JavaScript.
@@ -118,13 +107,6 @@ Program that extracts documentation for a Solidity project.
 **[Surya](https://github.com/ConsenSys/surya)**
 
 Utility tool for smart contract systems.
-
-#### solidity-coverage
-
-#### Others
-
-**[dotenv](https://www.npmjs.com/package/dotenv)**
-Loads environment variables from a .env file 
 
 ### Production 
 
