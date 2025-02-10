@@ -173,7 +173,7 @@ Engine to perform snapshot on-chain. This engine is defined in the module `Snaps
 
 CMTAT implements only one function defined in the interface [ISnapshotEngine](./contracts/interfaces/engine/ISnapshotEngine.sol)
 
-After each transfer, the CMTAT calls the function `operateOnTransfer` which is the entrypoint for the SnapshotEngine.
+**Before** each transfer, the CMTAT calls the function `operateOnTransfer` which is the entrypoint for the SnapshotEngine.
 
 ```solidity
 /*

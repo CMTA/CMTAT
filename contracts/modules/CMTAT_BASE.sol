@@ -206,10 +206,11 @@ abstract contract CMTAT_BASE is
         if (!ValidationModule._operateOnTransfer(from, to, amount)) {
             revert Errors.CMTAT_InvalidTransfer(from, to, amount);
         }
-        ERC20Upgradeable._update(from, to, amount);
+        // Required to be performed before the update
         if(address(snapshotEngine()) != address(0)){
             snapshotEngine().operateOnTransfer(from, to, balanceOf(from), balanceOf(to), totalSupply());
         }
+        ERC20Upgradeable._update(from, to, amount);
     }
     /*//////////////////////////////////////////////////////////////
                             METAXTX MODULE
