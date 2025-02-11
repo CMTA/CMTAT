@@ -6,7 +6,8 @@ const UpgradeProxyCommon = require('./UpgradeProxyCommon')
 const {
   DEPLOYMENT_DECIMAL,
   fixture,
-  loadFixture
+  loadFixture,
+  TERMS
 } = require('../../deploymentUtils')
 describe('CMTAT with UUPS Proxy', function () {
   beforeEach(async function () {
@@ -23,7 +24,7 @@ describe('CMTAT with UUPS Proxy', function () {
       [
         this.admin.address,
         ['CMTA Token', 'CMTAT', DEPLOYMENT_DECIMAL],
-        ['CMTAT_ISIN', 'https://cmta.ch', 'CMTAT_info'],
+        ['CMTAT_ISIN', TERMS, 'CMTAT_info'],
         [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]
       ],
       {

@@ -12,15 +12,15 @@ This document defines the MetaTx Module for the CMTA Token specification. The go
 
 ### Inheritance
 
-![surya_inheritance_MetaTxModule.sol](../../../schema/surya_inheritance/surya_inheritance_MetaTxModule.sol.png)
+![surya_inheritance_MetaTxModule.sol](../../schema/surya_inheritance/surya_inheritance_MetaTxModule.sol.png)
 
 ### UML
 
-![MetaTxModule](../../../schema/sol2uml/MetaTxModule.svg)
+![MetaTxModule](../../schema/sol2uml/MetaTxModule.svg)
 
 ### Graph
 
-![surya_graph_MetaTxModule.sol](../../../schema/surya_graph/surya_graph_MetaTxModule.sol.png)
+![surya_graph_MetaTxModule.sol](../../schema/surya_graph/surya_graph_MetaTxModule.sol.png)
 
 ## Sūrya's Description Report
 

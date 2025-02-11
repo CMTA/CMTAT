@@ -16,15 +16,15 @@ This document defines Base Module for the CMTA Token specification.
 
 ### Inheritance
 
-![surya_inheritance_BaseModule.sol](../../../schema/surya_inheritance/surya_inheritance_BaseModule.sol.png)
+![surya_inheritance_BaseModule.sol](../../schema/surya_inheritance/surya_inheritance_BaseModule.sol.png)
 
 ### UML
 
-![BaseModule](../../../schema/sol2uml/BaseModule.svg)
+![BaseModule](../../schema/sol2uml/BaseModule.svg)
 
 ### Graph
 
-![surya_graph_BaseModule.sol](../../../schema/surya_graph/surya_graph_BaseModule.sol.png)
+![surya_graph_BaseModule.sol](../../schema/surya_graph/surya_graph_BaseModule.sol.png)
 
 ## Sūrya's Description Report
 

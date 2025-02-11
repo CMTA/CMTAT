@@ -2,7 +2,9 @@ const ValidationModuleCommon = require('../../../common/ValidationModule/Validat
 const {
   deployCMTATProxyWithParameter,
   fixture,
-  loadFixture
+  loadFixture,
+  TERMS,
+  DEPLOYMENT_DECIMAL
 } = require('../../../deploymentUtils')
 const { ZERO_ADDRESS } = require('../../../utils')
 
@@ -12,7 +14,6 @@ describe('Proxy - ValidationModule - Constructor', function () {
     this.ADDRESS2_INITIAL_BALANCE = 18n
     this.ADDRESS3_INITIAL_BALANCE = 19n
     Object.assign(this, await loadFixture(fixture))
-    const DECIMAL = 0
     this.ruleEngineMock = await ethers.deployContract('RuleEngineMock')
     this.definedAtDeployment = true
     this.cmtat = await deployCMTATProxyWithParameter(
@@ -21,9 +22,9 @@ describe('Proxy - ValidationModule - Constructor', function () {
       this.admin.address,
       'CMTA Token',
       'CMTAT',
-      DECIMAL,
+      DEPLOYMENT_DECIMAL,
       'CMTAT_ISIN',
-      'https://cmta.ch',
+      TERMS,
       'CMTAT_info',
       [this.ruleEngineMock.target, ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]
     )

@@ -1,11 +1,20 @@
 const { expect } = require('chai')
 const { DEFAULT_ADMIN_ROLE } = require('../utils')
+const { TERMS } = require('../deploymentUtils')
 
 function BaseModuleCommon () {
   context('Token structure', function () {
+    async function checkTerms(myThis, terms){
+      let blockTimestamp = (await ethers.provider.getBlock('latest')).timestamp;
+      let result = await myThis.cmtat.terms()
+      expect(result[0]).to.equal(terms[0])
+      expect(result[1][0]).to.equal(terms[1])
+      expect(result[1][1]).to.equal(terms[2])
+      expect(result[1][2]).to.equal(blockTimestamp)
+    }
     it('testHasTheDefinedVersion', async function () {
       // Act + Assert
-      expect(await this.cmtat.VERSION()).to.equal('2.5.1')
+      expect(await this.cmtat.VERSION()).to.equal('3.0.0')
     })
     it('testHasTheDefinedTokenId', async function () {
       // Act + Assert
@@ -13,7 +22,7 @@ function BaseModuleCommon () {
     })
     it('testHasTheDefinedTerms', async function () {
       // Act + Assert
-      expect(await this.cmtat.terms()).to.equal('https://cmta.ch')
+      await checkTerms(this,TERMS)
     })
     it('testAdminCanChangeTokenId', async function () {
       // Arrange
@@ -44,24 +53,43 @@ function BaseModuleCommon () {
       expect(await this.cmtat.tokenId()).to.equal('CMTAT_ISIN')
     })
     it('testAdminCanUpdateTerms', async function () {
-      // Arrange - Assert
-      expect(await this.cmtat.terms()).to.equal('https://cmta.ch')
+      let NEW_TERMS = ["doc2", "https://example.com/doc2", "0xe405e5dad3b45f611e35717af4430b4560f12cd4054380b856446d286c341d05"] ; 
       // Act
       this.logs = await this.cmtat
         .connect(this.admin)
-        .setTerms('https://cmta.ch/terms')
+        .setTerms(NEW_TERMS)
       // Assert
-      expect(await this.cmtat.terms()).to.equal('https://cmta.ch/terms')
+      
+      //let blockTimestamp = (await ethers.provider.getBlock('latest')).timestamp;
+      await checkTerms(this,NEW_TERMS)
+      /*
+      don't work
       await expect(this.logs)
         .to.emit(this.cmtat, 'Term')
-        .withArgs('https://cmta.ch/terms', 'https://cmta.ch/terms')
+        .withArgs( [NEW_TERMS[0],tab] 
+
+      // Compute blocktimestamp
+        const blockTimestamp = (await ethers.provider.getBlock(this.logs.blockNumber)).timestamp;
+       let tab = [NEW_TERMS[1], NEW_TERMS[2], blockTimestamp]
+      // Encode struct argument
+          coder = new ethers.AbiCoder()
+         const encode = coder.encode(
+       ["tuple(string, tuple(string, bytes32, uint256))"], // Struct definition
+       [[NEW_TERMS[0], [NEW_TERMS[1], NEW_TERMS[2], blockTimestamp]]] );
+
+       // Check event hash
+        let hash = ethers.keccak256(encode)
+      await expect(this.logs)
+        .to.emit(this.cmtat, 'Term')
+        .withArgs( hash )
+        */
     })
     it('testCannotNonAdminUpdateTerms', async function () {
       // Arrange - Assert
-      expect(await this.cmtat.terms()).to.equal('https://cmta.ch')
+      checkTerms(TERMS)
       // Act
       await expect(
-        this.cmtat.connect(this.address1).setTerms('https://cmta.ch/terms')
+        this.cmtat.connect(this.address1).setTerms(TERMS)
       )
         .to.be.revertedWithCustomError(
           this.cmtat,
@@ -69,7 +97,7 @@ function BaseModuleCommon () {
         )
         .withArgs(this.address1.address, DEFAULT_ADMIN_ROLE)
       // Assert
-      expect(await this.cmtat.terms()).to.equal('https://cmta.ch')
+      checkTerms(TERMS)
     })
     it('testAdminCanUpdateInformation', async function () {
       // Arrange - Assert

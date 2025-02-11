@@ -2,7 +2,9 @@ const DebtModuleCommon = require('../../../common/DebtModule/DebtModuleCommon')
 const {
   deployCMTATStandaloneWithParameter,
   fixture,
-  loadFixture
+  loadFixture,
+  TERMS,
+  DEPLOYMENT_DECIMAL
 } = require('../../../deploymentUtils')
 
 const { ZERO_ADDRESS } = require('../../../utils')
@@ -19,9 +21,9 @@ describe('Standard - DebtModule - Constructor', function () {
       this.admin.address,
       'CMTA Token',
       'CMTAT',
-      DECIMAL,
+      DEPLOYMENT_DECIMAL,
       'CMTAT_ISIN',
-      'https://cmta.ch',
+      TERMS,
       'CMTAT_info',
       [ZERO_ADDRESS, this.debtEngineMock.target, ZERO_ADDRESS, ZERO_ADDRESS]
     )

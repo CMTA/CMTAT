@@ -16,15 +16,15 @@ However, this is not enforced in the functions that allow to change a user’s a
 
 ### Inheritance
 
-![surya_inheritance_PauseModule.sol](../../../schema/surya_inheritance/surya_inheritance_PauseModule.sol.png)
+![surya_inheritance_PauseModule.sol](../../schema/surya_inheritance/surya_inheritance_PauseModule.sol.png)
 
 ### UML
 
-![PauseModule](../../../schema/sol2uml/PauseModule.svg)
+![PauseModule](../../schema/sol2uml/PauseModule.svg)
 
 ### Graph
 
-![surya_graph_PauseModule.sol](../../../schema/surya_graph/surya_graph_PauseModule.sol.png)
+![surya_graph_PauseModule.sol](../../schema/surya_graph/surya_graph_PauseModule.sol.png)
 
 ## Sūrya's Description Report
 

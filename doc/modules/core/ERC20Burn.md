@@ -14,15 +14,15 @@ This document defines the ERC20Burn Module for the CMTA Token specification.
 
 ### Inheritance
 
-![surya_inheritance_BurnModule.sol](../../../schema/surya_inheritance/surya_inheritance_ERC20BurnModule.sol.png)
+![surya_inheritance_BurnModule.sol](../../schema/surya_inheritance/surya_inheritance_ERC20BurnModule.sol.png)
 
 ### UML
 
-![BurnModule](../../../schema/sol2uml/ERC20BurnModule.svg)
+![BurnModule](../../schema/sol2uml/ERC20BurnModule.svg)
 
 ### Graph
 
-![surya_graph_BurnModule.sol](../../../schema/surya_graph/surya_graph_ERC20BurnModule.sol.png)
+![surya_graph_BurnModule.sol](../../schema/surya_graph/surya_graph_ERC20BurnModule.sol.png)
 
 ## Sūrya's Description Report
 

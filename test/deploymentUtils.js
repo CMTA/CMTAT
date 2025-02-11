@@ -2,6 +2,8 @@ const { loadFixture } = require('@nomicfoundation/hardhat-network-helpers')
 const { ZERO_ADDRESS } = require('./utils')
 const { ethers, upgrades } = require('hardhat')
 const DEPLOYMENT_DECIMAL = 0n
+// hash = keccak256("doc1Hash");
+const TERMS = ["doc1", "https://example.com/doc1", "0x6a12eff2f559a5e529ca2c563c53194f6463ed5c61d1ae8f8731137467ab0279"] ;
 async function fixture () {
   const [
     _,
@@ -31,7 +33,7 @@ async function deployCMTATStandalone (_, admin, deployerAddress) {
     _,
     admin,
     ['CMTA Token', 'CMTAT', DEPLOYMENT_DECIMAL],
-    ['CMTAT_ISIN', 'https://cmta.ch', 'CMTAT_info'],
+    ['CMTAT_ISIN', TERMS, 'CMTAT_info'],
     [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]
   ])
   return cmtat
@@ -89,7 +91,7 @@ async function deployCMTATProxy (_, admin, deployerAddress) {
     [
       admin,
       ['CMTA Token', 'CMTAT', DEPLOYMENT_DECIMAL],
-      ['CMTAT_ISIN', 'https://cmta.ch', 'CMTAT_info'],
+      ['CMTAT_ISIN', TERMS, 'CMTAT_info'],
       [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]
     ],
     {
@@ -141,6 +143,7 @@ module.exports = {
   deployCMTATProxyWithParameter,
   deployCMTATStandaloneWithParameter,
   DEPLOYMENT_DECIMAL,
+  TERMS,
   deployCMTATProxyImplementation,
   deployCMTATProxyUUPSImplementation,
   fixture,

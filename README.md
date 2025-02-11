@@ -101,31 +101,31 @@ Here the list of the different modules with the links towards the documentation 
 
 Generally, these modules are required to be compliant with the CMTA specification.
 
-| Name              | Documentation                                                | Main File                                                    |
-| ----------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| BaseModule        | [base.md](doc/modules/presentation/core/base.md)             | [BaseModule.sol](./contracts/modules/wrapper/core/BaseModule.sol) |
-| BurnModule        | [ERC20Burn.md](doc/modules/presentation/core/ERC20Burn.md)   | [ERC20BurnModule.sol](./contracts/modules/wrapper/core/ERC20BurnModule.sol) |
-| EnforcementModule | [enforcement.md](doc/modules/presentation/core/enforcement.md) | [EnforcementModule.sol](./contracts/modules/wrapper/core/EnforcementModule.sol) |
-| ERC20BaseModule   | [erc20base.md](doc/modules/presentation/core/erc20base.md)   | [ERC20BaseModule.sol](./contracts/modules/wrapper/core/ERC20BaseModule.sol) |
-| MintModule        | [ERC20Mint.md](doc/modules/presentation/core/ERC20Mint.md)   | [ERC20MintModule.sol](./contracts/modules/wrapper/core/ERC20MintModule.sol) |
-| PauseModule       | [pause.md](doc/modules/presentation/core/pause.md)           | [PauseModule.sol](./contracts/modules/wrapper/core/PauseModule.sol) |
+| Name              | Documentation                                     | Main File                                                    |
+| ----------------- | ------------------------------------------------- | ------------------------------------------------------------ |
+| BaseModule        | [base.md](doc/modules/core/base.md)               | [BaseModule.sol](./contracts/modules/wrapper/core/BaseModule.sol) |
+| BurnModule        | [ERC20Burn.md](doc/modules/core/ERC20Burn.md)     | [ERC20BurnModule.sol](./contracts/modules/wrapper/core/ERC20BurnModule.sol) |
+| EnforcementModule | [enforcement.md](doc/modules/core/enforcement.md) | [EnforcementModule.sol](./contracts/modules/wrapper/core/EnforcementModule.sol) |
+| ERC20BaseModule   | [erc20base.md](doc/modules/core/ERC20base.md)     | [ERC20BaseModule.sol](./contracts/modules/wrapper/core/ERC20BaseModule.sol) |
+| MintModule        | [ERC20Mint.md](doc/modules/core/ERC20Mint.md)     | [ERC20MintModule.sol](./contracts/modules/wrapper/core/ERC20MintModule.sol) |
+| PauseModule       | [pause.md](doc/modules/core/pause.md)             | [PauseModule.sol](./contracts/modules/wrapper/core/PauseModule.sol) |
 
 ##### Extensions
 
 Generally, these modules are not required to be compliant with the CMTA specification.
 
-| Name           | Documentation                                                | Main File                                                    |
-| -------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| MetaTxModule   | [metatx.md](doc/modules/presentation/extensions/metatx.md)   | [MetaTxModule.sol](./contracts/modules/wrapper/extensions/MetaTxModule.sol) |
-| DebtModule     | [debt.md](doc/modules/presentation/extensions/debt.md)       | [DebtModule.sol](./contracts/modules/wrapper/extensions/DebtModule.sol) |
-| DocumentModule | [document.md](doc/modules/presentation/extensions/document.md) | [Document.sol](./contracts/modules/wrapper/extensions/DocumentModule.sol) |
-| SnapshotModule | [ERC20Snapshot.md](doc/modules/presentation/extensions/ERC20Snapshot.md) | [ERC20SnapshotModule.sol](./contracts/modules/wrapper/extensions//ERC20SnapshotModule.sol) |
+| Name           | Documentation                                               | Main File                                                    |
+| -------------- | ----------------------------------------------------------- | ------------------------------------------------------------ |
+| MetaTxModule   | [metatx.md](doc/modules/extensions/metatx.md)               | [MetaTxModule.sol](./contracts/modules/wrapper/extensions/MetaTxModule.sol) |
+| DebtModule     | [debt.md](doc/modules/extensions/debt.md)                   | [DebtModule.sol](./contracts/modules/wrapper/extensions/DebtModule.sol) |
+| DocumentModule | [document.md](doc/modules/extensions/document.md)           | [Document.sol](./contracts/modules/wrapper/extensions/DocumentModule.sol) |
+| SnapshotModule | [ERC20Snapshot.md](doc/modules/extensions/ERC20Snapshot.md) | [ERC20SnapshotModule.sol](./contracts/modules/wrapper/extensions//ERC20SnapshotModule.sol) |
 
 ##### Security
 
-| Name                | Documentation                                                | Main File                                                    |
-| ------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| AuthorizationModule | [authorization.md](./doc/modules/presentation/security/authorization.md) | [AuthorizationModule.sol](./contracts/modules/security/AuthorizationModule.sol) |
+| Name                | Documentation                                               | Main File                                                    |
+| ------------------- | ----------------------------------------------------------- | ------------------------------------------------------------ |
+| AuthorizationModule | [authorization.md](./doc/modules/security/authorization.md) | [AuthorizationModule.sol](./contracts/modules/security/AuthorizationModule.sol) |
 
 ### Engines
 

@@ -5,7 +5,9 @@ const {
   deployCMTATStandaloneWithParameter,
   deployCMTATProxy,
   fixture,
-  loadFixture
+  loadFixture,
+  TERMS,
+  DEPLOYMENT_DECIMAL
 } = require('../deploymentUtils')
 describe('CMTAT - Deployment', function () {
   beforeEach(async function () {
@@ -18,7 +20,6 @@ describe('CMTAT - Deployment', function () {
   })
 
   it('testCannotDeployProxyWithAdminSetToAddressZero', async function () {
-    const DECIMAL = 0
     // Act + Assert
     await expect(
       deployCMTATProxyWithParameter(
@@ -27,9 +28,9 @@ describe('CMTAT - Deployment', function () {
         ZERO_ADDRESS,
         'CMTA Token',
         'CMTAT',
-        DECIMAL,
+        DEPLOYMENT_DECIMAL,
         'CMTAT_ISIN',
-        'https://cmta.ch',
+        TERMS,
         'CMTAT_info',
         [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]
       )
@@ -39,7 +40,6 @@ describe('CMTAT - Deployment', function () {
     )
   })
   it('testCannotDeployStandaloneWithAdminSetToAddressZero', async function () {
-    const DECIMAL = 0
     // Act + Assert
     await expect(
       deployCMTATStandaloneWithParameter(
@@ -48,9 +48,9 @@ describe('CMTAT - Deployment', function () {
         ZERO_ADDRESS,
         'CMTA Token',
         'CMTAT',
-        DECIMAL,
+        DEPLOYMENT_DECIMAL,
         'CMTAT_ISIN',
-        'https://cmta.ch',
+        TERMS,
         'CMTAT_info',
         [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]
       )

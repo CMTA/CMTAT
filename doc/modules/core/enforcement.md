@@ -14,25 +14,25 @@ This document defines Enforcement Module for the CMTA Token specification.
 
 #### EnforcementModule
 
-![surya_inheritance_EnforcementModule.sol](../../../schema/surya_inheritance/surya_inheritance_EnforcementModule.sol.png)
+![surya_inheritance_EnforcementModule.sol](../../schema/surya_inheritance/surya_inheritance_EnforcementModule.sol.png)
 
 #### EnforcementModuleInternal
 
-![surya_inheritance_EnforcementModuleInternal.sol](../../../schema/surya_inheritance/surya_inheritance_EnforcementModuleInternal.sol.png)
+![surya_inheritance_EnforcementModuleInternal.sol](../../schema/surya_inheritance/surya_inheritance_EnforcementModuleInternal.sol.png)
 
 ### UML
 
-![EnforcementModule](../../../schema/sol2uml/EnforcementModule.svg)
+![EnforcementModule](../../schema/sol2uml/EnforcementModule.svg)
 
 ### Graph
 
 #### EnforcementModule
 
-![surya_graph_EnforcementModule.sol](../../../schema/surya_graph/surya_graph_EnforcementModule.sol.png)
+![surya_graph_EnforcementModule.sol](../../schema/surya_graph/surya_graph_EnforcementModule.sol.png)
 
 #### EnforcementModuleInternal
 
-![surya_graph_EnforcementModuleInternal.sol](../../../schema/surya_graph/surya_graph_EnforcementModuleInternal.sol.png)
+![surya_graph_EnforcementModuleInternal.sol](../../schema/surya_graph/surya_graph_EnforcementModuleInternal.sol.png)
 
 
 

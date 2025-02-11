@@ -1,10 +1,10 @@
 //SPDX-License-Identifier: MPL-2.0
 pragma solidity ^0.8.20;
-import "./engine/IDebtEngine.sol";
-import "./engine/IRuleEngine.sol";
-import "./engine/ISnapshotEngine.sol";
-import "./engine/draft-IERC1643.sol";
-
+import {IDebtEngine} from "./engine/IDebtEngine.sol";
+import {IRuleEngine} from "./engine/IRuleEngine.sol";
+import {ISnapshotEngine} from "./engine/ISnapshotEngine.sol";
+import {IERC1643} from "./engine/draft-IERC1643.sol";
+import {IERC1643CMTAT} from "./draft-IERC1643CMTAT.sol";
 
 
 /**
@@ -29,7 +29,7 @@ interface ICMTATConstructor {
         // name of the tokenId
         string tokenId;
         // terms associated with the token
-        string terms;
+        IERC1643CMTAT.DocumentInfo terms;
         // additional information to describe the token
         string information;
     }
