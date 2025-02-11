@@ -202,7 +202,7 @@ abstract contract CMTAT_BASE is
         address from,
         address to,
         uint256 amount
-    ) internal override(ERC20Upgradeable) {
+    ) internal virtual override(ERC20Upgradeable) {
         if (!ValidationModule._operateOnTransfer(from, to, amount)) {
             revert Errors.CMTAT_InvalidTransfer(from, to, amount);
         }
@@ -219,7 +219,7 @@ abstract contract CMTAT_BASE is
      * @dev This surcharge is not necessary if you do not use the MetaTxModule
      */
     function _msgSender()
-        internal
+        internal virtual
         view
         override(ERC2771ContextUpgradeable, ContextUpgradeable)
         returns (address sender)
@@ -230,7 +230,7 @@ abstract contract CMTAT_BASE is
     /**
      * @dev This surcharge is not necessary if you do not use the MetaTxModule
      */
-    function _contextSuffixLength() internal view 
+    function _contextSuffixLength() internal virtual view 
     override(ERC2771ContextUpgradeable, ContextUpgradeable)
     returns (uint256) {
          return ERC2771ContextUpgradeable._contextSuffixLength();
@@ -240,7 +240,7 @@ abstract contract CMTAT_BASE is
      * @dev This surcharge is not necessary if you do not use the MetaTxModule
      */
     function _msgData()
-        internal
+        internal virtual
         view
         override(ERC2771ContextUpgradeable, ContextUpgradeable)
         returns (bytes calldata)

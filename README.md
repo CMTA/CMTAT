@@ -13,6 +13,8 @@ The preferred way to receive comments is through the GitHub issue tracker.  Priv
 
 Note that CMTAT may be used in other jurisdictions than Switzerland, and for tokenizing various asset types, beyond equity and debt products. 
 
+[TOC]
+
 
 
 ## Functionality
@@ -282,11 +284,15 @@ There was only one prototype available: [CMTA/AuthorizationEngine](https://githu
 
 ## Deployment model 
 
-| Model                       | Contract                                             |
-| --------------------------- | ---------------------------------------------------- |
-| Standalone                  | [CMTAT_STANDALONE](./contracts/CMTAT_STANDALONE.sol) |
-| Transparent or Beacon Proxy | [CMTAT_PROXY](./contracts/CMTAT_PROXY.sol)           |
-| UUPS Proxy                  | [CMTAT_PROXY_UUPS](./contracts/CMTAT_PROXY_UUPS.sol) |
+Contracts for deployment are available in the directory [./contracts/deployment](./contracts/deployment)
+
+| CMTAT Model         | Description                                                  | Contract                                                     |
+| ------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| Standalone          | Deployment without proxy <br />(immutable)                   | [CMTAT_STANDALONE](./contracts/deployment/CMTAT_STANDALONE.sol) |
+| Proxy               | Deployment with a standard proxy (Transparent or Beacon Proxy) | [CMTAT_PROXY](./contracts/deployment/CMTAT_PROXY.sol)        |
+| UUPS Proxy          | Deployment with a UUPS proxy                                 | [CMTAT_PROXY_UUPS](./contracts/deployment/CMTAT_PROXY_UUPS.sol) |
+| Proxy ERC-1363      | ERC1363 Proxy version                                        | [CMTAT_PROXY_ERC1363](./contracts/deployment/ERC1363/CMTAT_PROXY_ERC1363.sol) |
+| Standalone ERC-1363 | ERC1363 Standalone version                                   | [CMTAT_STANDALONE_ERC1363](./contracts/deployment/ERC1363/CMTAT_STANDALONE_ERC1363.sol) |
 
 ### Standalone
 
@@ -306,6 +312,14 @@ Please see the OpenZeppelin [Upgrades plugins](https://docs.openzeppelin.com/upg
 CMTAT also implements the [ERC-7201](https://eips.ethereum.org/EIPS/eip-7201) to manage the storage location.
 
 Note that deployment via a proxy is not mandatory, but is recommended by CMTA.
+
+### ERC-1363
+
+[ERC-1363](https://eips.ethereum.org/EIPS/eip-1363) is an extension interface for ERC-20 tokens that supports executing code on a recipient contract after transfers, or code on a spender contract after approvals, in a single transaction.
+
+Two dedicated version (proxy and standalone) implementing this standard are available.
+
+More information on this standard here: [erc1363.org](https://erc1363.org), [RareSkills - ERC-1363](https://www.rareskills.io/post/erc-1363)
 
 ### Factory
 
