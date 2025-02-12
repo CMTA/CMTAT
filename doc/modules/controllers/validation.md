@@ -12,87 +12,13 @@ This document defines the Validation Module for the CMTA Token specification. Th
 
 ### Inheritance
 
-#### ValidationModule
-
-![surya_inheritance_ValidationModule.sol](../../../schema/surya_inheritance/surya_inheritance_ValidationModule.sol.png)
-
-#### ValidationModuleInternal
-
-![surya_inheritance_ValidationModuleInternal.sol](../../../schema/surya_inheritance/surya_inheritance_ValidationModuleInternal.sol.png)
-
-### UML
-
-![ValidationModule](../../../schema/sol2uml/ValidationModule.svg)
+![surya_inheritance_ValidationModule.sol](../../schema/surya_inheritance/surya_inheritance_ValidationModule.sol.png)
 
 ### Graph
 
-#### ValidationModule
-
-![surya_graph_ValidationModule.sol](../../../schema/surya_graph/surya_graph_ValidationModule.sol.png)
-
-#### ValidationModuleInternal
-
-![surya_graph_ValidationModuleInternal.sol](../../../schema/surya_graph/surya_graph_ValidationModuleInternal.sol.png)
+![surya_graph_ValidationModule.sol](../../schema/surya_graph/surya_graph_ValidationModule.sol.png)
 
 
-
-## Sūrya's Description Report
-
-### Legend
-
-| Symbol | Meaning                   |
-| :----: | ------------------------- |
-|   🛑    | Function can modify state |
-|   💵    | Function is payable       |
-
-### ValidationModule
-
-#### Files Description Table
-
-
-| File Name                                          | SHA-1 Hash                               |
-| -------------------------------------------------- | ---------------------------------------- |
-| ./modules/wrapper/controllers/ValidationModule.sol | 109054150a46ef0f010693889f9c1c44e151719b |
-
-
-#### Contracts Description Table
-
-
-|       Contract       |               Type                |                            Bases                             |                |                  |
-| :------------------: | :-------------------------------: | :----------------------------------------------------------: | :------------: | :--------------: |
-|          └           |         **Function Name**         |                        **Visibility**                        | **Mutability** |  **Modifiers**   |
-|                      |                                   |                                                              |                |                  |
-| **ValidationModule** |          Implementation           | ValidationModuleInternal, PauseModule, EnforcementModule, IERC1404Wrapper |                |                  |
-|          └           |      __ValidationModule_init      |                          Internal 🔒                          |       🛑        | onlyInitializing |
-|          └           | __ValidationModule_init_unchained |                          Internal 🔒                          |       🛑        | onlyInitializing |
-|          └           |           setRuleEngine           |                          External ❗️                          |       🛑        |     onlyRole     |
-|          └           |     detectTransferRestriction     |                           Public ❗️                           |                |       NO❗️        |
-|          └           |   messageForTransferRestriction   |                          External ❗️                          |                |       NO❗️        |
-|          └           |         validateTransfer          |                           Public ❗️                           |                |       NO❗️        |
-
-### ValidationModuleInternal
-
-#### Files Description Table
-
-
-| File Name                                       | SHA-1 Hash                               |
-| ----------------------------------------------- | ---------------------------------------- |
-| ./modules/internal/ValidationModuleInternal.sol | 7520ea131a1c5befcc07ff41eada7406ab745850 |
-
-
-#### Contracts Description Table
-
-
-|           Contract           |              Type              |               Bases               |                |                  |
-| :--------------------------: | :----------------------------: | :-------------------------------: | :------------: | :--------------: |
-|              └               |       **Function Name**        |          **Visibility**           | **Mutability** |  **Modifiers**   |
-|                              |                                |                                   |                |                  |
-| **ValidationModuleInternal** |         Implementation         | Initializable, ContextUpgradeable |                |                  |
-|              └               |       __Validation_init        |            Internal 🔒             |       🛑        | onlyInitializing |
-|              └               |  __Validation_init_unchained   |            Internal 🔒             |       🛑        | onlyInitializing |
-|              └               |       _validateTransfer        |            Internal 🔒             |                |                  |
-|              └               | _messageForTransferRestriction |            Internal 🔒             |                |                  |
-|              └               |   _detectTransferRestriction   |            Internal 🔒             |                |                  |
 
 ## API for Ethereum
 

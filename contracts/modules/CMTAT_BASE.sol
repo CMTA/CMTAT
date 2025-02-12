@@ -12,10 +12,10 @@ import {ERC20MintModule} from "./wrapper/core/ERC20MintModule.sol";
 import {EnforcementModule} from "./wrapper/core/EnforcementModule.sol";
 import {ERC20BaseModule, ERC20Upgradeable} from "./wrapper/core/ERC20BaseModule.sol";
 import {PauseModule} from "./wrapper/core/PauseModule.sol";
-import {ValidationModule} from "./wrapper/controllers/ValidationModule.sol";
+import {ValidationModule} from "./wrapper/controllers/ValidationEngineModule.sol";
 import {MetaTxModule, ERC2771ContextUpgradeable} from "./wrapper/extensions/MetaTxModule.sol";
-import {DebtModule} from "./wrapper/extensions/DebtModule.sol";
-import {DocumentModule} from "./wrapper/extensions/DocumentModule.sol";
+import {DebtModule} from "./wrapper/extensions/DebtEngineModule.sol";
+import {DocumentModule} from "./wrapper/extensions/DocumentEngineModule.sol";
 import {SnapshotEngineModule} from "./wrapper/extensions/SnapshotEngineModule.sol";
 // Security
 import {AuthorizationModule} from "./security/AuthorizationModule.sol";
@@ -88,7 +88,7 @@ abstract contract CMTAT_BASE is
         // Openzeppelin
         __CMTAT_openzeppelin_init_unchained();
         /* Internal Modules */
-       __CMTAT_internal_init_unchained(engines_ );
+       __CMTAT_internal_init_unchained();
 
         /* Wrapper modules */
         __CMTAT_modules_init_unchained(admin, ERC20Attributes_, baseModuleAttributes_, engines_ );
@@ -113,9 +113,8 @@ abstract contract CMTAT_BASE is
     /*
     * @dev CMTAT internal module
     */
-    function __CMTAT_internal_init_unchained( ICMTATConstructor.Engine memory engines_) internal virtual onlyInitializing {
+    function __CMTAT_internal_init_unchained() internal virtual onlyInitializing {
         __Enforcement_init_unchained();   
-        __Validation_init_unchained(engines_.ruleEngine);
     }
 
     /*
@@ -131,7 +130,7 @@ abstract contract CMTAT_BASE is
         __ERC20BaseModule_init_unchained(ERC20Attributes_.decimalsIrrevocable, ERC20Attributes_.name, ERC20Attributes_.symbol);
         // PauseModule_init_unchained is called before ValidationModule_init_unchained due to inheritance
         __PauseModule_init_unchained();
-        __ValidationModule_init_unchained();
+        __ValidationModule_init_unchained(engines_.ruleEngine);
 
         __SnapshotModule_init_unchained(engines_.snapshotEngine);
         __DocumentModule_init_unchained(engines_ .documentEngine);
@@ -237,9 +236,11 @@ abstract contract CMTAT_BASE is
         if (!ValidationModule._operateOnTransfer(from, to, amount)) {
             revert Errors.CMTAT_InvalidTransfer(from, to, amount);
         }
+        // We check here the address of the snapshotEngine here because we don't want to read balance/totalSupply if there is no ruleEngine
+        ISnapshotEngine snapshotEngine = snapshotEngine();
         // Required to be performed before the update
-        if(address(snapshotEngine()) != address(0)){
-            snapshotEngine().operateOnTransfer(from, to, balanceOf(from), balanceOf(to), totalSupply());
+        if(address(snapshotEngine) != address(0)){
+            snapshotEngine.operateOnTransfer(from, to, balanceOf(from), balanceOf(to), totalSupply());
         }
         ERC20Upgradeable._update(from, to, amount);
     }

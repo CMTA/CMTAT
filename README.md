@@ -70,16 +70,16 @@ CMTAT architecture is divided in two main componentes: module and engines
 
 ### Module
 
-Modules describe a logical code separation inside CMTAT.  They are defined as abstract contracts.
+Modules describe a **logical** code separation inside CMTAT.  They are defined as abstract contracts.
 Their code and functionalities are part of the CMTAT and therefore are also included in the calculation of the contract size and the maximum size limit of 24 kB.
 
 It is always possible to delete a module but this requires modifying the code and compiling it again, which require to perform a security audit on these modifications.
 
 Modules are also separated in different categories.
 
-- Internal modules: implementation for a module when OpenZeppelin does not provide a library to use. For example, this is the case for the SnapshotModule.
+- **Internal** modules: implementation for a module when OpenZeppelin does not provide a library to use. For example, this is the case for the SnapshotModule.
 
-- Wrapper modules: abstract contract around OpenZeppelin contracts or internal module.
+- **Wrapper** modules: abstract contract around OpenZeppelin contracts or internal module.
   For example, the wrapper PauseModule provides public functions to call the internal functions from OpenZeppelin.
 
   - Core (Wrapper sub-category): Contains the modules required to be CMTA compliant
@@ -95,7 +95,7 @@ Here the list of the different modules with the links towards the documentation 
 
 | Name             | Documentation                                                | Main File                                                    |
 | ---------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| ValidationModule | [validation.md](doc/modules/presentation/controllers/validation.md) | [ValidationModule.sol](./contracts/modules/wrapper/controllers/ValidationModule.sol) |
+| ValidationModule | [validation.md](doc/modules/presentation/controllers/validation.md) | [ValidationEngineModule.sol](./contracts/modules/wrapper/controllers/ValidationEngineModule.sol) |
 
 ##### Core
 
@@ -114,12 +114,12 @@ Generally, these modules are required to be compliant with the CMTA specificatio
 
 Generally, these modules are not required to be compliant with the CMTA specification.
 
-| Name           | Documentation                                               | Main File                                                    |
-| -------------- | ----------------------------------------------------------- | ------------------------------------------------------------ |
-| MetaTxModule   | [metatx.md](doc/modules/extensions/metatx.md)               | [MetaTxModule.sol](./contracts/modules/wrapper/extensions/MetaTxModule.sol) |
-| DebtModule     | [debt.md](doc/modules/extensions/debt.md)                   | [DebtModule.sol](./contracts/modules/wrapper/extensions/DebtModule.sol) |
-| DocumentModule | [document.md](doc/modules/extensions/document.md)           | [Document.sol](./contracts/modules/wrapper/extensions/DocumentModule.sol) |
-| SnapshotModule | [ERC20Snapshot.md](doc/modules/extensions/ERC20Snapshot.md) | [ERC20SnapshotModule.sol](./contracts/modules/wrapper/extensions//ERC20SnapshotModule.sol) |
+| Name           | Documentation                                       | Main File                                                    |
+| -------------- | --------------------------------------------------- | ------------------------------------------------------------ |
+| MetaTxModule   | [metatx.md](doc/modules/extensions/metatx)          | [MetaTxModule.sol](./contracts/modules/wrapper/extensions/MetaTxModule.sol) |
+| DebtModule     | [debt.md](doc/modules/extensions/debt)              | [DebtEngineModule.sol](./contracts/modules/wrapper/extensions/DebtEngineModule.sol) |
+| DocumentModule | [document.md](doc/modules/extensions/document)      | [DocumentEngineModule.sol](./contracts/modules/wrapper/extensions/DocumentEngineModule.sol) |
+| SnapshotModule | [ERC20Snapshot.md](doc/modules/extensions/snapshot) | [SnapshotEngineModule.sol](./contracts/modules/wrapper/extensions/SnapshotEngineModule.sol) |
 
 ##### Security
 
@@ -159,15 +159,25 @@ This contract acts as a controller and can call different contract rule to apply
 
 A possible rule is a whitelist rule where only the address inside the whitelist can perform a transfer
 
+##### Requirement
+
 Since the version 2.4.0, the requirement to use a RuleEngine are the following:
 
-> The `RuleEngine` has to import an implement the interface `IRuleEngine` which declares the function `operateOnTransfer`.
+> The `RuleEngine` has to import an implement the interface `IRuleEngine` which declares the function `operateOnTransfer` and several other functions related to IERC1404.
 
 This interface can be found in [./contracts/interfaces/engine/IRuleEngine.sol](./contracts/interfaces/engine/IRuleEngine.sol).
+
+Warning: The `RuleEngine` has to restrict the access of the function `operateOnTransfer` to only the `CMTAT contract`. 
 
 Before each transfer, the CMTAT calls the function `operateOnTransfer` which is the entrypoint for the RuleEngine.
 
 Further reading: [Taurus - Token Transfer Management: How to Apply Restrictions with CMTAT and ERC-1404](https://www.taurushq.com/blog/token-transfer-management-how-to-apply-restrictions-with-cmtat-and-erc-1404/) (version used CMTAT v2.4.0)
+
+Example of a CMTAT using a ruleEngine:
+
+In this example, the token holder calls the function `transfer` which triggers a call to the `RuleEngine` and the different rules associated.
+
+![RuleEngine](./doc/schema/drawio/RuleEngine.png)
 
 #### SnapshotEngine
 
@@ -263,7 +273,7 @@ Here is the list of the different version available for each CMTAT version.
 
 > Warning: this engine has been removed since CMTAT v3.0.0
 
-The `AuthorizationEngine` was an external contract to add supplementary check on the functions `grantRole` and `revokeRole`from the CMTAT. Since delegating access rights to an external contract is complicated and it is better to manage access control directly in CMTAT, we removed it in version 3.0.0.
+The `AuthorizationEngine` was an external contract to add supplementary check on AccessControl (functions `grantRole` and `revokeRole`) from the CMTAT. Since delegating access rights to an external contract is complicated and it is better to manage access control directly in CMTAT, we removed it in version 3.0.0.
 
 **Details**
 
@@ -309,9 +319,25 @@ Please see the OpenZeppelin [upgradeable contracts documentation](https://docs.o
 
 Please see the OpenZeppelin [Upgrades plugins](https://docs.openzeppelin.com/upgrades-plugins/1.x/) for more information about plugin upgrades in general.
 
-CMTAT also implements the [ERC-7201](https://eips.ethereum.org/EIPS/eip-7201) to manage the storage location.
+#### Implementation details
+
+##### Storage
+
+CMTAT also implements the [ERC-7201](https://eips.ethereum.org/EIPS/eip-7201) to manage the storage location. See [this article](https://www.rareskills.io/post/erc-7201) by RareSkills for more information
 
 Note that deployment via a proxy is not mandatory, but is recommended by CMTA.
+
+##### Initialize functions
+
+For wrapper modules, we have removed the public function `{ContractName}_init`to reduce the size of the contracts since inside the public initializer function to initialize your proxy, you have to call the difference functions `__{ContractName}_init_unchained`.
+
+Do not forget to call the functions `init_unchained` from the parent initializer if you create your own contract from the different modules.
+
+As indicated in the [OpenZeppelin documentation](https://docs.openzeppelin.com/contracts/5.x/upgradeable#multiple-inheritance): 
+
+> Initializer functions are not linearized by the compiler like constructors. Because of this, each `__{ContractName}_init` function embeds the linearized calls to all parent initializers. As a consequence, calling two of these `init` functions can potentially initialize the same contract twice.
+>
+> The function `__{ContractName}_init_unchained` found in every contract is the initializer function minus the calls to parent initializers, and can be used to avoid the double initialization problem, but doing this manually is not recommended. We hope to be able to implement safety checks for this in future versions of the Upgrades Plugins.
 
 ### ERC-1363
 
