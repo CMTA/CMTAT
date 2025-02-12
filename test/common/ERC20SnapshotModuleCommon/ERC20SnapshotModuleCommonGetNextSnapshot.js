@@ -16,11 +16,21 @@ function ERC20SnapshotModuleCommonGetNextSnapshot () {
       this.snapshotTime3 = this.currentTime + time.duration.seconds(20)
       this.snapshotTime4 = this.currentTime + time.duration.seconds(25)
       this.snapshotTime5 = this.currentTime + time.duration.seconds(30)
-      await this.transferEngineMock.connect(this.admin).scheduleSnapshot(this.snapshotTime1)
-      await this.transferEngineMock.connect(this.admin).scheduleSnapshot(this.snapshotTime2)
-      await this.transferEngineMock.connect(this.admin).scheduleSnapshot(this.snapshotTime3)
-      await this.transferEngineMock.connect(this.admin).scheduleSnapshot(this.snapshotTime4)
-      await this.transferEngineMock.connect(this.admin).scheduleSnapshot(this.snapshotTime5)
+      await this.transferEngineMock
+        .connect(this.admin)
+        .scheduleSnapshot(this.snapshotTime1)
+      await this.transferEngineMock
+        .connect(this.admin)
+        .scheduleSnapshot(this.snapshotTime2)
+      await this.transferEngineMock
+        .connect(this.admin)
+        .scheduleSnapshot(this.snapshotTime3)
+      await this.transferEngineMock
+        .connect(this.admin)
+        .scheduleSnapshot(this.snapshotTime4)
+      await this.transferEngineMock
+        .connect(this.admin)
+        .scheduleSnapshot(this.snapshotTime5)
       // Act
       const snapshots = await this.transferEngineMock.getNextSnapshots()
       // Assert
@@ -50,9 +60,15 @@ function ERC20SnapshotModuleCommonGetNextSnapshot () {
       this.snapshotTime1 = this.currentTime + time.duration.seconds(3)
       this.snapshotTime2 = this.currentTime + time.duration.seconds(4)
       this.snapshotTime3 = this.currentTime + time.duration.seconds(5)
-      await this.transferEngineMock.connect(this.admin).scheduleSnapshot(this.snapshotTime1)
-      await this.transferEngineMock.connect(this.admin).scheduleSnapshot(this.snapshotTime2)
-      await this.transferEngineMock.connect(this.admin).scheduleSnapshot(this.snapshotTime3)
+      await this.transferEngineMock
+        .connect(this.admin)
+        .scheduleSnapshot(this.snapshotTime1)
+      await this.transferEngineMock
+        .connect(this.admin)
+        .scheduleSnapshot(this.snapshotTime2)
+      await this.transferEngineMock
+        .connect(this.admin)
+        .scheduleSnapshot(this.snapshotTime3)
       // We jump into the future
       await time.increase(4)
       // Act
@@ -66,11 +82,17 @@ function ERC20SnapshotModuleCommonGetNextSnapshot () {
       this.snapshotTime1 = this.currentTime + time.duration.seconds(3)
       this.snapshotTime2 = this.currentTime + time.duration.seconds(20)
       this.snapshotTime3 = this.currentTime + time.duration.seconds(300)
-      await this.transferEngineMock.connect(this.admin).scheduleSnapshot(this.snapshotTime1)
+      await this.transferEngineMock
+        .connect(this.admin)
+        .scheduleSnapshot(this.snapshotTime1)
       // We jump into the future
       await time.increase(3)
-      await this.transferEngineMock.connect(this.admin).scheduleSnapshot(this.snapshotTime2)
-      await this.transferEngineMock.connect(this.admin).scheduleSnapshot(this.snapshotTime3)
+      await this.transferEngineMock
+        .connect(this.admin)
+        .scheduleSnapshot(this.snapshotTime2)
+      await this.transferEngineMock
+        .connect(this.admin)
+        .scheduleSnapshot(this.snapshotTime3)
       // Act
       const snapshots = await this.transferEngineMock.getNextSnapshots()
       // Assert

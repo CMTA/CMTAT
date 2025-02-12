@@ -25,7 +25,9 @@ function ERC20SnapshotModuleOnePlannedSnapshotTest () {
       this.currentTime = await time.latest()
       this.snapshotTime = this.currentTime + time.duration.seconds(3)
       this.beforeSnapshotTime = this.currentTime - time.duration.seconds(60)
-      await this.transferEngineMock.connect(this.admin).scheduleSnapshot(this.snapshotTime)
+      await this.transferEngineMock
+        .connect(this.admin)
+        .scheduleSnapshot(this.snapshotTime)
       // We jump into the future
       await time.increase(time.duration.seconds(10))
     })

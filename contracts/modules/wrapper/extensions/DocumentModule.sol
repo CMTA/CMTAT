@@ -42,8 +42,7 @@ abstract contract DocumentModule is AuthorizationModule, IERC1643 {
     internal onlyInitializing {
         if (address(documentEngine_) != address (0)) {
             DocumentModuleStorage storage $ = _getDocumentModuleStorage();
-            $._documentEngine = documentEngine_;
-            emit DocumentEngine(documentEngine_);
+        _   _setDocumentEngine($, documentEngine_);
         }
     }
 
@@ -54,22 +53,6 @@ abstract contract DocumentModule is AuthorizationModule, IERC1643 {
         DocumentModuleStorage storage $ = _getDocumentModuleStorage();
         return $._documentEngine;
     }
-
-    /*
-    * @notice set an authorizationEngine if not already set
-    * 
-    */
-    function setDocumentEngine(
-        IERC1643 documentEngine_
-    ) external onlyRole(DOCUMENT_ROLE) {
-        DocumentModuleStorage storage $ = _getDocumentModuleStorage();
-        if ($._documentEngine == documentEngine_){
-             revert Errors.CMTAT_DocumentModule_SameValue();
-        }
-        $._documentEngine = documentEngine_;
-        emit DocumentEngine(documentEngine_);
-    }
-
 
     function getDocument(string memory name) public view returns (Document memory document){
         DocumentModuleStorage storage $ = _getDocumentModuleStorage();
@@ -87,10 +70,31 @@ abstract contract DocumentModule is AuthorizationModule, IERC1643 {
         }
     }
 
+    /* ============  Restricted Functions ============ */
+    /*
+    * @notice set an authorizationEngine if not already set
+    * 
+    */
+    function setDocumentEngine(
+        IERC1643 documentEngine_
+    ) external onlyRole(DOCUMENT_ROLE) {
+        DocumentModuleStorage storage $ = _getDocumentModuleStorage();
+        if ($._documentEngine == documentEngine_){
+             revert Errors.CMTAT_DocumentModule_SameValue();
+        }
+        _setDocumentEngine($, documentEngine_);
+    }
+
 
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
+    function _setDocumentEngine(
+        DocumentModuleStorage storage $, IERC1643 documentEngine_
+    ) internal {
+        $._documentEngine = documentEngine_;
+        emit DocumentEngine(documentEngine_);
+    }
 
     /* ============ ERC-7201 ============ */
     function _getDocumentModuleStorage() private pure returns (DocumentModuleStorage storage $) {

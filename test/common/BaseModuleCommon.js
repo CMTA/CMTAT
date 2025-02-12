@@ -4,9 +4,9 @@ const { TERMS } = require('../deploymentUtils')
 
 function BaseModuleCommon () {
   context('Token structure', function () {
-    async function checkTerms(myThis, terms){
-      let blockTimestamp = (await ethers.provider.getBlock('latest')).timestamp;
-      let result = await myThis.cmtat.terms()
+    async function checkTerms (myThis, terms) {
+      const blockTimestamp = (await ethers.provider.getBlock('latest')).timestamp
+      const result = await myThis.cmtat.terms()
       expect(result[0]).to.equal(terms[0])
       expect(result[1][0]).to.equal(terms[1])
       expect(result[1][1]).to.equal(terms[2])
@@ -22,7 +22,7 @@ function BaseModuleCommon () {
     })
     it('testHasTheDefinedTerms', async function () {
       // Act + Assert
-      await checkTerms(this,TERMS)
+      await checkTerms(this, TERMS)
     })
     it('testAdminCanChangeTokenId', async function () {
       // Arrange
@@ -53,20 +53,22 @@ function BaseModuleCommon () {
       expect(await this.cmtat.tokenId()).to.equal('CMTAT_ISIN')
     })
     it('testAdminCanUpdateTerms', async function () {
-      let NEW_TERMS = ["doc2", "https://example.com/doc2", "0xe405e5dad3b45f611e35717af4430b4560f12cd4054380b856446d286c341d05"] ; 
+      const NEW_TERMS = [
+        'doc2',
+        'https://example.com/doc2',
+        '0xe405e5dad3b45f611e35717af4430b4560f12cd4054380b856446d286c341d05'
+      ]
       // Act
-      this.logs = await this.cmtat
-        .connect(this.admin)
-        .setTerms(NEW_TERMS)
+      this.logs = await this.cmtat.connect(this.admin).setTerms(NEW_TERMS)
       // Assert
-      
-      //let blockTimestamp = (await ethers.provider.getBlock('latest')).timestamp;
-      await checkTerms(this,NEW_TERMS)
+
+      // let blockTimestamp = (await ethers.provider.getBlock('latest')).timestamp;
+      await checkTerms(this, NEW_TERMS)
       /*
       don't work
       await expect(this.logs)
         .to.emit(this.cmtat, 'Term')
-        .withArgs( [NEW_TERMS[0],tab] 
+        .withArgs( [NEW_TERMS[0],tab]
 
       // Compute blocktimestamp
         const blockTimestamp = (await ethers.provider.getBlock(this.logs.blockNumber)).timestamp;
@@ -88,9 +90,7 @@ function BaseModuleCommon () {
       // Arrange - Assert
       checkTerms(TERMS)
       // Act
-      await expect(
-        this.cmtat.connect(this.address1).setTerms(TERMS)
-      )
+      await expect(this.cmtat.connect(this.address1).setTerms(TERMS))
         .to.be.revertedWithCustomError(
           this.cmtat,
           'AccessControlUnauthorizedAccount'

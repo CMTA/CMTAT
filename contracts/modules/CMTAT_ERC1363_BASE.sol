@@ -1,12 +1,13 @@
 //SPDX-License-Identifier: MPL-2.0
 
 pragma solidity ^0.8.20;
+import {ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
 import {ERC1363Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/ERC1363Upgradeable.sol";
 import {ERC20Upgradeable, IERC20} from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 import {ERC2771ContextUpgradeable} from "./wrapper/extensions/MetaTxModule.sol";
-import {CMTAT_BASE} from "./CMTAT_BASE.sol";
 import {AccessControlUpgradeable} from "./security/AuthorizationModule.sol";
-import {ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
+import {CMTAT_BASE} from "./CMTAT_BASE.sol";
+
 /**
 * @title CMTAT Proxy version for ERC1363
 */

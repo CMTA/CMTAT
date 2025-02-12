@@ -56,21 +56,6 @@ abstract contract DebtModule is AuthorizationModule, IDebtEngine {
         return $._debtEngine;
     }
 
-    /*
-    * @notice set an authorizationEngine if not already set
-    * 
-    */
-    function setDebtEngine(
-        IDebtEngine debtEngine_
-    ) external onlyRole(DEBT_ROLE) {
-        DebtModuleStorage storage $ = _getDebtModuleStorage();
-        if ($._debtEngine == debtEngine_){
-            revert Errors.CMTAT_DebtModule_SameValue();
-        }
-        $._debtEngine = debtEngine_;
-        emit DebtEngine(debtEngine_);
-    }
-
     function debt() public view returns(DebtBase memory debtBaseResult){
         DebtModuleStorage storage $ = _getDebtModuleStorage();
         if(address($._debtEngine) != address(0)){
@@ -85,10 +70,32 @@ abstract contract DebtModule is AuthorizationModule, IDebtEngine {
         }
     }
 
+    /* ============  Restricted Functions ============ */
+    /*
+    * @notice set an authorizationEngine if not already set
+    * 
+    */
+    function setDebtEngine(
+        IDebtEngine debtEngine_
+    ) external onlyRole(DEBT_ROLE) {
+        DebtModuleStorage storage $ = _getDebtModuleStorage();
+        if ($._debtEngine == debtEngine_){
+            revert Errors.CMTAT_DebtModule_SameValue();
+        }
+        _setDebtEngine($, debtEngine_);
+    }
+
 
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
+    function _setDebtEngine(
+        DebtModuleStorage storage $, IDebtEngine debtEngine_
+    ) internal {
+        $._debtEngine = debtEngine_;
+        emit DebtEngine(debtEngine_);
+    }
+
     
     /* ============ ERC-7201 ============ */
     function _getDebtModuleStorage() private pure returns (DebtModuleStorage storage $) {

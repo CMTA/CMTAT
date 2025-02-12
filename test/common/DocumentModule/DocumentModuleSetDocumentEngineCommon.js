@@ -44,8 +44,7 @@ function DocumentModuleSetDocumentEngineCommon () {
     it('testGetEmptyDocumentsIfNoDocumentEngine', async function () {
       const name = ethers.encodeBytes32String('doc1')
       // act
-      const doc =
-        await this.cmtat.getDocument(name)
+      const doc = await this.cmtat.getDocument(name)
       // Assert
       expect(doc.uri).to.equal('')
       expect(doc.documentHash).to.equal(ethers.encodeBytes32String(''))

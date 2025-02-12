@@ -36,9 +36,15 @@ function ERC20SnapshotModuleMultiplePlannedTest () {
       this.snapshotTime3 =
         this.currentTime + time.duration.seconds(THIRD_SNAPSHOT_INTERVAL)
       this.beforeSnapshotTime = this.currentTime - time.duration.seconds(60)
-      await this.transferEngineMock.connect(this.admin).scheduleSnapshot(this.snapshotTime1)
-      await this.transferEngineMock.connect(this.admin).scheduleSnapshot(this.snapshotTime2)
-      await this.transferEngineMock.connect(this.admin).scheduleSnapshot(this.snapshotTime3)
+      await this.transferEngineMock
+        .connect(this.admin)
+        .scheduleSnapshot(this.snapshotTime1)
+      await this.transferEngineMock
+        .connect(this.admin)
+        .scheduleSnapshot(this.snapshotTime2)
+      await this.transferEngineMock
+        .connect(this.admin)
+        .scheduleSnapshot(this.snapshotTime3)
       // We jump into the future
       await time.increase(FIRST_SNAPSHOT_INTERVAL + 1)
     })
@@ -306,7 +312,9 @@ function ERC20SnapshotModuleMultiplePlannedTest () {
           ADDRESS3_INITIAL_MINT
         ]
       )
-      expect((await this.transferEngineMock.getNextSnapshots()).length).to.equal(2)
+      expect(
+        (await this.transferEngineMock.getNextSnapshots()).length
+      ).to.equal(2)
       // We jump into the future
       await time.increase(SECOND_SNAPSHOT_INTERVAL - FIRST_SNAPSHOT_INTERVAL)
 
@@ -362,7 +370,9 @@ function ERC20SnapshotModuleMultiplePlannedTest () {
           ADDRESS3_INITIAL_MINT
         ]
       )
-      expect((await this.transferEngineMock.getNextSnapshots()).length).to.equal(1)
+      expect(
+        (await this.transferEngineMock.getNextSnapshots()).length
+      ).to.equal(1)
       // We jump into the future
       await time.increase(THIRD_SNAPSHOT_INTERVAL - FIRST_SNAPSHOT_INTERVAL)
 
@@ -431,7 +441,9 @@ function ERC20SnapshotModuleMultiplePlannedTest () {
           ADDRESS3_INITIAL_MINT
         ]
       )
-      expect((await this.transferEngineMock.getNextSnapshots()).length).to.equal(0)
+      expect(
+        (await this.transferEngineMock.getNextSnapshots()).length
+      ).to.equal(0)
     })
   })
 }

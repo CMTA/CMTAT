@@ -30,7 +30,9 @@ function ERC20SnapshotModuleCommonScheduling () {
     it('reverts when calling from non-admin', async function () {
       const SNAPSHOT_TIME = this.currentTime + time.duration.seconds(60)
       await expect(
-        this.transferEngineMock.connect(this.address1).scheduleSnapshot(SNAPSHOT_TIME)
+        this.transferEngineMock
+          .connect(this.address1)
+          .scheduleSnapshot(SNAPSHOT_TIME)
       )
         .to.be.revertedWithCustomError(
           this.transferEngineMock,
@@ -48,7 +50,9 @@ function ERC20SnapshotModuleCommonScheduling () {
       const SNAPSHOT_TIME_INVALID = SNAPSHOT_TIME - time.duration.seconds(60)
 
       await expect(
-        this.transferEngineMock.connect(this.admin).scheduleSnapshot(SNAPSHOT_TIME_INVALID)
+        this.transferEngineMock
+          .connect(this.admin)
+          .scheduleSnapshot(SNAPSHOT_TIME_INVALID)
       )
         .to.be.revertedWithCustomError(
           this.transferEngineMock,
@@ -60,7 +64,9 @@ function ERC20SnapshotModuleCommonScheduling () {
     it('reverts when trying to schedule a snapshot in the past', async function () {
       const SNAPSHOT_TIME = this.currentTime - time.duration.seconds(60)
       await expect(
-        this.transferEngineMock.connect(this.admin).scheduleSnapshot(SNAPSHOT_TIME)
+        this.transferEngineMock
+          .connect(this.admin)
+          .scheduleSnapshot(SNAPSHOT_TIME)
       )
         .to.be.revertedWithCustomError(
           this.transferEngineMock,
@@ -75,10 +81,14 @@ function ERC20SnapshotModuleCommonScheduling () {
     it('reverts when trying to schedule a snapshot with the same time twice', async function () {
       const SNAPSHOT_TIME = this.currentTime + time.duration.seconds(60)
       // Arrange
-      await this.transferEngineMock.connect(this.admin).scheduleSnapshot(SNAPSHOT_TIME)
+      await this.transferEngineMock
+        .connect(this.admin)
+        .scheduleSnapshot(SNAPSHOT_TIME)
       // Act
       await expect(
-        this.transferEngineMock.connect(this.admin).scheduleSnapshot(SNAPSHOT_TIME)
+        this.transferEngineMock
+          .connect(this.admin)
+          .scheduleSnapshot(SNAPSHOT_TIME)
       ).to.be.revertedWithCustomError(
         this.transferEngineMock,
         'CMTAT_SnapshotModule_SnapshotAlreadyExists'
@@ -126,11 +136,21 @@ function ERC20SnapshotModuleCommonScheduling () {
       const FIVE_SNAPSHOT = this.currentTime + time.duration.seconds(30)
       // Third position
       const RANDOM_SNAPSHOT = this.currentTime + time.duration.seconds(17)
-      await this.transferEngineMock.connect(this.admin).scheduleSnapshot(FIRST_SNAPSHOT)
-      await this.transferEngineMock.connect(this.admin).scheduleSnapshot(SECOND_SNAPSHOT)
-      await this.transferEngineMock.connect(this.admin).scheduleSnapshot(THIRD_SNAPSHOT)
-      await this.transferEngineMock.connect(this.admin).scheduleSnapshot(FOUR_SNAPSHOT)
-      await this.transferEngineMock.connect(this.admin).scheduleSnapshot(FIVE_SNAPSHOT)
+      await this.transferEngineMock
+        .connect(this.admin)
+        .scheduleSnapshot(FIRST_SNAPSHOT)
+      await this.transferEngineMock
+        .connect(this.admin)
+        .scheduleSnapshot(SECOND_SNAPSHOT)
+      await this.transferEngineMock
+        .connect(this.admin)
+        .scheduleSnapshot(THIRD_SNAPSHOT)
+      await this.transferEngineMock
+        .connect(this.admin)
+        .scheduleSnapshot(FOUR_SNAPSHOT)
+      await this.transferEngineMock
+        .connect(this.admin)
+        .scheduleSnapshot(FIVE_SNAPSHOT)
       // Act
       await this.transferEngineMock
         .connect(this.admin)

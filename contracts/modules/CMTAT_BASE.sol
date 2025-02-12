@@ -5,7 +5,7 @@ pragma solidity ^0.8.20;
 // required OZ imports here
 import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import {ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
-
+// Wrapper
 import {BaseModule} from "./wrapper/core/BaseModule.sol";
 import {ERC20BurnModule} from "./wrapper/core/ERC20BurnModule.sol";
 import {ERC20MintModule} from "./wrapper/core/ERC20MintModule.sol";
@@ -17,7 +17,9 @@ import {MetaTxModule, ERC2771ContextUpgradeable} from "./wrapper/extensions/Meta
 import {DebtModule} from "./wrapper/extensions/DebtModule.sol";
 import {DocumentModule} from "./wrapper/extensions/DocumentModule.sol";
 import {SnapshotEngineModule} from "./wrapper/extensions/SnapshotEngineModule.sol";
+// Security
 import {AuthorizationModule} from "./security/AuthorizationModule.sol";
+// Interface and other library
 import {ICMTATConstructor} from "../interfaces/ICMTATConstructor.sol";
 import {ISnapshotEngine} from "../interfaces/engine/ISnapshotEngine.sol";
 import {Errors} from "../libraries/Errors.sol";

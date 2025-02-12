@@ -32,11 +32,21 @@ function ERC20SnapshotModuleCommonUnschedule () {
       expect(snapshots.length).to.equal(0)
     })
     it('can remove a random snapshot with the snapshoter role', async function () {
-      await this.transferEngineMock.connect(this.admin).scheduleSnapshot(this.snapshotTime1)
-      await this.transferEngineMock.connect(this.admin).scheduleSnapshot(this.snapshotTime2)
-      await this.transferEngineMock.connect(this.admin).scheduleSnapshot(this.snapshotTime3)
-      await this.transferEngineMock.connect(this.admin).scheduleSnapshot(this.snapshotTime4)
-      await this.transferEngineMock.connect(this.admin).scheduleSnapshot(this.snapshotTime5)
+      await this.transferEngineMock
+        .connect(this.admin)
+        .scheduleSnapshot(this.snapshotTime1)
+      await this.transferEngineMock
+        .connect(this.admin)
+        .scheduleSnapshot(this.snapshotTime2)
+      await this.transferEngineMock
+        .connect(this.admin)
+        .scheduleSnapshot(this.snapshotTime3)
+      await this.transferEngineMock
+        .connect(this.admin)
+        .scheduleSnapshot(this.snapshotTime4)
+      await this.transferEngineMock
+        .connect(this.admin)
+        .scheduleSnapshot(this.snapshotTime5)
       let snapshots = await this.transferEngineMock.getNextSnapshots()
       expect(snapshots.length).to.equal(5)
       await this.transferEngineMock
@@ -70,7 +80,9 @@ function ERC20SnapshotModuleCommonUnschedule () {
     it('testCannotUnscheduleASnapshotInThePast', async function () {
       const SNAPSHOT_TIME = this.currentTime - time.duration.seconds(60)
       await expect(
-        this.transferEngineMock.connect(this.admin).unscheduleLastSnapshot(SNAPSHOT_TIME)
+        this.transferEngineMock
+          .connect(this.admin)
+          .unscheduleLastSnapshot(SNAPSHOT_TIME)
       ).to.be.revertedWithCustomError(
         this.transferEngineMock,
         'CMTAT_SnapshotModule_SnapshotAlreadyDone'
@@ -79,11 +91,21 @@ function ERC20SnapshotModuleCommonUnschedule () {
 
     it('can unschedule a snaphot in a random place', async function () {
       const RANDOM_SNAPSHOT = this.currentTime + time.duration.seconds(17)
-      await this.transferEngineMock.connect(this.admin).scheduleSnapshot(this.snapshotTime1)
-      await this.transferEngineMock.connect(this.admin).scheduleSnapshot(this.snapshotTime2)
-      await this.transferEngineMock.connect(this.admin).scheduleSnapshot(this.snapshotTime3)
-      await this.transferEngineMock.connect(this.admin).scheduleSnapshot(this.snapshotTime4)
-      await this.transferEngineMock.connect(this.admin).scheduleSnapshot(this.snapshotTime5)
+      await this.transferEngineMock
+        .connect(this.admin)
+        .scheduleSnapshot(this.snapshotTime1)
+      await this.transferEngineMock
+        .connect(this.admin)
+        .scheduleSnapshot(this.snapshotTime2)
+      await this.transferEngineMock
+        .connect(this.admin)
+        .scheduleSnapshot(this.snapshotTime3)
+      await this.transferEngineMock
+        .connect(this.admin)
+        .scheduleSnapshot(this.snapshotTime4)
+      await this.transferEngineMock
+        .connect(this.admin)
+        .scheduleSnapshot(this.snapshotTime5)
       await this.transferEngineMock
         .connect(this.admin)
         .scheduleSnapshotNotOptimized(RANDOM_SNAPSHOT)
@@ -113,11 +135,21 @@ function ERC20SnapshotModuleCommonUnschedule () {
     })
 
     it('can schedule a snaphot after an unschedule', async function () {
-      await this.transferEngineMock.connect(this.admin).scheduleSnapshot(this.snapshotTime1)
-      await this.transferEngineMock.connect(this.admin).scheduleSnapshot(this.snapshotTime2)
-      await this.transferEngineMock.connect(this.admin).scheduleSnapshot(this.snapshotTime3)
-      await this.transferEngineMock.connect(this.admin).scheduleSnapshot(this.snapshotTime4)
-      await this.transferEngineMock.connect(this.admin).scheduleSnapshot(this.snapshotTime5)
+      await this.transferEngineMock
+        .connect(this.admin)
+        .scheduleSnapshot(this.snapshotTime1)
+      await this.transferEngineMock
+        .connect(this.admin)
+        .scheduleSnapshot(this.snapshotTime2)
+      await this.transferEngineMock
+        .connect(this.admin)
+        .scheduleSnapshot(this.snapshotTime3)
+      await this.transferEngineMock
+        .connect(this.admin)
+        .scheduleSnapshot(this.snapshotTime4)
+      await this.transferEngineMock
+        .connect(this.admin)
+        .scheduleSnapshot(this.snapshotTime5)
       let snapshots = await this.transferEngineMock.getNextSnapshots()
       expect(snapshots.length).to.equal(5)
       await this.transferEngineMock
@@ -125,7 +157,9 @@ function ERC20SnapshotModuleCommonUnschedule () {
         .unscheduleSnapshotNotOptimized(this.snapshotTime2)
       snapshots = await this.transferEngineMock.getNextSnapshots()
       expect(snapshots.length).to.equal(4)
-      await this.transferEngineMock.connect(this.admin).scheduleSnapshot(this.snapshotTime6)
+      await this.transferEngineMock
+        .connect(this.admin)
+        .scheduleSnapshot(this.snapshotTime6)
       snapshots = await this.transferEngineMock.getNextSnapshots()
       expect(snapshots.length).to.equal(5)
       checkArraySnapshot(snapshots, [
@@ -167,7 +201,9 @@ function ERC20SnapshotModuleCommonUnschedule () {
     beforeEach(async function () {
       this.currentTime = await time.latest()
       this.snapshotTime = this.currentTime + time.duration.seconds(60)
-      await this.transferEngineMock.connect(this.admin).scheduleSnapshot(this.snapshotTime)
+      await this.transferEngineMock
+        .connect(this.admin)
+        .scheduleSnapshot(this.snapshotTime)
     })
 
     it('can unschedule a snapshot with the snapshoter role and emits a SnapshotUnschedule event', async function () {
@@ -203,7 +239,9 @@ function ERC20SnapshotModuleCommonUnschedule () {
         .unscheduleLastSnapshot(this.snapshotTime)
       // Act
       await expect(
-        this.transferEngineMock.connect(this.admin).unscheduleLastSnapshot(SNAPSHOT_TIME)
+        this.transferEngineMock
+          .connect(this.admin)
+          .unscheduleLastSnapshot(SNAPSHOT_TIME)
       ).to.be.revertedWithCustomError(
         this.transferEngineMock,
         'CMTAT_SnapshotModule_NoSnapshotScheduled'
@@ -214,7 +252,9 @@ function ERC20SnapshotModuleCommonUnschedule () {
       const SNAPSHOT_TIME = this.currentTime + time.duration.seconds(90)
       // Act
       await expect(
-        this.transferEngineMock.connect(this.admin).unscheduleLastSnapshot(SNAPSHOT_TIME)
+        this.transferEngineMock
+          .connect(this.admin)
+          .unscheduleLastSnapshot(SNAPSHOT_TIME)
       ).to.be.revertedWithCustomError(
         this.transferEngineMock,
         'CMTAT_SnapshotModule_SnapshotNotFound'
@@ -224,7 +264,9 @@ function ERC20SnapshotModuleCommonUnschedule () {
     it('reverts when snapshot has been processed', async function () {
       const SNAPSHOT_TIME = this.currentTime - time.duration.seconds(60)
       await expect(
-        this.transferEngineMock.connect(this.admin).unscheduleLastSnapshot(SNAPSHOT_TIME)
+        this.transferEngineMock
+          .connect(this.admin)
+          .unscheduleLastSnapshot(SNAPSHOT_TIME)
       ).to.be.revertedWithCustomError(
         this.transferEngineMock,
         'CMTAT_SnapshotModule_SnapshotAlreadyDone'

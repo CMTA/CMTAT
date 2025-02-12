@@ -24,10 +24,9 @@ function DocumentModuleCommon () {
       const uri = 'https://github.com/CMTA/CMTAT'
       const documentHash = ethers.encodeBytes32String('hash1')
 
-      await this.documentEngineMock.setDocument(({name, uri, documentHash}))
+      await this.documentEngineMock.setDocument({ name, uri, documentHash })
 
-      const doc =
-        await this.cmtat.getDocument(name)
+      const doc = await this.cmtat.getDocument(name)
       expect(doc.uri).to.equal(uri)
       expect(doc.documentHash).to.equal(documentHash)
       expect(doc.lastModified).to.be.gt(0)
@@ -44,17 +43,15 @@ function DocumentModuleCommon () {
       await this.documentEngineMock.setDocument([name, uri1, documentHash1])
       await this.documentEngineMock.setDocument([name, uri2, documentHash2])
 
-      const doc =
-        await this.cmtat.getDocument(name)
-        expect(doc.uri).to.equal(uri2)
-        expect(doc.documentHash).to.equal(documentHash2)
-        expect(doc.lastModified).to.be.gt(0)
+      const doc = await this.cmtat.getDocument(name)
+      expect(doc.uri).to.equal(uri2)
+      expect(doc.documentHash).to.equal(documentHash2)
+      expect(doc.lastModified).to.be.gt(0)
     })
 
     it('testCanGetNullValueIfNoDocument', async function () {
       const name = ethers.encodeBytes32String('doc1')
-      const doc =
-        await this.cmtat.getDocument(name)
+      const doc = await this.cmtat.getDocument(name)
       expect(doc.uri).to.equal('')
       expect(doc.documentHash).to.equal(ethers.encodeBytes32String(''))
       expect(doc.lastModified).to.equal(0)
@@ -68,8 +65,7 @@ function DocumentModuleCommon () {
       await this.documentEngineMock.setDocument([name, uri, documentHash])
       await this.documentEngineMock.removeDocument(name)
 
-      const doc =
-        await this.cmtat.getDocument(name)
+      const doc = await this.cmtat.getDocument(name)
       expect(doc.uri).to.equal('')
       expect(doc.documentHash).to.equal(ethers.encodeBytes32String(''))
       expect(doc.lastModified).to.equal(0)

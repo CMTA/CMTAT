@@ -8,7 +8,6 @@ import {PauseModule}  from "../core/PauseModule.sol";
 import {EnforcementModule} from "../core/EnforcementModule.sol";
 import {Errors} from "../../../libraries/Errors.sol";
 import {IERC1404Wrapper} from "../../../interfaces/draft-IERC1404/draft-IERC1404Wrapper.sol";
-///import {IRuleEngine} from "../../../interfaces/engine/IRuleEngine.sol";
 /**
  * @dev Validation module.
  *
@@ -45,8 +44,7 @@ abstract contract ValidationModule is
         if ($._ruleEngine == ruleEngine_){
              revert Errors.CMTAT_ValidationModule_SameValue();
         }
-        $._ruleEngine = ruleEngine_;
-        emit RuleEngine(ruleEngine_);
+        _setRuleEngine($,ruleEngine_);
     }
 
     /**
@@ -76,7 +74,7 @@ abstract contract ValidationModule is
         ) {
             return TEXT_TRANSFER_REJECTED_TO_FROZEN;
         } else if (address($._ruleEngine) != address(0)) {
-            return _messageForTransferRestriction(restrictionCode);
+            return _messageForTransferRestriction($, restrictionCode);
         } else {
             return TEXT_UNKNOWN_CODE;
         }
@@ -102,8 +100,9 @@ abstract contract ValidationModule is
         } else if (frozen(to)) {
             return uint8(REJECTED_CODE_BASE.TRANSFER_REJECTED_TO_FROZEN);
         } else if (address($._ruleEngine) != address(0)) {
-            return _detectTransferRestriction(from, to, amount);
-        } else {
+            return _detectTransferRestriction($, from, to, amount);
+        } 
+        else {
             return uint8(REJECTED_CODE_BASE.TRANSFER_OK);
         }
     }
@@ -115,12 +114,9 @@ abstract contract ValidationModule is
     ) public view override returns (bool) {
         if (!_validateTransferByModule(from, to, amount)) {
             return false;
-        }
-        ValidationModuleInternalStorage storage $ = _getValidationModuleInternalStorage();
-        if (address($._ruleEngine) != address(0)) {
+        } else {
             return _validateTransfer(from, to, amount);
         }
-        return true;
     }
 
 
@@ -134,18 +130,17 @@ abstract contract ValidationModule is
     ) internal view returns (bool) {
         if (paused() || frozen(from) || frozen(to)) {
             return false;
+        } else{
+            return true;
         }
-        return true;
+        
     }
 
     function _operateOnTransfer(address from, address to, uint256 amount) override internal returns (bool){
         if (!_validateTransferByModule(from, to, amount)){
             return false;
-        }
-        ValidationModuleInternalStorage storage $ = _getValidationModuleInternalStorage();
-        if (address($._ruleEngine) != address(0)) {
+        } else{
             return ValidationModuleInternal._operateOnTransfer(from, to, amount);
         }
-        return true;
     }
 }

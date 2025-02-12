@@ -3,7 +3,11 @@ const { ZERO_ADDRESS } = require('./utils')
 const { ethers, upgrades } = require('hardhat')
 const DEPLOYMENT_DECIMAL = 0n
 // hash = keccak256("doc1Hash");
-const TERMS = ["doc1", "https://example.com/doc1", "0x6a12eff2f559a5e529ca2c563c53194f6463ed5c61d1ae8f8731137467ab0279"] ;
+const TERMS = [
+  'doc1',
+  'https://example.com/doc1',
+  '0x6a12eff2f559a5e529ca2c563c53194f6463ed5c61d1ae8f8731137467ab0279'
+]
 async function fixture () {
   const [
     _,

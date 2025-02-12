@@ -32,8 +32,7 @@ abstract contract ValidationModuleInternal is
     ) internal onlyInitializing {
         if (address(ruleEngine_) != address(0)) {
             ValidationModuleInternalStorage storage $ = _getValidationModuleInternalStorage();
-            $._ruleEngine = ruleEngine_;
-            emit RuleEngine(ruleEngine_);
+            _setRuleEngine($, ruleEngine_);
         }
     }
 
@@ -51,26 +50,28 @@ abstract contract ValidationModuleInternal is
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
+    /* ============ View functions ============ */
 
-    /**
-    * @dev before making a call to this function, you have to check if a ruleEngine is set.
-    */
     function _validateTransfer(
         address from,
         address to,
         uint256 amount
     ) internal view returns (bool) {
         ValidationModuleInternalStorage storage $ = _getValidationModuleInternalStorage();
-        return $._ruleEngine.validateTransfer(from, to, amount);
+        if (address($._ruleEngine) != address(0)) {
+            return $._ruleEngine.validateTransfer(from, to, amount);
+        } else{
+            return true;
+        }
     }
 
     /**
     * @dev before making a call to this function, you have to check if a ruleEngine is set.
     */
     function _messageForTransferRestriction(
+        ValidationModuleInternalStorage storage $,
         uint8 restrictionCode
     ) internal view returns (string memory) {
-        ValidationModuleInternalStorage storage $ = _getValidationModuleInternalStorage();
         return $._ruleEngine.messageForTransferRestriction(restrictionCode);
     }
 
@@ -78,17 +79,33 @@ abstract contract ValidationModuleInternal is
     * @dev before making a call to this function, you have to check if a ruleEngine is set.
     */
     function _detectTransferRestriction(
+        ValidationModuleInternalStorage storage $,
         address from,
         address to,
         uint256 amount
     ) internal view returns (uint8) {
-        ValidationModuleInternalStorage storage $ = _getValidationModuleInternalStorage();
         return $._ruleEngine.detectTransferRestriction(from, to, amount);
     }
 
+    /* ============ State functions ============ */
+    /*
+    * @dev set a RuleEngine
+    * @param ruleEngine_ the call will be reverted if the new value of ruleEngine is the same as the current one
+    */
+    function _setRuleEngine(
+        ValidationModuleInternalStorage storage $,
+        IRuleEngine ruleEngine_
+    )  internal {
+        $._ruleEngine = ruleEngine_;
+        emit RuleEngine(ruleEngine_);
+    }
     function _operateOnTransfer(address from, address to, uint256 amount) virtual internal returns (bool) {
         ValidationModuleInternalStorage storage $ = _getValidationModuleInternalStorage();
-        return $._ruleEngine.operateOnTransfer(from, to, amount);
+        if (address($._ruleEngine) != address(0)) {
+            return $._ruleEngine.operateOnTransfer(from, to, amount);
+        } else{
+            return true;
+        }
     }
 
 

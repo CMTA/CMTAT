@@ -163,11 +163,7 @@ abstract contract ERC20BaseModule is ERC20Upgradeable, AuthorizationModule {
         totalSupply = ERC20Upgradeable.totalSupply();
     }
 
-
-
-    /*//////////////////////////////////////////////////////////////
-                           RESTRICTED FUNCTIONS
-    //////////////////////////////////////////////////////////////*/
+    /* ============  Restricted Functions ============ */
     /**
      *  @dev See {IToken-setName}.
      */
@@ -185,11 +181,8 @@ abstract contract ERC20BaseModule is ERC20Upgradeable, AuthorizationModule {
         $._symbol = symbol_;
         emit Symbol(symbol_, symbol_);
     }
-
-    /*//////////////////////////////////////////////////////////////
-                          ERC-20 Enforcement
-    //////////////////////////////////////////////////////////////*/
-
+    
+    /* ============  ERC-20 Enforcement ============ */
     /**
     * @notice Triggers a forced transfer.
     *

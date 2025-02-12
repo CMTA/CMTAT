@@ -4,59 +4,69 @@ function ERC20BaseModuleCommon () {
   context('Enforcement', function () {
     beforeEach(async function () {
       await this.cmtat.connect(this.admin).mint(this.address1, 50)
-    });
+    })
 
     it('testCanForceTransferFromAddress1ToAddress2AsAdmin', async function () {
-    const AMOUNT_TO_TRANSFER = 20
-    const REASON = 'Bad guy'
+      const AMOUNT_TO_TRANSFER = 20
+      const REASON = 'Bad guy'
       // Act
-    this.logs = await this.cmtat
-      .connect(this.admin)
-      .enforceTransfer(this.address1, this.address2, AMOUNT_TO_TRANSFER, REASON)
-    // Assert
-      expect(await this.cmtat.balanceOf(this.address1)).to.equal(
-        '30'
-      )
-      expect(await this.cmtat.balanceOf(this.address2)).to.equal(
-        '20'
-      )
+      this.logs = await this.cmtat
+        .connect(this.admin)
+        .enforceTransfer(
+          this.address1,
+          this.address2,
+          AMOUNT_TO_TRANSFER,
+          REASON
+        )
+      // Assert
+      expect(await this.cmtat.balanceOf(this.address1)).to.equal('30')
+      expect(await this.cmtat.balanceOf(this.address2)).to.equal('20')
       // Events
       await expect(this.logs)
         .to.emit(this.cmtat, 'Enforcement')
-        .withArgs(this.admin, this.address1, AMOUNT_TO_TRANSFER,  REASON)
-        await expect(this.logs)
+        .withArgs(this.admin, this.address1, AMOUNT_TO_TRANSFER, REASON)
+      await expect(this.logs)
         .to.emit(this.cmtat, 'Transfer')
         .withArgs(this.address1, this.address2, AMOUNT_TO_TRANSFER)
-    }); 
+    })
 
     it('testCanForceTransferFromAddress1ToAddress2AsEnforcerTransferRole', async function () {
       const AMOUNT_TO_TRANSFER = 20
       const REASON = 'Bad guy'
       // Arrange - Assert
-      await this.cmtat.connect(this.admin).grantRole(ENFORCER_ROLE_TRANSFER, this.address3);
+      await this.cmtat
+        .connect(this.admin)
+        .grantRole(ENFORCER_ROLE_TRANSFER, this.address3)
       // Act
       this.logs = await this.cmtat
         .connect(this.admin)
-        .enforceTransfer(this.address1, this.address2, AMOUNT_TO_TRANSFER, REASON)
-        // Assert
-        expect(await this.cmtat.balanceOf(this.address1)).to.equal(
-          50 - AMOUNT_TO_TRANSFER
+        .enforceTransfer(
+          this.address1,
+          this.address2,
+          AMOUNT_TO_TRANSFER,
+          REASON
         )
-        expect(await this.cmtat.balanceOf(this.address2)).to.equal(
-          AMOUNT_TO_TRANSFER
-        )
-        await expect(this.logs)
+      // Assert
+      expect(await this.cmtat.balanceOf(this.address1)).to.equal(
+        50 - AMOUNT_TO_TRANSFER
+      )
+      expect(await this.cmtat.balanceOf(this.address2)).to.equal(
+        AMOUNT_TO_TRANSFER
+      )
+      await expect(this.logs)
         .to.emit(this.cmtat, 'Enforcement')
-        .withArgs(this.admin, this.address1, AMOUNT_TO_TRANSFER,  REASON)
-        await expect(this.logs)
+        .withArgs(this.admin, this.address1, AMOUNT_TO_TRANSFER, REASON)
+      await expect(this.logs)
         .to.emit(this.cmtat, 'Transfer')
         .withArgs(this.address1, this.address2, AMOUNT_TO_TRANSFER)
-      }); 
+    })
 
     it('testCannotNonEnforcerTransferFunds', async function () {
       // Act
       await expect(
-        this.cmtat.connect(this.address2).enforceTransfer(this.address1, this.address2, 20, 'Bad guy')
+        this.cmtat
+          .connect(this.address2)
+          .enforceTransfer(this.address1, this.address2, 20, 'Bad guy')
       )
         .to.be.revertedWithCustomError(
           this.cmtat,
@@ -64,7 +74,7 @@ function ERC20BaseModuleCommon () {
         )
         .withArgs(this.address2.address, ENFORCER_ROLE_TRANSFER)
     })
-  });
+  })
   context('Token structure', function () {
     it('testHasTheDefinedName', async function () {
       // Act + Assert
@@ -80,24 +90,20 @@ function ERC20BaseModuleCommon () {
     })
   })
 
-  context("Token Name", function (){
+  context('Token Name', function () {
     it('testAdminCanUpdateName', async function () {
-      const NEW_NAME = "New Name"
+      const NEW_NAME = 'New Name'
       // Act
-      this.logs = await this.cmtat
-        .connect(this.admin)
-        .setName(NEW_NAME)
+      this.logs = await this.cmtat.connect(this.admin).setName(NEW_NAME)
       // Assert
       expect(await this.cmtat.name()).to.equal(NEW_NAME)
       await expect(this.logs)
-        .to.emit(this.cmtat, "Name")
+        .to.emit(this.cmtat, 'Name')
         .withArgs(NEW_NAME, NEW_NAME)
     })
     it('testCannotNonAdminUpdateName', async function () {
       // Act
-      await expect(
-        this.cmtat.connect(this.address1).setName('New Name')
-      )
+      await expect(this.cmtat.connect(this.address1).setName('New Name'))
         .to.be.revertedWithCustomError(
           this.cmtat,
           'AccessControlUnauthorizedAccount'
@@ -108,24 +114,20 @@ function ERC20BaseModuleCommon () {
     })
   })
 
-  context("Token Symbol", function (){
+  context('Token Symbol', function () {
     it('testAdminCanUpdateSymbol', async function () {
-      const NEW_SYMBOL = "New Symbol"
+      const NEW_SYMBOL = 'New Symbol'
       // Act
-      this.logs = await this.cmtat
-        .connect(this.admin)
-        .setSymbol(NEW_SYMBOL)
+      this.logs = await this.cmtat.connect(this.admin).setSymbol(NEW_SYMBOL)
       // Assert
       expect(await this.cmtat.symbol()).to.equal(NEW_SYMBOL)
       await expect(this.logs)
-        .to.emit(this.cmtat, "Symbol")
+        .to.emit(this.cmtat, 'Symbol')
         .withArgs(NEW_SYMBOL, NEW_SYMBOL)
     })
     it('testCannotNonAdminUpdateName', async function () {
       // Act
-      await expect(
-        this.cmtat.connect(this.address1).setSymbol('New Symbol')
-      )
+      await expect(this.cmtat.connect(this.address1).setSymbol('New Symbol'))
         .to.be.revertedWithCustomError(
           this.cmtat,
           'AccessControlUnauthorizedAccount'

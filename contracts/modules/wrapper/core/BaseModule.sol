@@ -75,6 +75,9 @@ abstract contract BaseModule is AuthorizationModule {
         return $._information;
     }
 
+
+    /* ============  Restricted Functions ============ */
+
     /** 
     * @notice the tokenId will be changed even if the new value is the same as the current one
     */

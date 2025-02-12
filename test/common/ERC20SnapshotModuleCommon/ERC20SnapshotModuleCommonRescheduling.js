@@ -11,7 +11,9 @@ function ERC20SnapshotModuleCommonRescheduling () {
       this.currentTime = await time.latest()
       this.snapshotTime = this.currentTime + time.duration.seconds(60)
       this.newSnapshotTime = this.currentTime + time.duration.seconds(200)
-      await this.transferEngineMock.connect(this.admin).scheduleSnapshot(this.snapshotTime)
+      await this.transferEngineMock
+        .connect(this.admin)
+        .scheduleSnapshot(this.snapshotTime)
     })
 
     it('can reschedule a snapshot with the snapshoter role and emits a SnapshotSchedule event', async function () {
@@ -36,8 +38,12 @@ function ERC20SnapshotModuleCommonRescheduling () {
       await this.transferEngineMock
         .connect(this.admin)
         .scheduleSnapshot(SNAPSHOT_MIDDLE_OLD_TIME)
-      await this.transferEngineMock.connect(this.admin).scheduleSnapshot(FIRST_SNAPSHOT)
-      await this.transferEngineMock.connect(this.admin).scheduleSnapshot(SECOND_SNAPSHOT)
+      await this.transferEngineMock
+        .connect(this.admin)
+        .scheduleSnapshot(FIRST_SNAPSHOT)
+      await this.transferEngineMock
+        .connect(this.admin)
+        .scheduleSnapshot(SECOND_SNAPSHOT)
       this.logs = await this.transferEngineMock
         .connect(this.admin)
         .rescheduleSnapshot(SNAPSHOT_MIDDLE_OLD_TIME, SNAPSHOT_MIDDLE_NEW_TIME)
@@ -64,8 +70,12 @@ function ERC20SnapshotModuleCommonRescheduling () {
       await this.transferEngineMock
         .connect(this.admin)
         .scheduleSnapshot(SNAPSHOT_MIDDLE_OLD_TIME)
-      await this.transferEngineMock.connect(this.admin).scheduleSnapshot(FIRST_SNAPSHOT)
-      await this.transferEngineMock.connect(this.admin).scheduleSnapshot(SECOND_SNAPSHOT)
+      await this.transferEngineMock
+        .connect(this.admin)
+        .scheduleSnapshot(FIRST_SNAPSHOT)
+      await this.transferEngineMock
+        .connect(this.admin)
+        .scheduleSnapshot(SECOND_SNAPSHOT)
       // Act
       await expect(
         this.transferEngineMock
@@ -102,8 +112,12 @@ function ERC20SnapshotModuleCommonRescheduling () {
       await this.transferEngineMock
         .connect(this.admin)
         .scheduleSnapshot(SNAPSHOT_MIDDLE_OLD_TIME)
-      await this.transferEngineMock.connect(this.admin).scheduleSnapshot(FIRST_SNAPSHOT)
-      await this.transferEngineMock.connect(this.admin).scheduleSnapshot(SECOND_SNAPSHOT)
+      await this.transferEngineMock
+        .connect(this.admin)
+        .scheduleSnapshot(FIRST_SNAPSHOT)
+      await this.transferEngineMock
+        .connect(this.admin)
+        .scheduleSnapshot(SECOND_SNAPSHOT)
       // Act
       await expect(
         this.transferEngineMock
@@ -160,7 +174,9 @@ function ERC20SnapshotModuleCommonRescheduling () {
 
     it('reverts when trying to reschedule a snapshot to a snapshot time already existing', async function () {
       const NEW_TIME = this.snapshotTime + time.duration.seconds(60)
-      await this.transferEngineMock.connect(this.admin).scheduleSnapshot(NEW_TIME)
+      await this.transferEngineMock
+        .connect(this.admin)
+        .scheduleSnapshot(NEW_TIME)
       await expect(
         this.transferEngineMock
           .connect(this.admin)

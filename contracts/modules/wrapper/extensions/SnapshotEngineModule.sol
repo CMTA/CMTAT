@@ -33,8 +33,7 @@ abstract contract SnapshotEngineModule is AuthorizationModule {
     internal onlyInitializing {
         if (address(snapshotEngine_) != address (0)) {
             SnapshotEngineModuleStorage storage $ = _getSnapshotEngineModuleStorage();
-            $._snapshotEngine = snapshotEngine_;
-            emit SnapshotEngine(snapshotEngine_);
+            _setSnapshotEngine($, snapshotEngine_);
         }
     }
 
@@ -48,6 +47,7 @@ abstract contract SnapshotEngineModule is AuthorizationModule {
         return $._snapshotEngine;
     }
 
+    /* ============  Restricted Functions ============ */
     /*
     * @notice set an SnapshotEngine if not already set
     * @dev once an SnapshotEngine is set, it is not possible to unset it
@@ -59,13 +59,18 @@ abstract contract SnapshotEngineModule is AuthorizationModule {
         if ($._snapshotEngine == snapshotEngine_){
              revert Errors.CMTAT_SnapshotModule_SameValue();
         }
-        $._snapshotEngine = snapshotEngine_;
-        emit SnapshotEngine(snapshotEngine_);
+        _setSnapshotEngine($, snapshotEngine_);
     }
 
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
+    function _setSnapshotEngine(
+        SnapshotEngineModuleStorage storage $, ISnapshotEngine snapshotEngine_
+    ) internal {
+        $._snapshotEngine = snapshotEngine_;
+        emit SnapshotEngine(snapshotEngine_);
+    }
 
     /* ============ ERC-7201 ============ */
     function _getSnapshotEngineModuleStorage() private pure returns (SnapshotEngineModuleStorage storage $) {
