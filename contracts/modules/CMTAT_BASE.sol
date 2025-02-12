@@ -25,7 +25,6 @@ import {Errors} from "../libraries/Errors.sol";
 abstract contract CMTAT_BASE is
     Initializable,
     ContextUpgradeable,
-    SnapshotEngineModule,
     // Core
     BaseModule,
     PauseModule,
@@ -37,6 +36,7 @@ abstract contract CMTAT_BASE is
     // Extension
     MetaTxModule,
     DebtModule,
+    SnapshotEngineModule,
     DocumentModule
 {   
 
@@ -75,23 +75,51 @@ abstract contract CMTAT_BASE is
         ICMTATConstructor.ERC20Attributes memory ERC20Attributes_,
         ICMTATConstructor.BaseModuleAttributes memory baseModuleAttributes_,
         ICMTATConstructor.Engine memory engines_ 
-    ) internal onlyInitializing {
+    ) internal virtual onlyInitializing {
         /* OpenZeppelin library */
         // OZ init_unchained functions are called firstly due to inheritance
         __Context_init_unchained();
-        // We don'use name and symbol set by the OpenZeppelin module
-        //__ERC20_init_unchained(ERC20Attributes_.name, ERC20Attributes_.symbol);
+
         // AccessControlUpgradeable inherits from ERC165Upgradeable
         __ERC165_init_unchained();
-        // AuthorizationModule inherits from AccessControlUpgradeable
+
+        // Openzeppelin
+        __CMTAT_openzeppelin_init_unchained();
+        /* Internal Modules */
+       __CMTAT_internal_init_unchained(engines_ );
+
+        /* Wrapper modules */
+        __CMTAT_modules_init_unchained(admin, ERC20Attributes_, baseModuleAttributes_, engines_ );
+
+        /* own function */
+        __CMTAT_init_unchained();
+    }
+
+    /*
+    * @dev OpenZeppelin
+    */
+    function __CMTAT_openzeppelin_init_unchained() internal virtual onlyInitializing {
+         // AuthorizationModule inherits from AccessControlUpgradeable
         __AccessControl_init_unchained();
         __Pausable_init_unchained();
+        // We don'use name and symbol set by the OpenZeppelin module
+        //__ERC20_init_unchained(ERC20Attributes_.name, ERC20Attributes_.symbol);
+    }
 
-        /* Internal Modules */
+
+
+    /*
+    * @dev CMTAT internal module
+    */
+    function __CMTAT_internal_init_unchained( ICMTATConstructor.Engine memory engines_) internal virtual onlyInitializing {
         __Enforcement_init_unchained();   
-        __Validation_init_unchained(engines_ .ruleEngine);
+        __Validation_init_unchained(engines_.ruleEngine);
+    }
 
-        /* Wrapper */
+    /*
+    * @dev CMTAT wrapper modules
+    */
+    function __CMTAT_modules_init_unchained(address admin, ICMTATConstructor.ERC20Attributes memory ERC20Attributes_, ICMTATConstructor.BaseModuleAttributes memory baseModuleAttributes_, ICMTATConstructor.Engine memory engines_ ) internal virtual onlyInitializing {
         // AuthorizationModule_init_unchained is called firstly due to inheritance
         __AuthorizationModule_init_unchained(admin);
         __ERC20BurnModule_init_unchained();
@@ -109,13 +137,11 @@ abstract contract CMTAT_BASE is
 
         /* Other modules */
         __Base_init_unchained(baseModuleAttributes_.tokenId, baseModuleAttributes_.terms, baseModuleAttributes_.information);
-
-        /* own function */
-        __CMTAT_init_unchained();
     }
 
-    function __CMTAT_init_unchained() internal onlyInitializing {
+    function __CMTAT_init_unchained() internal virtual onlyInitializing {
         // no variable to initialize
+        
     }
 
 
@@ -141,6 +167,9 @@ abstract contract CMTAT_BASE is
         return ERC20BaseModule.decimals();
     }
 
+    /*
+    * @inheritdoc ERC20BaseModule
+    */
     function transferFrom(
         address sender,
         address recipient,
@@ -186,7 +215,7 @@ abstract contract CMTAT_BASE is
     * - Input validation is also managed by the functions burn and mint
     * - You can mint more tokens than burnt
     */
-    function burnAndMint(address from, address to, uint256 amountToBurn, uint256 amountToMint, string calldata reason) public  {
+    function burnAndMint(address from, address to, uint256 amountToBurn, uint256 amountToMint, string calldata reason) public virtual  {
         burn(from, amountToBurn, reason);
         mint(to, amountToMint);
     }

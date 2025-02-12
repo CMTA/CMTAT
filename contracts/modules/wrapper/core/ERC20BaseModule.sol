@@ -60,6 +60,8 @@ abstract contract ERC20BaseModule is ERC20Upgradeable, AuthorizationModule {
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
+
+    /* ============  ERC-20 standard ============ */
     /**
      *
      * @notice Returns the number of decimals used to get its user representation.
@@ -69,6 +71,49 @@ abstract contract ERC20BaseModule is ERC20Upgradeable, AuthorizationModule {
         ERC20BaseModuleStorage storage $ = _getERC20BaseModuleStorage();
         return $._decimals;
     }
+
+    /**
+     * @notice Transfers `value` amount of tokens from address `from` to address `to`
+     * @custom:dev-cmtat
+     * Emits a {Spend} event indicating the spended allowance.
+     * @inheritdoc ERC20Upgradeable
+     *
+     */
+    function transferFrom(
+        address from,
+        address to,
+        uint256 value
+    ) public virtual override returns (bool) {
+        bool result = ERC20Upgradeable.transferFrom(from, to, value);
+        // The result will be normally always true because OpenZeppelin will revert in case of an error
+        if (result) {
+            emit Spend(from, _msgSender(), value);
+        }
+
+        return result;
+    }
+
+
+
+    /**
+     * @notice Returns the name of the token.
+     */
+    function name() public virtual override view returns (string memory) {
+        ERC20BaseModuleStorage storage $ = _getERC20BaseModuleStorage();
+        return $._name;
+    }
+
+    /**
+     * @notice  Returns the symbol of the token, usually a shorter version of the
+     * name.
+     */
+    function symbol() public virtual override view returns (string memory) {
+        ERC20BaseModuleStorage storage $ = _getERC20BaseModuleStorage();
+        return $._symbol;
+    }
+
+
+    /* ============  Custom functions ============ */
 
     /**
      * @notice batch version of transfer
@@ -106,30 +151,9 @@ abstract contract ERC20BaseModule is ERC20Upgradeable, AuthorizationModule {
     }
 
     /**
-     * @notice Transfers `value` amount of tokens from address `from` to address `to`
-     * @custom:dev-cmtat
-     * Emits a {Spend} event indicating the spended allowance.
-     * @inheritdoc ERC20Upgradeable
-     *
-     */
-    function transferFrom(
-        address from,
-        address to,
-        uint256 value
-    ) public virtual override returns (bool) {
-        bool result = ERC20Upgradeable.transferFrom(from, to, value);
-        // The result will be normally always true because OpenZeppelin will revert in case of an error
-        if (result) {
-            emit Spend(from, _msgSender(), value);
-        }
-
-        return result;
-    }
-
-    /**
     * @param addresses list of address to know their balance
     * @return balances ,totalSupply array with balance for each address, totalSupply
-    * @dev useful for the snapshot rule
+    * @dev useful to distribute dividend and to perform on-chain snapshot
     */
     function balanceInfo(address[] calldata addresses) public view returns(uint256[] memory balances , uint256 totalSupply) {
         balances = new uint256[](addresses.length);
@@ -139,22 +163,6 @@ abstract contract ERC20BaseModule is ERC20Upgradeable, AuthorizationModule {
         totalSupply = ERC20Upgradeable.totalSupply();
     }
 
-    /**
-     * @dev Returns the name of the token.
-     */
-    function name() public virtual override view returns (string memory) {
-        ERC20BaseModuleStorage storage $ = _getERC20BaseModuleStorage();
-        return $._name;
-    }
-
-    /**
-     * @dev Returns the symbol of the token, usually a shorter version of the
-     * name.
-     */
-    function symbol() public virtual override view returns (string memory) {
-        ERC20BaseModuleStorage storage $ = _getERC20BaseModuleStorage();
-        return $._symbol;
-    }
 
 
     /*//////////////////////////////////////////////////////////////

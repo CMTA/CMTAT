@@ -7,7 +7,7 @@ import {CMTAT_BASE, MetaTxModule, ICMTATConstructor} from "../../modules/CMTAT_B
 /**
 * @title CMTAT standalone version for ERC1363
 */
-contract CMTAT_STANDALONE_ERC1363W is CMTAT_ERC1363_BASE {
+contract CMTAT_STANDALONE_ERC1363 is CMTAT_ERC1363_BASE {
     /**
      * @notice Contract version for standalone deployment
      * @param forwarderIrrevocable address of the forwarder, required for the gasless support

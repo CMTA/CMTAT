@@ -11,6 +11,10 @@ import {ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/Cont
 * @title CMTAT Proxy version for ERC1363
 */
 abstract contract CMTAT_ERC1363_BASE is ERC1363Upgradeable,CMTAT_BASE {
+    /*//////////////////////////////////////////////////////////////
+                            PUBLIC/EXTERNAL FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
+    
     /**
      * 
      */
@@ -72,6 +76,14 @@ abstract contract CMTAT_ERC1363_BASE is ERC1363Upgradeable,CMTAT_BASE {
         uint256 amount
     ) internal override(ERC20Upgradeable, CMTAT_BASE) {
         CMTAT_BASE._update(from, to, amount);
+    }
+
+    /**
+    * @dev initializer function
+    */
+    function __CMTAT_openzeppelin_init_unchained() internal virtual override onlyInitializing {
+        __ERC1363_init_unchained();
+        CMTAT_BASE.__CMTAT_openzeppelin_init_unchained();
     }
 
 

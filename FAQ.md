@@ -33,9 +33,47 @@ There are two possibilities to use LayerZero with a CMTAT:
 
 The first one is to add a module inside CMTAT to include the Omnichain Fungible Token (OFT) Standard; see  [github.com/LayerZero-Labs - OFT.sol](https://github.com/LayerZero-Labs/LayerZero-v2/blob/main/packages/layerzero-v2/evm/oapp/contracts/oft/OFT.sol)
 
+### OFT
+
+The Omnichain Fungible Token (OFT) Standard allows **fungible tokens** to be transferred across multiple blockchains without asset wrapping, middlechains, or liquidity pools.
+
+#### Modifying CMTAT
+
+This standard work by burning tokens on the source chain whenever an omnichain transfer is initiated, sending a message via the protocol and delivering a function call to the destination contract to mint the same number of tokens burned, creating a **unified supply** across both networks.
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.22;
+
+import "@layerzerolabs/lz-evm-oapp-v2/contracts/standards/oft/OFT.sol";
+
+contract MyOFT is OFT {
+    constructor(
+        string _name, // token name
+        string _symbol, // token symbol
+        address _lzEndpoint, // LayerZero Endpoint address
+        uint8 _localDecimals) // token decimals
+        OFT(_name, _symbol, _localDecimals, _lzEndpoint) {}
+}
+```
+
+See [OFT standard](https://docs.layerzero.network/v2/home/token-standards/oft-standard)
+
+#### OFT standard
+
+**OFT Adapter** works as an intermediary contract that handles sending and receiving deployed fungible tokens. For example, when transferring an ERC20 from the source chain (Chain A), the token will lock in the OFT Adapter, triggering a new token to mint on the destination chain (Chain B) via the peer OFT.
+
+[OFT Adapter](https://docs.layerzero.network/v2/home/token-standards/oft-standard)
+
 The second possibility is to deploy an OFT Adapter to act as an intermediary lockbox for the token.
 
+See https://docs.layerzero.network/v2/home/token-standards/oft-standard#oft-adapter
+
 More information in LayerZero documentation: [docs.layerzero.network/v2/developers/evm/oft/quickstart](
+
+
+
+https://docs.layerzero.network/v2/home/token-standards/oft-standard
 
 ## Toolkit support
 
