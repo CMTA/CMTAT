@@ -18,6 +18,31 @@ Please follow <https://changelog.md/> conventions.
   
   - Update changelog
 
+## 3.0.0
+
+- Update DocumentModule to use a struct
+
+- ERC20BaseModule: 
+  - Add function`enforceTransfer` (forceTransfer)
+  - Add function to update ERC20 Symbol and Name
+    
+- BaseModule: Terms are represented as document (name, hash, uri, last on-chain modification date).
+
+Deployment
+
+- Add deployment version for ERC-1363
+- Create a separate directory for factory contract. See [CMTATFactory](https://github.com/CMTA/CMTATFactory)
+
+Engine:
+
+- Remove AuthorizationEngine
+- Add SnapshotEngine instead of snapshotModule. See also [SnapshotEngine](https://github.com/CMTA/SnapshotEngine)
+
+Lib:
+
+- Update solidity to version 0.8.28
+- Update OpenZeppelin to version 5.2.0
+
 ## 2.5.1 - 20241003
 
 - Beacon Factory: deploy an implementation inside the constructor if no implementation is provided

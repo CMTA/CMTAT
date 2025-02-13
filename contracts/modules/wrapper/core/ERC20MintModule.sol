@@ -4,7 +4,7 @@ pragma solidity ^0.8.20;
 
 import {ERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 import {AuthorizationModule} from "../../security/AuthorizationModule.sol";
-import {ICCIPMintERC20} from "../../../interfaces/ICCIPToken.sol";
+import {IMintERC20} from "../../../interfaces/IMintToken.sol";
 import {Errors} from "../../../libraries/Errors.sol";
 /**
  * @title ERC20Mint module.
@@ -12,7 +12,7 @@ import {Errors} from "../../../libraries/Errors.sol";
  *
  * Contains all mint functions, inherits from ERC-20
  */
-abstract contract ERC20MintModule is ERC20Upgradeable, ICCIPMintERC20, AuthorizationModule {
+abstract contract ERC20MintModule is ERC20Upgradeable, IMintERC20, AuthorizationModule {
     /* ============ State Variables ============ */
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     /* ============ Events ============ */

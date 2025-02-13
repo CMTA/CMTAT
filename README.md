@@ -48,6 +48,8 @@ For simplicity, the module names and function locations are those of version 3.0
 - "fn" means function
 - Changes made in a release are considered maintained in the following release unless explicitly stated otherwise
 
+#### Core modules
+
 |                     | CMTAT 1.0      | CMTAT 2.30                                                   | CMTAT 3.0.0                                                  |
 | ------------------- | -------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | ValidationModule    | &#x2611;       | &#x2611;                                                     | &#x2611;                                                     |
@@ -61,14 +63,14 @@ For simplicity, the module names and function locations are those of version 3.0
 
 CMTAT 3.0.0 adds also a function `burnAndMint`to burn and mint atomically in the same function.
 
+### Extensions modules
+
 |                | CMTAT 1.0       | CMTAT 2.30                                               | CMTAT 3.0.0                                               |
 | -------------- | --------------- | -------------------------------------------------------- | --------------------------------------------------------- |
 | CreditsEvents  | &#x2612;        | &#x2611;<br />                                           | &#x2611;  <br />(Require an external contract DebtEngine) |
 | DebtEvents     | &#x2612;        | &#x2611;                                                 | &#x2611; <br />(Require an external contract DebtEngine)  |
 | MetaTx         | &#x2611; <br /> | &#x2611; <br /><br />(forwarder immutable)               | &#x2611; <br />                                           |
 | SnapshotModule | &#x2611;<br />  | Partial<br />(Not included by default because unaudited) | &#x2611; <br />(require an external SnapshotEngine)       |
-
-[TOC]
 
 
 

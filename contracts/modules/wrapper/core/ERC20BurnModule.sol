@@ -4,7 +4,7 @@ pragma solidity ^0.8.20;
 
 import {ERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 import {AuthorizationModule} from "../../security/AuthorizationModule.sol";
-import {ICCIPBurnFromERC20} from "../../../interfaces/ICCIPToken.sol";
+import {IBurnFromERC20} from "../../../interfaces/IMintToken.sol";
 import {Errors} from "../../../libraries/Errors.sol";
 /**
  * @title ERC20Burn module.
@@ -12,7 +12,7 @@ import {Errors} from "../../../libraries/Errors.sol";
  *
  * Contains all burn functions, inherits from ERC-20
  */
-abstract contract ERC20BurnModule is ERC20Upgradeable, ICCIPBurnFromERC20, AuthorizationModule {
+abstract contract ERC20BurnModule is ERC20Upgradeable, IBurnFromERC20, AuthorizationModule {
     /* ============ State Variables ============ */
     bytes32 public constant BURNER_ROLE = keccak256("BURNER_ROLE");
     bytes32 public constant BURNER_FROM_ROLE = keccak256("BURNER_FROM_ROLE");
@@ -51,10 +51,20 @@ abstract contract ERC20BurnModule is ERC20Upgradeable, ICCIPBurnFromERC20, Autho
         uint256 value,
         string calldata reason
     ) public onlyRole(BURNER_ROLE) {
-        _burn(account, value);
-        emit Burn(account, value, reason);
+        _burnCommon(account, value,reason);
     }
 
+    /**
+     * @notice {burn} withtout reason
+     * @dev
+     * More standard burn function for compatibility
+     */
+    function burn(
+        address account,
+        uint256 value
+    ) public onlyRole(BURNER_ROLE) {
+        _burnCommon(account, value,"");
+    }
 
     /**
      *
@@ -120,10 +130,25 @@ abstract contract ERC20BurnModule is ERC20Upgradeable, ICCIPBurnFromERC20, Autho
             _approve(account, sender, currentAllowance - value);
         }
         // burn
-        _burn(account, value);
         // We also emit a burn event since its a burn operation
-        emit Burn(account, value, "burnFrom");
+        _burnCommon(account, value, "burnFrom");
         // Specific event for the operation
         emit BurnFrom(account, sender, value);
+    }
+
+    /*//////////////////////////////////////////////////////////////
+                            INTERNAL/PRIVATE FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
+
+    /**
+    * @notice internal function to burn
+    */
+    function _burnCommon(
+        address account,
+        uint256 value,
+        string memory reason
+    ) internal {
+        _burn(account, value);
+        emit Burn(account, value, reason);
     }
 }

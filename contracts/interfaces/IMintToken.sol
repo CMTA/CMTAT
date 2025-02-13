@@ -3,9 +3,9 @@
 pragma solidity ^0.8.20;
 
 /**
-* @notice CCIP Pool with mint
+* @notice Interface to mint tokens
 */
-interface ICCIPMintERC20 {
+interface IMintERC20 {
   /// @notice Mints new tokens for a given address.
   /// @param account The address to mint the new tokens to.
   /// @param value The number of tokens to be minted.
@@ -14,9 +14,9 @@ interface ICCIPMintERC20 {
 }
 
 /**
-* @notice CCIP Pool with burnFrom
+* @notice interface with burnFrom
 */
-interface ICCIPBurnFromERC20 {
+interface IBurnFromERC20 {
   /// @notice Burns tokens from a given address..
   /// @param account The address to burn tokens from.
   /// @param value The number of tokens to be burned.
