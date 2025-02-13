@@ -38,6 +38,7 @@ Here the list of ERC supported between different version:
 | [ERC-7201](https://eips.ethereum.org/EIPS/eip-7201)<br/>(Storage namespaces for proxy contract) | Standard Track (final)   | &#x2612;  | &#x2612;   | &#x2611;                                                     |
 | **Other**                                                    |                          |           |            |                                                              |
 | [ERC-2771](https://eips.ethereum.org/EIPS/eip-2771) (Meta Tx / gasless) | Standard Track (final)   | &#x2611;  | &#x2611;   | &#x2611;                                                     |
+| [ERC-6093](https://eips.ethereum.org/EIPS/eip-6093)          | Standard Track (final)   | &#x2612;  | &#x2612;   | &#x2611;<br />(through OpenZeppelin)                         |
 
 ### Modules
 
