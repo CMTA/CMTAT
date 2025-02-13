@@ -243,7 +243,7 @@ npm run-script coverage
 Slither is a Solidity static analysis framework written in Python3
 
 ```bash
-slither .  --checklist --filter-paths "openzeppelin-contracts-upgradeable|openzeppelin-contracts|@openzeppelin|test" > slither-report.md
+slither .  --checklist --filter-paths "mocks|openzeppelin-contracts-upgradeable|openzeppelin-contracts|@openzeppelin|test" > slither-report.md
 ```
 
 ### [Mythril](https://github.com/Consensys/mythril)

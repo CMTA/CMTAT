@@ -2,6 +2,10 @@
 
 > To use the CMTAT, we recommend the latest audited version, from the [Releases](https://github.com/CMTA/CMTAT/releases) page. Currently, it is the version [v2.3.0](https://github.com/CMTA/CMTAT/releases/tag/v2.3.0)
 
+[TOC]
+
+
+
 ## Introduction
 
 The CMTA token (CMTAT) is a framework enabling the tokenization of securities in compliance with Swiss law. This repository provides CMTA's reference implementation of CMTAT for Ethereum, as an ERC-20 compatible token.
@@ -13,9 +17,87 @@ The preferred way to receive comments is through the GitHub issue tracker.  Priv
 
 Note that CMTAT may be used in other jurisdictions than Switzerland, and for tokenizing various asset types, beyond equity and debt products. 
 
+## Difference between version
+
+The main difference between the three main version are the following
+
+### Standard ERC
+
+Here the list of ERC supported between different version:
+
+|                                                              | ERC status               | CMTAT 1.0 | CMTAT 2.30 | CMTAT 3.0.0                                                  |
+| ------------------------------------------------------------ | ------------------------ | --------- | ---------- | ------------------------------------------------------------ |
+| **Fungible tokens**                                          |                          |           |            |                                                              |
+| [ERC-20](https://eips.ethereum.org/EIPS/eip-20)              | Standard Track (final)   | &#x2611;  | &#x2611;   | &#x2611;                                                     |
+| [ERC-1363](https://eips.ethereum.org/EIPS/eip-1363)          | Standard Track (final)   | &#x2612;  | &#x2612;   | &#x2611;<br />(specific deployment version)                  |
+| **Tokenization**                                             |                          |           |            |                                                              |
+| [ERC-1404](https://github.com/ethereum/eips/issues/1404)<br />(Simple Restricted Token Standard) | Draft                    | &#x2611;  | &#x2611;   | &#x2611;                                                     |
+| [ERC-1643](https://github.com/ethereum/eips/issues/1643) (Document Management Standard) <br />(Standard from [ERC-1400](https://github.com/ethereum/EIPs/issues/1411)) | Draft                    | &#x2612;  | &#x2612;   | &#x2611;<br />(through DocumentEngine with small improvement) |
+| **Proxy support related**                                    |                          |           |            |                                                              |
+| Deployment with a UUPS proxy ([ERC-1822](https://eips.ethereum.org/EIPS/eip-1822)) | Stagnant<br />(but used) | &#x2612;  | &#x2612;   | &#x2611;<br />(specific deployment version)                  |
+| [ERC-7201](https://eips.ethereum.org/EIPS/eip-7201)<br/>(Storage namespaces for proxy contract) | Standard Track (final)   | &#x2612;  | &#x2612;   | &#x2611;                                                     |
+| **Other**                                                    |                          |           |            |                                                              |
+| [ERC-2771](https://eips.ethereum.org/EIPS/eip-2771) (Meta Tx / gasless) | Standard Track (final)   | &#x2611;  | &#x2611;   | &#x2611;                                                     |
+
+### Modules
+
+Here the list of modules supported between different version and the difference.
+
+For simplicity, the module names and function locations are those of version 3.0.0
+
+- "fn" means function
+- Changes made in a release are considered maintained in the following release unless explicitly stated otherwise
+
+|                     | CMTAT 1.0      | CMTAT 2.30                                                   | CMTAT 3.0.0                                                  |
+| ------------------- | -------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| ValidationModule    | &#x2611;       | &#x2611;                                                     | &#x2611;                                                     |
+| AuthorizationModule | &#x2611;<br /> | &#x2611;<br /><br />(Admin has all the roles by default)     | &#x2611;<br />                                               |
+| BaseModule          | &#x2611;       | &#x2611;<br />(Add two fields: flag and information)         | &#x2611;<br />Remove field flag (not used)                   |
+| BurnModule          | &#x2611;       | &#x2611;<br />Replace fn `burnFrom` by fn `forceBurn`        | Add fn `burnBatch`<br />Rename `forceBurn` in `burn`<br />Add fn `burnFrom` |
+| EnforcementModule   | &#x2611;       | &#x2611;                                                     | &#x2611;                                                     |
+| ERC20BaseModule     | &#x2611;       | &#x2611;<br />Remove fn `forceTransfer`<br />(replaced by `burn`and `mint`)<br /> | Add fn `transferBatch` <br /><br />Add fn `balanceInfo` (useful to distribute dividends)<br />Add  fn `enforceTransfer`(=forceTransfer)<br /><br />Add fn `setName`and `setSymbol`<br />Remove custom fn `approve`(keep only ERC-20 approve) |
+| MintModule          | &#x2611;       | &#x2611;                                                     | Add fn `mintBatch`                                           |
+| PauseModule         | &#x2611;       | &#x2611;                                                     | Replace fn `kill` by fn `deactivateContract`                 |
+
+CMTAT 3.0.0 adds also a function `burnAndMint`to burn and mint atomically in the same function.
+
+|                | CMTAT 1.0       | CMTAT 2.30                                               | CMTAT 3.0.0                                               |
+| -------------- | --------------- | -------------------------------------------------------- | --------------------------------------------------------- |
+| CreditsEvents  | &#x2612;        | &#x2611;<br />                                           | &#x2611;  <br />(Require an external contract DebtEngine) |
+| DebtEvents     | &#x2612;        | &#x2611;                                                 | &#x2611; <br />(Require an external contract DebtEngine)  |
+| MetaTx         | &#x2611; <br /> | &#x2611; <br /><br />(forwarder immutable)               | &#x2611; <br />                                           |
+| SnapshotModule | &#x2611;<br />  | Partial<br />(Not included by default because unaudited) | &#x2611; <br />(require an external SnapshotEngine)       |
+
 [TOC]
 
 
+
+------
+
+## Documentation
+
+Here a summary of the main documents:
+
+| Document                            | Link/Files                                               |
+| ----------------------------------- | -------------------------------------------------------- |
+| Documentation of the modules API.   | [doc/modules](doc/modules)                               |
+| How to use the project + toolchains | [doc/USAGE.md](doc/USAGE.md)                             |
+| Project architecture                | [architecture.pdf](./doc/schema/drawio/architecture.pdf) |
+| FAQ                                 | [doc/general/FAQ.md](doc/general/FAQ.md)                 |
+
+CMTA providers further documentation describing the CMTAT framework in a platform-agnostic way, and covering legal aspects, see
+
+-  [CMTA Token (CMTAT)](https://cmta.ch/standards/cmta-token-cmtat)
+-  [Standard for the tokenization of shares of Swiss corporations using the distributed ledger technology](https://cmta.ch/standards/standard-for-the-tokenization-of-shares-of-swiss-corporations-using-the-distributed-ledger-technology)
+
+### Further reading
+
+- [CMTA - A comparison of different security token standards](https://cmta.ch/news-articles/a-comparison-of-different-security-token-standards)
+- [Taurus - Security Token Standards: A Closer Look at CMTAT](https://www.taurushq.com/blog/security-token-standards-a-closer-look-at-cmtat/)
+- [Taurus - Equity Tokenization: How to Pay Dividend On-Chain Using CMTAT](https://www.taurushq.com/blog/equity-tokenization-how-to-pay-dividend-on-chain-using-cmtat/) (CMTAT v2.4.0)
+- [Taurus - Token Transfer Management: How to Apply Restrictions with CMTAT and ERC-1404](https://www.taurushq.com/blog/token-transfer-management-how-to-apply-restrictions-with-cmtat-and-erc-1404/) (CMTAT v2.4.0)
+- [Taurus - Making CMTAT Tokenization More Scalable and Cost-Effective with Proxy and Factory Contracts](https://www.taurushq.com/blog/cmtat-tokenization-deployment-with-proxy-and-factory/) (CMTAT v2.5.1)
+- [Taurus - Addressing the Privacy and Compliance Challenge in Public Blockchain Token Transactions](https://www.taurushq.com/blog/enhancing-token-transaction-privacy-on-public-blockchains-while-ensuring-compliance/) (Aztec)
 
 ## Functionality
 
@@ -56,17 +138,29 @@ The consequences are the following:
 
 ### Gasless support
 
-The CMTAT supports client-side gasless transactions using the [Gas Station Network](https://docs.opengsn.org/#the-problem) (GSN) pattern, the main open standard for transfering fee payment to another account than that of the transaction issuer. The contract uses the OpenZeppelin contract `ERC2771ContextUpgradeable`, which allows a contract to get the original client with `_msgSender()` instead of the fee payer given by `msg.sender` while allowing upgrades on the main contract (see *Deployment via a proxy* above).
+The CMTAT supports client-side gasless transactions using the [ERC-2771](https://eips.ethereum.org/EIPS/eip-2771)
 
-At deployment, the parameter  `forwarder` inside the  CMTAT contract constructor has to be set  with the defined address of the forwarder. Please note that the forwarder can not be changed after deployment, and with a proxy architecture, its value is stored inside the implementation contract bytecode instead of the storage of the proxy.
+The contract uses the OpenZeppelin contract `ERC2771ContextUpgradeable`, which allows a contract to get the original client with `_msgSender()` instead of the fee payer given by `msg.sender` while allowing upgrades on the main contract (see *Deployment via a proxy* above).
 
-Please see the OpenGSN [documentation](https://docs.opengsn.org/contracts/#receiving-a-relayed-call) for more details on what is done to support GSN in the contract.
+At deployment, the parameter  `forwarder` inside the CMTAT contract constructor has to be set  with the defined address of the forwarder. Please note that the forwarder can not be changed after deployment, and with a proxy architecture, its value is stored inside the implementation contract bytecode instead of the storage of the proxy.
+
+References:
+
+- [OpenZeppelin Meta Transactions](https://docs.openzeppelin.com/contracts/5.x/api/metatx)
+
+- OpenGSN has deployed several forwarders, see their [documentation](https://docs.opengsn.org/contracts/#receiving-a-relayed-call) to see some examples.
 
 -----
 
 ## Architecture
 
 CMTAT architecture is divided in two main componentes: module and engines
+
+The main schema describing the architecture can be found here: [architecture.pdf](./doc/schema/drawio/architecture.pdf) 
+
+#### Base
+
+![surya_graph_CMTAT_BASE.sol](./doc/schema/surya_graph/surya_graph_CMTAT_BASE.sol.png)
 
 ### Module
 
@@ -308,6 +402,10 @@ Contracts for deployment are available in the directory [./contracts/deployment]
 
 To deploy CMTAT without a proxy, in standalone mode, you need to use the contract version `CMTAT_STANDALONE`.
 
+Here the surya inheritance schema:
+
+![surya_inheritance_CMTAT_STANDALONE.sol](./doc/schema/surya_inheritance/surya_inheritance_CMTAT_STANDALONE.sol.png)
+
 ### With a proxy
 
 The CMTAT supports deployment via a proxy contract.  Furthermore, using a proxy permits to upgrade the contract, using a standard proxy upgrade pattern.
@@ -317,7 +415,19 @@ The CMTAT supports deployment via a proxy contract.  Furthermore, using a proxy 
 
 Please see the OpenZeppelin [upgradeable contracts documentation](https://docs.openzeppelin.com/upgrades-plugins/1.x/writing-upgradeable) for more information about the proxy requirements applied to the contract.
 
-Please see the OpenZeppelin [Upgrades plugins](https://docs.openzeppelin.com/upgrades-plugins/1.x/) for more information about plugin upgrades in general.
+See the OpenZeppelin [Upgrades plugins](https://docs.openzeppelin.com/upgrades-plugins/1.x/) for more information about plugin upgrades in general.
+
+#### Inheritance
+
+- UUPS
+
+![surya_inheritance_CMTAT_PROXY_UUPS.sol](./doc/schema/surya_inheritance/surya_inheritance_CMTAT_PROXY_UUPS.sol.png)
+
+- Proxy standard
+
+
+
+![surya_inheritance_CMTAT_PROXY.sol](./doc/schema/surya_inheritance/surya_inheritance_CMTAT_PROXY.sol.png)
 
 #### Implementation details
 
@@ -346,6 +456,24 @@ As indicated in the [OpenZeppelin documentation](https://docs.openzeppelin.com/c
 Two dedicated version (proxy and standalone) implementing this standard are available.
 
 More information on this standard here: [erc1363.org](https://erc1363.org), [RareSkills - ERC-1363](https://www.rareskills.io/post/erc-1363)
+
+#### Inheritance
+
+- CMTAT ERC-1363 Base
+
+![surya_inheritance_CMTAT_ERC1363_BASE.sol](./doc/schema/surya_inheritance/surya_inheritance_CMTAT_ERC1363_BASE.sol.png)
+
+
+
+- CMTAT PROXY ERC-1363
+
+![surya_inheritance_CMTAT_PROXY_ERC1363.sol](./doc/schema/surya_inheritance/surya_inheritance_CMTAT_PROXY_ERC1363.sol.png)
+
+
+
+- CMTAT Proxy ERC-1363
+
+![surya_inheritance_CMTAT_STANDALONE_ERC1363.sol](./doc/schema/surya_inheritance/surya_inheritance_CMTAT_STANDALONE_ERC1363.sol.png)
 
 ### Factory
 
@@ -406,19 +534,17 @@ The report is available in [ABDK_CMTA_CMTATRuleEngine_v_1_0.pdf](doc/audits/ABDK
 
 You will find the report produced by [Slither](https://github.com/crytic/slither) in 
 
-| Version      | File                                                         |
-| ------------ | ------------------------------------------------------------ |
-| Last version | [slither-report.md](doc/audits/tools/slither//slither-report.md) |
-| v2.3.0       | [v2.3.0-slither-report.md](doc/audits/tools/slither/v2.3.0-slither-report.md) |
-| v2.3.1       | [v2.3.1-slither-report.md](doc/audits/tools/slither/v2.3.1-slither-report.md) |
-| v2.4.0       | [v2.4.0-slither-report.md](doc/audits/tools/slither/v2.4.0-slither-report.md) |
-| v2.5.0       | [v2.5.0-slither-report.md](doc/audits/tools/slither/v2.5.0-slither-report.md) |
+| Version | File                                                         |
+| ------- | ------------------------------------------------------------ |
+| v3.0.0  | [v3.0.0-slither-report.md](doc/audits/tools/slither/v3.0.0-slither-report.md) |
+| v2.5.0  | [v2.5.0-slither-report.md](doc/audits/tools/slither/v2.5.0-slither-report.md) |
+| v2.3.0  | [v2.3.0-slither-report.md](doc/audits/tools/slither/v2.3.0-slither-report.md) |
 
 #### [Mythril](https://github.com/Consensys/mythril)
 
-| Version      | File                                                         |
-| ------------ | ------------------------------------------------------------ |
-| Last version | [mythril-report-standalone.md](doc/audits/tools/mythril/myth_standalone_report.md)<br />[mythril-report-proxy.md](doc/audits/tools/mythril/myth_proxy_report.md)<br /> |
+| Version | File                                                         |
+| ------- | ------------------------------------------------------------ |
+| v2.5.0  | [mythril-report-standalone.md](doc/audits/tools/mythril/v2.5.0/myth_standalone_report.md)<br />[mythril-report-proxy.md](doc/audits/tools/mythril/v2.5.0/myth_proxy_report.md)<br /> |
 
 ### Test
 
@@ -430,33 +556,10 @@ A code coverage is available in [index.html](doc/general/test/coverage/index.htm
 As with any token contract, access to the owner key must be adequately restricted.
 Likewise, access to the proxy contract must be restricted and seggregated from the token contract.
 
-------
-
-## Documentation
-
-Here a summary of the main documents:
-
-| Document                          | Link/Files                                                 |
-| --------------------------------- | ---------------------------------------------------------- |
-| Documentation of the modules API. | [doc/modules](doc/modules)                                 |
-| Documentation on the toolchain    | [doc/TOOLCHAIN.md](doc/TOOLCHAIN.md)                       |
-| How to use the project            | [doc/USAGE.md](doc/USAGE.md)                               |
-| Project architecture              | [doc/general/ARCHITECTURE.md](doc/general/ARCHITECTURE.md) |
-
-CMTA providers further documentation describing the CMTAT framework in a platform-agnostic way, and covering legal aspects, see
-
--  [CMTA Token (CMTAT)](https://cmta.ch/standards/cmta-token-cmtat)
-- [Standard for the tokenization of shares of Swiss corporations using the distributed ledger technology](https://cmta.ch/standards/standard-for-the-tokenization-of-shares-of-swiss-corporations-using-the-distributed-ledger-technology)
-
-### Further reading
-- [CMTA - A comparison of different security token standards](https://cmta.ch/news-articles/a-comparison-of-different-security-token-standards)
-- [Taurus - Security Token Standards: A Closer Look at CMTAT](https://www.taurushq.com/blog/security-token-standards-a-closer-look-at-cmtat/)
-- [Taurus - Equity Tokenization: How to Pay Dividend On-Chain Using CMTAT](https://www.taurushq.com/blog/equity-tokenization-how-to-pay-dividend-on-chain-using-cmtat/) (CMTAT v2.4.0)
-- [Taurus - Token Transfer Management: How to Apply Restrictions with CMTAT and ERC-1404](https://www.taurushq.com/blog/token-transfer-management-how-to-apply-restrictions-with-cmtat-and-erc-1404/) (CMTAT v2.4.0)
-- [Taurus - Making CMTAT Tokenization More Scalable and Cost-Effective with Proxy and Factory Contracts](https://www.taurushq.com/blog/cmtat-tokenization-deployment-with-proxy-and-factory/) (CMTAT v2.5.1)
-- [Taurus - Addressing the Privacy and Compliance Challenge in Public Blockchain Token Transactions](https://www.taurushq.com/blog/enhancing-token-transaction-privacy-on-public-blockchains-while-ensuring-compliance/) (Aztec)
+---
 
 ## Others implementations
+
 Two versions are available for the blockchain [Tezos](https://tezos.com)
 - [CMTAT FA2](https://github.com/CMTA/CMTAT-Tezos-FA2) Official version written in SmartPy
 - [@ligo/cmtat](https://github.com/ligolang/CMTAT-Ligo/) Unofficial version written in Ligo
@@ -464,11 +567,24 @@ Two versions are available for the blockchain [Tezos](https://tezos.com)
 
 For [Aztec](https://aztec.network), see [Taurus - Addressing the Privacy and Compliance Challenge in Public Blockchain Token Transactions](https://www.taurushq.com/blog/enhancing-token-transaction-privacy-on-public-blockchains-while-ensuring-compliance/) 
 
-
 ## Contract size
 
-![contract-size](./doc/general/contract-size.png)
+```bash
+npm run-script size
+```
 
+Solc version: 0.8.28
+
+Optimizer: true
+
+First column: contract name
+
+second colum: deployed size (KiB))
+
+Third column: Initcode size (KiB)
+
+
+![contract-size](./doc/general/contract-size.png)
 ## Intellectual property
 
-The code is copyright (c) Capital Market and Technology Association, 2018-2024, and is released under [Mozilla Public License 2.0](./LICENSE.md).
+The code is copyright (c) Capital Market and Technology Association, 2018-2025, and is released under [Mozilla Public License 2.0](./LICENSE.md).

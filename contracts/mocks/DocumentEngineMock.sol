@@ -24,10 +24,6 @@ interface IERC1643Whole is IERC1643{
 * @title a DocumentEngine mock for testing, not suitable for production
 */
 contract DocumentEngineMock is IERC1643Whole {
-    /*struct DocumentStorage {
-        uint256 key;
-        Document doc;
-    }*/
     mapping(string => Document) private documents;
     mapping(string => uint256) private documentKey;
     string[] private documentNames;

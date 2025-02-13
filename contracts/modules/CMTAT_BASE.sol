@@ -237,10 +237,10 @@ abstract contract CMTAT_BASE is
             revert Errors.CMTAT_InvalidTransfer(from, to, amount);
         }
         // We check here the address of the snapshotEngine here because we don't want to read balance/totalSupply if there is no ruleEngine
-        ISnapshotEngine snapshotEngine = snapshotEngine();
+        ISnapshotEngine snapshotEngineLocal = snapshotEngine();
         // Required to be performed before the update
-        if(address(snapshotEngine) != address(0)){
-            snapshotEngine.operateOnTransfer(from, to, balanceOf(from), balanceOf(to), totalSupply());
+        if(address(snapshotEngineLocal) != address(0)){
+            snapshotEngineLocal.operateOnTransfer(from, to, balanceOf(from), balanceOf(to), totalSupply());
         }
         ERC20Upgradeable._update(from, to, amount);
     }
