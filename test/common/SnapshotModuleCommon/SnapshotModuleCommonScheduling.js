@@ -1,14 +1,23 @@
 const { time } = require('@nomicfoundation/hardhat-network-helpers')
 const { expect } = require('chai')
-const { SNAPSHOOTER_ROLE } = require('../../utils')
+const { SNAPSHOOTER_ROLE, ZERO_ADDRESS } = require('../../utils')
 const {
   checkArraySnapshot
-} = require('./ERC20SnapshotModuleUtils/ERC20SnapshotModuleUtils')
+} = require('./SnapshotModuleUtils/SnapshotModuleUtils')
 
-function ERC20SnapshotModuleCommonScheduling () {
+function SnapshotModuleCommonScheduling () {
   context('Snapshot scheduling', function () {
     beforeEach(async function () {
       this.currentTime = await time.latest()
+      if ((await this.cmtat.snapshotEngine()) === ZERO_ADDRESS) {
+        this.transferEngineMock = await ethers.deployContract(
+          'SnapshotEngineMock',
+          [this.cmtat.target, this.admin]
+        )
+        this.cmtat
+          .connect(this.admin)
+          .setSnapshotEngine(this.transferEngineMock)
+      }
     })
     it('can schedule a snapshot with the snapshoter role', async function () {
       const SNAPSHOT_TIME = this.currentTime + time.duration.seconds(60)
@@ -103,6 +112,15 @@ function ERC20SnapshotModuleCommonScheduling () {
   context('Snapshot scheduling NotOptimized', function () {
     beforeEach(async function () {
       this.currentTime = await time.latest()
+      if ((await this.cmtat.snapshotEngine()) === ZERO_ADDRESS) {
+        this.transferEngineMock = await ethers.deployContract(
+          'SnapshotEngineMock',
+          [this.cmtat.target, this.admin]
+        )
+        this.cmtat
+          .connect(this.admin)
+          .setSnapshotEngine(this.transferEngineMock)
+      }
     })
     it('can schedule a snapshot in the first place with the snapshoter role', async function () {
       const FIRST_SNAPSHOT = this.currentTime + time.duration.seconds(100)
@@ -240,4 +258,4 @@ function ERC20SnapshotModuleCommonScheduling () {
     })
   })
 }
-module.exports = ERC20SnapshotModuleCommonScheduling
+module.exports = SnapshotModuleCommonScheduling

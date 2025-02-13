@@ -1,16 +1,25 @@
 const { time } = require('@nomicfoundation/hardhat-network-helpers')
 const { expect } = require('chai')
-const { SNAPSHOOTER_ROLE } = require('../../utils')
+const { SNAPSHOOTER_ROLE, ZERO_ADDRESS } = require('../../utils')
 const {
   checkArraySnapshot
-} = require('./ERC20SnapshotModuleUtils/ERC20SnapshotModuleUtils')
+} = require('./SnapshotModuleUtils/SnapshotModuleUtils')
 
-function ERC20SnapshotModuleCommonRescheduling () {
+function SnapshotModuleCommonRescheduling () {
   context('Snapshot rescheduling', function () {
     beforeEach(async function () {
       this.currentTime = await time.latest()
       this.snapshotTime = this.currentTime + time.duration.seconds(60)
       this.newSnapshotTime = this.currentTime + time.duration.seconds(200)
+      if ((await this.cmtat.snapshotEngine()) === ZERO_ADDRESS) {
+        this.transferEngineMock = await ethers.deployContract(
+          'SnapshotEngineMock',
+          [this.cmtat.target, this.admin]
+        )
+        this.cmtat
+          .connect(this.admin)
+          .setSnapshotEngine(this.transferEngineMock)
+      }
       await this.transferEngineMock
         .connect(this.admin)
         .scheduleSnapshot(this.snapshotTime)
@@ -252,4 +261,4 @@ function ERC20SnapshotModuleCommonRescheduling () {
     })
   })
 }
-module.exports = ERC20SnapshotModuleCommonRescheduling
+module.exports = SnapshotModuleCommonRescheduling

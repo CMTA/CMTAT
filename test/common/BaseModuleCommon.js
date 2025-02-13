@@ -5,7 +5,8 @@ const { TERMS } = require('../deploymentUtils')
 function BaseModuleCommon () {
   context('Token structure', function () {
     async function checkTerms (myThis, terms) {
-      const blockTimestamp = (await ethers.provider.getBlock('latest')).timestamp
+      const blockTimestamp = (await ethers.provider.getBlock('latest'))
+        .timestamp
       const result = await myThis.cmtat.terms()
       expect(result[0]).to.equal(terms[0])
       expect(result[1][0]).to.equal(terms[1])

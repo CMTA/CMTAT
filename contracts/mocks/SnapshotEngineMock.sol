@@ -6,6 +6,8 @@ import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/acce
 import {SnapshotModuleBase} from "./library/snapshot/SnapshotModuleBase.sol";
 import {ICMTATSnapshot} from "./library/snapshot/ICMTATSnapshot.sol";
 import {ISnapshotEngine} from "../interfaces/engine/ISnapshotEngine.sol";
+
+
 /*
 * @title a RuleEngine mock for testing, not suitable for production
 */
@@ -18,6 +20,9 @@ contract SnapshotEngineMock is SnapshotModuleBase, AccessControlUpgradeable, ISn
         /* ============ State Variables ============ */
     bytes32 public constant SNAPSHOOTER_ROLE = keccak256("SNAPSHOOTER_ROLE");
 
+    function setERC20(ERC20Upgradeable erc20_) public{
+        erc20 = erc20_;
+    }
     /** 
      * @dev Returns `true` if `account` has been granted `role`.
      */

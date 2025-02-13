@@ -119,6 +119,12 @@ Please see the Hardhat [documentation](https://hardhat.org/tutorial/testing-cont
 
 We use linters to ensure consistent coding style. If you contribute code, please run this following command: 
 
+Prettier
+
+```bash
+npm run-script lint:all:prettier
+```
+
 For JavaScript:
 ```bash
 npm run-script lint:js 
@@ -157,7 +163,7 @@ Solidity static analyzer.
 JavaScript bindings for the Solidity compiler.
 
 ```bash
-solc --base-path . --include-path ./node_modules/ contracts/CMTAT_STANDALONE.sol
+solc --base-path . --include-path ./node_modules/ contracts/deployment/CMTAT_STANDALONE.sol
 ```
 
 ## Generate documentation

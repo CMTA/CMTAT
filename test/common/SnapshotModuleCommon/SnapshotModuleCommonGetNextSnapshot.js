@@ -1,13 +1,29 @@
 const { time } = require('@nomicfoundation/hardhat-network-helpers')
 const { expect } = require('chai')
+const { ZERO_ADDRESS } = require('../../utils')
 const {
   checkArraySnapshot
-} = require('./ERC20SnapshotModuleUtils/ERC20SnapshotModuleUtils')
+} = require('./SnapshotModuleUtils/SnapshotModuleUtils')
 
-function ERC20SnapshotModuleCommonGetNextSnapshot () {
+function SnapshotModuleCommonGetNextSnapshot () {
   context('Snapshot scheduling', function () {
     beforeEach(async function () {
       this.currentTime = await time.latest()
+      if ((await this.cmtat.snapshotEngine()) === ZERO_ADDRESS) {
+        this.transferEngineMock = await ethers.deployContract(
+          'SnapshotEngineMock',
+          [this.cmtat.target, this.admin]
+        )
+        this.cmtat
+          .connect(this.admin)
+          .setSnapshotEngine(this.transferEngineMock)
+      }
+    })
+    it('testCanReturnTheRightAddressIfSet', async function () {
+      if (this.definedAtDeployment) {
+        const transferEngine = await this.cmtat.snapshotEngine()
+        expect(this.transferEngineMock.target).to.equal(transferEngine)
+      }
     })
     it('testCanGetAllNextSnapshots', async function () {
       // Arrange
@@ -57,9 +73,9 @@ function ERC20SnapshotModuleCommonGetNextSnapshot () {
     //
     it('testCanReturnEmptyArrayIfAllSnapshotsAreInThePast', async function () {
       // Arrange
-      this.snapshotTime1 = this.currentTime + time.duration.seconds(3)
-      this.snapshotTime2 = this.currentTime + time.duration.seconds(4)
-      this.snapshotTime3 = this.currentTime + time.duration.seconds(5)
+      this.snapshotTime1 = this.currentTime + time.duration.seconds(4)
+      this.snapshotTime2 = this.currentTime + time.duration.seconds(5)
+      this.snapshotTime3 = this.currentTime + time.duration.seconds(6)
       await this.transferEngineMock
         .connect(this.admin)
         .scheduleSnapshot(this.snapshotTime1)
@@ -103,4 +119,4 @@ function ERC20SnapshotModuleCommonGetNextSnapshot () {
     })
   })
 }
-module.exports = ERC20SnapshotModuleCommonGetNextSnapshot
+module.exports = SnapshotModuleCommonGetNextSnapshot

@@ -1,11 +1,11 @@
 const { time } = require('@nomicfoundation/hardhat-network-helpers')
 const { expect } = require('chai')
-const { SNAPSHOOTER_ROLE } = require('../../utils')
+const { SNAPSHOOTER_ROLE, ZERO_ADDRESS } = require('../../utils')
 const {
   checkArraySnapshot
-} = require('./ERC20SnapshotModuleUtils/ERC20SnapshotModuleUtils')
+} = require('./SnapshotModuleUtils/SnapshotModuleUtils')
 
-function ERC20SnapshotModuleCommonUnschedule () {
+function SnapshotModuleCommonUnschedule () {
   context('unscheduleSnapshotNotOptimized', function () {
     beforeEach(async function () {
       this.currentTime = await time.latest()
@@ -15,6 +15,15 @@ function ERC20SnapshotModuleCommonUnschedule () {
       this.snapshotTime4 = this.currentTime + time.duration.seconds(25)
       this.snapshotTime5 = this.currentTime + time.duration.seconds(30)
       this.snapshotTime6 = this.currentTime + time.duration.seconds(40)
+      if ((await this.cmtat.snapshotEngine()) === ZERO_ADDRESS) {
+        this.transferEngineMock = await ethers.deployContract(
+          'SnapshotEngineMock',
+          [this.cmtat.target, this.admin]
+        )
+        this.cmtat
+          .connect(this.admin)
+          .setSnapshotEngine(this.transferEngineMock)
+      }
     })
 
     it('can remove a snapshot as admin', async function () {
@@ -201,6 +210,15 @@ function ERC20SnapshotModuleCommonUnschedule () {
     beforeEach(async function () {
       this.currentTime = await time.latest()
       this.snapshotTime = this.currentTime + time.duration.seconds(60)
+      if ((await this.cmtat.snapshotEngine()) === ZERO_ADDRESS) {
+        this.transferEngineMock = await ethers.deployContract(
+          'SnapshotEngineMock',
+          [this.cmtat.target, this.admin]
+        )
+        this.cmtat
+          .connect(this.admin)
+          .setSnapshotEngine(this.transferEngineMock)
+      }
       await this.transferEngineMock
         .connect(this.admin)
         .scheduleSnapshot(this.snapshotTime)
@@ -274,4 +292,4 @@ function ERC20SnapshotModuleCommonUnschedule () {
     })
   })
 }
-module.exports = ERC20SnapshotModuleCommonUnschedule
+module.exports = SnapshotModuleCommonUnschedule

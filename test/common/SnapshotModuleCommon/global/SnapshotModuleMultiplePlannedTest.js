@@ -1,10 +1,8 @@
 const { time } = require('@nomicfoundation/hardhat-network-helpers')
 const { expect } = require('chai')
-const {
-  checkSnapshot
-} = require('../ERC20SnapshotModuleUtils/ERC20SnapshotModuleUtils')
-
-function ERC20SnapshotModuleMultiplePlannedTest () {
+const { checkSnapshot } = require('../SnapshotModuleUtils/SnapshotModuleUtils')
+const { ZERO_ADDRESS } = require('../../../utils')
+function SnapshotModuleMultiplePlannedTest () {
   // With multiple planned snapshot
   context('SnapshotMultiplePlannedTest', function () {
     const ADDRESSES = [this.address1, this.address2, this.address3]
@@ -19,6 +17,15 @@ function ERC20SnapshotModuleMultiplePlannedTest () {
     const TRANSFER_AMOUNT_2 = 10n
     const TRANSFER_AMOUNT_3 = 5n
     beforeEach(async function () {
+      if ((await this.cmtat.snapshotEngine()) === ZERO_ADDRESS) {
+        this.transferEngineMock = await ethers.deployContract(
+          'SnapshotEngineMock',
+          [this.cmtat.target, this.admin]
+        )
+        this.cmtat
+          .connect(this.admin)
+          .setSnapshotEngine(this.transferEngineMock)
+      }
       await this.cmtat
         .connect(this.admin)
         .mint(this.address1, ADDRESS1_INITIAL_MINT)
@@ -447,4 +454,4 @@ function ERC20SnapshotModuleMultiplePlannedTest () {
     })
   })
 }
-module.exports = ERC20SnapshotModuleMultiplePlannedTest
+module.exports = SnapshotModuleMultiplePlannedTest
