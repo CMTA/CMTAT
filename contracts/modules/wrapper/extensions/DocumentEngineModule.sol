@@ -79,9 +79,7 @@ abstract contract DocumentModule is AuthorizationModule, IERC1643 {
         IERC1643 documentEngine_
     ) external onlyRole(DOCUMENT_ROLE) {
         DocumentModuleStorage storage $ = _getDocumentModuleStorage();
-        if ($._documentEngine == documentEngine_){
-             revert Errors.CMTAT_DocumentModule_SameValue();
-        }
+        require($._documentEngine != documentEngine_, Errors.CMTAT_DocumentModule_SameValue());
         _setDocumentEngine($, documentEngine_);
     }
 

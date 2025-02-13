@@ -68,9 +68,7 @@ abstract contract ValidationModule is
         IRuleEngine ruleEngine_
     ) external onlyRole(DEFAULT_ADMIN_ROLE) {
         ValidationModuleInternalStorage storage $ = _getValidationModuleInternalStorage();
-        if ($._ruleEngine == ruleEngine_){
-             revert Errors.CMTAT_ValidationModule_SameValue();
-        }
+        require($._ruleEngine != ruleEngine_, Errors.CMTAT_ValidationModule_SameValue());
         _setRuleEngine($,ruleEngine_);
     }
 

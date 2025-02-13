@@ -131,14 +131,10 @@ abstract contract ERC20BaseModule is ERC20Upgradeable, AuthorizationModule {
         address[] calldata tos,
         uint256[] calldata values
     ) public returns (bool) {
-        if (tos.length == 0) {
-            revert Errors.CMTAT_ERC20BaseModule_EmptyTos();
-        }
+        require(tos.length >0, Errors.CMTAT_ERC20BaseModule_EmptyTos());
         // We do not check that values is not empty since
         // this require will throw an error in this case.
-        if (bool(tos.length != values.length)) {
-            revert Errors.CMTAT_ERC20BaseModule_TosValueslengthMismatch();
-        }
+        require(bool(tos.length == values.length), Errors.CMTAT_ERC20BaseModule_TosValueslengthMismatch());
         // No need of unchecked block since Soliditiy 0.8.22
         for (uint256 i = 0; i < tos.length; ++i) {
             // We call directly the internal function transfer

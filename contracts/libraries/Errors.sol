@@ -40,9 +40,6 @@ library Errors {
     // AuthorizationModule
     error CMTAT_AuthorizationModule_AddressZeroNotAllowed();
     error CMTAT_AuthorizationModule_InvalidAuthorization();
-    error CMTAT_AuthorizationModule_AuthorizationEngineAlreadySet(); 
-
-    error CMTAT_TransferEngineModule_TransferEngineAlreadySet();
 
     // DocumentModule
     error CMTAT_DocumentModule_SameValue();

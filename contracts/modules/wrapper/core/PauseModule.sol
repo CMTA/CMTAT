@@ -61,9 +61,7 @@ abstract contract PauseModule is PausableUpgradeable, AuthorizationModule {
      */
     function unpause() public onlyRole(PAUSER_ROLE) {
         PauseModuleStorage storage $ = _getPauseModuleStorage();
-        if($._isDeactivated){
-            revert Errors.CMTAT_PauseModule_ContractIsDeactivated();
-        }
+        require(!$._isDeactivated, Errors.CMTAT_PauseModule_ContractIsDeactivated());
         _unpause();
     }
 

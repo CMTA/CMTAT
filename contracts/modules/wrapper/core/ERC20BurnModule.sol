@@ -85,15 +85,10 @@ abstract contract ERC20BurnModule is ERC20Upgradeable, IBurnFromERC20, Authoriza
         uint256[] calldata values,
         string calldata reason
     ) public onlyRole(BURNER_ROLE) {
-        if (accounts.length == 0) {
-            revert Errors.CMTAT_BurnModule_EmptyAccounts();
-        }
+        require(accounts.length != 0, Errors.CMTAT_BurnModule_EmptyAccounts());
         // We do not check that values is not empty since
         // this require will throw an error in this case.
-        if (bool(accounts.length != values.length)) {
-            revert Errors.CMTAT_BurnModule_AccountsValueslengthMismatch();
-        }
-        // No need of unchecked block since Soliditiy 0.8.22
+        require(bool(accounts.length == values.length), Errors.CMTAT_BurnModule_AccountsValueslengthMismatch());
         for (uint256 i = 0; i < accounts.length; ++i ) {
             _burn(accounts[i], values[i]);
             emit Burn(accounts[i], values[i], reason);
@@ -121,10 +116,8 @@ abstract contract ERC20BurnModule is ERC20Upgradeable, IBurnFromERC20, Authoriza
         // Allowance check
         address sender =  _msgSender();
         uint256 currentAllowance = allowance(account, sender);
-        if(currentAllowance < value){
-            // ERC-6093
-            revert ERC20InsufficientAllowance(sender, currentAllowance, value);
-        }
+        // Generate  ERC-6093 error if insufficient allowance 
+        require(currentAllowance >= value, ERC20InsufficientAllowance(sender, currentAllowance, value) );
         // Update allowance
         unchecked {
             _approve(account, sender, currentAllowance - value);

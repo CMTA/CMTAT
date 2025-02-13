@@ -79,9 +79,7 @@ abstract contract DebtModule is AuthorizationModule, IDebtEngine {
         IDebtEngine debtEngine_
     ) external onlyRole(DEBT_ROLE) {
         DebtModuleStorage storage $ = _getDebtModuleStorage();
-        if ($._debtEngine == debtEngine_){
-            revert Errors.CMTAT_DebtModule_SameValue();
-        }
+        require($._debtEngine != debtEngine_, Errors.CMTAT_DebtModule_SameValue());
         _setDebtEngine($, debtEngine_);
     }
 

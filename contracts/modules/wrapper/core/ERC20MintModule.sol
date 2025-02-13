@@ -68,15 +68,10 @@ abstract contract ERC20MintModule is ERC20Upgradeable, IMintERC20, Authorization
         address[] calldata accounts,
         uint256[] calldata values
     ) public onlyRole(MINTER_ROLE) {
-        if (accounts.length == 0) {
-            revert Errors.CMTAT_MintModule_EmptyAccounts();
-        }
+        require(accounts.length > 0, Errors.CMTAT_MintModule_EmptyAccounts());
         // We do not check that values is not empty since
         // this require will throw an error in this case.
-        if (bool(accounts.length != values.length)) {
-            revert Errors.CMTAT_MintModule_AccountsValueslengthMismatch();
-        }
-        // No need of unchecked block since Soliditiy 0.8.22
+        require(bool(accounts.length == values.length), Errors.CMTAT_MintModule_AccountsValueslengthMismatch());
         for (uint256 i = 0; i < accounts.length; ++i ) {
             _mint(accounts[i], values[i]);
             emit Mint(accounts[i], values[i]);

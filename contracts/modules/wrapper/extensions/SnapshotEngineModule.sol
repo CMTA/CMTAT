@@ -56,9 +56,7 @@ abstract contract SnapshotEngineModule is AuthorizationModule {
         ISnapshotEngine snapshotEngine_
     ) external onlyRole(SNAPSHOOTER_ROLE) {
         SnapshotEngineModuleStorage storage $ = _getSnapshotEngineModuleStorage();
-        if ($._snapshotEngine == snapshotEngine_){
-             revert Errors.CMTAT_SnapshotModule_SameValue();
-        }
+        require($._snapshotEngine != snapshotEngine_, Errors.CMTAT_SnapshotModule_SameValue());
         _setSnapshotEngine($, snapshotEngine_);
     }
 
