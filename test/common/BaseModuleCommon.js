@@ -15,7 +15,7 @@ function BaseModuleCommon () {
     }
     it('testHasTheDefinedVersion', async function () {
       // Act + Assert
-      expect(await this.cmtat.VERSION()).to.equal('3.0.0')
+      expect(await this.cmtat.version()).to.equal('3.0.0')
     })
     it('testHasTheDefinedTokenId', async function () {
       // Act + Assert

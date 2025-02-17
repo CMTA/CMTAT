@@ -315,7 +315,7 @@ function ERC20BurnModuleCommon () {
     })
   })
 
-  context('burnBatch', function () {
+  context('batchBurn', function () {
     const REASON = 'BURN_TEST'
     const TOKEN_SUPPLY_BY_HOLDERS = [10, 100, 1000]
     const INITIAL_SUPPLY = TOKEN_SUPPLY_BY_HOLDERS.reduce((a, b) => {
@@ -337,7 +337,7 @@ function ERC20BurnModuleCommon () {
       const TOKEN_HOLDER = [this.admin, this.address1, this.address2];
       ({ logs: this.logs1 } = await this.cmtat
         .connect(this.admin)
-        .mintBatch(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS))
+        .batchMint(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS))
       expect(await this.cmtat.totalSupply()).to.equal(INITIAL_SUPPLY)
     })
 
@@ -347,7 +347,7 @@ function ERC20BurnModuleCommon () {
       // Burn
       this.logs = await this.cmtat
         .connect(this.admin)
-        .burnBatch(TOKEN_HOLDER, TOKEN_BY_HOLDERS_TO_BURN, REASON)
+        .batchBurn(TOKEN_HOLDER, TOKEN_BY_HOLDERS_TO_BURN,  ethers.Typed.string(REASON))
       // Assert
       // emits a Transfer event
       // Assert event
@@ -387,7 +387,7 @@ function ERC20BurnModuleCommon () {
       // Burn
       this.logs = await this.cmtat
         .connect(this.address2)
-        .burnBatch(TOKEN_HOLDER, TOKEN_BY_HOLDERS_TO_BURN, REASON)
+        .batchBurn(TOKEN_HOLDER, TOKEN_BY_HOLDERS_TO_BURN,  ethers.Typed.string(REASON))
 
       // Assert
       // emits a Transfer event
@@ -424,7 +424,7 @@ function ERC20BurnModuleCommon () {
       await expect(
         this.cmtat
           .connect(this.admin)
-          .burnBatch(TOKEN_HOLDER, TOKEN_BY_HOLDERS_TO_BURN_FAIL, '')
+          .batchBurn(TOKEN_HOLDER, TOKEN_BY_HOLDERS_TO_BURN_FAIL,  ethers.Typed.string(''))
       )
         .to.be.revertedWithCustomError(this.cmtat, 'ERC20InsufficientBalance')
         .withArgs(
@@ -439,7 +439,7 @@ function ERC20BurnModuleCommon () {
       await expect(
         this.cmtat
           .connect(this.address2)
-          .burnBatch(TOKEN_HOLDER, TOKEN_BY_HOLDERS_TO_BURN, '')
+          .batchBurn(TOKEN_HOLDER, TOKEN_BY_HOLDERS_TO_BURN,  ethers.Typed.string(''))
       )
         .to.be.revertedWithCustomError(
           this.cmtat,
@@ -448,20 +448,20 @@ function ERC20BurnModuleCommon () {
         .withArgs(this.address2.address, BURNER_ROLE)
     })
 
-    it('testCannotburnBatchIfLengthMismatchMissingAddresses', async function () {
+    it('testCannotbatchBurnIfLengthMismatchMissingAddresses', async function () {
       // Number of addresses is insufficient
       const TOKEN_HOLDER_INVALID = [this.admin, this.address1]
       await expect(
         this.cmtat
           .connect(this.admin)
-          .burnBatch(TOKEN_HOLDER_INVALID, TOKEN_BY_HOLDERS_TO_BURN, REASON)
+          .batchBurn(TOKEN_HOLDER_INVALID, TOKEN_BY_HOLDERS_TO_BURN,  ethers.Typed.string(REASON))
       ).to.be.revertedWithCustomError(
         this.cmtat,
         'CMTAT_BurnModule_AccountsValueslengthMismatch'
       )
     })
 
-    it('testCannotburnBatchIfLengthMismatchTooManyAddresses', async function () {
+    it('testCannotbatchBurnIfLengthMismatchTooManyAddresses', async function () {
       // There are too many addresses
       const TOKEN_HOLDER_INVALID = [
         this.admin,
@@ -472,22 +472,22 @@ function ERC20BurnModuleCommon () {
       await expect(
         this.cmtat
           .connect(this.admin)
-          .burnBatch(TOKEN_HOLDER_INVALID, TOKEN_BY_HOLDERS_TO_BURN, REASON)
+          .batchBurn(TOKEN_HOLDER_INVALID, TOKEN_BY_HOLDERS_TO_BURN,  ethers.Typed.string(REASON))
       ).to.be.revertedWithCustomError(
         this.cmtat,
         'CMTAT_BurnModule_AccountsValueslengthMismatch'
       )
     })
 
-    it('testCannotburnBatchIfAccountsIsEmpty', async function () {
+    it('testCannotbatchBurnIfAccountsIsEmpty', async function () {
       const TOKEN_ADDRESS_TOS_INVALID = []
       await expect(
         this.cmtat
           .connect(this.admin)
-          .burnBatch(
+          .batchBurn(
             TOKEN_ADDRESS_TOS_INVALID,
             TOKEN_BY_HOLDERS_TO_BURN,
-            REASON
+            ethers.Typed.string(REASON)
           )
       ).to.be.revertedWithCustomError(
         this.cmtat,

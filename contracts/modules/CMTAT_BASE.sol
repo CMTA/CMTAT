@@ -25,6 +25,7 @@ import {ISnapshotEngine} from "../interfaces/engine/ISnapshotEngine.sol";
 import {Errors} from "../libraries/Errors.sol";
 
 abstract contract CMTAT_BASE is
+    // OpenZeppelin
     Initializable,
     ContextUpgradeable,
     // Core
@@ -244,6 +245,8 @@ abstract contract CMTAT_BASE is
         }
         ERC20Upgradeable._update(from, to, amount);
     }
+
+
     /*//////////////////////////////////////////////////////////////
                             METAXTX MODULE
     //////////////////////////////////////////////////////////////*/

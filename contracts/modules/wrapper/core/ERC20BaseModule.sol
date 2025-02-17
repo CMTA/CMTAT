@@ -5,6 +5,7 @@ pragma solidity ^0.8.20;
 import {AuthorizationModule} from "../../security/AuthorizationModule.sol";
 // required OZ imports here
 import {ERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
+import {IERC3643ERC20Base} from "../../../interfaces/IERC3643Partial.sol";
 import {Errors} from "../../../libraries/Errors.sol";
 
 /**
@@ -15,14 +16,8 @@ import {Errors} from "../../../libraries/Errors.sol";
  * Inherits from ERC-20
  * 
  */
-abstract contract ERC20BaseModule is ERC20Upgradeable, AuthorizationModule {
-     /* ============ State Variables ============ */
-    bytes32 public constant ENFORCER_ROLE_TRANSFER = keccak256("ENFORCER_ROLE_TRANSFER");
+abstract contract ERC20BaseModule is ERC20Upgradeable, IERC3643ERC20Base, AuthorizationModule {
     /* ============ Events ============ */
-    /**
-    * @notice Emitted when a transfer is forced.
-    */
-    event Enforcement (address indexed enforcer, address indexed account, uint256 amount, string reason);
     /**
     * @notice Emitted when the specified `spender` spends the specified `value` tokens owned by the specified `owner` reducing the corresponding allowance.
     * @dev The allowance can be also "spend" with the function BurnFrom, but in this case, the emitted event is BurnFrom.
@@ -127,10 +122,10 @@ abstract contract ERC20BaseModule is ERC20Upgradeable, AuthorizationModule {
      * - `tos`cannot contain a zero address (check made by transfer)
      * - the caller must have a balance cooresponding to the total values
      */
-    function transferBatch(
+    function batchTransfer(
         address[] calldata tos,
         uint256[] calldata values
-    ) public returns (bool) {
+    ) public override returns (bool) {
         require(tos.length >0, Errors.CMTAT_ERC20BaseModule_EmptyTos());
         // We do not check that values is not empty since
         // this require will throw an error in this case.
@@ -178,18 +173,6 @@ abstract contract ERC20BaseModule is ERC20Upgradeable, AuthorizationModule {
         emit Symbol(symbol_, symbol_);
     }
     
-    /* ============  ERC-20 Enforcement ============ */
-    /**
-    * @notice Triggers a forced transfer.
-    *
-    */
-  function enforceTransfer(address account, address destination, uint256 value, string calldata reason) public onlyRole(ENFORCER_ROLE_TRANSFER) {
-       _transfer(account, destination, value);
-        emit Enforcement(_msgSender(), account, value, reason);
-  }
-
-
-
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/

@@ -120,9 +120,9 @@ abstract contract ValidationModule is
         ValidationModuleInternalStorage storage $ = _getValidationModuleInternalStorage();
         if (paused()) {
             return uint8(REJECTED_CODE_BASE.TRANSFER_REJECTED_PAUSED);
-        } else if (frozen(from)) {
+        } else if (isFrozen(from)) {
             return uint8(REJECTED_CODE_BASE.TRANSFER_REJECTED_FROM_FROZEN);
-        } else if (frozen(to)) {
+        } else if (isFrozen(to)) {
             return uint8(REJECTED_CODE_BASE.TRANSFER_REJECTED_TO_FROZEN);
         } else if (address($._ruleEngine) != address(0)) {
             return $._ruleEngine.detectTransferRestriction(from, to, amount);
@@ -167,7 +167,7 @@ abstract contract ValidationModule is
         address to,
         uint256 /*amount*/
     ) internal view returns (bool) {
-        if (paused() || frozen(from) || frozen(to)) {
+        if (paused() || isFrozen(from) || isFrozen(to)) {
             return false;
         } else{
             return true;

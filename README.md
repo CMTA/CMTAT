@@ -38,7 +38,84 @@ Here the list of ERC supported between different version:
 | [ERC-7201](https://eips.ethereum.org/EIPS/eip-7201)<br/>(Storage namespaces for proxy contract) | Standard Track (final)   | &#x2612;  | &#x2612;   | &#x2611;                                                     |
 | **Other**                                                    |                          |           |            |                                                              |
 | [ERC-2771](https://eips.ethereum.org/EIPS/eip-2771) (Meta Tx / gasless) | Standard Track (final)   | &#x2611;  | &#x2611;   | &#x2611;                                                     |
-| [ERC-6093](https://eips.ethereum.org/EIPS/eip-6093)          | Standard Track (final)   | &#x2612;  | &#x2612;   | &#x2611;<br />(through OpenZeppelin)                         |
+| [ERC-6093](https://eips.ethereum.org/EIPS/eip-6093) (Custom errors for ERC-20 tokens) | Standard Track (final)   | &#x2612;  | &#x2612;   | &#x2611;<br />                                               |
+
+#### ERC-3643
+
+The [ERC-3643](https://eips.ethereum.org/EIPS/eip-3643) is an official Ethereum standard, unlike ERC-1400 and ERC-1404. This standard, also built on top of ERC-20, offers a way to manage and perform compliant transfers of security tokens.
+
+ERC-3643 enforces identity management as a core component of the standards by using a decentralized identity system called [onchainid](https://www.onchainid.com/).
+
+While CMTAT does not include directly the identify management system, it shares with ERC-3643 several same functions.
+
+To represent the level of similarity between ERC-3643 interface and CMTAT functionnalities, we have created three level of conformity.
+
+The interface is available in [IERC3643Partial.sol](./contracts/interfaces/IERC3643Partial.sol)
+
+If you want to use CMTAT to create a version implementing all functions from ERC-3643, you can create it through a dedicated deployment version (similar to what has been done for UUPS and ERC-1363).
+
+**Level**
+
+| **Level** | **Description**                                              |
+| :-------- | :----------------------------------------------------------- |
+| 0         | Not implemented                                              |
+| 1         | Implemented, but the argument names are different<br />(function signature will be the same nevertheless) |
+| 3         | Exactly same function (same argument name, same parameter)   |
+
+The main reason the argument names change is because CMTAT relies on OpenZeppelin to name the arguments
+
+##### Pause
+
+| **ERC-3643**                             | **CMTAT 3.0**                   | **Result** |
+| :--------------------------------------- | :------------------------------ | :--------- |
+| `pause() external`                       | Same                            | 3          |
+| `unpause() external`                     | Same                            | 3          |
+| `paused() external view returns (bool);` | Same                            | 2          |
+| `  event Paused(address _userAddress);`  | event Paused(address account);  | 2          |
+| ` event Unpaused(address _userAddress);` | event Unpaused(address account) | 2          |
+
+##### ERC20Base
+
+| **ERC-3643**                                                 | **CMTAT 3.0**                                                | **Result** |
+| :----------------------------------------------------------- | :----------------------------------------------------------- | :--------- |
+| `setName(string calldata _name) external;`                   | setName(string calldata name_)                               | 2          |
+| `setSymbol(string calldata _symbol) external;`               | function setSymbol(string calldata symbol_)                  | 2          |
+| `function batchTransfer(address[] calldata _toList, uint256[] calldata _amounts) external;` | function batchTransfer(address[] calldata tos,uint256[] calldata values) external returns (bool); | 2          |
+
+##### Supply Management (burn/mint)
+
+| **ERC-3643**                                                 | **CMTAT 3.0 Modules** | **CMTAT 3.0 Functions**                                      | **Result** |
+| :----------------------------------------------------------- | :-------------------- | :----------------------------------------------------------- | :--------- |
+| `  batchMint(address[] calldata _toList, uint256[] calldata _amounts) external;` | MintModule            | `mint(address account, uint256 value)`                       | 2          |
+| `  batchMint(address[] calldata _toList, uint256[] calldata _amounts) external;` | MintModule            | `function mintBatch(address[] calldata accounts,uint256[] calldata values) ` | 2          |
+| `burn(address _userAddress, uint256 _amount) external`       | BurnModule            | `function burn(address account,uint256 value)`               | 2          |
+| `batchBurn(address[] calldata _userAddresses, uint256[] calldata _amounts) external` | BurnModule            | `function burnBatch(address[] calldata accounts,uint256[] calldata values,string calldata reason)` | 2          |
+| `function batchForcedTransfer(address[] calldata _fromList, address[] calldata _toList, uint256[] calldata _amounts) external` | BurnModule            | `function forcedTransfer(address account, address destination, uint256 value) external returns (bool)` | 2          |
+
+##### Enforcement
+
+| **ERC-3643**                      | **CMTAT 3.0**               | **Result** |
+| :-------------------------------- | :-------------------------- | :--------- |
+| ` isFrozen(address _userAddress)` | `isFrozen(address account)` | 2          |
+
+####  ERC-7551
+
+This section presents a correspondence table between [ERC-7551](https://ethereum-magicians.org/t/erc-7551-crypto-security-token-smart-contract-interface-ewpg/16416) and their equivalent functions inside CMTAT.
+
+The ERC-7551 is currently a draft ERC proposed by the Federal Association of Crypto Registrars from Germany to tokenize assets in compliance with [eWPG](https://www.gesetze-im-internet.de/ewpg/). 
+
+The interface is supposed to work on top of additional standards that cover the actual storage of ownership of shares of a security in the form of a token (e.g. ERC-20 or ERC-1155).
+
+| **N°** | **Functionalities**                                          | **ERC-7551 Functions**                    | **CMTAT 3.0.0** (next release                                |
+| :----- | :----------------------------------------------------------- | :---------------------------------------- | :----------------------------------------------------------- |
+| 1      | Freeze and unfreeze a specific amount of tokens              | freezeTokens<br />unfreezeTokens          | Partial<br />All the tokens owned by the address are frozen  |
+| 2      | Pausing transfers The operator can pause and unpause transfers | pauseTransfers                            | ✅<br />function pause/unpause + deactivateContract           |
+| 3      | Link to off-chain document<br />Add the hash of a document   | setPaperContractHash                      | ✅<br />Done with the field terms.<br />This field is represented as a Document also (name, uri, hash, last on-chain modification date) |
+| 4      | Metadata JSON file                                           | setMetaDataJSON                           | ✅<br />Support through the documentModule and [ERC-1643](https://github.com/ethereum/eips/issues/1643) or Link can be put  in the string field “information” |
+| 5      | Forced transfersTransfer `amount` tokens to `to` without requiring the consent of `fro`m | forceTransferFrom                         | ✅<br />Function forceTransfer                                |
+| 6      | Token supply managementreduce the balance of `tokenHolder` by `amount` without increasing the amount of tokens of any other holder | destroyTokens                             | ✅<br />Function burn                                         |
+| 7      | Token supply managementincrease the balance of `to` by `amount` without decreasing the amount of tokens from any other holder. | issue                                     | ✅<br />Function mint and mintBatch                           |
+| 8      | Transfer compliance<br />Check if a transfer is valid        | `canTransfer() `and a `canTransferFrom()` | ✅ <br />With [ERC-1404](https://github.com/ethereum/eips/issues/1404) |
 
 ### Modules
 

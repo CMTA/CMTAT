@@ -12,11 +12,11 @@ function ERC20BaseModuleCommon () {
       // Act
       this.logs = await this.cmtat
         .connect(this.admin)
-        .enforceTransfer(
+        .forcedTransfer(
           this.address1,
           this.address2,
           AMOUNT_TO_TRANSFER,
-          REASON
+          ethers.Typed.string(REASON)
         )
       // Assert
       expect(await this.cmtat.balanceOf(this.address1)).to.equal('30')
@@ -40,11 +40,11 @@ function ERC20BaseModuleCommon () {
       // Act
       this.logs = await this.cmtat
         .connect(this.admin)
-        .enforceTransfer(
+        .forcedTransfer(
           this.address1,
           this.address2,
           AMOUNT_TO_TRANSFER,
-          REASON
+          ethers.Typed.string(REASON)
         )
       // Assert
       expect(await this.cmtat.balanceOf(this.address1)).to.equal(
@@ -66,7 +66,7 @@ function ERC20BaseModuleCommon () {
       await expect(
         this.cmtat
           .connect(this.address2)
-          .enforceTransfer(this.address1, this.address2, 20, 'Bad guy')
+          .forcedTransfer(this.address1, this.address2, 20, ethers.Typed.string('Bad guy'))
       )
         .to.be.revertedWithCustomError(
           this.cmtat,
@@ -415,7 +415,7 @@ function ERC20BaseModuleCommon () {
     })
   })
 
-  context('transferBatch', function () {
+  context('batchTransfer', function () {
     const TOKEN_AMOUNTS = [10n, 100n, 1000n]
 
     beforeEach(async function () {
@@ -428,12 +428,12 @@ function ERC20BaseModuleCommon () {
       )
     })
 
-    it('testTransferBatch', async function () {
+    it('testbatchTransfer', async function () {
       const TOKEN_ADDRESS_TOS = [this.address1, this.address2, this.address3]
       // Act
       this.logs = await this.cmtat
         .connect(this.admin)
-        .transferBatch(TOKEN_ADDRESS_TOS, TOKEN_AMOUNTS)
+        .batchTransfer(TOKEN_ADDRESS_TOS, TOKEN_AMOUNTS)
       // Assert
       for (let i = 0; i < TOKEN_ADDRESS_TOS.length; ++i) {
         expect(await this.cmtat.balanceOf(TOKEN_ADDRESS_TOS[i])).to.equal(
@@ -449,7 +449,7 @@ function ERC20BaseModuleCommon () {
     })
 
     // ADDRESS1 -> ADDRESS2
-    it('testCannotTransferBatchMoreTokensThanOwn', async function () {
+    it('testCannotbatchTransferMoreTokensThanOwn', async function () {
       const TOKEN_ADDRESS_TOS = [this.address1, this.address2, this.address3]
       const BALANCE_AFTER_FIRST_TRANSFER =
         (await this.cmtat.balanceOf(this.admin)) - TOKEN_AMOUNTS[0]
@@ -464,7 +464,7 @@ function ERC20BaseModuleCommon () {
       await expect(
         this.cmtat
           .connect(this.admin)
-          .transferBatch(TOKEN_ADDRESS_TOS, TOKEN_AMOUNTS_INVALID)
+          .batchTransfer(TOKEN_ADDRESS_TOS, TOKEN_AMOUNTS_INVALID)
       )
         .to.be.revertedWithCustomError(this.cmtat, 'ERC20InsufficientBalance')
         .withArgs(
@@ -474,20 +474,20 @@ function ERC20BaseModuleCommon () {
         )
     })
 
-    it('testCannotTransferBatchIfLengthMismatchMissingAddresses', async function () {
+    it('testCannotbatchTransferIfLengthMismatchMissingAddresses', async function () {
       // Number of addresses is insufficient
       const TOKEN_ADDRESS_TOS_INVALID = [this.address1, this.address2]
       await expect(
         this.cmtat
           .connect(this.admin)
-          .transferBatch(TOKEN_ADDRESS_TOS_INVALID, TOKEN_AMOUNTS)
+          .batchTransfer(TOKEN_ADDRESS_TOS_INVALID, TOKEN_AMOUNTS)
       ).to.be.revertedWithCustomError(
         this.cmtat,
         'CMTAT_ERC20BaseModule_TosValueslengthMismatch'
       )
     })
 
-    it('testCannotTransferBatchIfLengthMismatchTooManyAddresses', async function () {
+    it('testCannotbatchTransferIfLengthMismatchTooManyAddresses', async function () {
       // There are too many addresses
       const TOKEN_ADDRESS_TOS_INVALID = [
         this.address1,
@@ -498,19 +498,19 @@ function ERC20BaseModuleCommon () {
       await expect(
         this.cmtat
           .connect(this.admin)
-          .transferBatch(TOKEN_ADDRESS_TOS_INVALID, TOKEN_AMOUNTS)
+          .batchTransfer(TOKEN_ADDRESS_TOS_INVALID, TOKEN_AMOUNTS)
       ).to.be.revertedWithCustomError(
         this.cmtat,
         'CMTAT_ERC20BaseModule_TosValueslengthMismatch'
       )
     })
 
-    it('testCannotTransferBatchIfTOSIsEmpty', async function () {
+    it('testCannotbatchTransferIfTOSIsEmpty', async function () {
       const TOKEN_ADDRESS_TOS_INVALID = []
       await expect(
         this.cmtat
           .connect(this.admin)
-          .transferBatch(TOKEN_ADDRESS_TOS_INVALID, TOKEN_AMOUNTS)
+          .batchTransfer(TOKEN_ADDRESS_TOS_INVALID, TOKEN_AMOUNTS)
       ).to.be.revertedWithCustomError(
         this.cmtat,
         'CMTAT_ERC20BaseModule_EmptyTos'

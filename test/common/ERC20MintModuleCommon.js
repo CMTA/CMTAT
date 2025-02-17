@@ -117,7 +117,7 @@ function ERC20MintModuleCommon () {
       // Issue 20 and check balances and total supply
       this.logs = await this.cmtat
         .connect(this.admin)
-        .mintBatch(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS)
+        .batchMint(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS)
 
       // Assert
       for (let i = 0; i < TOKEN_HOLDER.length; ++i) {
@@ -164,7 +164,7 @@ function ERC20MintModuleCommon () {
       // Issue 20 and check balances and total supply
       this.logs = await this.cmtat
         .connect(this.address1)
-        .mintBatch(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS)
+        .batchMint(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS)
 
       // Assert
       for (let i = 0; i < TOKEN_HOLDER.length; ++i) {
@@ -193,13 +193,13 @@ function ERC20MintModuleCommon () {
       }
     })
 
-    it('testCannotMintBatchByNonMinter', async function () {
+    it('testCannotbatchMintByNonMinter', async function () {
       const TOKEN_HOLDER = [this.admin, this.address1, this.address2]
       const TOKEN_SUPPLY_BY_HOLDERS = [10n, 100n, 1000n]
       await expect(
         this.cmtat
           .connect(this.address1)
-          .mintBatch(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS)
+          .batchMint(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS)
       )
         .to.be.revertedWithCustomError(
           this.cmtat,
@@ -208,21 +208,21 @@ function ERC20MintModuleCommon () {
         .withArgs(this.address1.address, MINTER_ROLE)
     })
 
-    it('testCannotMintBatchIfLengthMismatchMissingAddresses', async function () {
+    it('testCannotbatchMintIfLengthMismatchMissingAddresses', async function () {
       // Number of addresses is insufficient
       const TOKEN_HOLDER_INVALID = [this.admin, this.address1]
       const TOKEN_SUPPLY_BY_HOLDERS = [10n, 100n, 1000n]
       await expect(
         this.cmtat
           .connect(this.admin)
-          .mintBatch(TOKEN_HOLDER_INVALID, TOKEN_SUPPLY_BY_HOLDERS)
+          .batchMint(TOKEN_HOLDER_INVALID, TOKEN_SUPPLY_BY_HOLDERS)
       ).to.be.revertedWithCustomError(
         this.cmtat,
         'CMTAT_MintModule_AccountsValueslengthMismatch'
       )
     })
 
-    it('testCannotMintBatchIfLengthMismatchTooManyAddresses', async function () {
+    it('testCannotbatchMintIfLengthMismatchTooManyAddresses', async function () {
       // There are too many addresses
       const TOKEN_HOLDER_INVALID = [
         this.admin,
@@ -234,20 +234,20 @@ function ERC20MintModuleCommon () {
       await expect(
         this.cmtat
           .connect(this.admin)
-          .mintBatch(TOKEN_HOLDER_INVALID, TOKEN_SUPPLY_BY_HOLDERS)
+          .batchMint(TOKEN_HOLDER_INVALID, TOKEN_SUPPLY_BY_HOLDERS)
       ).to.be.revertedWithCustomError(
         this.cmtat,
         'CMTAT_MintModule_AccountsValueslengthMismatch'
       )
     })
 
-    it('testCannotMintBatchIfTOSIsEmpty', async function () {
+    it('testCannotbatchMintIfTOSIsEmpty', async function () {
       const TOKEN_HOLDER_INVALID = []
       const TOKEN_SUPPLY_BY_HOLDERS = []
       await expect(
         this.cmtat
           .connect(this.admin)
-          .mintBatch(TOKEN_HOLDER_INVALID, TOKEN_SUPPLY_BY_HOLDERS)
+          .batchMint(TOKEN_HOLDER_INVALID, TOKEN_SUPPLY_BY_HOLDERS)
       ).to.be.revertedWithCustomError(
         this.cmtat,
         'CMTAT_MintModule_EmptyAccounts'

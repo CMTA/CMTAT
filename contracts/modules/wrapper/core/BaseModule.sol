@@ -4,14 +4,15 @@ pragma solidity ^0.8.20;
 
 import {AuthorizationModule} from "../../security/AuthorizationModule.sol";
 import {IERC1643CMTAT, IERC1643} from "../../../interfaces/draft-IERC1643CMTAT.sol";
+import {IERC3643Base} from "../../../interfaces/IERC3643Partial.sol";
 
-abstract contract BaseModule is AuthorizationModule {
+abstract contract BaseModule is IERC3643Base, AuthorizationModule {
     /* ============ State Variables ============ */
     /** 
     * @notice 
     * Get the current version of the smart contract
     */
-    string public constant VERSION = "3.0.0";
+    string private constant VERSION = "3.0.0";
 
  struct Terms {
  	string name;
@@ -60,7 +61,12 @@ abstract contract BaseModule is AuthorizationModule {
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
-
+    /**
+    * @notice ERC-3643 version function
+    */
+    function version() public view virtual override returns (string memory) {
+       return VERSION;
+    }
     function tokenId() public view virtual returns (string memory) {
         BaseModuleStorage storage $ = _getBaseModuleStorage();
         return $._tokenId;

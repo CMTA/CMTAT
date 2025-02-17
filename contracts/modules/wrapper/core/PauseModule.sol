@@ -5,7 +5,9 @@ pragma solidity ^0.8.20;
 import {PausableUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/PausableUpgradeable.sol";
 import {AuthorizationModule} from "../../security/AuthorizationModule.sol";
 import {Errors} from "../../../libraries/Errors.sol";
-/**
+import {IERC3643Pause} from "../../../interfaces/IERC3643Partial.sol";
+
+/**IERC3643Pause
  * @title Pause Module
  * @dev 
  * Put in pause or deactivate the contract
@@ -16,7 +18,7 @@ import {Errors} from "../../../libraries/Errors.sol";
  * period, or having an emergency switch for freezing all token transfers in the
  * event of a large bug.
  */
-abstract contract PauseModule is PausableUpgradeable, AuthorizationModule {
+abstract contract PauseModule is PausableUpgradeable, AuthorizationModule, IERC3643Pause {
     /* ============ State Variables ============ */
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     string internal constant TEXT_TRANSFER_REJECTED_PAUSED =
@@ -38,6 +40,10 @@ abstract contract PauseModule is PausableUpgradeable, AuthorizationModule {
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
+    function paused() public virtual view override(IERC3643Pause, PausableUpgradeable)  returns (bool){
+        return PausableUpgradeable.paused();
+   }
+    
     /**
      * @notice Pauses all token transfers.
      * @dev See {ERC20Pausable} and {Pausable-_pause}.

@@ -11,13 +11,13 @@ function EnforcementModuleCommon () {
 
     it('testAdminCanFreezeAddress', async function () {
       // Arrange - Assert
-      expect(await this.cmtat.frozen(this.address1)).to.equal(false)
+      expect(await this.cmtat.isFrozen(this.address1)).to.equal(false)
       // Act
       this.logs = await this.cmtat
         .connect(this.admin)
         .freeze(this.address1, reasonFreeze)
       // Assert
-      expect(await this.cmtat.frozen(this.address1)).to.equal(true)
+      expect(await this.cmtat.isFrozen(this.address1)).to.equal(true)
       // emits a Freeze event
       await expect(this.logs)
         .to.emit(this.cmtat, 'Freeze')
@@ -26,13 +26,13 @@ function EnforcementModuleCommon () {
 
     it('testReasonParameterCanBeEmptyString', async function () {
       // Arrange - Assert
-      expect(await this.cmtat.frozen(this.address1)).to.equal(false)
+      expect(await this.cmtat.isFrozen(this.address1)).to.equal(false)
       // Act
       this.logs = await this.cmtat
         .connect(this.admin)
         .freeze(this.address1, '')
       // Assert
-      expect(await this.cmtat.frozen(this.address1)).to.equal(true)
+      expect(await this.cmtat.isFrozen(this.address1)).to.equal(true)
       // emits a Freeze event
       await expect(this.logs)
         .to.emit(this.cmtat, 'Freeze')
@@ -45,7 +45,7 @@ function EnforcementModuleCommon () {
         .connect(this.admin)
         .grantRole(ENFORCER_ROLE, this.address2)
       // Arrange - Assert
-      expect(await this.cmtat.frozen(this.address1)).to.equal(false)
+      expect(await this.cmtat.isFrozen(this.address1)).to.equal(false)
       // Act
       this.logs = await this.cmtat
         .connect(this.address2)
@@ -56,7 +56,7 @@ function EnforcementModuleCommon () {
         await this.cmtat.validateTransfer(this.address1, this.address2, 10)
       ).to.equal(false)
       // Assert
-      expect(await this.cmtat.frozen(this.address1)).to.equal(true)
+      expect(await this.cmtat.isFrozen(this.address1)).to.equal(true)
 
       // emits a Freeze event
       await expect(this.logs)
@@ -68,13 +68,13 @@ function EnforcementModuleCommon () {
       // Arrange
       await this.cmtat.connect(this.admin).freeze(this.address1, reasonFreeze)
       // Arrange - Assert
-      expect(await this.cmtat.frozen(this.address1)).to.equal(true)
+      expect(await this.cmtat.isFrozen(this.address1)).to.equal(true)
       // Act
       this.logs = await this.cmtat
         .connect(this.admin)
         .unfreeze(this.address1, reasonUnfreeze)
       // Assert
-      expect(await this.cmtat.frozen(this.address1)).to.equal(false)
+      expect(await this.cmtat.isFrozen(this.address1)).to.equal(false)
       await expect(this.logs)
         .to.emit(this.cmtat, 'Unfreeze')
         .withArgs(this.admin, this.address1, reasonUnfreeze, reasonUnfreeze)
@@ -87,13 +87,13 @@ function EnforcementModuleCommon () {
         .connect(this.admin)
         .grantRole(ENFORCER_ROLE, this.address2)
       // Arrange - Assert
-      expect(await this.cmtat.frozen(this.address1)).to.equal(true)
+      expect(await this.cmtat.isFrozen(this.address1)).to.equal(true)
       // Act
       this.logs = await this.cmtat
         .connect(this.address2)
         .unfreeze(this.address1, reasonUnfreeze)
       // Assert
-      expect(await this.cmtat.frozen(this.address1)).to.equal(false)
+      expect(await this.cmtat.isFrozen(this.address1)).to.equal(false)
       // emits an Unfreeze event
       await expect(this.logs)
         .to.emit(this.cmtat, 'Unfreeze')
@@ -111,7 +111,7 @@ function EnforcementModuleCommon () {
         )
         .withArgs(this.address2.address, ENFORCER_ROLE)
       // Assert
-      expect(await this.cmtat.frozen(this.address1)).to.equal(false)
+      expect(await this.cmtat.isFrozen(this.address1)).to.equal(false)
     })
 
     it('testCannotNonEnforcerUnfreezeAddress', async function () {
@@ -127,11 +127,11 @@ function EnforcementModuleCommon () {
         )
         .withArgs(this.address2.address, ENFORCER_ROLE)
       // Assert
-      expect(await this.cmtat.frozen(this.address1)).to.equal(true)
+      expect(await this.cmtat.isFrozen(this.address1)).to.equal(true)
     })
 
     // reverts if address1 transfers tokens to address2 when paused
-    it('testCannotTransferWhenFromIsFrozenWithTransfer', async function () {
+    it('testCannotTransferWhenFromIsisFrozenWithTransfer', async function () {
       // Act
       await this.cmtat.connect(this.admin).freeze(this.address1, reasonFreeze)
       // Assert
@@ -160,7 +160,7 @@ function EnforcementModuleCommon () {
     })
 
     // reverts if address3 transfers tokens from address1 to this.address2 when paused
-    it('testCannotTransferTokenWhenToIsFrozenWithTransferFrom', async function () {
+    it('testCannotTransferTokenWhenToIsisFrozenWithTransferFrom', async function () {
       // Arrange
       // Define allowance
       await this.cmtat.connect(this.address3).approve(this.address1, 20)
@@ -193,28 +193,28 @@ function EnforcementModuleCommon () {
     })
 
     // Improvement: check the return value but it is not possible to get the return value of a state modifying function
-    it('testFreezeDoesNotEmitEventIfAddressAlreadyFrozen', async function () {
+    it('testFreezeDoesNotEmitEventIfAddressAlreadyisFrozen', async function () {
       // Arrange - Assert
-      expect(await this.cmtat.frozen(this.address1)).to.equal(false)
+      expect(await this.cmtat.isFrozen(this.address1)).to.equal(false)
       // Arrange
       await this.cmtat.connect(this.admin).freeze(this.address1, reasonFreeze)
       // Arrange - Assert
-      expect(await this.cmtat.frozen(this.address1)).to.equal(true)
+      expect(await this.cmtat.isFrozen(this.address1)).to.equal(true)
       // Act
       this.logs = await this.cmtat
         .connect(this.admin)
         .freeze(this.address1, reasonFreeze)
       // Assert
       await expect(this.logs).to.not.emit(this.cmtat, 'Freeze')
-      expect(await this.cmtat.frozen(this.address1)).to.equal(true)
+      expect(await this.cmtat.isFrozen(this.address1)).to.equal(true)
     })
 
     // Improvement: check the return value but it is not possible to get the return value of a state modifying function
-    it('testUnfreezeDoesNotEmitEventIfAddressAlreadyUnfrozen', async function () {
+    it('testUnfreezeDoesNotEmitEventIfAddressAlreadyUnisFrozen', async function () {
       // Arrange
       await this.cmtat.connect(this.admin).freeze(this.address1, reasonFreeze)
       // Arrange - Assert
-      expect(await this.cmtat.frozen(this.address1)).to.equal(true)
+      expect(await this.cmtat.isFrozen(this.address1)).to.equal(true)
       await this.cmtat
         .connect(this.admin)
         .unfreeze(this.address1, reasonFreeze)
@@ -225,7 +225,7 @@ function EnforcementModuleCommon () {
         .unfreeze(this.address1, reasonUnfreeze)
       // Assert
       await expect(this.logs).to.not.emit(this.cmtat, 'Unfreeze')
-      expect(await this.cmtat.frozen(this.address1)).to.equal(false)
+      expect(await this.cmtat.isFrozen(this.address1)).to.equal(false)
     })
   })
 }
