@@ -139,7 +139,7 @@ abstract contract ValidationModule is
         address to,
         uint256 amount
     ) public view override returns (bool) {
-        if (!_validateTransferByModule(from, to, amount)) {
+        if (!_canTransferByModule(from, to, amount)) {
             return false;
         } else {
             return _canTransfer(from, to, amount);
@@ -164,7 +164,7 @@ abstract contract ValidationModule is
         }
     }
 
-    function _validateTransferByModule(
+    function _canTransferByModule(
         address from,
         address to,
         uint256 /*amount*/
@@ -191,7 +191,7 @@ abstract contract ValidationModule is
     }
 
     function _operateOnTransfer(address from, address to, uint256 amount) internal returns (bool){
-        if (!_validateTransferByModule(from, to, amount)){
+        if (!_canTransferByModule(from, to, amount)){
             return false;
         } else{
             ValidationModuleInternalStorage storage $ = _getValidationModuleInternalStorage();

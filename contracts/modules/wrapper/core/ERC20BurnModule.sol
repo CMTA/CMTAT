@@ -6,6 +6,7 @@ import {ERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/
 import {AuthorizationModule} from "../../security/AuthorizationModule.sol";
 import {IBurnFromERC20} from "../../../interfaces/IMintToken.sol";
 import {IERC3643Burn} from "../../../interfaces/IERC3643Partial.sol";
+import {IERC20Allowance} from "../../../interfaces/IERC20Allowance.sol";
 import {Errors} from "../../../libraries/Errors.sol";
 /**
  * @title ERC20Burn module.
@@ -13,7 +14,7 @@ import {Errors} from "../../../libraries/Errors.sol";
  *
  * Contains all burn functions, inherits from ERC-20
  */
-abstract contract ERC20BurnModule is ERC20Upgradeable, IBurnFromERC20, IERC3643Burn, AuthorizationModule {
+abstract contract ERC20BurnModule is ERC20Upgradeable, IERC20Allowance, IBurnFromERC20, IERC3643Burn, AuthorizationModule {
     /* ============ State Variables ============ */
     bytes32 public constant BURNER_ROLE = keccak256("BURNER_ROLE");
     bytes32 public constant BURNER_FROM_ROLE = keccak256("BURNER_FROM_ROLE");
@@ -136,18 +137,13 @@ abstract contract ERC20BurnModule is ERC20Upgradeable, IBurnFromERC20, IERC3643B
     {
         // Allowance check
         address sender =  _msgSender();
-        uint256 currentAllowance = allowance(account, sender);
-        // Generate  ERC-6093 error if insufficient allowance 
-        require(currentAllowance >= value, ERC20InsufficientAllowance(sender, currentAllowance, value) );
-        // Update allowance
-        unchecked {
-            _approve(account, sender, currentAllowance - value);
-        }
+        ERC20Upgradeable._spendAllowance(account, sender, value );
         // burn
         // We also emit a burn event since its a burn operation
         _burnCommon(account, value, "burnFrom");
         // Specific event for the operation
         emit BurnFrom(account, sender, value);
+        emit Spend(account, sender, value);
     }
 
 

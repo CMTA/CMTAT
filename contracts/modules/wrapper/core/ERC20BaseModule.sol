@@ -6,6 +6,7 @@ import {AuthorizationModule} from "../../security/AuthorizationModule.sol";
 // required OZ imports here
 import {ERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 import {IERC3643ERC20Base} from "../../../interfaces/IERC3643Partial.sol";
+import {IERC20Allowance} from "../../../interfaces/IERC20Allowance.sol";
 import {Errors} from "../../../libraries/Errors.sol";
 
 /**
@@ -16,13 +17,7 @@ import {Errors} from "../../../libraries/Errors.sol";
  * Inherits from ERC-20
  * 
  */
-abstract contract ERC20BaseModule is ERC20Upgradeable, IERC3643ERC20Base, AuthorizationModule {
-    /* ============ Events ============ */
-    /**
-    * @notice Emitted when the specified `spender` spends the specified `value` tokens owned by the specified `owner` reducing the corresponding allowance.
-    * @dev The allowance can be also "spend" with the function BurnFrom, but in this case, the emitted event is BurnFrom.
-    */
-    event Spend(address indexed owner, address indexed spender, uint256 value);
+abstract contract ERC20BaseModule is ERC20Upgradeable, IERC20Allowance, IERC3643ERC20Base, AuthorizationModule {
     event Name(string indexed newNameIndexed, string newName);
     event Symbol(string indexed newSymbolIndexed, string newSymbol);
     /* ============ ERC-7201 ============ */
