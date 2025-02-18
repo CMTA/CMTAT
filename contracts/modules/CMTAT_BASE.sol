@@ -2,15 +2,17 @@
 
 pragma solidity ^0.8.20;
 
-// required OZ imports here
+/* ==== OpenZeppelin === */
 import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import {ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
-// Wrapper
-import {BaseModule} from "./wrapper/core/BaseModule.sol";
+/* ==== Wrapper === */
+// ERC20
 import {ERC20BurnModule} from "./wrapper/core/ERC20BurnModule.sol";
 import {ERC20MintModule} from "./wrapper/core/ERC20MintModule.sol";
-import {EnforcementModule} from "./wrapper/core/EnforcementModule.sol";
 import {ERC20BaseModule, ERC20Upgradeable} from "./wrapper/core/ERC20BaseModule.sol";
+// Other
+import {BaseModule} from "./wrapper/core/BaseModule.sol";
+import {EnforcementModule} from "./wrapper/core/EnforcementModule.sol";
 import {PauseModule} from "./wrapper/core/PauseModule.sol";
 import {ValidationModule} from "./wrapper/controllers/ValidationEngineModule.sol";
 import {MetaTxModule, ERC2771ContextUpgradeable} from "./wrapper/extensions/MetaTxModule.sol";
@@ -19,7 +21,7 @@ import {DocumentModule} from "./wrapper/extensions/DocumentEngineModule.sol";
 import {SnapshotEngineModule} from "./wrapper/extensions/SnapshotEngineModule.sol";
 // Security
 import {AuthorizationModule} from "./security/AuthorizationModule.sol";
-// Interface and other library
+ /* ==== Interface and other library === */
 import {ICMTATConstructor} from "../interfaces/ICMTATConstructor.sol";
 import {ISnapshotEngine} from "../interfaces/engine/ISnapshotEngine.sol";
 import {Errors} from "../libraries/Errors.sol";
@@ -156,6 +158,8 @@ abstract contract CMTAT_BASE is
                 Override ERC20Upgradeable, ERC20BaseModule
     //////////////////////////////////////////////////////////////*/
 
+    /* ============  View Functions ============ */
+
     /**
      * @notice Returns the number of decimals used to get its user representation.
      */
@@ -167,22 +171,6 @@ abstract contract CMTAT_BASE is
         returns (uint8)
     {
         return ERC20BaseModule.decimals();
-    }
-
-    /*
-    * @inheritdoc ERC20BaseModule
-    */
-    function transferFrom(
-        address sender,
-        address recipient,
-        uint256 amount
-    )
-        public
-        virtual
-        override(ERC20Upgradeable, ERC20BaseModule)
-        returns (bool)
-    {
-        return ERC20BaseModule.transferFrom(sender, recipient, amount);
     }
 
 
@@ -201,6 +189,33 @@ abstract contract CMTAT_BASE is
         return ERC20BaseModule.symbol();
     }
 
+    /* ============  State Functions ============ */
+    /*
+    * @inheritdoc ERC20BaseModule
+    */
+    function transferFrom(
+        address from,
+        address to,
+        uint256 value
+    )
+        public
+        virtual
+        override(ERC20Upgradeable, ERC20BaseModule)
+        returns (bool)
+    {
+        return ERC20BaseModule.transferFrom(from, to, value);
+    }
+
+    function approve(address spender, uint256 value) public override virtual returns (bool) {
+        address owner = _msgSender();
+        if (!ValidationModule._canApprove(owner, spender, value)) {
+            revert Errors.CMTAT_InvalidApproval(owner, spender, value);
+        }
+        // We call directly the internal OpenZeppelin function _approve
+        // The reason is that the public function adds only the owner address recovery
+        ERC20Upgradeable._approve(owner, spender, value);
+        return true;
+    }
 
     /*//////////////////////////////////////////////////////////////
                 Functions requiring several modules
@@ -245,6 +260,7 @@ abstract contract CMTAT_BASE is
         }
         ERC20Upgradeable._update(from, to, amount);
     }
+
 
 
     /*//////////////////////////////////////////////////////////////

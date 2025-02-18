@@ -9,7 +9,7 @@ import {PauseModule}  from "../core/PauseModule.sol";
 import {EnforcementModule} from "../core/EnforcementModule.sol";
 import {Errors} from "../../../libraries/Errors.sol";
 import {IERC1404} from "../../../interfaces/draft-IERC1404.sol";
-import {IERC3643Compliance} from "../../../interfaces/IERC3643Partial.sol";
+import {IERC3643ComplianceRead} from "../../../interfaces/IERC3643Partial.sol";
 import {IRuleEngine} from "../../../interfaces/engine/IRuleEngine.sol";
 /**
  * @dev Validation module.
@@ -22,7 +22,7 @@ abstract contract ValidationModule is
     PauseModule,
     EnforcementModule,
     IERC1404,
-    IERC3643Compliance
+    IERC3643ComplianceRead
 {
     /* ============ State Variables ============ */
     string constant TEXT_TRANSFER_OK = "No restriction";
@@ -111,13 +111,13 @@ abstract contract ValidationModule is
      * @dev ERC1404 check if _value token can be transferred from _from to _to
      * @param from address The address which you want to send tokens from
      * @param to address The address which you want to transfer to
-     * @param amount uint256 the amount of tokens to be transferred
+     * @param value uint256 the amount of tokens to be transferred
      * @return code of the rejection reason
      */
     function detectTransferRestriction(
         address from,
         address to,
-        uint256 amount
+        uint256 value
     ) public view override returns (uint8 code) {
         ValidationModuleInternalStorage storage $ = _getValidationModuleInternalStorage();
         if (paused()) {
@@ -127,7 +127,7 @@ abstract contract ValidationModule is
         } else if (isFrozen(to)) {
             return uint8(IERC1404.REJECTED_CODE_BASE.TRANSFER_REJECTED_TO_FROZEN);
         } else if (address($._ruleEngine) != address(0)) {
-            return $._ruleEngine.detectTransferRestriction(from, to, amount);
+            return $._ruleEngine.detectTransferRestriction(from, to, value);
         } 
         else {
             return uint8(IERC1404.REJECTED_CODE_BASE.TRANSFER_OK);
@@ -137,12 +137,23 @@ abstract contract ValidationModule is
     function canTransfer(
         address from,
         address to,
-        uint256 amount
+        uint256 value
     ) public view override returns (bool) {
-        if (!_canTransferByModule(from, to, amount)) {
+        if (!_canTransferByModule(from, to, value)) {
             return false;
         } else {
-            return _canTransfer(from, to, amount);
+            return _canTransfer(from, to, value);
+        }
+    }
+
+    function canApprove(
+        address owner, address spender, uint256 value
+    ) public view returns (bool) {
+        ValidationModuleInternalStorage storage $ = _getValidationModuleInternalStorage();
+        if (address($._ruleEngine) != address(0)) {
+            return $._ruleEngine.canApprove(owner, spender, value);
+        } else{
+            return true;
         }
     }
 
@@ -154,11 +165,11 @@ abstract contract ValidationModule is
     function _canTransfer(
         address from,
         address to,
-        uint256 amount
+        uint256 value
     ) internal view returns (bool) {
         ValidationModuleInternalStorage storage $ = _getValidationModuleInternalStorage();
         if (address($._ruleEngine) != address(0)) {
-            return $._ruleEngine.canTransfer(from, to, amount);
+            return $._ruleEngine.canTransfer(from, to, value);
         } else{
             return true;
         }
@@ -167,7 +178,7 @@ abstract contract ValidationModule is
     function _canTransferByModule(
         address from,
         address to,
-        uint256 /*amount*/
+        uint256 /*value*/
     ) internal view returns (bool) {
         if (paused() || isFrozen(from) || isFrozen(to)) {
             return false;
@@ -190,18 +201,29 @@ abstract contract ValidationModule is
         emit RuleEngine(ruleEngine_);
     }
 
-    function _operateOnTransfer(address from, address to, uint256 amount) internal returns (bool){
-        if (!_canTransferByModule(from, to, amount)){
+    function _operateOnTransfer(address from, address to, uint256 value) internal returns (bool){
+        if (!_canTransferByModule(from, to, value)){
             return false;
         } else{
             ValidationModuleInternalStorage storage $ = _getValidationModuleInternalStorage();
             if (address($._ruleEngine) != address(0)){
-                return $._ruleEngine.operateOnTransfer(from, to, amount);
+                return $._ruleEngine.transferred(from, to, value);
             }else{
                 return true;
             }
         }
     }
+
+
+    function _canApprove(address owner, address spender, uint256 value) internal view returns (bool){
+        ValidationModuleInternalStorage storage $ = _getValidationModuleInternalStorage();
+        if (address($._ruleEngine) != address(0)){
+                return $._ruleEngine.canApprove(owner, spender, value);
+        }else{
+                return true;
+        }
+    }
+
 
     /* ============ ERC-7201 ============ */
     function _getValidationModuleInternalStorage() internal pure returns (ValidationModuleInternalStorage storage $) {

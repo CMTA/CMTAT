@@ -127,7 +127,7 @@ abstract contract ERC20BaseModule is ERC20Upgradeable, IERC20Allowance, IERC3643
         require(bool(tos.length == values.length), Errors.CMTAT_ERC20BaseModule_TosValueslengthMismatch());
         // No need of unchecked block since Soliditiy 0.8.22
         for (uint256 i = 0; i < tos.length; ++i) {
-            // We call directly the internal function transfer
+            // We call directly the internal OpenZeppelin function _transfer
             // The reason is that the public function adds only the owner address recovery
             ERC20Upgradeable._transfer(_msgSender(), tos[i], values[i]);
         }

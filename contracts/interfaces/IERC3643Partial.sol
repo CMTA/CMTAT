@@ -36,20 +36,27 @@ interface IERC3643Mint{
 }
 interface IERC3643Burn{
     // transfer actions
-    function forcedTransfer(address account, address destination, uint256 value) external returns (bool);
+    function forcedTransfer(address account, address to, uint256 value) external returns (bool);
     function burn(address account,uint256 value) external;
     // batch functions
     function batchBurn(address[] calldata accounts,uint256[] calldata values) external;
 }
 
-interface IERC3643Compliance {
+interface IERC3643ComplianceRead {
     /**
      * @dev Returns true if the transfer is valid, and false otherwise.
      */
     function canTransfer(
-        address _from,
-        address _to,
-        uint256 _amount
+        address from,
+        address to,
+        uint256 value
     ) external view returns (bool isValid);
+}
+
+interface IERC3643ComplianceWrite {
+    /**
+     * @dev Returns true if the transfer is valid, and false otherwise.
+     */
+    function transferred(address from, address to, uint256 value) external returns (bool isValid);
 }
 

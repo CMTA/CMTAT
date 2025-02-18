@@ -6,9 +6,9 @@ pragma solidity ^0.8.20;
 * @dev CMTAT custom errors
 */
 library Errors {
-    // CMTAT
+    // CMTAT Base
     error CMTAT_InvalidTransfer(address from, address to, uint256 amount);
-
+    error CMTAT_InvalidApproval(address owner, address spender, uint256 value);
     // SnapshotModule
     error CMTAT_SnapshotModule_SameValue();
     

@@ -37,16 +37,16 @@ contract RuleEngineMock is IRuleEngineMock {
     }
 
     function detectTransferRestriction(
-        address _from,
-        address _to,
-        uint256 _amount
+       address from,
+        address to,
+        uint256 value
     ) public view override returns (uint8) {
         uint256 ruleArrayLength = _rules.length;
         for (uint256 i; i < ruleArrayLength; ) {
             uint8 restriction = _rules[i].detectTransferRestriction(
-                _from,
-                _to,
-                _amount
+               from,
+               to, 
+               value
             );
             if (restriction != uint8(REJECTED_CODE_BASE.TRANSFER_OK)) {
                 return restriction;
@@ -59,21 +59,33 @@ contract RuleEngineMock is IRuleEngineMock {
     }
 
     function canTransfer(
-        address _from,
-        address _to,
-        uint256 _amount
+        address from,
+        address to,
+        uint256 value
     ) public view override returns (bool) {
-        return detectTransferRestriction(_from, _to, _amount) == 0;
+        return detectTransferRestriction(from, to, value) == 0;
     }
+
+
+    function canApprove(
+        address /* from */,
+        address /* to */,
+        uint256 /* value */
+    ) public pure override returns (bool) {
+        return true;
+    }
+
+
+
 
     /*
     * @dev 
     * Warning: if you want to use this mock, you have to restrict the access to this function through an an access control
     */
-    function operateOnTransfer(  address _from,
-        address _to,
-        uint256 _amount) view public override returns (bool){
-        return canTransfer(_from, _to, _amount);
+    function transferred(  address from,
+        address to,
+        uint256 value) view public override returns (bool){
+        return canTransfer(from, to, value);
     }
 
     /**
