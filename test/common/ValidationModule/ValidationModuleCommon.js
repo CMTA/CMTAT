@@ -19,12 +19,12 @@ function ValidationModuleCommon () {
         )
       }
     })
-    it('testCanValidateTransferWithoutRuleEngine', async function () {
+    it('testCancanTransferWithoutRuleEngine', async function () {
       // Arrange
       await this.cmtat.connect(this.admin).setRuleEngine(ZERO_ADDRESS)
       // Act + Assert
       expect(
-        await this.cmtat.validateTransfer(this.address1, this.address2, 10)
+        await this.cmtat.canTransfer(this.address1, this.address2, 10)
       ).to.equal(true)
     })
 
@@ -38,7 +38,7 @@ function ValidationModuleCommon () {
         )
       ).to.equal(0)
       expect(
-        await this.cmtat.validateTransfer(this.address1, this.address2, 11)
+        await this.cmtat.canTransfer(this.address1, this.address2, 11)
       ).to.equal(true)
     })
 
@@ -60,7 +60,7 @@ function ValidationModuleCommon () {
       ).to.equal(10n)
 
       expect(
-        await this.cmtat.validateTransfer(
+        await this.cmtat.canTransfer(
           this.address1,
           this.address2,
           RULE_MOCK_AMOUNT_MAX + 1
@@ -87,7 +87,7 @@ function ValidationModuleCommon () {
       const AMOUNT_TO_TRANSFER = 11n
       // Act
       expect(
-        await this.cmtat.validateTransfer(
+        await this.cmtat.canTransfer(
           this.address1,
           this.address2,
           AMOUNT_TO_TRANSFER
@@ -114,7 +114,7 @@ function ValidationModuleCommon () {
       const AMOUNT_TO_TRANSFER = RULE_MOCK_AMOUNT_MAX + 1
       // Act
       expect(
-        await this.cmtat.validateTransfer(
+        await this.cmtat.canTransfer(
           this.address1,
           this.address2,
           AMOUNT_TO_TRANSFER

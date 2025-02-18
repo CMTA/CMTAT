@@ -53,7 +53,7 @@ function EnforcementModuleCommon () {
       // Act + Assert
       // Act + Assert
       expect(
-        await this.cmtat.validateTransfer(this.address1, this.address2, 10)
+        await this.cmtat.canTransfer(this.address1, this.address2, 10)
       ).to.equal(false)
       // Assert
       expect(await this.cmtat.isFrozen(this.address1)).to.equal(true)

@@ -42,3 +42,14 @@ interface IERC3643Burn{
     function batchBurn(address[] calldata accounts,uint256[] calldata values) external;
 }
 
+interface IERC3643Compliance {
+    /**
+     * @dev Returns true if the transfer is valid, and false otherwise.
+     */
+    function canTransfer(
+        address _from,
+        address _to,
+        uint256 _amount
+    ) external view returns (bool isValid);
+}
+

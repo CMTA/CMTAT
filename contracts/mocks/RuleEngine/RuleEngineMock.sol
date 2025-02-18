@@ -58,7 +58,7 @@ contract RuleEngineMock is IRuleEngineMock {
         return uint8(REJECTED_CODE_BASE.TRANSFER_OK);
     }
 
-    function validateTransfer(
+    function canTransfer(
         address _from,
         address _to,
         uint256 _amount
@@ -73,7 +73,7 @@ contract RuleEngineMock is IRuleEngineMock {
     function operateOnTransfer(  address _from,
         address _to,
         uint256 _amount) view public override returns (bool){
-        return validateTransfer(_from, _to, _amount);
+        return canTransfer(_from, _to, _amount);
     }
 
     /**

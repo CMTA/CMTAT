@@ -46,11 +46,9 @@ The [ERC-3643](https://eips.ethereum.org/EIPS/eip-3643) is an official Ethereum 
 
 ERC-3643 enforces identity management as a core component of the standards by using a decentralized identity system called [onchainid](https://www.onchainid.com/).
 
-While CMTAT does not include directly the identify management system, it shares with ERC-3643 several same functions.
+While CMTAT does not include directly the identity management system, it shares with ERC-3643 several same functions. The interface is available in [IERC3643Partial.sol](./contracts/interfaces/IERC3643Partial.sol)
 
 To represent the level of similarity between ERC-3643 interface and CMTAT functionnalities, we have created three level of conformity.
-
-The interface is available in [IERC3643Partial.sol](./contracts/interfaces/IERC3643Partial.sol)
 
 If you want to use CMTAT to create a version implementing all functions from ERC-3643, you can create it through a dedicated deployment version (similar to what has been done for UUPS and ERC-1363).
 
@@ -90,13 +88,21 @@ The main reason the argument names change is because CMTAT relies on OpenZeppeli
 | `  batchMint(address[] calldata _toList, uint256[] calldata _amounts) external;` | MintModule            | `function mintBatch(address[] calldata accounts,uint256[] calldata values) ` | 2          |
 | `burn(address _userAddress, uint256 _amount) external`       | BurnModule            | `function burn(address account,uint256 value)`               | 2          |
 | `batchBurn(address[] calldata _userAddresses, uint256[] calldata _amounts) external` | BurnModule            | `function burnBatch(address[] calldata accounts,uint256[] calldata values,string calldata reason)` | 2          |
-| `function batchForcedTransfer(address[] calldata _fromList, address[] calldata _toList, uint256[] calldata _amounts) external` | BurnModule            | `function forcedTransfer(address account, address destination, uint256 value) external returns (bool)` | 2          |
+| `batchForcedTransfer(address[] calldata _fromList, address[] calldata _toList, uint256[] calldata _amounts) external` | BurnModule            | `function forcedTransfer(address account, address destination, uint256 value) external returns (bool)` | 2          |
 
 ##### Enforcement
 
 | **ERC-3643**                      | **CMTAT 3.0**               | **Result** |
 | :-------------------------------- | :-------------------------- | :--------- |
 | ` isFrozen(address _userAddress)` | `isFrozen(address account)` | 2          |
+
+##### Validation
+
+Note: `canTransfer`is defined for the compliance contract in ERC-3643.
+
+| **ERC-3643**                                                 | **CMTAT 3.0**               | **Result** |
+| :----------------------------------------------------------- | :-------------------------- | :--------- |
+| `canTransfer(address _from, address _to, uint256 _amount) external view returns (bool)` | `     function canTransfer` | 3          |
 
 ####  ERC-7551
 
@@ -115,7 +121,7 @@ The interface is supposed to work on top of additional standards that cover the 
 | 5      | Forced transfersTransfer `amount` tokens to `to` without requiring the consent of `fro`m | forceTransferFrom                         | ✅<br />Function forceTransfer                                |
 | 6      | Token supply managementreduce the balance of `tokenHolder` by `amount` without increasing the amount of tokens of any other holder | destroyTokens                             | ✅<br />Function burn                                         |
 | 7      | Token supply managementincrease the balance of `to` by `amount` without decreasing the amount of tokens from any other holder. | issue                                     | ✅<br />Function mint and mintBatch                           |
-| 8      | Transfer compliance<br />Check if a transfer is valid        | `canTransfer() `and a `canTransferFrom()` | ✅ <br />With [ERC-1404](https://github.com/ethereum/eips/issues/1404) |
+| 8      | Transfer compliance<br />Check if a transfer is valid        | `canTransfer() `and a `canTransferFrom()` | ✅ <br />With [ERC-1404](https://github.com/ethereum/eips/issues/1404) and IERC3643Compliance (canTransfer) |
 
 ### Modules
 

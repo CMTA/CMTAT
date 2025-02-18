@@ -10,7 +10,7 @@ import {CodeList} from "./CodeList.sol";
 * @title a mock for testing, not suitable for production
 */
 contract RuleMock is IRule, CodeList {
-    function validateTransfer(
+    function canTransfer(
         address _from,
         address _to,
         uint256 _amount

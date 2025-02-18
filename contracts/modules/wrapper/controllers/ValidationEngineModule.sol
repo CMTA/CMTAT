@@ -8,7 +8,8 @@ import {AuthorizationModule} from "../../security/AuthorizationModule.sol";
 import {PauseModule}  from "../core/PauseModule.sol";
 import {EnforcementModule} from "../core/EnforcementModule.sol";
 import {Errors} from "../../../libraries/Errors.sol";
-import {IERC1404Wrapper} from "../../../interfaces/draft-IERC1404/draft-IERC1404Wrapper.sol";
+import {IERC1404} from "../../../interfaces/draft-IERC1404.sol";
+import {IERC3643Compliance} from "../../../interfaces/IERC3643Partial.sol";
 import {IRuleEngine} from "../../../interfaces/engine/IRuleEngine.sol";
 /**
  * @dev Validation module.
@@ -20,7 +21,8 @@ abstract contract ValidationModule is
     ContextUpgradeable,
     PauseModule,
     EnforcementModule,
-    IERC1404Wrapper
+    IERC1404,
+    IERC3643Compliance
 {
     /* ============ State Variables ============ */
     string constant TEXT_TRANSFER_OK = "No restriction";
@@ -81,21 +83,21 @@ abstract contract ValidationModule is
         uint8 restrictionCode
     ) external view override returns (string memory message) {
           ValidationModuleInternalStorage storage $ = _getValidationModuleInternalStorage();
-        if (restrictionCode == uint8(REJECTED_CODE_BASE.TRANSFER_OK)) {
+        if (restrictionCode == uint8(IERC1404.REJECTED_CODE_BASE.TRANSFER_OK)) {
             return TEXT_TRANSFER_OK;
         } else if (
             restrictionCode ==
-            uint8(REJECTED_CODE_BASE.TRANSFER_REJECTED_PAUSED)
+            uint8(IERC1404.REJECTED_CODE_BASE.TRANSFER_REJECTED_PAUSED)
         ) {
             return TEXT_TRANSFER_REJECTED_PAUSED;
         } else if (
             restrictionCode ==
-            uint8(REJECTED_CODE_BASE.TRANSFER_REJECTED_FROM_FROZEN)
+            uint8(IERC1404.REJECTED_CODE_BASE.TRANSFER_REJECTED_FROM_FROZEN)
         ) {
             return TEXT_TRANSFER_REJECTED_FROM_FROZEN;
         } else if (
             restrictionCode ==
-            uint8(REJECTED_CODE_BASE.TRANSFER_REJECTED_TO_FROZEN)
+            uint8(IERC1404.REJECTED_CODE_BASE.TRANSFER_REJECTED_TO_FROZEN)
         ) {
             return TEXT_TRANSFER_REJECTED_TO_FROZEN;
         } else if (address($._ruleEngine) != address(0)) {
@@ -119,20 +121,20 @@ abstract contract ValidationModule is
     ) public view override returns (uint8 code) {
         ValidationModuleInternalStorage storage $ = _getValidationModuleInternalStorage();
         if (paused()) {
-            return uint8(REJECTED_CODE_BASE.TRANSFER_REJECTED_PAUSED);
+            return uint8(IERC1404.REJECTED_CODE_BASE.TRANSFER_REJECTED_PAUSED);
         } else if (isFrozen(from)) {
-            return uint8(REJECTED_CODE_BASE.TRANSFER_REJECTED_FROM_FROZEN);
+            return uint8(IERC1404.REJECTED_CODE_BASE.TRANSFER_REJECTED_FROM_FROZEN);
         } else if (isFrozen(to)) {
-            return uint8(REJECTED_CODE_BASE.TRANSFER_REJECTED_TO_FROZEN);
+            return uint8(IERC1404.REJECTED_CODE_BASE.TRANSFER_REJECTED_TO_FROZEN);
         } else if (address($._ruleEngine) != address(0)) {
             return $._ruleEngine.detectTransferRestriction(from, to, amount);
         } 
         else {
-            return uint8(REJECTED_CODE_BASE.TRANSFER_OK);
+            return uint8(IERC1404.REJECTED_CODE_BASE.TRANSFER_OK);
         }
     }
 
-    function validateTransfer(
+    function canTransfer(
         address from,
         address to,
         uint256 amount
@@ -140,7 +142,7 @@ abstract contract ValidationModule is
         if (!_validateTransferByModule(from, to, amount)) {
             return false;
         } else {
-            return _validateTransfer(from, to, amount);
+            return _canTransfer(from, to, amount);
         }
     }
 
@@ -149,14 +151,14 @@ abstract contract ValidationModule is
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
     /* ============ View functions ============ */
-    function _validateTransfer(
+    function _canTransfer(
         address from,
         address to,
         uint256 amount
     ) internal view returns (bool) {
         ValidationModuleInternalStorage storage $ = _getValidationModuleInternalStorage();
         if (address($._ruleEngine) != address(0)) {
-            return $._ruleEngine.validateTransfer(from, to, amount);
+            return $._ruleEngine.canTransfer(from, to, amount);
         } else{
             return true;
         }
