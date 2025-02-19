@@ -1,4 +1,4 @@
-const DocumentModuleCommon = require('../../../common/DocumentModule/DocumentModuleCommon')
+const DebtModuleCommon = require('../../../common/DebtModule/DebtModuleCommon')
 const {
   deployCMTATProxyWithParameter,
   fixture,
@@ -9,10 +9,11 @@ const {
 
 const { ZERO_ADDRESS } = require('../../../utils')
 
-describe('Proxy - DocumentModule - Constructor', function () {
+describe('Proxy - DebtModule - Constructor', function () {
   beforeEach(async function () {
     Object.assign(this, await loadFixture(fixture))
-    this.documentEngineMock = await ethers.deployContract('DocumentEngineMock')
+    const DECIMAL = 0
+    this.debtEngineMock = await ethers.deployContract('DebtEngineMock')
     this.definedAtDeployment = true
     this.cmtat = await deployCMTATProxyWithParameter(
       this.deployerAddress.address,
@@ -24,8 +25,8 @@ describe('Proxy - DocumentModule - Constructor', function () {
       'CMTAT_ISIN',
       TERMS,
       'CMTAT_info',
-      [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS, this.documentEngineMock.target]
+      [ZERO_ADDRESS, this.debtEngineMock.target, ZERO_ADDRESS, ZERO_ADDRESS]
     )
   })
-  DocumentModuleCommon()
+  DebtModuleCommon()
 })

@@ -11,9 +11,11 @@ import {RuleMock} from "./RuleMock.sol";
 */
 contract RuleEngineMock is IRuleEngineMock {
     IRule[] internal _rules;
+    address immutable authorizedSpender;
 
-    constructor() {
+    constructor(address spender) {
         _rules.push(new RuleMock());
+        authorizedSpender =  spender;
     }
 
     /*
@@ -68,11 +70,15 @@ contract RuleEngineMock is IRuleEngineMock {
 
 
     function canApprove(
-        address /* from */,
-        address /* to */,
+        address /* owner */,
+        address  spender,
         uint256 /* value */
-    ) public pure override returns (bool) {
-        return true;
+    ) public view override returns (bool) {
+        if(spender == authorizedSpender) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 

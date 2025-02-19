@@ -40,9 +40,9 @@
     "test:enforcement": "npx hardhat test test/standard/modules/EnforcementModule.test.js test/proxy/modules/EnforcementModule.test.js",
     "test:metaTx": "npx hardhat test test/standard/modules/MetaTxModule.test.js test/proxy/modules/MetaTxModule.test.js",
     "test:proxy": "npx hardhat test test/proxy/general/factory/Beacon.test.js test/proxy/general/factory/Transparent.test.js test/proxy/general/factory/TransparentSalt.test.js test/proxy/general/Proxy.test.js test/proxy/general/UpgradeProxy.test.js test/proxy/general/UpgradeProxyUUPS.test.js",
-    "test:deployment": "npx hardhat test test/deployment/deployment.test.js test/deployment/deploymentERC1363Proxy.test.js test/deployment/deploymentERC1363Standalone.test.js",
-    "test:document": "npx hardhat test test/standard/modules/DocumentModule.test.js",
-    "test:debt": "npx hardhat test test/standard/modules/DebtModule.test.js test/proxy/modules/DebtModule.test.js"
+    "test:deployment": "npx hardhat test test/deployment/deployment.test.js test/deployment/deploymentERC1363Proxy.test.js test/deployment/deploymentERC1363ProxyValidation.test.js test/deployment/deploymentERC1363Standalone.test.js",
+    "test:document": "npx hardhat test test/standard/modules/DocumentModule/DocumentModule.test.js test/standard/modules/DocumentModule/DocumentModuleConstructor.test.js test/proxy/modules/DocumentModule/DocumentModule.test.js test/proxy/modules/DocumentModule/DocumentModuleConstructor.test.js",
+    "test:debt": "npx hardhat test test/standard/modules/DebtModule/DebtModule.test.js test/standard/modules/DebtModule/DebtModuleConstructor.test.js test/proxy/modules/DebtModule/DebtModule.test.js test/proxy/modules/DebtModule/DebtModuleConstructor.test.js"
   },
   "repository": {
     "type": "git",

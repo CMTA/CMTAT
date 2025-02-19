@@ -6,7 +6,7 @@ const {
 } = require('../deploymentUtils')
 const ERC20BaseModuleCommon = require('../common/ERC20BaseModuleCommon')
 const VALUE = 20n
-describe('CMTAT - Deployment', function () {
+describe('CMTAT ERC1363 - Standalone', function () {
   beforeEach(async function () {
     Object.assign(this, await loadFixture(fixture))
     this.cmtat = await deployCMTATERC1363Standalone(
