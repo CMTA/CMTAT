@@ -1,9 +1,11 @@
 //SPDX-License-Identifier: MPL-2.0
 
 pragma solidity ^0.8.20;
+/* ==== OpenZeppelin === */
 import {ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
 import {ERC1363Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/ERC1363Upgradeable.sol";
 import {ERC20Upgradeable, IERC20} from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
+/* ==== Module === */
 import {ERC2771ContextUpgradeable} from "./wrapper/extensions/MetaTxModule.sol";
 import {AccessControlUpgradeable} from "./security/AuthorizationModule.sol";
 import {CMTAT_BASE} from "./CMTAT_BASE.sol";
@@ -21,6 +23,14 @@ abstract contract CMTAT_ERC1363_BASE is ERC1363Upgradeable,CMTAT_BASE {
      */
     function supportsInterface(bytes4 interfaceId) public view virtual override(ERC1363Upgradeable, AccessControlUpgradeable) returns (bool) {
         return ERC1363Upgradeable.supportsInterface(interfaceId) || AccessControlUpgradeable.supportsInterface(interfaceId);
+    }
+
+
+    function transfer(address to, uint256 value) public virtual override(ERC20Upgradeable, CMTAT_BASE, IERC20) returns (bool) {
+         address from = _msgSender();
+        _checkTransfer(from, to, value);
+        _transfer(from, to, value);
+        return true;
     }
 
     function transferFrom(

@@ -15,12 +15,16 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **ERC20BaseModule** | Implementation | ERC20Upgradeable |||
+| **ERC20BaseModule** | Implementation | ERC20Upgradeable, IERC20Allowance, IERC3643ERC20Base, AuthorizationModule |||
 | └ | __ERC20BaseModule_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |
 | └ | decimals | Public ❗️ |   |NO❗️ |
-| └ | transferBatch | Public ❗️ | 🛑  |NO❗️ |
 | └ | transferFrom | Public ❗️ | 🛑  |NO❗️ |
+| └ | name | Public ❗️ |   |NO❗️ |
+| └ | symbol | Public ❗️ |   |NO❗️ |
+| └ | batchTransfer | Public ❗️ | 🛑  |NO❗️ |
 | └ | balanceInfo | Public ❗️ |   |NO❗️ |
+| └ | setName | Public ❗️ | 🛑  | onlyRole |
+| └ | setSymbol | Public ❗️ | 🛑  | onlyRole |
 | └ | _getERC20BaseModuleStorage | Private 🔐 |   | |
 
 

@@ -15,14 +15,21 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **BaseModule** | Implementation | AuthorizationModule |||
+| **BaseModule** | Implementation | IERC3643Base, IERC7551Base, ICMTATBase, AuthorizationModule |||
 | └ | __Base_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |
+| └ | version | Public ❗️ |   |NO❗️ |
 | └ | tokenId | Public ❗️ |   |NO❗️ |
 | └ | terms | Public ❗️ |   |NO❗️ |
 | └ | information | Public ❗️ |   |NO❗️ |
+| └ | metaData | Public ❗️ |   |NO❗️ |
 | └ | setTokenId | Public ❗️ | 🛑  | onlyRole |
 | └ | setTerms | Public ❗️ | 🛑  | onlyRole |
 | └ | setInformation | Public ❗️ | 🛑  | onlyRole |
+| └ | setMetaData | Public ❗️ | 🛑  | onlyRole |
+| └ | _setMetaData | Internal 🔒 | 🛑  | |
+| └ | _setTokenId | Internal 🔒 | 🛑  | |
+| └ | _setTerms | Internal 🔒 | 🛑  | |
+| └ | _setInformation | Internal 🔒 | 🛑  | |
 | └ | _getBaseModuleStorage | Private 🔐 |   | |
 
 

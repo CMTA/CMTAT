@@ -95,7 +95,7 @@ function SnapshotModuleCommonGetNextSnapshot () {
 
     it('testCanReturnOnlyFutureSnapshotsIfSomeSnapshotsAreInThePast', async function () {
       // Arrange
-      this.snapshotTime1 = this.currentTime + time.duration.seconds(3)
+      this.snapshotTime1 = this.currentTime + time.duration.seconds(4)
       this.snapshotTime2 = this.currentTime + time.duration.seconds(20)
       this.snapshotTime3 = this.currentTime + time.duration.seconds(300)
       await this.transferEngineMock

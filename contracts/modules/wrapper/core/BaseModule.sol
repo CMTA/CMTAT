@@ -2,31 +2,29 @@
 
 pragma solidity ^0.8.20;
 
+/* ==== Module === */
 import {AuthorizationModule} from "../../security/AuthorizationModule.sol";
-import {IERC1643CMTAT, IERC1643} from "../../../interfaces/draft-IERC1643CMTAT.sol";
-import {IERC3643Base} from "../../../interfaces/IERC3643Partial.sol";
-
-abstract contract BaseModule is IERC3643Base, AuthorizationModule {
+/* ==== Tokenization === */
+import {IERC1643CMTAT, IERC1643} from "../../../interfaces/tokenization/draft-IERC1643CMTAT.sol";
+import {IERC3643Base} from "../../../interfaces/tokenization/IERC3643Partial.sol";
+import {ICMTATBase} from "../../../interfaces/tokenization/ICMTAT.sol";
+import {IERC7551Base} from "../../../interfaces/tokenization/draft-IERC7551.sol";
+abstract contract BaseModule is IERC3643Base, IERC7551Base, ICMTATBase, AuthorizationModule {
     /* ============ State Variables ============ */
     /** 
     * @notice 
     * Get the current version of the smart contract
     */
     string private constant VERSION = "3.0.0";
-
- struct Terms {
- 	string name;
- 	IERC1643.Document doc;
- }
-    
     /* ============ Events ============ */
-    event Term(Terms indexed newTermIndexed, Terms newTerm);
-    event TokenId(string indexed newTokenIdIndexed, string newTokenId);
     event Information(
         string indexed newInformationIndexed,
         string newInformation
     );
-    event Flag(uint256 indexed newFlag);
+    event Metadata(
+        string indexed newMetaDataIdexed,
+        string newMetaData
+    );
     /* ============ ERC-7201 ============ */
     // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.BaseModule")) - 1)) & ~bytes32(uint256(0xff))
     bytes32 private constant BaseModuleStorageLocation = 0xa98e72f7f70574363edb12c42a03ac1feb8cc898a6e0a30f6eefbab7093e0d00;
@@ -36,6 +34,7 @@ abstract contract BaseModule is IERC3643Base, AuthorizationModule {
             string _tokenId;
             Terms _terms;
             string _information;
+            string _metadata;
     }
     /* ============  Initializer Function ============ */
     /**
@@ -64,21 +63,26 @@ abstract contract BaseModule is IERC3643Base, AuthorizationModule {
     /**
     * @notice ERC-3643 version function
     */
-    function version() public view virtual override returns (string memory) {
+    function version() public view virtual override(IERC3643Base) returns (string memory) {
        return VERSION;
     }
-    function tokenId() public view virtual returns (string memory) {
+    function tokenId() public view  virtual override(ICMTATBase) returns (string memory) {
         BaseModuleStorage storage $ = _getBaseModuleStorage();
         return $._tokenId;
     }
 
-    function terms() public view virtual returns (Terms memory) {
+    function terms() public view virtual override(ICMTATBase)  returns (Terms memory) {
         BaseModuleStorage storage $ = _getBaseModuleStorage();
         return $._terms;
     }
     function information() public view virtual returns (string memory) {
         BaseModuleStorage storage $ = _getBaseModuleStorage();
         return $._information;
+    }
+
+    function metaData() public view virtual override(IERC7551Base) returns (string memory) {
+        BaseModuleStorage storage $ = _getBaseModuleStorage();
+        return $._metadata;
     }
 
 
@@ -89,7 +93,7 @@ abstract contract BaseModule is IERC3643Base, AuthorizationModule {
     */
     function setTokenId(
         string calldata tokenId_
-    ) public onlyRole(DEFAULT_ADMIN_ROLE) {
+    ) public virtual override(ICMTATBase)  onlyRole(DEFAULT_ADMIN_ROLE) {
         BaseModuleStorage storage $ = _getBaseModuleStorage();
         _setTokenId($, tokenId_);
     }
@@ -97,7 +101,7 @@ abstract contract BaseModule is IERC3643Base, AuthorizationModule {
     /** 
     * @notice The terms will be changed even if the new value is the same as the current one
     */
-    function setTerms(IERC1643CMTAT.DocumentInfo calldata terms_) public onlyRole(DEFAULT_ADMIN_ROLE) {
+    function setTerms(IERC1643CMTAT.DocumentInfo calldata terms_) public virtual override(ICMTATBase) onlyRole(DEFAULT_ADMIN_ROLE) {
 		BaseModuleStorage storage $ = _getBaseModuleStorage();
         _setTerms($, terms_);
     }
@@ -115,16 +119,35 @@ abstract contract BaseModule is IERC3643Base, AuthorizationModule {
 
 
 
+    /** 
+    * @notice The information will be changed even if the new value is the same as the current one
+    */
+    function setMetaData(
+        string calldata metadata_
+    ) public override(IERC7551Base) onlyRole(DEFAULT_ADMIN_ROLE) {
+        BaseModuleStorage storage $ = _getBaseModuleStorage();
+        _setMetaData($,  metadata_);
+    }
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
+    /** 
+    * @dev the tokenId will be changed even if the new value is the same as the current one
+    */
+    function _setMetaData(
+        BaseModuleStorage storage $, string memory metadata_
+    ) internal virtual  {
+        $._metadata = metadata_;
+        emit Metadata(metadata_, metadata_);
+    }
+
 
     /** 
     * @dev the tokenId will be changed even if the new value is the same as the current one
     */
     function _setTokenId(
         BaseModuleStorage storage $, string memory tokenId_
-    ) internal  {
+    ) internal virtual  {
         $._tokenId = tokenId_;
         emit TokenId(tokenId_, tokenId_);
     }
@@ -132,7 +155,7 @@ abstract contract BaseModule is IERC3643Base, AuthorizationModule {
     /** 
     * @dev The terms will be changed even if the new value is the same as the current one
     */
-    function _setTerms(BaseModuleStorage storage $, IERC1643CMTAT.DocumentInfo memory terms_) internal {
+    function _setTerms(BaseModuleStorage storage $, IERC1643CMTAT.DocumentInfo memory terms_) internal virtual {
 		// Terms/Document name
         $._terms.name = terms_.name;
         // Document
@@ -146,10 +169,13 @@ abstract contract BaseModule is IERC3643Base, AuthorizationModule {
     /** 
     * @dev The terms will be changed even if the new value is the same as the current one
     */
-    function _setInformation(BaseModuleStorage storage $, string memory information_) internal {
+    function _setInformation(BaseModuleStorage storage $, string memory information_) internal virtual {
         $._information  = information_;
         emit Information(information_, information_);
     }
+
+
+
 
 
     /* ============ ERC-7201 ============ */

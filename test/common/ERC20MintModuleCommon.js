@@ -33,7 +33,7 @@ function ERC20MintModuleCommon () {
       // emits a Mint event
       await expect(this.logs)
         .to.emit(this.cmtat, 'Mint')
-        .withArgs(this.address1, VALUE1)
+        .withArgs(this.address1, VALUE1, "0x")
 
       // Act
       // Issue 50 and check intermediate balances and total supply
@@ -53,7 +53,7 @@ function ERC20MintModuleCommon () {
       // emits a Mint event
       await expect(this.logs)
         .to.emit(this.cmtat, 'Mint')
-        .withArgs(this.address2, VALUE2)
+        .withArgs(this.address2, VALUE2, "0x")
     })
 
     it('testCanMintByANewMinter', async function () {
@@ -83,7 +83,7 @@ function ERC20MintModuleCommon () {
       // emits a Mint event
       await expect(this.logs)
         .to.emit(this.cmtat, 'Mint')
-        .withArgs(this.address1, VALUE1)
+        .withArgs(this.address1, VALUE1, "0x")
     })
 
     // reverts when issuing by a non minter
@@ -142,7 +142,7 @@ function ERC20MintModuleCommon () {
         // emits a Mint event
         await expect(this.logs)
           .to.emit(this.cmtat, 'Mint')
-          .withArgs(TOKEN_HOLDER[i], TOKEN_SUPPLY_BY_HOLDERS[i])
+          .withArgs(TOKEN_HOLDER[i], TOKEN_SUPPLY_BY_HOLDERS[i], "0x")
       }
     })
 
@@ -189,7 +189,7 @@ function ERC20MintModuleCommon () {
       for (let i = 0; i < TOKEN_HOLDER.length; ++i) {
         await expect(this.logs)
           .to.emit(this.cmtat, 'Mint')
-          .withArgs(TOKEN_HOLDER[i], TOKEN_SUPPLY_BY_HOLDERS[i])
+          .withArgs(TOKEN_HOLDER[i], TOKEN_SUPPLY_BY_HOLDERS[i], "0x")
       }
     })
 

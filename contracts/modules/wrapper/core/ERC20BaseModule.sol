@@ -2,11 +2,15 @@
 
 pragma solidity ^0.8.20;
 
-import {AuthorizationModule} from "../../security/AuthorizationModule.sol";
-// required OZ imports here
+/* ==== OpenZeppelin === */
 import {ERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
-import {IERC3643ERC20Base} from "../../../interfaces/IERC3643Partial.sol";
-import {IERC20Allowance} from "../../../interfaces/IERC20Allowance.sol";
+/* ==== Module === */
+import {AuthorizationModule} from "../../security/AuthorizationModule.sol";
+/* ==== Technical === */
+import {IERC20Allowance} from "../../../interfaces/technical/IERC20Allowance.sol";
+/* ==== Tokenization === */
+import {IERC3643ERC20Base} from "../../../interfaces/tokenization/IERC3643Partial.sol";
+/* ==== Other === */
 import {Errors} from "../../../libraries/Errors.sol";
 
 /**
@@ -57,7 +61,7 @@ abstract contract ERC20BaseModule is ERC20Upgradeable, IERC20Allowance, IERC3643
      * @notice Returns the number of decimals used to get its user representation.
      * @inheritdoc ERC20Upgradeable
      */
-    function decimals() public view virtual override returns (uint8) {
+    function decimals() public view virtual override(ERC20Upgradeable) returns (uint8) {
         ERC20BaseModuleStorage storage $ = _getERC20BaseModuleStorage();
         return $._decimals;
     }
@@ -73,7 +77,7 @@ abstract contract ERC20BaseModule is ERC20Upgradeable, IERC20Allowance, IERC3643
         address from,
         address to,
         uint256 value
-    ) public virtual override returns (bool) {
+    ) public virtual override(ERC20Upgradeable) returns (bool) {
         bool result = ERC20Upgradeable.transferFrom(from, to, value);
         // The result will be normally always true because OpenZeppelin will revert in case of an error
         if (result) {
@@ -88,7 +92,7 @@ abstract contract ERC20BaseModule is ERC20Upgradeable, IERC20Allowance, IERC3643
     /**
      * @notice Returns the name of the token.
      */
-    function name() public virtual override view returns (string memory) {
+    function name() public virtual override(ERC20Upgradeable) view returns (string memory) {
         ERC20BaseModuleStorage storage $ = _getERC20BaseModuleStorage();
         return $._name;
     }
@@ -97,7 +101,7 @@ abstract contract ERC20BaseModule is ERC20Upgradeable, IERC20Allowance, IERC3643
      * @notice  Returns the symbol of the token, usually a shorter version of the
      * name.
      */
-    function symbol() public virtual override view returns (string memory) {
+    function symbol() public virtual override(ERC20Upgradeable) view returns (string memory) {
         ERC20BaseModuleStorage storage $ = _getERC20BaseModuleStorage();
         return $._symbol;
     }
@@ -120,8 +124,8 @@ abstract contract ERC20BaseModule is ERC20Upgradeable, IERC20Allowance, IERC3643
     function batchTransfer(
         address[] calldata tos,
         uint256[] calldata values
-    ) public override returns (bool) {
-        require(tos.length >0, Errors.CMTAT_ERC20BaseModule_EmptyTos());
+    ) public override(IERC3643ERC20Base) returns (bool) {
+        require(tos.length > 0, Errors.CMTAT_ERC20BaseModule_EmptyTos());
         // We do not check that values is not empty since
         // this require will throw an error in this case.
         require(bool(tos.length == values.length), Errors.CMTAT_ERC20BaseModule_TosValueslengthMismatch());
@@ -141,19 +145,19 @@ abstract contract ERC20BaseModule is ERC20Upgradeable, IERC20Allowance, IERC3643
     * @return balances ,totalSupply array with balance for each address, totalSupply
     * @dev useful to distribute dividend and to perform on-chain snapshot
     */
-    function balanceInfo(address[] calldata addresses) public view returns(uint256[] memory balances , uint256 totalSupply) {
+    function balanceInfo(address[] calldata addresses) public view virtual returns(uint256[] memory balances , uint256 totalSupply_) {
         balances = new uint256[](addresses.length);
         for(uint256 i = 0; i < addresses.length; ++i){
             balances[i] = ERC20Upgradeable.balanceOf(addresses[i]);
         }
-        totalSupply = ERC20Upgradeable.totalSupply();
+        totalSupply_ = ERC20Upgradeable.totalSupply();
     }
 
     /* ============  Restricted Functions ============ */
     /**
      *  @dev See {IToken-setName}.
      */
-    function setName(string calldata name_) public onlyRole(DEFAULT_ADMIN_ROLE) {
+    function setName(string calldata name_) public virtual onlyRole(DEFAULT_ADMIN_ROLE) {
         ERC20BaseModuleStorage storage $ = _getERC20BaseModuleStorage();
         $._name = name_;
         emit Name(name_, name_);
@@ -162,7 +166,7 @@ abstract contract ERC20BaseModule is ERC20Upgradeable, IERC20Allowance, IERC3643
     /**
      *  @dev See {IToken-setSymbol}.
      */
-    function setSymbol(string calldata symbol_) public onlyRole(DEFAULT_ADMIN_ROLE) {
+    function setSymbol(string calldata symbol_) public virtual onlyRole(DEFAULT_ADMIN_ROLE) {
         ERC20BaseModuleStorage storage $ = _getERC20BaseModuleStorage();
         $._symbol = symbol_;
         emit Symbol(symbol_, symbol_);

@@ -2,7 +2,10 @@ const { time } = require('@nomicfoundation/hardhat-network-helpers')
 const { expect } = require('chai')
 const { checkSnapshot } = require('../SnapshotModuleUtils/SnapshotModuleUtils')
 const { ZERO_ADDRESS } = require('../../../utils')
-const reason = 'BURN_TEST'
+const REASON_STRING = 'BURN_TEST'
+const REASON_EVENT = ethers.toUtf8Bytes(REASON_STRING)
+const REASON = ethers.Typed.bytes(REASON_EVENT);
+const REASON_EMPTY = ethers.Typed.bytes(ethers.toUtf8Bytes(""))
 
 function SnapshotModuleOnePlannedSnapshotTest () {
   const ADDRESSES = [this.address1, this.address2, this.address3]
@@ -41,7 +44,7 @@ function SnapshotModuleOnePlannedSnapshotTest () {
     })
 
     it('testCanMintTokens', async function () {
-      const MINT_AMOUNT = '20'
+      const MINT_AMOUNT = 20n
       // Arrange - Assert
       await checkSnapshot.call(
         this,
@@ -54,10 +57,7 @@ function SnapshotModuleOnePlannedSnapshotTest () {
       // Gas and gasPrice are fixed arbitrarily
       ({ logs: this.logs } = await this.cmtat
         .connect(this.admin)
-        .mint(this.address1, MINT_AMOUNT, {
-          gas: 5000000,
-          gasPrice: 500000000
-        }))
+        .mint(this.address1, MINT_AMOUNT))
 
       // Assert
       // Values before the snapshot
@@ -89,7 +89,7 @@ function SnapshotModuleOnePlannedSnapshotTest () {
     })
 
     it('testCanBurnTokens', async function () {
-      const BURN_AMOUNT = '20'
+      const BURN_AMOUNT = 20n
       // Arrange - Assert
       await checkSnapshot.call(
         this,
@@ -102,7 +102,7 @@ function SnapshotModuleOnePlannedSnapshotTest () {
       // Act
       await this.cmtat
         .connect(this.admin)
-        .burn(this.address1, BURN_AMOUNT, reason, {
+        .burn(this.address1, BURN_AMOUNT, REASON, {
           gas: 5000000,
           gasPrice: 500000000
         })
@@ -137,7 +137,7 @@ function SnapshotModuleOnePlannedSnapshotTest () {
     })
 
     it('testCanTransferTokens', async function () {
-      const TRANSFER_AMOUNT = '20'
+      const TRANSFER_AMOUNT = 20n
       // Arrange - Assert
       await checkSnapshot.call(
         this,

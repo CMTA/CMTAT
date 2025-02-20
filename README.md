@@ -52,6 +52,8 @@ To represent the level of similarity between ERC-3643 interface and CMTAT functi
 
 If you want to use CMTAT to create a version implementing all functions from ERC-3643, you can create it through a dedicated deployment version (similar to what has been done for UUPS and ERC-1363).
 
+The implemented interface is available in [IERC3643Partial](./contracts/interfaces/tokenization/IERC3643Partial.sol)
+
 **Level**
 
 | **Level** | **Description**                                              |
@@ -87,14 +89,16 @@ The main reason the argument names change is because CMTAT relies on OpenZeppeli
 | `  batchMint(address[] calldata _toList, uint256[] calldata _amounts) external;` | MintModule            | `mint(address account, uint256 value)`                       | 2          |
 | `  batchMint(address[] calldata _toList, uint256[] calldata _amounts) external;` | MintModule            | `function mintBatch(address[] calldata accounts,uint256[] calldata values) ` | 2          |
 | `burn(address _userAddress, uint256 _amount) external`       | BurnModule            | `function burn(address account,uint256 value)`               | 2          |
-| `batchBurn(address[] calldata _userAddresses, uint256[] calldata _amounts) external` | BurnModule            | `function burnBatch(address[] calldata accounts,uint256[] calldata values,string calldata reason)` | 2          |
-| `batchForcedTransfer(address[] calldata _fromList, address[] calldata _toList, uint256[] calldata _amounts) external` | BurnModule            | `function forcedTransfer(address account, address destination, uint256 value) external returns (bool)` | 2          |
+| `batchBurn(address[] calldata _userAddresses, uint256[] calldata _amounts) external` | -                     | `function burnBatch(address[] calldata accounts,uint256[] calldata values,string calldata reason)` | 2          |
+|                                                              |                       |                                                              |            |
 
-##### Enforcement
+##### ERC20Enforcement
 
-| **ERC-3643**                      | **CMTAT 3.0**               | **Result** |
-| :-------------------------------- | :-------------------------- | :--------- |
-| ` isFrozen(address _userAddress)` | `isFrozen(address account)` | 2          |
+| **ERC-3643**                                                 | **CMTAT 3.0**                                                | **Result** |
+| :----------------------------------------------------------- | :----------------------------------------------------------- | :--------- |
+| ` isFrozen(address _userAddress)`                            | `isFrozen(address account)`                                  | 2          |
+| `forcedTransfer(address _from, address _to, uint256 _amount) external returns (bool)` | `forcedTransfer(address from, address to, uint256 value) external returns (bool)` | 2          |
+| `batchForcedTransfer(address[] calldata _fromList, address[] calldata _toList, uint256[] calldata _amounts) external` | -                                                            | 0          |
 
 ##### Validation
 
@@ -111,17 +115,20 @@ This section presents a correspondence table between [ERC-7551](https://ethereum
 The ERC-7551 is currently a draft ERC proposed by the Federal Association of Crypto Registrars from Germany to tokenize assets in compliance with [eWPG](https://www.gesetze-im-internet.de/ewpg/). 
 
 The interface is supposed to work on top of additional standards that cover the actual storage of ownership of shares of a security in the form of a token (e.g. ERC-20 or ERC-1155).
+The functions have been modified to be compliant with ERC-3643.
 
-| **N°** | **Functionalities**                                          | **ERC-7551 Functions**                    | **CMTAT 3.0.0** (next release                                |
-| :----- | :----------------------------------------------------------- | :---------------------------------------- | :----------------------------------------------------------- |
-| 1      | Freeze and unfreeze a specific amount of tokens              | freezeTokens<br />unfreezeTokens          | Partial<br />All the tokens owned by the address are frozen  |
-| 2      | Pausing transfers The operator can pause and unpause transfers | pauseTransfers                            | ✅<br />function pause/unpause + deactivateContract           |
-| 3      | Link to off-chain document<br />Add the hash of a document   | setPaperContractHash                      | ✅<br />Done with the field terms.<br />This field is represented as a Document also (name, uri, hash, last on-chain modification date) |
-| 4      | Metadata JSON file                                           | setMetaDataJSON                           | ✅<br />Support through the documentModule and [ERC-1643](https://github.com/ethereum/eips/issues/1643) or Link can be put  in the string field “information” |
-| 5      | Forced transfersTransfer `amount` tokens to `to` without requiring the consent of `fro`m | forceTransferFrom                         | ✅<br />Function forceTransfer                                |
-| 6      | Token supply managementreduce the balance of `tokenHolder` by `amount` without increasing the amount of tokens of any other holder | destroyTokens                             | ✅<br />Function burn                                         |
-| 7      | Token supply managementincrease the balance of `to` by `amount` without decreasing the amount of tokens from any other holder. | issue                                     | ✅<br />Function mint and mintBatch                           |
-| 8      | Transfer compliance<br />Check if a transfer is valid        | `canTransfer() `and a `canTransferFrom()` | ✅ <br />With [ERC-1404](https://github.com/ethereum/eips/issues/1404) and IERC3643Compliance (canTransfer) |
+The implemented interface is available in [IERC7551](./contracts/interfaces/tokenization/draft-IERC7551.sol)
+
+| **N°** | **Functionalities**                                          | **ERC-7551 Functions**                    | Name modified                       | **CMTAT 3.0.0** (next release                                |      |
+| :----- | :----------------------------------------------------------- | :---------------------------------------- | ----------------------------------- | :----------------------------------------------------------- | ---- |
+| 1      | Freeze and unfreeze a specific amount of tokens              | freezeTokens<br />unfreezeTokens          | yes                                 | ✅<br />Same function as ERC-3643                             |      |
+| 2      | Pausing transfers The operator can pause and unpause transfers | pauseTransfers                            | yes                                 | ✅<br />function pause/unpause + deactivateContract           |      |
+| 3      | Link to off-chain document<br />Add the hash of a document   | setPaperContractHash                      | (function not directly implemented) | ✅<br />Done with the field terms.<br />This field is represented as a Document also (name, uri, hash, last on-chain modification date) |      |
+| 4      | Metadata JSON file                                           | setMetaDataJSON                           | yes                                 | ✅<br />setMetaData                                           |      |
+| 5      | Forced transfersTransfer `amount` tokens to `to` without requiring the consent of `fro`m | forceTransferFrom                         | yes                                 | ✅<br />Function forcedTransfer (same as ERC-3643)            |      |
+| 6      | Token supply managementreduce the balance of `tokenHolder` by `amount` without increasing the amount of tokens of any other holder | destroyTokens                             | yes                                 | ✅<br />Function burn                                         |      |
+| 7      | Token supply managementincrease the balance of `to` by `amount` without decreasing the amount of tokens from any other holder. | issue                                     | yes                                 | ✅<br />Function mint and mintBatch                           |      |
+| 8      | Transfer compliance<br />Check if a transfer is valid        | `canTransfer() `and a `canTransferFrom()` | yes                                 | ✅ <br />With [ERC-1404](https://github.com/ethereum/eips/issues/1404) and IERC3643Compliance (canTransfer) |      |
 
 ### Modules
 
@@ -343,11 +350,11 @@ A possible rule is a whitelist rule where only the address inside the whitelist 
 
 Since the version 2.4.0, the requirement to use a RuleEngine are the following:
 
-> The `RuleEngine` has to import an implement the interface `IRuleEngine` which declares the function `operateOnTransfer` and several other functions related to IERC1404.
+> The `RuleEngine` has to import an implement the interface `IRuleEngine` which declares the function `transferred` and `canApprove`with several other functions related to IERC1404.
 
 This interface can be found in [./contracts/interfaces/engine/IRuleEngine.sol](./contracts/interfaces/engine/IRuleEngine.sol).
 
-Warning: The `RuleEngine` has to restrict the access of the function `operateOnTransfer` to only the `CMTAT contract`. 
+Warning: The `RuleEngine` has to restrict the access of the function `transferred` to only the `CMTAT contract`. 
 
 Before each transfer, the CMTAT calls the function `operateOnTransfer` which is the entrypoint for the RuleEngine.
 
@@ -398,7 +405,7 @@ This engine:
 CMTAT only implements two functions , available in the interface [IDebtEngine](./contracts/interfaces/engine/IDebtEngine.sol) to get information from the debtEngine.
 
 ```solidity
-interface IDebtEngine is IDebtGlobal {
+interface IDebtEngine is IDebtEngine {
     function debt() external view returns(IDebtGlobal.DebtBase memory);
     function creditEvents() external view returns(IDebtGlobal.CreditEvents memory);
 }
@@ -427,7 +434,7 @@ This EIP defines a document with three attributes:
 -  A generic URI (represented as a `string`) that could point to a website or other document portal.
 -  The hash of the document contents associated with it on-chain.
 
-CMTAT only implements two functions from this standard, available in the interface [IERC1643](./contracts/interfaces/engined/draft-IERC1643.sol) to get the documents from the documentEngine.
+CMTAT only implements two functions from this standard, available in the interface [IERC1643](./contracts/interfaces/tokenization/draft-IERC1643.sol) to get the documents from the documentEngine.
 
 ```solidity
 interface IERC1643 {

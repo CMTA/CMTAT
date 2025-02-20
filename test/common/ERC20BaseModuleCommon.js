@@ -1,5 +1,9 @@
 const { expect } = require('chai')
-const { ENFORCER_ROLE_TRANSFER, DEFAULT_ADMIN_ROLE } = require('../utils')
+const { ERC20ENFORCER_ROLE, DEFAULT_ADMIN_ROLE } = require('../utils')
+const REASON_STRING = 'Bad guy'
+const REASON_EVENT = ethers.toUtf8Bytes(REASON_STRING)
+const REASON = ethers.Typed.bytes(REASON_EVENT);
+const REASON_EMPTY = ethers.Typed.bytes(ethers.toUtf8Bytes(""))
 function ERC20BaseModuleCommon () {
   context('Enforcement', function () {
     beforeEach(async function () {
@@ -8,7 +12,6 @@ function ERC20BaseModuleCommon () {
 
     it('testCanForceTransferFromAddress1ToAddress2AsAdmin', async function () {
       const AMOUNT_TO_TRANSFER = 20
-      const REASON = 'Bad guy'
       // Act
       this.logs = await this.cmtat
         .connect(this.admin)
@@ -16,7 +19,7 @@ function ERC20BaseModuleCommon () {
           this.address1,
           this.address2,
           AMOUNT_TO_TRANSFER,
-          ethers.Typed.string(REASON)
+          REASON
         )
       // Assert
       expect(await this.cmtat.balanceOf(this.address1)).to.equal('30')
@@ -24,7 +27,7 @@ function ERC20BaseModuleCommon () {
       // Events
       await expect(this.logs)
         .to.emit(this.cmtat, 'Enforcement')
-        .withArgs(this.admin, this.address1, AMOUNT_TO_TRANSFER, REASON)
+        .withArgs(this.admin, this.address1, AMOUNT_TO_TRANSFER, REASON_EVENT)
       await expect(this.logs)
         .to.emit(this.cmtat, 'Transfer')
         .withArgs(this.address1, this.address2, AMOUNT_TO_TRANSFER)
@@ -32,11 +35,10 @@ function ERC20BaseModuleCommon () {
 
     it('testCanForceTransferFromAddress1ToAddress2AsEnforcerTransferRole', async function () {
       const AMOUNT_TO_TRANSFER = 20
-      const REASON = 'Bad guy'
       // Arrange - Assert
       await this.cmtat
         .connect(this.admin)
-        .grantRole(ENFORCER_ROLE_TRANSFER, this.address3)
+        .grantRole(ERC20ENFORCER_ROLE, this.address3)
       // Act
       this.logs = await this.cmtat
         .connect(this.admin)
@@ -44,7 +46,7 @@ function ERC20BaseModuleCommon () {
           this.address1,
           this.address2,
           AMOUNT_TO_TRANSFER,
-          ethers.Typed.string(REASON)
+          REASON
         )
       // Assert
       expect(await this.cmtat.balanceOf(this.address1)).to.equal(
@@ -55,7 +57,7 @@ function ERC20BaseModuleCommon () {
       )
       await expect(this.logs)
         .to.emit(this.cmtat, 'Enforcement')
-        .withArgs(this.admin, this.address1, AMOUNT_TO_TRANSFER, REASON)
+        .withArgs(this.admin, this.address1, AMOUNT_TO_TRANSFER, REASON_EVENT)
       await expect(this.logs)
         .to.emit(this.cmtat, 'Transfer')
         .withArgs(this.address1, this.address2, AMOUNT_TO_TRANSFER)
@@ -66,13 +68,13 @@ function ERC20BaseModuleCommon () {
       await expect(
         this.cmtat
           .connect(this.address2)
-          .forcedTransfer(this.address1, this.address2, 20, ethers.Typed.string('Bad guy'))
+          .forcedTransfer(this.address1, this.address2, 20, REASON)
       )
         .to.be.revertedWithCustomError(
           this.cmtat,
           'AccessControlUnauthorizedAccount'
         )
-        .withArgs(this.address2.address, ENFORCER_ROLE_TRANSFER)
+        .withArgs(this.address2.address, ERC20ENFORCER_ROLE)
     })
   })
   context('Token structure', function () {

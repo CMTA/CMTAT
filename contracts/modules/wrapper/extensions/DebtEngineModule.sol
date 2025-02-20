@@ -2,17 +2,19 @@
 
 pragma solidity ^0.8.20;
 
+/* ==== Module === */
 import {AuthorizationModule} from "../../security/AuthorizationModule.sol";
+/* ==== Engine === */
+import {IDebtEngine, ICMTATDebt} from "../../../interfaces/engine/IDebtEngine.sol";
+/* ==== Other === */
 import {Errors} from "../../../libraries/Errors.sol";
-import {IDebtEngine} from "../../../interfaces/engine/IDebtEngine.sol";
-
 /**
  * @title Debt module
  * @dev 
  *
  * Retrieve debt and creditEvents information from a debtEngine
  */
-abstract contract DebtModule is AuthorizationModule, IDebtEngine {
+abstract contract DebtModule is AuthorizationModule, ICMTATDebt {
     /* ============ State Variables ============ */
     bytes32 public constant DEBT_ROLE = keccak256("DEBT_ROLE");
     /* ============ ERC-7201 ============ */
@@ -56,14 +58,14 @@ abstract contract DebtModule is AuthorizationModule, IDebtEngine {
         return $._debtEngine;
     }
 
-    function debt() public view returns(DebtBase memory debtBaseResult){
+    function debt() public view virtual returns(DebtBase memory debtBaseResult){
         DebtModuleStorage storage $ = _getDebtModuleStorage();
         if(address($._debtEngine) != address(0)){
             debtBaseResult =  $._debtEngine.debt();
         }
     }
 
-    function creditEvents() public view returns(CreditEvents memory creditEventsResult){
+    function creditEvents() public view virtual returns(CreditEvents memory creditEventsResult){
         DebtModuleStorage storage $ = _getDebtModuleStorage();
         if(address($._debtEngine) != address(0)){
             creditEventsResult =  $._debtEngine.creditEvents();
@@ -77,7 +79,7 @@ abstract contract DebtModule is AuthorizationModule, IDebtEngine {
     */
     function setDebtEngine(
         IDebtEngine debtEngine_
-    ) external onlyRole(DEBT_ROLE) {
+    ) external virtual onlyRole(DEBT_ROLE) {
         DebtModuleStorage storage $ = _getDebtModuleStorage();
         require($._debtEngine != debtEngine_, Errors.CMTAT_DebtModule_SameValue());
         _setDebtEngine($, debtEngine_);
