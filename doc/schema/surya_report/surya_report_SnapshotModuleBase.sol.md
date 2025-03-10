@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/internal/base/SnapshotModuleBase.sol | [object Promise] |
+| ./mocks/library/snapshot/SnapshotModuleBase.sol | [object Promise] |
 
 
 ### Contracts Description Table
@@ -30,6 +30,10 @@
 | └ | _lastSnapshot | Private 🔐 |   | |
 | └ | _findScheduledSnapshotIndex | Private 🔐 |   | |
 | └ | _findScheduledMostRecentPastSnapshot | Private 🔐 |   | |
+| └ | _updateAccountSnapshot | Internal 🔒 | 🛑  | |
+| └ | _updateTotalSupplySnapshot | Internal 🔒 | 🛑  | |
+| └ | _snapshotBalanceOf | Internal 🔒 |   | |
+| └ | _snapshotTotalSupply | Internal 🔒 |   | |
 | └ | _findAndRevertScheduledSnapshotIndex | Private 🔐 |   | |
 | └ | _checkTimeInThePast | Internal 🔒 |   | |
 | └ | _checkTimeSnapshotAlreadyDone | Internal 🔒 |   | |

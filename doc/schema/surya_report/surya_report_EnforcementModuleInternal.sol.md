@@ -15,11 +15,10 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **EnforcementModuleInternal** | Implementation | Initializable, ContextUpgradeable |||
+| **EnforcementModuleInternal** | Implementation | Initializable, ContextUpgradeable, IERC3643EnforcementEvent |||
 | └ | __Enforcement_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |
-| └ | frozen | Public ❗️ |   |NO❗️ |
-| └ | _freeze | Internal 🔒 | 🛑  | |
-| └ | _unfreeze | Internal 🔒 | 🛑  | |
+| └ | _setAddressFrozen | Internal 🔒 | 🛑  | |
+| └ | _isFrozen | Internal 🔒 |   | |
 | └ | _getEnforcementModuleInternalStorage | Private 🔐 |   | |
 
 

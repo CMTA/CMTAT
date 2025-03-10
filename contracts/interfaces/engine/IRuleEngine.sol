@@ -2,8 +2,8 @@
 
 pragma solidity ^0.8.20;
 
-import {IERC1404} from "../draft-IERC1404.sol";
-import {IERC3643ComplianceRead, IERC3643ComplianceWrite} from "../IERC3643Partial.sol";
+import {IERC1404} from "../tokenization/draft-IERC1404.sol";
+import {IERC3643ComplianceRead, IERC3643ComplianceWrite} from "../tokenization/IERC3643Partial.sol";
 
 /*
 * @dev minimum interface to define a RuleEngine

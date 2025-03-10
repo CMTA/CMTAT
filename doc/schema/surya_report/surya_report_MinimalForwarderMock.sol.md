@@ -16,7 +16,6 @@
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
 | **MinimalForwarderMock** | Implementation | ERC2771ForwarderUpgradeable |||
-| └ | initialize | Public ❗️ | 🛑  | initializer |
 
 
 ### Legend

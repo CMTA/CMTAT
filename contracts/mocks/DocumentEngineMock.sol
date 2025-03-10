@@ -1,8 +1,8 @@
 
 // SPDX-License-Identifier: MPL-2.0
 pragma solidity ^0.8.20;
-import {IERC1643} from "../interfaces/engine/draft-IERC1643.sol";
-interface IERC1643Whole is IERC1643{
+import {IDocumentEngine} from "../interfaces/engine/IDocumentEngine.sol";
+interface IERC1643Whole is IDocumentEngine{
     /// uri The URI of the document
     /// @return documentHash The hash of the document contents
     /// @return lastModified The timestamp of the last modification

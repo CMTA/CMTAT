@@ -15,7 +15,7 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **IRule** | Interface | IERC1404Wrapper |||
+| **IRule** | Interface | IERC1404, IERC3643ComplianceRead |||
 | └ | canReturnTransferRestrictionCode | External ❗️ |   |NO❗️ |
 
 

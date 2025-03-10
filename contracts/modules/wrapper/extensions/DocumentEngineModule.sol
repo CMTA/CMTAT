@@ -2,11 +2,12 @@
 
 pragma solidity ^0.8.20;
 
+/* ==== Module === */
 import {AuthorizationModule} from "../../security/AuthorizationModule.sol";
+/* ==== Engine === */
+import {IERC1643, IDocumentEngine} from "../../../interfaces/engine/IDocumentEngine.sol";
+/* ==== Other === */
 import {Errors} from "../../../libraries/Errors.sol";
-import {IERC1643} from "../../../interfaces/engine/draft-IERC1643.sol";
-
-
 /**
  * @title Document module
  * @dev 
@@ -54,7 +55,7 @@ abstract contract DocumentModule is AuthorizationModule, IERC1643 {
         return $._documentEngine;
     }
 
-    function getDocument(string memory name) public view returns (Document memory document){
+    function getDocument(string memory name) public view  virtual returns (Document memory document){
         DocumentModuleStorage storage $ = _getDocumentModuleStorage();
         if(address($._documentEngine) != address(0)){
             return $._documentEngine.getDocument(name);
@@ -63,7 +64,7 @@ abstract contract DocumentModule is AuthorizationModule, IERC1643 {
         }
     }
 
-    function getAllDocuments() public view returns (string[] memory documents){
+    function getAllDocuments() public view virtual returns (string[] memory documents){
         DocumentModuleStorage storage $ = _getDocumentModuleStorage();
         if(address($._documentEngine) != address(0)){
             documents =  $._documentEngine.getAllDocuments();
@@ -77,7 +78,7 @@ abstract contract DocumentModule is AuthorizationModule, IERC1643 {
     */
     function setDocumentEngine(
         IERC1643 documentEngine_
-    ) external onlyRole(DOCUMENT_ROLE) {
+    ) external virtual onlyRole(DOCUMENT_ROLE) {
         DocumentModuleStorage storage $ = _getDocumentModuleStorage();
         require($._documentEngine != documentEngine_, Errors.CMTAT_DocumentModule_SameValue());
         _setDocumentEngine($, documentEngine_);
@@ -89,7 +90,7 @@ abstract contract DocumentModule is AuthorizationModule, IERC1643 {
     //////////////////////////////////////////////////////////////*/
     function _setDocumentEngine(
         DocumentModuleStorage storage $, IERC1643 documentEngine_
-    ) internal {
+    ) internal virtual {
         $._documentEngine = documentEngine_;
         emit DocumentEngine(documentEngine_);
     }

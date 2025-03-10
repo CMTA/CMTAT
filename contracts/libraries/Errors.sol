@@ -9,6 +9,9 @@ library Errors {
     // CMTAT Base
     error CMTAT_InvalidTransfer(address from, address to, uint256 amount);
     error CMTAT_InvalidApproval(address owner, address spender, uint256 value);
+    error CMTAT_InvalidMint(address account, uint256 value);
+    error CMTAT_InvalidBurn(address account, uint256 value);
+    
     // SnapshotModule
     error CMTAT_SnapshotModule_SameValue();
     
@@ -46,4 +49,8 @@ library Errors {
 
     // PauseModule
     error CMTAT_PauseModule_ContractIsDeactivated();
+
+    // ERC20Enforcement
+    error CMTAT_ERC20EnforcementModule_ValueExceedsAvailableBalance();
+    error CMTAT_ERC20EnforcementModule_ValueExceedsFrozenBalance(); 
 }

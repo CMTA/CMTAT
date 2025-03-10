@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./CMTAT_PROXY_UUPS.sol | [object Promise] |
+| ./deployment/CMTAT_PROXY_UUPS.sol | [object Promise] |
 
 
 ### Contracts Description Table

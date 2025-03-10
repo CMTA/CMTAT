@@ -2,10 +2,12 @@
 
 pragma solidity ^0.8.20;
 
+/* ==== Module === */
 import {AuthorizationModule} from "../../security/AuthorizationModule.sol";
-import {Errors} from "../../../libraries/Errors.sol";
+/* ==== Engine === */
 import {ISnapshotEngine} from "../../../interfaces/engine/ISnapshotEngine.sol";
-
+/* ==== Other === */
+import {Errors} from "../../../libraries/Errors.sol";
 abstract contract SnapshotEngineModule is AuthorizationModule {
     /* ============ State Variables ============ */
     bytes32 public constant SNAPSHOOTER_ROLE = keccak256("SNAPSHOOTER_ROLE");
@@ -54,7 +56,7 @@ abstract contract SnapshotEngineModule is AuthorizationModule {
     */
     function setSnapshotEngine(
         ISnapshotEngine snapshotEngine_
-    ) external onlyRole(SNAPSHOOTER_ROLE) {
+    ) external virtual onlyRole(SNAPSHOOTER_ROLE) {
         SnapshotEngineModuleStorage storage $ = _getSnapshotEngineModuleStorage();
         require($._snapshotEngine != snapshotEngine_, Errors.CMTAT_SnapshotModule_SameValue());
         _setSnapshotEngine($, snapshotEngine_);
@@ -65,7 +67,7 @@ abstract contract SnapshotEngineModule is AuthorizationModule {
     //////////////////////////////////////////////////////////////*/
     function _setSnapshotEngine(
         SnapshotEngineModuleStorage storage $, ISnapshotEngine snapshotEngine_
-    ) internal {
+    ) internal virtual {
         $._snapshotEngine = snapshotEngine_;
         emit SnapshotEngine(snapshotEngine_);
     }

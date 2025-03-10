@@ -128,6 +128,32 @@ function BaseModuleCommon () {
       // Assert
       expect(await this.cmtat.information()).to.equal('CMTAT_info')
     })
+
+    it('testAdminCanUpdateMetadata', async function () {
+      const NEW_METADATA = 'https://example.com/metadata2'
+      // Act
+      this.logs = await this.cmtat.connect(this.admin).setMetaData(NEW_METADATA)
+      // Assert
+      expect(await this.cmtat.metaData()).to.equal(NEW_METADATA)
+      await expect(this.logs)
+      .to.emit(this.cmtat, 'MetaData')
+      .withArgs(NEW_METADATA, NEW_METADATA)
+    })
+
+    it('testCannotNonAdminUpdateMetadata', async function () {
+      const NEW_METADATA = 'https://example.com/metadata2'
+      // Act
+      await expect(
+        this.cmtat.connect(this.address1).setMetaData(NEW_METADATA)
+      )
+        .to.be.revertedWithCustomError(
+          this.cmtat,
+          'AccessControlUnauthorizedAccount'
+        )
+        .withArgs(this.address1.address, DEFAULT_ADMIN_ROLE)
+      // Assert
+      expect(await this.cmtat.metaData()).to.equal('')
+    })
   })
 }
 module.exports = BaseModuleCommon

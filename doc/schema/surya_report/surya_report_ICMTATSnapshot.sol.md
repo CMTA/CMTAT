@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./interfaces/ICMTATSnapshot.sol | [object Promise] |
+| ./mocks/library/snapshot/ICMTATSnapshot.sol | [object Promise] |
 
 
 ### Contracts Description Table

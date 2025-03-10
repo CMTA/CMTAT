@@ -2,10 +2,16 @@
 
 pragma solidity ^0.8.20;
 
+/* ==== OpenZeppelin === */
 import {PausableUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/PausableUpgradeable.sol";
+/* ==== Module === */
 import {AuthorizationModule} from "../../security/AuthorizationModule.sol";
+/* ==== Tokenization === */
+import {IERC3643Pause} from "../../../interfaces/tokenization/IERC3643Partial.sol";
+import {IERC7551Pause} from "../../../interfaces/tokenization/draft-IERC7551.sol";
+import {ICMTATPause} from "../../../interfaces/tokenization/ICMTAT.sol";
+/* ==== Other === */
 import {Errors} from "../../../libraries/Errors.sol";
-import {IERC3643Pause} from "../../../interfaces/IERC3643Partial.sol";
 
 /**IERC3643Pause
  * @title Pause Module
@@ -18,13 +24,12 @@ import {IERC3643Pause} from "../../../interfaces/IERC3643Partial.sol";
  * period, or having an emergency switch for freezing all token transfers in the
  * event of a large bug.
  */
-abstract contract PauseModule is PausableUpgradeable, AuthorizationModule, IERC3643Pause {
+abstract contract PauseModule is PausableUpgradeable, AuthorizationModule, IERC3643Pause, IERC7551Pause, ICMTATPause {
     /* ============ State Variables ============ */
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     string internal constant TEXT_TRANSFER_REJECTED_PAUSED =
         "All transfers paused";
-    /* ============ Events ============ */
-    event Deactivated(address account);
+
     /* ============ ERC-7201 ============ */
     // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.ERC20BaseModule")) - 1)) & ~bytes32(uint256(0xff))
     bytes32 private constant PauseModuleStorageLocation = 0x9bd8d607565c0370ae5f91651ca67fd26d4438022bf72037316600e29e6a3a00;
@@ -40,7 +45,7 @@ abstract contract PauseModule is PausableUpgradeable, AuthorizationModule, IERC3
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
-    function paused() public virtual view override(IERC3643Pause, PausableUpgradeable)  returns (bool){
+    function paused() public virtual view override(IERC3643Pause, IERC7551Pause, ICMTATPause, PausableUpgradeable)  returns (bool){
         return PausableUpgradeable.paused();
    }
     
@@ -53,7 +58,7 @@ abstract contract PauseModule is PausableUpgradeable, AuthorizationModule, IERC3
      * - the caller must have the `PAUSER_ROLE`.
      *
      */
-    function pause() public onlyRole(PAUSER_ROLE) {
+    function pause() public virtual override(IERC3643Pause, IERC7551Pause, ICMTATPause) onlyRole(PAUSER_ROLE) {
         _pause();
     }
 
@@ -65,14 +70,14 @@ abstract contract PauseModule is PausableUpgradeable, AuthorizationModule, IERC3
      *
      * - the caller must have the `PAUSER_ROLE`.
      */
-    function unpause() public onlyRole(PAUSER_ROLE) {
+    function unpause() public virtual override(IERC3643Pause, IERC7551Pause, ICMTATPause) onlyRole(PAUSER_ROLE) {
         PauseModuleStorage storage $ = _getPauseModuleStorage();
         require(!$._isDeactivated, Errors.CMTAT_PauseModule_ContractIsDeactivated());
         _unpause();
     }
 
     /**
-    * @notice  deactivate the contract
+    * @notice deactivate the contract
     * Warning: the operation is irreversible, be careful
     * @dev
     * Emits a {Deactivated} event indicating that the contract has been deactivated.
@@ -81,7 +86,7 @@ abstract contract PauseModule is PausableUpgradeable, AuthorizationModule, IERC3
     * - the caller must have the `DEFAULT_ADMIN_ROLE`.
     */
     function deactivateContract()
-        public
+        public virtual override(ICMTATPause)
         onlyRole(DEFAULT_ADMIN_ROLE)
     {
         PauseModuleStorage storage $ = _getPauseModuleStorage();
@@ -93,7 +98,7 @@ abstract contract PauseModule is PausableUpgradeable, AuthorizationModule, IERC3
     /**
     * @notice Returns true if the contract is deactivated, and false otherwise.
     */
-    function deactivated() view public returns (bool){
+    function deactivated() public view virtual override(ICMTATPause) returns (bool){
         PauseModuleStorage storage $ = _getPauseModuleStorage();
         return $._isDeactivated;
     }

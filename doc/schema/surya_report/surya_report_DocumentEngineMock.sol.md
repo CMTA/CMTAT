@@ -15,7 +15,7 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **IERC1643Whole** | Interface | IERC1643 |||
+| **IERC1643Whole** | Interface | IDocumentEngine |||
 | └ | setDocument | External ❗️ | 🛑  |NO❗️ |
 | └ | removeDocument | External ❗️ | 🛑  |NO❗️ |
 ||||||
