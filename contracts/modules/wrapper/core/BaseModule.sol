@@ -21,7 +21,7 @@ abstract contract BaseModule is IERC3643Base, IERC7551Base, ICMTATBase, Authoriz
         string indexed newInformationIndexed,
         string newInformation
     );
-    event Metadata(
+    event MetaData(
         string indexed newMetaDataIdexed,
         string newMetaData
     );
@@ -138,7 +138,7 @@ abstract contract BaseModule is IERC3643Base, IERC7551Base, ICMTATBase, Authoriz
         BaseModuleStorage storage $, string memory metadata_
     ) internal virtual  {
         $._metadata = metadata_;
-        emit Metadata(metadata_, metadata_);
+        emit MetaData(metadata_, metadata_);
     }
 
 

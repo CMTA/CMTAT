@@ -202,27 +202,12 @@ abstract contract ValidationModule is
         }
     }
 
-     /**
-    @dev function used by canTransfer and operateOnTransfer
-     */
+    /**
+    * @dev function used by canTransfer and operateOnTransfer
+    * Block mint if the contract is deactivated (PauseModule) 
+    * or if to is frozen
+    */
     function _canMintByModule(
-        address from
-    ) internal view virtual returns (bool) {
-        if(deactivated()){
-            // can not mint or burn if the contract is deactivated
-            return false;
-        }
-        if( isFrozen(from) ){
-            return false;
-        }
-        return true;
-    }
-
-
-     /**
-    @dev function used by canTransfer and operateOnTransfer
-     */
-    function _canBurnByModule(
         address to
     ) internal view virtual returns (bool) {
         if(deactivated()){
@@ -230,6 +215,24 @@ abstract contract ValidationModule is
             return false;
         }
         if( isFrozen(to) ){
+            return false;
+        }
+        return true;
+    }
+
+
+    /**
+    * @dev function used by canTransfer and operateOnTransfer
+    * Block burn if the contract is deactivated (PauseModule) 
+    * Contrary to `_canMintByModule`, 
+    * this function does not return false if from or to is frozen.
+    * An issuer should be able to burn token from a frozen address.
+    */
+    function _canBurnByModule(
+        address to
+    ) internal view virtual returns (bool) {
+        if(deactivated()){
+            // can not mint or burn if the contract is deactivated
             return false;
         }
         return true;

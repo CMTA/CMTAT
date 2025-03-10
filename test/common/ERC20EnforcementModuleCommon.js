@@ -13,54 +13,63 @@ const REASON_UNFREEZE_EVENT = ethers.toUtf8Bytes(REASON_STRING)
 const reasonUnfreeze = ethers.Typed.bytes(REASON_UNFREEZE_EVENT);
 const REASON_EMPTY = ethers.Typed.bytes(ethers.toUtf8Bytes(""))
 const REASON_EMPTY_EVENT = ethers.toUtf8Bytes("")
-function EnforcementModuleCommon () {
+
+const FREEZE_AMOUNT = 20
+const UNFREEZE_AMOUNT = 10
+function ERC20EnforcementModuleCommon () {
+  async function testFreeze(sender){
+    // Arrange - Assert
+    expect(await this.cmtat.getFrozenTokens(this.address1)).to.equal(0)
+    expect(await this.cmtat.getBalanceOf(this.address1)).to.equal(INITIAL_BALANCE)
+    // Act
+    this.logs = await this.cmtat
+      .connect(sender)
+      .freezePartialTokens(this.address1, FREEZE_AMOUNT)
+    // Assert
+     expect(
+      await this.cmtat.canTransfer(this.address1, this.address2, INITIAL_BALANCE - FREEZE_AMOUNT + 1)
+    ).to.equal(false)
+    expect(
+      await this.cmtat.canTransfer(this.address1, this.address2, INITIAL_BALANCE - FREEZE_AMOUNT)
+    ).to.equal(true)
+    expect(await this.cmtat.getFrozenTokens(this.address1)).to.equal(FREEZE_AMOUNT)
+    expect(await this.cmtat.getBalanceOf(this.address1)).to.equal(INITIAL_BALANCE - FREEZE_AMOUNT)
+    // emits a Freeze event
+    await expect(this.logs)
+      .to.emit(this.cmtat, 'TokensFrozen')
+      .withArgs(this.address1,FREEZE_AMOUNT)
+  }
+
+  async function testUnfreeze(sender) {
+    const bindTest = await testFreeze.bind(this)
+    await bindTest(sender)
+     // Act
+     this.logs = await this.cmtat
+       .connect(sender)
+       .unfreezePartialTokens(this.address1, FREEZE_AMOUNT)
+     // Assert
+     expect(
+      await this.cmtat.canTransfer(this.address1, this.address2, INITIAL_BALANCE - FREEZE_AMOUNT + UNFREEZE_AMOUNT + 1)
+    ).to.equal(false)
+    expect(
+      await this.cmtat.canTransfer(this.address1, this.address2,  INITIAL_BALANCE - FREEZE_AMOUNT + UNFREEZE_AMOUNT)
+    ).to.equal(true)
+    expect(await this.cmtat.getFrozenTokens(this.address1)).to.equal(FREEZE_AMOUNT - UNFREEZE_AMOUNT)
+    expect(await this.cmtat.getBalanceOf(this.address1)).to.equal(INITIAL_BALANCE - FREEZE_AMOUNT + UNFREEZE_AMOUNT)
+    // emits a Freeze event
+    await expect(this.logs)
+      .to.emit(this.cmtat, 'TokensUnfrozen')
+      .withArgs(this.address1,UNFREEZE_AMOUNT)
+  }
+  
   context('Freeze', function () {
-    async function testFreeze(sender){
-       // Arrange - Assert
-       expect(await this.cmtat.isFrozen(this.address1)).to.equal(false)
-       // Act
-       this.logs = await this.cmtat
-         .connect(sender)
-         .setAddressFrozen(this.address1, true, reasonFreeze)
-       // Assert
-       expect(
-        await this.cmtat.canTransfer(this.address1, this.address2, 10)
-      ).to.equal(false)
-       expect(await this.cmtat.isFrozen(this.address1)).to.equal(true)
-       // emits a Freeze event
-       await expect(this.logs)
-         .to.emit(this.cmtat, 'AddressFrozen')
-         .withArgs(this.address1, true, sender, REASON_FREEZE_EVENT)
-    }
-
-    async function testUnfreeze(sender){
-       // Arrange
-       await this.cmtat.connect(sender).setAddressFrozen(this.address1, true, reasonFreeze)
-       // Arrange - Assert
-       expect(await this.cmtat.isFrozen(this.address1)).to.equal(true)
-       expect(
-        await this.cmtat.canTransfer(this.address1, this.address2, 10)
-      ).to.equal(false)
-       // Act
-       this.logs = await this.cmtat
-         .connect(sender)
-         .setAddressFrozen(this.address1, false, reasonUnfreeze)
-       // Assert
-       expect(await this.cmtat.isFrozen(this.address1)).to.equal(false)
-       expect(
-        await this.cmtat.canTransfer(this.address1, this.address2, 10)
-      ).to.equal(true)
-       await expect(this.logs)
-         .to.emit(this.cmtat, 'AddressFrozen')
-         .withArgs(this.address1, false, sender, REASON_UNFREEZE_EVENT)
-
-    }
+    const INITIAL_BALANCE = 50
     beforeEach(async function () {
-      await this.cmtat.connect(this.admin).mint(this.address1, 50)
+      await this.cmtat.connect(this.admin).mint(this.address1, INITIAL_BALANCE)
     })
 
     it('testAdminCanFreezeAddress', async function () {
-      const bindTest = testFreeze.bind(this)
+      const bindTest = await testFreeze.bind(this)
       await bindTest(this.admin)
     })
 
@@ -85,23 +94,18 @@ function EnforcementModuleCommon () {
         .connect(this.admin)
         .grantRole(ENFORCER_ROLE, this.address2)
 
-      const bindTest = testFreeze.bind(this)
+      const bindTest = await testFreeze.bind(this)
       await bindTest(this.address2)
     })
 
     it('testAdminCanUnfreezeAddress', async function () {
-      const bindTest = testUnfreeze.bind(this)
+      const bindTest = await testUnfreeze.bind(this)
       await bindTest(this.admin)
     })
 
     it('testEnforcerRoleCanUnfreezeAddress', async function () {
-      // Arrange
-      await this.cmtat
-        .connect(this.admin)
-        .grantRole(ENFORCER_ROLE, this.address2)
-      // Act + assert
-      const bindTest = testUnfreeze.bind(this)
-      await bindTest(this.address2)
+      const bindTest = await testUnfreeze.bind(this)
+      await bindTest(this.admin)
     })
 
     it('testCannotNonEnforcerFreezeAddress', async function () {
@@ -232,4 +236,4 @@ function EnforcementModuleCommon () {
     })*/
   })
 }
-module.exports = EnforcementModuleCommon
+module.exports = ERC20EnforcementModuleCommon

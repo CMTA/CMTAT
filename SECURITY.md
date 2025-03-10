@@ -2,7 +2,7 @@
 
 ## Reporting a Vulnerability
 
-To report a security vulnerability in CMTAT, please contact security@taurusgroup.ch.
+To report a security vulnerability in this project, please contact security@taurusgroup.ch.
 
 You may encrypt your message using the following PGP key:
 

@@ -97,7 +97,7 @@ abstract contract ERC20EnforcementModule is ERC20Upgradeable, IERC7551ERC20Enfor
         ERC20EnforcementModuleStorage storage $ = _getEnforcementModuleStorage();
         require($._frozenTokens[account] >= value, Errors.CMTAT_ERC20EnforcementModule_ValueExceedsFrozenBalance());
         $._frozenTokens[account] = $._frozenTokens[account] - value;
-        emit TokensFrozen(account, value);
+        emit TokensUnfrozen(account, value);
     }
 
 
