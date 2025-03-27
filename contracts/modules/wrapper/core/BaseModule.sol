@@ -2,18 +2,25 @@
 
 pragma solidity ^0.8.20;
 
-import "../../security/AuthorizationModule.sol";
+import {AuthorizationModule} from "../../security/AuthorizationModule.sol";
+import {IERC1643CMTAT, IERC1643} from "../../../interfaces/draft-IERC1643CMTAT.sol";
+import {IERC3643Base} from "../../../interfaces/IERC3643Partial.sol";
 
-abstract contract BaseModule is AuthorizationModule {
+abstract contract BaseModule is IERC3643Base, AuthorizationModule {
     /* ============ State Variables ============ */
     /** 
     * @notice 
     * Get the current version of the smart contract
     */
-    string public constant VERSION = "2.5.1";
+    string private constant VERSION = "3.0.0";
+
+ struct Terms {
+ 	string name;
+ 	IERC1643.Document doc;
+ }
     
     /* ============ Events ============ */
-    event Term(string indexed newTermIndexed, string newTerm);
+    event Term(Terms indexed newTermIndexed, Terms newTerm);
     event TokenId(string indexed newTokenIdIndexed, string newTokenId);
     event Information(
         string indexed newInformationIndexed,
@@ -27,7 +34,7 @@ abstract contract BaseModule is AuthorizationModule {
     /* ==== ERC-7201 State Variables === */
     struct BaseModuleStorage {
             string _tokenId;
-            string _terms;
+            Terms _terms;
             string _information;
     }
     /* ============  Initializer Function ============ */
@@ -39,25 +46,33 @@ abstract contract BaseModule is AuthorizationModule {
      */
     function __Base_init_unchained(
         string memory tokenId_,
-        string memory terms_,
+        IERC1643CMTAT.DocumentInfo memory terms_,
         string memory information_
     ) internal onlyInitializing {
         BaseModuleStorage storage $ = _getBaseModuleStorage();
-        $._tokenId = tokenId_;
-        $._terms = terms_;
-        $._information = information_;
+        // tokenId
+        _setTokenId($, tokenId_);
+        // Terms
+        _setTerms($, terms_);
+        // Information
+        _setInformation($, information_);
     }
 
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
-
+    /**
+    * @notice ERC-3643 version function
+    */
+    function version() public view virtual override returns (string memory) {
+       return VERSION;
+    }
     function tokenId() public view virtual returns (string memory) {
         BaseModuleStorage storage $ = _getBaseModuleStorage();
         return $._tokenId;
     }
 
-    function terms() public view virtual returns (string memory) {
+    function terms() public view virtual returns (Terms memory) {
         BaseModuleStorage storage $ = _getBaseModuleStorage();
         return $._terms;
     }
@@ -66,6 +81,9 @@ abstract contract BaseModule is AuthorizationModule {
         return $._information;
     }
 
+
+    /* ============  Restricted Functions ============ */
+
     /** 
     * @notice the tokenId will be changed even if the new value is the same as the current one
     */
@@ -73,20 +91,17 @@ abstract contract BaseModule is AuthorizationModule {
         string calldata tokenId_
     ) public onlyRole(DEFAULT_ADMIN_ROLE) {
         BaseModuleStorage storage $ = _getBaseModuleStorage();
-        $._tokenId = tokenId_;
-        emit TokenId(tokenId_, tokenId_);
+        _setTokenId($, tokenId_);
     }
 
     /** 
     * @notice The terms will be changed even if the new value is the same as the current one
     */
-    function setTerms(
-        string calldata terms_
-    ) public onlyRole(DEFAULT_ADMIN_ROLE) {
-        BaseModuleStorage storage $ = _getBaseModuleStorage();
-        $._terms  = terms_;
-        emit Term(terms_, terms_);
+    function setTerms(IERC1643CMTAT.DocumentInfo calldata terms_) public onlyRole(DEFAULT_ADMIN_ROLE) {
+		BaseModuleStorage storage $ = _getBaseModuleStorage();
+        _setTerms($, terms_);
     }
+
 
     /** 
     * @notice The information will be changed even if the new value is the same as the current one
@@ -95,14 +110,47 @@ abstract contract BaseModule is AuthorizationModule {
         string calldata information_
     ) public onlyRole(DEFAULT_ADMIN_ROLE) {
         BaseModuleStorage storage $ = _getBaseModuleStorage();
-        $._information  = information_;
-        emit Information(information_, information_);
+        _setInformation($, information_);
     }
+
 
 
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
+
+    /** 
+    * @dev the tokenId will be changed even if the new value is the same as the current one
+    */
+    function _setTokenId(
+        BaseModuleStorage storage $, string memory tokenId_
+    ) internal  {
+        $._tokenId = tokenId_;
+        emit TokenId(tokenId_, tokenId_);
+    }
+
+    /** 
+    * @dev The terms will be changed even if the new value is the same as the current one
+    */
+    function _setTerms(BaseModuleStorage storage $, IERC1643CMTAT.DocumentInfo memory terms_) internal {
+		// Terms/Document name
+        $._terms.name = terms_.name;
+        // Document
+        $._terms.doc.documentHash  = terms_.documentHash;
+        $._terms.doc.uri = terms_.uri;
+        $._terms.doc.lastModified = block.timestamp;
+		// Event
+        emit Term($._terms, $._terms);
+    }
+
+    /** 
+    * @dev The terms will be changed even if the new value is the same as the current one
+    */
+    function _setInformation(BaseModuleStorage storage $, string memory information_) internal {
+        $._information  = information_;
+        emit Information(information_, information_);
+    }
+
 
     /* ============ ERC-7201 ============ */
     function _getBaseModuleStorage() private pure returns (BaseModuleStorage storage $) {

@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.20;
 
-import "@openzeppelin/contracts-upgradeable/metatx/ERC2771ContextUpgradeable.sol";
+import {ERC2771ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/metatx/ERC2771ContextUpgradeable.sol";
 
 /**
  * @title Meta transaction (gasless) module.

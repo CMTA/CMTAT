@@ -2,14 +2,14 @@ const MetaTxModuleCommon = require('../../common/MetaTxModuleCommon')
 const {
   deployCMTATStandaloneWithParameter,
   fixture,
-  loadFixture
+  loadFixture,
+  TERMS,
+  DEPLOYMENT_DECIMAL
 } = require('../../deploymentUtils.js')
 const { ZERO_ADDRESS, ERC2771ForwarderDomain } = require('../../utils.js')
 describe('Standard - MetaTxModule', function () {
   beforeEach(async function () {
     Object.assign(this, await loadFixture(fixture))
-    const DECIMAL = 0n
-
     this.forwarder = await ethers.deployContract('MinimalForwarderMock')
     await this.forwarder.initialize(ERC2771ForwarderDomain)
     this.cmtat = await deployCMTATStandaloneWithParameter(
@@ -18,9 +18,9 @@ describe('Standard - MetaTxModule', function () {
       this.admin.address,
       'CMTA Token',
       'CMTAT',
-      DECIMAL,
+      DEPLOYMENT_DECIMAL,
       'CMTAT_ISIN',
-      'https://cmta.ch',
+      TERMS,
       'CMTAT_info',
       [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]
     )

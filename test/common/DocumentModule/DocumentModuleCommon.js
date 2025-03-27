@@ -24,13 +24,12 @@ function DocumentModuleCommon () {
       const uri = 'https://github.com/CMTA/CMTAT'
       const documentHash = ethers.encodeBytes32String('hash1')
 
-      await this.documentEngineMock.setDocument(name, uri, documentHash)
+      await this.documentEngineMock.setDocument({ name, uri, documentHash })
 
-      const [storedUri, storedHash, lastModified] =
-        await this.cmtat.getDocument(name)
-      expect(storedUri).to.equal(uri)
-      expect(storedHash).to.equal(documentHash)
-      expect(lastModified).to.be.gt(0)
+      const doc = await this.cmtat.getDocument(name)
+      expect(doc.uri).to.equal(uri)
+      expect(doc.documentHash).to.equal(documentHash)
+      expect(doc.lastModified).to.be.gt(0)
     })
 
     it('testCanUpdateADocument', async function () {
@@ -41,23 +40,21 @@ function DocumentModuleCommon () {
       const uri2 = 'https://github.com/CMTA/CMTAT/V2'
       const documentHash2 = ethers.encodeBytes32String('hash2')
 
-      await this.documentEngineMock.setDocument(name, uri1, documentHash1)
-      await this.documentEngineMock.setDocument(name, uri2, documentHash2)
+      await this.documentEngineMock.setDocument([name, uri1, documentHash1])
+      await this.documentEngineMock.setDocument([name, uri2, documentHash2])
 
-      const [storedUri, storedHash, lastModified] =
-        await this.cmtat.getDocument(name)
-      expect(storedUri).to.equal(uri2)
-      expect(storedHash).to.equal(documentHash2)
-      expect(lastModified).to.be.gt(0)
+      const doc = await this.cmtat.getDocument(name)
+      expect(doc.uri).to.equal(uri2)
+      expect(doc.documentHash).to.equal(documentHash2)
+      expect(doc.lastModified).to.be.gt(0)
     })
 
     it('testCanGetNullValueIfNoDocument', async function () {
       const name = ethers.encodeBytes32String('doc1')
-      const [storedUri, storedHash, lastModified] =
-        await this.cmtat.getDocument(name)
-      expect(storedUri).to.equal('')
-      expect(storedHash).to.equal(ethers.encodeBytes32String(''))
-      expect(lastModified).to.equal(0)
+      const doc = await this.cmtat.getDocument(name)
+      expect(doc.uri).to.equal('')
+      expect(doc.documentHash).to.equal(ethers.encodeBytes32String(''))
+      expect(doc.lastModified).to.equal(0)
     })
 
     it('testCanRemoveADocument', async function () {
@@ -65,14 +62,13 @@ function DocumentModuleCommon () {
       const uri = 'https://github.com/CMTA/CMTAT'
       const documentHash = ethers.encodeBytes32String('hash1')
 
-      await this.documentEngineMock.setDocument(name, uri, documentHash)
+      await this.documentEngineMock.setDocument([name, uri, documentHash])
       await this.documentEngineMock.removeDocument(name)
 
-      const [storedUri, storedHash, lastModified] =
-        await this.cmtat.getDocument(name)
-      expect(storedUri).to.equal('')
-      expect(storedHash).to.equal(ethers.encodeBytes32String(''))
-      expect(lastModified).to.equal(0)
+      const doc = await this.cmtat.getDocument(name)
+      expect(doc.uri).to.equal('')
+      expect(doc.documentHash).to.equal(ethers.encodeBytes32String(''))
+      expect(doc.lastModified).to.equal(0)
     })
 
     it('testCanReturnAllDocumentNames', async function () {
@@ -84,8 +80,8 @@ function DocumentModuleCommon () {
       const uri2 = 'https://github.com/CMTA/CMTAT/V2'
       const documentHash2 = ethers.encodeBytes32String('hash2')
 
-      await this.documentEngineMock.setDocument(name1, uri1, documentHash1)
-      await this.documentEngineMock.setDocument(name2, uri2, documentHash2)
+      await this.documentEngineMock.setDocument([name1, uri1, documentHash1])
+      await this.documentEngineMock.setDocument([name2, uri2, documentHash2])
 
       const documentNames = await this.cmtat.getAllDocuments()
       expect(documentNames.length).to.equal(2)

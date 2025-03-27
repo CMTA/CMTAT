@@ -2,7 +2,9 @@ const DocumentModuleCommon = require('../../../common/DocumentModule/DocumentMod
 const {
   deployCMTATStandaloneWithParameter,
   fixture,
-  loadFixture
+  loadFixture,
+  TERMS,
+  DEPLOYMENT_DECIMAL
 } = require('../../../deploymentUtils')
 
 const { ZERO_ADDRESS } = require('../../../utils')
@@ -10,7 +12,6 @@ const { ZERO_ADDRESS } = require('../../../utils')
 describe('Standard - DocumentModule - Constructor', function () {
   beforeEach(async function () {
     Object.assign(this, await loadFixture(fixture))
-    const DECIMAL = 0
     this.documentEngineMock = await ethers.deployContract('DocumentEngineMock')
     this.definedAtDeployment = true
     this.cmtat = await deployCMTATStandaloneWithParameter(
@@ -19,9 +20,9 @@ describe('Standard - DocumentModule - Constructor', function () {
       this.admin.address,
       'CMTA Token',
       'CMTAT',
-      DECIMAL,
+      DEPLOYMENT_DECIMAL,
       'CMTAT_ISIN',
-      'https://cmta.ch',
+      TERMS,
       'CMTAT_info',
       [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS, this.documentEngineMock.target]
     )

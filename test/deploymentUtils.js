@@ -2,6 +2,12 @@ const { loadFixture } = require('@nomicfoundation/hardhat-network-helpers')
 const { ZERO_ADDRESS } = require('./utils')
 const { ethers, upgrades } = require('hardhat')
 const DEPLOYMENT_DECIMAL = 0n
+// hash = keccak256("doc1Hash");
+const TERMS = [
+  'doc1',
+  'https://example.com/doc1',
+  '0x6a12eff2f559a5e529ca2c563c53194f6463ed5c61d1ae8f8731137467ab0279'
+]
 async function fixture () {
   const [
     _,
@@ -31,7 +37,18 @@ async function deployCMTATStandalone (_, admin, deployerAddress) {
     _,
     admin,
     ['CMTA Token', 'CMTAT', DEPLOYMENT_DECIMAL],
-    ['CMTAT_ISIN', 'https://cmta.ch', 'CMTAT_info'],
+    ['CMTAT_ISIN', TERMS, 'CMTAT_info'],
+    [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]
+  ])
+  return cmtat
+}
+
+async function deployCMTATERC1363Standalone (_, admin, deployerAddress) {
+  const cmtat = await ethers.deployContract('CMTAT_STANDALONE_ERC1363', [
+    _,
+    admin,
+    ['CMTA Token', 'CMTAT', DEPLOYMENT_DECIMAL],
+    ['CMTAT_ISIN', TERMS, 'CMTAT_info'],
     [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]
   ])
   return cmtat
@@ -79,6 +96,28 @@ async function deployCMTATStandaloneWithParameter (
   return cmtat
 }
 
+async function deployCMTATERC1363Proxy (_, admin, deployerAddress) {
+  // Ref: https://forum.openzeppelin.com/t/upgrades-hardhat-truffle5/30883/3
+  const ETHERS_CMTAT_PROXY_FACTORY = await ethers.getContractFactory(
+    'CMTAT_PROXY_ERC1363'
+  )
+  const ETHERS_CMTAT_PROXY = await upgrades.deployProxy(
+    ETHERS_CMTAT_PROXY_FACTORY,
+    [
+      admin,
+      ['CMTA Token', 'CMTAT', DEPLOYMENT_DECIMAL],
+      ['CMTAT_ISIN', TERMS, 'CMTAT_info'],
+      [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]
+    ],
+    {
+      initializer: 'initialize',
+      constructorArgs: [_],
+      from: deployerAddress
+    }
+  )
+  return ETHERS_CMTAT_PROXY
+}
+
 async function deployCMTATProxy (_, admin, deployerAddress) {
   // Ref: https://forum.openzeppelin.com/t/upgrades-hardhat-truffle5/30883/3
   const ETHERS_CMTAT_PROXY_FACTORY = await ethers.getContractFactory(
@@ -89,7 +128,7 @@ async function deployCMTATProxy (_, admin, deployerAddress) {
     [
       admin,
       ['CMTA Token', 'CMTAT', DEPLOYMENT_DECIMAL],
-      ['CMTAT_ISIN', 'https://cmta.ch', 'CMTAT_info'],
+      ['CMTAT_ISIN', TERMS, 'CMTAT_info'],
       [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]
     ],
     {
@@ -138,9 +177,12 @@ async function deployCMTATProxyWithParameter (
 module.exports = {
   deployCMTATStandalone,
   deployCMTATProxy,
+  deployCMTATERC1363Proxy,
+  deployCMTATERC1363Standalone,
   deployCMTATProxyWithParameter,
   deployCMTATStandaloneWithParameter,
   DEPLOYMENT_DECIMAL,
+  TERMS,
   deployCMTATProxyImplementation,
   deployCMTATProxyUUPSImplementation,
   fixture,

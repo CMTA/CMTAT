@@ -6,7 +6,7 @@ function ValidationModuleCommon () {
   context('RuleEngineTransferTest', function () {
     beforeEach(async function () {
       if ((await this.cmtat.ruleEngine()) === ZERO_ADDRESS) {
-        this.ruleEngineMock = await ethers.deployContract('RuleEngineMock')
+        this.ruleEngineMock = await ethers.deployContract('RuleEngineMock', [this.admin])
         await this.cmtat
           .connect(this.admin)
           .setRuleEngine(this.ruleEngineMock.target)
@@ -19,12 +19,12 @@ function ValidationModuleCommon () {
         )
       }
     })
-    it('testCanValidateTransferWithoutRuleEngine', async function () {
+    it('testCanCanTransferWithoutRuleEngine', async function () {
       // Arrange
       await this.cmtat.connect(this.admin).setRuleEngine(ZERO_ADDRESS)
       // Act + Assert
       expect(
-        await this.cmtat.validateTransfer(this.address1, this.address2, 10)
+        await this.cmtat.canTransfer(this.address1, this.address2, 10)
       ).to.equal(true)
     })
 
@@ -38,7 +38,7 @@ function ValidationModuleCommon () {
         )
       ).to.equal(0)
       expect(
-        await this.cmtat.validateTransfer(this.address1, this.address2, 11)
+        await this.cmtat.canTransfer(this.address1, this.address2, 11)
       ).to.equal(true)
     })
 
@@ -60,7 +60,7 @@ function ValidationModuleCommon () {
       ).to.equal(10n)
 
       expect(
-        await this.cmtat.validateTransfer(
+        await this.cmtat.canTransfer(
           this.address1,
           this.address2,
           RULE_MOCK_AMOUNT_MAX + 1
@@ -87,7 +87,7 @@ function ValidationModuleCommon () {
       const AMOUNT_TO_TRANSFER = 11n
       // Act
       expect(
-        await this.cmtat.validateTransfer(
+        await this.cmtat.canTransfer(
           this.address1,
           this.address2,
           AMOUNT_TO_TRANSFER
@@ -114,7 +114,7 @@ function ValidationModuleCommon () {
       const AMOUNT_TO_TRANSFER = RULE_MOCK_AMOUNT_MAX + 1
       // Act
       expect(
-        await this.cmtat.validateTransfer(
+        await this.cmtat.canTransfer(
           this.address1,
           this.address2,
           AMOUNT_TO_TRANSFER
@@ -133,6 +133,89 @@ function ValidationModuleCommon () {
           AMOUNT_TO_TRANSFER
         )
     })
+  })
+  context('RuleEngineApprovalTest', function () {
+    beforeEach(async function () {
+      if ((await this.cmtat.ruleEngine()) === ZERO_ADDRESS) {
+        this.ruleEngineMock = await ethers.deployContract('RuleEngineMock', [this.admin])
+        await this.cmtat
+          .connect(this.admin)
+          .setRuleEngine(this.ruleEngineMock.target)
+      }
+    })
+    it('testCanApprove', async function () {
+      // Admin is an authorized spender
+      expect(
+        await this.cmtat.connect(this.address1).canApprove( this.address1,this.admin,10)
+      ).to.equal(true)
+      expect(
+        await this.cmtat.connect(this.address1).canApprove( this.address1,this.address2,10)
+      ).to.equal(false)
+    })
+
+    it('testCanCanApproveWithoutRuleEngine', async function () {
+      // Arrange
+      await this.cmtat.connect(this.admin).setRuleEngine(ZERO_ADDRESS)
+      // Act + Assert
+      expect(
+        await this.cmtat.connect(this.admin).canApprove( this.address1,this.admin,10)
+      ).to.equal(true)
+      expect(
+        await this.cmtat.connect(this.address1).canApprove( this.address1,this.address2,10)
+      ).to.equal(true)
+    })
+
+    it('testCannotApproveIfNotAllowedByRuleEngine', async function () {
+      const AMOUNT_TO_APPROVE = RULE_MOCK_AMOUNT_MAX + 1
+      // Act
+      expect(
+        await this.cmtat.canTransfer(
+          this.address1,
+          this.address2,
+          AMOUNT_TO_APPROVE
+        )
+      ).to.equal(false)
+      // Act
+      await expect(
+        this.cmtat
+          .connect(this.address1)
+          .approve(this.address2, AMOUNT_TO_APPROVE)
+      )
+        .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidApproval')
+        .withArgs(
+          this.address1.address,
+          this.address2.address,
+          AMOUNT_TO_APPROVE
+        )
+    })
+    it('testCanApproveAllowedByRuleEngine', async function () {
+      const AMOUNT_TO_APPROVE = 11n
+      // Act
+      expect(
+        await this.cmtat.connect(this.admin).canApprove(
+          this.address1,
+          this.admin,
+          AMOUNT_TO_APPROVE
+        )
+      ).to.equal(true)
+      // Act
+      await this.cmtat
+        .connect(this.address1)
+        .approve(this.admin, AMOUNT_TO_APPROVE)
+      // Assert
+      expect(await this.cmtat.allowance(this.address1, this.admin)).to.equal(
+        AMOUNT_TO_APPROVE
+      )
+      await this.cmtat
+      .connect(this.admin)
+      .transferFrom(this.address1, this.address2, AMOUNT_TO_APPROVE)
+      expect(await this.cmtat.balanceOf(this.address1)).to.equal(
+        this.ADDRESS1_INITIAL_BALANCE - AMOUNT_TO_APPROVE
+      )
+      expect(await this.cmtat.balanceOf(this.address2)).to.equal(
+        this.ADDRESS2_INITIAL_BALANCE + AMOUNT_TO_APPROVE)
+    })
+
   })
 }
 module.exports = ValidationModuleCommon

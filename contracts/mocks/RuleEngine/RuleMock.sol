@@ -2,15 +2,15 @@
 
 pragma solidity ^0.8.20;
 
-import "./interfaces/IRule.sol";
-import "./CodeList.sol";
+import {IRule} from "./interfaces/IRule.sol";
+import {CodeList} from "./CodeList.sol";
 
 
 /*
 * @title a mock for testing, not suitable for production
 */
 contract RuleMock is IRule, CodeList {
-    function validateTransfer(
+    function canTransfer(
         address _from,
         address _to,
         uint256 _amount

@@ -1,5 +1,4 @@
 const AuthorizationModuleCommon = require('../../../common/AuthorizationModule/AuthorizationModuleCommon')
-const AuthorizationModuleSetAuthorizationEngineCommon = require('../../../common/AuthorizationModule/AuthorizationModuleSetAuthorizationEngineCommon')
 const {
   deployCMTATProxy,
   fixture,
@@ -14,11 +13,7 @@ describe('Proxy - AuthorizationModule', function () {
       this.admin.address,
       this.deployerAddress.address
     )
-    this.authorizationEngineMock = await ethers.deployContract(
-      'AuthorizationEngineMock'
-    )
   })
 
   AuthorizationModuleCommon()
-  AuthorizationModuleSetAuthorizationEngineCommon()
 })

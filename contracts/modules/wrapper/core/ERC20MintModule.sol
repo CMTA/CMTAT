@@ -2,17 +2,18 @@
 
 pragma solidity ^0.8.20;
 
-import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
-import "../../security/AuthorizationModule.sol";
-import "../../../interfaces/ICCIPToken.sol";
-
+import {ERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
+import {AuthorizationModule} from "../../security/AuthorizationModule.sol";
+import {IMintERC20} from "../../../interfaces/IMintToken.sol";
+import {IERC3643Mint} from "../../../interfaces/IERC3643Partial.sol";
+import {Errors} from "../../../libraries/Errors.sol";
 /**
  * @title ERC20Mint module.
  * @dev 
  *
  * Contains all mint functions, inherits from ERC-20
  */
-abstract contract ERC20MintModule is ERC20Upgradeable, ICCIPMintERC20, AuthorizationModule {
+abstract contract ERC20MintModule is ERC20Upgradeable, IMintERC20, IERC3643Mint, AuthorizationModule {
     /* ============ State Variables ============ */
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     /* ============ Events ============ */
@@ -44,7 +45,7 @@ abstract contract ERC20MintModule is ERC20Upgradeable, ICCIPMintERC20, Authoriza
      * - `account` cannot be the zero address (check made by _mint).
      * - The caller must have the `MINTER_ROLE`.
      */
-    function mint(address account, uint256 value) public onlyRole(MINTER_ROLE) {
+    function mint(address account, uint256 value) public override(IERC3643Mint,IMintERC20) onlyRole(MINTER_ROLE) {
         _mint(account, value);
         emit Mint(account, value);
     }
@@ -64,19 +65,14 @@ abstract contract ERC20MintModule is ERC20Upgradeable, ICCIPMintERC20, Authoriza
      * - `accounts` cannot contain a zero address (check made by _mint).
      * - the caller must have the `MINTER_ROLE`.
      */
-    function mintBatch(
+    function batchMint(
         address[] calldata accounts,
         uint256[] calldata values
-    ) public onlyRole(MINTER_ROLE) {
-        if (accounts.length == 0) {
-            revert Errors.CMTAT_MintModule_EmptyAccounts();
-        }
+    ) public override onlyRole(MINTER_ROLE) {
+        require(accounts.length > 0, Errors.CMTAT_MintModule_EmptyAccounts());
         // We do not check that values is not empty since
         // this require will throw an error in this case.
-        if (bool(accounts.length != values.length)) {
-            revert Errors.CMTAT_MintModule_AccountsValueslengthMismatch();
-        }
-        // No need of unchecked block since Soliditiy 0.8.22
+        require(bool(accounts.length == values.length), Errors.CMTAT_MintModule_AccountsValueslengthMismatch());
         for (uint256 i = 0; i < accounts.length; ++i ) {
             _mint(accounts[i], values[i]);
             emit Mint(accounts[i], values[i]);

@@ -125,7 +125,7 @@ function PauseModuleCommon () {
       await this.cmtat.connect(this.admin).pause()
       // Act + Assert
       expect(
-        await this.cmtat.validateTransfer(
+        await this.cmtat.canTransfer(
           this.address1,
           this.address2,
           AMOUNT_TO_TRANSFER
