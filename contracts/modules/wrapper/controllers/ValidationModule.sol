@@ -15,8 +15,8 @@ import {IERC3643ComplianceRead} from "../../../interfaces/tokenization/IERC3643P
 import {IERC7551Compliance} from "../../../interfaces/tokenization/draft-IERC7551.sol";
 /* ==== Engine === */
 import {IRuleEngine} from "../../../interfaces/engine/IRuleEngine.sol";
-/* ==== Other === */
-import {Errors} from "../../../libraries/Errors.sol";
+
+import {ValidationModuleCore} from "./ValidationModuleCore.sol";
 /**
  * @dev Validation module.
  *
@@ -25,12 +25,10 @@ import {Errors} from "../../../libraries/Errors.sol";
 abstract contract ValidationModule is
     Initializable,
     ContextUpgradeable,
-    PauseModule,
-    EnforcementModule,
     IERC1404,
-    IERC3643ComplianceRead,
-    IERC7551Compliance
+    ValidationModuleCore
 {
+    error CMTAT_ValidationModule_SameValue();
     /* ============ State Variables ============ */
     string constant TEXT_TRANSFER_OK = "No restriction";
     string constant TEXT_UNKNOWN_CODE = "Unknown code";
@@ -77,7 +75,7 @@ abstract contract ValidationModule is
         IRuleEngine ruleEngine_
     ) public virtual onlyRole(DEFAULT_ADMIN_ROLE) {
         ValidationModuleInternalStorage storage $ = _getValidationModuleInternalStorage();
-        require($._ruleEngine != ruleEngine_, Errors.CMTAT_ValidationModule_SameValue());
+        require($._ruleEngine != ruleEngine_, CMTAT_ValidationModule_SameValue());
         _setRuleEngine($,ruleEngine_);
     }
 
@@ -145,35 +143,54 @@ abstract contract ValidationModule is
     }
 
     function canMint(
-        address /*from*/,
         address to,
-        uint256 /*value */
-    ) public view returns (bool) {
-        return _canMintByModule(to);
+        uint256 value
+    ) public virtual  override(ValidationModuleCore) view returns (bool) {
+        if (!ValidationModuleCore.canMint(to, value)) {
+            return false;
+        } else {
+            return _canTransferWithRuleEngine(address(0), to, value);
+        }
     }
 
 
     function canBurn(
         address from,
-        address /* to */,
-        uint256  /*value */
-    ) public view returns (bool) {
-        return _canMintByModule(from);
+        uint256 value
+    ) public virtual override(ValidationModuleCore) view returns (bool) {
+        if (!ValidationModuleCore.canBurn(from, value)) {
+            return false;
+        } else {
+            return _canTransferWithRuleEngine(from, address(0), value);
+        }
     }
 
     function canTransfer(
         address from,
         address to,
         uint256 value
-    ) public view override(IERC3643ComplianceRead, IERC7551Compliance) returns (bool) {
-        if (!_canTransferByModule(from, to, value)) {
+    ) public view virtual override(ValidationModuleCore) returns (bool) {
+        if (!ValidationModuleCore.canTransfer(from, to, value)) {
             return false;
         } else {
-            return _canTransfer(from, to, value);
+            return _canTransferWithRuleEngine(from, to, value);
         }
     }
 
-    function canApprove(
+    function canTransferFrom(
+        address spender,
+        address from,
+        address to,
+        uint256 value
+    ) public view virtual override(ValidationModuleCore) returns (bool) {
+        if (!ValidationModuleCore.canTransferFrom(spender, from, to, value)) {
+            return false;
+        } else {
+            return _canTransferFromWithRuleEngine(spender, from, to, value);
+        }
+    }
+
+    /*function canApprove(
         address owner, address spender, uint256 value
     ) public view virtual returns (bool) {
         ValidationModuleInternalStorage storage $ = _getValidationModuleInternalStorage();
@@ -182,14 +199,27 @@ abstract contract ValidationModule is
         } else{
             return true;
         }
-    }
+    }*/
 
 
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
     /* ============ View functions ============ */
-    function _canTransfer(
+    function _canTransferFromWithRuleEngine(
+        address spender,
+        address from,
+        address to,
+        uint256 value
+    ) internal view virtual returns (bool) {
+        ValidationModuleInternalStorage storage $ = _getValidationModuleInternalStorage();
+        if (address($._ruleEngine) != address(0)) {
+            return $._ruleEngine.canTransferFrom(spender, from, to, value);
+        } else{
+            return true;
+        }
+    }
+    function _canTransferWithRuleEngine(
         address from,
         address to,
         uint256 value
@@ -200,57 +230,6 @@ abstract contract ValidationModule is
         } else{
             return true;
         }
-    }
-
-    /**
-    * @dev function used by canTransfer and operateOnTransfer
-    * Block mint if the contract is deactivated (PauseModule) 
-    * or if to is frozen
-    */
-    function _canMintByModule(
-        address to
-    ) internal view virtual returns (bool) {
-        if(deactivated()){
-            // can not mint or burn if the contract is deactivated
-            return false;
-        }
-        if( isFrozen(to) ){
-            return false;
-        }
-        return true;
-    }
-
-
-    /**
-    * @dev function used by canTransfer and operateOnTransfer
-    * Block burn if the contract is deactivated (PauseModule) 
-    * Contrary to `_canMintByModule`, 
-    * this function does not return false if from or to is frozen.
-    * An issuer should be able to burn token from a frozen address.
-    */
-    function _canBurnByModule(
-        address to
-    ) internal view virtual returns (bool) {
-        if(deactivated()){
-            // can not mint or burn if the contract is deactivated
-            return false;
-        }
-        return true;
-    }
-
-    /**
-    @dev function used by canTransfer and operateOnTransfer
-     */
-    function _canTransferByModule(
-        address from,
-        address to,
-        uint256 /*value*/
-    ) internal view virtual returns (bool) {
-        if( isFrozen(from) || isFrozen(to) || paused() ){
-            return false;
-        }
-        return true;
-      
     }
 
     /* ============ State functions ============ */
@@ -267,13 +246,13 @@ abstract contract ValidationModule is
         emit RuleEngine(ruleEngine_);
     }
 
-    function _operateOnTransfer(address from, address to, uint256 value) internal returns (bool){
-        if (!_canTransferByModule(from, to, value)){
+    function _operateOnTransfer(address spender, address from, address to, uint256 value) internal returns (bool){
+        if (!canTransferFrom(spender, from, to, value)){
             return false;
         } else{
             ValidationModuleInternalStorage storage $ = _getValidationModuleInternalStorage();
             if (address($._ruleEngine) != address(0)){
-                return $._ruleEngine.transferred(from, to, value);
+                return $._ruleEngine.transferred(spender, from, to, value);
             }else {
                 return true;
             }
@@ -281,14 +260,14 @@ abstract contract ValidationModule is
     }
 
 
-    function _canApprove(address owner, address spender, uint256 value) internal view returns (bool){
+    /*function _canApprove(address owner, address spender, uint256 value) internal view returns (bool){
         ValidationModuleInternalStorage storage $ = _getValidationModuleInternalStorage();
         if (address($._ruleEngine) != address(0)){
                 return $._ruleEngine.canApprove(owner, spender, value);
         }else{
                 return true;
         }
-    }
+    }*/
 
 
     /* ============ ERC-7201 ============ */

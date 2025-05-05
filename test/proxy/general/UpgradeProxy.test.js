@@ -13,7 +13,7 @@ describe('UpgradeableCMTAT - Proxy', function () {
   beforeEach(async function () {
     Object.assign(this, await loadFixture(fixture))
     /* Factory & Artefact */
-    CMTAT_PROXY_FACTORY = await ethers.getContractFactory('CMTAT_PROXY')
+    CMTAT_PROXY_FACTORY = await ethers.getContractFactory('CMTATUpgradeable')
     this.CMTAT_PROXY_TestFactory = await ethers.getContractFactory(
       'CMTAT_PROXY_TEST'
     )

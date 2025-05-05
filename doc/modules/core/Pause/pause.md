@@ -45,6 +45,18 @@ Pause all the token transfers.
 This function doesn't affect issuance, redemption, and approves.
 Only authorized users are allowed to call this function.
 
+##### Events
+
+###### `Paused(address)`
+
+Origin: OpenZeppelin (PausableUpgradeable)
+
+```solidity
+event Paused(address account)
+```
+
+Emitted when token transfers were paused.
+
 #### `unpause()`
 
 ##### Definition:
@@ -54,24 +66,24 @@ function unpause()
 public onlyRole(PAUSER_ROLE)
 ```
 
+##### Description
+
 Unpause token transfers.
 Only authorized users are allowed to call this function.
 
-#### `unpause()`
+##### Events
 
-##### Definition:
+###### `Unpaused(address)`
 
 ```solidity
-function unpause() 
-public onlyRole(PAUSER_ROLE)
+event Unpaused(address account)
 ```
 
-Unpause token transfers.
-Only authorized users are allowed to call this function.
+Description:
 
+Emitted when token transfers were unpaused.
 
-
-`deactivateContract() `
+#### `deactivateContract() `
 
 ##### Definition:
 
@@ -88,30 +100,11 @@ The variable `isDeactivated` will also have an impact on the function `unpause`.
 
 ***With a proxy, it is still possible to rollback by deploying a new implementation.
 
-### Events
+##### Events
 
-#### `Paused(address)`
+###### Deactivated
 
-Origin: OpenZeppelin (PausableUpgradeable)
-
-##### Definition:
-
-```solidity
-event Paused(address account)
+```
+event Deactivated(address account);
 ```
 
-##### Description:
-
-Emitted when token transfers were paused.
-
-#### `Unpaused(address)`
-
-##### Definition:
-
-```solidity
-event Unpaused(address account)
-```
-
-##### Description:
-
-Emitted when token transfers were unpaused.

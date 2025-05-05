@@ -21,7 +21,7 @@ describe('Proxy - Security Test', function () {
     const implementationContractAddress =
       await upgrades.erc1967.getImplementationAddress(this.CMTAT_PROXY.target)
 
-    const MyContract = await ethers.getContractFactory('CMTAT_PROXY')
+    const MyContract = await ethers.getContractFactory('CMTATUpgradeable')
     this.implementationContract = MyContract.attach(
       implementationContractAddress
     )

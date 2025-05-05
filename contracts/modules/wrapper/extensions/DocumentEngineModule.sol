@@ -6,8 +6,7 @@ pragma solidity ^0.8.20;
 import {AuthorizationModule} from "../../security/AuthorizationModule.sol";
 /* ==== Engine === */
 import {IERC1643, IDocumentEngine} from "../../../interfaces/engine/IDocumentEngine.sol";
-/* ==== Other === */
-import {Errors} from "../../../libraries/Errors.sol";
+
 /**
  * @title Document module
  * @dev 
@@ -16,6 +15,8 @@ import {Errors} from "../../../libraries/Errors.sol";
  */
 
 abstract contract DocumentModule is AuthorizationModule, IERC1643 {
+    error CMTAT_DocumentModule_SameValue();
+
     /* ============ Events ============ */
     /**
      * @dev Emitted when a rule engine is set.
@@ -80,7 +81,7 @@ abstract contract DocumentModule is AuthorizationModule, IERC1643 {
         IERC1643 documentEngine_
     ) external virtual onlyRole(DOCUMENT_ROLE) {
         DocumentModuleStorage storage $ = _getDocumentModuleStorage();
-        require($._documentEngine != documentEngine_, Errors.CMTAT_DocumentModule_SameValue());
+        require($._documentEngine != documentEngine_, CMTAT_DocumentModule_SameValue());
         _setDocumentEngine($, documentEngine_);
     }
 

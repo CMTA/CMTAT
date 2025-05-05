@@ -9,9 +9,8 @@ import {AuthorizationModule} from "../../security/AuthorizationModule.sol";
 /* ==== Tokenization === */
 import {IERC3643Pause} from "../../../interfaces/tokenization/IERC3643Partial.sol";
 import {IERC7551Pause} from "../../../interfaces/tokenization/draft-IERC7551.sol";
-import {ICMTATPause} from "../../../interfaces/tokenization/ICMTAT.sol";
-/* ==== Other === */
-import {Errors} from "../../../libraries/Errors.sol";
+import {ICMTATDeactivate} from "../../../interfaces/tokenization/ICMTAT.sol";
+
 
 /**IERC3643Pause
  * @title Pause Module
@@ -24,7 +23,8 @@ import {Errors} from "../../../libraries/Errors.sol";
  * period, or having an emergency switch for freezing all token transfers in the
  * event of a large bug.
  */
-abstract contract PauseModule is PausableUpgradeable, AuthorizationModule, IERC3643Pause, IERC7551Pause, ICMTATPause {
+abstract contract PauseModule is PausableUpgradeable, AuthorizationModule, IERC3643Pause, IERC7551Pause, ICMTATDeactivate {
+    error CMTAT_PauseModule_ContractIsDeactivated();
     /* ============ State Variables ============ */
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     string internal constant TEXT_TRANSFER_REJECTED_PAUSED =
@@ -45,7 +45,7 @@ abstract contract PauseModule is PausableUpgradeable, AuthorizationModule, IERC3
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
-    function paused() public virtual view override(IERC3643Pause, IERC7551Pause, ICMTATPause, PausableUpgradeable)  returns (bool){
+    function paused() public virtual view override(IERC3643Pause, IERC7551Pause, PausableUpgradeable)  returns (bool){
         return PausableUpgradeable.paused();
    }
     
@@ -58,7 +58,7 @@ abstract contract PauseModule is PausableUpgradeable, AuthorizationModule, IERC3
      * - the caller must have the `PAUSER_ROLE`.
      *
      */
-    function pause() public virtual override(IERC3643Pause, IERC7551Pause, ICMTATPause) onlyRole(PAUSER_ROLE) {
+    function pause() public virtual override(IERC3643Pause, IERC7551Pause) onlyRole(PAUSER_ROLE) {
         _pause();
     }
 
@@ -70,9 +70,9 @@ abstract contract PauseModule is PausableUpgradeable, AuthorizationModule, IERC3
      *
      * - the caller must have the `PAUSER_ROLE`.
      */
-    function unpause() public virtual override(IERC3643Pause, IERC7551Pause, ICMTATPause) onlyRole(PAUSER_ROLE) {
+    function unpause() public virtual override(IERC3643Pause, IERC7551Pause) onlyRole(PAUSER_ROLE) {
         PauseModuleStorage storage $ = _getPauseModuleStorage();
-        require(!$._isDeactivated, Errors.CMTAT_PauseModule_ContractIsDeactivated());
+        require(!$._isDeactivated, CMTAT_PauseModule_ContractIsDeactivated());
         _unpause();
     }
 
@@ -86,7 +86,7 @@ abstract contract PauseModule is PausableUpgradeable, AuthorizationModule, IERC3
     * - the caller must have the `DEFAULT_ADMIN_ROLE`.
     */
     function deactivateContract()
-        public virtual override(ICMTATPause)
+        public virtual override(ICMTATDeactivate)
         onlyRole(DEFAULT_ADMIN_ROLE)
     {
         PauseModuleStorage storage $ = _getPauseModuleStorage();
@@ -98,7 +98,7 @@ abstract contract PauseModule is PausableUpgradeable, AuthorizationModule, IERC3
     /**
     * @notice Returns true if the contract is deactivated, and false otherwise.
     */
-    function deactivated() public view virtual override(ICMTATPause) returns (bool){
+    function deactivated() public view virtual override(ICMTATDeactivate) returns (bool){
         PauseModuleStorage storage $ = _getPauseModuleStorage();
         return $._isDeactivated;
     }

@@ -6,8 +6,7 @@ pragma solidity ^0.8.20;
 import {AuthorizationModule} from "../../security/AuthorizationModule.sol";
 /* ==== Engine === */
 import {IDebtEngine, ICMTATDebt} from "../../../interfaces/engine/IDebtEngine.sol";
-/* ==== Other === */
-import {Errors} from "../../../libraries/Errors.sol";
+
 /**
  * @title Debt module
  * @dev 
@@ -15,6 +14,7 @@ import {Errors} from "../../../libraries/Errors.sol";
  * Retrieve debt and creditEvents information from a debtEngine
  */
 abstract contract DebtModule is AuthorizationModule, ICMTATDebt {
+    error CMTAT_DebtModule_SameValue();
     /* ============ State Variables ============ */
     bytes32 public constant DEBT_ROLE = keccak256("DEBT_ROLE");
     /* ============ ERC-7201 ============ */
@@ -81,7 +81,7 @@ abstract contract DebtModule is AuthorizationModule, ICMTATDebt {
         IDebtEngine debtEngine_
     ) external virtual onlyRole(DEBT_ROLE) {
         DebtModuleStorage storage $ = _getDebtModuleStorage();
-        require($._debtEngine != debtEngine_, Errors.CMTAT_DebtModule_SameValue());
+        require($._debtEngine != debtEngine_, CMTAT_DebtModule_SameValue());
         _setDebtEngine($, debtEngine_);
     }
 

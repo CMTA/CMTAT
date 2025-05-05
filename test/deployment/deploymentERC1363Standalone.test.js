@@ -5,6 +5,10 @@ const {
   loadFixture
 } = require('../deploymentUtils')
 const ERC20BaseModuleCommon = require('../common/ERC20BaseModuleCommon')
+const ERC20MintModuleCommon = require('../common/ERC20MintModuleCommon')
+const ERC20BurnModuleCommon = require('../common/ERC20BurnModuleCommon')
+const EnforcementModuleCommon = require('../common/EnforcementModuleCommon')
+const ERC20EnforcementModuleCommon = require('../common/ERC20EnforcementModuleCommon')
 const VALUE = 20n
 describe('CMTAT ERC1363 - Standalone', function () {
   beforeEach(async function () {
@@ -64,4 +68,8 @@ describe('CMTAT ERC1363 - Standalone', function () {
       .withArgs(this.address1.address)
   })
   ERC20BaseModuleCommon()
+  ERC20BurnModuleCommon()
+  ERC20MintModuleCommon()
+  EnforcementModuleCommon()
+  ERC20EnforcementModuleCommon()
 })

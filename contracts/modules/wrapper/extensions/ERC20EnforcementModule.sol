@@ -11,8 +11,7 @@ import {IBurnERC20} from "../../../interfaces/technical/IMintBurnToken.sol";
 /* ==== Tokenization === */
 import {IERC3643ERC20Enforcement} from "../../../interfaces/tokenization/IERC3643Partial.sol";
 import {IERC7551ERC20Enforcement} from "../../../interfaces/tokenization/draft-IERC7551.sol";
-/* ==== Other === */
-import {Errors} from "../../../libraries/Errors.sol";
+
 /**
  * @title ERC20Burn module.
  * @dev 
@@ -20,8 +19,11 @@ import {Errors} from "../../../libraries/Errors.sol";
  * Contains all burn functions, inherits from ERC-20
  */
 abstract contract ERC20EnforcementModule is ERC20Upgradeable, IERC7551ERC20Enforcement, IERC3643ERC20Enforcement, AuthorizationModule {
+    error CMTAT_ERC20EnforcementModule_ValueExceedsAvailableBalance();
+    error CMTAT_ERC20EnforcementModule_ValueExceedsFrozenBalance(); 
+
     string internal constant TEXT_TRANSFER_REJECTED_FROM_INSUFFICIENT_ACTIVE_BALANCE =
-        "From:insufficient active balance";
+        "Address from:insufficient active balance";
    
     /* ============ State Variables ============ */
     bytes32 public constant ERC20ENFORCER_ROLE = keccak256("ERC20ENFORCER_ROLE");
@@ -85,7 +87,7 @@ abstract contract ERC20EnforcementModule is ERC20Upgradeable, IERC7551ERC20Enfor
         ERC20EnforcementModuleStorage storage $ = _getEnforcementModuleStorage();
         uint256 balance = ERC20Upgradeable.balanceOf(account);
         uint256 frozenBalance = $._frozenTokens[account] + value;
-        require(balance >= frozenBalance, Errors.CMTAT_ERC20EnforcementModule_ValueExceedsAvailableBalance());
+        require(balance >= frozenBalance, CMTAT_ERC20EnforcementModule_ValueExceedsAvailableBalance());
         $._frozenTokens[account] = frozenBalance;
         emit TokensFrozen(account, value);
     }
@@ -95,7 +97,7 @@ abstract contract ERC20EnforcementModule is ERC20Upgradeable, IERC7551ERC20Enfor
      */
     function unfreezePartialTokens(address account, uint256 value) public virtual override(IERC7551ERC20Enforcement, IERC3643ERC20Enforcement) onlyRole(ERC20ENFORCER_ROLE) {
         ERC20EnforcementModuleStorage storage $ = _getEnforcementModuleStorage();
-        require($._frozenTokens[account] >= value, Errors.CMTAT_ERC20EnforcementModule_ValueExceedsFrozenBalance());
+        require($._frozenTokens[account] >= value, CMTAT_ERC20EnforcementModule_ValueExceedsFrozenBalance());
         $._frozenTokens[account] = $._frozenTokens[account] - value;
         emit TokensUnfrozen(account, value);
     }

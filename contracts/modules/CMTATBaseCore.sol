@@ -10,54 +10,33 @@ import {ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/Cont
 import {ERC20BurnModule} from "./wrapper/core/ERC20BurnModule.sol";
 import {ERC20MintModule} from "./wrapper/core/ERC20MintModule.sol";
 import {ERC20BaseModule, ERC20Upgradeable} from "./wrapper/core/ERC20BaseModule.sol";
+
 // Other
 import {BaseModule} from "./wrapper/core/BaseModule.sol";
 import {EnforcementModule} from "./wrapper/core/EnforcementModule.sol";
-import {ERC20EnforcementModule} from "./wrapper/extensions/ERC20EnforcementModule.sol";
-import {ExtraInformationModule} from "./wrapper/extensions/ExtraInformationModule.sol";
 import {PauseModule} from "./wrapper/core/PauseModule.sol";
-import {ValidationModule, IERC1404} from "./wrapper/controllers/ValidationModule.sol";
-import {MetaTxModule, ERC2771ContextUpgradeable} from "./wrapper/extensions/MetaTxModule.sol";
-import {DebtModule} from "./wrapper/extensions/DebtEngineModule.sol";
-import {DocumentModule} from "./wrapper/extensions/DocumentEngineModule.sol";
-import {SnapshotEngineModule} from "./wrapper/extensions/SnapshotEngineModule.sol";
+import {ValidationModuleCore} from "./wrapper/controllers/ValidationModuleCore.sol";
+
 // Security
 import {AuthorizationModule} from "./security/AuthorizationModule.sol";
- /* ==== Interface and other library === */
+
+/* ==== Interface and other library === */
 import {ICMTATConstructor} from "../interfaces/technical/ICMTATConstructor.sol";
 import {ISnapshotEngine} from "../interfaces/engine/ISnapshotEngine.sol";
 import {Errors} from "../libraries/Errors.sol";
-//import {CMTATBaseCore} from "./CMTATBaseCore.sol";
-abstract contract CMTAT_BASE is
+
+abstract contract CMTATBaseCore is
     // OpenZeppelin
     Initializable,
     ContextUpgradeable,
-    // Core
     BaseModule,
-    //PauseModule,
+    // Core
     ERC20MintModule,
     ERC20BurnModule,
-    //EnforcementModule,
-    ValidationModule,
-    ERC20BaseModule,
-    // Extension
-    MetaTxModule,
-    DebtModule,
-    SnapshotEngineModule,
-    ERC20EnforcementModule,
-    DocumentModule,
-    ExtraInformationModule
+    ValidationModuleCore,
+    ERC20BaseModule
 {  
  
-    function _checkTransfer(address spender, address from, address to, uint256 value) internal {
-        if(!_checkActiveBalance(from, value)){
-            revert Errors.CMTAT_InvalidTransfer(from, to, value);
-        }
-        if (!ValidationModule._operateOnTransfer(spender, from, to, value)) {
-            revert Errors.CMTAT_InvalidTransfer(from, to, value);
-        }
-    } 
-
     /*//////////////////////////////////////////////////////////////
                          INITIALIZER FUNCTION
     //////////////////////////////////////////////////////////////*/
@@ -67,20 +46,14 @@ abstract contract CMTAT_BASE is
      * The calls to this function will revert if the contract was deployed without a proxy
      * @param admin address of the admin of contract (Access Control)
      * @param ERC20Attributes_ ERC20 name, symbol and decimals
-     * @param baseModuleAttributes_ tokenId, terms, information
-     * @param engines_ external contract
      */
     function initialize(
         address admin,
-        ICMTATConstructor.ERC20Attributes memory ERC20Attributes_,
-        ICMTATConstructor.BaseModuleAttributes memory baseModuleAttributes_,
-        ICMTATConstructor.Engine memory engines_ 
+        ICMTATConstructor.ERC20Attributes memory ERC20Attributes_
     ) public virtual initializer {
         __CMTAT_init(
             admin,
-            ERC20Attributes_,
-            baseModuleAttributes_,
-            engines_
+            ERC20Attributes_
         );
     }
 
@@ -90,9 +63,7 @@ abstract contract CMTAT_BASE is
      */
     function __CMTAT_init(
         address admin,
-        ICMTATConstructor.ERC20Attributes memory ERC20Attributes_,
-        ICMTATConstructor.BaseModuleAttributes memory baseModuleAttributes_,
-        ICMTATConstructor.Engine memory engines_ 
+        ICMTATConstructor.ERC20Attributes memory ERC20Attributes_
     ) internal virtual onlyInitializing {
         /* OpenZeppelin library */
         // OZ init_unchained functions are called firstly due to inheritance
@@ -107,7 +78,7 @@ abstract contract CMTAT_BASE is
        __CMTAT_internal_init_unchained();
 
         /* Wrapper modules */
-        __CMTAT_modules_init_unchained(admin, ERC20Attributes_, baseModuleAttributes_, engines_ );
+        __CMTAT_modules_init_unchained(admin, ERC20Attributes_);
 
         /* own function */
         __CMTAT_init_unchained();
@@ -136,7 +107,7 @@ abstract contract CMTAT_BASE is
     /*
     * @dev CMTAT wrapper modules
     */
-    function __CMTAT_modules_init_unchained(address admin, ICMTATConstructor.ERC20Attributes memory ERC20Attributes_, ICMTATConstructor.BaseModuleAttributes memory baseModuleAttributes_, ICMTATConstructor.Engine memory engines_ ) internal virtual onlyInitializing {
+    function __CMTAT_modules_init_unchained(address admin, ICMTATConstructor.ERC20Attributes memory ERC20Attributes_ ) internal virtual onlyInitializing {
         // AuthorizationModule_init_unchained is called firstly due to inheritance
         __AuthorizationModule_init_unchained(admin);
         __ERC20BurnModule_init_unchained();
@@ -146,14 +117,6 @@ abstract contract CMTAT_BASE is
         __ERC20BaseModule_init_unchained(ERC20Attributes_.decimalsIrrevocable, ERC20Attributes_.name, ERC20Attributes_.symbol);
         // PauseModule_init_unchained is called before ValidationModule_init_unchained due to inheritance
         __PauseModule_init_unchained();
-        __ValidationModule_init_unchained(engines_.ruleEngine);
-
-        __SnapshotModule_init_unchained(engines_.snapshotEngine);
-        __DocumentModule_init_unchained(engines_ .documentEngine);
-        __DebtModule_init_unchained(engines_ .debtEngine);
-        __ERC20EnforcementModule_init_unchained();
-        /* Other modules */
-        __ExtraInformationModule_init_unchained(baseModuleAttributes_.tokenId, baseModuleAttributes_.terms, baseModuleAttributes_.information);
     }
 
     function __CMTAT_init_unchained() internal virtual onlyInitializing {
@@ -203,10 +166,11 @@ abstract contract CMTAT_BASE is
     }
 
     /* ============  State Functions ============ */
+        /* ============  State Functions ============ */
     function transfer(address to, uint256 value) public virtual override returns (bool) {
-         address from = _msgSender();
-        _checkTransfer(address(0), from, to, value);
-        _transfer(from, to, value);
+        address from = _msgSender();
+        require(ValidationModuleCore.canTransfer(from, to, value), Errors.CMTAT_InvalidTransfer(from, to, value) );
+        ERC20Upgradeable._transfer(from, to, value);
         return true;
     }
     /*
@@ -222,20 +186,9 @@ abstract contract CMTAT_BASE is
         override(ERC20Upgradeable, ERC20BaseModule)
         returns (bool)
     {
-        _checkTransfer(_msgSender(), from, to, value);
+        require(ValidationModuleCore.canTransfer(from, to, value), Errors.CMTAT_InvalidTransfer(from, to, value) );
         return ERC20BaseModule.transferFrom(from, to, value);
     }
-
-   /* function approve(address spender, uint256 value) public override virtual returns (bool) {
-        address owner = _msgSender();
-        if (!ValidationModule._canApprove(owner, spender, value)) {
-            revert Errors.CMTAT_InvalidApproval(owner, spender, value);
-        }
-        // We call directly the internal OpenZeppelin function _approve
-        // The reason is that the public function adds only the owner address recovery
-        ERC20Upgradeable._approve(owner, spender, value);
-        return true;
-    }*/
 
     /*//////////////////////////////////////////////////////////////
                 Functions requiring several modules
@@ -261,115 +214,16 @@ abstract contract CMTAT_BASE is
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
     /**
-     * @dev
-     *
-     */
-    function _update(
-        address from,
-        address to,
-        uint256 amount
-    ) internal virtual override(ERC20Upgradeable) {
-        /*if (!ValidationModule._operateOnTransfer(from, to, amount)) {
-            revert Errors.CMTAT_InvalidTransfer(from, to, amount);
-        }*/
-        // We check here the address of the snapshotEngine here because we don't want to read balance/totalSupply if there is no Snapshot Engine
-        ISnapshotEngine snapshotEngineLocal = snapshotEngine();
-        // Required to be performed before the update
-        if(address(snapshotEngineLocal) != address(0)){
-            snapshotEngineLocal.operateOnTransfer(from, to, balanceOf(from), balanceOf(to), totalSupply());
-        }
-        ERC20Upgradeable._update(from, to, amount);
-    }
-    function detectTransferRestriction(
-        address from,
-        address to,
-        uint256 value
-    ) public virtual view override(ValidationModule ) returns (uint8 code) {
-        uint256 frozenTokensLocal = getFrozenTokens(from);
-        if(frozenTokensLocal > 0 ){
-            uint256 activeBalance = balanceOf(from) - frozenTokensLocal;
-            if(value > activeBalance) {
-                return uint8(IERC1404.REJECTED_CODE_BASE.TRANSFER_REJECTED_FROM_INSUFFICIENT_ACTIVE_BALANCE);
-            }
-        } 
-        return ValidationModule.detectTransferRestriction(from, to, value);
-    }
-
-    function messageForTransferRestriction(
-        uint8 restrictionCode
-    )  public view virtual override(ValidationModule)  returns (string memory message) {
-        if(restrictionCode == uint8(IERC1404.REJECTED_CODE_BASE.TRANSFER_REJECTED_FROM_INSUFFICIENT_ACTIVE_BALANCE)){
-            return ERC20EnforcementModule.TEXT_TRANSFER_REJECTED_FROM_INSUFFICIENT_ACTIVE_BALANCE;
-        } else {
-            return ValidationModule.messageForTransferRestriction(restrictionCode);
-        }
-
-    }
-
-    function canTransfer(
-        address from,
-        address to,
-        uint256 value
-    ) public virtual override (ValidationModule) view returns (bool) {
-        if(!_checkActiveBalance(from, value)){
-            return false;
-        } else {
-            return ValidationModule.canTransfer(from, to, value);
-        }
-        
-    }
-
-    /**
     * @dev 
     */
     function _mint(address account, uint256 value, bytes memory data) internal virtual override(ERC20MintModule) {
-        require(ValidationModule.canMint(account, value), Errors.CMTAT_InvalidMint(account, value) );
+        require(ValidationModuleCore.canMint(account, value), Errors.CMTAT_InvalidMint(account, value) );
         ERC20MintModule._mint(account, value, data);
     }
 
 
     function _burn(address account, uint256 value, bytes memory data) internal virtual override(ERC20BurnModule) {
-        require(ValidationModule.canBurn(account, value), Errors.CMTAT_InvalidBurn(account, value) );
+        require(ValidationModuleCore.canBurn(account, value), Errors.CMTAT_InvalidBurn(account, value) );
         ERC20BurnModule._burn(account, value, data);
-    }
-
- 
-
-
-
-    /*//////////////////////////////////////////////////////////////
-                            METAXTX MODULE
-    //////////////////////////////////////////////////////////////*/
-    /**
-     * @dev This surcharge is not necessary if you do not use the MetaTxModule
-     */
-    function _msgSender()
-        internal virtual
-        view
-        override(ERC2771ContextUpgradeable, ContextUpgradeable)
-        returns (address sender)
-    {
-        return ERC2771ContextUpgradeable._msgSender();
-    }
-
-    /**
-     * @dev This surcharge is not necessary if you do not use the MetaTxModule
-     */
-    function _contextSuffixLength() internal virtual view 
-    override(ERC2771ContextUpgradeable, ContextUpgradeable)
-    returns (uint256) {
-         return ERC2771ContextUpgradeable._contextSuffixLength();
-    }
-
-    /**
-     * @dev This surcharge is not necessary if you do not use the MetaTxModule
-     */
-    function _msgData()
-        internal virtual
-        view
-        override(ERC2771ContextUpgradeable, ContextUpgradeable)
-        returns (bytes calldata)
-    {
-        return ERC2771ContextUpgradeable._msgData();
     }
 }

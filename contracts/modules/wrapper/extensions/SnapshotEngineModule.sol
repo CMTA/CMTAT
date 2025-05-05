@@ -9,6 +9,7 @@ import {ISnapshotEngine} from "../../../interfaces/engine/ISnapshotEngine.sol";
 /* ==== Other === */
 import {Errors} from "../../../libraries/Errors.sol";
 abstract contract SnapshotEngineModule is AuthorizationModule {
+    error CMTAT_SnapshotModule_SameValue();
     /* ============ State Variables ============ */
     bytes32 public constant SNAPSHOOTER_ROLE = keccak256("SNAPSHOOTER_ROLE");
     /* ============ Events ============ */
@@ -58,7 +59,7 @@ abstract contract SnapshotEngineModule is AuthorizationModule {
         ISnapshotEngine snapshotEngine_
     ) external virtual onlyRole(SNAPSHOOTER_ROLE) {
         SnapshotEngineModuleStorage storage $ = _getSnapshotEngineModuleStorage();
-        require($._snapshotEngine != snapshotEngine_, Errors.CMTAT_SnapshotModule_SameValue());
+        require($._snapshotEngine != snapshotEngine_, CMTAT_SnapshotModule_SameValue());
         _setSnapshotEngine($, snapshotEngine_);
     }
 

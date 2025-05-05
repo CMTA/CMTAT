@@ -4,50 +4,13 @@ pragma solidity ^0.8.20;
 
 import {IERC1643CMTAT, IERC1643} from "./draft-IERC1643CMTAT.sol";
 
-
-
-/**
-* The issuer must be in a position to create new tokens by allocating new tokens to a distributed
-* ledger address.
-* This function is meant to be used when the issuer tokenizes newly issued shares or existing
-* shares previously issued in a different form (e.g. in the form of paper certificates).
-*/
-interface ICMTATMint {
-    /**
-    * See {IERC7551} & {IERC3643Partial}
-    */
-    function mint(address to, uint256 amount) external;
-}
-
-/**
-* This function allows the issuer to destroy specific tokens that are recorded on a distributed ledger
-* address.
-* This function is meant to be used if the issuer cancels tokenized shares (e.g. if it reduces its
-* share capital, if it has decided to have the shares in a different form (e.g. “simple” uncertificated
-* securities within the meaning of Article 973c CO or paper certificates), or to comply with a court
-* order requiring the cancellation of tokens pursuant to Article 973h CO).*/
-interface ICMTATBurn {
-    /**
-    * See {IERC7551} & {IERC3643Partial}
-    */
-    function burn(address to, uint256 amount) external;
-}
-
 /**
 * The issuer must be able to “pause” the smart contract, to prevent execution of transactions on
 * the distributed ledger until the issuer puts an end to the pause. This function can be used to block
 * transactions in case of a “hard fork” of the distributed ledger, pending a decision of the issuer as
 * to which version of the distributed ledger it will support.
 */
-interface ICMTATPause {
-    /**
-    * See {IERC7551} & {IERC3643Partial}
-    */
-    function paused() external view returns (bool);
-    function pause() external;
-    function unpause() external;
-
-
+interface ICMTATDeactivate {
     /**
     * Contrary to the “burn” function mentioned under 5 above, the “deactivateContract” function
     * affects all tokens in issue, and not only some of them. 
@@ -70,22 +33,6 @@ interface ICMTATPause {
     event Deactivated(address account);
     function deactivateContract() external;
     function deactivated() external view returns (bool) ;
-}
-
-/**
-* The issuer (or a third party appointed by it) must be in a position to freeze tokens on specific
-* distributed ledger addresses (as opposed to pausing the whole smart contract) to prevent
-* the transfer of tokens that have been earmarked for transfer to a third party (e.g. between the
-* execution of a transaction on a trading platform and the settlement of the trade in the distributed
-* ledger).
-*/
-interface ICMTATEnforcement {
-    /**
-    * See {IERC3643Partial}
-    */
-   function setAddressFrozen(address account, bool freeze) external;
-   function isFrozen(address account) external view returns (bool);
-
 }
 
 

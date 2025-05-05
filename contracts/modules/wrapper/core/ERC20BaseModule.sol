@@ -10,8 +10,6 @@ import {AuthorizationModule} from "../../security/AuthorizationModule.sol";
 import {IERC20Allowance} from "../../../interfaces/technical/IERC20Allowance.sol";
 /* ==== Tokenization === */
 import {IERC3643ERC20Base} from "../../../interfaces/tokenization/IERC3643Partial.sol";
-/* ==== Other === */
-import {Errors} from "../../../libraries/Errors.sol";
 
 /**
  * @title ERC20Base module
@@ -24,6 +22,15 @@ import {Errors} from "../../../libraries/Errors.sol";
 abstract contract ERC20BaseModule is ERC20Upgradeable, IERC20Allowance, IERC3643ERC20Base, AuthorizationModule {
     event Name(string indexed newNameIndexed, string newName);
     event Symbol(string indexed newSymbolIndexed, string newSymbol);
+
+    error CMTAT_ERC20BaseModule_EmptyTos();
+    error CMTAT_ERC20BaseModule_TosValueslengthMismatch();
+    error CMTAT_ERC20BaseModule_WrongAllowance(
+        address spender,
+        uint256 currentAllowance,
+        uint256 allowanceProvided
+    );
+
     /* ============ ERC-7201 ============ */
     // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.ERC20BaseModule")) - 1)) & ~bytes32(uint256(0xff))
     bytes32 private constant ERC20BaseModuleStorageLocation = 0x9bd8d607565c0370ae5f91651ca67fd26d4438022bf72037316600e29e6a3a00;
@@ -125,10 +132,10 @@ abstract contract ERC20BaseModule is ERC20Upgradeable, IERC20Allowance, IERC3643
         address[] calldata tos,
         uint256[] calldata values
     ) public override(IERC3643ERC20Base) returns (bool) {
-        require(tos.length > 0, Errors.CMTAT_ERC20BaseModule_EmptyTos());
+        require(tos.length > 0, CMTAT_ERC20BaseModule_EmptyTos());
         // We do not check that values is not empty since
         // this require will throw an error in this case.
-        require(bool(tos.length == values.length), Errors.CMTAT_ERC20BaseModule_TosValueslengthMismatch());
+        require(bool(tos.length == values.length), CMTAT_ERC20BaseModule_TosValueslengthMismatch());
         // No need of unchecked block since Soliditiy 0.8.22
         for (uint256 i = 0; i < tos.length; ++i) {
             // We call directly the internal OpenZeppelin function _transfer

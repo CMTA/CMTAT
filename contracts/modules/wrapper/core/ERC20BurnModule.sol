@@ -12,16 +12,17 @@ import {IERC20Allowance} from "../../../interfaces/technical/IERC20Allowance.sol
 /* ==== Tokenization === */
 import {IERC3643Burn} from "../../../interfaces/tokenization/IERC3643Partial.sol";
 import {IERC7551Burn} from "../../../interfaces/tokenization/draft-IERC7551.sol";
-import {ICMTATBurn} from "../../../interfaces/tokenization/ICMTAT.sol";
-/* ==== Other === */
-import {Errors} from "../../../libraries/Errors.sol";
 /**
  * @title ERC20Burn module.
  * @dev 
  *
  * Contains all burn functions, inherits from ERC-20
  */
-abstract contract ERC20BurnModule is ERC20Upgradeable, IERC20Allowance, IBurnERC20, ICMTATBurn, IERC3643Burn, IERC7551Burn, AuthorizationModule {
+abstract contract ERC20BurnModule is ERC20Upgradeable, IERC20Allowance, IBurnERC20, IERC3643Burn, IERC7551Burn, AuthorizationModule {
+    error CMTAT_BurnModule_EmptyAccounts();
+    error CMTAT_BurnModule_AccountsValueslengthMismatch();
+
+    
     /* ============ State Variables ============ */
     bytes32 public constant BURNER_ROLE = keccak256("BURNER_ROLE");
     bytes32 public constant BURNER_FROM_ROLE = keccak256("BURNER_FROM_ROLE");
@@ -67,7 +68,7 @@ abstract contract ERC20BurnModule is ERC20Upgradeable, IERC20Allowance, IBurnERC
     function burn(
         address account,
         uint256 value
-    ) public virtual override(IERC3643Burn, IBurnERC20, ICMTATBurn) onlyRole(BURNER_ROLE) {
+    ) public virtual override(IERC3643Burn, IBurnERC20) onlyRole(BURNER_ROLE) {
         _burn(account, value, "");
     }
 
@@ -154,10 +155,10 @@ abstract contract ERC20BurnModule is ERC20Upgradeable, IERC20Allowance, IBurnERC
         uint256[] calldata values,
         bytes memory data
     ) internal virtual {
-        require(accounts.length != 0, Errors.CMTAT_BurnModule_EmptyAccounts());
+        require(accounts.length != 0, CMTAT_BurnModule_EmptyAccounts());
         // We do not check that values is not empty since
         // this require will throw an error in this case.
-        require(bool(accounts.length == values.length), Errors.CMTAT_BurnModule_AccountsValueslengthMismatch());
+        require(bool(accounts.length == values.length), CMTAT_BurnModule_AccountsValueslengthMismatch());
         for (uint256 i = 0; i < accounts.length; ++i ) {
             _burn(accounts[i], values[i], data);
         }

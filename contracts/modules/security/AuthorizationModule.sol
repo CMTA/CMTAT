@@ -3,9 +3,10 @@
 pragma solidity ^0.8.20;
 
 import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
-import {Errors} from "../../libraries/Errors.sol";
 
 abstract contract AuthorizationModule is AccessControlUpgradeable {
+    error CMTAT_AuthorizationModule_AddressZeroNotAllowed();
+
     /* ============  Initializer Function ============ */
     /**
      * @dev
@@ -17,7 +18,7 @@ abstract contract AuthorizationModule is AccessControlUpgradeable {
     function __AuthorizationModule_init_unchained(address admin)
     internal onlyInitializing {
         if(admin == address(0)){
-            revert Errors.CMTAT_AuthorizationModule_AddressZeroNotAllowed();
+            revert CMTAT_AuthorizationModule_AddressZeroNotAllowed();
         }
         _grantRole(DEFAULT_ADMIN_ROLE, admin);
     }

@@ -27,10 +27,7 @@ abstract contract CMTAT_ERC1363_BASE is ERC1363Upgradeable,CMTAT_BASE {
 
 
     function transfer(address to, uint256 value) public virtual override(ERC20Upgradeable, CMTAT_BASE, IERC20) returns (bool) {
-         address from = _msgSender();
-        _checkTransfer(from, to, value);
-        _transfer(from, to, value);
-        return true;
+        return CMTAT_BASE.transfer(to, value);
     }
 
     function transferFrom(
@@ -46,9 +43,9 @@ abstract contract CMTAT_ERC1363_BASE is ERC1363Upgradeable,CMTAT_BASE {
         return CMTAT_BASE.transferFrom(sender, recipient, amount);
     }
 
-    function approve(address spender, uint256 value) public override(ERC20Upgradeable, CMTAT_BASE, IERC20) virtual returns (bool) {
+  /*  function approve(address spender, uint256 value) public override(ERC20Upgradeable, CMTAT_BASE, IERC20) virtual returns (bool) {
         return CMTAT_BASE.approve(spender, value);
-    }
+    }*/
 
     function decimals()
         public

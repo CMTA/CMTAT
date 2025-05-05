@@ -136,20 +136,22 @@ function EnforcementModuleCommon () {
 
     // reverts if address1 transfers tokens to address2 when paused
     it('testCannotTransferWhenFromIsisFrozenWithTransfer', async function () {
+      const AMOUNT_TO_TRANSFER = 10
       // Act
       await this.cmtat.connect(this.admin).setAddressFrozen(this.address1, true, reasonFreeze)
       // Assert
-      expect(
-        await this.cmtat.detectTransferRestriction(
-          this.address1,
-          this.address2,
-          10
+      if(!this.core){
+        expect(
+          await this.cmtat.detectTransferRestriction(
+            this.address1,
+            this.address2,
+            AMOUNT_TO_TRANSFER
+          )
+        ).to.equal('2')
+        expect(await this.cmtat.messageForTransferRestriction(2)).to.equal(
+          'Address FROM is frozen'
         )
-      ).to.equal('2')
-      expect(await this.cmtat.messageForTransferRestriction(2)).to.equal(
-        'Address FROM is frozen'
-      )
-      const AMOUNT_TO_TRANSFER = 10
+      }
       await expect(
         this.cmtat
           .connect(this.address1)
@@ -165,24 +167,27 @@ function EnforcementModuleCommon () {
 
     // reverts if address3 transfers tokens from address1 to this.address2 when paused
     it('testCannotTransferTokenWhenToIsisFrozenWithTransferFrom', async function () {
+      const AMOUNT_TO_TRANSFER = 10
       // Arrange
       // Define allowance
-      await this.cmtat.connect(this.address3).approve(this.address1, 20)
+      await this.cmtat.connect(this.address3).approve(this.address1, AMOUNT_TO_TRANSFER)
       // Act
       await this.cmtat.connect(this.admin).setAddressFrozen(this.address2, true, reasonFreeze)
-
-      // Assert
+      if(!this.core){
+          // Assert
       expect(
         await this.cmtat.detectTransferRestriction(
           this.address1,
           this.address2,
-          10
+          AMOUNT_TO_TRANSFER
         )
       ).to.equal('3')
       expect(await this.cmtat.messageForTransferRestriction(3)).to.equal(
         'Address TO is frozen'
       )
-      const AMOUNT_TO_TRANSFER = 10
+      }
+    
+      
       await expect(
         this.cmtat
           .connect(this.address1)

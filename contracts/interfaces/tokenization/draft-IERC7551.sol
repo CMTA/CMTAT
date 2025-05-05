@@ -99,11 +99,11 @@ interface IERC7551Base {
    
 
     /*
-    * This function MUST update the metaDataJSON value
+    * This function MUST update the metaData value, generally an url
     * It MAY be empty.
     *
     */
-    function setMetaData(string calldata _metaDataJSON) external;
+    function setMetaData(string calldata metaData) external;
 }
 
 

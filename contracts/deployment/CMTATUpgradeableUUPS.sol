@@ -8,7 +8,7 @@ import {CMTAT_BASE, MetaTxModule, ICMTATConstructor} from "../modules/CMTAT_BASE
 /**
 * @title CMTAT version for a proxy deployment with UUPS proxy
 */
-contract CMTAT_PROXY_UUPS is CMTAT_BASE, UUPSUpgradeable {
+contract CMTATUpgradeableUUPS is CMTAT_BASE, UUPSUpgradeable {
     bytes32 public constant PROXY_UPGRADE_ROLE = keccak256("PROXY_UPGRADE_ROLE");
     /**
      * @notice Contract version for the deployment with a proxy
