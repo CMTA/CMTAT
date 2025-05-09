@@ -23,11 +23,12 @@ module.exports = {
     '0x13293a342e85bb7a675992804d0c6194d27d85f90a7401d0666e206fe3b06a03',
   DOCUMENT_ROLE:
     '0xdd7c9aafbb91d54fb2041db1d5b172ea665309b32f5fffdbddf452802a1e3b20',
-
+  CROSS_CHAIN_ROLE:'0x620d362b92b6ef580d4e86c5675d679fe08d31dff47b72f281959a4eecdd036a',
   PROXY_UPGRADE_ROLE:
     '0x233d5d22cfc2df30a1764cac21e2207537a3711647f2c29fe3702201f65c1444',
   ZERO_ADDRESS: ethers.ZeroAddress,
   RULE_MOCK_AMOUNT_MAX: '20',
+  RULE_MOCK_MINT_AMOUNT_MAX: '20',
   CMTAT_TRANSFER_REJECT: 'CMTAT: transfer rejected by validation module',
   // Metatx test
   ERC2771ForwarderDomain: 'ERC2771ForwarderDomain'

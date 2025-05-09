@@ -53,20 +53,33 @@ abstract contract ExtraInformationModule is IERC7551Base, ICMTATBase, Authorizat
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
+    /**
+    * @inheritdoc ICMTATBase
+    */
     function tokenId() public view  virtual override(ICMTATBase) returns (string memory) {
         ExtraInformationModuleStorage storage $ = _getExtraInformationModuleStorage();
         return $._tokenId;
     }
 
+    /**
+    * @inheritdoc ICMTATBase
+    */
     function terms() public view virtual override(ICMTATBase)  returns (Terms memory) {
         ExtraInformationModuleStorage storage $ = _getExtraInformationModuleStorage();
         return $._terms;
     }
-    function information() public view virtual returns (string memory) {
+    
+    /**
+    * @inheritdoc ICMTATBase
+    */
+    function information() public view virtual override(ICMTATBase) returns (string memory) {
         ExtraInformationModuleStorage storage $ = _getExtraInformationModuleStorage();
         return $._information;
     }
 
+    /**
+    * @inheritdoc IERC7551Base
+    */
     function metaData() public view virtual override(IERC7551Base) returns (string memory) {
         ExtraInformationModuleStorage storage $ = _getExtraInformationModuleStorage();
         return $._metadata;
@@ -86,7 +99,8 @@ abstract contract ExtraInformationModule is IERC7551Base, ICMTATBase, Authorizat
     }
 
     /** 
-    * @notice The terms will be changed even if the new value is the same as the current one
+    * @inheritdoc ICMTATBase
+    * @dev The terms will be changed even if the new value is the same as the current one
     */
     function setTerms(IERC1643CMTAT.DocumentInfo calldata terms_) public virtual override(ICMTATBase) onlyRole(DEFAULT_ADMIN_ROLE) {
 		ExtraInformationModuleStorage storage $ = _getExtraInformationModuleStorage();
@@ -95,7 +109,8 @@ abstract contract ExtraInformationModule is IERC7551Base, ICMTATBase, Authorizat
 
 
     /** 
-    * @notice The information will be changed even if the new value is the same as the current one
+    * @inheritdoc ICMTATBase
+    * @dev The information will be changed even if the new value is the same as the current one
     */
     function setInformation(
         string calldata information_
@@ -107,7 +122,8 @@ abstract contract ExtraInformationModule is IERC7551Base, ICMTATBase, Authorizat
 
 
     /** 
-    * @notice The information will be changed even if the new value is the same as the current one
+    * @inheritdoc IERC7551Base
+    * @notice The metadata will be changed even if the new value is the same as the current one
     */
     function setMetaData(
         string calldata metadata_
@@ -118,9 +134,6 @@ abstract contract ExtraInformationModule is IERC7551Base, ICMTATBase, Authorizat
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
-    /** 
-    * @dev the tokenId will be changed even if the new value is the same as the current one
-    */
     function _setMetaData(
         ExtraInformationModuleStorage storage $, string memory metadata_
     ) internal virtual  {
@@ -128,10 +141,6 @@ abstract contract ExtraInformationModule is IERC7551Base, ICMTATBase, Authorizat
         emit MetaData(metadata_, metadata_);
     }
 
-
-    /** 
-    * @dev the tokenId will be changed even if the new value is the same as the current one
-    */
     function _setTokenId(
         ExtraInformationModuleStorage storage $, string memory tokenId_
     ) internal virtual  {
@@ -139,9 +148,6 @@ abstract contract ExtraInformationModule is IERC7551Base, ICMTATBase, Authorizat
         emit TokenId(tokenId_, tokenId_);
     }
 
-    /** 
-    * @dev The terms will be changed even if the new value is the same as the current one
-    */
     function _setTerms(ExtraInformationModuleStorage storage $, IERC1643CMTAT.DocumentInfo memory terms_) internal virtual {
 		// Terms/Document name
         $._terms.name = terms_.name;
@@ -153,9 +159,6 @@ abstract contract ExtraInformationModule is IERC7551Base, ICMTATBase, Authorizat
         emit Term($._terms, $._terms);
     }
 
-    /** 
-    * @dev The terms will be changed even if the new value is the same as the current one
-    */
     function _setInformation(ExtraInformationModuleStorage storage $, string memory information_) internal virtual {
         $._information  = information_;
         emit Information(information_, information_);

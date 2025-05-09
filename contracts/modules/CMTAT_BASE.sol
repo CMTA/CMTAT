@@ -16,10 +16,10 @@ import {EnforcementModule} from "./wrapper/core/EnforcementModule.sol";
 import {ERC20EnforcementModule} from "./wrapper/extensions/ERC20EnforcementModule.sol";
 import {ExtraInformationModule} from "./wrapper/extensions/ExtraInformationModule.sol";
 import {PauseModule} from "./wrapper/core/PauseModule.sol";
-import {ValidationModule, IERC1404} from "./wrapper/controllers/ValidationModule.sol";
+import {ValidationModule,ValidationModuleCore, IERC1404} from "./wrapper/controllers/ValidationModule.sol";
 import {MetaTxModule, ERC2771ContextUpgradeable} from "./wrapper/extensions/MetaTxModule.sol";
-import {DebtModule} from "./wrapper/extensions/DebtEngineModule.sol";
-import {DocumentModule} from "./wrapper/extensions/DocumentEngineModule.sol";
+import {DebtEngineModule} from "./wrapper/extensions/DebtEngineModule.sol";
+import {DocumentEngineModule} from "./wrapper/extensions/DocumentEngineModule.sol";
 import {SnapshotEngineModule} from "./wrapper/extensions/SnapshotEngineModule.sol";
 // Security
 import {AuthorizationModule} from "./security/AuthorizationModule.sol";
@@ -42,10 +42,10 @@ abstract contract CMTAT_BASE is
     ERC20BaseModule,
     // Extension
     MetaTxModule,
-    DebtModule,
+    DebtEngineModule,
     SnapshotEngineModule,
     ERC20EnforcementModule,
-    DocumentModule,
+    DocumentEngineModule,
     ExtraInformationModule
 {  
  
@@ -148,9 +148,9 @@ abstract contract CMTAT_BASE is
         __PauseModule_init_unchained();
         __ValidationModule_init_unchained(engines_.ruleEngine);
 
-        __SnapshotModule_init_unchained(engines_.snapshotEngine);
-        __DocumentModule_init_unchained(engines_ .documentEngine);
-        __DebtModule_init_unchained(engines_ .debtEngine);
+        __SnapshotEngineModule_init_unchained(engines_.snapshotEngine);
+        __DocumentEngineModule_init_unchained(engines_ .documentEngine);
+        __DebtEngineModule_init_unchained(engines_ .debtEngine);
         __ERC20EnforcementModule_init_unchained();
         /* Other modules */
         __ExtraInformationModule_init_unchained(baseModuleAttributes_.tokenId, baseModuleAttributes_.terms, baseModuleAttributes_.information);
@@ -226,17 +226,6 @@ abstract contract CMTAT_BASE is
         return ERC20BaseModule.transferFrom(from, to, value);
     }
 
-   /* function approve(address spender, uint256 value) public override virtual returns (bool) {
-        address owner = _msgSender();
-        if (!ValidationModule._canApprove(owner, spender, value)) {
-            revert Errors.CMTAT_InvalidApproval(owner, spender, value);
-        }
-        // We call directly the internal OpenZeppelin function _approve
-        // The reason is that the public function adds only the owner address recovery
-        ERC20Upgradeable._approve(owner, spender, value);
-        return true;
-    }*/
-
     /*//////////////////////////////////////////////////////////////
                 Functions requiring several modules
     //////////////////////////////////////////////////////////////*/
@@ -257,29 +246,6 @@ abstract contract CMTAT_BASE is
         mint(to, amountToMint, data);
     }
 
-    /*//////////////////////////////////////////////////////////////
-                            INTERNAL/PRIVATE FUNCTIONS
-    //////////////////////////////////////////////////////////////*/
-    /**
-     * @dev
-     *
-     */
-    function _update(
-        address from,
-        address to,
-        uint256 amount
-    ) internal virtual override(ERC20Upgradeable) {
-        /*if (!ValidationModule._operateOnTransfer(from, to, amount)) {
-            revert Errors.CMTAT_InvalidTransfer(from, to, amount);
-        }*/
-        // We check here the address of the snapshotEngine here because we don't want to read balance/totalSupply if there is no Snapshot Engine
-        ISnapshotEngine snapshotEngineLocal = snapshotEngine();
-        // Required to be performed before the update
-        if(address(snapshotEngineLocal) != address(0)){
-            snapshotEngineLocal.operateOnTransfer(from, to, balanceOf(from), balanceOf(to), totalSupply());
-        }
-        ERC20Upgradeable._update(from, to, amount);
-    }
     function detectTransferRestriction(
         address from,
         address to,
@@ -319,26 +285,56 @@ abstract contract CMTAT_BASE is
         
     }
 
+    /*//////////////////////////////////////////////////////////////
+                            INTERNAL/PRIVATE FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
     /**
-    * @dev 
+     * @dev we don't check the transfer validity here
+     * 
+     *
+     */
+    function _update(
+        address from,
+        address to,
+        uint256 amount
+    ) internal virtual override(ERC20Upgradeable) {
+        // We check here the address of the snapshotEngine here because we don't want to read balance/totalSupply if there is no Snapshot Engine
+        ISnapshotEngine snapshotEngineLocal = snapshotEngine();
+        // Required to be performed before the update
+        if(address(snapshotEngineLocal) != address(0)){
+            snapshotEngineLocal.operateOnTransfer(from, to, balanceOf(from), balanceOf(to), totalSupply());
+        }
+        ERC20Upgradeable._update(from, to, amount);
+    }
+    
+        
+
+    /**
+    * @dev Check if the mint is valid
     */
-    function _mint(address account, uint256 value, bytes memory data) internal virtual override(ERC20MintModule) {
-        require(ValidationModule.canMint(account, value), Errors.CMTAT_InvalidMint(account, value) );
-        ERC20MintModule._mint(account, value, data);
+    function _mintOverride(address account, uint256 value) internal virtual override(ERC20MintModule) {
+        //require(ValidationModule.canMint(account, value), Errors.CMTAT_InvalidMint(account, value) );
+        require(ValidationModuleCore._canMintBurnByModule(account), Errors.CMTAT_InvalidMint(account, value) );
+        _checkTransfer(address(0), address(0), account, value);
+        ERC20MintModule._mintOverride(account, value);
     }
 
-
-    function _burn(address account, uint256 value, bytes memory data) internal virtual override(ERC20BurnModule) {
-        require(ValidationModule.canBurn(account, value), Errors.CMTAT_InvalidBurn(account, value) );
-        ERC20BurnModule._burn(account, value, data);
+    /**
+    * @dev Check if the burn is valid
+    */
+    function _burnOverride(address account, uint256 value) internal virtual override(ERC20BurnModule) {
+        //require(ValidationModule.canBurn(account, value), Errors.CMTAT_InvalidBurn(account, value) );
+         require(ValidationModuleCore._canMintBurnByModule(account), Errors.CMTAT_InvalidBurn(account, value) );
+        _checkTransfer(address(0), address(0), account, value);
+        //ERC20EnforcementModule._unfreezeTokens(account, value);
+        
+        ERC20BurnModule._burnOverride(account, value);
     }
-
- 
 
 
 
     /*//////////////////////////////////////////////////////////////
-                            METAXTX MODULE
+                            METATX MODULE
     //////////////////////////////////////////////////////////////*/
     /**
      * @dev This surcharge is not necessary if you do not use the MetaTxModule

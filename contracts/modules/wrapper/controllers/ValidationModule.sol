@@ -142,7 +142,8 @@ abstract contract ValidationModule is
         }
     }
 
-    function canMint(
+    /* ============ Mint & Burn ============ */
+    /*function canMint(
         address to,
         uint256 value
     ) public virtual  override(ValidationModuleCore) view returns (bool) {
@@ -151,10 +152,10 @@ abstract contract ValidationModule is
         } else {
             return _canTransferWithRuleEngine(address(0), to, value);
         }
-    }
+    }*/
 
 
-    function canBurn(
+    /*function canBurn(
         address from,
         uint256 value
     ) public virtual override(ValidationModuleCore) view returns (bool) {
@@ -163,8 +164,9 @@ abstract contract ValidationModule is
         } else {
             return _canTransferWithRuleEngine(from, address(0), value);
         }
-    }
+    }*/
 
+/* ============ Transfer & TransferFrom ============ */
     function canTransfer(
         address from,
         address to,
@@ -189,18 +191,6 @@ abstract contract ValidationModule is
             return _canTransferFromWithRuleEngine(spender, from, to, value);
         }
     }
-
-    /*function canApprove(
-        address owner, address spender, uint256 value
-    ) public view virtual returns (bool) {
-        ValidationModuleInternalStorage storage $ = _getValidationModuleInternalStorage();
-        if (address($._ruleEngine) != address(0)) {
-            return $._ruleEngine.canApprove(owner, spender, value);
-        } else{
-            return true;
-        }
-    }*/
-
 
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
@@ -258,17 +248,6 @@ abstract contract ValidationModule is
             }
         }
     }
-
-
-    /*function _canApprove(address owner, address spender, uint256 value) internal view returns (bool){
-        ValidationModuleInternalStorage storage $ = _getValidationModuleInternalStorage();
-        if (address($._ruleEngine) != address(0)){
-                return $._ruleEngine.canApprove(owner, spender, value);
-        }else{
-                return true;
-        }
-    }*/
-
 
     /* ============ ERC-7201 ============ */
     function _getValidationModuleInternalStorage() internal pure returns (ValidationModuleInternalStorage storage $) {

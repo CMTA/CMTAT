@@ -5,43 +5,48 @@ pragma solidity ^0.8.20;
 import {IERC1643CMTAT, IERC1643} from "./draft-IERC1643CMTAT.sol";
 
 /**
-* The issuer must be able to “pause” the smart contract, to prevent execution of transactions on
-* the distributed ledger until the issuer puts an end to the pause. This function can be used to block
-* transactions in case of a “hard fork” of the distributed ledger, pending a decision of the issuer as
-* to which version of the distributed ledger it will support.
+* The issuer must be able to “deactivate” the smart contract, to prevent execution of transactions on
+* the distributed ledger.
+* Contrary to the “burn” function, the “deactivateContract” function
+* affects all tokens in issuance, and not only some of them. 
+* 
+* a) This function is necessary to allow the issuer to carry out certain corporate actions 
+* (e.g. share splits, reverse splits or mergers), which 
+* require that all existing tokens are either canceled or immobilized and decoupled from the shares
+* (i.e. the tokens no longer represent shares).
+* 
+* b) The “deactivateContract” function can also be used if the issuer decides that it no longer wishes
+* to have its shares issued in the form of ledger-based securities
+* 
+* The “deactivateContract” function does not delete the smart contract’s 
+* storage and code, i.e. tokens are not burned by the function, however it permanently and
+* irreversibly deactivates the smart contract (unless a proxy is used). 
+* 
 */
 interface ICMTATDeactivate {
-    /**
-    * Contrary to the “burn” function mentioned under 5 above, the “deactivateContract” function
-    * affects all tokens in issue, and not only some of them. 
-    * 
-    * a) This function is necessary to allow the issuer to carry out certain corporate actions 
-    * (e.g. share splits, reverse splits or mergers), which 
-    * require that all existing tokens are either canceled or immobilized and decoupled from the shares
-    * (i.e. the tokens no longer represent shares).
-    * 
-    * b) The “deactivateContract” function can also be used if the issuer decides that it no longer wishes
-    * to have its shares issued in the form of ledger-based securities within the meaning of Article
-    * 973d CO, but rather as “simple” uncertificated securities within the meaning of Article 973c CO or
-    * as certificated securities. 
-    * The “deactivateContract” function does not delete the smart contract’s 
-    * storage and code, i.e. tokens are not burned by the function, however it permanently and
-    * irreversibly deactivates the smart contract (unless a proxy is used). In such cases, the last entries
-    * in the distributed ledger make it possible to identify the owners of the uncertificated securities or
-    * the persons entitled to receive share certificates.
-    */
     event Deactivated(address account);
+    /**
+    * @notice deactivate the contract
+    * Warning: the operation is irreversible, be careful
+    */
     function deactivateContract() external;
+
+    /**
+    * @notice Returns true if the contract is deactivated, and false otherwise.
+    */
     function deactivated() external view returns (bool) ;
 }
 
 
 /**
 *  BASIC PARAMETERS OF THE TOKEN
-* a reference to (e.g. in the form of an Internet address) or a hash of the tokenization terms
-* and the information required by law about the distributed ledger and the smart contract 
+* 
+* 
 */
 interface ICMTATBase {
+     /*
+     * @dev A reference to (e.g. in the form of an Internet address) or a hash of the tokenization terms
+     */ 
      struct Terms {
  	    string name;
  	    IERC1643.Document doc;
@@ -51,23 +56,36 @@ interface ICMTATBase {
     event TokenId(string indexed newTokenIdIndexed, string newTokenId);
     /* ============ Functions ============ */
     /*
-    * return tokenization tokenId
+    * @notice return tokenization tokenId
     */
     function tokenId() external view returns (string memory);
     /*
-    * returns tokenization terms
+    * @notice returns tokenization terms
     */
     function terms() external view returns (Terms memory);
+
     /*
-    * @dev set tokenization tokenId
+    * @notice returns information field
+    */
+    function information() external view returns (string memory);
+
+    /*
+    * @notice set tokenization tokenId
     */
     function setTokenId(
         string calldata tokenId_
     ) external ;
     /*
-    * @dev set tokenization terms
+    * @notice set tokenization terms
     */
     function setTerms(IERC1643CMTAT.DocumentInfo calldata terms_) external;
+
+    /*
+    * @notice set information field
+    */
+    function setInformation(
+        string calldata information_
+    ) external;
 }
 
 /**
@@ -107,12 +125,12 @@ interface ICMTATDebt {
         string rating;
     }
 
-        /**
-     * @dev Returns debt information
+    /**
+     * @notice Returns debt information
      */
     function debt() external view returns(ICMTATDebt.DebtBase memory);
     /**
-     * @dev Returns credit events
+     * @notice Returns credit events
      */
     function creditEvents() external view returns(ICMTATDebt.CreditEvents memory);
 }

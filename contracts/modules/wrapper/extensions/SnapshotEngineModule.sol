@@ -32,7 +32,7 @@ abstract contract SnapshotEngineModule is AuthorizationModule {
      * - The control of the zero address is done by AccessControlDefaultAdminRules
      *
      */
-    function __SnapshotModule_init_unchained(ISnapshotEngine snapshotEngine_)
+    function __SnapshotEngineModule_init_unchained(ISnapshotEngine snapshotEngine_)
     internal onlyInitializing {
         if (address(snapshotEngine_) != address (0)) {
             SnapshotEngineModuleStorage storage $ = _getSnapshotEngineModuleStorage();

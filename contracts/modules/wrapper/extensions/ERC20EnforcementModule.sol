@@ -13,7 +13,7 @@ import {IERC3643ERC20Enforcement} from "../../../interfaces/tokenization/IERC364
 import {IERC7551ERC20Enforcement} from "../../../interfaces/tokenization/draft-IERC7551.sol";
 
 /**
- * @title ERC20Burn module.
+ * @title ERC20Enforcement module.
  * @dev 
  *
  * Contains all burn functions, inherits from ERC-20
@@ -52,11 +52,19 @@ abstract contract ERC20EnforcementModule is ERC20Upgradeable, IERC7551ERC20Enfor
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
+    /**
+    *
+    * @inheritdoc IERC7551ERC20Enforcement
+    */
      function getFrozenTokens(address account) public override(IERC7551ERC20Enforcement, IERC3643ERC20Enforcement) view virtual returns (uint256) {
         ERC20EnforcementModuleStorage storage $ = _getEnforcementModuleStorage();
         return $._frozenTokens[account];
      }
 
+    /**
+    *
+    * @inheritdoc IERC7551ERC20Enforcement
+    */
      function getActiveBalanceOf(address account) public view override(IERC7551ERC20Enforcement) returns (uint256){
         ERC20EnforcementModuleStorage storage $ = _getEnforcementModuleStorage();
         return ERC20Upgradeable.balanceOf(account) - $._frozenTokens[account];
@@ -64,8 +72,8 @@ abstract contract ERC20EnforcementModule is ERC20Upgradeable, IERC7551ERC20Enfor
 
     /* ============  ERC-20 Enforcement ============ */
     /**
-    * @notice Triggers a forced transfer.
     *
+    * @inheritdoc IERC7551ERC20Enforcement
     */
     function forcedTransfer(address from, address to, uint256 value, bytes calldata data) public virtual override(IERC7551ERC20Enforcement)  onlyRole(ERC20ENFORCER_ROLE) returns (bool) {
        _forcedTransfer(from, to, value, data);
@@ -73,31 +81,37 @@ abstract contract ERC20EnforcementModule is ERC20Upgradeable, IERC7551ERC20Enfor
     }
 
     /**
-    * @notice Triggers a forced transfer.
     *
+    * @inheritdoc IERC3643ERC20Enforcement
     */
     function forcedTransfer(address from, address to, uint256 value) public virtual override(IERC3643ERC20Enforcement) onlyRole(ERC20ENFORCER_ROLE) returns (bool)  {
        _forcedTransfer(from, to, value, "");
        return true;
     }
     /**
-     *  @dev 
-     */
+    *
+    * @inheritdoc IERC3643ERC20Enforcement
+    */
     function freezePartialTokens(address account, uint256 value) public virtual override(IERC7551ERC20Enforcement, IERC3643ERC20Enforcement) onlyRole(ERC20ENFORCER_ROLE){
         ERC20EnforcementModuleStorage storage $ = _getEnforcementModuleStorage();
+        // Retrieve current value
         uint256 balance = ERC20Upgradeable.balanceOf(account);
         uint256 frozenBalance = $._frozenTokens[account] + value;
+        // Check
         require(balance >= frozenBalance, CMTAT_ERC20EnforcementModule_ValueExceedsAvailableBalance());
+        // Update frozenBalance
         $._frozenTokens[account] = frozenBalance;
         emit TokensFrozen(account, value);
     }
 
     /**
-     *  @dev 
-     */
+    *
+    * @inheritdoc IERC3643ERC20Enforcement
+    */
     function unfreezePartialTokens(address account, uint256 value) public virtual override(IERC7551ERC20Enforcement, IERC3643ERC20Enforcement) onlyRole(ERC20ENFORCER_ROLE) {
         ERC20EnforcementModuleStorage storage $ = _getEnforcementModuleStorage();
         require($._frozenTokens[account] >= value, CMTAT_ERC20EnforcementModule_ValueExceedsFrozenBalance());
+        // Update frozenBalance
         $._frozenTokens[account] = $._frozenTokens[account] - value;
         emit TokensUnfrozen(account, value);
     }
@@ -106,9 +120,12 @@ abstract contract ERC20EnforcementModule is ERC20Upgradeable, IERC7551ERC20Enfor
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
-    function _forcedTransfer(address from, address to, uint256 value, bytes memory data) internal {
-        ERC20EnforcementModuleStorage storage $ = _getEnforcementModuleStorage();
+    function _unfreezeTokens(address from, uint256 value) internal{
         uint256 balance = ERC20Upgradeable.balanceOf(from);
+        if(value > balance){
+            revert ERC20InsufficientBalance(_msgSender(), balance, value-balance);
+        }
+        ERC20EnforcementModuleStorage storage $ = _getEnforcementModuleStorage();
         // Frozen token can not be < balance
         uint256 activeBalance = balance - $._frozenTokens[from];
         if (value > activeBalance) {
@@ -116,7 +133,25 @@ abstract contract ERC20EnforcementModule is ERC20Upgradeable, IERC7551ERC20Enfor
             $._frozenTokens[from] = $._frozenTokens[from] - tokensToUnfreeze;
             emit TokensUnfrozen(from, tokensToUnfreeze);
         }
-       _transfer(from, to, value);
+    }
+    function _forcedTransfer(address from, address to, uint256 value, bytes memory data) internal {
+        _unfreezeTokens(from, value);
+        // Spend allowance
+        // See https://ethereum-magicians.org/t/erc-3643-the-t-rex-token-standard/6844/11
+        uint256 currentAllowance = allowance(to, from);
+        if (currentAllowance < type(uint256).max) {
+            if (currentAllowance < value) {
+               _approve(to, from, currentAllowance, false);
+            }
+            unchecked {
+                _approve(to, from, currentAllowance - value, false);
+            }
+        }
+        if(to == address(0)){
+            _burn(from, value);
+        } else {
+            _transfer(from, to, value);
+        }
         emit Enforcement(_msgSender(), from, value, data);
     }
 

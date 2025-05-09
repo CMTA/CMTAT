@@ -8,45 +8,49 @@ pragma solidity ^0.8.20;
 */
 interface IERC3643Pause {
     /**
-     * @dev Returns true if the contract is paused, and false otherwise.
+     * @notice Returns true if the contract is paused, and false otherwise.
      */
     function paused() external view returns (bool);
     /**
-     *  @dev pauses the token contract, 
+     *  @notice pauses the token contract, 
      *  when contract is paused token holders cannot transfer tokens anymore
-     *  emits a `Paused` event
+     *  
      */
     function pause() external;
 
     /**
-     *  @dev unpauses the token contract, when contract is unpaused token holders can transfer tokens
-     *  This function can only be called by a wallet set as agent of the token
-     *  emits an `Unpaused` event
+     *  @notice unpauses the token contract, 
+     *  when contract is unpaused token holders can transfer tokens
+     *  
+     *  
      */
     function unpause() external;
 } 
 interface IERC3643ERC20Base {
     /**
-     *  @dev sets the token name
+     *  @notice sets the token name
      *  @param name the name of token to set
      */
     function setName(string calldata name) external;
     /**
-     *  @dev sets the token symbol
+     *  @notice sets the token symbol
      *  @param symbol the token symbol to set
      */
     function setSymbol(string calldata symbol) external;
+}
+
+interface IERC3643BatchTransfer {
     /**
-     *  @dev function allowing to issue transfers in batch
-     *  If IERC3643Enforcement is implemented:
-     *  Require that the msg.sender and `to` addresses are not frozen.
-     *  If IERC364320Enforcement is implemented:
-     *  Require that the total value should not exceed available balance.
-     *  IMPORTANT : This transaction could exceed gas limit if `tos.length` is too heigh,
-     *  Use with care or you could lose TX fees with an "OUT OF GAS" transaction
-     *  @param tos The addresses of the receivers
+     *  @notice batch version of transfer
+     *  @param tos The addresses of the receivers tos can not be empty
      *  @param values The number of tokens to transfer to the corresponding receiver
-     *  emits tos .length `Transfer` events
+     *  @dev function allowing the minter to transfers in batch
+     *  If IERC3643Enforcement is implemented:
+     *      Require that the msg.sender and `to` addresses are not frozen.
+     *  If IERC364320Enforcement is implemented:
+     *      Require that the total value should not exceed available balance.
+     *  
+     *  Emits tos .length `Transfer` events
      *  Warning: 
      *  Contrary to ERC-3643 specification, return bool to keep the same behaviour as ERC-20 transfer
      */
@@ -72,16 +76,18 @@ interface IERC3643EnforcementEvent {
      *  Warning: contrary to ERC-3643 specification, add a supplementary field data to further document the action.
      */
     event AddressFrozen(address indexed account, bool indexed isFrozen, address indexed enforcer, bytes data);
-    
 }
 interface IERC3643Enforcement {
-
+    /**
+     * @notice Returns true if the account is frozen, and false otherwise.
+     */
     function isFrozen(address account) external view returns (bool);
     /**
-     *  @dev sets an address frozen status for this token.
+     *  @notice sets an address frozen status for this token.
      *  @param account The address for which to update frozen status
      *  @param freeze Frozen status of the address
-     *  emits an `AddressFrozen` event
+     *  @dev
+     *  Emits an `AddressFrozen` event
      */
     function setAddressFrozen(address account, bool freeze) external;
 
@@ -109,26 +115,33 @@ interface IERC3643ERC20Enforcement {
 
 
     /**
-     *  @dev freezes token amount specified for given address.
+     *  @notice freezes token amount specified for given address.
      *  @param account The address for which to update frozen tokens
      *  @param value Amount of Tokens to be frozen
-     *  emits a `TokensFrozen` event
+     *  @dev emits a `TokensFrozen` event
      */
     function freezePartialTokens(address account, uint256 value) external;
     /**
-     *  @dev unfreezes token amount specified for given address
+     *  @notice unfreezes token amount specified for given address
      *  @param account The address for which to update frozen tokens
      *  @param value Amount of Tokens to be unfrozen
-     *  emits a `TokensUnfrozen` event
+     *  @dev Emits a `TokensUnfrozen` event
      */
     function unfreezePartialTokens(address account, uint256 value) external;
     /*
     function batchFreezePartialTokens(address[] calldata _userAddresses, uint256[] calldata _amounts) external;
     function batchUnfreezePartialTokens(address[] calldata _userAddresses, uint256[] calldata _amounts) external;
     */
-        /**
-     *  @dev force a transfer of tokens between 2 token holders
-     *      
+    /**
+     *  
+     *  @notice Triggers a forced transfer.
+     *  
+     *  @param from The address of the token holder
+     *  @param to The address of the receiver
+     *  @param value amount of tokens to transfer
+     *  @return `true` if successful and revert if unsuccessful
+     *  @dev 
+*    *  Force a transfer of tokens between 2 token holders
      *  If IERC364320Enforcement is implemented:
      *      Require that the total value should not exceed available balance.
      *      In case the `from` address has not enough free tokens (unfrozen tokens)
@@ -137,25 +150,20 @@ interface IERC3643ERC20Enforcement {
      *      to proceed the transfer, in such a case, the remaining balance on the `from`
      *      account is 100% composed of frozen tokens post-transfer.
      *      emits a `TokensUnfrozen` event if `value` is higher than the free balance of `from`
-     *  @param from The address of the token holder
-     *  @param to The address of the receiver
-     *  @param value amount of tokens to transfer
-     *  @return `true` if successful and revert if unsuccessful
-
      *  emits a `Transfer` event
      */
     function forcedTransfer(address from, address to, uint256 value) external returns (bool);
 
 }
 interface IERC3643Mint{
-     /**
-     *  @dev mint tokens on an address
-     *  @param account Address to mint the tokens to.
-     *  @param value Amount of tokens to mint.
-     *  emits a `Transfer` event
+    /**
+     * @notice  Creates a `value` amount of tokens and assigns them to `account`, by transferring it from address(0)
+     * @param account token receiver
+     * @param value amount of tokens to mint
      */
     function mint(address account, uint256 value) external;
     /**
+     *  @notice batch version of {mint}
      *  @dev function allowing to mint tokens in batch
      *  IMPORTANT : This transaction could exceed gas limit if `tos.length` is too heigh,
      *  Use with care or you could lose TX fees with an "OUT OF GAS" transaction
@@ -166,7 +174,7 @@ interface IERC3643Mint{
     function batchMint( address[] calldata accounts,uint256[] calldata values) external;
 }
 interface IERC3643Burn{
-    /**
+    /**      * @notice {burn} withtout reason
      *  @dev burn tokens on an address
      *  If IERC364320Enforcement is implemented:
      *      In case the `account` address has not enough free tokens (unfrozen tokens)
@@ -179,6 +187,11 @@ interface IERC3643Burn{
      *  @param value Amount of tokens to burn.
      * 
      *  emits a `Transfer` event
+       /// @notice Burns tokens from a given address..
+  /// @param account The address to burn tokens from.
+  /// @param value The number of tokens to be burned.
+  /// @dev this function decreases the total supply.
+  function burn(address account, uint256 value) external;
      */
     function burn(address account,uint256 value) external;
     /**

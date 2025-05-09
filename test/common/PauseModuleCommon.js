@@ -131,7 +131,9 @@ function PauseModuleCommon () {
           AMOUNT_TO_TRANSFER
         )
       ).to.equal(false)
-      // Assert
+
+      if(!this.core){
+        // Assert
       expect(
         await this.cmtat.detectTransferRestriction(
           this.address1,
@@ -153,6 +155,7 @@ function PauseModuleCommon () {
           this.address2.address,
           AMOUNT_TO_TRANSFER
         )
+      }
     })
 
     // reverts if address3 transfers tokens from address1 to address2 when paused
@@ -165,7 +168,8 @@ function PauseModuleCommon () {
       // Act
       await this.cmtat.connect(this.admin).pause()
 
-      // Assert
+      if(!this.core){
+              // Assert
       expect(
         await this.cmtat.detectTransferRestriction(
           this.address1,
@@ -187,6 +191,7 @@ function PauseModuleCommon () {
           this.address2.address,
           AMOUNT_TO_TRANSFER
         )
+      }
     })
   })
 

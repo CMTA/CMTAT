@@ -135,7 +135,7 @@ function EnforcementModuleCommon () {
     })
 
     // reverts if address1 transfers tokens to address2 when paused
-    it('testCannotTransferWhenFromIsisFrozenWithTransfer', async function () {
+    it('testCannotTransferWhenFromIsFrozenWithTransfer', async function () {
       const AMOUNT_TO_TRANSFER = 10
       // Act
       await this.cmtat.connect(this.admin).setAddressFrozen(this.address1, true, reasonFreeze)
@@ -188,6 +188,36 @@ function EnforcementModuleCommon () {
       }
     
       
+      await expect(
+        this.cmtat
+          .connect(this.address1)
+          .transferFrom(this.address3, this.address2, AMOUNT_TO_TRANSFER)
+      )
+        .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
+        .withArgs(
+          this.address3.address,
+          this.address2.address,
+          AMOUNT_TO_TRANSFER
+        )
+    })
+
+    it('testCannotTransferTokenWhenSpenderIsisFrozenWithTransferFrom', async function () {
+      const AMOUNT_TO_TRANSFER = 10
+      // Arrange
+      // Define allowance
+      await this.cmtat.connect(this.address3).approve(this.address1, AMOUNT_TO_TRANSFER)
+      // Act
+      await this.cmtat.connect(this.admin).setAddressFrozen(this.address3, true, reasonFreeze)
+     
+      expect(
+        await this.cmtat.canTransferFrom(
+          this.address3,
+          this.address1,
+          this.address2,
+          AMOUNT_TO_TRANSFER
+        )
+      ).to.equal(false)
+    
       await expect(
         this.cmtat
           .connect(this.address1)

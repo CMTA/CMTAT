@@ -12,7 +12,7 @@ import {IERC7551Pause} from "../../../interfaces/tokenization/draft-IERC7551.sol
 import {ICMTATDeactivate} from "../../../interfaces/tokenization/ICMTAT.sol";
 
 
-/**IERC3643Pause
+/**
  * @title Pause Module
  * @dev 
  * Put in pause or deactivate the contract
@@ -45,14 +45,17 @@ abstract contract PauseModule is PausableUpgradeable, AuthorizationModule, IERC3
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
+    /**
+    * @inheritdoc IERC3643Pause
+    */
     function paused() public virtual view override(IERC3643Pause, IERC7551Pause, PausableUpgradeable)  returns (bool){
         return PausableUpgradeable.paused();
    }
     
     /**
-     * @notice Pauses all token transfers.
-     * @dev See {ERC20Pausable} and {Pausable-_pause}.
-     *
+     * @inheritdoc IERC3643Pause
+     * @dev See {Pausable-_pause}.
+     * Emits a `Paused` event
      * Requirements:
      *
      * - the caller must have the `PAUSER_ROLE`.
@@ -63,9 +66,9 @@ abstract contract PauseModule is PausableUpgradeable, AuthorizationModule, IERC3
     }
 
     /**
-     * @notice Unpauses all token transfers.
-     * @dev See {ERC20Pausable} and {Pausable-_unpause}.
-     *
+     * @inheritdoc IERC3643Pause
+     * @dev See {Pausable-_unpause}.
+     * emits an `Unpaused` event
      * Requirements:
      *
      * - the caller must have the `PAUSER_ROLE`.
@@ -77,13 +80,13 @@ abstract contract PauseModule is PausableUpgradeable, AuthorizationModule, IERC3
     }
 
     /**
-    * @notice deactivate the contract
-    * Warning: the operation is irreversible, be careful
+    * @inheritdoc ICMTATDeactivate
     * @dev
     * Emits a {Deactivated} event indicating that the contract has been deactivated.
     * Requirements:
     *
     * - the caller must have the `DEFAULT_ADMIN_ROLE`.
+    * 
     */
     function deactivateContract()
         public virtual override(ICMTATDeactivate)
@@ -95,8 +98,9 @@ abstract contract PauseModule is PausableUpgradeable, AuthorizationModule, IERC3
        emit Deactivated(_msgSender());
     }
 
+
     /**
-    * @notice Returns true if the contract is deactivated, and false otherwise.
+    * @inheritdoc ICMTATDeactivate
     */
     function deactivated() public view virtual override(ICMTATDeactivate) returns (bool){
         PauseModuleStorage storage $ = _getPauseModuleStorage();

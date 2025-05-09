@@ -34,25 +34,21 @@ abstract contract EnforcementModule is
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
+    
     /**
-     * @notice Returns true if the account is frozen, and false otherwise.
-     */
+    * @inheritdoc IERC3643Enforcement
+    */
     function isFrozen(address account) public override(IERC3643Enforcement) view virtual returns (bool) {
        return _isFrozen(account);
        
     }
 
+    /**
+    * @inheritdoc IERC3643Enforcement
+    */
     function setAddressFrozen(address account, bool freeze) public virtual override(IERC3643Enforcement) onlyRole(ENFORCER_ROLE){
          _setAddressFrozen(account, freeze, "");
     }
-
-    /*
-    Not implemented to reduce contract size
-    function batchSetAddressFrozen(
-        address[] calldata accounts, bool[] calldata freezes
-    ) public virtual override(IERC3643Enforcement) onlyRole(ENFORCER_ROLE) {
-         _batchSetAddressFrozen(accounts, freezes, "");
-    }*/
 
     /**
      * @notice Freezes/unfreeze an address.
@@ -66,12 +62,18 @@ abstract contract EnforcementModule is
          _setAddressFrozen(account, freeze, data);
     }
 
-    /*
-    Not implemented to reduce contract size
+    /**
+    * @notice batch version of {setAddressFrozen}
+    */
     function batchSetAddressFrozen(
+        address[] calldata accounts, bool[] calldata freezes
+    ) public virtual onlyRole(ENFORCER_ROLE) {
+         _batchSetAddressFrozen(accounts, freezes, "");
+    }
+
+   /* function batchSetAddressFrozen(
         address[] calldata accounts, bool[] calldata freezes, bytes calldata data
     ) public virtual onlyRole(ENFORCER_ROLE) {
          _batchSetAddressFrozen(accounts, freezes, data);
     }*/
-
 }

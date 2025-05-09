@@ -115,38 +115,6 @@ abstract contract ERC20BaseModule is ERC20Upgradeable, IERC20Allowance, IERC3643
 
 
     /* ============  Custom functions ============ */
-
-    /**
-     * @notice batch version of transfer
-     * @param tos can not be empty, must have the same length as values
-     * @param values can not be empty
-     * @dev See {OpenZeppelin ERC20-transfer & ERC1155-safeBatchTransferFrom}.
-     *
-     *
-     * Requirements:
-     * - `tos` and `values` must have the same length
-     * - `tos`cannot contain a zero address (check made by transfer)
-     * - the caller must have a balance cooresponding to the total values
-     */
-    function batchTransfer(
-        address[] calldata tos,
-        uint256[] calldata values
-    ) public override(IERC3643ERC20Base) returns (bool) {
-        require(tos.length > 0, CMTAT_ERC20BaseModule_EmptyTos());
-        // We do not check that values is not empty since
-        // this require will throw an error in this case.
-        require(bool(tos.length == values.length), CMTAT_ERC20BaseModule_TosValueslengthMismatch());
-        // No need of unchecked block since Soliditiy 0.8.22
-        for (uint256 i = 0; i < tos.length; ++i) {
-            // We call directly the internal OpenZeppelin function _transfer
-            // The reason is that the public function adds only the owner address recovery
-            ERC20Upgradeable._transfer(_msgSender(), tos[i], values[i]);
-        }
-        // not really useful
-        // Here only to keep the same behaviour as transfer
-        return true;
-    }
-
     /**
     * @param addresses list of address to know their balance
     * @return balances ,totalSupply array with balance for each address, totalSupply
@@ -162,18 +130,19 @@ abstract contract ERC20BaseModule is ERC20Upgradeable, IERC20Allowance, IERC3643
 
     /* ============  Restricted Functions ============ */
     /**
-     *  @dev See {IToken-setName}.
+     *  @inheritdoc IERC3643ERC20Base
+     *  @dev 
      */
-    function setName(string calldata name_) public virtual onlyRole(DEFAULT_ADMIN_ROLE) {
+    function setName(string calldata name_) public virtual override(IERC3643ERC20Base) onlyRole(DEFAULT_ADMIN_ROLE) {
         ERC20BaseModuleStorage storage $ = _getERC20BaseModuleStorage();
         $._name = name_;
         emit Name(name_, name_);
     }
 
     /**
-     *  @dev See {IToken-setSymbol}.
+     * @inheritdoc IERC3643ERC20Base
      */
-    function setSymbol(string calldata symbol_) public virtual onlyRole(DEFAULT_ADMIN_ROLE) {
+    function setSymbol(string calldata symbol_) public virtual override(IERC3643ERC20Base) onlyRole(DEFAULT_ADMIN_ROLE) {
         ERC20BaseModuleStorage storage $ = _getERC20BaseModuleStorage();
         $._symbol = symbol_;
         emit Symbol(symbol_, symbol_);

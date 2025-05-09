@@ -21,21 +21,28 @@ abstract contract ValidationModuleCore is
     IERC3643ComplianceRead,
     IERC7551Compliance
 {
-    function canMint(
+    /* ============ Mint & Burn ============ */
+    /**
+    * @dev value is not used here, but can be used by overriding the function
+    */
+    /*function canMint(
         address to,
         uint256 /*value*/
-    ) public virtual view returns (bool) {
-        return _canMintByModule(to);
-    }
+   /* ) public virtual view returns (bool) {
+        return _canMintBurnByModule(to);
+    }*/
 
-
-    function canBurn(
-        address /* from */,
+    /**
+    * @dev value is not used here, but can be used by overriding the function
+    */
+    /*function canBurn(
+        address from,
         uint256 /* value */
-    ) public virtual view returns (bool) {
-        return _canBurnByModule();
-    }
+   /* ) public virtual view returns (bool) {
+        return _canMintBurnByModule(from);
+    }*/
 
+    /* ============ Transfer & TransferFrom ============ */
     function canTransfer(
         address from,
         address to,
@@ -62,14 +69,13 @@ abstract contract ValidationModuleCore is
     * Block mint if the contract is deactivated (PauseModule) 
     * or if to is frozen
     */
-    function _canMintByModule(
-        address to
+    function _canMintBurnByModule(
+        address target
     ) internal view virtual returns (bool) {
-        if(PauseModule.deactivated()){
+        if(PauseModule.deactivated() || isFrozen(target)){
             // can not mint or burn if the contract is deactivated
-            return false;
-        }
-        if( isFrozen(to) ){
+            // cannot burn if target is frozen (used forcedTransfer instead if available)
+            // cannot mint if target is frozen
             return false;
         }
         return true;
@@ -83,17 +89,17 @@ abstract contract ValidationModuleCore is
     * this function does not return false if from or to is frozen.
     * An issuer should be able to burn token from a frozen address.
     */
-    function _canBurnByModule() internal view virtual returns (bool) {
-        if(PauseModule.deactivated()){
+  /*  function _canBurnByModule(addresss fom) internal view virtual returns (bool) {
+        if(PauseModule.deactivated() || EnforcementModule.isFrozen(from)){
             // can not mint or burn if the contract is deactivated
             return false;
         }
         return true;
-    }
+    }*/
 
     /**
-    @dev function used by canTransfer and operateOnTransfer
-     */
+    * @dev function used by canTransfer and operateOnTransfer
+    */
     function _canTransferByModule(
         address spender,
         address from,
@@ -102,12 +108,15 @@ abstract contract ValidationModuleCore is
     ) internal view virtual returns (bool) {
         // Mint
         if(from == address(0)){
-            return _canMintByModule(from);
+            return _canMintBurnByModule(from);
         } // burn
         else if(to == address(0)){
-            return _canBurnByModule();
+            return _canMintBurnByModule(to);
         } // Normal transfer
-        else if (EnforcementModule.isFrozen(spender) || EnforcementModule.isFrozen(from) || EnforcementModule.isFrozen(to) || PauseModule.paused())  {
+        else if (EnforcementModule.isFrozen(spender) 
+        || EnforcementModule.isFrozen(from) 
+        || EnforcementModule.isFrozen(to) 
+        || PauseModule.paused())  {
             return false;
         } else {
              return true;

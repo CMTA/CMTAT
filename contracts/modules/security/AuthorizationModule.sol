@@ -37,7 +37,8 @@ abstract contract AuthorizationModule is AccessControlUpgradeable {
         // The Default Admin has all roles
         if (AccessControlUpgradeable.hasRole(DEFAULT_ADMIN_ROLE, account)) {
             return true;
+        } else {
+            return AccessControlUpgradeable.hasRole(role, account);
         }
-        return AccessControlUpgradeable.hasRole(role, account);
     }
 }

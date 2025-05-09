@@ -14,8 +14,8 @@ import {IERC1643, IDocumentEngine} from "../../../interfaces/engine/IDocumentEng
  * Retrieve documents from a documentEngine
  */
 
-abstract contract DocumentModule is AuthorizationModule, IERC1643 {
-    error CMTAT_DocumentModule_SameValue();
+abstract contract DocumentEngineModule is AuthorizationModule, IERC1643 {
+    error CMTAT_DocumentEngineModule_SameValue();
 
     /* ============ Events ============ */
     /**
@@ -25,10 +25,10 @@ abstract contract DocumentModule is AuthorizationModule, IERC1643 {
    
     /* ============ ERC-7201 ============ */
     bytes32 public constant DOCUMENT_ROLE = keccak256("DOCUMENT_ROLE");
-    // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.DocumentModule")) - 1)) & ~bytes32(uint256(0xff))
-    bytes32 private constant DocumentModuleStorageLocation = 0x5edcb2767f407e647b6a4171ef53e8015a3eff0bb2b6e7765b1a26332bc43000;
+    // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.DocumentEngineModule")) - 1)) & ~bytes32(uint256(0xff))
+    bytes32 private constant DocumentEngineModuleStorageLocation = 0x5edcb2767f407e647b6a4171ef53e8015a3eff0bb2b6e7765b1a26332bc43000;
     /* ==== ERC-7201 State Variables === */
-    struct DocumentModuleStorage {
+    struct DocumentEngineModuleStorage {
         IERC1643  _documentEngine;
     }
 
@@ -40,10 +40,10 @@ abstract contract DocumentModule is AuthorizationModule, IERC1643 {
      * - The control of the zero address is done by AccessControlDefaultAdminRules
      *
      */
-    function __DocumentModule_init_unchained(IERC1643 documentEngine_)
+    function __DocumentEngineModule_init_unchained(IERC1643 documentEngine_)
     internal onlyInitializing {
         if (address(documentEngine_) != address (0)) {
-            DocumentModuleStorage storage $ = _getDocumentModuleStorage();
+            DocumentEngineModuleStorage storage $ = _getDocumentEngineModuleStorage();
             _setDocumentEngine($, documentEngine_);
         }
     }
@@ -52,12 +52,12 @@ abstract contract DocumentModule is AuthorizationModule, IERC1643 {
                             PUBLIC/EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
     function documentEngine() public view virtual returns (IERC1643) {
-        DocumentModuleStorage storage $ = _getDocumentModuleStorage();
+        DocumentEngineModuleStorage storage $ = _getDocumentEngineModuleStorage();
         return $._documentEngine;
     }
 
     function getDocument(string memory name) public view  virtual returns (Document memory document){
-        DocumentModuleStorage storage $ = _getDocumentModuleStorage();
+        DocumentEngineModuleStorage storage $ = _getDocumentEngineModuleStorage();
         if(address($._documentEngine) != address(0)){
             return $._documentEngine.getDocument(name);
         } else{
@@ -66,7 +66,7 @@ abstract contract DocumentModule is AuthorizationModule, IERC1643 {
     }
 
     function getAllDocuments() public view virtual returns (string[] memory documents){
-        DocumentModuleStorage storage $ = _getDocumentModuleStorage();
+        DocumentEngineModuleStorage storage $ = _getDocumentEngineModuleStorage();
         if(address($._documentEngine) != address(0)){
             documents =  $._documentEngine.getAllDocuments();
         }
@@ -80,8 +80,8 @@ abstract contract DocumentModule is AuthorizationModule, IERC1643 {
     function setDocumentEngine(
         IERC1643 documentEngine_
     ) external virtual onlyRole(DOCUMENT_ROLE) {
-        DocumentModuleStorage storage $ = _getDocumentModuleStorage();
-        require($._documentEngine != documentEngine_, CMTAT_DocumentModule_SameValue());
+        DocumentEngineModuleStorage storage $ = _getDocumentEngineModuleStorage();
+        require($._documentEngine != documentEngine_, CMTAT_DocumentEngineModule_SameValue());
         _setDocumentEngine($, documentEngine_);
     }
 
@@ -90,16 +90,16 @@ abstract contract DocumentModule is AuthorizationModule, IERC1643 {
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
     function _setDocumentEngine(
-        DocumentModuleStorage storage $, IERC1643 documentEngine_
+        DocumentEngineModuleStorage storage $, IERC1643 documentEngine_
     ) internal virtual {
         $._documentEngine = documentEngine_;
         emit DocumentEngine(documentEngine_);
     }
 
     /* ============ ERC-7201 ============ */
-    function _getDocumentModuleStorage() private pure returns (DocumentModuleStorage storage $) {
+    function _getDocumentEngineModuleStorage() private pure returns (DocumentEngineModuleStorage storage $) {
         assembly {
-            $.slot := DocumentModuleStorageLocation
+            $.slot := DocumentEngineModuleStorageLocation
         }
     } 
 }

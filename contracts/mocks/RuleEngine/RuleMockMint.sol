@@ -9,7 +9,7 @@ import {CodeList} from "./CodeList.sol";
 /*
 * @title a mock for testing, not suitable for production
 */
-contract RuleMock is IRule, CodeList {
+contract RuleMockMint is IRule, CodeList {
     function canTransfer(
         address _from,
         address _to,
@@ -26,28 +26,27 @@ contract RuleMock is IRule, CodeList {
         address /* _to */,
         uint256 _amount
     ) public pure override returns (uint8) {
-        if(_from != address(0)){
-             return  _amount < 20
+        if(_from == address(0)){
+            return  _amount < 20
                 ? uint8(REJECTED_CODE_BASE.TRANSFER_OK)
-                : AMOUNT_TOO_HIGH;
-        } else{
-            return uint8(REJECTED_CODE_BASE.TRANSFER_OK);
+                : MINT_TOO_HIGH;
         }
-         
+        return uint8(REJECTED_CODE_BASE.TRANSFER_OK);
+           
     }
 
     function canReturnTransferRestrictionCode(
         uint8 _restrictionCode
     ) public pure override returns (bool) {
-        return _restrictionCode == AMOUNT_TOO_HIGH;
+        return _restrictionCode == MINT_TOO_HIGH;
     }
 
     function messageForTransferRestriction(
         uint8 _restrictionCode
     ) external pure override returns (string memory) {
         return
-            _restrictionCode == AMOUNT_TOO_HIGH
-                ? TEXT_AMOUNT_TOO_HIGH
+            _restrictionCode == MINT_TOO_HIGH
+                ? TEXT_MINT_TOO_HIGH
                 : TEXT_CODE_NOT_FOUND;
     }
 }

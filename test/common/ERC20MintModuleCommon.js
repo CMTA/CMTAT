@@ -103,6 +103,19 @@ function ERC20MintModuleCommon () {
           'CMTAT_InvalidMint'
         )
     })
+
+    it('testCannotBeMintedIfToIsFrozen', async function () {
+      await this.cmtat
+      .connect(this.admin)
+      .setAddressFrozen(this.address1, true);
+      await expect(
+        this.cmtat.connect(this.admin).mint(this.address1, VALUE1)
+      )
+        .to.be.revertedWithCustomError(
+          this.cmtat,
+          'CMTAT_InvalidMint'
+        )
+    })
   })
 
   context('Batch Minting', function () {
@@ -140,12 +153,12 @@ function ERC20MintModuleCommon () {
           .to.emit(this.cmtat, 'Transfer')
           .withArgs(ZERO_ADDRESS, TOKEN_HOLDER[i], TOKEN_SUPPLY_BY_HOLDERS[i])
       }
-      for (let i = 0; i < TOKEN_HOLDER.length; ++i) {
+     
         // emits a Mint event
         await expect(this.logs)
-          .to.emit(this.cmtat, 'Mint')
-          .withArgs(TOKEN_HOLDER[i], TOKEN_SUPPLY_BY_HOLDERS[i], "0x")
-      }
+          .to.emit(this.cmtat, 'BatchMint')
+          .withArgs(sender, TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS)
+      
 
     }
     /**
@@ -156,7 +169,7 @@ function ERC20MintModuleCommon () {
       await bindTest(this.admin)
     })
 
-    it('testCanBeMinteBatchdByANewMinter', async function () {
+    it('testCanBeMintBatchdByANewMinter', async function () {
       // Arrange
       await this.cmtat
         .connect(this.admin)
@@ -231,6 +244,108 @@ function ERC20MintModuleCommon () {
       ).to.be.revertedWithCustomError(
         this.cmtat,
         'CMTAT_MintModule_EmptyAccounts'
+      )
+    })
+  })
+  context('batchTransfer', function () {
+    const TOKEN_AMOUNTS = [10n, 100n, 1000n]
+
+    beforeEach(async function () {
+      // Only the admin has tokens
+      await this.cmtat.connect(this.admin).mint(
+        this.admin,
+        TOKEN_AMOUNTS.reduce((a, b) => {
+          return a + b
+        })
+      )
+    })
+
+    it('testbatchTransfer', async function () {
+      const TOKEN_ADDRESS_TOS = [this.address1, this.address2, this.address3]
+      // Act
+      this.logs = await this.cmtat
+        .connect(this.admin)
+        .batchTransfer(TOKEN_ADDRESS_TOS, TOKEN_AMOUNTS)
+      // Assert
+      for (let i = 0; i < TOKEN_ADDRESS_TOS.length; ++i) {
+        expect(await this.cmtat.balanceOf(TOKEN_ADDRESS_TOS[i])).to.equal(
+          TOKEN_AMOUNTS[i]
+        )
+      }
+      // emits a Transfer event
+      for (let i = 0; i < TOKEN_ADDRESS_TOS.length; ++i) {
+        await expect(this.logs)
+          .to.emit(this.cmtat, 'Transfer')
+          .withArgs(this.admin, TOKEN_ADDRESS_TOS[i], TOKEN_AMOUNTS[i])
+      }
+    })
+
+    // ADDRESS1 -> ADDRESS2
+    it('testCannotbatchTransferMoreTokensThanOwn', async function () {
+      const TOKEN_ADDRESS_TOS = [this.address1, this.address2, this.address3]
+      const BALANCE_AFTER_FIRST_TRANSFER =
+        (await this.cmtat.balanceOf(this.admin)) - TOKEN_AMOUNTS[0]
+      const AMOUNT_TO_TRANSFER_SECOND = BALANCE_AFTER_FIRST_TRANSFER + 1n
+      // Second amount is invalid
+      const TOKEN_AMOUNTS_INVALID = [
+        TOKEN_AMOUNTS[0],
+        AMOUNT_TO_TRANSFER_SECOND,
+        TOKEN_AMOUNTS[2]
+      ]
+      // Act
+      await expect(
+        this.cmtat
+          .connect(this.admin)
+          .batchTransfer(TOKEN_ADDRESS_TOS, TOKEN_AMOUNTS_INVALID)
+      )
+        .to.be.revertedWithCustomError(this.cmtat, 'ERC20InsufficientBalance')
+        .withArgs(
+          this.admin.address,
+          BALANCE_AFTER_FIRST_TRANSFER,
+          AMOUNT_TO_TRANSFER_SECOND
+        )
+    })
+
+    it('testCannotbatchTransferIfLengthMismatchMissingAddresses', async function () {
+      // Number of addresses is insufficient
+      const TOKEN_ADDRESS_TOS_INVALID = [this.address1, this.address2]
+      await expect(
+        this.cmtat
+          .connect(this.admin)
+          .batchTransfer(TOKEN_ADDRESS_TOS_INVALID, TOKEN_AMOUNTS)
+      ).to.be.revertedWithCustomError(
+        this.cmtat,
+        'CMTAT_MintModule_TosValueslengthMismatch'
+      )
+    })
+
+    it('testCannotbatchTransferIfLengthMismatchTooManyAddresses', async function () {
+      // There are too many addresses
+      const TOKEN_ADDRESS_TOS_INVALID = [
+        this.address1,
+        this.address2,
+        this.address1,
+        this.address1
+      ]
+      await expect(
+        this.cmtat
+          .connect(this.admin)
+          .batchTransfer(TOKEN_ADDRESS_TOS_INVALID, TOKEN_AMOUNTS)
+      ).to.be.revertedWithCustomError(
+        this.cmtat,
+        'CMTAT_MintModule_TosValueslengthMismatch'
+      )
+    })
+
+    it('testCannotbatchTransferIfTOSIsEmpty', async function () {
+      const TOKEN_ADDRESS_TOS_INVALID = []
+      await expect(
+        this.cmtat
+          .connect(this.admin)
+          .batchTransfer(TOKEN_ADDRESS_TOS_INVALID, TOKEN_AMOUNTS)
+      ).to.be.revertedWithCustomError(
+        this.cmtat,
+        'CMTAT_MintModule_EmptyTos'
       )
     })
   })

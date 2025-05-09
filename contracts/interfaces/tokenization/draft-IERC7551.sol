@@ -10,14 +10,17 @@ interface IERC7551Mint {
      */
     event Mint(address indexed account, uint256 value, bytes data);
     /**
-    * This function MUST increase the balance of to by amount without decreasing the amount of tokens from any other holder. 
-    * This function MUST throw if the sum of amount and the amount of already issued tokens is greater than the total supply. 
+    * @notice Creates a `value` amount of tokens and assigns them to `account`, by transferring it from address(0)
+    * @param account token receiver
+    * @param value amount of tokens
+    * @param data supplemtary field to further document the action.
+    * @dev
+    * This function increases the balance of to by amount without decreasing the amount of tokens from any other holder.  
     * It MUST emit a Transfer as well as an Mint event. 
     * If {IERC7551Pause} is implemented:
     *   Paused transfers MUST NOT prevent an issuance. 
-    * The data parameter MAY be used to further document the action.
     */
-    function mint(address to, uint256 amount, bytes calldata data) external;
+    function mint(address account, uint256 value, bytes calldata data) external;
 }
 
 interface IERC7551Burn {
@@ -56,10 +59,9 @@ interface IERC7551ERC20Enforcement {
     *  For events, see {IERC3643Partial - IERC3643EnforcementPartial}
     *  
     */
-
     /**
-    * This function MUST return the unfrozen balance of an account. 
-    * This balance can be used by the account for transfers to other account addresses.
+    * @notice This function  returns the unfrozen balance of an account. 
+    * @dev This balance can be used by the account for transfers to other account addresses.
     */
     function getActiveBalanceOf(address account) external view returns (uint256);
     /**
@@ -73,20 +75,32 @@ interface IERC7551ERC20Enforcement {
     function freezePartialTokens(address account, uint256 amount) external;
     function unfreezePartialTokens(address account, uint256 amount) external;
     /*
-    * This function MUST transfer amount tokens to to without requiring the consent of from. 
-    * The function MUST throw if from’s balance is less than amount (including frozen tokens). 
+    * @notice Triggers a forced transfer.
+    * @dev This function transfer amount tokens to to without requiring the consent of from. 
+    * The function throws if from’s balance is less than amount (including frozen tokens). 
     * If the frozen balance of from is used for the transfer a TokenUnfrozen event must be emitted. 
-    * The function MUST emit a Transfer event. The data parameter MAY be used to further document the action.
+    * The function MUST emit a Transfer event. 
+    * The data parameter MAY be used to further document the action.
     */
     function forcedTransfer(address account, address to, uint256 value, bytes calldata data) external returns (bool);
 
 }
 
 interface IERC7551Compliance {
-     /*
-    * This function MUST return true if the message sender is able to transfer amount tokens to to respecting all compliance, investor eligibility and other implemented restrictions. Otherwise it MUST return false.
+    /*
+    * @notice This function return true if the message sender is able to transfer amount tokens to to respecting all compliance.
     */
-    function canTransfer(address from, address to, uint256 amount) external view returns (bool);
+    function canTransfer(address from, address to, uint256 value) external view returns (bool);
+
+    /*
+    * @notice This function return true if the message sender is able to transfer amount tokens to to respecting all compliance.
+    */
+    function canTransferFrom(
+        address spender,
+        address from,
+        address to,
+        uint256 value
+    )  external view returns (bool);
 }
 
 
@@ -96,12 +110,8 @@ interface IERC7551Base {
     */
     function metaData() external view returns (string memory);
 
-   
-
     /*
-    * This function MUST update the metaData value, generally an url
-    * It MAY be empty.
-    *
+    * @notice This function update the metaData value, generally an url
     */
     function setMetaData(string calldata metaData) external;
 }

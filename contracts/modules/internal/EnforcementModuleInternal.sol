@@ -15,6 +15,9 @@ abstract contract EnforcementModuleInternal is
     ContextUpgradeable,
     IERC3643EnforcementEvent
 {
+    error CMTAT_EnforcementModuleInternal_EmptyAccounts();
+    error CMTAT_EnforcementModuleInternal_AccountsValueslengthMismatch();
+    
      /* ============ ERC-7201 ============ */
     // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.EnforcementModuleInternal")) - 1)) & ~bytes32(uint256(0xff))
     bytes32 private constant EnforcementModuleInternalStorageLocation = 0x3f8bb8b8091c756b4423e8d10de8c6b7534e765f399b3f3409d2bed57af75e00;
@@ -37,17 +40,26 @@ abstract contract EnforcementModuleInternal is
     //////////////////////////////////////////////////////////////*/
     function _setAddressFrozen(address account, bool freeze, bytes memory data) internal virtual{
         EnforcementModuleInternalStorage storage $ = _getEnforcementModuleInternalStorage();
+        _setAddressFrozen($, account, freeze, data);
+    }
+
+    function _setAddressFrozen(EnforcementModuleInternalStorage storage $,address account, bool freeze, bytes memory data) internal virtual{
         $._frozen[account] = freeze;
         emit AddressFrozen(account, freeze, _msgSender(), data);
     }
 
-        /*
-    Not implemented to reduce contract size
+
+
    function _batchSetAddressFrozen(address[] calldata accounts, bool[] calldata freezes, bytes memory data) internal virtual{
+        require(accounts.length > 0, CMTAT_EnforcementModuleInternal_EmptyAccounts());
+        // We do not check that values is not empty since
+        // this require will throw an error in this case.
+        require(bool(accounts.length == freezes.length), CMTAT_EnforcementModuleInternal_AccountsValueslengthMismatch());
+        EnforcementModuleInternalStorage storage $ = _getEnforcementModuleInternalStorage();
         for (uint256 i = 0; i < accounts.length; ++i) {
-            _setAddressFrozen(accounts[i], freezes[i], data);
+            _setAddressFrozen($, accounts[i], freezes[i], data);
         }
-    }*/
+    }
 
     /**
      * @dev Returns true if the account is frozen, and false otherwise.

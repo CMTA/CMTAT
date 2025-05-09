@@ -25,20 +25,22 @@ The main difference between the three main version are the following
 
 Here the list of ERC supported between different version:
 
-|                                                              | ERC status               | CMTAT 1.0 | CMTAT 2.30 | CMTAT 3.0.0                                                  |
-| ------------------------------------------------------------ | ------------------------ | --------- | ---------- | ------------------------------------------------------------ |
-| **Fungible tokens**                                          |                          |           |            |                                                              |
-| [ERC-20](https://eips.ethereum.org/EIPS/eip-20)              | Standard Track (final)   | &#x2611;  | &#x2611;   | &#x2611;                                                     |
-| [ERC-1363](https://eips.ethereum.org/EIPS/eip-1363)          | Standard Track (final)   | &#x2612;  | &#x2612;   | &#x2611;<br />(specific deployment version)                  |
-| **Tokenization**                                             |                          |           |            |                                                              |
-| [ERC-1404](https://github.com/ethereum/eips/issues/1404)<br />(Simple Restricted Token Standard) | Draft                    | &#x2611;  | &#x2611;   | &#x2611;                                                     |
-| [ERC-1643](https://github.com/ethereum/eips/issues/1643) (Document Management Standard) <br />(Standard from [ERC-1400](https://github.com/ethereum/EIPs/issues/1411)) | Draft                    | &#x2612;  | &#x2612;   | &#x2611;<br />(through DocumentEngine with small improvement) |
-| **Proxy support related**                                    |                          |           |            |                                                              |
-| Deployment with a UUPS proxy ([ERC-1822](https://eips.ethereum.org/EIPS/eip-1822)) | Stagnant<br />(but used) | &#x2612;  | &#x2612;   | &#x2611;<br />(specific deployment version)                  |
-| [ERC-7201](https://eips.ethereum.org/EIPS/eip-7201)<br/>(Storage namespaces for proxy contract) | Standard Track (final)   | &#x2612;  | &#x2612;   | &#x2611;                                                     |
-| **Other**                                                    |                          |           |            |                                                              |
-| [ERC-2771](https://eips.ethereum.org/EIPS/eip-2771) (Meta Tx / gasless) | Standard Track (final)   | &#x2611;  | &#x2611;   | &#x2611;                                                     |
-| [ERC-6093](https://eips.ethereum.org/EIPS/eip-6093) (Custom errors for ERC-20 tokens) | Standard Track (final)   | &#x2612;  | &#x2612;   | &#x2611;<br />                                               |
+|                                                              | ERC status               | CMTAT 1.0 | CMTAT 2.30 | CMTAT 3.0.0                                                  |          |          |          |
+| ------------------------------------------------------------ | ------------------------ | --------- | ---------- | ------------------------------------------------------------ | -------- | -------- | -------- |
+| Deployment version                                           |                          |           |            |                                                              | Light    | UUPS     | ERC1363  |
+| **Fungible tokens**                                          |                          |           |            |                                                              |          |          |          |
+| [ERC-20](https://eips.ethereum.org/EIPS/eip-20)              | Standard Track (final)   | &#x2611;  | &#x2611;   | &#x2611;                                                     | &#x2611; | &#x2611; | &#x2611; |
+| [ERC-1363](https://eips.ethereum.org/EIPS/eip-1363)          | Standard Track (final)   | &#x2612;  | &#x2612;   | &#x2612;                                                     | &#x2612; | &#x2612; | &#x2611; |
+| **Tokenization**                                             |                          |           |            |                                                              |          |          |          |
+| [ERC-1404](https://github.com/ethereum/eips/issues/1404)<br />(Simple Restricted Token Standard) | Draft                    | &#x2611;  | &#x2611;   | &#x2611;                                                     | &#x2612; | &#x2611; | &#x2611; |
+| [ERC-1643](https://github.com/ethereum/eips/issues/1643) (Document Management Standard) <br />(Standard from [ERC-1400](https://github.com/ethereum/EIPs/issues/1411)) | Draft                    | &#x2612;  | &#x2612;   | &#x2611;<br />(through DocumentEngine with small improvement) | &#x2612; | &#x2611; | &#x2611; |
+| **Proxy support related**                                    |                          |           |            |                                                              |          |          |          |
+| Deployment with a UUPS proxy ([ERC-1822](https://eips.ethereum.org/EIPS/eip-1822)) | Stagnant<br />(but used) | &#x2612;  | &#x2612;   | &#x2611;<br />(specific deployment version)                  | &#x2612; | &#x2611; | &#x2612; |
+| [ERC-7201](https://eips.ethereum.org/EIPS/eip-7201)<br/>(Storage namespaces for proxy contract) | Standard Track (final)   | &#x2612;  | &#x2612;   | &#x2611;                                                     | &#x2611; | &#x2611; | &#x2611; |
+| **Other**                                                    |                          |           |            |                                                              |          |          |          |
+| [ERC-2771](https://eips.ethereum.org/EIPS/eip-2771) (Meta Tx / gasless) | Standard Track (final)   | &#x2611;  | &#x2611;   | &#x2611;                                                     | &#x2612; | &#x2611; | &#x2611; |
+| [ERC-6093](https://eips.ethereum.org/EIPS/eip-6093) (Custom errors for ERC-20 tokens) | Standard Track (final)   | &#x2612;  | &#x2612;   | &#x2611;<br />                                               | &#x2611; | &#x2611; | &#x2611; |
+| ERC-7802 (cross-chain token)                                 |                          | &#x2612;  | &#x2612;   | &#x2611;<br />                                               | &#x2612; | &#x2612; | &#x2612; |
 
 #### ERC-3643
 
@@ -56,57 +58,60 @@ The implemented interface is available in [IERC3643Partial](./contracts/interfac
 
 **Level**
 
-| **Level** | **Description**                                              |
-| :-------- | :----------------------------------------------------------- |
-| 0         | Not implemented                                              |
-| 1         | Implemented, but the argument names are different<br />(function signature will be the same nevertheless) |
-| 3         | Exactly same function (same argument name, same parameter)   |
+| **Level** | **Description** |
+| :-------- | :-------------- |
+| 0         | Not implemented |
+| 1         | Implemented     |
+|           |                 |
 
 The main reason the argument names change is because CMTAT relies on OpenZeppelin to name the arguments
 
 ##### Pause
 
-| **ERC-3643**                             | **CMTAT 3.0**                   | **Result** |
-| :--------------------------------------- | :------------------------------ | :--------- |
-| `pause() external`                       | Same                            | 3          |
-| `unpause() external`                     | Same                            | 3          |
-| `paused() external view returns (bool);` | Same                            | 2          |
-| `  event Paused(address _userAddress);`  | event Paused(address account);  | 2          |
-| ` event Unpaused(address _userAddress);` | event Unpaused(address account) | 2          |
+Module: PauseModule
+
+| **ERC-3643**                             |      | **CMTAT 3.0.**0                 |                |                |                |                |
+| :--------------------------------------- | ---- | :------------------------------ | -------------- | -------------- | -------------- | -------------- |
+| Deployment version                       |      |                                 | Full           | Light          | UUPS           | ERC1363        |
+| `pause() external`                       |      | Same                            | &#x2611;<br /> | &#x2611;<br /> | &#x2611;<br /> | &#x2611;<br /> |
+| `unpause() external`                     |      | Same                            | &#x2611;<br /> | &#x2611;<br /> | &#x2611;<br /> | &#x2611;<br /> |
+| `paused() external view returns (bool);` |      | Same                            | &#x2611;<br /> | &#x2611;<br /> | &#x2611;<br /> | &#x2611;<br /> |
+| `  event Paused(address _userAddress);`  |      | event Paused(address account);  | &#x2611;<br /> | &#x2611;<br /> | &#x2611;<br /> | &#x2611;<br /> |
+| ` event Unpaused(address _userAddress);` |      | event Unpaused(address account) | &#x2611;<br /> | &#x2611;<br /> | &#x2611;<br /> | &#x2611;<br /> |
 
 ##### ERC20Base
 
-| **ERC-3643**                                                 | **CMTAT 3.0**                                                | **Result** |
-| :----------------------------------------------------------- | :----------------------------------------------------------- | :--------- |
-| `setName(string calldata _name) external;`                   | setName(string calldata name_)                               | 2          |
-| `setSymbol(string calldata _symbol) external;`               | function setSymbol(string calldata symbol_)                  | 2          |
-| `function batchTransfer(address[] calldata _toList, uint256[] calldata _amounts) external;` | function batchTransfer(address[] calldata tos,uint256[] calldata values) external returns (bool); | 2          |
+| **ERC-3643**                                   | **CMTAT 3.0**                               |      |
+| :--------------------------------------------- | :------------------------------------------ | ---- |
+| `setName(string calldata _name) external;`     | setName(string calldata name_)              |      |
+| `setSymbol(string calldata _symbol) external;` | function setSymbol(string calldata symbol_) |      |
+|                                                |                                             |      |
 
 ##### Supply Management (burn/mint)
 
-| **ERC-3643**                                                 | **CMTAT 3.0 Modules** | **CMTAT 3.0 Functions**                                      | **Result** |
-| :----------------------------------------------------------- | :-------------------- | :----------------------------------------------------------- | :--------- |
-| `  batchMint(address[] calldata _toList, uint256[] calldata _amounts) external;` | MintModule            | `mint(address account, uint256 value)`                       | 2          |
-| `  batchMint(address[] calldata _toList, uint256[] calldata _amounts) external;` | MintModule            | `function mintBatch(address[] calldata accounts,uint256[] calldata values) ` | 2          |
-| `burn(address _userAddress, uint256 _amount) external`       | BurnModule            | `function burn(address account,uint256 value)`               | 2          |
-| `batchBurn(address[] calldata _userAddresses, uint256[] calldata _amounts) external` | -                     | `function burnBatch(address[] calldata accounts,uint256[] calldata values,string calldata reason)` | 2          |
-|                                                              |                       |                                                              |            |
+| **ERC-3643**                                                 | **CMTAT 3.0 Modules** | **CMTAT 3.0 Functions**                                      |
+| :----------------------------------------------------------- | :-------------------- | :----------------------------------------------------------- |
+| `  batchMint(address[] calldata _toList, uint256[] calldata _amounts) external;` | MintModule            | `mint(address account, uint256 value)`                       |
+| `  batchMint(address[] calldata _toList, uint256[] calldata _amounts) external;` | MintModule            | `function mintBatch(address[] calldata accounts,uint256[] calldata values) ` |
+| `burn(address _userAddress, uint256 _amount) external`       | BurnModule            | `function burn(address account,uint256 value)`               |
+| `batchBurn(address[] calldata _userAddresses, uint256[] calldata _amounts) external` | -                     | `function burnBatch(address[] calldata accounts,uint256[] calldata values,string calldata reason)` |
+| `function batchTransfer(address[] calldata _toList, uint256[] calldata _amounts) external;` |                       | function batchTransfer(address[] calldata tos,uint256[] calldata values) external returns (bool); |
 
 ##### ERC20Enforcement
 
-| **ERC-3643**                                                 | **CMTAT 3.0**                                                | **Result** |
-| :----------------------------------------------------------- | :----------------------------------------------------------- | :--------- |
-| ` isFrozen(address _userAddress)`                            | `isFrozen(address account)`                                  | 2          |
-| `forcedTransfer(address _from, address _to, uint256 _amount) external returns (bool)` | `forcedTransfer(address from, address to, uint256 value) external returns (bool)` | 2          |
-| `batchForcedTransfer(address[] calldata _fromList, address[] calldata _toList, uint256[] calldata _amounts) external` | -                                                            | 0          |
+| **ERC-3643**                                                 | **CMTAT 3.0**                                                |
+| :----------------------------------------------------------- | :----------------------------------------------------------- |
+| ` isFrozen(address _userAddress)`                            | `isFrozen(address account)`                                  |
+| `forcedTransfer(address _from, address _to, uint256 _amount) external returns (bool)` | `forcedTransfer(address from, address to, uint256 value) external returns (bool)` |
+| `batchForcedTransfer(address[] calldata _fromList, address[] calldata _toList, uint256[] calldata _amounts) external` | -                                                            |
 
 ##### Validation
 
 Note: `canTransfer`is defined for the compliance contract in ERC-3643.
 
-| **ERC-3643**                                                 | **CMTAT 3.0**               | **Result** |
-| :----------------------------------------------------------- | :-------------------------- | :--------- |
-| `canTransfer(address _from, address _to, uint256 _amount) external view returns (bool)` | `     function canTransfer` | 3          |
+| **ERC-3643**                                                 | **CMTAT 3.0**               |
+| :----------------------------------------------------------- | :-------------------------- |
+| `canTransfer(address _from, address _to, uint256 _amount) external view returns (bool)` | `     function canTransfer` |
 
 ####  ERC-7551
 
@@ -121,6 +126,7 @@ The implemented interface is available in [IERC7551](./contracts/interfaces/toke
 
 | **N°** | **Functionalities**                                          | **ERC-7551 Functions**                    | Name modified                       | **CMTAT 3.0.0** (next release                                |      |
 | :----- | :----------------------------------------------------------- | :---------------------------------------- | ----------------------------------- | :----------------------------------------------------------- | ---- |
+|        |                                                              |                                           |                                     |                                                              |      |
 | 1      | Freeze and unfreeze a specific amount of tokens              | freezeTokens<br />unfreezeTokens          | yes                                 | ✅<br />Same function as ERC-3643                             |      |
 | 2      | Pausing transfers The operator can pause and unpause transfers | pauseTransfers                            | yes                                 | ✅<br />function pause/unpause + deactivateContract           |      |
 | 3      | Link to off-chain document<br />Add the hash of a document   | setPaperContractHash                      | (function not directly implemented) | ✅<br />Done with the field terms.<br />This field is represented as a Document also (name, uri, hash, last on-chain modification date) |      |

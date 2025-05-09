@@ -8,7 +8,8 @@ const ERC20BaseModuleCommon = require('../common/ERC20BaseModuleCommon')
 const ERC20MintModuleCommon = require('../common/ERC20MintModuleCommon')
 const ERC20BurnModuleCommon = require('../common/ERC20BurnModuleCommon')
 const EnforcementModuleCommon = require('../common/EnforcementModuleCommon')
-const ERC20EnforcementModuleCommon = require('../common/ERC20EnforcementModuleCommon')
+const BaseModuleCommon = require('../common/BaseModuleCommon')
+const PauseModuleCommon = require('../common/PauseModuleCommon')
 const VALUE = 20n
 describe('CMTAT Core - Standalone', function () {
   beforeEach(async function () {
@@ -20,6 +21,8 @@ describe('CMTAT Core - Standalone', function () {
     )
     this.core = true
   })
+  BaseModuleCommon()
+  PauseModuleCommon()
   ERC20BaseModuleCommon()
   ERC20BurnModuleCommon()
   ERC20MintModuleCommon()

@@ -22,18 +22,11 @@ abstract contract ERC20BurnModule is ERC20Upgradeable, IERC20Allowance, IBurnERC
     error CMTAT_BurnModule_EmptyAccounts();
     error CMTAT_BurnModule_AccountsValueslengthMismatch();
 
-    
     /* ============ State Variables ============ */
     bytes32 public constant BURNER_ROLE = keccak256("BURNER_ROLE");
-    bytes32 public constant BURNER_FROM_ROLE = keccak256("BURNER_FROM_ROLE");
-    bytes32 public constant ENFORCER_ROLE_TRANSFER = keccak256("ENFORCER_ROLE_TRANSFER");
+ 
     
-    /* ============ Events ============ */
-    /**
-    * @notice Emitted when the specified `spender` burns the specified `value` tokens owned by the specified `owner` reducing the corresponding allowance.
-    */
-    event BurnFrom(address indexed owner, address indexed spender, uint256 value);
-
+  
     /* ============  Initializer Function ============ */
     function __ERC20BurnModule_init_unchained() internal onlyInitializing {
         // no variable to initialize
@@ -61,15 +54,15 @@ abstract contract ERC20BurnModule is ERC20Upgradeable, IERC20Allowance, IBurnERC
     }
 
     /**
-     * @notice {burn} withtout reason
+     * @inheritdoc IERC3643Burn
      * @dev
      * More standard burn function for compatibility
      */
     function burn(
         address account,
         uint256 value
-    ) public virtual override(IERC3643Burn, IBurnERC20) onlyRole(BURNER_ROLE) {
-        _burn(account, value, "");
+    ) public virtual override(IERC3643Burn) onlyRole(BURNER_ROLE) {
+       _burn(account, value,"");
     }
 
     /**
@@ -94,12 +87,11 @@ abstract contract ERC20BurnModule is ERC20Upgradeable, IERC20Allowance, IBurnERC
         _batchBurn(accounts, values, data);
     }
 
-
     /**
      *
      * @notice batch version of {burn}.
      * @dev
-     * See {IERC3643Burn}
+     * See {IERC3643Burn}t
      *
      * For each burn action:
      * -Emits a {Burn} event
@@ -115,38 +107,7 @@ abstract contract ERC20BurnModule is ERC20Upgradeable, IERC20Allowance, IBurnERC
         _batchBurn(accounts, values, "");
     }
 
-    /**
-     * @notice Destroys `amount` tokens from `account`, deducting from the caller's
-     * allowance.
-     * @dev 
-     * Can be used to authorize a bridge (e.g. CCIP) to burn token owned by the bridge
-     * No data parameter reason to be compatible with Bridge, e.g. CCIP
-     * 
-     * See {ERC20-_burn} and {ERC20-allowance}.
-     *
-     * Requirements:
-     *
-     * - the caller must have allowance for ``accounts``'s tokens of at least
-     * `value`.
-     */
-    function burnFrom(address account, uint256 value)
-        public override(IBurnERC20)
-        onlyRole(BURNER_FROM_ROLE)
-    {
-        // Allowance check
-        address sender =  _msgSender();
-        ERC20Upgradeable._spendAllowance(account, sender, value );
-        // burn
-        // We also emit a burn event since its a burn operation
-        _burn(account, value, "burnFrom");
-        // Specific event for the operation
-        emit BurnFrom(account, sender, value);
-        emit Spend(account, sender, value);
-    }
 
-    /*//////////////////////////////////////////////////////////////
-                            INTERNAL/PRIVATE FUNCTIONS
-    //////////////////////////////////////////////////////////////*/
     /**
     * @dev internal function to burn in batch
     */
@@ -160,19 +121,27 @@ abstract contract ERC20BurnModule is ERC20Upgradeable, IERC20Allowance, IBurnERC
         // this require will throw an error in this case.
         require(bool(accounts.length == values.length), CMTAT_BurnModule_AccountsValueslengthMismatch());
         for (uint256 i = 0; i < accounts.length; ++i ) {
-            _burn(accounts[i], values[i], data);
+             _burnOverride(accounts[i], values[i]);
         }
+        emit BatchBurn(_msgSender(),accounts, values, data );
     }
 
     /**
-    * @dev internal function to burn
+    * @dev Internal function to burn
     */
+    function _burnOverride(
+        address account,
+        uint256 value
+    ) internal virtual {
+        ERC20Upgradeable._burn(account, value);
+    }
+
     function _burn(
         address account,
         uint256 value,
         bytes memory data
     ) internal virtual {
-        _burn(account, value);
+        _burnOverride(account, value);
         emit Burn(account, value, data);
     }
 }

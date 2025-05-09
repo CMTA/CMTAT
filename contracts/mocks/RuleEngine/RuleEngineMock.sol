@@ -5,7 +5,7 @@ pragma solidity ^0.8.20;
 import {IRule} from "./interfaces/IRule.sol";
 import {IRuleEngineMock} from "./interfaces/IRuleEngineMock.sol";
 import {RuleMock} from "./RuleMock.sol";
-
+import {RuleMockMint} from "./RuleMockMint.sol";
 /*
 * @title a RuleEngine mock for testing, not suitable for production
 */
@@ -15,6 +15,7 @@ contract RuleEngineMock is IRuleEngineMock {
 
     constructor(address spender) {
         _rules.push(new RuleMock());
+        _rules.push(new RuleMockMint());
         authorizedSpender =  spender;
     }
 
@@ -77,22 +78,6 @@ contract RuleEngineMock is IRuleEngineMock {
             return false;
         }
     }
-
-
-    /*function canApprove(
-        address /* owner */
-       /* address  spender,
-        uint256 /* value */
-   /* ) public view override returns (bool) {
-        if(spender == authorizedSpender) {
-            return true;
-        } else {
-            return false;
-        }
-    }*/
-
-
-
 
     /*
     * @dev 

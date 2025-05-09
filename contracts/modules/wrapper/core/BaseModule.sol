@@ -9,7 +9,7 @@ import {IERC3643Base} from "../../../interfaces/tokenization/IERC3643Partial.sol
 abstract contract BaseModule is IERC3643Base {
     /* ============ State Variables ============ */
     /** 
-    * @notice 
+    * @dev 
     * Get the current version of the smart contract
     */
     string private constant VERSION = "3.0.0";
@@ -18,7 +18,7 @@ abstract contract BaseModule is IERC3643Base {
                             PUBLIC/EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
     /**
-    * @notice ERC-3643 version function
+    * @inheritdoc IERC3643Base
     */
     function version() public view virtual override(IERC3643Base) returns (string memory) {
        return VERSION;
