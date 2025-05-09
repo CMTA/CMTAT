@@ -108,10 +108,10 @@ abstract contract ValidationModuleCore is
     ) internal view virtual returns (bool) {
         // Mint
         if(from == address(0)){
-            return _canMintBurnByModule(from);
+            return _canMintBurnByModule(to);
         } // burn
         else if(to == address(0)){
-            return _canMintBurnByModule(to);
+            return _canMintBurnByModule(from);
         } // Normal transfer
         else if (EnforcementModule.isFrozen(spender) 
         || EnforcementModule.isFrozen(from) 

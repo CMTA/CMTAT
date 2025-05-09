@@ -4,7 +4,7 @@ const {
   fixture,
   loadFixture
 } = require('../../deploymentUtils')
-describe('Standard - ERC20MintModule', function () {
+describe('Standard - BaseExtend', function () {
   beforeEach(async function () {
     Object.assign(this, await loadFixture(fixture))
     this.cmtat = await deployCMTATStandalone(

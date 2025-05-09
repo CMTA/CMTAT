@@ -12,11 +12,12 @@ const REASON = ethers.Typed.bytes(REASON_EVENT);
 const REASON_EMPTY = ethers.Typed.bytes(ethers.toUtf8Bytes(""))
 function ERC20BurnModuleCommon () {
   context('burn', function () {
-    const INITIAL_SUPPLY = 50
-
-    const VALUE1 = 20
+    const INITIAL_SUPPLY = 50n
+    const INITIAL_SUPPLY_TYPED = ethers.Typed.uint256(50)
+    const VALUE1 = 20n
+    const VALUE_TYPED = ethers.Typed.uint256(20)
     const DIFFERENCE = INITIAL_SUPPLY - VALUE1
-
+    const DIFFERENCE_TYPED = ethers.Typed.uint256(30)
     async function testBurn(sender) {
     // Act
       // Burn 20
@@ -52,8 +53,8 @@ function ERC20BurnModuleCommon () {
         .to.emit(this.cmtat, 'Burn')
         .withArgs(this.address1, DIFFERENCE, REASON_EVENT)
       // Check balances and total supply
-      expect(await this.cmtat.balanceOf(this.address1)).to.equal(0n)
-      expect(await this.cmtat.totalSupply()).to.equal(0n)
+      expect(await this.cmtat.balanceOf(this.address1)).to.equal(0)
+      expect(await this.cmtat.totalSupply()).to.equal(0)
     }
 
     beforeEach(async function () {
@@ -67,11 +68,12 @@ function ERC20BurnModuleCommon () {
     })
 
     it('testCanBeBurntByAdminWithoutReason', async function () {
+
       // Act
       // Burn 20
       this.logs = await this.cmtat
         .connect(this.admin)
-        .burn(this.address1, VALUE1)
+        .burn(this.address1, VALUE_TYPED)
       // Assert
       // emits a Transfer event
       await expect(this.logs)
@@ -89,7 +91,7 @@ function ERC20BurnModuleCommon () {
       // Act
       this.logs = await this.cmtat
         .connect(this.admin)
-        .burn(this.address1, DIFFERENCE)
+        .burn(this.address1, DIFFERENCE_TYPED)
 
       // Assert
       // Emits a Transfer event
@@ -153,12 +155,12 @@ function ERC20BurnModuleCommon () {
       .connect(this.admin)
       .deactivateContract()
       await expect(
-        this.cmtat.connect(this.admin).burn(this.address1, VALUE1)
+        this.cmtat.connect(this.admin).burn(this.address1, VALUE_TYPED)
       )
         .to.be.revertedWithCustomError(
           this.cmtat,
-          'CMTAT_InvalidBurn'
-        )
+          'CMTAT_InvalidTransfer'
+        ).withArgs(this.address1, ZERO_ADDRESS, VALUE1)
     })
 
     it('testCanBeBurnEvenIfContractIsPaused', async function () {
@@ -175,16 +177,17 @@ function ERC20BurnModuleCommon () {
 
       // Act
       const VALUE = 20
+      const VALUE_TYPED = ethers.Typed.uint256(20)
       await expect(
         this.cmtat
         .connect(this.admin)
-        .burn(this.address1, VALUE)
+        .burn(this.address1, VALUE_TYPED)
       )
         .to.be.revertedWithCustomError(
           this.cmtat,
-          'CMTAT_InvalidBurn'
+          'CMTAT_InvalidTransfer'
         )
-        .withArgs(this.address1.address, VALUE)
+        .withArgs(this.address1.address, ZERO_ADDRESS, VALUE)
     })
 
   })
@@ -313,8 +316,8 @@ function ERC20BurnModuleCommon () {
       )
         .to.be.revertedWithCustomError(
           this.cmtat,
-          'CMTAT_InvalidBurn'
-        )
+          'CMTAT_InvalidTransfer'
+        ).withArgs(this.address1, ZERO_ADDRESS, AMOUNT_TO_BURN)
     })
 
     it('testCanBeBurnAndMintEvenIFContractIsPaused', async function () {

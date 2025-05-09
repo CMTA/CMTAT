@@ -100,8 +100,8 @@ function ERC20MintModuleCommon () {
       )
         .to.be.revertedWithCustomError(
           this.cmtat,
-          'CMTAT_InvalidMint'
-        )
+          'CMTAT_InvalidTransfer'
+        ).withArgs(ZERO_ADDRESS, this.address1, VALUE1)
     })
 
     it('testCannotBeMintedIfToIsFrozen', async function () {
@@ -113,8 +113,8 @@ function ERC20MintModuleCommon () {
       )
         .to.be.revertedWithCustomError(
           this.cmtat,
-          'CMTAT_InvalidMint'
-        )
+          'CMTAT_InvalidTransfer'
+        ).withArgs(ZERO_ADDRESS, this.address1, VALUE1)
     })
   })
 

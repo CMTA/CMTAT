@@ -26,7 +26,7 @@ abstract contract ERC20CrossChainModule is CMTAT_BASE, IERC7802, IBurnFromERC20 
     * @dev
     * Don't emit the same event as configured in the ERC20MintModule
     */
-    function crosschainMint(address _to, uint256 _amount) external virtual onlyRole(CROSS_CHAIN_ROLE) {
+    function crosschainMint(address _to, uint256 _amount) external virtual onlyRole(CROSS_CHAIN_ROLE) whenNotPaused {
         _mintOverride(_to, _amount);
         emit CrosschainMint(_to, _amount, msg.sender);
     }
@@ -36,7 +36,7 @@ abstract contract ERC20CrossChainModule is CMTAT_BASE, IERC7802, IBurnFromERC20 
     * @dev
     * Don't emit the same event as configured in the ERC20BurnModule
     */
-    function crosschainBurn(address _from, uint256 _amount) external virtual onlyRole(CROSS_CHAIN_ROLE) {
+    function crosschainBurn(address _from, uint256 _amount) external virtual onlyRole(CROSS_CHAIN_ROLE) whenNotPaused{
         address sender =  _msgSender();
         _burnFrom(sender, _from, _amount);
         //_burnOverride(_from, _amount);
@@ -59,7 +59,7 @@ abstract contract ERC20CrossChainModule is CMTAT_BASE, IERC7802, IBurnFromERC20 
      */
     function burnFrom(address account, uint256 value)
         public override(IBurnFromERC20)
-        onlyRole(BURNER_FROM_ROLE)
+        onlyRole(BURNER_FROM_ROLE) whenNotPaused
     {
         address sender =  _msgSender();
         _burnFrom(sender, account, value);
@@ -68,8 +68,9 @@ abstract contract ERC20CrossChainModule is CMTAT_BASE, IERC7802, IBurnFromERC20 
 
     function burn(
         uint256 value
-    ) public virtual onlyRole(BURNER_FROM_ROLE) {
-        _burnFrom(_msgSender(), _msgSender(), value);
+    ) public virtual onlyRole(BURNER_FROM_ROLE) whenNotPaused {
+        _burnOverride(_msgSender(), value);
+        //_burnFrom(_msgSender(), _msgSender(), value);
     }
 
     function supportsInterface(bytes4 _interfaceId) public view virtual override(AccessControlUpgradeable, IERC165) returns (bool) {

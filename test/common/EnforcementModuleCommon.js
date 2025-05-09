@@ -177,7 +177,7 @@ function EnforcementModuleCommon () {
           // Assert
       expect(
         await this.cmtat.detectTransferRestriction(
-          this.address1,
+          this.address3,
           this.address2,
           AMOUNT_TO_TRANSFER
         )

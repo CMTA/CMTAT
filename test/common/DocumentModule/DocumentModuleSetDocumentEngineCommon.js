@@ -23,7 +23,7 @@ function DocumentModuleSetDocumentEngineCommon () {
           .setDocumentEngine(await this.cmtat.documentEngine())
       ).to.be.revertedWithCustomError(
         this.cmtat,
-        'CMTAT_DocumentModule_SameValue'
+        'CMTAT_DocumentEngineModule_SameValue'
       )
     })
 

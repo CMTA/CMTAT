@@ -49,11 +49,11 @@ abstract contract CMTAT_BASE is
     ExtraInformationModule
 {  
  
-    function _checkTransfer(address spender, address from, address to, uint256 value) internal {
+    function _checkTransferred(address spender, address from, address to, uint256 value) internal {
         if(!_checkActiveBalance(from, value)){
             revert Errors.CMTAT_InvalidTransfer(from, to, value);
         }
-        if (!ValidationModule._operateOnTransfer(spender, from, to, value)) {
+        if (!ValidationModule._transferred(spender, from, to, value)) {
             revert Errors.CMTAT_InvalidTransfer(from, to, value);
         }
     } 
@@ -205,7 +205,7 @@ abstract contract CMTAT_BASE is
     /* ============  State Functions ============ */
     function transfer(address to, uint256 value) public virtual override returns (bool) {
          address from = _msgSender();
-        _checkTransfer(address(0), from, to, value);
+        _checkTransferred(address(0), from, to, value);
         _transfer(from, to, value);
         return true;
     }
@@ -222,7 +222,7 @@ abstract contract CMTAT_BASE is
         override(ERC20Upgradeable, ERC20BaseModule)
         returns (bool)
     {
-        _checkTransfer(_msgSender(), from, to, value);
+        _checkTransferred(_msgSender(), from, to, value);
         return ERC20BaseModule.transferFrom(from, to, value);
     }
 
@@ -314,8 +314,8 @@ abstract contract CMTAT_BASE is
     */
     function _mintOverride(address account, uint256 value) internal virtual override(ERC20MintModule) {
         //require(ValidationModule.canMint(account, value), Errors.CMTAT_InvalidMint(account, value) );
-        require(ValidationModuleCore._canMintBurnByModule(account), Errors.CMTAT_InvalidMint(account, value) );
-        _checkTransfer(address(0), address(0), account, value);
+        //require(ValidationModuleCore._canMintBurnByModule(account), Errors.CMTAT_InvalidMint(account, value) );
+        _checkTransferred(address(0), address(0), account, value);
         ERC20MintModule._mintOverride(account, value);
     }
 
@@ -324,8 +324,8 @@ abstract contract CMTAT_BASE is
     */
     function _burnOverride(address account, uint256 value) internal virtual override(ERC20BurnModule) {
         //require(ValidationModule.canBurn(account, value), Errors.CMTAT_InvalidBurn(account, value) );
-         require(ValidationModuleCore._canMintBurnByModule(account), Errors.CMTAT_InvalidBurn(account, value) );
-        _checkTransfer(address(0), address(0), account, value);
+        // require(ValidationModuleCore._canMintBurnByModule(account), Errors.CMTAT_InvalidBurn(account, value) );
+        _checkTransferred(address(0),  account, address(0), value);
         //ERC20EnforcementModule._unfreezeTokens(account, value);
         
         ERC20BurnModule._burnOverride(account, value);

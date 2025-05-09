@@ -36,6 +36,8 @@ abstract contract CMTATBaseCore is
     ValidationModuleCore,
     ERC20BaseModule
 {  
+    error CMTAT_BurnEnforcement_AddressIsNotFrozen(); 
+    event Enforcement (address indexed enforcer, address indexed account, uint256 amount, bytes data);
  
     /*//////////////////////////////////////////////////////////////
                          INITIALIZER FUNCTION
@@ -210,25 +212,38 @@ abstract contract CMTATBaseCore is
         mint(to, amountToMint, data);
     }
 
+    /**
+    * @notice allows the issuer to burn tokens from a frozen address
+    */
+    function forceBurn(
+        address account,
+        uint256 value,
+        bytes memory data
+    ) public virtual onlyRole(DEFAULT_ADMIN_ROLE) {
+        require(EnforcementModule.isFrozen(account), CMTAT_BurnEnforcement_AddressIsNotFrozen());
+        _burn(account, value);
+        emit Enforcement(_msgSender(), account, value, data);
+    }
+
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
+
     /**
     * @dev 
     */
     function _mint(address account, uint256 value, bytes memory data) internal virtual override(ERC20MintModule) {
-        //require(ValidationModuleCore._canMint(account, value), Errors.CMTAT_InvalidMint(account, value) );
-        require(ValidationModuleCore._canMintBurnByModule(account), Errors.CMTAT_InvalidMint(account, value) );
+        require(ValidationModuleCore._canMintBurnByModule(account), Errors.CMTAT_InvalidTransfer(address(0), account, value) );
         //_checkTransfer(address(0), address(0), account, value);
-        _canMintBurnByModule(account);
+        //_canMintBurnByModule(account);
         ERC20MintModule._mint(account, value, data);
     }
 
 
     function _burn(address account, uint256 value, bytes memory data) internal virtual override(ERC20BurnModule) {
         //require(ValidationModuleCore._canBurn(account, value), Errors.CMTAT_InvalidBurn(account, value) );
-         //_checkTransfer(address(0), address(0), account, value);
-         require(ValidationModuleCore._canMintBurnByModule(account), Errors.CMTAT_InvalidBurn(account, value) );
+        // _checkTransfer(address(0), address(0), account, value);
+         require(ValidationModuleCore._canMintBurnByModule(account), Errors.CMTAT_InvalidTransfer(account, address(0), value) );
         
         ERC20BurnModule._burn(account, value, data);
     }

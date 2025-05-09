@@ -231,12 +231,12 @@ abstract contract ValidationModule is
     function _setRuleEngine(
         ValidationModuleInternalStorage storage $,
         IRuleEngine ruleEngine_
-    )  internal {
+    )  internal virtual {
         $._ruleEngine = ruleEngine_;
         emit RuleEngine(ruleEngine_);
     }
 
-    function _operateOnTransfer(address spender, address from, address to, uint256 value) internal returns (bool){
+    function _transferred(address spender, address from, address to, uint256 value) internal virtual returns (bool){
         if (!canTransferFrom(spender, from, to, value)){
             return false;
         } else{

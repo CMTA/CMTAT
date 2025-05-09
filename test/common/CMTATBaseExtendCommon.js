@@ -65,6 +65,9 @@ function CMTATBASEXTENDCommon () {
       await this.cmtat
       .connect(this.address1,)
       .approve(this.admin, INITIAL_SUPPLY)
+      await this.cmtat
+      .connect(this.address1,)
+      .approve(this.address2, INITIAL_SUPPLY)
     })
 
     it('testCanBeBurntByAdmin', async function () {
@@ -85,7 +88,9 @@ function CMTATBASEXTENDCommon () {
     it('testCannotBeBurntIfBalanceExceeds', async function () {
       const AMOUNT_TO_BURN = 200n
       const ADDRESS1_BALANCE = await this.cmtat.balanceOf(this.address1)
-
+      await this.cmtat
+      .connect(this.address1,)
+      .approve(this.admin, AMOUNT_TO_BURN)
       // Act
       await expect(
         this.cmtat.connect(this.admin).crosschainBurn(this.address1, AMOUNT_TO_BURN)
@@ -105,7 +110,7 @@ function CMTATBASEXTENDCommon () {
         .withArgs(this.address2.address, CROSS_CHAIN_ROLE)
     })
 
-    it('testCannotBeMBurnIfContractIsDeactivated', async function () {
+    it('testCannotBeBurnIfContractIsDeactivated', async function () {
       await this.cmtat
       .connect(this.admin)
       .deactivateContract()
@@ -114,16 +119,21 @@ function CMTATBASEXTENDCommon () {
       )
         .to.be.revertedWithCustomError(
           this.cmtat,
-          'CMTAT_InvalidBurn'
+          'EnforcedPause'
         )
     })
 
-    it('testCanBeBurnEvenIfContractIsPaused', async function () {
+    it('testCannotBeBurnIfContractIsPaused', async function () {
       await this.cmtat
       .connect(this.admin)
       .pause()
-      const bindTest = testBurn.bind(this)
-      await bindTest(this.admin)
+      await expect(
+        this.cmtat.connect(this.admin).crosschainBurn(this.address1, VALUE1)
+      )
+        .to.be.revertedWithCustomError(
+          this.cmtat,
+          'EnforcedPause'
+        )
     })
 
     it('testCannotBeBurnIfAddressIsFrozen', async function () {
@@ -139,9 +149,9 @@ function CMTATBASEXTENDCommon () {
           )
             .to.be.revertedWithCustomError(
               this.cmtat,
-              'CMTAT_InvalidBurn'
+              'CMTAT_InvalidTransfer'
             )
-            .withArgs(this.address1.address, VALUE)
+            .withArgs(this.address1.address, ZERO_ADDRESS, VALUE)
     })
 
   })
@@ -196,14 +206,19 @@ function CMTATBASEXTENDCommon () {
         .withArgs(this.address2.address, BURNER_FROM_ROLE)
     })
 
-    it('testCanBeBurnFromEvenIfContractIsPaused', async function () {
+    it('testCannotBeBurnFromIfContractIsPaused', async function () {
       // Arrange
       await this.cmtat
       .connect(this.admin)
       .pause()
       await this.cmtat.connect(this.address1).approve(this.admin, 50n)
       // Act
-      await this.cmtat.connect(this.admin).burnFrom(this.address1, 20n)
+      await expect(
+        this.cmtat.connect(this.admin).burnFrom(this.address1, 20n)
+      )
+        .to.be.revertedWithCustomError(
+          this.cmtat,
+          'EnforcedPause')
     })
 
     it('testCannotBeBurnFromIfContractIsDeactivated', async function () {
@@ -216,8 +231,8 @@ function CMTATBASEXTENDCommon () {
       )
         .to.be.revertedWithCustomError(
           this.cmtat,
-          'CMTAT_InvalidBurn'
-        )
+          'EnforcedPause')
+
     })
 
 
@@ -302,12 +317,17 @@ function CMTATBASEXTENDCommon () {
         .withArgs(this.address1.address, CROSS_CHAIN_ROLE)
     })
 
-    it('testCanBeMintedEvenIfContractIsPaused', async function () {
+    it('testCannotBeMintedIfContractIsPaused', async function () {
       await this.cmtat
       .connect(this.admin)
       .pause()
-      const bindTest = testMint.bind(this)
-      await bindTest(this.admin)
+      await expect(
+        this.cmtat.connect(this.admin).crosschainMint(this.address1, VALUE1)
+      )
+        .to.be.revertedWithCustomError(
+          this.cmtat,
+          'EnforcedPause'
+        )
     })
 
     it('testCannotBeMintedIfContractIsDeactivated', async function () {
@@ -319,7 +339,7 @@ function CMTATBASEXTENDCommon () {
       )
         .to.be.revertedWithCustomError(
           this.cmtat,
-          'CMTAT_InvalidMint'
+          'EnforcedPause'
         )
     })
 
@@ -332,8 +352,8 @@ function CMTATBASEXTENDCommon () {
       )
         .to.be.revertedWithCustomError(
           this.cmtat,
-          'CMTAT_InvalidMint'
-        )
+          'CMTAT_InvalidTransfer'
+        ).withArgs(ZERO_ADDRESS, this.address1, VALUE1)
     })
   })
   context('AdminSetDebt', function () {
