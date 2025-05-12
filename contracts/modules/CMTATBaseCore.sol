@@ -234,17 +234,12 @@ abstract contract CMTATBaseCore is
     */
     function _mint(address account, uint256 value, bytes memory data) internal virtual override(ERC20MintModule) {
         require(ValidationModuleCore._canMintBurnByModule(account), Errors.CMTAT_InvalidTransfer(address(0), account, value) );
-        //_checkTransfer(address(0), address(0), account, value);
-        //_canMintBurnByModule(account);
         ERC20MintModule._mint(account, value, data);
     }
 
 
     function _burn(address account, uint256 value, bytes memory data) internal virtual override(ERC20BurnModule) {
-        //require(ValidationModuleCore._canBurn(account, value), Errors.CMTAT_InvalidBurn(account, value) );
-        // _checkTransfer(address(0), address(0), account, value);
-         require(ValidationModuleCore._canMintBurnByModule(account), Errors.CMTAT_InvalidTransfer(account, address(0), value) );
-        
+        require(ValidationModuleCore._canMintBurnByModule(account), Errors.CMTAT_InvalidTransfer(account, address(0), value) );
         ERC20BurnModule._burn(account, value, data);
     }
 }
