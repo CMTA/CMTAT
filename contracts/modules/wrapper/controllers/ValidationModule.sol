@@ -2,82 +2,32 @@
 
 pragma solidity ^0.8.20;
 
-/* ==== OpenZeppelin === */
-import {ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
-import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
-/* ==== Module === */
-import {AuthorizationModule} from "../../security/AuthorizationModule.sol";
-import {PauseModule}  from "../core/PauseModule.sol";
-import {EnforcementModule} from "../core/EnforcementModule.sol";
+
 /* ==== Tokenization === */
 import {IERC1404} from "../../../interfaces/tokenization/draft-IERC1404.sol";
-import {IERC3643ComplianceRead} from "../../../interfaces/tokenization/IERC3643Partial.sol";
-import {IERC7551Compliance} from "../../../interfaces/tokenization/draft-IERC7551.sol";
-/* ==== Engine === */
-import {IRuleEngine} from "../../../interfaces/engine/IRuleEngine.sol";
-
-import {ValidationModuleCore} from "./ValidationModuleCore.sol";
+import {ValidationModuleInternal} from "../../internal/ValidationModuleInternal.sol";
 /**
  * @dev Validation module.
  *
  * Useful for to restrict and validate transfers
  */
 abstract contract ValidationModule is
-    Initializable,
-    ContextUpgradeable,
-    IERC1404,
-    ValidationModuleCore
+   ValidationModuleInternal, IERC1404
 {
-    error CMTAT_ValidationModule_SameValue();
     /* ============ State Variables ============ */
-    string constant TEXT_TRANSFER_OK = "No restriction";
-    string constant TEXT_UNKNOWN_CODE = "Unknown code";
+    string constant TEXT_TRANSFER_OK = "NoRestriction";
+    string constant TEXT_UNKNOWN_CODE = "UnknownCode";
 
+    /* EnforcementModule */
+    string internal constant TEXT_TRANSFER_REJECTED_FROM_FROZEN =
+        "AddrFromIsFrozen";
 
-    /* ============ Events ============ */
-    /**
-     * @dev Emitted when a rule engine is set.
-     */
-    event RuleEngine(IRuleEngine indexed newRuleEngine);
-    /* ============ ERC-7201 ============ */
-    // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.ValidationModuleInternal")) - 1)) & ~bytes32(uint256(0xff))
-    bytes32 private constant ValidationModuleInternalStorageLocation = 0xb3e8f29e401cfa802cad91001b5f9eb50decccdb111d80cb07177ab650b04700;
-    /* ==== ERC-7201 State Variables === */
-    struct ValidationModuleInternalStorage {
-        IRuleEngine _ruleEngine;
-    }
+    string internal constant TEXT_TRANSFER_REJECTED_TO_FROZEN =
+        "AddrToIsFrozen";
 
-    /* ============  Initializer Function ============ */
-    function __ValidationModule_init_unchained(
-        IRuleEngine ruleEngine_
-    ) internal onlyInitializing {
-        if (address(ruleEngine_) != address(0)) {
-            ValidationModuleInternalStorage storage $ = _getValidationModuleInternalStorage();
-            _setRuleEngine($, ruleEngine_);
-        }
-    }
-
-
-    /*//////////////////////////////////////////////////////////////
-                            PUBLIC/EXTERNAL FUNCTIONS
-    //////////////////////////////////////////////////////////////*/
-    
-    function ruleEngine() public view returns(IRuleEngine){
-        ValidationModuleInternalStorage storage $ = _getValidationModuleInternalStorage();
-        return $._ruleEngine;
-    }
-
-    /*
-    * @notice set a RuleEngine
-    * @param ruleEngine_ the call will be reverted if the new value of ruleEngine is the same as the current one
-    */
-    function setRuleEngine(
-        IRuleEngine ruleEngine_
-    ) public virtual onlyRole(DEFAULT_ADMIN_ROLE) {
-        ValidationModuleInternalStorage storage $ = _getValidationModuleInternalStorage();
-        require($._ruleEngine != ruleEngine_, CMTAT_ValidationModule_SameValue());
-        _setRuleEngine($,ruleEngine_);
-    }
+    /* PauseModule */
+    string internal constant TEXT_TRANSFER_REJECTED_PAUSED =
+        "EnforcedPause";
 
     /**
      * @notice returns the human readable explaination 
@@ -139,120 +89,6 @@ abstract contract ValidationModule is
         } 
         else {
             return uint8(IERC1404.REJECTED_CODE_BASE.TRANSFER_OK);
-        }
-    }
-
-    /* ============ Mint & Burn ============ */
-    /*function canMint(
-        address to,
-        uint256 value
-    ) public virtual  override(ValidationModuleCore) view returns (bool) {
-        if (!ValidationModuleCore.canMint(to, value)) {
-            return false;
-        } else {
-            return _canTransferWithRuleEngine(address(0), to, value);
-        }
-    }*/
-
-
-    /*function canBurn(
-        address from,
-        uint256 value
-    ) public virtual override(ValidationModuleCore) view returns (bool) {
-        if (!ValidationModuleCore.canBurn(from, value)) {
-            return false;
-        } else {
-            return _canTransferWithRuleEngine(from, address(0), value);
-        }
-    }*/
-
-/* ============ Transfer & TransferFrom ============ */
-    function canTransfer(
-        address from,
-        address to,
-        uint256 value
-    ) public view virtual override(ValidationModuleCore) returns (bool) {
-        if (!ValidationModuleCore.canTransfer(from, to, value)) {
-            return false;
-        } else {
-            return _canTransferWithRuleEngine(from, to, value);
-        }
-    }
-
-    function canTransferFrom(
-        address spender,
-        address from,
-        address to,
-        uint256 value
-    ) public view virtual override(ValidationModuleCore) returns (bool) {
-        if (!ValidationModuleCore.canTransferFrom(spender, from, to, value)) {
-            return false;
-        } else {
-            return _canTransferFromWithRuleEngine(spender, from, to, value);
-        }
-    }
-
-    /*//////////////////////////////////////////////////////////////
-                            INTERNAL/PRIVATE FUNCTIONS
-    //////////////////////////////////////////////////////////////*/
-    /* ============ View functions ============ */
-    function _canTransferFromWithRuleEngine(
-        address spender,
-        address from,
-        address to,
-        uint256 value
-    ) internal view virtual returns (bool) {
-        ValidationModuleInternalStorage storage $ = _getValidationModuleInternalStorage();
-        if (address($._ruleEngine) != address(0)) {
-            return $._ruleEngine.canTransferFrom(spender, from, to, value);
-        } else{
-            return true;
-        }
-    }
-    function _canTransferWithRuleEngine(
-        address from,
-        address to,
-        uint256 value
-    ) internal view virtual returns (bool) {
-        ValidationModuleInternalStorage storage $ = _getValidationModuleInternalStorage();
-        if (address($._ruleEngine) != address(0)) {
-            return $._ruleEngine.canTransfer(from, to, value);
-        } else{
-            return true;
-        }
-    }
-
-    /* ============ State functions ============ */
-    /*
-    * @dev set a RuleEngine
-    * @param ruleEngine_ 
-    * The call will be reverted if the new value of ruleEngine is the same as the current one
-    */
-    function _setRuleEngine(
-        ValidationModuleInternalStorage storage $,
-        IRuleEngine ruleEngine_
-    )  internal virtual {
-        $._ruleEngine = ruleEngine_;
-        emit RuleEngine(ruleEngine_);
-    }
-
-    function _transferred(address spender, address from, address to, uint256 value) internal virtual returns (bool){
-        if (!canTransferFrom(spender, from, to, value)){
-            return false;
-        } else{
-            ValidationModuleInternalStorage storage $ = _getValidationModuleInternalStorage();
-            if (address($._ruleEngine) != address(0)){
-                return $._ruleEngine.transferred(spender, from, to, value);
-            }else {
-                return true;
-            }
-        }
-    }
-
-    /* ============ ERC-7201 ============ */
-    function _getValidationModuleInternalStorage() internal pure returns (ValidationModuleInternalStorage storage $) {
-        assembly {
-            $.slot := ValidationModuleInternalStorageLocation
         }
     }
 }

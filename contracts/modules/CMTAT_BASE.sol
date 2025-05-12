@@ -16,9 +16,9 @@ import {EnforcementModule} from "./wrapper/core/EnforcementModule.sol";
 import {ERC20EnforcementModule} from "./wrapper/extensions/ERC20EnforcementModule.sol";
 import {ExtraInformationModule} from "./wrapper/extensions/ExtraInformationModule.sol";
 import {PauseModule} from "./wrapper/core/PauseModule.sol";
-import {ValidationModule,ValidationModuleCore, IERC1404} from "./wrapper/controllers/ValidationModule.sol";
+import {ValidationModuleInternal, ValidationModule, IERC1404} from "./wrapper/controllers/ValidationModule.sol";
 import {MetaTxModule, ERC2771ContextUpgradeable} from "./wrapper/extensions/MetaTxModule.sol";
-import {DebtEngineModule} from "./wrapper/extensions/DebtEngineModule.sol";
+import {DebtModule} from "./wrapper/extensions/DebtModule.sol";
 import {DocumentEngineModule} from "./wrapper/extensions/DocumentEngineModule.sol";
 import {SnapshotEngineModule} from "./wrapper/extensions/SnapshotEngineModule.sol";
 // Security
@@ -34,15 +34,12 @@ abstract contract CMTAT_BASE is
     ContextUpgradeable,
     // Core
     BaseModule,
-    //PauseModule,
     ERC20MintModule,
     ERC20BurnModule,
-    //EnforcementModule,
     ValidationModule,
     ERC20BaseModule,
     // Extension
-    MetaTxModule,
-    DebtEngineModule,
+    DebtModule,
     SnapshotEngineModule,
     ERC20EnforcementModule,
     DocumentEngineModule,
@@ -53,7 +50,7 @@ abstract contract CMTAT_BASE is
         if(!_checkActiveBalance(from, value)){
             revert Errors.CMTAT_InvalidTransfer(from, to, value);
         }
-        if (!ValidationModule._transferred(spender, from, to, value)) {
+        if (!ValidationModuleInternal._transferred(spender, from, to, value)) {
             revert Errors.CMTAT_InvalidTransfer(from, to, value);
         }
     } 
@@ -150,7 +147,7 @@ abstract contract CMTAT_BASE is
 
         __SnapshotEngineModule_init_unchained(engines_.snapshotEngine);
         __DocumentEngineModule_init_unchained(engines_ .documentEngine);
-        __DebtEngineModule_init_unchained(engines_ .debtEngine);
+        __DebtModule_init_unchained();
         __ERC20EnforcementModule_init_unchained();
         /* Other modules */
         __ExtraInformationModule_init_unchained(baseModuleAttributes_.tokenId, baseModuleAttributes_.terms, baseModuleAttributes_.information);
@@ -276,11 +273,11 @@ abstract contract CMTAT_BASE is
         address from,
         address to,
         uint256 value
-    ) public virtual override (ValidationModule) view returns (bool) {
+    ) public virtual override (ValidationModuleInternal) view returns (bool) {
         if(!_checkActiveBalance(from, value)){
             return false;
         } else {
-            return ValidationModule.canTransfer(from, to, value);
+            return ValidationModuleInternal.canTransfer(from, to, value);
         }
         
     }
@@ -329,43 +326,5 @@ abstract contract CMTAT_BASE is
         //ERC20EnforcementModule._unfreezeTokens(account, value);
         
         ERC20BurnModule._burnOverride(account, value);
-    }
-
-
-
-    /*//////////////////////////////////////////////////////////////
-                            METATX MODULE
-    //////////////////////////////////////////////////////////////*/
-    /**
-     * @dev This surcharge is not necessary if you do not use the MetaTxModule
-     */
-    function _msgSender()
-        internal virtual
-        view
-        override(ERC2771ContextUpgradeable, ContextUpgradeable)
-        returns (address sender)
-    {
-        return ERC2771ContextUpgradeable._msgSender();
-    }
-
-    /**
-     * @dev This surcharge is not necessary if you do not use the MetaTxModule
-     */
-    function _contextSuffixLength() internal virtual view 
-    override(ERC2771ContextUpgradeable, ContextUpgradeable)
-    returns (uint256) {
-         return ERC2771ContextUpgradeable._contextSuffixLength();
-    }
-
-    /**
-     * @dev This surcharge is not necessary if you do not use the MetaTxModule
-     */
-    function _msgData()
-        internal virtual
-        view
-        override(ERC2771ContextUpgradeable, ContextUpgradeable)
-        returns (bytes calldata)
-    {
-        return ERC2771ContextUpgradeable._msgData();
     }
 }

@@ -3,30 +3,60 @@
 pragma solidity ^0.8.20;
 /* ==== OpenZeppelin === */
 /* ==== Module === */
-import {DebtEngineModule, ICMTATDebt} from "./options/DebtEngineModuleOption.sol";
-import {ERC20CrossChainModule} from "./options/ERC20CrossChainModule.sol";
-
-
+import {DebtEngineModule, DebtModule, ICMTATDebt} from "./options/DebtEngineModule.sol";
+import {ERC20CrossChainModule, CMTAT_BASE} from "./options/ERC20CrossChainModule.sol";
+import {ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
+import {AccessControlUpgradeable} from "./security/AuthorizationModule.sol";
+import {MetaTxModule, ERC2771ContextUpgradeable} from "./wrapper/extensions/MetaTxModule.sol";
 /**
 * @title Extend CMTAT Base
 */
-abstract contract CMTAT_BASE_EXTEND is  ERC20CrossChainModule {
-      /**
-     * @notice Set the debt
-     */
-    function setDebt(
-          ICMTATDebt.DebtBase calldata debt_
-    ) external onlyRole(DEBT_ROLE) {
-        DebtEngineModuleStorage storage $ = _getDebtEngineModuleStorage();
-        $._debt = debt_;
+abstract contract CMTAT_BASE_EXTEND is  ERC20CrossChainModule,DebtEngineModule, MetaTxModule {
+
+    function debt() public view virtual override(DebtEngineModule, DebtModule) returns(DebtBase memory debtBaseResult){
+        return DebtEngineModule.debt();
+        
     }
-    function debt() public view virtual override(DebtEngineModule) returns(DebtBase memory debtBaseResult){
-        DebtEngineModuleStorage storage $ = _getDebtEngineModuleStorage();
-        if(address($._debtEngine) != address(0)){
-            debtBaseResult =  $._debtEngine.debt();
-        } else {
-            debtBaseResult = $._debt;
-        }
+        /*//////////////////////////////////////////////////////////////
+                            METAXTX MODULE
+    //////////////////////////////////////////////////////////////*/
+       /**
+     * @dev This surcharge is not necessary if you do not use the MetaTxModule
+     */
+    function _msgSender()
+        internal
+        view
+        override(ContextUpgradeable, ERC2771ContextUpgradeable)
+        returns (address sender)
+    {
+        return ERC2771ContextUpgradeable._msgSender();
     }
 
+    /**
+     * @dev This surcharge is not necessary if you do not use the MetaTxModule
+     */
+    function _contextSuffixLength() internal view 
+    override(ContextUpgradeable, ERC2771ContextUpgradeable)
+    returns (uint256) {
+         return ERC2771ContextUpgradeable._contextSuffixLength();
+    }
+
+    /**
+     * @dev This surcharge is not necessary if you do not use the MetaTxModule
+     */
+    function _msgData()
+        internal
+        view
+        override(ContextUpgradeable, ERC2771ContextUpgradeable)
+        returns (bytes calldata)
+    {
+        return ERC2771ContextUpgradeable._msgData();
+    }
+
+    /**
+     * 
+     */
+    function supportsInterface(bytes4 interfaceId) public view virtual override(AccessControlUpgradeable, ERC20CrossChainModule) returns (bool) {
+        return AccessControlUpgradeable.supportsInterface(interfaceId) || ERC20CrossChainModule.supportsInterface(interfaceId);
+    }
 }

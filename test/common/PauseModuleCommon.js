@@ -142,7 +142,7 @@ function PauseModuleCommon () {
         )
       ).to.equal('1')
       expect(await this.cmtat.messageForTransferRestriction(1)).to.equal(
-        'All transfers paused'
+        'EnforcedPause'
       )
       await expect(
         this.cmtat
@@ -178,7 +178,7 @@ function PauseModuleCommon () {
         )
       ).to.equal('1')
       expect(await this.cmtat.messageForTransferRestriction(1)).to.equal(
-        'All transfers paused'
+        'EnforcedPause'
       )
       await expect(
         this.cmtat

@@ -32,45 +32,32 @@ This document defines Enforcement Module for the CMTA Token specification.
 
 ![surya_graph_EnforcementModuleInternal.sol](../../../schema/surya_graph/surya_graph_EnforcementModuleInternal.sol.png)
 
-## 
-
 ## API for Ethereum
 
 This section describes the Ethereum API of the Enforcement Module.
 
 ### Functions
 
-#### `freeze(address,string)`
+#### `setAddressFrozen(address,bool,bytes)`
 
 ##### Definition:
 
 ```solidity
-function freeze(address account,string memory reason) 
-public onlyRole(ENFORCER_ROLE) 
-returns (bool)
+function setAddressFrozen(address account, bool freeze) 
+public virtual override(IERC3643Enforcement) 
+onlyRole(ENFORCER_ROLE)
 ```
 
 #### Description:
 
-Prevents `account` to perform any transfer.
-Only authorized users are allowed to call this function.
-Returns `true` if the address is not yet frozen, `false` otherwise.
+If `freeze`== true:
 
-#### `unfreeze(address,string)`
+- Prevents `account` to perform any transfer.
+  Only authorized users are allowed to call this function.
 
-##### Definition:
+If `freeze`== false:
 
-```solidity
-function unfreeze(address account,string memory reason) 
-public onlyRole(ENFORCER_ROLE) 
-returns (bool)
-```
-
-#### Description:
-
-Re-authorizes `account` to perform transfers if it was frozen.
-Only authorized users are allowed to call this function.
-Returns `true` if the address was frozen, `false` otherwise.
+- Authorize an account to perform transfer again.
 
 #### `frozen(address)`
 
@@ -79,9 +66,9 @@ Origin: EnforcementModuleInternal
 ##### Definition:
 
 ```solidity
-function frozen(address account) 
-public view virtual 
-returns (bool)
+function isFrozen(address account) 
+public override(IERC3643Enforcement) 
+view virtual returns (bool)
 ```
 
 ##### Description:
@@ -91,24 +78,24 @@ Tell, whether the given `account` is frozen.
 ### Events
 
 
-#### `Freeze(address,address)`
+#### `TokensFrozen(address,uint256)`
 
 ##### Definition:
 
 ```solidity
-event Freeze (address indexed enforcer, address indexed owner)
+event TokensFrozen(address indexed account, uint256 value)
 ```
 
 ##### Description:
 
-Emitted when address `owner` is frozen by `enforcer`.
+Emitted when address `account` is frozen by `enforcer`.
 
-#### `Unfreeze(address,address)`
+#### `TokensUnfrozen(address,uint256)`
 
 ##### Definition:
 
 ```solidity
-event Unfreeze (address indexed enforcer, address indexed owner)
+event TokensUnfrozen(address indexed account, uint256 value)
 ```
 
 ##### Description:

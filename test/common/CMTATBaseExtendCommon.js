@@ -155,6 +155,158 @@ function CMTATBASEXTENDCommon () {
     })
 
   })
+
+  context('burn sender tokens', function () {
+    const INITIAL_SUPPLY = 50n
+    const INITIAL_SUPPLY_TYPED = ethers.Typed.uint256(50)
+    const VALUE1 = 20n
+    const VALUE_TYPED = ethers.Typed.uint256(20)
+    const DIFFERENCE = INITIAL_SUPPLY - VALUE1
+    const DIFFERENCE_TYPED = ethers.Typed.uint256(30)
+    async function testBurn(sender) {
+    // Act
+      // Burn 20
+      this.logs = await this.cmtat
+        .connect(sender)
+        .burn(VALUE1)
+      // Assert
+      // emits a Transfer event
+      await expect(this.logs)
+        .to.emit(this.cmtat, 'Transfer')
+        .withArgs(sender, ZERO_ADDRESS, VALUE1)
+      // Emits a Burn event
+      await expect(this.logs)
+      .to.emit(this.cmtat, 'CrosschainBurn')
+      .withArgs(sender,VALUE1 ,sender)
+      // Check balances and total supply
+      expect(await this.cmtat.balanceOf(sender)).to.equal(DIFFERENCE)
+      expect(await this.cmtat.totalSupply()).to.equal(DIFFERENCE)
+
+      // Burn 30
+      // Act
+      this.logs = await this.cmtat
+        .connect(sender)
+        .burn(DIFFERENCE )
+        
+      // Assert
+      // Emits a Transfer event
+      await expect(this.logs)
+        .to.emit(this.cmtat, 'Transfer')
+      // Emits a Burn event
+      await expect(this.logs)
+      .to.emit(this.cmtat, 'CrosschainBurn')
+      .withArgs(sender, DIFFERENCE, sender )
+      // Check balances and total supply
+      expect(await this.cmtat.balanceOf(sender)).to.equal(0)
+      expect(await this.cmtat.totalSupply()).to.equal(0)
+    }
+
+    beforeEach(async function () {
+      await this.cmtat.connect(this.admin).mint(this.address1, INITIAL_SUPPLY)
+      expect(await this.cmtat.totalSupply()).to.equal(INITIAL_SUPPLY)
+    })
+
+
+    it('testCanBeBurntByBurnerRole', async function () {
+      // Arrange
+      await this.cmtat
+        .connect(this.admin)
+        .grantRole(BURNER_FROM_ROLE, this.address1)
+      // Act
+      const bindTest = testBurn.bind(this)
+      await bindTest(this.address1)
+    })
+
+    it('testCannotBeBurntIfBalanceExceeds', async function () {
+      await this.cmtat
+      .connect(this.admin)
+      .grantRole(BURNER_FROM_ROLE, this.address1)
+      // error AccessControlUnauthorizedAccount(address account, bytes32 neededRole);
+      const AMOUNT_TO_BURN = 200n
+      const ADDRESS1_BALANCE = await this.cmtat.balanceOf(this.address1)
+      // Act
+      await expect(
+        this.cmtat.connect(this.address1).burn(AMOUNT_TO_BURN)
+      )
+        .to.be.revertedWithCustomError(this.cmtat, 'ERC20InsufficientBalance')
+        .withArgs(this.address1.address, ADDRESS1_BALANCE, AMOUNT_TO_BURN)
+    })
+
+    it('testCannotBeBurntWithoutBurnerRole', async function () {
+      await expect(
+        this.cmtat.connect(this.address2).burn(20n)
+      )
+        .to.be.revertedWithCustomError(
+          this.cmtat,
+          'AccessControlUnauthorizedAccount'
+        )
+        .withArgs(this.address2.address, BURNER_FROM_ROLE)
+
+        // Without reason
+         await expect(
+        this.cmtat.connect(this.address2).burn(20n)
+      )
+        .to.be.revertedWithCustomError(
+          this.cmtat,
+          'AccessControlUnauthorizedAccount'
+        )
+        .withArgs(this.address2.address, BURNER_FROM_ROLE)
+    })
+
+    it('testCannotBeMBurnIfContractIsDeactivated', async function () {
+      await this.cmtat
+      .connect(this.admin)
+      .deactivateContract()
+      await expect(
+        this.cmtat.connect(this.admin).burn(VALUE_TYPED)
+      )
+        .to.be.revertedWithCustomError(
+          this.cmtat,
+          'EnforcedPause'
+        )
+    })
+
+    it('testCanBeBurnEvenIfContractIsPaused', async function () {
+      await this.cmtat
+      .connect(this.admin)
+      .grantRole(BURNER_FROM_ROLE, this.address1)
+      await this.cmtat
+      .connect(this.admin)
+      .pause()
+      await expect(
+        this.cmtat.connect(this.admin).burn(VALUE_TYPED)
+      )
+        .to.be.revertedWithCustomError(
+          this.cmtat,
+          'EnforcedPause'
+        )
+    })
+
+    it('testCannotBeBurnIfAddressIsFrozen', async function () {
+      // Arrange
+      await this.cmtat.connect(this.admin).setAddressFrozen(this.address1, true)
+      await this.cmtat
+      .connect(this.admin)
+      .grantRole(BURNER_FROM_ROLE, this.address1)
+      // Act
+      const VALUE = 20
+      const VALUE_TYPED = ethers.Typed.uint256(20)
+      await expect(
+        this.cmtat
+        .connect(this.address1)
+        .burn(VALUE_TYPED)
+      )
+        .to.be.revertedWithCustomError(
+          this.cmtat,
+          'CMTAT_InvalidTransfer'
+        )
+        .withArgs(this.address1.address, ZERO_ADDRESS, VALUE)
+    })
+
+  })
+
+
+
   context('burnFrom', function () {
     const INITIAL_SUPPLY = 50n
     const VALUE1 = 20n

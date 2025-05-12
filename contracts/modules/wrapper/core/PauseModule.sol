@@ -27,8 +27,6 @@ abstract contract PauseModule is PausableUpgradeable, AuthorizationModule, IERC3
     error CMTAT_PauseModule_ContractIsDeactivated();
     /* ============ State Variables ============ */
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
-    string internal constant TEXT_TRANSFER_REJECTED_PAUSED =
-        "All transfers paused";
 
     /* ============ ERC-7201 ============ */
     // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.ERC20BaseModule")) - 1)) & ~bytes32(uint256(0xff))

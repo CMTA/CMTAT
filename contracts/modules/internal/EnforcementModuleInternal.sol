@@ -12,8 +12,7 @@ import {IERC3643EnforcementEvent} from "../../interfaces/tokenization/IERC3643Pa
  */
 abstract contract EnforcementModuleInternal is
     Initializable,
-    ContextUpgradeable,
-    IERC3643EnforcementEvent
+    ContextUpgradeable
 {
     error CMTAT_EnforcementModuleInternal_EmptyAccounts();
     error CMTAT_EnforcementModuleInternal_AccountsValueslengthMismatch();
@@ -38,33 +37,32 @@ abstract contract EnforcementModuleInternal is
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
-    function _setAddressFrozen(address account, bool freeze, bytes memory data) internal virtual{
+    function _addAddressToTheList(address account, bool freeze, bytes memory data) internal virtual{
         EnforcementModuleInternalStorage storage $ = _getEnforcementModuleInternalStorage();
-        _setAddressFrozen($, account, freeze, data);
+        _addAddressToTheList($, account, freeze, data);
     }
 
-    function _setAddressFrozen(EnforcementModuleInternalStorage storage $,address account, bool freeze, bytes memory data) internal virtual{
+    function _addAddressToTheList(EnforcementModuleInternalStorage storage $,address account, bool freeze, bytes memory /*data */) internal virtual{
         $._frozen[account] = freeze;
-        emit AddressFrozen(account, freeze, _msgSender(), data);
     }
 
 
 
-   function _batchSetAddressFrozen(address[] calldata accounts, bool[] calldata freezes, bytes memory data) internal virtual{
+  function _addAddressesToTheList(address[] calldata accounts, bool[] calldata freezes, bytes memory data) internal virtual{
         require(accounts.length > 0, CMTAT_EnforcementModuleInternal_EmptyAccounts());
         // We do not check that values is not empty since
         // this require will throw an error in this case.
         require(bool(accounts.length == freezes.length), CMTAT_EnforcementModuleInternal_AccountsValueslengthMismatch());
         EnforcementModuleInternalStorage storage $ = _getEnforcementModuleInternalStorage();
         for (uint256 i = 0; i < accounts.length; ++i) {
-            _setAddressFrozen($, accounts[i], freezes[i], data);
+            _addAddressToTheList($, accounts[i], freezes[i], data);
         }
     }
 
     /**
      * @dev Returns true if the account is frozen, and false otherwise.
      */
-    function _isFrozen(address account) internal view virtual returns (bool) {
+    function _addressIsListed(address account) internal view virtual returns (bool) {
         EnforcementModuleInternalStorage storage $ = _getEnforcementModuleInternalStorage();
         return $._frozen[account];
     }

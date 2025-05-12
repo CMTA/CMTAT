@@ -1,6 +1,7 @@
 const ValidationModuleCommon = require('../ValidationModuleCommon')
 const ValidationModuleSetRuleEngineCommon = require('../ValidationModuleSetRuleEngineCommon')
 const {
+  deployCMTATERC1363Proxy,
   deployCMTATProxy,
   deployCMTATProxyWithParameter,
   DEPLOYMENT_DECIMAL,
@@ -17,11 +18,19 @@ function ValidationModuleProxyCommon () {
       this.ADDRESS3_INITIAL_BALANCE = 19n
       Object.assign(this, await loadFixture(fixture))
       this.ruleEngineMock = await ethers.deployContract('RuleEngineMock', [this.admin])
-      this.cmtat = await deployCMTATProxy(
-        this._.address,
-        this.admin.address,
-        this.deployerAddress.address
-      )
+      if(!this.CMTATERC1363){
+        this.cmtat = await deployCMTATProxy(
+          this._.address,
+          this.admin.address,
+          this.deployerAddress.address
+        )
+      }else{
+        this.cmtat = await deployCMTATERC1363Proxy(
+          this._.address,
+          this.admin.address,
+          this.deployerAddress.address
+        )
+      }
       await this.cmtat
         .connect(this.admin)
         .mint(this.address1, this.ADDRESS1_INITIAL_BALANCE)
@@ -71,11 +80,21 @@ function ValidationModuleProxyCommon () {
   context('Proxy - ValidationModule - setRuleEngine', function () {
     beforeEach(async function () {
       Object.assign(this, await loadFixture(fixture))
-      this.cmtat = await deployCMTATProxy(
-        this._.address,
-        this.admin.address,
-        this.deployerAddress.address
-      )
+      if(!this.CMTATERC1363){
+        this.cmtat = await deployCMTATProxy(
+          this._.address,
+          this.admin.address,
+          this.deployerAddress.address
+        )
+      } 
+      else {
+          this.cmtat = await deployCMTATERC1363Proxy(
+            this._.address,
+            this.admin.address,
+            this.deployerAddress.address
+          )
+        
+      }
       this.ruleEngine = await ethers.deployContract('RuleEngineMock', [this.admin])
     })
     ValidationModuleSetRuleEngineCommon()

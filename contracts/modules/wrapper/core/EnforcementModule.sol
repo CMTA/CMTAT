@@ -5,7 +5,7 @@ pragma solidity ^0.8.20;
 /* ==== Module === */
 import {AuthorizationModule} from "../../security/AuthorizationModule.sol";
 import {EnforcementModuleInternal} from "../../internal/EnforcementModuleInternal.sol";
-import {IERC3643Enforcement} from "../../../interfaces/tokenization/IERC3643Partial.sol";
+import {IERC3643Enforcement, IERC3643EnforcementEvent} from "../../../interfaces/tokenization/IERC3643Partial.sol";
 /*
 /**
  * @title Enforcement module.
@@ -16,15 +16,11 @@ import {IERC3643Enforcement} from "../../../interfaces/tokenization/IERC3643Part
 abstract contract EnforcementModule is
     EnforcementModuleInternal,
     AuthorizationModule,
-    IERC3643Enforcement
+    IERC3643Enforcement,
+    IERC3643EnforcementEvent
 {
     /* ============ State Variables ============ */
     bytes32 public constant ENFORCER_ROLE = keccak256("ENFORCER_ROLE");
-    string internal constant TEXT_TRANSFER_REJECTED_FROM_FROZEN =
-        "Address FROM is frozen";
-
-    string internal constant TEXT_TRANSFER_REJECTED_TO_FROZEN =
-        "Address TO is frozen";
 
     /* ============  Initializer Function ============ */
     function __EnforcementModule_init_unchained() internal onlyInitializing {
@@ -39,7 +35,7 @@ abstract contract EnforcementModule is
     * @inheritdoc IERC3643Enforcement
     */
     function isFrozen(address account) public override(IERC3643Enforcement) view virtual returns (bool) {
-       return _isFrozen(account);
+       return _addressIsListed(account);
        
     }
 
@@ -47,7 +43,7 @@ abstract contract EnforcementModule is
     * @inheritdoc IERC3643Enforcement
     */
     function setAddressFrozen(address account, bool freeze) public virtual override(IERC3643Enforcement) onlyRole(ENFORCER_ROLE){
-         _setAddressFrozen(account, freeze, "");
+         _addAddressToTheList(account, freeze, "");
     }
 
     /**
@@ -59,7 +55,7 @@ abstract contract EnforcementModule is
     function setAddressFrozen(
         address account, bool freeze, bytes calldata data
     ) public virtual onlyRole(ENFORCER_ROLE)  {
-         _setAddressFrozen(account, freeze, data);
+         _addAddressToTheList(account, freeze, data);
     }
 
     /**
@@ -68,8 +64,14 @@ abstract contract EnforcementModule is
     function batchSetAddressFrozen(
         address[] calldata accounts, bool[] calldata freezes
     ) public virtual onlyRole(ENFORCER_ROLE) {
-         _batchSetAddressFrozen(accounts, freezes, "");
+         _addAddressesToTheList(accounts, freezes, "");
     }
+
+    function _addAddressToTheList(EnforcementModuleInternalStorage storage $,address account, bool freeze, bytes memory data) internal override(EnforcementModuleInternal){
+        EnforcementModuleInternal._addAddressToTheList($, account, freeze, data);
+        emit AddressFrozen(account, freeze, _msgSender(), data);
+    }
+
 
    /* function batchSetAddressFrozen(
         address[] calldata accounts, bool[] calldata freezes, bytes calldata data

@@ -88,6 +88,18 @@ interface ICMTATBase {
     ) external;
 }
 
+interface ICMTATCreditEvents {
+     /**
+     * @notice Returns credit events
+     */
+    function creditEvents() external view returns(CreditEvents memory);
+
+    struct CreditEvents {
+        bool flagDefault;
+        bool flagRedeemed;
+        string rating;
+    }
+}
 /**
 * @notice interface to represent debt tokens
 */
@@ -119,20 +131,13 @@ interface ICMTATDebt {
         string couponFrequency;
     }
 
-    struct CreditEvents {
-        bool flagDefault;
-        bool flagRedeemed;
-        string rating;
-    }
+
 
     /**
      * @notice Returns debt information
      */
-    function debt() external view returns(ICMTATDebt.DebtBase memory);
-    /**
-     * @notice Returns credit events
-     */
-    function creditEvents() external view returns(ICMTATDebt.CreditEvents memory);
+    function debt() external view returns(DebtBase memory);
+   
 }
 
 

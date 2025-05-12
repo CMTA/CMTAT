@@ -20,11 +20,13 @@ function SnapshotModuleProxyCommon () {
   context('Proxy - SnapshotModule', function () {
     beforeEach(async function () {
       Object.assign(this, await loadFixture(fixture))
-      this.cmtat = await deployCMTATProxy(
-        this._.address,
-        this.admin.address,
-        this.deployerAddress.address
-      )
+      if(!this.CMTATAlreadyDeployed){
+        this.cmtat = await deployCMTATProxy(
+          this._.address,
+          this.admin.address,
+          this.deployerAddress.address
+        )
+      }
       this.transferEngineMock = await ethers.deployContract(
         'SnapshotEngineMock',
         [this.cmtat.target, this.admin]

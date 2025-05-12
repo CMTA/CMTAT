@@ -52,7 +52,7 @@ function ValidationModuleCommon () {
       if(!this.core){
               // Act + Assert
       expect(await this.cmtat.messageForTransferRestriction(0)).to.equal(
-        'No restriction'
+        'NoRestriction'
       )
       }
 
@@ -93,7 +93,7 @@ function ValidationModuleCommon () {
     it('testCanReturnMessageWithUnknownRestrictionCode', async function () {
       // Act + Assert
       expect(await this.cmtat.messageForTransferRestriction(254)).to.equal(
-        'Unknown restriction code'
+        'UnknownRestrictionCode'
       )
     })
 

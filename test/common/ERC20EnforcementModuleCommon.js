@@ -230,7 +230,7 @@ function ERC20EnforcementModuleCommon () {
         )
       ).to.equal('4')
       expect(await this.cmtat.messageForTransferRestriction(4)).to.equal(
-        'Address from:insufficient active balance'
+        'AddressFrom:insufficientActiveBalance'
       )
      
       await expect(
@@ -283,7 +283,7 @@ function ERC20EnforcementModuleCommon () {
             )
           ).to.equal('4')
           expect(await this.cmtat.messageForTransferRestriction(4)).to.equal(
-            'Address from:insufficient active balance'
+            'AddressFrom:insufficientActiveBalance'
           )
           await expect(
             this.cmtat

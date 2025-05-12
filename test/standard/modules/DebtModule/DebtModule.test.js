@@ -1,4 +1,3 @@
-const DebtModuleSetDebtEngineCommon = require('../../../common/DebtModule/DebtModuleSetDebtEngineCommon')
 const DebtModuleCommon = require('../../../common/DebtModule/DebtModuleCommon')
 const {
   deployCMTATStandalone,
@@ -13,8 +12,6 @@ describe('Standard - DebtModule', function () {
       this.admin.address,
       this.deployerAddress.address
     )
-    this.debtEngineMock = await ethers.deployContract('DebtEngineMock')
   })
   DebtModuleCommon()
-  DebtModuleSetDebtEngineCommon()
 })

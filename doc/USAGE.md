@@ -13,16 +13,21 @@ are the latest ones that we tested:
 
 ### Smart contract
 
-- Solidity 0.8.28 (via solc-js)
-- OpenZeppelin Contracts (Node.js module) [v5.2.0](https://github.com/OpenZeppelin/openzeppelin-contracts/releases/tag/v5.2.0) 
-- OpenZeppelin Contracts Upgradeable (Node.js module) [v5.2.0](https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/releases/tag/v5.0.2)
+- hardhat.config.js
+  - Solidity 0.8.28 (via solc-js)
+  - EVM version: Prague (Pectra upgrade)
+
+- Package.json
+  - OpenZeppelin Contracts (Node.js module) [v5.3.0](https://github.com/OpenZeppelin/openzeppelin-contracts/releases/tag/v5.3.0) 
+  - OpenZeppelin Contracts Upgradeable (Node.js module) [v5.3.0](https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/releases/tag/v5.3.0)
+
 
 ### Tools
 
 - Node 20.5.0
 
 - npm 10.2.5
-- Nomiclabs - Hardhat: ^2.22.7
+- Nomiclabs - Hardhat: ^2.24.0
   - **[hardhat-web3](https://hardhat.org/hardhat-runner/plugins/nomiclabs-hardhat-web3)**: This plugin integrates [Web3.js](https://github.com/ethereum/web3.js) `1.x` into [Hardhat](https://hardhat.org/).
   - **[hardhat-ethers](https://www.npmjs.com/package/@nomicfoundation/hardhat-ethers)**
   - [Hardhat](https://hardhat.org/) plugin for integration with [ethers.js](https://github.com/ethers-io/ethers.js/)

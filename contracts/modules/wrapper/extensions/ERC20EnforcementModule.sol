@@ -23,7 +23,7 @@ abstract contract ERC20EnforcementModule is ERC20Upgradeable, IERC7551ERC20Enfor
     error CMTAT_ERC20EnforcementModule_ValueExceedsFrozenBalance(); 
 
     string internal constant TEXT_TRANSFER_REJECTED_FROM_INSUFFICIENT_ACTIVE_BALANCE =
-        "Address from:insufficient active balance";
+        "AddressFrom:insufficientActiveBalance";
    
     /* ============ State Variables ============ */
     bytes32 public constant ERC20ENFORCER_ROLE = keccak256("ERC20ENFORCER_ROLE");

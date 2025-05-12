@@ -35,14 +35,6 @@ abstract contract ERC20MintModule is ERC20Upgradeable, IERC3643Mint, IERC3643Bat
     /* ============ State Variables ============ */
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
 
-    /**
-     * @dev Emitted when performing mint in batch with the same value
-     */
-    event BatchMintSameValue(
-        address indexed minter,
-        address[] accounts,
-        uint256 value
-    );
     /* ============  Initializer Function ============ */
     function __ERC20MintModule_init_unchained() internal onlyInitializing {
         // no variable to initialize
@@ -111,31 +103,6 @@ abstract contract ERC20MintModule is ERC20Upgradeable, IERC3643Mint, IERC3643Bat
         }
         emit BatchMint(_msgSender(), accounts, values);
     }
-
-    /**
-     *
-     * @notice batch version of {mint} with the same `value` amount of tokens minted for each account
-     * @dev
-     *
-     * For each mint action, emits a {Transfer} event with `from` set to the zero address (emits inside _mint).
-     * Emits a {BatchMintSameValue} event.
-     * Requirements:
-     * - `accounts` cannot be empty (error Mint_EmptyAccounts)
-     * - `accounts` cannot contain a zero address (check made by _mint, error ERC20InvalidReceiver).
-     * -  the caller must have the `MINTER_ROLE` (error AccessControlUnauthorizedAccount)
-     */
-   /* function batchMintSameValue(
-        address[] calldata accounts,
-        uint256 value
-    ) public virtual onlyRole(MINTER_ROLE) {
-        require(accounts.length != 0, CMTAT_MintModule_EmptyAccounts());
-        for (uint256 i = 0; i < accounts.length; ++i) {
-            _mint(accounts[i], value);
-        }
-        emit BatchMintSameValue(msg.sender, accounts, value);
-    }*/
-
-
     
     /* inheritdoc IERC3643BatchTransfer
      * @dev See {OpenZeppelin ERC20-transfer}.

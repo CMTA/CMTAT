@@ -6,14 +6,14 @@ import {ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/Cont
 import {ERC1363Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/ERC1363Upgradeable.sol";
 import {ERC20Upgradeable, IERC20} from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 /* ==== Module === */
-import {ERC2771ContextUpgradeable} from "./wrapper/extensions/MetaTxModule.sol";
+import {ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
 import {AccessControlUpgradeable} from "./security/AuthorizationModule.sol";
 import {CMTAT_BASE} from "./CMTAT_BASE.sol";
-
+import {MetaTxModule, ERC2771ContextUpgradeable} from "./wrapper/extensions/MetaTxModule.sol";
 /**
 * @title CMTAT Proxy version for ERC1363
 */
-abstract contract CMTAT_ERC1363_BASE is ERC1363Upgradeable,CMTAT_BASE {
+abstract contract CMTAT_ERC1363_BASE is ERC1363Upgradeable,CMTAT_BASE, MetaTxModule {
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
@@ -91,7 +91,6 @@ abstract contract CMTAT_ERC1363_BASE is ERC1363Upgradeable,CMTAT_BASE {
         CMTAT_BASE.__CMTAT_openzeppelin_init_unchained();
     }
 
-
     /*//////////////////////////////////////////////////////////////
                             METAXTX MODULE
     //////////////////////////////////////////////////////////////*/
@@ -101,19 +100,19 @@ abstract contract CMTAT_ERC1363_BASE is ERC1363Upgradeable,CMTAT_BASE {
     function _msgSender()
         internal
         view
-        override(ContextUpgradeable, CMTAT_BASE)
+        override(ContextUpgradeable, ERC2771ContextUpgradeable)
         returns (address sender)
     {
-        return CMTAT_BASE._msgSender();
+        return ERC2771ContextUpgradeable._msgSender();
     }
 
     /**
      * @dev This surcharge is not necessary if you do not use the MetaTxModule
      */
     function _contextSuffixLength() internal view 
-    override(ContextUpgradeable, CMTAT_BASE)
+    override(ContextUpgradeable, ERC2771ContextUpgradeable)
     returns (uint256) {
-         return CMTAT_BASE._contextSuffixLength();
+         return ERC2771ContextUpgradeable._contextSuffixLength();
     }
 
     /**
@@ -122,9 +121,9 @@ abstract contract CMTAT_ERC1363_BASE is ERC1363Upgradeable,CMTAT_BASE {
     function _msgData()
         internal
         view
-        override(ContextUpgradeable, CMTAT_BASE)
+        override(ContextUpgradeable, ERC2771ContextUpgradeable)
         returns (bytes calldata)
     {
-        return CMTAT_BASE._msgData();
+        return ERC2771ContextUpgradeable._msgData();
     }
 }

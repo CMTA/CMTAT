@@ -2,13 +2,13 @@
 
 pragma solidity ^0.8.20;
 import {UUPSUpgradeable} from "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
-import {CMTAT_BASE, MetaTxModule, ICMTATConstructor} from "../modules/CMTAT_BASE.sol";
-
+import {CMTAT_BASE, MetaTxModule,  ERC2771ContextUpgradeable, ICMTATConstructor} from "../modules/CMTAT_BASE.sol";
+import {ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
 
 /**
 * @title CMTAT version for a proxy deployment with UUPS proxy
 */
-contract CMTATUpgradeableUUPS is CMTAT_BASE, UUPSUpgradeable {
+contract CMTATUpgradeableUUPS is CMTAT_BASE, UUPSUpgradeable, MetaTxModule  {
     bytes32 public constant PROXY_UPGRADE_ROLE = keccak256("PROXY_UPGRADE_ROLE");
     /**
      * @notice Contract version for the deployment with a proxy
@@ -47,6 +47,41 @@ contract CMTATUpgradeableUUPS is CMTAT_BASE, UUPSUpgradeable {
     }
 
 
+    /*//////////////////////////////////////////////////////////////
+                            METAXTX MODULE
+    //////////////////////////////////////////////////////////////*/
+    /**
+     * @dev This surcharge is not necessary if you do not use the MetaTxModule
+     */
+    function _msgSender()
+        internal
+        view
+        override(ContextUpgradeable, ERC2771ContextUpgradeable)
+        returns (address sender)
+    {
+        return ERC2771ContextUpgradeable._msgSender();
+    }
+
+    /**
+     * @dev This surcharge is not necessary if you do not use the MetaTxModule
+     */
+    function _contextSuffixLength() internal view 
+    override(ContextUpgradeable, ERC2771ContextUpgradeable)
+    returns (uint256) {
+         return ERC2771ContextUpgradeable._contextSuffixLength();
+    }
+
+    /**
+     * @dev This surcharge is not necessary if you do not use the MetaTxModule
+     */
+    function _msgData()
+        internal
+        view
+        override(ContextUpgradeable, ERC2771ContextUpgradeable)
+        returns (bytes calldata)
+    {
+        return ERC2771ContextUpgradeable._msgData();
+    }
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/

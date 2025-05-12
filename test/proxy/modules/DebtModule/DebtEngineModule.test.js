@@ -1,5 +1,5 @@
 const DebtModuleSetDebtEngineCommon = require('../../../common/DebtModule/DebtModuleSetDebtEngineCommon')
-const DebtModuleCommon = require('../../../common/DebtModule/DebtModuleCommon')
+const DebtEngineModuleCommon = require('../../../common/DebtModule/DebtEngineModuleCommon')
 const {
   deployCMTATProxy,
   fixture,
@@ -15,5 +15,6 @@ describe('Proxy - DebtModule', function () {
     )
     this.debtEngineMock = await ethers.deployContract('DebtEngineMock')
   })
-  DebtModuleCommon()
+  DebtEngineModuleCommon()
+  DebtModuleSetDebtEngineCommon()
 })

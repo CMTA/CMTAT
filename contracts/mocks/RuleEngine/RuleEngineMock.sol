@@ -109,6 +109,6 @@ contract RuleEngineMock is IRuleEngineMock {
                 ++i;
             }
         }
-        return "Unknown restriction code";
+        return "UnknownRestrictionCode";
     }
 }

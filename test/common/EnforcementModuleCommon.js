@@ -149,7 +149,7 @@ function EnforcementModuleCommon () {
           )
         ).to.equal('2')
         expect(await this.cmtat.messageForTransferRestriction(2)).to.equal(
-          'Address FROM is frozen'
+          'AddrFromIsFrozen'
         )
       }
       await expect(
@@ -183,7 +183,7 @@ function EnforcementModuleCommon () {
         )
       ).to.equal('3')
       expect(await this.cmtat.messageForTransferRestriction(3)).to.equal(
-        'Address TO is frozen'
+        'AddrToIsFrozen'
       )
       }
     
