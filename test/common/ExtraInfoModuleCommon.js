@@ -107,7 +107,7 @@ function ExtraInfoModuleCommon () {
       expect(await this.cmtat.information()).to.equal('new info available')
       await expect(this.logs)
         .to.emit(this.cmtat, 'Information')
-        .withArgs('new info available', 'new info available')
+        .withArgs('new info available')
     })
     it('testCannotNonAdminUpdateInformation', async function () {
       // Arrange - Assert
@@ -133,7 +133,7 @@ function ExtraInfoModuleCommon () {
       expect(await this.cmtat.metaData()).to.equal(NEW_METADATA)
       await expect(this.logs)
       .to.emit(this.cmtat, 'MetaData')
-      .withArgs(NEW_METADATA, NEW_METADATA)
+      .withArgs(NEW_METADATA)
     })
 
     it('testCannotNonAdminUpdateMetadata', async function () {

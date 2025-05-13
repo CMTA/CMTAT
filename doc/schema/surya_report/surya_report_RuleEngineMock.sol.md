@@ -23,7 +23,7 @@
 | └ | rules | External ❗️ |   |NO❗️ |
 | └ | detectTransferRestriction | Public ❗️ |   |NO❗️ |
 | └ | canTransfer | Public ❗️ |   |NO❗️ |
-| └ | canApprove | Public ❗️ |   |NO❗️ |
+| └ | canTransferFrom | Public ❗️ |   |NO❗️ |
 | └ | transferred | Public ❗️ |   |NO❗️ |
 | └ | messageForTransferRestriction | Public ❗️ |   |NO❗️ |
 

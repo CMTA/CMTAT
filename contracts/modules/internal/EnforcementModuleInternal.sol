@@ -4,7 +4,7 @@ pragma solidity ^0.8.20;
 
 import {ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
 import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
-import {IERC3643EnforcementEvent} from "../../interfaces/tokenization/IERC3643Partial.sol";
+
 /**
  * @dev Enforcement module.
  *

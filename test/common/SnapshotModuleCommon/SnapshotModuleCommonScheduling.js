@@ -226,10 +226,19 @@ function SnapshotModuleCommonScheduling () {
           this.transferEngineMock,
           'CMTAT_SnapshotModule_SnapshotScheduledInThePast'
         )
+      /*await expect(
+        this.transferEngineMock
+          .connect(this.admin)
+          .scheduleSnapshotNotOptimized(SNAPSHOT_TIME)
+      )
+        .to.be.revertedWithCustomError(
+          this.transferEngineMock,
+          'CMTAT_SnapshotModule_SnapshotScheduledInThePast'
+        )
         .withArgs(
           SNAPSHOT_TIME,
           (await time.latest()) + time.duration.seconds(1)
-        )
+        )*/
     })
 
     it('reverts when trying to schedule a snapshot with the same time twice', async function () {

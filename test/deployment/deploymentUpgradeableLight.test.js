@@ -10,6 +10,7 @@ const ERC20BurnModuleCommon = require('../common/ERC20BurnModuleCommon')
 const EnforcementModuleCommon = require('../common/EnforcementModuleCommon')
 const BaseModuleCommon = require('../common/BaseModuleCommon')
 const PauseModuleCommon = require('../common/PauseModuleCommon')
+const ValidationModuleCommonCore = require('../common/ValidationModule/ValidationModuleCommonCore')
 const VALUE = 20n
 describe('CMTAT Core - Upgradeable', function () {
   beforeEach(async function () {
@@ -27,4 +28,5 @@ describe('CMTAT Core - Upgradeable', function () {
   ERC20BurnModuleCommon()
   ERC20MintModuleCommon()
   EnforcementModuleCommon()
+  ValidationModuleCommonCore()
 })

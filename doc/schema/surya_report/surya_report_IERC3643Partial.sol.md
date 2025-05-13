@@ -23,6 +23,8 @@
 | **IERC3643ERC20Base** | Interface |  |||
 | └ | setName | External ❗️ | 🛑  |NO❗️ |
 | └ | setSymbol | External ❗️ | 🛑  |NO❗️ |
+||||||
+| **IERC3643BatchTransfer** | Interface |  |||
 | └ | batchTransfer | External ❗️ | 🛑  |NO❗️ |
 ||||||
 | **IERC3643Base** | Interface |  |||

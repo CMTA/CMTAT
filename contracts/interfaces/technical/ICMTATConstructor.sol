@@ -13,7 +13,6 @@ import {IERC1643CMTAT} from "../tokenization/draft-IERC1643CMTAT.sol";
 interface ICMTATConstructor {
     struct Engine {
         IRuleEngine ruleEngine;
-        IDebtEngine debtEngine;
         ISnapshotEngine snapshotEngine;
         IERC1643 documentEngine;
     }

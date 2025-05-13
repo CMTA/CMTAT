@@ -8,7 +8,4 @@ pragma solidity ^0.8.20;
 library Errors {
     // CMTAT Base
     error CMTAT_InvalidTransfer(address from, address to, uint256 amount);
-    error CMTAT_InvalidApproval(address owner, address spender, uint256 value);
-    error CMTAT_InvalidMint(address account, uint256 value);
-    error CMTAT_InvalidBurn(address account, uint256 value);
 }   

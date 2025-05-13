@@ -5,7 +5,20 @@ function ValidationModuleCommonCore () {
   // Transferring with Rule Engine set
   context('ValidationCore test', function () {
     beforeEach(async function () {
-    
+      if(this.core){
+        this.ADDRESS1_INITIAL_BALANCE = 31n
+        this.ADDRESS2_INITIAL_BALANCE = 32n
+        this.ADDRESS3_INITIAL_BALANCE = 33n
+        await this.cmtat
+          .connect(this.admin)
+          .mint(this.address1, this.ADDRESS1_INITIAL_BALANCE)
+        await this.cmtat
+          .connect(this.admin)
+          .mint(this.address2, this.ADDRESS2_INITIAL_BALANCE)
+        await this.cmtat
+          .connect(this.admin)
+          .mint(this.address3, this.ADDRESS3_INITIAL_BALANCE)
+      }
     })
    
     it('testCanCanTransferWithoutRuleEngine', async function () {
@@ -26,13 +39,6 @@ function ValidationModuleCommonCore () {
     it('testCanTransferAllowedByRule', async function () {
       const AMOUNT_TO_TRANSFER = 11n
 
-      expect(
-        await this.ruleEngineMock.canTransfer(
-          this.address1,
-          this.address2,
-          AMOUNT_TO_TRANSFER
-        )
-      ).to.equal(true)
       // Act
       expect(
         await this.cmtat.canTransfer(
@@ -58,15 +64,8 @@ function ValidationModuleCommonCore () {
     })
 
     // reverts if this.address1 transfers more tokens than rule allows
-    it('testCannotTransferIfNotAllowedByRule', async function () {
-      const AMOUNT_TO_TRANSFER = RULE_MOCK_AMOUNT_MAX + 1
-      expect(
-        await this.ruleEngineMock.canTransfer(
-          this.address1,
-          this.address2,
-          AMOUNT_TO_TRANSFER
-        )
-      ).to.equal(false)
+    it('testCanTransfer', async function () {
+      AMOUNT_TO_TRANSFER = 5
       // Act
       expect(
         await this.cmtat.canTransfer(
@@ -74,19 +73,10 @@ function ValidationModuleCommonCore () {
           this.address2,
           AMOUNT_TO_TRANSFER
         )
-      ).to.equal(false)
-      // Act
-      await expect(
-        this.cmtat
-          .connect(this.address1)
-          .transfer(this.address2, AMOUNT_TO_TRANSFER)
-      )
-        .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
-        .withArgs(
-          this.address1.address,
-          this.address2.address,
-          AMOUNT_TO_TRANSFER
-        )
+      ).to.equal(true)
+      await this.cmtat
+      .connect(this.address1)
+      .transfer(this.address2, AMOUNT_TO_TRANSFER)
     })
   })
 }

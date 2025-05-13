@@ -18,7 +18,7 @@ This document defines the MetaTx Module for the CMTA Token specification. The go
 
 ![surya_graph_MetaTxModule.sol](../../../schema/surya_graph/surya_graph_MetaTxModule.sol.png)
 
-## 
+
 
 ## API for Ethereum
 

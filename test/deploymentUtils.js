@@ -38,7 +38,7 @@ async function deployCMTATStandalone (_, admin, deployerAddress) {
     admin,
     ['CMTA Token', 'CMTAT', DEPLOYMENT_DECIMAL],
     ['CMTAT_ISIN', TERMS, 'CMTAT_info'],
-    [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]
+    [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]
   ])
   return cmtat
 }
@@ -49,7 +49,7 @@ async function deployCMTATERC1363Standalone (_, admin, deployerAddress) {
     admin,
     ['CMTA Token', 'CMTAT', DEPLOYMENT_DECIMAL],
     ['CMTAT_ISIN', TERMS, 'CMTAT_info'],
-    [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]
+    [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]
   ])
   return cmtat
 }
@@ -115,7 +115,7 @@ async function deployCMTATERC1363Proxy (_, admin, deployerAddress) {
       admin,
       ['CMTA Token', 'CMTAT', DEPLOYMENT_DECIMAL],
       ['CMTAT_ISIN', TERMS, 'CMTAT_info'],
-      [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]
+      [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]
     ],
     {
       initializer: 'initialize',
@@ -157,7 +157,7 @@ async function deployCMTATProxy (_, admin, deployerAddress) {
       admin,
       ['CMTA Token', 'CMTAT', DEPLOYMENT_DECIMAL],
       ['CMTAT_ISIN', TERMS, 'CMTAT_info'],
-      [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]
+      [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]
     ],
     {
       initializer: 'initialize',
@@ -179,7 +179,7 @@ async function deployCMTATUUPSProxy (_, admin, deployerAddress) {
       admin,
       ['CMTA Token', 'CMTAT', DEPLOYMENT_DECIMAL],
       ['CMTAT_ISIN', TERMS, 'CMTAT_info'],
-      [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]
+      [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]
     ],
     {
       initializer: 'initialize',

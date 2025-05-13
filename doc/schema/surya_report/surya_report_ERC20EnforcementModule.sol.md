@@ -23,6 +23,7 @@
 | └ | forcedTransfer | Public ❗️ | 🛑  | onlyRole |
 | └ | freezePartialTokens | Public ❗️ | 🛑  | onlyRole |
 | └ | unfreezePartialTokens | Public ❗️ | 🛑  | onlyRole |
+| └ | _unfreezeTokens | Internal 🔒 | 🛑  | |
 | └ | _forcedTransfer | Internal 🔒 | 🛑  | |
 | └ | _checkActiveBalance | Internal 🔒 |   | |
 | └ | _getEnforcementModuleStorage | Private 🔐 |   | |

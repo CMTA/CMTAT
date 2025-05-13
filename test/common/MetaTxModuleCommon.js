@@ -66,7 +66,11 @@ function MetaTxModuleCommon () {
     })
 
     it('can send a transfer transaction without paying gas', async function () {
-      const provider = await ethers.getDefaultProvider()
+      
+      //const provider = await ethers.getDefaultProvider()
+      // getDefaultProvider uses Infura and Alchemy instead of Hardhat
+      [signer] = await ethers.getSigners();
+      const provider = signer.provider;
       const balanceEtherBefore = await provider.getBalance(this.address1)
       expect(await this.cmtat.balanceOf(this.address1)).to.equal(
         ADDRESS1_INITIAL_BALANCE

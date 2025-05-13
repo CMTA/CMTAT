@@ -2,8 +2,6 @@
 
 pragma solidity ^0.8.20;
 
-/* ==== Module === */
-import {AuthorizationModule} from "../security/AuthorizationModule.sol";
 /* ==== Engine === */
 import {IDebtEngine, ICMTATDebt, ICMTATCreditEvents} from "../../interfaces/engine/IDebtEngine.sol";
 import {DebtModule} from "../wrapper/extensions/DebtModule.sol";

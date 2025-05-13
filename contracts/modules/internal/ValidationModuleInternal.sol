@@ -5,17 +5,12 @@ pragma solidity ^0.8.20;
 /* ==== OpenZeppelin === */
 import {ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
 import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
-/* ==== Module === */
-import {AuthorizationModule} from "../security/AuthorizationModule.sol";
-import {PauseModule}  from "../wrapper//core/PauseModule.sol";
-import {EnforcementModule} from "../wrapper//core/EnforcementModule.sol";
 /* ==== Tokenization === */
 import {IERC3643ComplianceRead} from "../../interfaces/tokenization/IERC3643Partial.sol";
-import {IERC7551Compliance} from "../../interfaces/tokenization/draft-IERC7551.sol";
 /* ==== Engine === */
 import {IRuleEngine} from "../../interfaces/engine/IRuleEngine.sol";
 
-import {ValidationModuleCore} from "../wrapper/controllers/ValidationModuleCore.sol";
+import {ValidationModuleInternalCore} from "./ValidationModuleInternalCore.sol";
 /**
  * @dev Validation module.
  *
@@ -24,7 +19,7 @@ import {ValidationModuleCore} from "../wrapper/controllers/ValidationModuleCore.
 abstract contract ValidationModuleInternal is
     Initializable,
     ContextUpgradeable,
-    ValidationModuleCore
+    ValidationModuleInternalCore
 {
     error CMTAT_ValidationModule_SameValue();
 
@@ -78,8 +73,8 @@ abstract contract ValidationModuleInternal is
         address from,
         address to,
         uint256 value
-    ) public view virtual override(ValidationModuleCore) returns (bool) {
-        if (!ValidationModuleCore.canTransfer(from, to, value)) {
+    ) public view virtual override(ValidationModuleInternalCore) returns (bool) {
+        if (!ValidationModuleInternalCore.canTransfer(from, to, value)) {
             return false;
         } else {
             return _canTransferWithRuleEngine(from, to, value);
@@ -91,8 +86,8 @@ abstract contract ValidationModuleInternal is
         address from,
         address to,
         uint256 value
-    ) public view virtual override(ValidationModuleCore) returns (bool) {
-        if (!ValidationModuleCore.canTransferFrom(spender, from, to, value)) {
+    ) public view virtual override(ValidationModuleInternalCore) returns (bool) {
+        if (!ValidationModuleInternalCore.canTransferFrom(spender, from, to, value)) {
             return false;
         } else {
             return _canTransferFromWithRuleEngine(spender, from, to, value);

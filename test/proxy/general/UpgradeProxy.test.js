@@ -24,7 +24,7 @@ describe('UpgradeableCMTAT - Proxy', function () {
         this.admin.address,
         ['CMTA Token', 'CMTAT', DEPLOYMENT_DECIMAL],
         ['CMTAT_ISIN', TERMS, 'CMTAT_info'],
-        [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]
+        [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]
       ],
       {
         initializer: 'initialize',

@@ -31,7 +31,9 @@ function DebtModuleCommon () {
   
 
     it('testCanSetAndGetDebtCorrectly', async function () {
-      await this.cmtat.connect(this.admin).setDebt(debtBase)
+      this.logs = await this.cmtat.connect(this.admin).setDebt(debtBase)
+      await expect(this.logs)
+      .to.emit(this.cmtat, 'Debt')
       const debt = await this.cmtat.debt()
 
       expect(debt.interestRate).to.equal(debtBase.interestRate)

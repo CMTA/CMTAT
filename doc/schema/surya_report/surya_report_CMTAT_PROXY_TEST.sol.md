@@ -15,8 +15,8 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **CMTAT_PROXY_TEST** | Implementation | CMTAT_PROXY |||
-| └ | <Constructor> | Public ❗️ | 🛑  | CMTAT_PROXY |
+| **CMTAT_PROXY_TEST** | Implementation | CMTATUpgradeable |||
+| └ | <Constructor> | Public ❗️ | 🛑  | CMTATUpgradeable |
 
 
 ### Legend

@@ -23,14 +23,6 @@ abstract contract ERC20BaseModule is ERC20Upgradeable, IERC20Allowance, IERC3643
     event Name(string indexed newNameIndexed, string newName);
     event Symbol(string indexed newSymbolIndexed, string newSymbol);
 
-    error CMTAT_ERC20BaseModule_EmptyTos();
-    error CMTAT_ERC20BaseModule_TosValueslengthMismatch();
-    error CMTAT_ERC20BaseModule_WrongAllowance(
-        address spender,
-        uint256 currentAllowance,
-        uint256 allowanceProvided
-    );
-
     /* ============ ERC-7201 ============ */
     // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.ERC20BaseModule")) - 1)) & ~bytes32(uint256(0xff))
     bytes32 private constant ERC20BaseModuleStorageLocation = 0x9bd8d607565c0370ae5f91651ca67fd26d4438022bf72037316600e29e6a3a00;

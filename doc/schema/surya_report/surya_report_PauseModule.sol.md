@@ -15,7 +15,7 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **PauseModule** | Implementation | PausableUpgradeable, AuthorizationModule, IERC3643Pause, IERC7551Pause, ICMTATPause |||
+| **PauseModule** | Implementation | PausableUpgradeable, AuthorizationModule, IERC3643Pause, IERC7551Pause, ICMTATDeactivate |||
 | └ | __PauseModule_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |
 | └ | paused | Public ❗️ |   |NO❗️ |
 | └ | pause | Public ❗️ | 🛑  | onlyRole |

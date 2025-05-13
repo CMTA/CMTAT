@@ -15,8 +15,8 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **CMTAT_BASE** | Implementation | Initializable, ContextUpgradeable, BaseModule, PauseModule, ERC20MintModule, ERC20BurnModule, EnforcementModule, ValidationModule, ERC20BaseModule, MetaTxModule, DebtModule, SnapshotEngineModule, ERC20EnforcementModule, DocumentModule |||
-| └ | _checkTransfer | Internal 🔒 | 🛑  | |
+| **CMTAT_BASE** | Implementation | Initializable, ContextUpgradeable, BaseModule, ERC20MintModule, ERC20BurnModule, ValidationModule, ERC20BaseModule, DebtModule, SnapshotEngineModule, ERC20EnforcementModule, DocumentEngineModule, ExtraInformationModule |||
+| └ | _checkTransferred | Internal 🔒 | 🛑  | |
 | └ | initialize | Public ❗️ | 🛑  | initializer |
 | └ | __CMTAT_init | Internal 🔒 | 🛑  | onlyInitializing |
 | └ | __CMTAT_openzeppelin_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |
@@ -28,18 +28,13 @@
 | └ | symbol | Public ❗️ |   |NO❗️ |
 | └ | transfer | Public ❗️ | 🛑  |NO❗️ |
 | └ | transferFrom | Public ❗️ | 🛑  |NO❗️ |
-| └ | approve | Public ❗️ | 🛑  |NO❗️ |
 | └ | burnAndMint | Public ❗️ | 🛑  |NO❗️ |
-| └ | _update | Internal 🔒 | 🛑  | |
 | └ | detectTransferRestriction | Public ❗️ |   |NO❗️ |
 | └ | messageForTransferRestriction | Public ❗️ |   |NO❗️ |
-| └ | _canMintByModule | Internal 🔒 |   | |
-| └ | _canTransferByModule | Internal 🔒 |   | |
-| └ | _mint | Internal 🔒 | 🛑  | |
-| └ | _burn | Internal 🔒 | 🛑  | |
-| └ | _msgSender | Internal 🔒 |   | |
-| └ | _contextSuffixLength | Internal 🔒 |   | |
-| └ | _msgData | Internal 🔒 |   | |
+| └ | canTransfer | Public ❗️ |   |NO❗️ |
+| └ | _update | Internal 🔒 | 🛑  | |
+| └ | _mintOverride | Internal 🔒 | 🛑  | |
+| └ | _burnOverride | Internal 🔒 | 🛑  | |
 
 
 ### Legend

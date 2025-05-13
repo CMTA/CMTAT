@@ -15,11 +15,10 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **CMTAT_ERC1363_BASE** | Implementation | ERC1363Upgradeable, CMTAT_BASE |||
+| **CMTAT_ERC1363_BASE** | Implementation | ERC1363Upgradeable, CMTAT_BASE, MetaTxModule |||
 | └ | supportsInterface | Public ❗️ |   |NO❗️ |
 | └ | transfer | Public ❗️ | 🛑  |NO❗️ |
 | └ | transferFrom | Public ❗️ | 🛑  |NO❗️ |
-| └ | approve | Public ❗️ | 🛑  |NO❗️ |
 | └ | decimals | Public ❗️ |   |NO❗️ |
 | └ | name | Public ❗️ |   |NO❗️ |
 | └ | symbol | Public ❗️ |   |NO❗️ |

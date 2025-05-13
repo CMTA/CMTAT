@@ -6,12 +6,9 @@ pragma solidity ^0.8.20;
 import {ERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 /* ==== Module === */
 import {AuthorizationModule} from "../../security/AuthorizationModule.sol";
-/* ==== Technical === */
-import {IBurnERC20} from "../../../interfaces/technical/IMintBurnToken.sol";
 /* ==== Tokenization === */
 import {IERC3643ERC20Enforcement} from "../../../interfaces/tokenization/IERC3643Partial.sol";
 import {IERC7551ERC20Enforcement} from "../../../interfaces/tokenization/draft-IERC7551.sol";
-
 /**
  * @title ERC20Enforcement module.
  * @dev 
@@ -23,7 +20,7 @@ abstract contract ERC20EnforcementModule is ERC20Upgradeable, IERC7551ERC20Enfor
     error CMTAT_ERC20EnforcementModule_ValueExceedsFrozenBalance(); 
 
     string internal constant TEXT_TRANSFER_REJECTED_FROM_INSUFFICIENT_ACTIVE_BALANCE =
-        "AddressFrom:insufficientActiveBalance";
+        "AddrFrom:insufficientActiveBalance";
    
     /* ============ State Variables ============ */
     bytes32 public constant ERC20ENFORCER_ROLE = keccak256("ERC20ENFORCER_ROLE");
@@ -75,7 +72,7 @@ abstract contract ERC20EnforcementModule is ERC20Upgradeable, IERC7551ERC20Enfor
     *
     * @inheritdoc IERC7551ERC20Enforcement
     */
-    function forcedTransfer(address from, address to, uint256 value, bytes calldata data) public virtual override(IERC7551ERC20Enforcement)  onlyRole(ERC20ENFORCER_ROLE) returns (bool) {
+    function forcedTransfer(address from, address to, uint256 value, bytes calldata data) public virtual override(IERC7551ERC20Enforcement)  onlyRole(DEFAULT_ADMIN_ROLE) returns (bool) {
        _forcedTransfer(from, to, value, data);
        return true;
     }
@@ -84,7 +81,7 @@ abstract contract ERC20EnforcementModule is ERC20Upgradeable, IERC7551ERC20Enfor
     *
     * @inheritdoc IERC3643ERC20Enforcement
     */
-    function forcedTransfer(address from, address to, uint256 value) public virtual override(IERC3643ERC20Enforcement) onlyRole(ERC20ENFORCER_ROLE) returns (bool)  {
+    function forcedTransfer(address from, address to, uint256 value) public virtual override(IERC3643ERC20Enforcement) onlyRole(DEFAULT_ADMIN_ROLE) returns (bool)  {
        _forcedTransfer(from, to, value, "");
        return true;
     }
@@ -120,7 +117,7 @@ abstract contract ERC20EnforcementModule is ERC20Upgradeable, IERC7551ERC20Enfor
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
-    function _unfreezeTokens(address from, uint256 value) internal{
+    function _unfreezeTokens(address from, uint256 value) internal virtual{
         uint256 balance = ERC20Upgradeable.balanceOf(from);
         if(value > balance){
             revert ERC20InsufficientBalance(_msgSender(), balance, value-balance);
@@ -134,7 +131,7 @@ abstract contract ERC20EnforcementModule is ERC20Upgradeable, IERC7551ERC20Enfor
             emit TokensUnfrozen(from, tokensToUnfreeze);
         }
     }
-    function _forcedTransfer(address from, address to, uint256 value, bytes memory data) internal {
+    function _forcedTransfer(address from, address to, uint256 value, bytes memory data) internal virtual {
         _unfreezeTokens(from, value);
         // Spend allowance
         // See https://ethereum-magicians.org/t/erc-3643-the-t-rex-token-standard/6844/11
@@ -155,7 +152,7 @@ abstract contract ERC20EnforcementModule is ERC20Upgradeable, IERC7551ERC20Enfor
         emit Enforcement(_msgSender(), from, value, data);
     }
 
-    function _checkActiveBalance(address from, uint256 value) internal view returns(bool){
+    function _checkActiveBalance(address from, uint256 value) internal virtual view returns(bool){
          uint256 frozenTokensLocal = getFrozenTokens(from);
         if(frozenTokensLocal > 0 ){
             uint256 activeBalance = balanceOf(from) - frozenTokensLocal;

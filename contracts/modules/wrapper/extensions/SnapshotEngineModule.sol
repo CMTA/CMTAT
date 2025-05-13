@@ -6,8 +6,7 @@ pragma solidity ^0.8.20;
 import {AuthorizationModule} from "../../security/AuthorizationModule.sol";
 /* ==== Engine === */
 import {ISnapshotEngine} from "../../../interfaces/engine/ISnapshotEngine.sol";
-/* ==== Other === */
-import {Errors} from "../../../libraries/Errors.sol";
+
 abstract contract SnapshotEngineModule is AuthorizationModule {
     error CMTAT_SnapshotModule_SameValue();
     /* ============ State Variables ============ */
@@ -45,6 +44,9 @@ abstract contract SnapshotEngineModule is AuthorizationModule {
                             PUBLIC/EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
 
+    /**
+    * @notice returns the current snapshotEngine
+    */
     function snapshotEngine() public view virtual returns (ISnapshotEngine) {
         SnapshotEngineModuleStorage storage $ = _getSnapshotEngineModuleStorage();
         return $._snapshotEngine;
@@ -52,8 +54,7 @@ abstract contract SnapshotEngineModule is AuthorizationModule {
 
     /* ============  Restricted Functions ============ */
     /*
-    * @notice set an SnapshotEngine if not already set
-    * @dev once an SnapshotEngine is set, it is not possible to unset it
+    * @notice Set the snapshotEngine
     */
     function setSnapshotEngine(
         ISnapshotEngine snapshotEngine_

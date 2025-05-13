@@ -113,7 +113,7 @@ abstract contract ERC20MintModule is ERC20Upgradeable, IERC3643Mint, IERC3643Bat
      * - `tos`cannot contain a zero address (check made by transfer)
      * - the caller must have a balance cooresponding to the total values
      */
-    function batchTransfer(
+   function batchTransfer(
         address[] calldata tos,
         uint256[] calldata values
     ) public override(IERC3643BatchTransfer) onlyRole(MINTER_ROLE) returns (bool) {

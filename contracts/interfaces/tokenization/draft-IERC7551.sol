@@ -113,7 +113,7 @@ interface IERC7551Base {
     /*
     * @notice This function update the metaData value, generally an url
     */
-    function setMetaData(string calldata metaData) external;
+    function setMetaData(string calldata metaData_) external;
 }
 
 

@@ -15,7 +15,7 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **IDebtEngine** | Interface | ICMTATDebt |||
+| **IDebtEngine** | Interface | ICMTATDebt, ICMTATCreditEvents |||
 
 
 ### Legend

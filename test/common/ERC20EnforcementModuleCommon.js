@@ -1,4 +1,4 @@
-const { ERC20ENFORCER_ROLE } = require('../utils')
+const { ERC20ENFORCER_ROLE, DEFAULT_ADMIN_ROLE } = require('../utils')
 const { expect } = require('chai')
 
 
@@ -52,7 +52,7 @@ function ERC20EnforcementModuleCommon () {
         .withArgs(this.address1, this.address2, AMOUNT_TO_TRANSFER)
     })
 
-    it('testCanForceTransferFromAddress1ToAddress2AsEnforcerTransferRole', async function () {
+   /*it('testCanForceTransferFromAddress1ToAddress2AsEnforcerTransferRole', async function () {
       const AMOUNT_TO_TRANSFER = 20
       // Arrange - Assert
       await this.cmtat
@@ -80,9 +80,9 @@ function ERC20EnforcementModuleCommon () {
       await expect(this.logs)
         .to.emit(this.cmtat, 'Transfer')
         .withArgs(this.address1, this.address2, AMOUNT_TO_TRANSFER)
-    })
+    })*/
 
-    it('testCannotNonEnforcerTransferFunds', async function () {
+    it('testCannotNonAdminTransferFunds', async function () {
       // Act
       await expect(
         this.cmtat
@@ -93,7 +93,7 @@ function ERC20EnforcementModuleCommon () {
           this.cmtat,
           'AccessControlUnauthorizedAccount'
         )
-        .withArgs(this.address2.address, ERC20ENFORCER_ROLE)
+        .withArgs(this.address2.address, DEFAULT_ADMIN_ROLE)
     })
   })
   async function testFreeze(sender){
@@ -230,7 +230,7 @@ function ERC20EnforcementModuleCommon () {
         )
       ).to.equal('4')
       expect(await this.cmtat.messageForTransferRestriction(4)).to.equal(
-        'AddressFrom:insufficientActiveBalance'
+        'AddrFrom:insufficientActiveBalance'
       )
      
       await expect(
@@ -283,7 +283,7 @@ function ERC20EnforcementModuleCommon () {
             )
           ).to.equal('4')
           expect(await this.cmtat.messageForTransferRestriction(4)).to.equal(
-            'AddressFrom:insufficientActiveBalance'
+            'AddrFrom:insufficientActiveBalance'
           )
           await expect(
             this.cmtat

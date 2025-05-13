@@ -14,6 +14,8 @@ import {IDebtEngine, ICMTATDebt} from "../../../interfaces/engine/IDebtEngine.so
  * Set Debt info
  */
 abstract contract DebtModule is AuthorizationModule, ICMTATDebt {
+    // No paramater to reduce contract size
+    event Debt();
     /* ============ State Variables ============ */
     bytes32 public constant DEBT_ROLE = keccak256("DEBT_ROLE");
     /* ============ ERC-7201 ============ */
@@ -46,9 +48,10 @@ abstract contract DebtModule is AuthorizationModule, ICMTATDebt {
      */
     function setDebt(
           ICMTATDebt.DebtBase calldata debt_
-    ) external onlyRole(DEBT_ROLE) {
+    ) external virtual onlyRole(DEBT_ROLE) {
         DebtModuleStorage storage $ = _getDebtModuleStorage();
         $._debt = debt_;
+        emit Debt();
     }
     function debt() public view virtual  returns(DebtBase memory debtBaseResult){
         DebtModuleStorage storage $ = _getDebtModuleStorage();

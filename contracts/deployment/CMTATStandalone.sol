@@ -2,13 +2,13 @@
 
 pragma solidity ^0.8.20;
 
-import {CMTAT_BASE_EXTEND} from "../modules/CMTAT_BASE_EXTEND.sol";
-import {MetaTxModule, ICMTATConstructor} from "../modules/CMTAT_BASE.sol";
+import {CMTATBaseOption} from "../modules/CMTATBaseOption.sol";
+import {MetaTxModule, ICMTATConstructor} from "../modules/CMTATBase.sol";
 
 /**
 * @title CMTAT version for a standalone deployment (without proxy)
 */
-contract CMTATStandalone is CMTAT_BASE_EXTEND {
+contract CMTATStandalone is CMTATBaseOption {
     /**
      * @notice Contract version for standalone deployment
      * @param forwarderIrrevocable address of the forwarder, required for the gasless support

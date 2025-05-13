@@ -71,11 +71,4 @@ abstract contract EnforcementModule is
         EnforcementModuleInternal._addAddressToTheList($, account, freeze, data);
         emit AddressFrozen(account, freeze, _msgSender(), data);
     }
-
-
-   /* function batchSetAddressFrozen(
-        address[] calldata accounts, bool[] calldata freezes, bytes calldata data
-    ) public virtual onlyRole(ENFORCER_ROLE) {
-         _batchSetAddressFrozen(accounts, freezes, data);
-    }*/
 }

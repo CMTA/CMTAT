@@ -2,13 +2,13 @@
 
 pragma solidity ^0.8.20;
 import {UUPSUpgradeable} from "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
-import {CMTAT_BASE, MetaTxModule,  ERC2771ContextUpgradeable, ICMTATConstructor} from "../modules/CMTAT_BASE.sol";
+import {CMTATBase, MetaTxModule,  ERC2771ContextUpgradeable, ICMTATConstructor} from "../modules/CMTATBase.sol";
 import {ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
 
 /**
 * @title CMTAT version for a proxy deployment with UUPS proxy
 */
-contract CMTATUpgradeableUUPS is CMTAT_BASE, UUPSUpgradeable, MetaTxModule  {
+contract CMTATUpgradeableUUPS is CMTATBase, UUPSUpgradeable, MetaTxModule  {
     bytes32 public constant PROXY_UPGRADE_ROLE = keccak256("PROXY_UPGRADE_ROLE");
     /**
      * @notice Contract version for the deployment with a proxy
@@ -39,7 +39,7 @@ contract CMTATUpgradeableUUPS is CMTAT_BASE, UUPSUpgradeable, MetaTxModule  {
         ICMTATConstructor.ERC20Attributes memory ERC20Attributes_,
         ICMTATConstructor.BaseModuleAttributes memory baseModuleAttributes_,
         ICMTATConstructor.Engine memory engines_ ) public override initializer {
-        CMTAT_BASE.initialize( admin,
+        CMTATBase.initialize( admin,
             ERC20Attributes_,
             baseModuleAttributes_,
             engines_);

@@ -2,14 +2,14 @@
 
 pragma solidity ^0.8.20;
 
-import {CMTAT_ERC1363_BASE} from "../../modules/CMTAT_ERC1363_BASE.sol";
-import {CMTAT_BASE, MetaTxModule, ICMTATConstructor} from "../../modules/CMTAT_BASE.sol";
+import {CMTATERC1363Base} from "../../modules/CMTATERC1363Base.sol";
+import {CMTATBase, MetaTxModule, ICMTATConstructor} from "../../modules/CMTATBase.sol";
 
 
 /**
 * @title CMTAT Proxy version for ERC1363
 */
-contract CMTATUpgradeableERC1363 is CMTAT_ERC1363_BASE {
+contract CMTATUpgradeableERC1363 is CMTATERC1363Base {
     /**
      * @notice Contract version for the deployment with a proxy
      * @param forwarderIrrevocable address of the forwarder, required for the gasless support

@@ -52,7 +52,7 @@ interface ICMTATBase {
  	    IERC1643.Document doc;
     }
     /* ============ Events ============ */
-    event Term(Terms indexed newTermIndexed, Terms newTerm);
+    event Term(Terms newTerm);
     event TokenId(string indexed newTokenIdIndexed, string newTokenId);
     /* ============ Functions ============ */
     /*

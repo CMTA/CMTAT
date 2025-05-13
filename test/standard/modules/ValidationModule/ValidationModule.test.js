@@ -1,4 +1,5 @@
 const ValidationModuleCommon = require('../../../common/ValidationModule/ValidationModuleCommon')
+const ValidationModuleCommonCore = require('../../../common/ValidationModule/ValidationModuleCommonCore')
 const {
   deployCMTATStandalone,
   fixture,
@@ -27,4 +28,5 @@ describe('Standard - ValidationModule', function () {
       .mint(this.address3, this.ADDRESS3_INITIAL_BALANCE)
   })
   ValidationModuleCommon()
+  ValidationModuleCommonCore()
 })

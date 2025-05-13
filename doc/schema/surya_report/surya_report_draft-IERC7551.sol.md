@@ -35,6 +35,7 @@
 ||||||
 | **IERC7551Compliance** | Interface |  |||
 | └ | canTransfer | External ❗️ |   |NO❗️ |
+| └ | canTransferFrom | External ❗️ |   |NO❗️ |
 ||||||
 | **IERC7551Base** | Interface |  |||
 | └ | metaData | External ❗️ |   |NO❗️ |

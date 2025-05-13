@@ -11,11 +11,9 @@ import {IERC7551Base} from "../../../interfaces/tokenization/draft-IERC7551.sol"
 abstract contract ExtraInformationModule is IERC7551Base, ICMTATBase, AuthorizationModule {
     /* ============ Events ============ */
     event Information(
-        string indexed newInformationIndexed,
         string newInformation
     );
     event MetaData(
-        string indexed newMetaDataIdexed,
         string newMetaData
     );
     /* ============ ERC-7201 ============ */
@@ -87,7 +85,7 @@ abstract contract ExtraInformationModule is IERC7551Base, ICMTATBase, Authorizat
 
 
     /* ============  Restricted Functions ============ */
-
+    
     /** 
     * @notice the tokenId will be changed even if the new value is the same as the current one
     */
@@ -138,7 +136,7 @@ abstract contract ExtraInformationModule is IERC7551Base, ICMTATBase, Authorizat
         ExtraInformationModuleStorage storage $, string memory metadata_
     ) internal virtual  {
         $._metadata = metadata_;
-        emit MetaData(metadata_, metadata_);
+        emit MetaData(metadata_);
     }
 
     function _setTokenId(
@@ -156,12 +154,12 @@ abstract contract ExtraInformationModule is IERC7551Base, ICMTATBase, Authorizat
         $._terms.doc.uri = terms_.uri;
         $._terms.doc.lastModified = block.timestamp;
 		// Event
-        emit Term($._terms, $._terms);
+        emit Term($._terms);
     }
 
     function _setInformation(ExtraInformationModuleStorage storage $, string memory information_) internal virtual {
         $._information  = information_;
-        emit Information(information_, information_);
+        emit Information(information_);
     }
 
     /* ============ ERC-7201 ============ */

@@ -25,7 +25,7 @@ describe('Proxy - DebtModule - Constructor', function () {
       'CMTAT_ISIN',
       TERMS,
       'CMTAT_info',
-      [ZERO_ADDRESS, this.debtEngineMock.target, ZERO_ADDRESS, ZERO_ADDRESS]
+      [ZERO_ADDRESS, this.debtEngineMock.target, ZERO_ADDRESS]
     )
   })
   DebtModuleCommon()

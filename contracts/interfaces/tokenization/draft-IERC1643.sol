@@ -12,6 +12,12 @@ interface IERC1643 {
     }
 
     // Document Management
+    /**
+     * @notice return a document identified by its name
+     */
     function getDocument(string memory name) external view returns (Document memory doc);
+    /**
+     * @notice return all documents
+     */
     function getAllDocuments() external view returns (string[] memory);
 }

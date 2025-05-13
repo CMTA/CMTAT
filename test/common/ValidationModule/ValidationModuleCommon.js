@@ -127,6 +127,13 @@ function ValidationModuleCommon () {
     // reverts if this.address1 transfers more tokens than rule allows
     it('testCannotTransferIfNotAllowedByRule', async function () {
       const AMOUNT_TO_TRANSFER = RULE_MOCK_AMOUNT_MAX + 1
+      expect(
+        await this.ruleEngineMock.canTransfer(
+          this.address1,
+          this.address2,
+          AMOUNT_TO_TRANSFER
+        )
+      ).to.equal(false)
       // Act
       expect(
         await this.cmtat.canTransfer(

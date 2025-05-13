@@ -2,8 +2,6 @@
 
 pragma solidity ^0.8.20;
 
-/* ==== Module === */
-import {AuthorizationModule} from "../../security/AuthorizationModule.sol";
 /* ==== Tokenization === */
 import {IERC3643Base} from "../../../interfaces/tokenization/IERC3643Partial.sol";
 abstract contract BaseModule is IERC3643Base {

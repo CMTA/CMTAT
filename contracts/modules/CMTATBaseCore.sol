@@ -15,14 +15,13 @@ import {ERC20BaseModule, ERC20Upgradeable} from "./wrapper/core/ERC20BaseModule.
 import {BaseModule} from "./wrapper/core/BaseModule.sol";
 import {EnforcementModule} from "./wrapper/core/EnforcementModule.sol";
 import {PauseModule} from "./wrapper/core/PauseModule.sol";
-import {ValidationModuleCore} from "./wrapper/controllers/ValidationModuleCore.sol";
+import {ValidationModuleInternalCore} from "./internal/ValidationModuleInternalCore.sol";
 
 // Security
 import {AuthorizationModule} from "./security/AuthorizationModule.sol";
 
 /* ==== Interface and other library === */
 import {ICMTATConstructor} from "../interfaces/technical/ICMTATConstructor.sol";
-import {ISnapshotEngine} from "../interfaces/engine/ISnapshotEngine.sol";
 import {Errors} from "../libraries/Errors.sol";
 
 abstract contract CMTATBaseCore is
@@ -33,7 +32,7 @@ abstract contract CMTATBaseCore is
     // Core
     ERC20MintModule,
     ERC20BurnModule,
-    ValidationModuleCore,
+    ValidationModuleInternalCore,
     ERC20BaseModule
 {  
     error CMTAT_BurnEnforcement_AddressIsNotFrozen(); 
@@ -171,7 +170,7 @@ abstract contract CMTATBaseCore is
         /* ============  State Functions ============ */
     function transfer(address to, uint256 value) public virtual override returns (bool) {
         address from = _msgSender();
-        require(ValidationModuleCore.canTransfer(from, to, value), Errors.CMTAT_InvalidTransfer(from, to, value) );
+        require(ValidationModuleInternalCore.canTransfer(from, to, value), Errors.CMTAT_InvalidTransfer(from, to, value) );
         ERC20Upgradeable._transfer(from, to, value);
         return true;
     }
@@ -188,7 +187,7 @@ abstract contract CMTATBaseCore is
         override(ERC20Upgradeable, ERC20BaseModule)
         returns (bool)
     {
-        require(ValidationModuleCore.canTransfer(from, to, value), Errors.CMTAT_InvalidTransfer(from, to, value) );
+        require(ValidationModuleInternalCore.canTransfer(from, to, value), Errors.CMTAT_InvalidTransfer(from, to, value) );
         return ERC20BaseModule.transferFrom(from, to, value);
     }
 
@@ -233,13 +232,13 @@ abstract contract CMTATBaseCore is
     * @dev 
     */
     function _mint(address account, uint256 value, bytes memory data) internal virtual override(ERC20MintModule) {
-        require(ValidationModuleCore._canMintBurnByModule(account), Errors.CMTAT_InvalidTransfer(address(0), account, value) );
+        require(ValidationModuleInternalCore._canMintBurnByModule(account), Errors.CMTAT_InvalidTransfer(address(0), account, value) );
         ERC20MintModule._mint(account, value, data);
     }
 
 
     function _burn(address account, uint256 value, bytes memory data) internal virtual override(ERC20BurnModule) {
-        require(ValidationModuleCore._canMintBurnByModule(account), Errors.CMTAT_InvalidTransfer(account, address(0), value) );
+        require(ValidationModuleInternalCore._canMintBurnByModule(account), Errors.CMTAT_InvalidTransfer(account, address(0), value) );
         ERC20BurnModule._burn(account, value, data);
     }
 }

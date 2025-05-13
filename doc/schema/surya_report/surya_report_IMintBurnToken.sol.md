@@ -15,11 +15,9 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **IMintERC20** | Interface |  |||
-| └ | mint | External ❗️ | 🛑  |NO❗️ |
-||||||
 | **IBurnERC20** | Interface |  |||
-| └ | burn | External ❗️ | 🛑  |NO❗️ |
+||||||
+| **IBurnFromERC20** | Interface |  |||
 | └ | burnFrom | External ❗️ | 🛑  |NO❗️ |
 
 

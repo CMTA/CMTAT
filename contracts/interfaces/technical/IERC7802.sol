@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // From https://github.com/ethereum-optimism/optimism/blob/op-node/v1.13.2/packages/contracts-bedrock/interfaces/L2/IERC7802.sol
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.20;
 
 import { IERC165 } from "@openzeppelin/contracts/interfaces/IERC165.sol";
 
