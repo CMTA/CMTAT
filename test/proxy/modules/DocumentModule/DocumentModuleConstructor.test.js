@@ -24,7 +24,7 @@ describe('Proxy - DocumentModule - Constructor', function () {
       'CMTAT_ISIN',
       TERMS,
       'CMTAT_info',
-      [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS, this.documentEngineMock.target]
+      [ZERO_ADDRESS, ZERO_ADDRESS, this.documentEngineMock.target]
     )
   })
   DocumentModuleCommon()

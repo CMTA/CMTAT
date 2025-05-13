@@ -15,15 +15,8 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **BaseModule** | Implementation | AuthorizationModule |||
-| └ | __Base_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |
-| └ | tokenId | Public ❗️ |   |NO❗️ |
-| └ | terms | Public ❗️ |   |NO❗️ |
-| └ | information | Public ❗️ |   |NO❗️ |
-| └ | setTokenId | Public ❗️ | 🛑  | onlyRole |
-| └ | setTerms | Public ❗️ | 🛑  | onlyRole |
-| └ | setInformation | Public ❗️ | 🛑  | onlyRole |
-| └ | _getBaseModuleStorage | Private 🔐 |   | |
+| **BaseModule** | Implementation | IERC3643Base |||
+| └ | version | Public ❗️ |   |NO❗️ |
 
 
 ### Legend

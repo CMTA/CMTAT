@@ -33,23 +33,31 @@ async function fixture () {
   }
 }
 async function deployCMTATStandalone (_, admin, deployerAddress) {
-  const cmtat = await ethers.deployContract('CMTAT_STANDALONE', [
+  const cmtat = await ethers.deployContract('CMTATStandalone', [
     _,
     admin,
     ['CMTA Token', 'CMTAT', DEPLOYMENT_DECIMAL],
     ['CMTAT_ISIN', TERMS, 'CMTAT_info'],
-    [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]
+    [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]
   ])
   return cmtat
 }
 
 async function deployCMTATERC1363Standalone (_, admin, deployerAddress) {
-  const cmtat = await ethers.deployContract('CMTAT_STANDALONE_ERC1363', [
+  const cmtat = await ethers.deployContract('CMTATStandaloneERC1363', [
     _,
     admin,
     ['CMTA Token', 'CMTAT', DEPLOYMENT_DECIMAL],
     ['CMTAT_ISIN', TERMS, 'CMTAT_info'],
-    [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]
+    [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]
+  ])
+  return cmtat
+}
+
+async function deployCMTATLightStandalone (_, admin, deployerAddress) {
+  const cmtat = await ethers.deployContract('CMTATStandaloneLight', [
+    admin,
+    ['CMTA Token', 'CMTAT', DEPLOYMENT_DECIMAL]
   ])
   return cmtat
 }
@@ -58,7 +66,7 @@ async function deployCMTATProxyImplementation (
   deployerAddress,
   forwarderIrrevocable
 ) {
-  const cmtat = await ethers.deployContract('CMTAT_PROXY', [
+  const cmtat = await ethers.deployContract('CMTATUpgradeable', [
     forwarderIrrevocable
   ])
   return cmtat
@@ -68,7 +76,7 @@ async function deployCMTATProxyUUPSImplementation (
   deployerAddress,
   forwarderIrrevocable
 ) {
-  const cmtat = await ethers.deployContract('CMTAT_PROXY_UUPS', [
+  const cmtat = await ethers.deployContract('CMTATUpgradeableUUPS', [
     forwarderIrrevocable
   ])
   return cmtat
@@ -86,7 +94,7 @@ async function deployCMTATStandaloneWithParameter (
   information_,
   engines
 ) {
-  const cmtat = await ethers.deployContract('CMTAT_STANDALONE', [
+  const cmtat = await ethers.deployContract('CMTATStandalone', [
     forwarderIrrevocable,
     admin,
     [nameIrrevocable, symbolIrrevocable, decimalsIrrevocable],
@@ -99,7 +107,7 @@ async function deployCMTATStandaloneWithParameter (
 async function deployCMTATERC1363Proxy (_, admin, deployerAddress) {
   // Ref: https://forum.openzeppelin.com/t/upgrades-hardhat-truffle5/30883/3
   const ETHERS_CMTAT_PROXY_FACTORY = await ethers.getContractFactory(
-    'CMTAT_PROXY_ERC1363'
+    'CMTATUpgradeableERC1363'
   )
   const ETHERS_CMTAT_PROXY = await upgrades.deployProxy(
     ETHERS_CMTAT_PROXY_FACTORY,
@@ -107,7 +115,7 @@ async function deployCMTATERC1363Proxy (_, admin, deployerAddress) {
       admin,
       ['CMTA Token', 'CMTAT', DEPLOYMENT_DECIMAL],
       ['CMTAT_ISIN', TERMS, 'CMTAT_info'],
-      [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]
+      [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]
     ],
     {
       initializer: 'initialize',
@@ -118,10 +126,30 @@ async function deployCMTATERC1363Proxy (_, admin, deployerAddress) {
   return ETHERS_CMTAT_PROXY
 }
 
+async function deployCMTATLightProxy (_, admin, deployerAddress) {
+  // Ref: https://forum.openzeppelin.com/t/upgrades-hardhat-truffle5/30883/3
+  const ETHERS_CMTAT_PROXY_FACTORY = await ethers.getContractFactory(
+    'CMTATUpgradeableLight'
+  )
+  const ETHERS_CMTAT_PROXY = await upgrades.deployProxy(
+    ETHERS_CMTAT_PROXY_FACTORY,
+    [
+      admin,
+      ['CMTA Token', 'CMTAT', DEPLOYMENT_DECIMAL]
+    ],
+    {
+      initializer: 'initialize',
+      constructorArgs: [],
+      from: deployerAddress
+    }
+  )
+  return ETHERS_CMTAT_PROXY
+}
+
 async function deployCMTATProxy (_, admin, deployerAddress) {
   // Ref: https://forum.openzeppelin.com/t/upgrades-hardhat-truffle5/30883/3
   const ETHERS_CMTAT_PROXY_FACTORY = await ethers.getContractFactory(
-    'CMTAT_PROXY'
+    'CMTATUpgradeable'
   )
   const ETHERS_CMTAT_PROXY = await upgrades.deployProxy(
     ETHERS_CMTAT_PROXY_FACTORY,
@@ -129,7 +157,29 @@ async function deployCMTATProxy (_, admin, deployerAddress) {
       admin,
       ['CMTA Token', 'CMTAT', DEPLOYMENT_DECIMAL],
       ['CMTAT_ISIN', TERMS, 'CMTAT_info'],
-      [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]
+      [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]
+    ],
+    {
+      initializer: 'initialize',
+      constructorArgs: [_],
+      from: deployerAddress
+    }
+  )
+  return ETHERS_CMTAT_PROXY
+}
+
+async function deployCMTATUUPSProxy (_, admin, deployerAddress) {
+  // Ref: https://forum.openzeppelin.com/t/upgrades-hardhat-truffle5/30883/3
+  const ETHERS_CMTAT_PROXY_FACTORY = await ethers.getContractFactory(
+    'CMTATUpgradeableUUPS'
+  )
+  const ETHERS_CMTAT_PROXY = await upgrades.deployProxy(
+    ETHERS_CMTAT_PROXY_FACTORY,
+    [
+      admin,
+      ['CMTA Token', 'CMTAT', DEPLOYMENT_DECIMAL],
+      ['CMTAT_ISIN', TERMS, 'CMTAT_info'],
+      [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]
     ],
     {
       initializer: 'initialize',
@@ -154,7 +204,7 @@ async function deployCMTATProxyWithParameter (
 ) {
   // Ref: https://forum.openzeppelin.com/t/upgrades-hardhat-truffle5/30883/3
   const ETHERS_CMTAT_PROXY_FACTORY = await ethers.getContractFactory(
-    'CMTAT_PROXY'
+    'CMTATUpgradeable'
   )
   const ETHERS_CMTAT_PROXY = await upgrades.deployProxy(
     ETHERS_CMTAT_PROXY_FACTORY,
@@ -177,12 +227,15 @@ async function deployCMTATProxyWithParameter (
 module.exports = {
   deployCMTATStandalone,
   deployCMTATProxy,
+  deployCMTATLightStandalone,
+  deployCMTATLightProxy,
   deployCMTATERC1363Proxy,
   deployCMTATERC1363Standalone,
   deployCMTATProxyWithParameter,
   deployCMTATStandaloneWithParameter,
   DEPLOYMENT_DECIMAL,
   TERMS,
+  deployCMTATUUPSProxy,
   deployCMTATProxyImplementation,
   deployCMTATProxyUUPSImplementation,
   fixture,

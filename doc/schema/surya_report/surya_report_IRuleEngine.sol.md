@@ -15,8 +15,9 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **IRuleEngine** | Interface | IERC1404Wrapper |||
-| └ | operateOnTransfer | External ❗️ | 🛑  |NO❗️ |
+| **IRuleEngine** | Interface | IERC1404, IERC3643ComplianceRead |||
+| └ | canTransferFrom | External ❗️ |   |NO❗️ |
+| └ | transferred | External ❗️ | 🛑  |NO❗️ |
 
 
 ### Legend

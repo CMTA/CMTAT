@@ -49,6 +49,50 @@ public onlyRole(MINTER_ROLE)
 - Only authorized users (`MINTER_ROLE`) are allowed to call this function.
 -  `account` cannot be the zero address (check made by _mint).
 
+##### Events
+
+###### Mint(address,uint256, bytes)
+
+
+```solidity
+event Mint(address indexed account, uint256 value, bytes data);
+```
+
+Emitted when the specified  `value` amount of new tokens are created and
+allocated to the specified `account`.
+
+#### `mint(address,uint256,bytes)`
+
+##### Definition
+
+```solidity
+function mint(address account, uint256 value, bytes calldata data) 
+public virtual override(IERC7551Mint) 
+onlyRole(MINTER_ROLE)
+```
+
+##### Description
+
+ Creates a `value` amount of tokens and assigns them to `account`, by transferring it from address(0)
+
+
+##### Requirements
+
+- Only authorized users (`MINTER_ROLE`) are allowed to call this function.
+- `account` cannot be the zero address (check made by _mint).
+
+##### Events
+
+###### Mint(address,uint256, bytes)
+
+
+```solidity
+event Mint(address indexed account, uint256 value, bytes data);
+```
+
+Emitted when the specified  `value` amount of new tokens are created and
+allocated to the specified `account`.
+
 #### `mintBatch(address[],uint256[]) `
 
 ##### Definition
@@ -70,19 +114,30 @@ Only authorized users (`MINTER_ROLE`) are allowed to call this function
 
 `accounts` cannot contain a zero address (check made by _mint).
 
-### Events
+##### Events
 
-#### `Mint(address,uint256)`
+```
+ event BatchMint(address indexed minter,address[] accounts,uint256[] values)
+```
+
+
+
+#### `transferBatch(address[],uint256[])  `
 
 ##### Definition
 
-
 ```solidity
-event Mint(address indexed account, uint256 value)
+ function transferBatch(address[] calldata tos,uint256[] calldata values) 
+ public 
+ returns (bool) 
 ```
 
 ##### Description
 
-Emitted when the specified  `value` amount of new tokens are created and
-allocated to the specified `account`.
+For each address in `tos`, transfer the given `value` amount of tokens from the sender to the given address `to`.
 
+##### Requirements
+
+- `tos` and `values` must have the same length.
+
+- The sender has to own the sum of tokens in `values`.

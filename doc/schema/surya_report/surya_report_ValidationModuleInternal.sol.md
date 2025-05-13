@@ -15,13 +15,16 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **ValidationModuleInternal** | Implementation | Initializable, ContextUpgradeable |||
-| └ | __Validation_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |
+| **ValidationModuleInternal** | Implementation | Initializable, ContextUpgradeable, ValidationModuleInternalCore |||
+| └ | __ValidationModule_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |
 | └ | ruleEngine | Public ❗️ |   |NO❗️ |
-| └ | _validateTransfer | Internal 🔒 |   | |
-| └ | _messageForTransferRestriction | Internal 🔒 |   | |
-| └ | _detectTransferRestriction | Internal 🔒 |   | |
-| └ | _operateOnTransfer | Internal 🔒 | 🛑  | |
+| └ | setRuleEngine | Public ❗️ | 🛑  | onlyRole |
+| └ | canTransfer | Public ❗️ |   |NO❗️ |
+| └ | canTransferFrom | Public ❗️ |   |NO❗️ |
+| └ | _canTransferFromWithRuleEngine | Internal 🔒 |   | |
+| └ | _canTransferWithRuleEngine | Internal 🔒 |   | |
+| └ | _setRuleEngine | Internal 🔒 | 🛑  | |
+| └ | _transferred | Internal 🔒 | 🛑  | |
 | └ | _getValidationModuleInternalStorage | Internal 🔒 |   | |
 
 

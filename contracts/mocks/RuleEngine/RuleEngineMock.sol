@@ -5,7 +5,7 @@ pragma solidity ^0.8.20;
 import {IRule} from "./interfaces/IRule.sol";
 import {IRuleEngineMock} from "./interfaces/IRuleEngineMock.sol";
 import {RuleMock} from "./RuleMock.sol";
-
+import {RuleMockMint} from "./RuleMockMint.sol";
 /*
 * @title a RuleEngine mock for testing, not suitable for production
 */
@@ -15,6 +15,7 @@ contract RuleEngineMock is IRuleEngineMock {
 
     constructor(address spender) {
         _rules.push(new RuleMock());
+        _rules.push(new RuleMockMint());
         authorizedSpender =  spender;
     }
 
@@ -44,7 +45,7 @@ contract RuleEngineMock is IRuleEngineMock {
         uint256 value
     ) public view override returns (uint8) {
         uint256 ruleArrayLength = _rules.length;
-        for (uint256 i; i < ruleArrayLength; ) {
+        for (uint256 i = 0; i < ruleArrayLength; ++i) {
             uint8 restriction = _rules[i].detectTransferRestriction(
                from,
                to, 
@@ -52,9 +53,6 @@ contract RuleEngineMock is IRuleEngineMock {
             );
             if (restriction != uint8(REJECTED_CODE_BASE.TRANSFER_OK)) {
                 return restriction;
-            }
-            unchecked {
-                ++i;
             }
         }
         return uint8(REJECTED_CODE_BASE.TRANSFER_OK);
@@ -68,30 +66,30 @@ contract RuleEngineMock is IRuleEngineMock {
         return detectTransferRestriction(from, to, value) == 0;
     }
 
-
-    function canApprove(
-        address /* owner */,
-        address  spender,
-        uint256 /* value */
+    function canTransferFrom(
+        address spender,
+        address from,
+        address to,
+        uint256 value
     ) public view override returns (bool) {
-        if(spender == authorizedSpender) {
-            return true;
+         if(spender == address(0) || spender == authorizedSpender) {
+             return detectTransferRestriction(from, to, value) == 0;
         } else {
             return false;
         }
     }
 
-
-
-
     /*
     * @dev 
     * Warning: if you want to use this mock, you have to restrict the access to this function through an an access control
     */
-    function transferred(  address from,
+    function transferred( 
+        address spender,
+        address from,
         address to,
         uint256 value) view public override returns (bool){
-        return canTransfer(from, to, value);
+        
+        return canTransferFrom(spender, from, to, value);
     }
 
     /**
@@ -111,6 +109,6 @@ contract RuleEngineMock is IRuleEngineMock {
                 ++i;
             }
         }
-        return "Unknown restriction code";
+        return "UnknownRestrictionCode";
     }
 }

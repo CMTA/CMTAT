@@ -2,13 +2,13 @@
 
 pragma solidity ^0.8.20;
 
-import {CMTAT_PROXY_UUPS} from "../../../deployment/CMTAT_PROXY_UUPS.sol";
+import {CMTATUpgradeableUUPS} from "../../../deployment/CMTATUpgradeableUUPS.sol";
 
 
 /**
  * @title a contrat used to test the proxy upgrade functionality
  */
-contract CMTAT_PROXY_TEST_UUPS is CMTAT_PROXY_UUPS {
+contract CMTAT_PROXY_TEST_UUPS is CMTATUpgradeableUUPS {
     /**
      * @notice Contract version for the deployment with a proxy
      * @param forwarderIrrevocable address of the forwarder, required for the gasless support
@@ -16,7 +16,7 @@ contract CMTAT_PROXY_TEST_UUPS is CMTAT_PROXY_UUPS {
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor(
         address forwarderIrrevocable
-    ) CMTAT_PROXY_UUPS(forwarderIrrevocable) {
+    ) CMTATUpgradeableUUPS(forwarderIrrevocable) {
         // Nothing to do
     }
 }

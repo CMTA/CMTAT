@@ -6,11 +6,10 @@ This document defines Base Module for the CMTA Token specification.
 
 ## Rationale
 
-> The Base Module sets forth the basic functionalities a token must have to comply with the CMTAT framework, for tokens representing equity securities as well as tokens representing and debt securities. Here a quick list :
+> The Base Module set the basic properties common to the different CMTAT tokens.
 >
-> - Terms of tokenization
-> - Token ID (ISIN or other identifier) 
-> - Others fields to allow the issuer to add additional information: information, flag
+> Currently it only stores the contract version with the ERC-3643 function to retrieve it (`version`)
+>
 
 ## Schema
 
@@ -28,47 +27,17 @@ This document defines Base Module for the CMTA Token specification.
 
 ### Functions
 
-#### `setTokenId(string)`
+#### `version`
 
 ##### Definition:
 
 ```solidity
-function setTokenId(string memory tokenId_) 
-public
+function version() public view virtual override(IERC3643Base) returns (string memory)
 ```
 
 ##### Description:
 
-Set the `token id` to the given `string`.
-Only authorized users are allowed to call this function.
-
-#### `setTerms(string)`
-
-##### Definition:
-
-```solidity
-function setTerms(string memory terms_) 
-public onlyRole(DEFAULT_ADMIN_ROLE)
-```
-
-##### Description:
-
-Set the `terms` to the given `string`.
-Only authorized users are allowed to call this function.
-
-#### `setInformation(string)`
-
-##### Definition:
-
-```solidity
-function setInformation(string memory information_) 
-public onlyRole(DEFAULT_ADMIN_ROLE) 
-```
-
-##### Description:
-
-Set the information` to the given `uint256`.
-Only authorized users are allowed to call this function.
+return the current contract version
 
 ### Files Description Table
 

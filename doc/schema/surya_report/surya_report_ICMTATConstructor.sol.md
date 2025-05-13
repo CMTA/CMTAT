@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./interfaces/ICMTATConstructor.sol | [object Promise] |
+| ./interfaces/technical/ICMTATConstructor.sol | [object Promise] |
 
 
 ### Contracts Description Table

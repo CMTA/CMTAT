@@ -2,9 +2,11 @@
 
 pragma solidity ^0.8.20;
 
+/* ==== Module === */
 import {AuthorizationModule} from "../../security/AuthorizationModule.sol";
 import {EnforcementModuleInternal} from "../../internal/EnforcementModuleInternal.sol";
-
+import {IERC3643Enforcement, IERC3643EnforcementEvent} from "../../../interfaces/tokenization/IERC3643Partial.sol";
+/*
 /**
  * @title Enforcement module.
  * @dev 
@@ -13,15 +15,12 @@ import {EnforcementModuleInternal} from "../../internal/EnforcementModuleInterna
  */
 abstract contract EnforcementModule is
     EnforcementModuleInternal,
-    AuthorizationModule
+    AuthorizationModule,
+    IERC3643Enforcement,
+    IERC3643EnforcementEvent
 {
     /* ============ State Variables ============ */
     bytes32 public constant ENFORCER_ROLE = keccak256("ENFORCER_ROLE");
-    string internal constant TEXT_TRANSFER_REJECTED_FROM_FROZEN =
-        "Address FROM is frozen";
-
-    string internal constant TEXT_TRANSFER_REJECTED_TO_FROZEN =
-        "Address TO is frozen";
 
     /* ============  Initializer Function ============ */
     function __EnforcementModule_init_unchained() internal onlyInitializing {
@@ -31,33 +30,45 @@ abstract contract EnforcementModule is
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
+    
     /**
-     * @notice Freezes an address.
+    * @inheritdoc IERC3643Enforcement
+    */
+    function isFrozen(address account) public override(IERC3643Enforcement) view virtual returns (bool) {
+       return _addressIsListed(account);
+       
+    }
+
+    /**
+    * @inheritdoc IERC3643Enforcement
+    */
+    function setAddressFrozen(address account, bool freeze) public virtual override(IERC3643Enforcement) onlyRole(ENFORCER_ROLE){
+         _addAddressToTheList(account, freeze, "");
+    }
+
+    /**
+     * @notice Freezes/unfreeze an address.
      * @param account the account to freeze
-     * @param reason indicate why the account was frozen.
+     * @param freeze true to freeze, false to unfreeze
+     * @param data indicate why the account was frozen.
      */
-    function freeze(
-        address account,
-        string calldata reason
-    ) public onlyRole(ENFORCER_ROLE) returns (bool) {
-        return _freeze(account, reason);
+    function setAddressFrozen(
+        address account, bool freeze, bytes calldata data
+    ) public virtual onlyRole(ENFORCER_ROLE)  {
+         _addAddressToTheList(account, freeze, data);
     }
 
     /**
-     * @notice Unfreezes an address.
-     * @param account the account to unfreeze
-     * @param reason indicate why the account was unfrozen.
-     *
-     *
-     */
-    function unfreeze(
-        address account,
-        string calldata reason
-    ) public onlyRole(ENFORCER_ROLE) returns (bool) {
-        return _unfreeze(account, reason);
+    * @notice batch version of {setAddressFrozen}
+    */
+    function batchSetAddressFrozen(
+        address[] calldata accounts, bool[] calldata freezes
+    ) public virtual onlyRole(ENFORCER_ROLE) {
+         _addAddressesToTheList(accounts, freezes, "");
     }
 
-
-
-
+    function _addAddressToTheList(EnforcementModuleInternalStorage storage $,address account, bool freeze, bytes memory data) internal override(EnforcementModuleInternal){
+        EnforcementModuleInternal._addAddressToTheList($, account, freeze, data);
+        emit AddressFrozen(account, freeze, _msgSender(), data);
+    }
 }

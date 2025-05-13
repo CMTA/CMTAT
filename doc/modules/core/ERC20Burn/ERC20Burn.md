@@ -28,13 +28,14 @@ This section describes the Ethereum API of Burn Module.
 
 ### Functions
 
-#### `forceBurn(address,uint256,string)`
+#### `burn(address,uint256,bytes)`
 
 ##### Definition
 
 ```solidity
-function forceBurn(address account,uint256 amount,string memory reason) 
-public onlyRole(BURNER_ROLE)
+function burn(address account,uint256 value,bytes calldata data) 
+public virtual override(IERC7551Burn) 
+onlyRole(BURNER_ROLE)
 ```
 
 ##### Description
@@ -45,20 +46,58 @@ Destroys a `value` amount of tokens from `account`, by transferring it to addres
 
 Only authorized users (*BURNER_ROLE*) are allowed to call this function.
 
-#### `forceBurnBatch(address[],uint256[],string)  `
+##### Events
+
+###### `Burn(address,uint,string)`
+
+```solidity
+event Burn(address indexed owner, uint256 value, bytes data);
+```
+
+Emitted when the specified `value` amount of tokens owned by `owner`are destroyed with the given `reason`
+
+#### `burn(address,uint256,bytes)`
 
 ##### Definition
 
 ```solidity
-function forceBurnBatch(address[] calldata accounts,uint256[] calldata amounts,string memory reason) 
-public onlyRole(BURNER_ROLE)
+function burn(address account,uint256 value) 
+public virtual override(IERC3643Burn) 
+onlyRole(BURNER_ROLE)
+```
+
+##### Description
+
+Destroys a `value` amount of tokens from `account`, by transferring it to address(0).
+
+##### Requirements
+
+Only authorized users (*BURNER_ROLE*) are allowed to call this function.
+
+##### Events
+
+###### `Burn(address,uint,bytes)`
+
+```solidity
+event Burn(address indexed owner, uint256 value, bytes data);
+```
+
+Emitted when the specified `value` amount of tokens owned by `owner`are destroyed with the given `reason`
+
+#### `batchBurn(address[],uint256[],bytes)  `
+
+##### Definition
+
+```solidity
+function batchBurn(address[] calldata accounts,uint256[] calldata values,bytes memory data) 
+public virtual onlyRole(BURNER_ROLE
 ```
 
 ##### Description
 
 For each account in `accounts`, destroys a `value` amount of tokens from `account`, by transferring it to address(0).
 
-The burn `reason`is the same for all `accounts` which tokens are burnt.
+The burn `data`is the same for all `accounts` which tokens are burnt.
 
 ##### Requirements
 
@@ -66,18 +105,38 @@ The burn `reason`is the same for all `accounts` which tokens are burnt.
 
 - The caller must have the `BURNER_ROLE`.
 
-### Events
+##### Event
 
-#### `Burn(address,uint,string)`
+###### BatchBurn
+
+```solidity
+event BatchBurn(address indexed burner,address[] accounts,uint256[] values,bytes data);
+```
+
+#### `batchBurn(address[],uint256[],bytes)  `
 
 ##### Definition
 
 ```solidity
-event Burn(address indexed owner, uint256 amount, string reason)
+function batchBurn(address[] calldata accounts, uint256[] calldata values) 
+public virtual override (IERC3643Burn) onlyRole(BURNER_ROLE)
 ```
 
 ##### Description
 
-Emitted when the specified `value` amount of tokens owned by `owner`are destroyed with the given `reason`
+For each account in `accounts`, destroys a `value` amount of tokens from `account`, by transferring it to address(0).
 
-​    
+The burn `data`is the same for all `accounts` which tokens are burnt.
+
+##### Requirements
+
+- `accounts` and `values` must have the same length
+
+- The caller must have the `BURNER_ROLE`.
+
+##### Event
+
+```solidity
+event BatchBurn(address indexed burner,address[] accounts,uint256[] values,bytes data);
+```
+

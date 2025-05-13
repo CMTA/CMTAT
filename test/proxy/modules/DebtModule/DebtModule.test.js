@@ -16,5 +16,4 @@ describe('Proxy - DebtModule', function () {
     this.debtEngineMock = await ethers.deployContract('DebtEngineMock')
   })
   DebtModuleCommon()
-  DebtModuleSetDebtEngineCommon()
 })

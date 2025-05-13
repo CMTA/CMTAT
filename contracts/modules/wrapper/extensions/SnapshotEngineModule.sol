@@ -2,11 +2,13 @@
 
 pragma solidity ^0.8.20;
 
+/* ==== Module === */
 import {AuthorizationModule} from "../../security/AuthorizationModule.sol";
-import {Errors} from "../../../libraries/Errors.sol";
+/* ==== Engine === */
 import {ISnapshotEngine} from "../../../interfaces/engine/ISnapshotEngine.sol";
 
 abstract contract SnapshotEngineModule is AuthorizationModule {
+    error CMTAT_SnapshotModule_SameValue();
     /* ============ State Variables ============ */
     bytes32 public constant SNAPSHOOTER_ROLE = keccak256("SNAPSHOOTER_ROLE");
     /* ============ Events ============ */
@@ -29,7 +31,7 @@ abstract contract SnapshotEngineModule is AuthorizationModule {
      * - The control of the zero address is done by AccessControlDefaultAdminRules
      *
      */
-    function __SnapshotModule_init_unchained(ISnapshotEngine snapshotEngine_)
+    function __SnapshotEngineModule_init_unchained(ISnapshotEngine snapshotEngine_)
     internal onlyInitializing {
         if (address(snapshotEngine_) != address (0)) {
             SnapshotEngineModuleStorage storage $ = _getSnapshotEngineModuleStorage();
@@ -42,6 +44,9 @@ abstract contract SnapshotEngineModule is AuthorizationModule {
                             PUBLIC/EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
 
+    /**
+    * @notice returns the current snapshotEngine
+    */
     function snapshotEngine() public view virtual returns (ISnapshotEngine) {
         SnapshotEngineModuleStorage storage $ = _getSnapshotEngineModuleStorage();
         return $._snapshotEngine;
@@ -49,14 +54,13 @@ abstract contract SnapshotEngineModule is AuthorizationModule {
 
     /* ============  Restricted Functions ============ */
     /*
-    * @notice set an SnapshotEngine if not already set
-    * @dev once an SnapshotEngine is set, it is not possible to unset it
+    * @notice Set the snapshotEngine
     */
     function setSnapshotEngine(
         ISnapshotEngine snapshotEngine_
-    ) external onlyRole(SNAPSHOOTER_ROLE) {
+    ) external virtual onlyRole(SNAPSHOOTER_ROLE) {
         SnapshotEngineModuleStorage storage $ = _getSnapshotEngineModuleStorage();
-        require($._snapshotEngine != snapshotEngine_, Errors.CMTAT_SnapshotModule_SameValue());
+        require($._snapshotEngine != snapshotEngine_, CMTAT_SnapshotModule_SameValue());
         _setSnapshotEngine($, snapshotEngine_);
     }
 
@@ -65,7 +69,7 @@ abstract contract SnapshotEngineModule is AuthorizationModule {
     //////////////////////////////////////////////////////////////*/
     function _setSnapshotEngine(
         SnapshotEngineModuleStorage storage $, ISnapshotEngine snapshotEngine_
-    ) internal {
+    ) internal virtual {
         $._snapshotEngine = snapshotEngine_;
         emit SnapshotEngine(snapshotEngine_);
     }

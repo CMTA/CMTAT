@@ -45,7 +45,7 @@ function ValidationModuleSetRuleEngineCommon () {
     it('testCanReturnMessageWithNoRuleEngine&UnknownRestrictionCode', async function () {
       // Act + Assert
       expect(await this.cmtat.messageForTransferRestriction(254)).to.equal(
-        'Unknown code'
+        'UnknownCode'
       )
     })
 

@@ -6,12 +6,6 @@ function DebtModuleCommon () {
     let debtBase, creditEvents
 
     beforeEach(async function () {
-      if ((await this.cmtat.debtEngine()) === ZERO_ADDRESS) {
-        this.debtEngineMock = await ethers.deployContract('DebtEngineMock')
-        await this.cmtat
-          .connect(this.admin)
-          .setDebtEngine(this.debtEngineMock.target)
-      }
       debtBase = {
         interestRate: 500, // Example: 5.00%
         parValue: 1000000, // Example: 1,000,000
@@ -34,16 +28,12 @@ function DebtModuleCommon () {
       }
     })
 
-    it('testCanReturnTheRightAddressIfSet', async function () {
-      if (this.definedAtDeployment) {
-        expect(this.debtEngineMock.target).to.equal(
-          await this.cmtat.debtEngine()
-        )
-      }
-    })
+  
 
     it('testCanSetAndGetDebtCorrectly', async function () {
-      await this.debtEngineMock.setDebt(debtBase)
+      this.logs = await this.cmtat.connect(this.admin).setDebt(debtBase)
+      await expect(this.logs)
+      .to.emit(this.cmtat, 'Debt')
       const debt = await this.cmtat.debt()
 
       expect(debt.interestRate).to.equal(debtBase.interestRate)
@@ -64,16 +54,6 @@ function DebtModuleCommon () {
       )
       expect(debt.issuanceDate).to.equal(debtBase.issuanceDate)
       expect(debt.couponFrequency).to.equal(debtBase.couponFrequency)
-    })
-
-    it('testCanSetAndGetCreditEventsCorrectly', async function () {
-      await this.debtEngineMock.setCreditEvents(creditEvents)
-
-      const events = await this.cmtat.creditEvents()
-
-      expect(events.flagDefault).to.equal(creditEvents.flagDefault)
-      expect(events.flagRedeemed).to.equal(creditEvents.flagRedeemed)
-      expect(events.rating).to.equal(creditEvents.rating)
     })
   })
 }

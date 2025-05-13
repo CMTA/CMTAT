@@ -15,10 +15,13 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **EnforcementModule** | Implementation | EnforcementModuleInternal, AuthorizationModule |||
+| **EnforcementModule** | Implementation | EnforcementModuleInternal, AuthorizationModule, IERC3643Enforcement, IERC3643EnforcementEvent |||
 | └ | __EnforcementModule_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |
-| └ | freeze | Public ❗️ | 🛑  | onlyRole |
-| └ | unfreeze | Public ❗️ | 🛑  | onlyRole |
+| └ | isFrozen | Public ❗️ |   |NO❗️ |
+| └ | setAddressFrozen | Public ❗️ | 🛑  | onlyRole |
+| └ | setAddressFrozen | Public ❗️ | 🛑  | onlyRole |
+| └ | batchSetAddressFrozen | Public ❗️ | 🛑  | onlyRole |
+| └ | _addAddressToTheList | Internal 🔒 | 🛑  | |
 
 
 ### Legend

@@ -34,7 +34,7 @@ describe('Standard - SnapshotModule - Constructor', function () {
       'CMTAT_ISIN',
       TERMS,
       'CMTAT_info',
-      [ZERO_ADDRESS, ZERO_ADDRESS, this.transferEngineMock.target, ZERO_ADDRESS]
+      [ZERO_ADDRESS, this.transferEngineMock.target, ZERO_ADDRESS]
     )
     this.transferEngineMock.setERC20(this.cmtat)
   })

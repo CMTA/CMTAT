@@ -21,7 +21,7 @@ describe('Proxy - Security Test', function () {
     const implementationContractAddress =
       await upgrades.erc1967.getImplementationAddress(this.CMTAT_PROXY.target)
 
-    const MyContract = await ethers.getContractFactory('CMTAT_PROXY')
+    const MyContract = await ethers.getContractFactory('CMTATUpgradeable')
     this.implementationContract = MyContract.attach(
       implementationContractAddress
     )
@@ -37,7 +37,7 @@ describe('Proxy - Security Test', function () {
             this.attacker,
             ['CMTA Token', 'CMTAT', DEPLOYMENT_DECIMAL],
             ['CMTAT_ISIN', TERMS, 'CMTAT_info'],
-            [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]
+            [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]
           )
       ).to.be.revertedWithCustomError(
         this.implementationContract,
