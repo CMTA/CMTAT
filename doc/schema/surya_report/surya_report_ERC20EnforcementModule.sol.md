@@ -23,6 +23,8 @@
 | └ | forcedTransfer | Public ❗️ | 🛑  | onlyRole |
 | └ | freezePartialTokens | Public ❗️ | 🛑  | onlyRole |
 | └ | unfreezePartialTokens | Public ❗️ | 🛑  | onlyRole |
+| └ | _freezePartialTokens | Internal 🔒 | 🛑  | |
+| └ | _unfreezePartialTokens | Internal 🔒 | 🛑  | |
 | └ | _unfreezeTokens | Internal 🔒 | 🛑  | |
 | └ | _forcedTransfer | Internal 🔒 | 🛑  | |
 | └ | _checkActiveBalance | Internal 🔒 |   | |

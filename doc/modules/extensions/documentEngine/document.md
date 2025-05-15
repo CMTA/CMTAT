@@ -6,6 +6,8 @@ This document defines  Document Module for the CMTA Token specification.
 
 ## Schema
 
+![DocumentUML](../../../schema/uml/DocumentUML.png)
+
 ### Inheritance
 
 ![surya_inheritance_DebtBaseModule.sol](../../../schema/surya_inheritance/surya_inheritance_DocumentEngineModule.sol.png)

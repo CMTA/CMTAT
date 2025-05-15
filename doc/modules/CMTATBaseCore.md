@@ -1,4 +1,4 @@
-# ERC20Burn Module
+# CMTATBaseCore
 
 This document defines the ERC20Burn Module for the CMTA Token specification.
 
@@ -12,15 +12,17 @@ This document defines the ERC20Burn Module for the CMTA Token specification.
 
 ## Schema
 
+![CMTATBaseCore](../schema/uml/CMTATBaseCore.png)
+
 ### Inheritance
 
-![surya_inheritance_BurnModule.sol](../../../schema/surya_inheritance/surya_inheritance_ERC20BurnModule.sol.png)
+![surya_inheritance_BurnModule.sol](../schema/surya_inheritance/surya_inheritance_CMTATBaseCore.sol.png)
 
 
 
 ### Graph
 
-![surya_graph_BurnModule.sol](../../../schema/surya_graph/surya_graph_ERC20BurnModule.sol.png)
+![surya_graph_CMTATBaseCoreModule.sol](../schema/surya_graph/surya_graph_CMTATBaseCore.sol.png)
 
 ## API for Ethereum
 
@@ -45,38 +47,13 @@ Destroys a `value` amount of tokens from `account`, by transferring it to addres
 
 Only authorized users (*BURNER_ROLE*) are allowed to call this function.
 
-#### `forceBurnBatch(address[],uint256[],string)  `
+#### Events
 
-##### Definition
-
-```solidity
-function forceBurnBatch(address[] calldata accounts,uint256[] calldata amounts,string memory reason) 
-public onlyRole(BURNER_ROLE)
-```
-
-##### Description
-
-For each account in `accounts`, destroys a `value` amount of tokens from `account`, by transferring it to address(0).
-
-The burn `reason`is the same for all `accounts` which tokens are burnt.
-
-##### Requirements
-
-- `accounts` and `values` must have the same length
-
-- The caller must have the `BURNER_ROLE`.
-
-### Events
-
-#### `Burn(address,uint,string)`
-
-##### Definition
+##### `Burn(address,uint,string)`
 
 ```solidity
 event Burn(address indexed owner, uint256 amount, string reason)
 ```
-
-##### Description
 
 Emitted when the specified `value` amount of tokens owned by `owner`are destroyed with the given `reason`
 

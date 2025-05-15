@@ -21,6 +21,7 @@
 | └ | mint | Public ❗️ | 🛑  | onlyRole |
 | └ | batchMint | Public ❗️ | 🛑  | onlyRole |
 | └ | batchTransfer | Public ❗️ | 🛑  | onlyRole |
+| └ | _batchMint | Internal 🔒 | 🛑  | |
 | └ | _batchTransfer | Internal 🔒 | 🛑  | |
 | └ | _mintOverride | Internal 🔒 | 🛑  | |
 | └ | _mint | Internal 🔒 | 🛑  | |

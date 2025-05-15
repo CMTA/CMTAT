@@ -6,18 +6,19 @@ pragma solidity ^0.8.20;
 import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import {ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
 /* ==== Wrapper === */
-// ERC20
+// Core
+import {BaseModule} from "./wrapper/core/BaseModule.sol";
 import {ERC20BurnModule} from "./wrapper/core/ERC20BurnModule.sol";
 import {ERC20MintModule} from "./wrapper/core/ERC20MintModule.sol";
+import {PauseModule} from "./wrapper/core/PauseModule.sol";
+import {EnforcementModule} from "./wrapper/core/EnforcementModule.sol";
+// Extensions
+import {ExtraInformationModule} from "./wrapper/extensions/ExtraInformationModule.sol";
+import {ERC20EnforcementModule} from "./wrapper/extensions/ERC20EnforcementModule.sol";
+// options
 import {ERC20BaseModule, ERC20Upgradeable} from "./wrapper/core/ERC20BaseModule.sol";
 // Other
-import {BaseModule} from "./wrapper/core/BaseModule.sol";
-import {EnforcementModule} from "./wrapper/core/EnforcementModule.sol";
-import {ERC20EnforcementModule} from "./wrapper/extensions/ERC20EnforcementModule.sol";
-import {ExtraInformationModule} from "./wrapper/extensions/ExtraInformationModule.sol";
-import {PauseModule} from "./wrapper/core/PauseModule.sol";
 import {ValidationModuleInternal, ValidationModuleERC1404, IERC1404} from "./wrapper/controllers/ValidationModuleERC1404.sol";
-import {MetaTxModule, ERC2771ContextUpgradeable} from "./wrapper/extensions/MetaTxModule.sol";
 import {DebtModule} from "./wrapper/extensions/DebtModule.sol";
 import {DocumentEngineModule} from "./wrapper/extensions/DocumentEngineModule.sol";
 import {SnapshotEngineModule} from "./wrapper/extensions/SnapshotEngineModule.sol";

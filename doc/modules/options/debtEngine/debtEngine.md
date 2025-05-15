@@ -10,7 +10,7 @@ This document defines Debt Module for the CMTA Token specification.
 
 ### Inheritance
 
-![surya_inheritance_DebtBaseModule.sol](../../../schema/surya_inheritance/surya_inheritance_DebtModule.sol.png)
+![surya_inheritance_DebtBaseModule.sol](../../../schema/surya_inheritance/surya_inheritance_DebtEngineModule.sol.png)
 
 
 
@@ -19,8 +19,6 @@ This document defines Debt Module for the CMTA Token specification.
 ### Graph
 
 ![surya_graph_DebtBaseModule.sol](../../../schema/surya_graph/surya_graph_DebtModule.sol.png)
-
-## 
 
 ## API for Ethereum
 

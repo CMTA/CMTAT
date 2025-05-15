@@ -9,7 +9,7 @@ import {ERC20Upgradeable, IERC20} from "@openzeppelin/contracts-upgradeable/toke
 import {ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
 import {AccessControlUpgradeable} from "./security/AuthorizationModule.sol";
 import {CMTATBase} from "./CMTATBase.sol";
-import {MetaTxModule, ERC2771ContextUpgradeable} from "./wrapper/extensions/MetaTxModule.sol";
+import {MetaTxModule, ERC2771ContextUpgradeable} from "./wrapper/options/MetaTxModule.sol";
 /**
 * @title CMTAT Proxy version for ERC1363
 */
@@ -55,7 +55,7 @@ abstract contract CMTATERC1363Base is ERC1363Upgradeable,CMTATBase, MetaTxModule
     }
 
 
-        /**
+    /**
      * @notice Returns the name of the token.
      */
     function name() public virtual override(ERC20Upgradeable, CMTATBase) view returns (string memory) {

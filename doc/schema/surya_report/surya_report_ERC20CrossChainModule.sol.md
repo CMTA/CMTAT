@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/options/ERC20CrossChainModule.sol | [object Promise] |
+| ./modules/wrapper/options/ERC20CrossChainModule.sol | [object Promise] |
 
 
 ### Contracts Description Table

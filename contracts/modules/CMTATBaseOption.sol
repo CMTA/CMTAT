@@ -3,11 +3,11 @@
 pragma solidity ^0.8.20;
 /* ==== OpenZeppelin === */
 /* ==== Module === */
-import {DebtEngineModule, DebtModule, ICMTATDebt} from "./options/DebtEngineModule.sol";
-import {ERC20CrossChainModule, CMTATBase} from "./options/ERC20CrossChainModule.sol";
+import {DebtEngineModule, DebtModule, ICMTATDebt} from "./wrapper/options/DebtEngineModule.sol";
+import {ERC20CrossChainModule, CMTATBase} from "./wrapper/options/ERC20CrossChainModule.sol";
 import {ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
 import {AccessControlUpgradeable} from "./security/AuthorizationModule.sol";
-import {MetaTxModule, ERC2771ContextUpgradeable} from "./wrapper/extensions/MetaTxModule.sol";
+import {MetaTxModule, ERC2771ContextUpgradeable} from "./wrapper/options/MetaTxModule.sol";
 /**
 * @title Extend CMTAT Base
 */

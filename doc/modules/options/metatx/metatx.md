@@ -10,6 +10,8 @@ This document defines the MetaTx Module for the CMTA Token specification. The go
 
 ## Schema
 
+![MetaTxUML](../../../schema/uml/MetaTxUML.png)
+
 ### Inheritance
 
 ![surya_inheritance_MetaTxModule.sol](../../../schema/surya_inheritance/surya_inheritance_MetaTxModule.sol.png)
@@ -24,22 +26,5 @@ This document defines the MetaTx Module for the CMTA Token specification. The go
 
 This section describes the Ethereum API of the MetaTx Module. 
 
-This modules uses ERC2771 implementation from OpenZeppelin: [https://docs.openzeppelin.com/contracts/4.x/api/metatx](https://docs.openzeppelin.com/contracts/4.x/api/metatx)
+This modules uses ERC2771 implementation from OpenZeppelin: [https://docs.openzeppelin.com/contracts/5.x/api/metatx](https://docs.openzeppelin.com/contracts/5.x/api/metatx)
 
-### Functions
-
-Origin: OpenZeppelin
-
-#### `isTrustedForwarder(address)`
-
-##### Signature:
-
-```solidity
-function isTrustedForwarder(address forwarder) 
-public view virtual 
-returns (bool) 
-```
-
-##### Description:
-
-Return `true`if the address put in parameter is the forwarder of the contract, false otherwise

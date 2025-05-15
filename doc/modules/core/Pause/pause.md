@@ -14,6 +14,8 @@ However, this is not enforced in the functions that allow to change a user’s a
 
 ## Schema
 
+![PauseUML](../../../schema/uml/PauseUML.png)
+
 ### Inheritance
 
 ![surya_inheritance_PauseModule.sol](../../../schema/surya_inheritance/surya_inheritance_PauseModule.sol.png)

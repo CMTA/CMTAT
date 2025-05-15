@@ -14,6 +14,8 @@ This document defines the Snapshot Module for the CMTA Token specification.
 
 ## Schema
 
+![snapshotUML](../../../schema/uml/snapshotUML.png)
+
 ### Inheritance
 
 ![surya_inheritance_ERC20SnapshotModule.sol](../../../schema/surya_inheritance/surya_inheritance_SnapshotEngineModule.sol.png)

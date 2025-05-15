@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/options/DebtEngineModule.sol | [object Promise] |
+| ./modules/wrapper/options/DebtEngineModule.sol | [object Promise] |
 
 
 ### Contracts Description Table

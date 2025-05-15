@@ -24,7 +24,7 @@ The DEFAULT_ADMIN_ROLE has automatically all the roles.
 
 This behavior is implemented by overriding the function `hasRole` from OpenZeppelin
 
-![RBAC-diagram](../../schema/accessControl/RBAC-diagram.svg)
+![RBAC-diagram-RBAC.drawio](../../schema/accessControl/RBAC-diagram-RBAC.drawio.png)
 
 ### UML
 
@@ -66,116 +66,4 @@ This behavior is implemented by overriding the function `hasRole` from OpenZeppe
 
 ## API for Ethereum
 
-### Functions
-
-Origin: OpenZeppelin (AccessControlUpgradeable)
-
-#### `grantRole(bytes32,address)`
-
-##### Definition:
-
-```solidity
-function grantRole(bytes32 role, address account) 
-public virtual override onlyRole(getRoleAdmin(role))
-```
-
-##### Description:
-
-Grant the given `role` to the given `account`.
-Here the role is a keccak256 hash of the role name.
-Only authorized users are allowed to call this function.
-
-#### `revokeRole(bytes32,address)`
-
-Origin: OpenZeppelin (AccessControlUpgradeable)
-
-##### Definition:
-
-```solidity
-function revokeRole(bytes32 role, address account) 
-public virtual override onlyRole(getRoleAdmin(role))
-```
-
-##### Description:
-
-Revoke from the given `role` from the given `account`.
-Only authorized users are allowed to call this function.
-
-#### `getRoleAdmin(bytes32)`
-
-Origin: OpenZeppelin (AccessControlUpgradeable)
-
-##### Definition:
-
-```solidity
-function getRoleAdmin(bytes32 role) 
-public view virtual override 
-returns (bytes32)
-```
-
-##### Description:
-
-Returns the admin role that controls `role`
-
-#### `hasRole(bytes32,address)`
-
-This function is overridden inside this module in order to give all the roles to the role `DEFAULT_ADMIN_ROLE`.
-
-##### Definition:
-
-```solidity
-function hasRole(bytes32 role, address account) 
-public view virtual override 
-returns (bool)
-```
-
-##### Description:
-
-Tell, whether the given `account` has the given `role` currently.
-
-### Events
-
-#### `RoleGranted(bytes32,address,address)`
-
-Origin: OpenZeppelin (AccessControlUpgradeable)
-
-##### Definition:
-
-```solidity
-event RoleGranted(bytes32 indexed role, address indexed account, address indexed sender)
-```
-
-##### Description:
-
-Emitted when the specified `account` was given the specified `role`.
-
-#### `RoleRevoked(bytes32,address,address)`
-
-Origin: OpenZeppelin (AccessControlUpgradeable)
-
-##### Definition:
-
-```solidity
-event RoleRevoked(bytes32 indexed role, address indexed account, address indexed sender)
-```
-
-##### Description:
-
-Emitted when the the specified `role` was revoked from the specified `account`.
-
-
-
-#### `RoleAdminChanged(bytes32,bytes32,bytes32)`
-
-Origin: OpenZeppelin (AccessControlUpgradeable)
-
-##### Definition:
-
-```solidity
-event RoleAdminChanged(bytes32 indexed role, bytes32 indexed previousAdminRole, bytes32 indexed newAdminRole)
-```
-
-##### Description:
-
-Emitted when `newAdminRole` is set as ``role``'s admin role, replacing `previousAdminRole`
-
+See [docs.openzeppelin.com - AccessControl](https://docs.openzeppelin.com/contracts/5.x/api/access#AccessControl)
