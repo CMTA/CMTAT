@@ -7,7 +7,7 @@ import {IERC165} from "@openzeppelin/contracts-upgradeable/utils/introspection/E
 /* ==== Module === */
 import {CMTATBase, ERC20Upgradeable} from "../../CMTATBase.sol";
 import {IERC7802} from "../../../interfaces/technical/IERC7802.sol";
-import {IBurnFromERC20} from "../../../interfaces/technical/IMintBurnToken.sol";
+import {IBurnFromERC20} from "../../../interfaces/technical/IBurnToken.sol";
 /**
  * @title ERC20Burn module.
  * @dev 

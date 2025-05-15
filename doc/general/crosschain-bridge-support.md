@@ -95,6 +95,12 @@ contract MyOFT is OFT {
 }
 ```
 
+Remarks:
+
+`OFT.sol` implements the standard ERC20 OpenZeppelin implementation, so it is not compatible with CMTAT which uses the upgradeable version. See also [LayerZero-v2/pull/9](https://github.com/LayerZero-Labs/LayerZero-v2/pull/9)
+
+The alternative is to inherit from [OFTCore](https://github.com/LayerZero-Labs/LayerZero-v2/blob/main/packages/layerzero-v2/evm/oapp/contracts/oft/OFTCore.sol) which is ERC-20 agnostic and implements the missing functions. 
+
 See [OFT standard](https://docs.layerzero.network/v2/home/token-standards/oft-standard)
 
 #### OFT Adapter

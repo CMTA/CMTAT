@@ -94,6 +94,23 @@ The implemented interface is available in [IERC3643Partial](./contracts/interfac
 
 The main reason the argument names change is because CMTAT relies on OpenZeppelin to name the arguments
 
+##### Functions not implemented
+
+All functions related to on-chain identity are **not** implemented inside CMTAT:
+
+- ` setOnchainID`
+- `setIdentityRegistry`
+- `recoveryAddress` because this function takes the ` investorOnchainID` as argument
+
+These following functions to reduce contract code size:
+
+- `batchForcedTransfer`to reduce contract code size
+- `batchFreezePartialTokens` and `batchUnfreezePartialTokens`
+
+All functions related to the interface `IAgentRole`because CMTAT uses a RBAC Access Control to offer more granularity in term of access control.
+
+And finally `setCompliance`because CMTAT uses a different architecture for its `ruleEngine`.
+
 ##### Pause
 
 Module: PauseModule
@@ -162,14 +179,14 @@ The implemented interface is available in [IERC7551](./contracts/interfaces/toke
 
 | **N°** | **Functionalities**                                          | **ERC-7551 Functions**                    | **CMTAT 3.0.0**          | Implementations details                                      | Modules                      |
 | :----- | :----------------------------------------------------------- | :---------------------------------------- | :----------------------- | ------------------------------------------------------------ | ---------------------------- |
-| 1      | Freeze and unfreeze a specific amount of tokens              | freezeTokens<br />unfreezeTokens          | &#x2611;                 | Same function as ERC-3643 <br />(`setAddressFrozen`)         | EnforcementModule            |
-| 2      | Pausing transfers The operator can pause and unpause transfers | pauseTransfers                            | &#x2611;                 | Same function as ERC-3643 (`pause/unpause`)<br /> + `deactivateContract` | PauseModule                  |
-| 3      | Link to off-chain document<br />Add the hash of a document   | setPaperContractHash                      | Equivalent functionality | Done with the field terms.<br />This field is represented as a Document also (name, uri, hash, last on-chain modification date) | ExtraInformationModule       |
+| 1      | Freeze and unfreeze a specific amount of tokens              | freezeTokens<br />unfreezeTokens          | &#x2611;                 | Implement ERC-3643 function`setAddressFrozen`                | EnforcementModule            |
+| 2      | Pausing transfers The operator can pause and unpause transfers | pauseTransfers                            | &#x2611;                 | Implement ERC-3643 functions `pause/unpause`<br /> + `deactivateContract` | PauseModule                  |
+| 3      | Link to off-chain document<br />Add the hash of a document   | setPaperContractHash                      | Equivalent functionality | The hash can be put in the field` Terms`<br />Terms is represented as a Document (name, uri, hash, last on-chain modification date) based on [ERC-1643](https://github.com/ethereum/eips/issues/1643) | ExtraInformationModule       |
 | 4      | Metadata JSON file                                           | setMetaDataJSON                           | &#x2611;                 | Define function `setMetaData`                                | ExtraInformationModule       |
-| 5      | Forced transfersTransfer `amount` tokens to `to` without requiring the consent of `fro`m | forceTransferFrom                         | &#x2611;                 | Same function as ERC-3643<br />`forcedTransfer`              | ERC20EnforcementModule       |
-| 6      | Token supply managementreduce the balance of `tokenHolder` by `amount` without increasing the amount of tokens of any other holder | destroyTokens                             | &#x2611;                 | Function burn                                                | BurnModule                   |
-| 7      | Token supply managementincrease the balance of `to` by `amount` without decreasing the amount of tokens from any other holder. | issue                                     | &#x2611;                 | Function mint and mintBatch                                  | MintModule                   |
-| 8      | Transfer compliance<br />Check if a transfer is valid        | `canTransfer() `and a `canTransferFrom()` | &#x2611;                 | IERC3643Compliance (canTransfer and `canTransfrom)           | ValidationInternalCoreModule |
+| 5      | Forced transfersTransfer `amount` tokens to `to` without requiring the consent of `fro`m | forceTransferFrom                         | &#x2611;                 | Implement<br/>ERC-3643 function  `forcedTransfer`            | ERC20EnforcementModule       |
+| 6      | Token supply managementreduce the balance of `tokenHolder` by `amount` without increasing the amount of tokens of any other holder | destroyTokens                             | &#x2611;                 | Implement<br/>ERC-3643 function  `burn` / `batchBurn`        | BurnModule                   |
+| 7      | Token supply managementincrease the balance of `to` by `amount` without decreasing the amount of tokens from any other holder. | issue                                     | &#x2611;                 | Implement<br/>ERC-3643 function  `mint` / `batchMint`        | MintModule                   |
+| 8      | Transfer compliance<br />Check if a transfer is valid        | `canTransfer() `and a `canTransferFrom()` | &#x2611;                 | Implement<br/>ERC-3643 function `canTransfer`<br/>as well as a specific function `canTransferFrom` | ValidationInternalCoreModule |
 
  
 

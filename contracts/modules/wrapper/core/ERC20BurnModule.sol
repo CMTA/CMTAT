@@ -7,7 +7,7 @@ import {ERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/
 /* ==== Module === */
 import {AuthorizationModule} from "../../security/AuthorizationModule.sol";
 /* ==== Technical === */
-import {IBurnERC20} from "../../../interfaces/technical/IMintBurnToken.sol";
+import {IBurnERC20} from "../../../interfaces/technical/IBurnToken.sol";
 import {IERC20Allowance} from "../../../interfaces/technical/IERC20Allowance.sol";
 /* ==== Tokenization === */
 import {IERC3643Burn} from "../../../interfaces/tokenization/IERC3643Partial.sol";
