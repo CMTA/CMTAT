@@ -18,6 +18,11 @@ Please follow <https://changelog.md/> conventions.
   
   - Update changelog
 
+## 3.0.0-rc.1
+
+- Move `MetaTx` module to the option folder
+- Improve documentation
+
 ## 3.0.0-rc.0
 
 The main goal of this version since the last version 2.3.0 is:
