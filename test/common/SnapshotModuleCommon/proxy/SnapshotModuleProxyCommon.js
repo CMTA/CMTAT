@@ -20,7 +20,7 @@ function SnapshotModuleProxyCommon () {
   context('Proxy - SnapshotModule', function () {
     beforeEach(async function () {
       Object.assign(this, await loadFixture(fixture))
-      if(!this.CMTATAlreadyDeployed){
+      if (!this.CMTATAlreadyDeployed) {
         this.cmtat = await deployCMTATProxy(
           this._.address,
           this.admin.address,
@@ -31,7 +31,6 @@ function SnapshotModuleProxyCommon () {
         'SnapshotEngineMock',
         [this.cmtat.target, this.admin]
       )
-      
     })
     SnapshotModuleMultiplePlannedTest()
     SnapshotModuleOnePlannedSnapshotTest()

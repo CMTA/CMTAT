@@ -3,7 +3,9 @@
 pragma solidity ^0.8.20;
 
 import {CMTATBaseOption} from "../modules/CMTATBaseOption.sol";
-import {MetaTxModule, ICMTATConstructor} from "../modules/CMTATBase.sol";
+import {ICMTATConstructor} from "../modules/CMTATBase.sol";
+import {MetaTxModule, ERC2771ContextUpgradeable} from "../modules/wrapper/options/MetaTxModule.sol";
+
 
 /**
 * @title CMTAT version for a standalone deployment (without proxy)

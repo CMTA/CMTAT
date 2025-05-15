@@ -18,13 +18,13 @@ function ValidationModuleProxyCommon () {
       this.ADDRESS3_INITIAL_BALANCE = 19n
       Object.assign(this, await loadFixture(fixture))
       this.ruleEngineMock = await ethers.deployContract('RuleEngineMock', [this.admin])
-      if(!this.CMTATERC1363){
+      if (!this.CMTATERC1363) {
         this.cmtat = await deployCMTATProxy(
           this._.address,
           this.admin.address,
           this.deployerAddress.address
         )
-      }else{
+      } else {
         this.cmtat = await deployCMTATERC1363Proxy(
           this._.address,
           this.admin.address,
@@ -40,8 +40,6 @@ function ValidationModuleProxyCommon () {
       await this.cmtat
         .connect(this.admin)
         .mint(this.address3, this.ADDRESS3_INITIAL_BALANCE)
-  
-      
     })
     ValidationModuleCommon()
   })
@@ -80,25 +78,22 @@ function ValidationModuleProxyCommon () {
   context('Proxy - ValidationModule - setRuleEngine', function () {
     beforeEach(async function () {
       Object.assign(this, await loadFixture(fixture))
-      if(!this.CMTATERC1363){
+      if (!this.CMTATERC1363) {
         this.cmtat = await deployCMTATProxy(
           this._.address,
           this.admin.address,
           this.deployerAddress.address
         )
-      } 
-      else {
-          this.cmtat = await deployCMTATERC1363Proxy(
-            this._.address,
-            this.admin.address,
-            this.deployerAddress.address
-          )
-        
+      } else {
+        this.cmtat = await deployCMTATERC1363Proxy(
+          this._.address,
+          this.admin.address,
+          this.deployerAddress.address
+        )
       }
       this.ruleEngine = await ethers.deployContract('RuleEngineMock', [this.admin])
     })
     ValidationModuleSetRuleEngineCommon()
   })
-  
 }
 module.exports = ValidationModuleProxyCommon

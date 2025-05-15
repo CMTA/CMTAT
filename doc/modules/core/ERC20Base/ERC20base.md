@@ -12,6 +12,8 @@ The ERC20Base Module sets forth the ERC20 basic functionalities a token must hav
 
 ## Schema
 
+![ERC20BaseUML](../../../schema/uml/ERC20BaseUML.png)
+
 ### Inheritance
 
 ![surya_inheritance_ERC20BaseModule.sol](../../../schema/surya_inheritance/surya_inheritance_ERC20BaseModule.sol.png)

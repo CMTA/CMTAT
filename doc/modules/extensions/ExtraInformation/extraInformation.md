@@ -20,6 +20,8 @@ This document defines Base Module for the CMTA Token specification.
 
 ## Schema
 
+![ExtraInformationUML](../../../schema/uml/ExtraInformationUML.png)
+
 ### Inheritance
 
 ![surya_inheritance_BaseModule.sol](../../../schema/surya_inheritance/surya_inheritance_BaseModule.sol.png)
@@ -99,7 +101,6 @@ Only authorized users are allowed to call this function.
 |       └        |      setTokenId       |      Public ❗️       |       🛑        |     onlyRole     |
 |       └        |       setTerms        |      Public ❗️       |       🛑        |     onlyRole     |
 |       └        |    setInformation     |      Public ❗️       |       🛑        |     onlyRole     |
-|       └        |        setFlag        |      Public ❗️       |       🛑        |     onlyRole     |
 
 ### Events
 

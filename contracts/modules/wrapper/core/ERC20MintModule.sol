@@ -94,14 +94,7 @@ abstract contract ERC20MintModule is ERC20Upgradeable, IERC3643Mint, IERC3643Bat
         address[] calldata accounts,
         uint256[] calldata values
     ) public virtual override(IERC3643Mint) onlyRole(MINTER_ROLE) {
-        require(accounts.length > 0, CMTAT_MintModule_EmptyAccounts());
-        // We do not check that values is not empty since
-        // this require will throw an error in this case.
-        require(bool(accounts.length == values.length), CMTAT_MintModule_AccountsValueslengthMismatch());
-        for (uint256 i = 0; i < accounts.length; ++i ) {
-            _mintOverride(accounts[i], values[i]);
-        }
-        emit BatchMint(_msgSender(), accounts, values);
+       _batchMint(accounts, values);
     }
     
     /* inheritdoc IERC3643BatchTransfer
@@ -125,10 +118,23 @@ abstract contract ERC20MintModule is ERC20Upgradeable, IERC3643Mint, IERC3643Bat
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
 
+    function _batchMint(
+        address[] calldata accounts,
+        uint256[] calldata values
+    ) internal virtual {
+        require(accounts.length > 0, CMTAT_MintModule_EmptyAccounts());
+        // We do not check that values is not empty since
+        // this require will throw an error in this case.
+        require(bool(accounts.length == values.length), CMTAT_MintModule_AccountsValueslengthMismatch());
+        for (uint256 i = 0; i < accounts.length; ++i ) {
+            _mintOverride(accounts[i], values[i]);
+        }
+        emit BatchMint(_msgSender(), accounts, values);
+    }
     function _batchTransfer(
         address[] calldata tos,
         uint256[] calldata values
-    ) internal returns (bool) {
+    ) internal virtual returns (bool) {
         require(tos.length > 0, CMTAT_MintModule_EmptyTos());
         // We do not check that values is not empty since
         // this require will throw an error in this case.

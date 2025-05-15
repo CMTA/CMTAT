@@ -12,6 +12,8 @@ This document defines ERC20Mint Module for the CMTA Token specification.
 
 ## Schema
 
+![ERC20MintUML](../../../schema/uml/ERC20MintUML.png)
+
 ### Inheritance
 
 ![surya_inheritance_MintModule.sol](../../../schema/surya_inheritance/surya_inheritance_ERC20MintModule.sol.png)

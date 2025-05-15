@@ -10,6 +10,8 @@ This document defines Enforcement Module for the CMTA Token specification.
 
 ## Schema
 
+![EnforcementUML](../../../schema/uml/EnforcementUML.png)
+
 ### Inheritance
 
 #### EnforcementModule

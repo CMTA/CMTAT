@@ -6,6 +6,8 @@ This document defines Debt Module for the CMTA Token specification.
 
 ## Schema
 
+![DebtUML](../../../schema/uml/DebtUML.png)
+
 ### Inheritance
 
 ![surya_inheritance_DebtBaseModule.sol](../../../schema/surya_inheritance/surya_inheritance_DebtModule.sol.png)

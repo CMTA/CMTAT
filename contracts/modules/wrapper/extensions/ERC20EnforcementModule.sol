@@ -90,7 +90,21 @@ abstract contract ERC20EnforcementModule is ERC20Upgradeable, IERC7551ERC20Enfor
     * @inheritdoc IERC3643ERC20Enforcement
     */
     function freezePartialTokens(address account, uint256 value) public virtual override(IERC7551ERC20Enforcement, IERC3643ERC20Enforcement) onlyRole(ERC20ENFORCER_ROLE){
-        ERC20EnforcementModuleStorage storage $ = _getEnforcementModuleStorage();
+        _freezePartialTokens(account, value);
+    }
+
+    /**
+    *
+    * @inheritdoc IERC3643ERC20Enforcement
+    */
+    function unfreezePartialTokens(address account, uint256 value) public virtual override(IERC7551ERC20Enforcement, IERC3643ERC20Enforcement) onlyRole(ERC20ENFORCER_ROLE) {
+        _unfreezePartialTokens(account, value);
+    }
+    /*//////////////////////////////////////////////////////////////
+                            INTERNAL/PRIVATE FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
+     function _freezePartialTokens(address account, uint256 value) internal virtual{
+       ERC20EnforcementModuleStorage storage $ = _getEnforcementModuleStorage();
         // Retrieve current value
         uint256 balance = ERC20Upgradeable.balanceOf(account);
         uint256 frozenBalance = $._frozenTokens[account] + value;
@@ -101,11 +115,7 @@ abstract contract ERC20EnforcementModule is ERC20Upgradeable, IERC7551ERC20Enfor
         emit TokensFrozen(account, value);
     }
 
-    /**
-    *
-    * @inheritdoc IERC3643ERC20Enforcement
-    */
-    function unfreezePartialTokens(address account, uint256 value) public virtual override(IERC7551ERC20Enforcement, IERC3643ERC20Enforcement) onlyRole(ERC20ENFORCER_ROLE) {
+    function _unfreezePartialTokens(address account, uint256 value) internal virtual{
         ERC20EnforcementModuleStorage storage $ = _getEnforcementModuleStorage();
         require($._frozenTokens[account] >= value, CMTAT_ERC20EnforcementModule_ValueExceedsFrozenBalance());
         // Update frozenBalance
@@ -113,10 +123,6 @@ abstract contract ERC20EnforcementModule is ERC20Upgradeable, IERC7551ERC20Enfor
         emit TokensUnfrozen(account, value);
     }
 
-
-    /*//////////////////////////////////////////////////////////////
-                            INTERNAL/PRIVATE FUNCTIONS
-    //////////////////////////////////////////////////////////////*/
     function _unfreezeTokens(address from, uint256 value) internal virtual{
         uint256 balance = ERC20Upgradeable.balanceOf(from);
         if(value > balance){
@@ -131,6 +137,7 @@ abstract contract ERC20EnforcementModule is ERC20Upgradeable, IERC7551ERC20Enfor
             emit TokensUnfrozen(from, tokensToUnfreeze);
         }
     }
+
     function _forcedTransfer(address from, address to, uint256 value, bytes memory data) internal virtual {
         _unfreezeTokens(from, value);
         // Spend allowance
