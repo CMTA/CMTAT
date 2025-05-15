@@ -132,29 +132,29 @@ function PauseModuleCommon () {
         )
       ).to.equal(false)
 
-      if(!this.core){
+      if (!this.core) {
         // Assert
-      expect(
-        await this.cmtat.detectTransferRestriction(
-          this.address1,
-          this.address2,
-          AMOUNT_TO_TRANSFER
+        expect(
+          await this.cmtat.detectTransferRestriction(
+            this.address1,
+            this.address2,
+            AMOUNT_TO_TRANSFER
+          )
+        ).to.equal('1')
+        expect(await this.cmtat.messageForTransferRestriction(1)).to.equal(
+          'EnforcedPause'
         )
-      ).to.equal('1')
-      expect(await this.cmtat.messageForTransferRestriction(1)).to.equal(
-        'EnforcedPause'
-      )
-      await expect(
-        this.cmtat
-          .connect(this.address1)
-          .transfer(this.address2, AMOUNT_TO_TRANSFER)
-      )
-        .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
-        .withArgs(
-          this.address1.address,
-          this.address2.address,
-          AMOUNT_TO_TRANSFER
+        await expect(
+          this.cmtat
+            .connect(this.address1)
+            .transfer(this.address2, AMOUNT_TO_TRANSFER)
         )
+          .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
+          .withArgs(
+            this.address1.address,
+            this.address2.address,
+            AMOUNT_TO_TRANSFER
+          )
       }
     })
 
@@ -168,29 +168,29 @@ function PauseModuleCommon () {
       // Act
       await this.cmtat.connect(this.admin).pause()
 
-      if(!this.core){
-              // Assert
-      expect(
-        await this.cmtat.detectTransferRestriction(
-          this.address1,
-          this.address2,
-          AMOUNT_TO_TRANSFER
+      if (!this.core) {
+        // Assert
+        expect(
+          await this.cmtat.detectTransferRestriction(
+            this.address1,
+            this.address2,
+            AMOUNT_TO_TRANSFER
+          )
+        ).to.equal('1')
+        expect(await this.cmtat.messageForTransferRestriction(1)).to.equal(
+          'EnforcedPause'
         )
-      ).to.equal('1')
-      expect(await this.cmtat.messageForTransferRestriction(1)).to.equal(
-        'EnforcedPause'
-      )
-      await expect(
-        this.cmtat
-          .connect(this.address3)
-          .transferFrom(this.address1, this.address2, AMOUNT_TO_TRANSFER)
-      )
-        .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
-        .withArgs(
-          this.address1.address,
-          this.address2.address,
-          AMOUNT_TO_TRANSFER
+        await expect(
+          this.cmtat
+            .connect(this.address3)
+            .transferFrom(this.address1, this.address2, AMOUNT_TO_TRANSFER)
         )
+          .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
+          .withArgs(
+            this.address1.address,
+            this.address2.address,
+            AMOUNT_TO_TRANSFER
+          )
       }
     })
   })

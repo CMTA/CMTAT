@@ -8,13 +8,8 @@ const {
 } = require('../deploymentUtils')
 describe('CMTAT ERC1363 - Proxy - ValidationModule', function () {
   beforeEach(async function () {
-   
     this.CMTATERC1363 = true
-    
   })
   ValidationModuleProxyCommon()
   SnapshotModuleProxyCommon()
- 
 })
-
-

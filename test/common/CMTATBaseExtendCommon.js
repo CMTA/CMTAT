@@ -5,13 +5,13 @@ const {
   ZERO_ADDRESS
 } = require('../utils')
 const { expect } = require('chai')
-//const REASON = 'BURN_TEST'
+// const REASON = 'BURN_TEST'
 const REASON_STRING = 'CrosschainBurn'
 const REASON_EVENT = ethers.toUtf8Bytes(REASON_STRING)
 const REASON_MINT_EVENT = ethers.toUtf8Bytes('CrosschainMint')
-const REASON = ethers.Typed.bytes(REASON_EVENT);
-const REASON_EMPTY = ethers.Typed.bytes(ethers.toUtf8Bytes(""))
-const REASON_EMPTY_EVENT = ethers.toUtf8Bytes("")
+const REASON = ethers.Typed.bytes(REASON_EVENT)
+const REASON_EMPTY = ethers.Typed.bytes(ethers.toUtf8Bytes(''))
+const REASON_EMPTY_EVENT = ethers.toUtf8Bytes('')
 function CMTATBASEXTENDCommon () {
   context('CrosschainBurn', function () {
     const INITIAL_SUPPLY = 50
@@ -19,8 +19,7 @@ function CMTATBASEXTENDCommon () {
     const VALUE1 = 20
     const DIFFERENCE = INITIAL_SUPPLY - VALUE1
 
-    async function testBurn(sender) {
-
+    async function testBurn (sender) {
     // Act
       // Burn 20
       this.logs = await this.cmtat
@@ -63,11 +62,11 @@ function CMTATBASEXTENDCommon () {
       await this.cmtat.connect(this.admin).mint(this.address1, INITIAL_SUPPLY)
       expect(await this.cmtat.totalSupply()).to.equal(INITIAL_SUPPLY)
       await this.cmtat
-      .connect(this.address1,)
-      .approve(this.admin, INITIAL_SUPPLY)
+        .connect(this.address1)
+        .approve(this.admin, INITIAL_SUPPLY)
       await this.cmtat
-      .connect(this.address1,)
-      .approve(this.address2, INITIAL_SUPPLY)
+        .connect(this.address1)
+        .approve(this.address2, INITIAL_SUPPLY)
     })
 
     it('testCanBeBurntByAdmin', async function () {
@@ -89,8 +88,8 @@ function CMTATBASEXTENDCommon () {
       const AMOUNT_TO_BURN = 200n
       const ADDRESS1_BALANCE = await this.cmtat.balanceOf(this.address1)
       await this.cmtat
-      .connect(this.address1,)
-      .approve(this.admin, AMOUNT_TO_BURN)
+        .connect(this.address1)
+        .approve(this.admin, AMOUNT_TO_BURN)
       // Act
       await expect(
         this.cmtat.connect(this.admin).crosschainBurn(this.address1, AMOUNT_TO_BURN)
@@ -112,8 +111,8 @@ function CMTATBASEXTENDCommon () {
 
     it('testCannotBeBurnIfContractIsDeactivated', async function () {
       await this.cmtat
-      .connect(this.admin)
-      .deactivateContract()
+        .connect(this.admin)
+        .deactivateContract()
       await expect(
         this.cmtat.connect(this.admin).crosschainBurn(this.address1, VALUE1)
       )
@@ -125,8 +124,8 @@ function CMTATBASEXTENDCommon () {
 
     it('testCannotBeBurnIfContractIsPaused', async function () {
       await this.cmtat
-      .connect(this.admin)
-      .pause()
+        .connect(this.admin)
+        .pause()
       await expect(
         this.cmtat.connect(this.admin).crosschainBurn(this.address1, VALUE1)
       )
@@ -137,23 +136,22 @@ function CMTATBASEXTENDCommon () {
     })
 
     it('testCannotBeBurnIfAddressIsFrozen', async function () {
-          // Arrange
-          await this.cmtat.connect(this.admin).setAddressFrozen(this.address1, true)
+      // Arrange
+      await this.cmtat.connect(this.admin).setAddressFrozen(this.address1, true)
 
-          // Act
-          const VALUE = 20
-          await expect(
-            this.cmtat
-            .connect(this.admin)
-            .crosschainBurn(this.address1, VALUE)
-          )
-            .to.be.revertedWithCustomError(
-              this.cmtat,
-              'CMTAT_InvalidTransfer'
-            )
-            .withArgs(this.address1.address, ZERO_ADDRESS, VALUE)
+      // Act
+      const VALUE = 20
+      await expect(
+        this.cmtat
+          .connect(this.admin)
+          .crosschainBurn(this.address1, VALUE)
+      )
+        .to.be.revertedWithCustomError(
+          this.cmtat,
+          'CMTAT_InvalidTransfer'
+        )
+        .withArgs(this.address1.address, ZERO_ADDRESS, VALUE)
     })
-
   })
 
   context('burn sender tokens', function () {
@@ -163,7 +161,7 @@ function CMTATBASEXTENDCommon () {
     const VALUE_TYPED = ethers.Typed.uint256(20)
     const DIFFERENCE = INITIAL_SUPPLY - VALUE1
     const DIFFERENCE_TYPED = ethers.Typed.uint256(30)
-    async function testBurn(sender) {
+    async function testBurn (sender) {
     // Act
       // Burn 20
       this.logs = await this.cmtat
@@ -176,8 +174,8 @@ function CMTATBASEXTENDCommon () {
         .withArgs(sender, ZERO_ADDRESS, VALUE1)
       // Emits a Burn event
       await expect(this.logs)
-      .to.emit(this.cmtat, 'CrosschainBurn')
-      .withArgs(sender,VALUE1 ,sender)
+        .to.emit(this.cmtat, 'CrosschainBurn')
+        .withArgs(sender, VALUE1, sender)
       // Check balances and total supply
       expect(await this.cmtat.balanceOf(sender)).to.equal(DIFFERENCE)
       expect(await this.cmtat.totalSupply()).to.equal(DIFFERENCE)
@@ -186,16 +184,16 @@ function CMTATBASEXTENDCommon () {
       // Act
       this.logs = await this.cmtat
         .connect(sender)
-        .burn(DIFFERENCE )
-        
+        .burn(DIFFERENCE)
+
       // Assert
       // Emits a Transfer event
       await expect(this.logs)
         .to.emit(this.cmtat, 'Transfer')
       // Emits a Burn event
       await expect(this.logs)
-      .to.emit(this.cmtat, 'CrosschainBurn')
-      .withArgs(sender, DIFFERENCE, sender )
+        .to.emit(this.cmtat, 'CrosschainBurn')
+        .withArgs(sender, DIFFERENCE, sender)
       // Check balances and total supply
       expect(await this.cmtat.balanceOf(sender)).to.equal(0)
       expect(await this.cmtat.totalSupply()).to.equal(0)
@@ -205,7 +203,6 @@ function CMTATBASEXTENDCommon () {
       await this.cmtat.connect(this.admin).mint(this.address1, INITIAL_SUPPLY)
       expect(await this.cmtat.totalSupply()).to.equal(INITIAL_SUPPLY)
     })
-
 
     it('testCanBeBurntByBurnerRole', async function () {
       // Arrange
@@ -219,8 +216,8 @@ function CMTATBASEXTENDCommon () {
 
     it('testCannotBeBurntIfBalanceExceeds', async function () {
       await this.cmtat
-      .connect(this.admin)
-      .grantRole(BURNER_FROM_ROLE, this.address1)
+        .connect(this.admin)
+        .grantRole(BURNER_FROM_ROLE, this.address1)
       // error AccessControlUnauthorizedAccount(address account, bytes32 neededRole);
       const AMOUNT_TO_BURN = 200n
       const ADDRESS1_BALANCE = await this.cmtat.balanceOf(this.address1)
@@ -242,8 +239,8 @@ function CMTATBASEXTENDCommon () {
         )
         .withArgs(this.address2.address, BURNER_FROM_ROLE)
 
-        // Without reason
-         await expect(
+      // Without reason
+      await expect(
         this.cmtat.connect(this.address2).burn(20n)
       )
         .to.be.revertedWithCustomError(
@@ -255,8 +252,8 @@ function CMTATBASEXTENDCommon () {
 
     it('testCannotBeMBurnIfContractIsDeactivated', async function () {
       await this.cmtat
-      .connect(this.admin)
-      .deactivateContract()
+        .connect(this.admin)
+        .deactivateContract()
       await expect(
         this.cmtat.connect(this.admin).burn(VALUE_TYPED)
       )
@@ -268,11 +265,11 @@ function CMTATBASEXTENDCommon () {
 
     it('testCanBeBurnEvenIfContractIsPaused', async function () {
       await this.cmtat
-      .connect(this.admin)
-      .grantRole(BURNER_FROM_ROLE, this.address1)
+        .connect(this.admin)
+        .grantRole(BURNER_FROM_ROLE, this.address1)
       await this.cmtat
-      .connect(this.admin)
-      .pause()
+        .connect(this.admin)
+        .pause()
       await expect(
         this.cmtat.connect(this.admin).burn(VALUE_TYPED)
       )
@@ -286,15 +283,15 @@ function CMTATBASEXTENDCommon () {
       // Arrange
       await this.cmtat.connect(this.admin).setAddressFrozen(this.address1, true)
       await this.cmtat
-      .connect(this.admin)
-      .grantRole(BURNER_FROM_ROLE, this.address1)
+        .connect(this.admin)
+        .grantRole(BURNER_FROM_ROLE, this.address1)
       // Act
       const VALUE = 20
       const VALUE_TYPED = ethers.Typed.uint256(20)
       await expect(
         this.cmtat
-        .connect(this.address1)
-        .burn(VALUE_TYPED)
+          .connect(this.address1)
+          .burn(VALUE_TYPED)
       )
         .to.be.revertedWithCustomError(
           this.cmtat,
@@ -302,10 +299,7 @@ function CMTATBASEXTENDCommon () {
         )
         .withArgs(this.address1.address, ZERO_ADDRESS, VALUE)
     })
-
   })
-
-
 
   context('burnFrom', function () {
     const INITIAL_SUPPLY = 50n
@@ -361,8 +355,8 @@ function CMTATBASEXTENDCommon () {
     it('testCannotBeBurnFromIfContractIsPaused', async function () {
       // Arrange
       await this.cmtat
-      .connect(this.admin)
-      .pause()
+        .connect(this.admin)
+        .pause()
       await this.cmtat.connect(this.address1).approve(this.admin, 50n)
       // Act
       await expect(
@@ -375,8 +369,8 @@ function CMTATBASEXTENDCommon () {
 
     it('testCannotBeBurnFromIfContractIsDeactivated', async function () {
       await this.cmtat
-      .connect(this.admin)
-      .deactivateContract()
+        .connect(this.admin)
+        .deactivateContract()
       await this.cmtat.connect(this.address1).approve(this.admin, 50n)
       await expect(
         this.cmtat.connect(this.admin).burnFrom(this.address1, 20n)
@@ -384,59 +378,56 @@ function CMTATBASEXTENDCommon () {
         .to.be.revertedWithCustomError(
           this.cmtat,
           'EnforcedPause')
-
     })
-
-
   })
   context('CrossChainMinting', function () {
     const VALUE1 = 20n
     const VALUE2 = 50n
-    async function testMint(sender) {
+    async function testMint (sender) {
       // Arrange
-  
-        // Arrange - Assert
-        // Check first balance
-        expect(await this.cmtat.balanceOf(this.address1)).to.equal(0n)
-  
-        // Act
-        // Issue 20 and check balances and total supply
-        this.logs = await this.cmtat
-          .connect(sender)
-          .crosschainMint(this.address1, VALUE1)
-  
-        // Assert
-        expect(await this.cmtat.balanceOf(this.address1)).to.equal(VALUE1)
-        expect(await this.cmtat.totalSupply()).to.equal(VALUE1)
-  
-        // Assert event
-        // emits a Transfer event
-        await expect(this.logs)
-          .to.emit(this.cmtat, 'Transfer')
-          .withArgs(ZERO_ADDRESS, this.address1, VALUE1)
-        await expect(this.logs)
-          .to.emit(this.cmtat, 'CrosschainMint')
-          .withArgs(this.address1, VALUE1, sender)
-  
-        // Act
-        // Issue 50 and check intermediate balances and total supply
-        this.logs = await this.cmtat
-          .connect(sender)
-          .crosschainMint(this.address2, VALUE2)
-  
-        // Assert
-        expect(await this.cmtat.balanceOf(this.address2)).to.equal(VALUE2)
-        expect(await this.cmtat.totalSupply()).to.equal(VALUE1 + VALUE2)
-  
-        // Assert event
-        // emits a Transfer event
-        await expect(this.logs)
-          .to.emit(this.cmtat, 'Transfer')
-          .withArgs(ZERO_ADDRESS, this.address2, VALUE2)
+
+      // Arrange - Assert
+      // Check first balance
+      expect(await this.cmtat.balanceOf(this.address1)).to.equal(0n)
+
+      // Act
+      // Issue 20 and check balances and total supply
+      this.logs = await this.cmtat
+        .connect(sender)
+        .crosschainMint(this.address1, VALUE1)
+
+      // Assert
+      expect(await this.cmtat.balanceOf(this.address1)).to.equal(VALUE1)
+      expect(await this.cmtat.totalSupply()).to.equal(VALUE1)
+
+      // Assert event
+      // emits a Transfer event
+      await expect(this.logs)
+        .to.emit(this.cmtat, 'Transfer')
+        .withArgs(ZERO_ADDRESS, this.address1, VALUE1)
+      await expect(this.logs)
+        .to.emit(this.cmtat, 'CrosschainMint')
+        .withArgs(this.address1, VALUE1, sender)
+
+      // Act
+      // Issue 50 and check intermediate balances and total supply
+      this.logs = await this.cmtat
+        .connect(sender)
+        .crosschainMint(this.address2, VALUE2)
+
+      // Assert
+      expect(await this.cmtat.balanceOf(this.address2)).to.equal(VALUE2)
+      expect(await this.cmtat.totalSupply()).to.equal(VALUE1 + VALUE2)
+
+      // Assert event
+      // emits a Transfer event
+      await expect(this.logs)
+        .to.emit(this.cmtat, 'Transfer')
+        .withArgs(ZERO_ADDRESS, this.address2, VALUE2)
         // emits a Mint event
-        await expect(this.logs)
-          .to.emit(this.cmtat, 'CrosschainMint')
-          .withArgs(this.address2, VALUE2, sender)
+      await expect(this.logs)
+        .to.emit(this.cmtat, 'CrosschainMint')
+        .withArgs(this.address2, VALUE2, sender)
     }
 
     /**
@@ -452,9 +443,9 @@ function CMTATBASEXTENDCommon () {
       await this.cmtat
         .connect(this.admin)
         .grantRole(CROSS_CHAIN_ROLE, this.address1)
-      
-        const bindTest = testMint.bind(this)
-        await bindTest(this.address1)
+
+      const bindTest = testMint.bind(this)
+      await bindTest(this.address1)
     })
 
     // reverts when issuing by a non minter
@@ -471,8 +462,8 @@ function CMTATBASEXTENDCommon () {
 
     it('testCannotBeMintedIfContractIsPaused', async function () {
       await this.cmtat
-      .connect(this.admin)
-      .pause()
+        .connect(this.admin)
+        .pause()
       await expect(
         this.cmtat.connect(this.admin).crosschainMint(this.address1, VALUE1)
       )
@@ -484,8 +475,8 @@ function CMTATBASEXTENDCommon () {
 
     it('testCannotBeMintedIfContractIsDeactivated', async function () {
       await this.cmtat
-      .connect(this.admin)
-      .deactivateContract()
+        .connect(this.admin)
+        .deactivateContract()
       await expect(
         this.cmtat.connect(this.admin).crosschainMint(this.address1, VALUE1)
       )
@@ -497,8 +488,8 @@ function CMTATBASEXTENDCommon () {
 
     it('testCannotBeMintedIfToIsFrozen', async function () {
       await this.cmtat
-      .connect(this.admin)
-      .setAddressFrozen(this.address1, true);
+        .connect(this.admin)
+        .setAddressFrozen(this.address1, true)
       await expect(
         this.cmtat.connect(this.admin).crosschainMint(this.address1, VALUE1)
       )
@@ -511,19 +502,19 @@ function CMTATBASEXTENDCommon () {
   context('AdminSetDebt', function () {
     it('testAdminCanSetDebt', async function () {
       const INTEREST_RATE = 1
-      const ParValue = 2;
+      const ParValue = 2
       // Arrange
-      expect((await this.cmtat.debt()).guarantor).to.equal('');
-      expect((await this.cmtat.debt()).bondHolder).to.equal('');
-      expect((await this.cmtat.debt()).maturityDate).to.equal('');
-      expect((await this.cmtat.debt()).interestRate).to.equal('0');
-      expect((await this.cmtat.debt()).parValue).to.equal('0');
-      expect((await this.cmtat.debt()).interestScheduleFormat).to.equal('');
-      expect((await this.cmtat.debt()).interestPaymentDate).to.equal('');
-      expect((await this.cmtat.debt()).dayCountConvention).to.equal('');
-      expect((await this.cmtat.debt()).businessDayConvention).to.equal('');
-      expect((await this.cmtat.debt()).publicHolidaysCalendar).to.equal('');
-      expect((await this.cmtat.debt()).issuanceDate).to.equal('');
+      expect((await this.cmtat.debt()).guarantor).to.equal('')
+      expect((await this.cmtat.debt()).bondHolder).to.equal('')
+      expect((await this.cmtat.debt()).maturityDate).to.equal('')
+      expect((await this.cmtat.debt()).interestRate).to.equal('0')
+      expect((await this.cmtat.debt()).parValue).to.equal('0')
+      expect((await this.cmtat.debt()).interestScheduleFormat).to.equal('')
+      expect((await this.cmtat.debt()).interestPaymentDate).to.equal('')
+      expect((await this.cmtat.debt()).dayCountConvention).to.equal('')
+      expect((await this.cmtat.debt()).businessDayConvention).to.equal('')
+      expect((await this.cmtat.debt()).publicHolidaysCalendar).to.equal('')
+      expect((await this.cmtat.debt()).issuanceDate).to.equal('')
       expect((await this.cmtat.debt()).couponFrequency).to.equal('')
 
       // Act
@@ -542,38 +533,36 @@ function CMTATBASEXTENDCommon () {
           issuanceDate: 'issuanceDate',
           couponFrequency: 'couponFrequency'
         }
-      );
+      )
       // Assert
       // Value
       expect((await this.cmtat.debt()).interestRate).to.equal(
         INTEREST_RATE
-      );
-      expect((await this.cmtat.debt()).parValue).to.equal(ParValue);
-      expect((await this.cmtat.debt()).guarantor).to.equal('guarantor');
-      expect((await this.cmtat.debt()).bondHolder).to.equal('bondHolder');
-      expect((await this.cmtat.debt()).maturityDate).to.equal('maturityDate');
+      )
+      expect((await this.cmtat.debt()).parValue).to.equal(ParValue)
+      expect((await this.cmtat.debt()).guarantor).to.equal('guarantor')
+      expect((await this.cmtat.debt()).bondHolder).to.equal('bondHolder')
+      expect((await this.cmtat.debt()).maturityDate).to.equal('maturityDate')
       expect((await this.cmtat.debt()).interestScheduleFormat).to.equal(
         'interestScheduleFormat'
-      );
+      )
       expect((await this.cmtat.debt()).interestPaymentDate).to.equal(
         'interestPaymentDate'
-      );
+      )
       expect((await this.cmtat.debt()).dayCountConvention).to.equal(
         'dayCountConvention'
-      );
+      )
       expect((await this.cmtat.debt()).businessDayConvention).to.equal(
         'businessDayConvention'
-      );
+      )
       expect((await this.cmtat.debt()).publicHolidaysCalendar).to.equal(
         'publicHolidaysCalendar'
-      );
-      expect((await this.cmtat.debt()).issuanceDate).to.equal('issuanceDate');
+      )
+      expect((await this.cmtat.debt()).issuanceDate).to.equal('issuanceDate')
       expect((await this.cmtat.debt()).couponFrequency).to.equal('couponFrequency')
 
       // events
     })
   })
-
-
 }
 module.exports = CMTATBASEXTENDCommon

@@ -2,10 +2,8 @@ const ValidationModuleProxyCommon = require('../../../common/ValidationModule/pr
 
 describe('Proxy - ValidationModule', function () {
   beforeEach(async function () {
-    
+
   })
 
   ValidationModuleProxyCommon()
 })
-
-

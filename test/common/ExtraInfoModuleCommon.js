@@ -132,8 +132,8 @@ function ExtraInfoModuleCommon () {
       // Assert
       expect(await this.cmtat.metaData()).to.equal(NEW_METADATA)
       await expect(this.logs)
-      .to.emit(this.cmtat, 'MetaData')
-      .withArgs(NEW_METADATA)
+        .to.emit(this.cmtat, 'MetaData')
+        .withArgs(NEW_METADATA)
     })
 
     it('testCannotNonAdminUpdateMetadata', async function () {

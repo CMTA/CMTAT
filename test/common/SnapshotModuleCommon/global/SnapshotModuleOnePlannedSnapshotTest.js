@@ -4,8 +4,8 @@ const { checkSnapshot } = require('../SnapshotModuleUtils/SnapshotModuleUtils')
 const { ZERO_ADDRESS } = require('../../../utils')
 const REASON_STRING = 'BURN_TEST'
 const REASON_EVENT = ethers.toUtf8Bytes(REASON_STRING)
-const REASON = ethers.Typed.bytes(REASON_EVENT);
-const REASON_EMPTY = ethers.Typed.bytes(ethers.toUtf8Bytes(""))
+const REASON = ethers.Typed.bytes(REASON_EVENT)
+const REASON_EMPTY = ethers.Typed.bytes(ethers.toUtf8Bytes(''))
 
 function SnapshotModuleOnePlannedSnapshotTest () {
   const ADDRESSES = [this.address1, this.address2, this.address3]

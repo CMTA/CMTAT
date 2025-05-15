@@ -20,19 +20,19 @@ function AuthorizationModuleCommon () {
         .to.emit(this.cmtat, 'RoleGranted')
         .withArgs(DEFAULT_ADMIN_ROLE, this.address1, this.admin)
 
-        // Act
-        this.logs = await this.cmtat
+      // Act
+      this.logs = await this.cmtat
         .connect(this.admin)
         .renounceRole(DEFAULT_ADMIN_ROLE, this.admin)
-       // Assert
-       expect(await this.cmtat.hasRole(DEFAULT_ADMIN_ROLE, this.admin)).to.equal(
+      // Assert
+      expect(await this.cmtat.hasRole(DEFAULT_ADMIN_ROLE, this.admin)).to.equal(
         false
       )
 
       // New admin can mint
       this.logs = await this.cmtat
-      .connect(this.address1)
-      .mint(this.address1, 100)
+        .connect(this.address1)
+        .mint(this.address1, 100)
     })
     it('testAdminCanGrantRole', async function () {
       // Act

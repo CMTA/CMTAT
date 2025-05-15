@@ -3,54 +3,53 @@ const { ZERO_ADDRESS, MINTER_ROLE } = require('../utils.js')
 const VALUE1 = 20n
 const VALUE2 = 50n
 function ERC20MintModuleCommon () {
-  
   context('Minting', function () {
-    async function testMint(sender) {
+    async function testMint (sender) {
       // Arrange
-  
-        // Arrange - Assert
-        // Check first balance
-        expect(await this.cmtat.balanceOf(this.address1)).to.equal(0n)
-  
-        // Act
-        // Issue 20 and check balances and total supply
-        this.logs = await this.cmtat
-          .connect(sender)
-          .mint(this.address1, VALUE1)
-  
-        // Assert
-        expect(await this.cmtat.balanceOf(this.address1)).to.equal(VALUE1)
-        expect(await this.cmtat.totalSupply()).to.equal(VALUE1)
-  
-        // Assert event
-        // emits a Transfer event
-        await expect(this.logs)
-          .to.emit(this.cmtat, 'Transfer')
-          .withArgs(ZERO_ADDRESS, this.address1, VALUE1)
+
+      // Arrange - Assert
+      // Check first balance
+      expect(await this.cmtat.balanceOf(this.address1)).to.equal(0n)
+
+      // Act
+      // Issue 20 and check balances and total supply
+      this.logs = await this.cmtat
+        .connect(sender)
+        .mint(this.address1, VALUE1)
+
+      // Assert
+      expect(await this.cmtat.balanceOf(this.address1)).to.equal(VALUE1)
+      expect(await this.cmtat.totalSupply()).to.equal(VALUE1)
+
+      // Assert event
+      // emits a Transfer event
+      await expect(this.logs)
+        .to.emit(this.cmtat, 'Transfer')
+        .withArgs(ZERO_ADDRESS, this.address1, VALUE1)
         // emits a Mint event
-        await expect(this.logs)
-          .to.emit(this.cmtat, 'Mint')
-          .withArgs(this.address1, VALUE1, "0x")
-  
-        // Act
-        // Issue 50 and check intermediate balances and total supply
-        this.logs = await this.cmtat
-          .connect(sender)
-          .mint(this.address2, VALUE2)
-  
-        // Assert
-        expect(await this.cmtat.balanceOf(this.address2)).to.equal(VALUE2)
-        expect(await this.cmtat.totalSupply()).to.equal(VALUE1 + VALUE2)
-  
-        // Assert event
-        // emits a Transfer event
-        await expect(this.logs)
-          .to.emit(this.cmtat, 'Transfer')
-          .withArgs(ZERO_ADDRESS, this.address2, VALUE2)
+      await expect(this.logs)
+        .to.emit(this.cmtat, 'Mint')
+        .withArgs(this.address1, VALUE1, '0x')
+
+      // Act
+      // Issue 50 and check intermediate balances and total supply
+      this.logs = await this.cmtat
+        .connect(sender)
+        .mint(this.address2, VALUE2)
+
+      // Assert
+      expect(await this.cmtat.balanceOf(this.address2)).to.equal(VALUE2)
+      expect(await this.cmtat.totalSupply()).to.equal(VALUE1 + VALUE2)
+
+      // Assert event
+      // emits a Transfer event
+      await expect(this.logs)
+        .to.emit(this.cmtat, 'Transfer')
+        .withArgs(ZERO_ADDRESS, this.address2, VALUE2)
         // emits a Mint event
-        await expect(this.logs)
-          .to.emit(this.cmtat, 'Mint')
-          .withArgs(this.address2, VALUE2, "0x")
+      await expect(this.logs)
+        .to.emit(this.cmtat, 'Mint')
+        .withArgs(this.address2, VALUE2, '0x')
     }
 
     /**
@@ -66,9 +65,9 @@ function ERC20MintModuleCommon () {
       await this.cmtat
         .connect(this.admin)
         .grantRole(MINTER_ROLE, this.address1)
-      
-        const bindTest = testMint.bind(this)
-        await bindTest(this.address1)
+
+      const bindTest = testMint.bind(this)
+      await bindTest(this.address1)
     })
 
     // reverts when issuing by a non minter
@@ -85,16 +84,16 @@ function ERC20MintModuleCommon () {
 
     it('testCanBeMintedEvenIfContractIsPaused', async function () {
       await this.cmtat
-      .connect(this.admin)
-      .pause()
+        .connect(this.admin)
+        .pause()
       const bindTest = testMint.bind(this)
       await bindTest(this.admin)
     })
 
     it('testCannotBeMintedIfContractIsDeactivated', async function () {
       await this.cmtat
-      .connect(this.admin)
-      .deactivateContract()
+        .connect(this.admin)
+        .deactivateContract()
       await expect(
         this.cmtat.connect(this.admin).mint(this.address1, VALUE1)
       )
@@ -106,8 +105,8 @@ function ERC20MintModuleCommon () {
 
     it('testCannotBeMintedIfToIsFrozen', async function () {
       await this.cmtat
-      .connect(this.admin)
-      .setAddressFrozen(this.address1, true);
+        .connect(this.admin)
+        .setAddressFrozen(this.address1, true)
       await expect(
         this.cmtat.connect(this.admin).mint(this.address1, VALUE1)
       )
@@ -120,7 +119,7 @@ function ERC20MintModuleCommon () {
 
   context('Batch Minting', function () {
     const TOKEN_SUPPLY_BY_HOLDERS = [10n, 100n, 1000n]
-    async function testMintBatch(sender){
+    async function testMintBatch (sender) {
       const TOKEN_HOLDER = [this.admin, this.address1, this.address2]
       // Arrange - Assert
       // Check first balance
@@ -153,13 +152,11 @@ function ERC20MintModuleCommon () {
           .to.emit(this.cmtat, 'Transfer')
           .withArgs(ZERO_ADDRESS, TOKEN_HOLDER[i], TOKEN_SUPPLY_BY_HOLDERS[i])
       }
-     
-        // emits a Mint event
-        await expect(this.logs)
-          .to.emit(this.cmtat, 'BatchMint')
-          .withArgs(sender, TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS)
-      
 
+      // emits a Mint event
+      await expect(this.logs)
+        .to.emit(this.cmtat, 'BatchMint')
+        .withArgs(sender, TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS)
     }
     /**
      * The admin is assigned the MINTER role when the contract is deployed
@@ -180,8 +177,8 @@ function ERC20MintModuleCommon () {
 
     it('testCanBeMintedBatchEvenIfContractIsPaused', async function () {
       await this.cmtat
-      .connect(this.admin)
-      .pause()
+        .connect(this.admin)
+        .pause()
       const bindTest = testMintBatch.bind(this)
       await bindTest(this.admin)
     })

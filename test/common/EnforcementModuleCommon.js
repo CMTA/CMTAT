@@ -1,41 +1,39 @@
 const { ENFORCER_ROLE } = require('../utils')
 const { expect } = require('chai')
 
-
 const REASON_FREEZE_STRING = 'testFreeze'
 const REASON_FREEZE_EVENT = ethers.toUtf8Bytes(REASON_FREEZE_STRING)
-const reasonFreeze = ethers.Typed.bytes(REASON_FREEZE_EVENT);
-const REASON_FREEZE_EMPTY = ethers.Typed.bytes(ethers.toUtf8Bytes(""))
-
+const reasonFreeze = ethers.Typed.bytes(REASON_FREEZE_EVENT)
+const REASON_FREEZE_EMPTY = ethers.Typed.bytes(ethers.toUtf8Bytes(''))
 
 const REASON_STRING = 'testUnfreeze'
 const REASON_UNFREEZE_EVENT = ethers.toUtf8Bytes(REASON_STRING)
-const reasonUnfreeze = ethers.Typed.bytes(REASON_UNFREEZE_EVENT);
-const REASON_EMPTY = ethers.Typed.bytes(ethers.toUtf8Bytes(""))
-const REASON_EMPTY_EVENT = ethers.toUtf8Bytes("")
+const reasonUnfreeze = ethers.Typed.bytes(REASON_UNFREEZE_EVENT)
+const REASON_EMPTY = ethers.Typed.bytes(ethers.toUtf8Bytes(''))
+const REASON_EMPTY_EVENT = ethers.toUtf8Bytes('')
 function EnforcementModuleCommon () {
   context('Freeze', function () {
-    async function testFreeze(sender){
-       // Arrange - Assert
-       expect(await this.cmtat.isFrozen(this.address1)).to.equal(false)
-       // Act
-       this.logs = await this.cmtat
-         .connect(sender)
-         .setAddressFrozen(this.address1, true, reasonFreeze)
-       // Assert
-       expect(
+    async function testFreeze (sender) {
+      // Arrange - Assert
+      expect(await this.cmtat.isFrozen(this.address1)).to.equal(false)
+      // Act
+      this.logs = await this.cmtat
+        .connect(sender)
+        .setAddressFrozen(this.address1, true, reasonFreeze)
+      // Assert
+      expect(
         await this.cmtat.canTransfer(this.address1, this.address2, 10)
       ).to.equal(false)
-       expect(await this.cmtat.isFrozen(this.address1)).to.equal(true)
-       // emits a Freeze event
-       await expect(this.logs)
-         .to.emit(this.cmtat, 'AddressFrozen')
-         .withArgs(this.address1, true, sender, REASON_FREEZE_EVENT)
+      expect(await this.cmtat.isFrozen(this.address1)).to.equal(true)
+      // emits a Freeze event
+      await expect(this.logs)
+        .to.emit(this.cmtat, 'AddressFrozen')
+        .withArgs(this.address1, true, sender, REASON_FREEZE_EVENT)
     }
 
-    async function testFreezeBatch(sender){
-      let accounts = [this.address1, this.address2]
-      let freeze = [true, true]
+    async function testFreezeBatch (sender) {
+      const accounts = [this.address1, this.address2]
+      const freeze = [true, true]
       // Arrange - Assert
       expect(await this.cmtat.isFrozen(this.address1)).to.equal(false)
       expect(await this.cmtat.isFrozen(this.address2)).to.equal(false)
@@ -45,81 +43,80 @@ function EnforcementModuleCommon () {
         .batchSetAddressFrozen(accounts, freeze)
       // Assert
       expect(
-       await this.cmtat.canTransfer(this.address1, this.address3, 10)
-     ).to.equal(false)
-     expect(
-      await this.cmtat.canTransfer(this.address2, this.address3, 10)
-    ).to.equal(false)
-    expect(
-      await this.cmtat.canTransfer(this.address1, this.address2, 10)
-    ).to.equal(false)
-    expect(await this.cmtat.isFrozen(this.address1)).to.equal(true)
-    expect(await this.cmtat.isFrozen(this.address2)).to.equal(true)
-      // emits a Freeze event
-    await expect(this.logs)
-        .to.emit(this.cmtat, 'AddressFrozen')
-        .withArgs(this.address1, true, sender, REASON_EMPTY_EVENT)
-    await expect(this.logs)
-        .to.emit(this.cmtat, 'AddressFrozen')
-        .withArgs(this.address2, true, sender, REASON_EMPTY_EVENT)
-   }
-
-   async function testPartialFreezeBatch(sender){
-    let accounts = [this.address1, this.address2, this.address3]
-    let freeze = [false, false, true]
-
-    // Arrange
-    testFreezeBatch(sender)
-    
-    // Act
-    this.logs = await this.cmtat
-      .connect(sender)
-      .batchSetAddressFrozen(accounts, freeze)
-    // Assert
-    expect(
-     await this.cmtat.canTransfer(this.address1, this.address3, 10)
-   ).to.equal(false)
-   expect(
-    await this.cmtat.canTransfer(this.address2, this.address3, 10)
-  ).to.equal(false)
-  expect(
-    await this.cmtat.canTransfer(this.address1, this.address2, 10)
-  ).to.equal(true)
-  expect(await this.cmtat.isFrozen(this.address1)).to.equal(false)
-  expect(await this.cmtat.isFrozen(this.address2)).to.equal(false)
-    // emits a Freeze event
-  await expect(this.logs)
-      .to.emit(this.cmtat, 'AddressFrozen')
-      .withArgs(this.address1, false, sender, REASON_EMPTY_EVENT)
-  await expect(this.logs)
-      .to.emit(this.cmtat, 'AddressFrozen')
-      .withArgs(this.address2, false, sender, REASON_EMPTY_EVENT)
-    await expect(this.logs)
-      .to.emit(this.cmtat, 'AddressFrozen')
-      .withArgs(this.address3, true, sender, REASON_EMPTY_EVENT)
- }
-
-    async function testUnfreeze(sender){
-       // Arrange
-       await this.cmtat.connect(sender).setAddressFrozen(this.address1, true, reasonFreeze)
-       // Arrange - Assert
-       expect(await this.cmtat.isFrozen(this.address1)).to.equal(true)
-       expect(
+        await this.cmtat.canTransfer(this.address1, this.address3, 10)
+      ).to.equal(false)
+      expect(
+        await this.cmtat.canTransfer(this.address2, this.address3, 10)
+      ).to.equal(false)
+      expect(
         await this.cmtat.canTransfer(this.address1, this.address2, 10)
       ).to.equal(false)
-       // Act
-       this.logs = await this.cmtat
-         .connect(sender)
-         .setAddressFrozen(this.address1, false, reasonUnfreeze)
-       // Assert
-       expect(await this.cmtat.isFrozen(this.address1)).to.equal(false)
-       expect(
+      expect(await this.cmtat.isFrozen(this.address1)).to.equal(true)
+      expect(await this.cmtat.isFrozen(this.address2)).to.equal(true)
+      // emits a Freeze event
+      await expect(this.logs)
+        .to.emit(this.cmtat, 'AddressFrozen')
+        .withArgs(this.address1, true, sender, REASON_EMPTY_EVENT)
+      await expect(this.logs)
+        .to.emit(this.cmtat, 'AddressFrozen')
+        .withArgs(this.address2, true, sender, REASON_EMPTY_EVENT)
+    }
+
+    async function testPartialFreezeBatch (sender) {
+      const accounts = [this.address1, this.address2, this.address3]
+      const freeze = [false, false, true]
+
+      // Arrange
+      testFreezeBatch(sender)
+
+      // Act
+      this.logs = await this.cmtat
+        .connect(sender)
+        .batchSetAddressFrozen(accounts, freeze)
+      // Assert
+      expect(
+        await this.cmtat.canTransfer(this.address1, this.address3, 10)
+      ).to.equal(false)
+      expect(
+        await this.cmtat.canTransfer(this.address2, this.address3, 10)
+      ).to.equal(false)
+      expect(
         await this.cmtat.canTransfer(this.address1, this.address2, 10)
       ).to.equal(true)
-       await expect(this.logs)
-         .to.emit(this.cmtat, 'AddressFrozen')
-         .withArgs(this.address1, false, sender, REASON_UNFREEZE_EVENT)
+      expect(await this.cmtat.isFrozen(this.address1)).to.equal(false)
+      expect(await this.cmtat.isFrozen(this.address2)).to.equal(false)
+      // emits a Freeze event
+      await expect(this.logs)
+        .to.emit(this.cmtat, 'AddressFrozen')
+        .withArgs(this.address1, false, sender, REASON_EMPTY_EVENT)
+      await expect(this.logs)
+        .to.emit(this.cmtat, 'AddressFrozen')
+        .withArgs(this.address2, false, sender, REASON_EMPTY_EVENT)
+      await expect(this.logs)
+        .to.emit(this.cmtat, 'AddressFrozen')
+        .withArgs(this.address3, true, sender, REASON_EMPTY_EVENT)
+    }
 
+    async function testUnfreeze (sender) {
+      // Arrange
+      await this.cmtat.connect(sender).setAddressFrozen(this.address1, true, reasonFreeze)
+      // Arrange - Assert
+      expect(await this.cmtat.isFrozen(this.address1)).to.equal(true)
+      expect(
+        await this.cmtat.canTransfer(this.address1, this.address2, 10)
+      ).to.equal(false)
+      // Act
+      this.logs = await this.cmtat
+        .connect(sender)
+        .setAddressFrozen(this.address1, false, reasonUnfreeze)
+      // Assert
+      expect(await this.cmtat.isFrozen(this.address1)).to.equal(false)
+      expect(
+        await this.cmtat.canTransfer(this.address1, this.address2, 10)
+      ).to.equal(true)
+      await expect(this.logs)
+        .to.emit(this.cmtat, 'AddressFrozen')
+        .withArgs(this.address1, false, sender, REASON_UNFREEZE_EVENT)
     }
     beforeEach(async function () {
       await this.cmtat.connect(this.admin).mint(this.address1, 50)
@@ -131,15 +128,15 @@ function EnforcementModuleCommon () {
     })
 
     it('testAdminCanBatchFreezeAddress', async function () {
-      const bindTest =  testFreezeBatch.bind(this)
+      const bindTest = testFreezeBatch.bind(this)
       await bindTest(this.admin)
     })
 
     it('testAdminCanBatchPartialFreezeAddress', async function () {
-      const bindTest =  testPartialFreezeBatch.bind(this)
+      const bindTest = testPartialFreezeBatch.bind(this)
       await bindTest(this.admin)
     })
-    
+
     it('testReasonParameterCanBeEmptyString', async function () {
       // Arrange - Assert
       expect(await this.cmtat.isFrozen(this.address1)).to.equal(false)
@@ -152,7 +149,7 @@ function EnforcementModuleCommon () {
       // emits a Freeze event
       await expect(this.logs)
         .to.emit(this.cmtat, 'AddressFrozen')
-        .withArgs(this.address1,  true, this.admin, REASON_EMPTY_EVENT )
+        .withArgs(this.address1, true, this.admin, REASON_EMPTY_EVENT)
     })
 
     it('testEnforcerRoleCanFreezeAddress', async function () {
@@ -195,8 +192,8 @@ function EnforcementModuleCommon () {
     })
 
     it('testCannotNonEnforcerBatchFreezeAddress', async function () {
-      let accounts = []
-      let freezes = []
+      const accounts = []
+      const freezes = []
       // Act
       await expect(
         this.cmtat.connect(this.address2).batchSetAddressFrozen(accounts, freezes)
@@ -207,7 +204,6 @@ function EnforcementModuleCommon () {
         )
         .withArgs(this.address2.address, ENFORCER_ROLE)
     })
-
 
     it('testCannotNonEnforcerUnfreezeAddress', async function () {
       // Arrange
@@ -231,7 +227,7 @@ function EnforcementModuleCommon () {
       // Act
       await this.cmtat.connect(this.admin).setAddressFrozen(this.address1, true, reasonFreeze)
       // Assert
-      if(!this.core){
+      if (!this.core) {
         expect(
           await this.cmtat.detectTransferRestriction(
             this.address1,
@@ -264,21 +260,20 @@ function EnforcementModuleCommon () {
       await this.cmtat.connect(this.address3).approve(this.address1, AMOUNT_TO_TRANSFER)
       // Act
       await this.cmtat.connect(this.admin).setAddressFrozen(this.address2, true, reasonFreeze)
-      if(!this.core){
-          // Assert
-      expect(
-        await this.cmtat.detectTransferRestriction(
-          this.address3,
-          this.address2,
-          AMOUNT_TO_TRANSFER
+      if (!this.core) {
+        // Assert
+        expect(
+          await this.cmtat.detectTransferRestriction(
+            this.address3,
+            this.address2,
+            AMOUNT_TO_TRANSFER
+          )
+        ).to.equal('3')
+        expect(await this.cmtat.messageForTransferRestriction(3)).to.equal(
+          'AddrToIsFrozen'
         )
-      ).to.equal('3')
-      expect(await this.cmtat.messageForTransferRestriction(3)).to.equal(
-        'AddrToIsFrozen'
-      )
       }
-    
-      
+
       await expect(
         this.cmtat
           .connect(this.address1)
@@ -299,7 +294,7 @@ function EnforcementModuleCommon () {
       await this.cmtat.connect(this.address3).approve(this.address1, AMOUNT_TO_TRANSFER)
       // Act
       await this.cmtat.connect(this.admin).setAddressFrozen(this.address3, true, reasonFreeze)
-     
+
       expect(
         await this.cmtat.canTransferFrom(
           this.address3,
@@ -308,7 +303,7 @@ function EnforcementModuleCommon () {
           AMOUNT_TO_TRANSFER
         )
       ).to.equal(false)
-    
+
       await expect(
         this.cmtat
           .connect(this.address1)
@@ -322,8 +317,7 @@ function EnforcementModuleCommon () {
         )
     })
 
-
-   /* it('testFreezeDoesNotEmitEventIfAddressAlreadyisFrozen', async function () {
+    /* it('testFreezeDoesNotEmitEventIfAddressAlreadyisFrozen', async function () {
       // Arrange - Assert
       expect(await this.cmtat.isFrozen(this.address1)).to.equal(false)
       // Arrange
@@ -355,7 +349,7 @@ function EnforcementModuleCommon () {
       // Assert
       await expect(this.logs).to.not.emit(this.cmtat, 'AddressFrozen')
       expect(await this.cmtat.isFrozen(this.address1)).to.equal(false)
-    })*/
+    }) */
   })
 }
 module.exports = EnforcementModuleCommon

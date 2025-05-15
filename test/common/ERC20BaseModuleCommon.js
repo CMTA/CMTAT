@@ -2,8 +2,8 @@ const { expect } = require('chai')
 const { ERC20ENFORCER_ROLE, DEFAULT_ADMIN_ROLE } = require('../utils')
 const REASON_STRING = 'Bad guy'
 const REASON_EVENT = ethers.toUtf8Bytes(REASON_STRING)
-const REASON = ethers.Typed.bytes(REASON_EVENT);
-const REASON_EMPTY = ethers.Typed.bytes(ethers.toUtf8Bytes(""))
+const REASON = ethers.Typed.bytes(REASON_EVENT)
+const REASON_EMPTY = ethers.Typed.bytes(ethers.toUtf8Bytes(''))
 function ERC20BaseModuleCommon () {
   context('Token structure', function () {
     it('testHasTheDefinedName', async function () {
@@ -344,7 +344,5 @@ function ERC20BaseModuleCommon () {
         .withArgs(this.address1.address, ADDRESS1_BALANCE, AMOUNT_TO_TRANSFER)
     })
   })
-
-
 }
 module.exports = ERC20BaseModuleCommon
