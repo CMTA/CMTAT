@@ -64,14 +64,14 @@ Here the list of ERC supported between different version:
 | [ERC-1404](https://github.com/ethereum/eips/issues/1404)<br />(Simple Restricted Token Standard) | Draft                    | &#x2611;  | &#x2611;   | &#x2611;                                                     | &#x2612;  | &#x2611; | &#x2611; |
 | [ERC-1643](https://github.com/ethereum/eips/issues/1643) (Document Management Standard) <br />(Standard from [ERC-1400](https://github.com/ethereum/EIPs/issues/1411))<br />(Slightly improved) | Draft                    | &#x2612;  | &#x2612;   | &#x2611;<br />(through DocumentEngine with small improvement) | &#x2612;  | &#x2611; | &#x2611; |
 | [ERC-3643](https://eips.ethereum.org/EIPS/eip-3643)<br /><br />(Without on-chain identity) | Standard Track (final)   | &#x2612;  | &#x2612;   | &#x2611;                                                     | &#x2612;  | &#x2611; | &#x2611; |
-| [ERC-7551](https://ethereum-magicians.org/t/erc-7551-crypto-security-token-smart-contract-interface-ewpg/16416)<br />(Slightly improved) | Draft                    | &#x2612;  | &#x2612;   | &#x2611;<br />                                               | Partially | &#x2611; | &#x2611; |
+| [ERC-7551](https://ethereum-magicians.org/t/erc-7551-crypto-security-token-smart-contract-interface-ewpg/16416)<br />(Slightly improved) | Draft                    | &#x2612;  | &#x2612;   | &#x2611;                                                     | Partially | &#x2611; | &#x2611; |
 | **Proxy support related**                                    |                          |           |            |                                                              |           |          |          |
 | Deployment with a UUPS proxy ([ERC-1822](https://eips.ethereum.org/EIPS/eip-1822)) | Stagnant<br />(but used) | &#x2612;  | &#x2612;   | &#x2612;                                                     | &#x2612;  | &#x2611; | &#x2612; |
 | [ERC-7201](https://eips.ethereum.org/EIPS/eip-7201)<br/>(Storage namespaces for proxy contract) | Standard Track (final)   | &#x2612;  | &#x2612;   | &#x2611;                                                     | &#x2611;  | &#x2611; | &#x2611; |
 | **Technical**                                                |                          |           |            |                                                              |           |          |          |
 | [ERC-2771](https://eips.ethereum.org/EIPS/eip-2771) (Meta Tx / gasless) | Standard Track (final)   | &#x2611;  | &#x2611;   | &#x2611;                                                     | &#x2612;  | &#x2611; | &#x2611; |
-| [ERC-6093](https://eips.ethereum.org/EIPS/eip-6093) (Custom errors for ERC-20 tokens) | Standard Track (final)   | &#x2612;  | &#x2612;   | &#x2611;<br />                                               | &#x2611;  | &#x2611; | &#x2611; |
-| [ERC-7802](https://eips.ethereum.org/EIPS/eip-7802) (cross-chain token/transfers) | Draft                    | &#x2612;  | &#x2612;   | &#x2611;<br />                                               | &#x2612;  | &#x2612; | &#x2612; |
+| [ERC-6093](https://eips.ethereum.org/EIPS/eip-6093) (Custom errors for ERC-20 tokens) | Standard Track (final)   | &#x2612;  | &#x2612;   | &#x2611;                                                     | &#x2611;  | &#x2611; | &#x2611; |
+| [ERC-7802](https://eips.ethereum.org/EIPS/eip-7802) (cross-chain token/transfers) | Draft                    | &#x2612;  | &#x2612;   | &#x2611;                                                     | &#x2612;  | &#x2612; | &#x2612; |
 
 ### Details
 
@@ -90,9 +90,9 @@ To represent the level of similarity between ERC-3643 interface and CMTAT functi
 
 If you want to use CMTAT to create a version implementing all functions from ERC-3643, you can create it through a dedicated deployment version (like what has been done for UUPS and ERC-1363).
 
-The implemented interface is available in [IERC3643Partial](./contracts/interfaces/tokenization/IERC3643Partial.sol)
+The implemented interface is available in [IERC3643Partial](./contracts/interfaces/tokenization/IERC3643Partial.sol).
 
-The main reason the argument names change is because CMTAT relies on OpenZeppelin to name the arguments
+The main reason the argument names change is because CMTAT relies on OpenZeppelin to name the arguments.
 
 ##### Functions not implemented
 
@@ -192,7 +192,7 @@ The implemented interface is available in [IERC7551](./contracts/interfaces/toke
 
 #### ERC-7802 (Crosschain transfers)
 
->  [ERC specification]( https://eips.ethereum.org/EIPS/eip-7802)
+>  [ERC specification](https://eips.ethereum.org/EIPS/eip-7802)
 > Status: draft
 
 This standard introduces a minimal and extensible interface, `IERC7802`, for tokens to enable standardized crosschain communication.
@@ -204,8 +204,6 @@ This standard is notably used by Optimism to provide cross-chain bridge between 
 More information here: [Cross-Chain bridge support](doc/general/crosschain-bridge-support.md)
 
 Deployment version: since it is an option module, it is not currently used in the deployment version CMTAT ERC-1363, UUPS and light.
-
-
 
 -----
 
@@ -565,8 +563,8 @@ CMTAT only implements two functions from this standard, available in the interfa
 
 ```solidity
 interface IERC1643 {
-function getDocument(bytes32 _name) external view returns (string memory , bytes32, uint256);
-function getAllDocuments() external view returns (bytes32[] memory);
+	function getDocument(bytes32 _name) external view returns (string memory , bytes32, uint256);
+	function getAllDocuments() external view returns (bytes32[] memory);
 }
 ```
 
