@@ -115,14 +115,14 @@ And finally `setCompliance`because CMTAT uses a different architecture for its `
 
 Module: PauseModule
 
-| **ERC-3643**                             | **CMTAT 3.0.**0                   |          |          |          |          |
-| :--------------------------------------- | :-------------------------------- | -------- | -------- | -------- | -------- |
-| Deployment version                       |                                   | Full     | Light    | UUPS     | ERC1363  |
-| `pause() external`                       | Same                              | &#x2611; | &#x2611; | &#x2611; | &#x2611; |
-| `unpause() external`                     | Same                              | &#x2611; | &#x2611; | &#x2611; | &#x2611; |
-| `paused() external view returns (bool);` | Same                              | &#x2611; | &#x2611; | &#x2611; | &#x2611; |
-| `  event Paused(address _userAddress);`  | `event Paused(address account)`   | &#x2611; | &#x2611; | &#x2611; | &#x2611; |
-| ` event Unpaused(address _userAddress);` | `event Unpaused(address account)` | &#x2611; | &#x2611; | &#x2611; | &#x2611; |
+| **ERC-3643**                             | **CMTAT 3.0.0**                   | Deployment version |
+| :--------------------------------------- | :-------------------------------- | ------------------ |
+| Deployment version                       |                                   |                    |
+| `pause() external`                       | Same                              | All                |
+| `unpause() external`                     | Same                              | All                |
+| `paused() external view returns (bool);` | Same                              | All                |
+| `  event Paused(address _userAddress);`  | `event Paused(address account)`   | All                |
+| ` event Unpaused(address _userAddress);` | `event Unpaused(address account)` | All                |
 
 ##### ERC20Base
 
