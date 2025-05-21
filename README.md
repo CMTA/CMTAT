@@ -259,7 +259,7 @@ CMTAT Base Core adds several functions:
 
 
 
-![surya_inheritance_CMTATERC1363Base.sol](./doc/schema/surya_inheritance/surya_inheritance_CMTATERC1363Base.sol.png)
+![surya_inheritance_CMTATERC1363Base.sol](./doc/schema/surya_inheritance/surya_inheritance_CMTATBaseERC1363.sol.png)
 
 
 
@@ -850,7 +850,11 @@ Deployment version using another type of tokens as ERC-20 (e.g ERC-721) or with 
 
 Currently, there is no available version but a mock contract which implements ERC-721 with `CMTATBaseGeneric`is available in the mock directory: [contracts/mocks/EC721MockUpgradeable](./contracts/mocks/ERC721MockUpgradeable.sol)
 
-![surya_inheritance_CMTAT_ERC1363_BASE.sol](./doc/schema/surya_inheritance/surya_inheritance_erc721Mock.sol.png)
+- ERC721MockUpgradeable
+
+![surya_inheritance_CMTAT_ERC1363_BASE.sol](./doc/schema/surya_inheritance/surya_inheritance_ERC721MockUpgradeable.sol.png)
+
+- CMTATBaseGeneric
 
 ![surya_inheritance_CMTATBaseOption.sol](./doc/schema/surya_inheritance/surya_inheritance_CMTATBaseGeneric.sol.png)
 
