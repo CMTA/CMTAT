@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/wrapper/extensions/ValidationModule/ValidationModuleERC1404.sol | [object Promise] |
+| ./modules/wrapper/controllers/ValidationModule.sol | [object Promise] |
 
 
 ### Contracts Description Table
@@ -15,9 +15,9 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **ValidationModuleERC1404** | Implementation | ValidationModuleRuleEngine, IERC1404 |||
-| └ | messageForTransferRestriction | Public ❗️ |   |NO❗️ |
-| └ | detectTransferRestriction | Public ❗️ |   |NO❗️ |
+| **ValidationModule** | Implementation | PauseModule, EnforcementModule |||
+| └ | _canMintBurnByModule | Internal 🔒 |   | |
+| └ | _canTransferGenericByModule | Internal 🔒 |   | |
 
 
 ### Legend

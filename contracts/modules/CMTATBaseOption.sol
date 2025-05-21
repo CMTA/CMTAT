@@ -9,7 +9,7 @@ import {ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/Cont
 import {AccessControlUpgradeable} from "./security/AuthorizationModule.sol";
 import {MetaTxModule, ERC2771ContextUpgradeable} from "./wrapper/options/MetaTxModule.sol";
 /**
-* @title Extend CMTAT Base
+* @title Extend CMTAT Base with option modules
 */
 abstract contract CMTATBaseOption is  ERC20CrossChainModule,DebtEngineModule, MetaTxModule {
 

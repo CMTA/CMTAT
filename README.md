@@ -221,12 +221,13 @@ The base contracts are abstract contracts, so not directly deployable, which inh
 
 Base contracts are used by the different deployable contracts (CMTATStandalone, CMTATUpgradeable,...) to inherits from the different modules
 
-| Name                                                         | Description                                                  | CMTAT Standalone /Upgradeable | CMTAT ERC1363 (Upgradeable & Standalone) | CMTAT Upgradeable UUPS | CMTAT Light (Upgradeadble & Standalone) |
-| ------------------------------------------------------------ | ------------------------------------------------------------ | ----------------------------- | ---------------------------------------- | ---------------------- | --------------------------------------- |
-| [CMTATBase](./contracts/modules/CMTATBase.sol)               | Inherit from all core and extensions modules                 | &#x2611;                      | &#x2611;                                 | &#x2611;               | &#x2612;                                |
-| [CMTATBaseCore](./contracts/modules/CMTATBaseCore.sol)       | Inherit from from all core modules                           | &#x2612;                      | &#x2612;                                 | &#x2612;               | &#x2611;                                |
-| [CMTATERC1363Base](./contracts/modules/CMTATERC1363Base.sol) | Inherit from CMTATBase, but also ERC-1363 OpenZeppelin contract and MetaTxModule (ERC-2771) | &#x2612;                      | &#x2611;                                 | &#x2612;               | &#x2612;                                |
-| [CMTATBaseOption](./contracts/modules/CMTATBaseOption.sol)   | Inherit from CMTATBase, but also from all other option modules | &#x2611;                      | &#x2612;                                 | &#x2612;               | &#x2612;                                |
+| Name                                                         | Description                                                  | Associated contracts deployments                          |
+| ------------------------------------------------------------ | ------------------------------------------------------------ | --------------------------------------------------------- |
+| [CMTATBase](./contracts/modules/CMTATBase.sol)               | Inherit from all core and extensions modules                 | CMTAT Standalone /Upgradeable<br />CMTAT Upgradeable UUPS |
+| [CMTATBaseCore](./contracts/modules/CMTATBaseCore.sol)       | Inherit from from all core modules                           | CMTAT Light (Upgradeadble & Standalone                    |
+| [CMTATBaseGeneric](./contracts/modules/CMTATBaseGeneric.sol) | Inherits from non-ERC20 related modules                      | -<br />(Only mock available)                              |
+| [CMTATERC1363Base](./contracts/modules/CMTATERC1363Base.sol) | Inherit from CMTATBase, but also ERC-1363 OpenZeppelin contract and MetaTxModule (ERC-2771) | CMTAT ERC1363 (Upgradeable & Standalone)                  |
+| [CMTATBaseOption](./contracts/modules/CMTATBaseOption.sol)   | Inherit from CMTATBase, but also from all other option modules | CMTAT Upgradeable UUPS                                    |
 
 
 
@@ -268,6 +269,12 @@ CMTAT Base Core adds several functions:
 
 ![surya_inheritance_CMTATBaseOption.sol](./doc/schema/surya_inheritance/surya_inheritance_CMTATBaseOption.sol.png)
 
+#### CMTAT Base Generic
+
+![surya_inheritance_CMTATBaseOption.sol](./doc/schema/surya_inheritance/surya_inheritance_CMTATBaseGeneric.sol.png)
+
+
+
 ### Module
 
 #### Description
@@ -300,33 +307,49 @@ For simplicity, the module names and function locations are those of version 3.0
 
 ##### Controllers
 
-| Modules                            | Description                                                  | File                                                         | CMTAT 1.0 | CMTAT 2.30 | CMTAT 3.0.0 | CMTAT 3.0 Light |
-| ---------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ | --------- | ---------- | ----------- | --------------- |
-| ValidationModuleInternalCore<br /> | `canTransfer`and `canTransferFrom`<br />The core module does not implement ERC-1404 and the RuleEngine | [ValidationModuleInternalCore.sol](./contracts/modules/internal//ValidationModuleInternalCore.sol) | &#x2611;  | &#x2611;   | &#x2611;    | &#x2611;        |
-| ValidationModuleInternal<br />     | Configure a `RuleEngine`                                     | [ValidationModuleInternal.sol](./contracts/modules/internal/ValidationModuleInternal.sol) | &#x2611;  | &#x2611;   | &#x2611;    | &#x2612;        |
-| ValidationModuleERC1404            | Implements ERC-1404                                          | [ValidationModuleERC1404.sol](./contracts/modules/wrapper/controllers/ValidationModuleERC1404.sol) | &#x2611;  | &#x2611;   | &#x2611;    | &#x2612;        |
+| Modules                            | Type        | Description                                                  | File                                                         | CMTAT 1.0 | CMTAT 2.30 | CMTAT 3.0.0 | CMTAT 3.0 Light |
+| ---------------------------------- | ----------- | ------------------------------------------------------------ | ------------------------------------------------------------ | --------- | ---------- | ----------- | --------------- |
+| ValidationModule                   | Controllers | Check transfer validity by calling the Pause and Enforcement modules | [ValidationModule.sol](./contracts/modules/wrapper/controllers/ValidationModule.sol) | &#x2611;  | &#x2611;   | &#x2611;    | &#x2611;        |
+| ValidationModuleRuleEngineInternal | Internal    | Configure a `RuleEngine`                                     | [ValidationModuleRuleEngineInternal.sol](./contracts/modules/internal/ValidationModuleRuleEngineInternal.sol) | &#x2611;  | &#x2611;   | &#x2611;    | &#x2612;        |
+| ValidationModuleCore<br />         | Core        | Implements`canTransfer`and `canTransferFrom`<br />The core module does not implement ERC-1404 and the RuleEngine | [ValidationModuleCore.sol](./contracts/modules/wrapper/core/ValidationModuleCore.sol) | &#x2611;  | &#x2611;   | &#x2611;    | &#x2611;        |
+| ValidationModuleRuleEngine         | Extensions  | Set and call the ruleEngine to check transfer.               | [ValidationModuleRuleEngine.sol](./contracts/modules/wrapper/extensions/ValidationModule/ValidationModuleRuleEngine.sol) | &#x2611;  | &#x2611;   | &#x2611;    | &#x2612;        |
+| ValidationModuleERC1404            | Extensions  | Implements ERC-1404                                          | [ValidationModuleERC1404.sol](./contracts/modules/wrapper/extensions/ValidationModule/ValidationModuleERC1404.sol) | &#x2611;  | &#x2611;   | &#x2611;    | &#x2612;        |
 
 
+
+**Controllers**
+
+- ValidationModule
+
+![surya_inheritance_ValidationModule.sol](./doc/schema/surya_inheritance/surya_inheritance_ValidationModule.sol.png)
+
+**Internal**
+
+- ValidationModuleRuleEngineSet
+
+
+
+![surya_inheritance_ValidationModuleRuleEngineSet.sol](./doc/schema/surya_inheritance/surya_inheritance_ValidationModuleRuleEngineSet.sol.png)
+
+**Core**
 
 - ValidationModuleCore
 
-![surya_inheritance_ValidationModuleCore.sol](./doc/schema/surya_inheritance/surya_inheritance_ValidationModuleInternalCore.sol.png)
+![surya_inheritance_ValidationModuleCore.sol](./doc/schema/surya_inheritance/surya_inheritance_ValidationModuleCore.sol.png)
 
 
 
+**Extensions**
 
+- ValidationModuleRuleEngine
 
-- ValidationModuleInternal
-
-![surya_inheritance_ValidationModuleInternal.sol](./doc/schema/surya_inheritance/surya_inheritance_ValidationModuleInternal.sol.png)
-
-
+![surya_inheritance_ValidationModuleERC1404.sol](./doc/schema/surya_inheritance/surya_inheritance_ValidationModuleRuleEngine.sol.png)
 
 - ValidationModuleERC1404
 
-
-
 ![surya_inheritance_ValidationModuleERC1404.sol](./doc/schema/surya_inheritance/surya_inheritance_ValidationModuleERC1404.sol.png)
+
+
 
 ##### Core modules
 
@@ -774,19 +797,15 @@ More information on this standard here: [erc1363.org](https://erc1363.org), [Rar
 
 
 
-- CMTAT PROXY ERC-1363
+- CMTAT Upgradeable ERC-1363
 
 ![surya_inheritance_CMTAT_PROXY_ERC1363.sol](./doc/schema/surya_inheritance/surya_inheritance_CMTATUpgradeableERC1363.sol.png)
 
 
 
-- CMTAT Proxy ERC-1363
+- CMTAT Standalone ERC-1363
 
 ![surya_inheritance_CMTAT_STANDALONE_ERC1363.sol](./doc/schema/surya_inheritance/surya_inheritance_CMTATStandaloneERC1363.sol.png)
-
-- CMTAT  ERC1363Base
-
-![surya_inheritance_CMTAT_STANDALONE_ERC1363.sol](./doc/schema/surya_inheritance/surya_inheritance_CMTATERC1363Base.sol.png)
 
 ### Light version
 
@@ -794,11 +813,11 @@ The light version only includes core modules.
 
 It also includes a function `forceBurn`to allow the admin to burn a token from a frozen address.
 
-- CMTAT Proxy
+- CMTAT Upgradeable Light
 
 ![surya_inheritance_CMTAT_ERC1363_BASE.sol](./doc/schema/surya_inheritance/surya_inheritance_CMTATUpgradeableLight.sol.png)
 
-- CMTAT Light
+- CMTAT Standalone Light
 
 ![surya_inheritance_CMTAT_ERC1363_BASE.sol](./doc/schema/surya_inheritance/surya_inheritance_CMTATStandaloneLight.sol.png)
 
@@ -820,6 +839,18 @@ These contracts have now their own GitHub project: [CMTAT Factory](https://githu
 | CMTAT 1.0 (audited)               | Not available                                                |
 
 Further reading: [Taurus - Making CMTAT Tokenization More Scalable and Cost-Effective with Proxy and Factory Contracts](https://www.taurushq.com/blog/cmtat-tokenization-deployment-with-proxy-and-factory/) (version used CMTAT v2.5.1)
+
+### Deployment for other type of tokens (ERC-721, ERC-1155, ...)
+
+Deployment version using another type of tokens as ERC-20 (e.g ERC-721) or with a different logic (e.g [ZamaFHE - EncryptedERC20](https://www.zama.ai/post/confidential-erc-20-tokens-using-homomorphic-encryption)) can be build by using the base contract `CMTATBaseGeneric`. This base contract inherits from several non-ERC-20 modules
+
+Currently, there is no available version but a mock contract which implements ERC-721 with `CMTATBaseGeneric`is available in the mock directory: [contracts/mocks/EC721MockUpgradeable](./contracts/mocks/ERC721MockUpgradeable.sol)
+
+![surya_inheritance_CMTAT_ERC1363_BASE.sol](./doc/schema/surya_inheritance/surya_inheritance_erc721Mock.sol.png)
+
+![surya_inheritance_CMTATBaseOption.sol](./doc/schema/surya_inheritance/surya_inheritance_CMTATBaseGeneric.sol.png)
+
+
 
 ----
 

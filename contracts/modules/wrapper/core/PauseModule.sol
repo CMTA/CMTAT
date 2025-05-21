@@ -29,8 +29,8 @@ abstract contract PauseModule is PausableUpgradeable, AuthorizationModule, IERC3
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
 
     /* ============ ERC-7201 ============ */
-    // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.ERC20BaseModule")) - 1)) & ~bytes32(uint256(0xff))
-    bytes32 private constant PauseModuleStorageLocation = 0x9bd8d607565c0370ae5f91651ca67fd26d4438022bf72037316600e29e6a3a00;
+    // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.PauseModule")) - 1)) & ~bytes32(uint256(0xff))
+    bytes32 private constant PauseModuleStorageLocation = 0xab1527b6135145d8da1edcbd6b7b270624e17f2b41c74a8c746ff388ad454700;
     /* ==== ERC-7201 State Variables === */
     struct PauseModuleStorage {
         bool _isDeactivated;

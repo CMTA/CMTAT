@@ -3,40 +3,17 @@
 pragma solidity ^0.8.20;
 
 /* ==== Module === */
-import {PauseModule}  from "../wrapper/core/PauseModule.sol";
-import {EnforcementModule} from "../wrapper/core/EnforcementModule.sol";
-/* ==== Tokenization === */
-import {IERC3643ComplianceRead} from "../../interfaces/tokenization/IERC3643Partial.sol";
-import {IERC7551Compliance} from "../../interfaces/tokenization/draft-IERC7551.sol";
+import {PauseModule}  from "../core/PauseModule.sol";
+import {EnforcementModule} from "../core/EnforcementModule.sol";
 /**
  * @dev Validation module.
  *
  * Useful for to restrict and validate transfers
  */
-abstract contract ValidationModuleInternalCore is
+abstract contract ValidationModule is
     PauseModule,
-    EnforcementModule,
-    IERC3643ComplianceRead,
-    IERC7551Compliance
+    EnforcementModule
 {
-    /* ============ Transfer & TransferFrom ============ */
-    function canTransfer(
-        address from,
-        address to,
-        uint256 value
-    ) public view virtual override(IERC3643ComplianceRead, IERC7551Compliance) returns (bool) {
-        return _canTransferByModule(address(0), from, to, value);
-    }
-
-    function canTransferFrom(
-        address spender,
-        address from,
-        address to,
-        uint256 value
-    ) public view virtual override(IERC7551Compliance) returns (bool) {
-        return _canTransferByModule(spender, from, to, value);
-    }
-
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
@@ -61,11 +38,10 @@ abstract contract ValidationModuleInternalCore is
     /**
     * @dev function used by canTransfer and operateOnTransfer
     */
-    function _canTransferByModule(
+    function _canTransferGenericByModule(
         address spender,
         address from,
-        address to,
-        uint256 /*value*/
+        address to
     ) internal view virtual returns (bool) {
         // Mint
         if(from == address(0)){

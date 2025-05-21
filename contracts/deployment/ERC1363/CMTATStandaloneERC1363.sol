@@ -2,15 +2,15 @@
 
 pragma solidity ^0.8.20;
 
-import {CMTATERC1363Base} from "../../modules/CMTATERC1363Base.sol";
-import {CMTATBase, ICMTATConstructor} from "../../modules/CMTATBase.sol";
+import {CMTATBaseERC1363} from "../../modules/CMTATBaseERC1363.sol";
+import {ICMTATConstructor} from "../../modules/CMTATBase.sol";
 import {MetaTxModule, ERC2771ContextUpgradeable} from "../../modules/wrapper/options/MetaTxModule.sol";
 
 
 /**
 * @title CMTAT standalone version for ERC1363
 */
-contract CMTATStandaloneERC1363 is CMTATERC1363Base {
+contract CMTATStandaloneERC1363 is CMTATBaseERC1363 {
     /**
      * @notice Contract version for standalone deployment
      * @param forwarderIrrevocable address of the forwarder, required for the gasless support

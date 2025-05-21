@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/wrapper/extensions/ValidationModule/ValidationModuleERC1404.sol | [object Promise] |
+| ./interfaces/technical/IBurnToken.sol | [object Promise] |
 
 
 ### Contracts Description Table
@@ -15,9 +15,10 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **ValidationModuleERC1404** | Implementation | ValidationModuleRuleEngine, IERC1404 |||
-| └ | messageForTransferRestriction | Public ❗️ |   |NO❗️ |
-| └ | detectTransferRestriction | Public ❗️ |   |NO❗️ |
+| **IBurnERC20** | Interface |  |||
+||||||
+| **IBurnFromERC20** | Interface |  |||
+| └ | burnFrom | External ❗️ | 🛑  |NO❗️ |
 
 
 ### Legend

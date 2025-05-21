@@ -4,11 +4,14 @@ const {
   fixture,
   loadFixture
 } = require('../deploymentUtils')
+const BaseModuleCommon = require('../common/BaseModuleCommon')
 const ERC20BaseModuleCommon = require('../common/ERC20BaseModuleCommon')
 const ERC20MintModuleCommon = require('../common/ERC20MintModuleCommon')
 const ERC20BurnModuleCommon = require('../common/ERC20BurnModuleCommon')
 const EnforcementModuleCommon = require('../common/EnforcementModuleCommon')
 const ERC20EnforcementModuleCommon = require('../common/ERC20EnforcementModuleCommon')
+const DocumentModuleCommon = require('../common/DocumentModule/DocumentModuleCommon')
+const DebtModuleCommon = require('../common/DebtModule/DebtModuleCommon')
 const VALUE = 20n
 describe('CMTAT - ERC1363 Proxy Deployment', function () {
   beforeEach(async function () {
@@ -63,9 +66,15 @@ describe('CMTAT - ERC1363 Proxy Deployment', function () {
       .to.be.revertedWithCustomError(this.cmtat, 'ERC1363InvalidReceiver')
       .withArgs(this.address1.address)
   })
+  // Core
+  BaseModuleCommon()
   ERC20BaseModuleCommon()
   ERC20BurnModuleCommon()
   ERC20MintModuleCommon()
   EnforcementModuleCommon()
+
+  // Extensions
   ERC20EnforcementModuleCommon()
+  DocumentModuleCommon()
+  DebtModuleCommon()
 })

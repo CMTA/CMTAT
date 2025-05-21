@@ -18,7 +18,7 @@ abstract contract ExtraInformationModule is IERC7551Base, ICMTATBase, Authorizat
     );
     /* ============ ERC-7201 ============ */
     // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.ExtraInformationModule")) - 1)) & ~bytes32(uint256(0xff))
-    bytes32 private constant ExtraInformationModuleStorageLocation = 0xa98e72f7f70574363edb12c42a03ac1feb8cc898a6e0a30f6eefbab7093e0d00;
+    bytes32 private constant ExtraInformationModuleStorageLocation = 0xd2d5d34c4a4dea00599692d3257c0aebc5e0359176118cd2364ab9b008c2d100;
 
     /* ==== ERC-7201 State Variables === */
     struct ExtraInformationModuleStorage {
@@ -168,5 +168,4 @@ abstract contract ExtraInformationModule is IERC7551Base, ICMTATBase, Authorizat
             $.slot := ExtraInformationModuleStorageLocation
         }
     }
-
 }

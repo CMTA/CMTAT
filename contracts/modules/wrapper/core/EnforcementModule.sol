@@ -67,6 +67,9 @@ abstract contract EnforcementModule is
          _addAddressesToTheList(accounts, freezes, "");
     }
 
+    /*//////////////////////////////////////////////////////////////
+                            INTERNAL/PRIVATE FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
     function _addAddressToTheList(EnforcementModuleInternalStorage storage $,address account, bool freeze, bytes memory data) internal override(EnforcementModuleInternal){
         EnforcementModuleInternal._addAddressToTheList($, account, freeze, data);
         emit AddressFrozen(account, freeze, _msgSender(), data);

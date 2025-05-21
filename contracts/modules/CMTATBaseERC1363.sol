@@ -10,10 +10,11 @@ import {ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/Cont
 import {AccessControlUpgradeable} from "./security/AuthorizationModule.sol";
 import {CMTATBase} from "./CMTATBase.sol";
 import {MetaTxModule, ERC2771ContextUpgradeable} from "./wrapper/options/MetaTxModule.sol";
+
 /**
-* @title CMTAT Proxy version for ERC1363
+* @title CMTAT Base for ERC-1363
 */
-abstract contract CMTATERC1363Base is ERC1363Upgradeable,CMTATBase, MetaTxModule {
+abstract contract CMTATBaseERC1363 is ERC1363Upgradeable,CMTATBase, MetaTxModule {
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/

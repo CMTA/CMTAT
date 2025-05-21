@@ -18,7 +18,7 @@ abstract contract SnapshotEngineModule is AuthorizationModule {
     event SnapshotEngine(ISnapshotEngine indexed newSnapshotEngine);
     /* ============ ERC-7201 ============ */
     // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.SnapshotModule")) - 1)) & ~bytes32(uint256(0xff))
-    bytes32 private constant SnapshotEngineModuleStorageLocation = 0x59b7f077fa4ad020f9053fd2197fef0113b19f0b11dcfe516e88cbc0e9226d00;
+    bytes32 private constant SnapshotEngineModuleStorageLocation = 0x77d0bf21d325f24f963ddfd6b9dd2037011ddf607536b9b6cb1b0095c8e11f00;
     /* ==== ERC-7201 State Variables === */
     struct SnapshotEngineModuleStorage {
         ISnapshotEngine _snapshotEngine;
