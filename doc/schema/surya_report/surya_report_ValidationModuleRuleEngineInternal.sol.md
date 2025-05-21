@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/internal/ValidationModuleInternalCore.sol | [object Promise] |
+| ./modules/internal/ValidationModuleRuleEngineInternal.sol | [object Promise] |
 
 
 ### Contracts Description Table
@@ -15,11 +15,11 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **ValidationModuleInternalCore** | Implementation | PauseModule, EnforcementModule, IERC3643ComplianceRead, IERC7551Compliance |||
-| └ | canTransfer | Public ❗️ |   |NO❗️ |
-| └ | canTransferFrom | Public ❗️ |   |NO❗️ |
-| └ | _canMintBurnByModule | Internal 🔒 |   | |
-| └ | _canTransferByModule | Internal 🔒 |   | |
+| **ValidationModuleRuleEngineInternal** | Implementation | Initializable, ContextUpgradeable |||
+| └ | __ValidationModule_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |
+| └ | ruleEngine | Public ❗️ |   |NO❗️ |
+| └ | _setRuleEngine | Internal 🔒 | 🛑  | |
+| └ | _getValidationModuleRuleEngineStorage | Private 🔐 |   | |
 
 
 ### Legend

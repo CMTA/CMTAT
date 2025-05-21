@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./interfaces/technical/IMintBurnToken.sol | [object Promise] |
+| ./mocks/ERC721MockUpgradeable.sol | [object Promise] |
 
 
 ### Contracts Description Table
@@ -15,10 +15,13 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **IBurnERC20** | Interface |  |||
-||||||
-| **IBurnFromERC20** | Interface |  |||
-| └ | burnFrom | External ❗️ | 🛑  |NO❗️ |
+| **ERC721MockUpgradeable** | Implementation | ERC721Upgradeable, CMTATBaseGeneric |||
+| └ | initialize | Public ❗️ | 🛑  | initializer |
+| └ | mint | Public ❗️ | 🛑  |NO❗️ |
+| └ | burn | External ❗️ | 🛑  |NO❗️ |
+| └ | safeTransferFrom | Public ❗️ | 🛑  |NO❗️ |
+| └ | transferFrom | Public ❗️ | 🛑  |NO❗️ |
+| └ | supportsInterface | Public ❗️ |   |NO❗️ |
 
 
 ### Legend

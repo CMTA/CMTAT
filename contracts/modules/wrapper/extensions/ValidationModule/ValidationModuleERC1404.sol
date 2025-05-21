@@ -4,15 +4,15 @@ pragma solidity ^0.8.20;
 
 
 /* ==== Tokenization === */
-import {IERC1404} from "../../../interfaces/tokenization/draft-IERC1404.sol";
-import {ValidationModuleInternal} from "../../internal/ValidationModuleInternal.sol";
+import {IERC1404} from "../../../../interfaces/tokenization/draft-IERC1404.sol";
+import {ValidationModuleRuleEngine, IRuleEngine} from "./ValidationModuleRuleEngine.sol";
 /**
  * @dev Validation module.
  *
  * Useful for to restrict and validate transfers
  */
 abstract contract ValidationModuleERC1404 is
-   ValidationModuleInternal, IERC1404
+   ValidationModuleRuleEngine, IERC1404
 {
     /* ============ State Variables ============ */
     string constant TEXT_TRANSFER_OK = "NoRestriction";
@@ -39,7 +39,7 @@ abstract contract ValidationModuleERC1404 is
     function messageForTransferRestriction(
         uint8 restrictionCode
     ) public virtual view override(IERC1404) returns (string memory message) {
-          ValidationModuleInternalStorage storage $ = _getValidationModuleInternalStorage();
+          IRuleEngine ruleEngine_ = ruleEngine();
         if (restrictionCode == uint8(IERC1404.REJECTED_CODE_BASE.TRANSFER_OK)) {
             return TEXT_TRANSFER_OK;
         } else if (
@@ -57,8 +57,8 @@ abstract contract ValidationModuleERC1404 is
             uint8(IERC1404.REJECTED_CODE_BASE.TRANSFER_REJECTED_TO_FROZEN)
         ) {
             return TEXT_TRANSFER_REJECTED_TO_FROZEN;
-        } else if (address($._ruleEngine) != address(0)) {
-            return $._ruleEngine.messageForTransferRestriction(restrictionCode);
+        } else if (address(ruleEngine_) != address(0)) {
+            return ruleEngine_.messageForTransferRestriction(restrictionCode);
         } else {
             return TEXT_UNKNOWN_CODE;
         }
@@ -77,15 +77,15 @@ abstract contract ValidationModuleERC1404 is
         address to,
         uint256 value
     ) public virtual view override(IERC1404) returns (uint8 code) {
-        ValidationModuleInternalStorage storage $ = _getValidationModuleInternalStorage();
+         IRuleEngine ruleEngine_ = ruleEngine();
         if (paused()) {
             return uint8(IERC1404.REJECTED_CODE_BASE.TRANSFER_REJECTED_PAUSED);
         } else if (isFrozen(from)) {
             return uint8(IERC1404.REJECTED_CODE_BASE.TRANSFER_REJECTED_FROM_FROZEN);
         } else if (isFrozen(to)) {
             return uint8(IERC1404.REJECTED_CODE_BASE.TRANSFER_REJECTED_TO_FROZEN);
-        } else if (address($._ruleEngine) != address(0)) {
-            return $._ruleEngine.detectTransferRestriction(from, to, value);
+        } else if (address(ruleEngine_) != address(0)) {
+            return ruleEngine_.detectTransferRestriction(from, to, value);
         } 
         else {
             return uint8(IERC1404.REJECTED_CODE_BASE.TRANSFER_OK);

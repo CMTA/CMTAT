@@ -34,7 +34,7 @@ abstract contract ERC20EnforcementModule is ERC20Upgradeable, IERC7551ERC20Enfor
     
     /* ============ ERC-7201 ============ */
     // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.ERC20EnforcementModule")) - 1)) & ~bytes32(uint256(0xff))
-    bytes32 private constant ERC20EnforcementModuleStorageLocation = 0xdbd8d607565c0370ae5f91651ca67fd26d4438022bf72037316600e29e6a3a00;
+    bytes32 private constant ERC20EnforcementModuleStorageLocation = 0x9d8059a24cb596f1948a937c2c163cf14465c2a24abfd3cd009eec4ac4c39800;
 
     /* ==== ERC-7201 State Variables === */
     struct ERC20EnforcementModuleStorage {

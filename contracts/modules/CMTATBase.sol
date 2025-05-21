@@ -18,7 +18,8 @@ import {ERC20EnforcementModule} from "./wrapper/extensions/ERC20EnforcementModul
 // options
 import {ERC20BaseModule, ERC20Upgradeable} from "./wrapper/core/ERC20BaseModule.sol";
 // Other
-import {ValidationModuleInternal, ValidationModuleERC1404, IERC1404} from "./wrapper/controllers/ValidationModuleERC1404.sol";
+import {ValidationModuleERC1404, IERC1404} from "./wrapper/extensions/ValidationModule/ValidationModuleERC1404.sol";
+import {ValidationModuleRuleEngine} from "./wrapper/extensions/ValidationModule/ValidationModuleRuleEngine.sol";
 import {DebtModule} from "./wrapper/extensions/DebtModule.sol";
 import {DocumentEngineModule} from "./wrapper/extensions/DocumentEngineModule.sol";
 import {SnapshotEngineModule} from "./wrapper/extensions/SnapshotEngineModule.sol";
@@ -50,7 +51,7 @@ abstract contract CMTATBase is
         if(!ERC20EnforcementModule._checkActiveBalance(from, value)){
             revert Errors.CMTAT_InvalidTransfer(from, to, value);
         }
-        if (!ValidationModuleInternal._transferred(spender, from, to, value)) {
+        if (!ValidationModuleRuleEngine._transferred(spender, from, to, value)) {
             revert Errors.CMTAT_InvalidTransfer(from, to, value);
         }
     } 
@@ -273,11 +274,11 @@ abstract contract CMTATBase is
         address from,
         address to,
         uint256 value
-    ) public virtual override (ValidationModuleInternal) view returns (bool) {
+    ) public virtual override (ValidationModuleRuleEngine) view returns (bool) {
         if(!_checkActiveBalance(from, value)){
             return false;
         } else {
-            return ValidationModuleInternal.canTransfer(from, to, value);
+            return ValidationModuleRuleEngine.canTransfer(from, to, value);
         }
         
     }

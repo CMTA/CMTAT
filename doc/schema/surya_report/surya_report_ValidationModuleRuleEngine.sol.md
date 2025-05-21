@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/internal/ValidationModuleInternal.sol | [object Promise] |
+| ./modules/wrapper/extensions/ValidationModule/ValidationModuleRuleEngine.sol | [object Promise] |
 
 
 ### Contracts Description Table
@@ -15,17 +15,14 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **ValidationModuleInternal** | Implementation | Initializable, ContextUpgradeable, ValidationModuleInternalCore |||
-| └ | __ValidationModule_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |
-| └ | ruleEngine | Public ❗️ |   |NO❗️ |
-| └ | setRuleEngine | Public ❗️ | 🛑  | onlyRole |
+| **ValidationModuleRuleEngine** | Implementation | ValidationModuleCore, ValidationModuleRuleEngineInternal |||
 | └ | canTransfer | Public ❗️ |   |NO❗️ |
 | └ | canTransferFrom | Public ❗️ |   |NO❗️ |
+| └ | setRuleEngine | Public ❗️ | 🛑  | onlyRole |
+| └ | _canTransferFrom | Internal 🔒 |   | |
 | └ | _canTransferFromWithRuleEngine | Internal 🔒 |   | |
 | └ | _canTransferWithRuleEngine | Internal 🔒 |   | |
-| └ | _setRuleEngine | Internal 🔒 | 🛑  | |
 | └ | _transferred | Internal 🔒 | 🛑  | |
-| └ | _getValidationModuleInternalStorage | Internal 🔒 |   | |
 
 
 ### Legend
