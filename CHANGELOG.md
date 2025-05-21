@@ -46,10 +46,12 @@ The main goal of this version since the last version 2.3.0 is:
 
 ### ValidationModule
 
-- Separate logic in three contracts:
-  - ValidationModuleInternalCore
-  - ValidationModuleInternal
-  - ValidationModuleERC1404
+- Separate logic in  several contracts:
+  - ValidationModule (controllrs)
+  - ValidationModuleCore (core)
+  - ValidationModuleRuleEngineInternal (internal)
+  - ValidationModuleRuleEngine (extensions)
+  - ValidationModuleERC1404 (extensions)
 
 ### Core module
 
@@ -81,6 +83,15 @@ The main goal of this version since the last version 2.3.0 is:
 - Add deployment version for [ERC-1363](https://eips.ethereum.org/EIPS/eip-1363)
 - Add light deployment with only core modules
 - Create a separate directory for factory contract. See [CMTATFactory](https://github.com/CMTA/CMTATFactory)
+
+### Base contract
+
+Add several base contracts to build the different deployment version:
+
+- CMTATBase for CMTATStandalone/Upgradeable/UUPS
+- CMTATBaseERC1363 for ERC-1363
+- CMTATBaseCore for light deployment
+- CMTATBaseGeneric to build non-ERC20 contracts (e.g ERC-721)
 
 ### Engine
 

@@ -14,7 +14,7 @@ import {MetaTxModule, ERC2771ContextUpgradeable} from "./wrapper/options/MetaTxM
 /**
 * @title CMTAT Base for ERC-1363
 */
-abstract contract CMTATERC1363Base is ERC1363Upgradeable,CMTATBase, MetaTxModule {
+abstract contract CMTATBaseERC1363 is ERC1363Upgradeable,CMTATBase, MetaTxModule {
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/

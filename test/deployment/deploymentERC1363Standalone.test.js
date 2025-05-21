@@ -76,7 +76,7 @@ describe('CMTAT ERC1363 - Standalone', function () {
   ERC20BurnModuleCommon()
   ERC20MintModuleCommon()
   EnforcementModuleCommon()
-  
+
   // Extensions
   ERC20EnforcementModuleCommon()
   DocumentModuleCommon()
