@@ -325,11 +325,11 @@ For simplicity, the module names and function locations are those of version 3.0
 
 **Internal**
 
-- ValidationModuleRuleEngineSet
+- ValidationModuleRuleEngineInternal
 
 
 
-![surya_inheritance_ValidationModuleRuleEngineSet.sol](./doc/schema/surya_inheritance/surya_inheritance_ValidationModuleRuleEngineSet.sol.png)
+![surya_inheritance_ValidationModuleRuleEngine.sol](./doc/schema/surya_inheritance/surya_inheritance_ValidationModuleRuleEngineInternal.sol.png)
 
 **Core**
 
@@ -793,7 +793,11 @@ More information on this standard here: [erc1363.org](https://erc1363.org), [Rar
 
 - CMTAT ERC-1363 Base
 
-![surya_inheritance_CMTAT_ERC1363_BASE.sol](./doc/schema/surya_inheritance/surya_inheritance_CMTATERC1363Base.sol.png)
+![surya_inheritance_CMTAT_ERC1363_BASE.sol](./doc/schema/surya_inheritance/surya_inheritance_CMTATBaseERC1363.sol.png)
+
+
+
+
 
 
 
