@@ -2,15 +2,13 @@
 
 pragma solidity ^0.8.20;
 
-import {CMTATBaseOption} from "../modules/CMTATBaseOption.sol";
-import {ICMTATConstructor} from "../modules/CMTATBase.sol";
-import {MetaTxModule} from "../modules/wrapper/options/MetaTxModule.sol";
-
+import {CMTATBaseWhitelist, ISnapshotEngine, IERC1643} from "../../modules/CMTATBaseWhitelist.sol";
+import {ICMTATConstructor} from "../../modules/CMTATBase.sol";
 
 /**
 * @title CMTAT version for a standalone deployment (without proxy)
 */
-contract CMTATStandalone is CMTATBaseOption {
+contract CMTATStandaloneWhitelist is CMTATBaseWhitelist {
     /**
      * @notice Contract version for standalone deployment
      * @param forwarderIrrevocable address of the forwarder, required for the gasless support
@@ -21,19 +19,21 @@ contract CMTATStandalone is CMTATBaseOption {
      */
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor(
-        address forwarderIrrevocable,
         address admin,
         ICMTATConstructor.ERC20Attributes memory ERC20Attributes_,
         ICMTATConstructor.BaseModuleAttributes memory baseModuleAttributes_,
-        ICMTATConstructor.Engine memory engines_ 
-    ) MetaTxModule(forwarderIrrevocable) {
+        ISnapshotEngine snapshotEngine,
+        IERC1643 documentEngine
+        
+    ) {
         // Initialize the contract to avoid front-running
         // Warning : do not initialize the proxy
         initialize(
             admin,
             ERC20Attributes_,
             baseModuleAttributes_,
-            engines_
+            snapshotEngine,
+            documentEngine
         );
     }
 }

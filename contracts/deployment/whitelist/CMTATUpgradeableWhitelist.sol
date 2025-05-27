@@ -2,22 +2,18 @@
 
 pragma solidity ^0.8.20;
 
-import {CMTATBaseOption} from "../modules/CMTATBaseOption.sol";
-import {MetaTxModule} from "../modules/wrapper/options/MetaTxModule.sol";
-
+import {CMTATBaseWhitelist} from "../../modules/CMTATBaseWhitelist.sol";
 
 /**
 * @title CMTAT version for a proxy deployment (Transparent or Beacon proxy)
 */
-contract CMTATUpgradeable is CMTATBaseOption {
+contract CMTATUpgradeableWhitelist is CMTATBaseWhitelist {
     /**
      * @notice Contract version for the deployment with a proxy
      * @param forwarderIrrevocable address of the forwarder, required for the gasless support
      */
     /// @custom:oz-upgrades-unsafe-allow constructor
-    constructor(
-        address forwarderIrrevocable
-    ) MetaTxModule(forwarderIrrevocable) {
+    constructor() {
         // Disable the possibility to initialize the implementation
         _disableInitializers();
     }

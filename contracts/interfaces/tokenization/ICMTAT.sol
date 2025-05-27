@@ -104,6 +104,38 @@ interface ICMTATCreditEvents {
 * @notice interface to represent debt tokens
 */
 interface ICMTATDebt {
+    struct debtIdentifier {
+        string issuer;
+        string issuerDescription;
+        string guarantor;
+        string bondHolder;
+    }
+    struct debtInstrument {
+        uint256 interestRate;
+        uint256 parValue;
+        string maturityDate;
+        /*
+        * Interest schedule format (if any). The purpose of the interest schedule is to set, in the parameters of the smart
+        *   contract, the dates on which the interest payments accrue.
+        *    - Format A: start date/end date/period
+        *   - Format B: start date/end date/day of period (e.g. quarter or year)
+        *    - Format C: date 1/date 2/date 3/….
+        */
+        string interestScheduleFormat;
+        /*
+        * - Format A: period (indicating the period between the accrual date for the interest payment and the date on
+        *   which the payment is scheduled to be made)
+        * - Format B: specific date
+        */
+        string interestPaymentDate;
+        string dayCountConvention;
+        string businessDayConvention;
+        string publicHolidaysCalendar;
+        string issuanceDate;
+        string couponFrequency;
+        address currencyContract;
+        string currency; 
+    }
     struct DebtBase {
         uint256 interestRate;
         uint256 parValue;

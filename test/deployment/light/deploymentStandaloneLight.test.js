@@ -4,17 +4,17 @@ const {
   fixture,
   loadFixture
 
-} = require('../deploymentUtils')
+} = require('../../deploymentUtils')
 const {
   ZERO_ADDRESS
-} = require('../utils')
-const ERC20BaseModuleCommon = require('../common/ERC20BaseModuleCommon')
-const ERC20MintModuleCommon = require('../common/ERC20MintModuleCommon')
-const ERC20BurnModuleCommon = require('../common/ERC20BurnModuleCommon')
-const EnforcementModuleCommon = require('../common/EnforcementModuleCommon')
-const BaseModuleCommon = require('../common/BaseModuleCommon')
-const PauseModuleCommon = require('../common/PauseModuleCommon')
-const ValidationModuleCommonCore = require('../common/ValidationModule/ValidationModuleCommonCore')
+} = require('../../utils')
+const ERC20BaseModuleCommon = require('../../common/ERC20BaseModuleCommon')
+const ERC20MintModuleCommon = require('../../common/ERC20MintModuleCommon')
+const ERC20BurnModuleCommon = require('../../common/ERC20BurnModuleCommon')
+const EnforcementModuleCommon = require('../../common/EnforcementModuleCommon')
+const BaseModuleCommon = require('../../common/BaseModuleCommon')
+const PauseModuleCommon = require('../../common/PauseModuleCommon')
+const ValidationModuleCommonCore = require('../../common/ValidationModule/ValidationModuleCommonCore')
 const REASON_STRING = 'BURN_TEST'
 const REASON_EVENT = ethers.toUtf8Bytes(REASON_STRING)
 const REASON = ethers.Typed.bytes(REASON_EVENT)

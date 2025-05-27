@@ -1,31 +1,33 @@
 const { expect } = require('chai')
 const {
-  deployCMTATERC1363Proxy,
+  deployCMTATERC1363Standalone,
   fixture,
   loadFixture
-} = require('../deploymentUtils')
-const BaseModuleCommon = require('../common/BaseModuleCommon')
-const ERC20BaseModuleCommon = require('../common/ERC20BaseModuleCommon')
-const ERC20MintModuleCommon = require('../common/ERC20MintModuleCommon')
-const ERC20BurnModuleCommon = require('../common/ERC20BurnModuleCommon')
-const EnforcementModuleCommon = require('../common/EnforcementModuleCommon')
-const ERC20EnforcementModuleCommon = require('../common/ERC20EnforcementModuleCommon')
-const DocumentModuleCommon = require('../common/DocumentModule/DocumentModuleCommon')
-const DebtModuleCommon = require('../common/DebtModule/DebtModuleCommon')
+} = require('../../deploymentUtils')
+const ERC20BaseModuleCommon = require('../../common/ERC20BaseModuleCommon')
+const BaseModuleCommon = require('../../common/BaseModuleCommon')
+const ERC20MintModuleCommon = require('../../common/ERC20MintModuleCommon')
+const ERC20BurnModuleCommon = require('../../common/ERC20BurnModuleCommon')
+const EnforcementModuleCommon = require('../../common/EnforcementModuleCommon')
+const ERC20EnforcementModuleCommon = require('../../common/ERC20EnforcementModuleCommon')
+const DocumentModuleCommon = require('../../common/DocumentModule/DocumentModuleCommon')
+const DebtModuleCommon = require('../../common/DebtModule/DebtModuleCommon')
 const VALUE = 20n
-describe('CMTAT - ERC1363 Proxy Deployment', function () {
+describe('CMTAT ERC1363 - Standalone', function () {
   beforeEach(async function () {
     Object.assign(this, await loadFixture(fixture))
-    this.cmtat = await deployCMTATERC1363Proxy(
+    this.cmtat = await deployCMTATERC1363Standalone(
       this._.address,
       this.admin.address,
       this.deployerAddress.address
     )
+
     const ReceiverMockFactory = await ethers.getContractFactory(
       'ERC1363ReceiverMock'
     )
     this.receiverMock = await ReceiverMockFactory.deploy()
   })
+
   /* ============ ERC165 ============ */
   it('testSupportRightInterface', async function () {
     const erc1363Interface = '0xb0202a11'
@@ -43,6 +45,7 @@ describe('CMTAT - ERC1363 Proxy Deployment', function () {
   it('testCanSendTokenToReceiverContract', async function () {
     // Arrange
     await this.cmtat.connect(this.admin).mint(this.admin, VALUE)
+
     // Arrange - Assert
     // Check balance before transfer
     expect(await this.cmtat.balanceOf(this.receiverMock)).to.equal(0)
@@ -60,6 +63,7 @@ describe('CMTAT - ERC1363 Proxy Deployment', function () {
   it('testCannotSendTokenToEOAWithERC1363Functions', async function () {
     // Arrange
     await this.cmtat.connect(this.admin).mint(this.admin, VALUE)
+
     await expect(
       this.cmtat.connect(this.admin).transferAndCall(this.address1, VALUE)
     )

@@ -3,14 +3,14 @@ const {
   deployCMTATLightProxy,
   fixture,
   loadFixture
-} = require('../deploymentUtils')
-const ERC20BaseModuleCommon = require('../common/ERC20BaseModuleCommon')
-const ERC20MintModuleCommon = require('../common/ERC20MintModuleCommon')
-const ERC20BurnModuleCommon = require('../common/ERC20BurnModuleCommon')
-const EnforcementModuleCommon = require('../common/EnforcementModuleCommon')
-const BaseModuleCommon = require('../common/BaseModuleCommon')
-const PauseModuleCommon = require('../common/PauseModuleCommon')
-const ValidationModuleCommonCore = require('../common/ValidationModule/ValidationModuleCommonCore')
+} = require('../../deploymentUtils')
+const ERC20BaseModuleCommon = require('../../common/ERC20BaseModuleCommon')
+const ERC20MintModuleCommon = require('../../common/ERC20MintModuleCommon')
+const ERC20BurnModuleCommon = require('../../common/ERC20BurnModuleCommon')
+const EnforcementModuleCommon = require('../../common/EnforcementModuleCommon')
+const BaseModuleCommon = require('../../common/BaseModuleCommon')
+const PauseModuleCommon = require('../../common/PauseModuleCommon')
+const ValidationModuleCommonCore = require('../../common/ValidationModule/ValidationModuleCommonCore')
 const VALUE = 20n
 describe('CMTAT Core - Upgradeable', function () {
   beforeEach(async function () {
