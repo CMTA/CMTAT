@@ -9,12 +9,13 @@ import {ERC20Upgradeable, IERC20} from "@openzeppelin/contracts-upgradeable/toke
 import {ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
 import {AccessControlUpgradeable} from "./security/AuthorizationModule.sol";
 import {CMTATBase, CMTATBaseCommon} from "./CMTATBase.sol";
+import {CMTATBaseOption, ERC20CrossChainModule} from "../modules/CMTATBaseOption.sol";
 import {MetaTxModule, ERC2771ContextUpgradeable} from "./wrapper/options/MetaTxModule.sol";
 
 /**
 * @title CMTAT Base for ERC-1363
 */
-abstract contract CMTATBaseERC1363 is ERC1363Upgradeable,CMTATBase, MetaTxModule {
+abstract contract CMTATBaseERC1363 is ERC1363Upgradeable,CMTATBaseOption{
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
@@ -22,8 +23,8 @@ abstract contract CMTATBaseERC1363 is ERC1363Upgradeable,CMTATBase, MetaTxModule
     /**
      * 
      */
-    function supportsInterface(bytes4 interfaceId) public view virtual override(ERC1363Upgradeable, AccessControlUpgradeable) returns (bool) {
-        return ERC1363Upgradeable.supportsInterface(interfaceId) || AccessControlUpgradeable.supportsInterface(interfaceId);
+    function supportsInterface(bytes4 interfaceId) public view virtual override(ERC1363Upgradeable, ERC20CrossChainModule) returns (bool) {
+        return ERC1363Upgradeable.supportsInterface(interfaceId) || ERC20CrossChainModule.supportsInterface(interfaceId);
     }
 
 
@@ -101,19 +102,19 @@ abstract contract CMTATBaseERC1363 is ERC1363Upgradeable,CMTATBase, MetaTxModule
     function _msgSender()
         internal
         view
-        override(ContextUpgradeable, ERC2771ContextUpgradeable)
+        override(ContextUpgradeable, CMTATBaseOption)
         returns (address sender)
     {
-        return ERC2771ContextUpgradeable._msgSender();
+        return CMTATBaseOption._msgSender();
     }
 
     /**
      * @dev This surcharge is not necessary if you do not use the MetaTxModule
      */
     function _contextSuffixLength() internal view 
-    override(ContextUpgradeable, ERC2771ContextUpgradeable)
+    override(ContextUpgradeable, CMTATBaseOption)
     returns (uint256) {
-         return ERC2771ContextUpgradeable._contextSuffixLength();
+         return CMTATBaseOption._contextSuffixLength();
     }
 
     /**
@@ -122,9 +123,9 @@ abstract contract CMTATBaseERC1363 is ERC1363Upgradeable,CMTATBase, MetaTxModule
     function _msgData()
         internal
         view
-        override(ContextUpgradeable, ERC2771ContextUpgradeable)
+        override(ContextUpgradeable, CMTATBaseOption)
         returns (bytes calldata)
     {
-        return ERC2771ContextUpgradeable._msgData();
+        return CMTATBaseOption._msgData();
     }
 }
