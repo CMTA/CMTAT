@@ -1,4 +1,4 @@
-const { ERC20ENFORCER_ROLE, DEFAULT_ADMIN_ROLE } = require('../utils')
+const { ERC20ENFORCER_ROLE, DEFAULT_ADMIN_ROLE, ZERO_ADDRESS } = require('../utils')
 const { expect } = require('chai')
 
 const REASON_FREEZE_STRING = 'testFreeze'
@@ -47,12 +47,12 @@ function ERC20EnforcementModuleCommon () {
         .withArgs(this.address1, this.address2, AMOUNT_TO_TRANSFER)
     })
 
-    /* it('testCanForceTransferFromAddress1ToAddress2AsEnforcerTransferRole', async function () {
+    it('testCanForceTransferFromAddress1ToAddress2AsAdminAndReduceAllowanceToZero', async function () {
       const AMOUNT_TO_TRANSFER = 20
-      // Arrange - Assert
+      const AMOUNT_TO_APPROVE = 10
       await this.cmtat
-        .connect(this.admin)
-        .grantRole(ERC20ENFORCER_ROLE, this.address3)
+        .connect(this.address1)
+        .approve(this.address2,AMOUNT_TO_APPROVE)
       // Act
       this.logs = await this.cmtat
         .connect(this.admin)
@@ -63,19 +63,89 @@ function ERC20EnforcementModuleCommon () {
           REASON
         )
       // Assert
-      expect(await this.cmtat.balanceOf(this.address1)).to.equal(
-        50 - AMOUNT_TO_TRANSFER
-      )
-      expect(await this.cmtat.balanceOf(this.address2)).to.equal(
-        AMOUNT_TO_TRANSFER
-      )
+      expect(await this.cmtat.allowance(this.address1, this.address2)).to.equal('0')
+      expect(await this.cmtat.balanceOf(this.address1)).to.equal('30')
+      expect(await this.cmtat.balanceOf(this.address2)).to.equal('20')
+      // Events
       await expect(this.logs)
         .to.emit(this.cmtat, 'Enforcement')
         .withArgs(this.admin, this.address1, AMOUNT_TO_TRANSFER, REASON_EVENT)
       await expect(this.logs)
         .to.emit(this.cmtat, 'Transfer')
         .withArgs(this.address1, this.address2, AMOUNT_TO_TRANSFER)
-    }) */
+    })
+
+    it('testCanForceTransferFromAddress1ToAddress2AsAdminAndReduceAllowance', async function () {
+      const AMOUNT_TO_TRANSFER = 20
+      const AMOUNT_TO_APPROVE = 30
+      await this.cmtat
+        .connect(this.address1)
+        .approve(this.address2,AMOUNT_TO_APPROVE)
+      // Act
+      this.logs = await this.cmtat
+        .connect(this.admin)
+        .forcedTransfer(
+          this.address1,
+          this.address2,
+          AMOUNT_TO_TRANSFER,
+          REASON
+        )
+      // Assert
+      expect(await this.cmtat.allowance(this.address1, this.address2)).to.equal('10')
+      expect(await this.cmtat.balanceOf(this.address1)).to.equal('30')
+      expect(await this.cmtat.balanceOf(this.address2)).to.equal('20')
+      // Events
+      await expect(this.logs)
+        .to.emit(this.cmtat, 'Enforcement')
+        .withArgs(this.admin, this.address1, AMOUNT_TO_TRANSFER, REASON_EVENT)
+      await expect(this.logs)
+        .to.emit(this.cmtat, 'Transfer')
+        .withArgs(this.address1, this.address2, AMOUNT_TO_TRANSFER)
+    })
+
+    it('testCanForceBurnWithForceTransferAsAdmin', async function () {
+      const AMOUNT_TO_TRANSFER = 20
+      // Act
+      this.logs = await this.cmtat
+        .connect(this.admin)
+        .forcedTransfer(
+          this.address1,
+          ZERO_ADDRESS,
+          AMOUNT_TO_TRANSFER,
+          REASON
+        )
+      // Assert
+      expect(await this.cmtat.balanceOf(this.address1)).to.equal('30')
+      // Events
+      await expect(this.logs)
+        .to.emit(this.cmtat, 'Enforcement')
+        .withArgs(this.admin, this.address1, AMOUNT_TO_TRANSFER, REASON_EVENT)
+      await expect(this.logs)
+        .to.emit(this.cmtat, 'Transfer')
+        .withArgs(this.address1, ZERO_ADDRESS, AMOUNT_TO_TRANSFER)
+    })
+
+    it('testCanForceTransferFromAddress1ToAddress2AsAdminWithoutReason', async function () {
+      const AMOUNT_TO_TRANSFER = 20
+      // Act
+      this.logs = await this.cmtat
+        .connect(this.admin)
+        .forcedTransfer(
+          this.address1,
+          this.address2,
+          AMOUNT_TO_TRANSFER
+        )
+      // Assert
+      expect(await this.cmtat.balanceOf(this.address1)).to.equal('30')
+      expect(await this.cmtat.balanceOf(this.address2)).to.equal('20')
+      // Events
+      await expect(this.logs)
+        .to.emit(this.cmtat, 'Enforcement')
+        .withArgs(this.admin, this.address1, AMOUNT_TO_TRANSFER, '0x')
+      await expect(this.logs)
+        .to.emit(this.cmtat, 'Transfer')
+        .withArgs(this.address1, this.address2, AMOUNT_TO_TRANSFER)
+    })
 
     it('testCannotNonAdminTransferFunds', async function () {
       // Act
@@ -83,6 +153,18 @@ function ERC20EnforcementModuleCommon () {
         this.cmtat
           .connect(this.address2)
           .forcedTransfer(this.address1, this.address2, 20, REASON)
+      )
+        .to.be.revertedWithCustomError(
+          this.cmtat,
+          'AccessControlUnauthorizedAccount'
+        )
+        .withArgs(this.address2.address, DEFAULT_ADMIN_ROLE)
+
+      // Act
+      await expect(
+        this.cmtat
+          .connect(this.address2)
+          .forcedTransfer(this.address1, this.address2, 20)
       )
         .to.be.revertedWithCustomError(
           this.cmtat,

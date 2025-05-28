@@ -140,20 +140,24 @@ abstract contract ERC20EnforcementModule is ERC20Upgradeable, IERC7551ERC20Enfor
 
     function _forcedTransfer(address from, address to, uint256 value, bytes memory data) internal virtual {
         _unfreezeTokens(from, value);
-        // Spend allowance
-        // See https://ethereum-magicians.org/t/erc-3643-the-t-rex-token-standard/6844/11
-        uint256 currentAllowance = allowance(to, from);
-        if (currentAllowance < type(uint256).max) {
-            if (currentAllowance < value) {
-               _approve(to, from, currentAllowance, false);
-            }
-            unchecked {
-                _approve(to, from, currentAllowance - value, false);
-            }
-        }
         if(to == address(0)){
             _burn(from, value);
-        } else {
+        } else{
+            // Spend allowance
+            // See https://ethereum-magicians.org/t/erc-3643-the-t-rex-token-standard/6844/11
+            uint256 currentAllowance = allowance(from, to);
+            if (currentAllowance > 0 && currentAllowance < type(uint256).max) {
+                if (currentAllowance < value) {
+                     unchecked {
+                        _approve(from, to, 0, false);
+                     }
+                } else{
+                    unchecked {
+                         _approve(from, to, currentAllowance - value, false);
+                    }
+                }
+              
+            }
             _transfer(from, to, value);
         }
         emit Enforcement(_msgSender(), from, value, data);
