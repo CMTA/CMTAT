@@ -15,7 +15,7 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **CMTATStandaloneERC1363** | Implementation | CMTATERC1363Base |||
+| **CMTATStandaloneERC1363** | Implementation | CMTATBaseERC1363 |||
 | └ | <Constructor> | Public ❗️ | 🛑  | MetaTxModule |
 
 

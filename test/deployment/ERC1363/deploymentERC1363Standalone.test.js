@@ -4,14 +4,17 @@ const {
   fixture,
   loadFixture
 } = require('../../deploymentUtils')
+// Core
 const ERC20BaseModuleCommon = require('../../common/ERC20BaseModuleCommon')
 const BaseModuleCommon = require('../../common/BaseModuleCommon')
 const ERC20MintModuleCommon = require('../../common/ERC20MintModuleCommon')
 const ERC20BurnModuleCommon = require('../../common/ERC20BurnModuleCommon')
 const EnforcementModuleCommon = require('../../common/EnforcementModuleCommon')
+const PauseModuleCommon = require('../../common/PauseModuleCommon')
+// Extensions
 const ERC20EnforcementModuleCommon = require('../../common/ERC20EnforcementModuleCommon')
 const DocumentModuleCommon = require('../../common/DocumentModule/DocumentModuleCommon')
-const DebtModuleCommon = require('../../common/DebtModule/DebtModuleCommon')
+const ExtraInfoModuleCommon = require('../../common/ExtraInfoModuleCommon')
 const VALUE = 20n
 describe('CMTAT ERC1363 - Standalone', function () {
   beforeEach(async function () {
@@ -21,7 +24,7 @@ describe('CMTAT ERC1363 - Standalone', function () {
       this.admin.address,
       this.deployerAddress.address
     )
-
+    this.dontCheckTimestamp = true
     const ReceiverMockFactory = await ethers.getContractFactory(
       'ERC1363ReceiverMock'
     )
@@ -72,6 +75,7 @@ describe('CMTAT ERC1363 - Standalone', function () {
   })
   // Core
   BaseModuleCommon()
+  PauseModuleCommon()
   ERC20BaseModuleCommon()
   ERC20BurnModuleCommon()
   ERC20MintModuleCommon()
@@ -80,5 +84,5 @@ describe('CMTAT ERC1363 - Standalone', function () {
   // Extensions
   ERC20EnforcementModuleCommon()
   DocumentModuleCommon()
-  DebtModuleCommon()
+  ExtraInfoModuleCommon()
 })

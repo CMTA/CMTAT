@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/CMTATERC1363Base.sol | [object Promise] |
+| ./modules/CMTATBaseERC1363.sol | [object Promise] |
 
 
 ### Contracts Description Table
@@ -15,7 +15,7 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **CMTATERC1363Base** | Implementation | ERC1363Upgradeable, CMTATBase, MetaTxModule |||
+| **CMTATBaseERC1363** | Implementation | ERC1363Upgradeable, CMTATBase, MetaTxModule |||
 | └ | supportsInterface | Public ❗️ |   |NO❗️ |
 | └ | transfer | Public ❗️ | 🛑  |NO❗️ |
 | └ | transferFrom | Public ❗️ | 🛑  |NO❗️ |

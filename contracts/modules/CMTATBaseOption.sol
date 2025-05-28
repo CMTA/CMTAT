@@ -3,7 +3,6 @@
 pragma solidity ^0.8.20;
 /* ==== OpenZeppelin === */
 /* ==== Module === */
-import {DebtEngineModule, DebtModule, ICMTATDebt} from "./wrapper/options/DebtEngineModule.sol";
 import {ERC20CrossChainModule, CMTATBase} from "./wrapper/options/ERC20CrossChainModule.sol";
 import {ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
 import {AccessControlUpgradeable} from "./security/AuthorizationModule.sol";
@@ -11,13 +10,8 @@ import {MetaTxModule, ERC2771ContextUpgradeable} from "./wrapper/options/MetaTxM
 /**
 * @title Extend CMTAT Base with option modules
 */
-abstract contract CMTATBaseOption is  ERC20CrossChainModule,DebtEngineModule, MetaTxModule {
-
-    function debt() public view virtual override(DebtEngineModule, DebtModule) returns(DebtBase memory debtBaseResult){
-        return DebtEngineModule.debt();
-        
-    }
-        /*//////////////////////////////////////////////////////////////
+abstract contract CMTATBaseOption is ERC20CrossChainModule, MetaTxModule {
+    /*//////////////////////////////////////////////////////////////
                             METAXTX MODULE
     //////////////////////////////////////////////////////////////*/
        /**
@@ -51,12 +45,5 @@ abstract contract CMTATBaseOption is  ERC20CrossChainModule,DebtEngineModule, Me
         returns (bytes calldata)
     {
         return ERC2771ContextUpgradeable._msgData();
-    }
-
-    /**
-     * 
-     */
-    function supportsInterface(bytes4 interfaceId) public view virtual override(AccessControlUpgradeable, ERC20CrossChainModule) returns (bool) {
-        return AccessControlUpgradeable.supportsInterface(interfaceId) || ERC20CrossChainModule.supportsInterface(interfaceId);
     }
 }

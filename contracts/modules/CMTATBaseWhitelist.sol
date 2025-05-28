@@ -40,7 +40,7 @@ abstract contract CMTATBaseWhitelist is
 
     function _checkTransferred(address spender, address from, address to, uint256 value) internal virtual override {
         CMTATBaseCommon._checkTransferred(spender, from, to, value);
-        if (!ValidationModuleCore._canTransferByModule(spender, from, to, value)) {
+        if (!ValidationModuleWhitelist._canTransferGenericByModule(spender, from, to)) {
             revert Errors.CMTAT_InvalidTransfer(from, to, value);
         }
     } 
@@ -130,14 +130,11 @@ abstract contract CMTATBaseWhitelist is
     */
     function __CMTAT_modules_init_unchained(address admin, ICMTATConstructor.ERC20Attributes memory ERC20Attributes_, ICMTATConstructor.BaseModuleAttributes memory baseModuleAttributes_,  ISnapshotEngine snapshotEngine,
         IERC1643 documentEngine ) internal virtual onlyInitializing {
-         __CMTAT_commonModules_init_unchained(admin,ERC20Attributes_, baseModuleAttributes_);
-        // EnforcementModule_init_unchained is called before ValidationModule_init_unchained due to inheritance
+         __CMTAT_commonModules_init_unchained(admin,ERC20Attributes_, baseModuleAttributes_, snapshotEngine, documentEngine);
         __EnforcementModule_init_unchained();
-        // PauseModule_init_unchained is called before ValidationModule_init_unchained due to inheritance
         __PauseModule_init_unchained();
-        __SnapshotEngineModule_init_unchained(snapshotEngine);
-        __DocumentEngineModule_init_unchained(documentEngine);
-        
+        // option
+        __Whitelist_init_unchained();
     }
 
     function __CMTAT_init_unchained() internal virtual onlyInitializing {
@@ -158,12 +155,28 @@ abstract contract CMTATBaseWhitelist is
         address to,
         uint256 value
     ) public virtual override (ValidationModuleCore) view returns (bool) {
+        if(!ValidationModuleWhitelist._canTransferGenericByModule(address(0), from, to)){
+            return false;
+        }
         if(!ERC20EnforcementModule._checkActiveBalance(from, value)){
             return false;
         } else {
             return ValidationModuleCore.canTransfer(from, to, value);
         }
         
+    }
+
+   function canTransferFrom(
+        address spender,
+        address from,
+        address to,
+        uint256 value
+    ) public virtual override (ValidationModuleCore) view returns (bool) {
+        if(!ValidationModuleWhitelist._canTransferGenericByModule(spender, from, to)){
+            return false;
+        }else {
+            return ValidationModuleCore.canTransferFrom(spender, from, to, value);
+        }  
     }
 
     /*//////////////////////////////////////////////////////////////

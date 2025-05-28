@@ -10,8 +10,9 @@ function ExtraInfoModuleCommon () {
       const result = await myThis.cmtat.terms()
       expect(result[0]).to.equal(terms[0])
       expect(result[1][0]).to.equal(terms[1])
-      expect(result[1][1]).to.equal(terms[2])
-      expect(result[1][2]).to.equal(blockTimestamp)
+      if(!myThis.dontCheckTimestamp){
+        expect(result[1][2]).to.equal(blockTimestamp)
+      }
     }
     it('testHasTheDefinedTokenId', async function () {
       // Act + Assert

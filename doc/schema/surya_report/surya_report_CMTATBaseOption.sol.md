@@ -15,12 +15,10 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **CMTATBaseOption** | Implementation | ERC20CrossChainModule, DebtEngineModule, MetaTxModule |||
-| └ | debt | Public ❗️ |   |NO❗️ |
+| **CMTATBaseOption** | Implementation | ERC20CrossChainModule, MetaTxModule |||
 | └ | _msgSender | Internal 🔒 |   | |
 | └ | _contextSuffixLength | Internal 🔒 |   | |
 | └ | _msgData | Internal 🔒 |   | |
-| └ | supportsInterface | Public ❗️ |   |NO❗️ |
 
 
 ### Legend

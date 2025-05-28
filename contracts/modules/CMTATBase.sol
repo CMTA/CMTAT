@@ -71,7 +71,7 @@ abstract contract CMTATBase is
         // Openzeppelin
         __CMTAT_openzeppelin_init_unchained();
         /* Internal Modules */
-       __CMTAT_internal_init_unchained();
+       __CMTAT_internal_init_unchained(engines_);
 
         /* Wrapper modules */
         __CMTAT_modules_init_unchained(admin, ERC20Attributes_, baseModuleAttributes_, engines_ );
@@ -94,23 +94,18 @@ abstract contract CMTATBase is
     /*
     * @dev CMTAT internal module
     */
-    function __CMTAT_internal_init_unchained() internal virtual onlyInitializing {
-        __Enforcement_init_unchained();   
+    function __CMTAT_internal_init_unchained(ICMTATConstructor.Engine memory engines_) internal virtual onlyInitializing {
+        __Enforcement_init_unchained(); 
+        __ValidationRuleEngine_init_unchained(engines_.ruleEngine);  
     }
 
     /*
     * @dev CMTAT wrapper modules
     */
-    function __CMTAT_modules_init_unchained(address admin, ICMTATConstructor.ERC20Attributes memory ERC20Attributes_, ICMTATConstructor.BaseModuleAttributes memory baseModuleAttributes_, ICMTATConstructor.Engine memory engines_ ) internal virtual onlyInitializing {
-        __CMTAT_commonModules_init_unchained(admin,ERC20Attributes_, baseModuleAttributes_);
-        // PauseModule_init_unchained is called before ValidationModule_init_unchained due to inheritance
+    function __CMTAT_modules_init_unchained(address admin, ICMTATConstructor.ERC20Attributes memory ERC20Attributes_, ICMTATConstructor.BaseModuleAttributes memory baseModuleAttributes_, ICMTATConstructor.Engine memory engines_) internal virtual onlyInitializing {
+        __CMTAT_commonModules_init_unchained(admin,ERC20Attributes_, baseModuleAttributes_, engines_.snapshotEngine, engines_ .documentEngine);
         __PauseModule_init_unchained();
         __EnforcementModule_init_unchained();
-        __ValidationModule_init_unchained(engines_.ruleEngine);
-
-        __SnapshotEngineModule_init_unchained(engines_.snapshotEngine);
-        __DocumentEngineModule_init_unchained(engines_ .documentEngine);
-        
     }
 
     function __CMTAT_init_unchained() internal virtual onlyInitializing {

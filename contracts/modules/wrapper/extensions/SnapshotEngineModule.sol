@@ -32,7 +32,7 @@ abstract contract SnapshotEngineModule is AuthorizationModule {
      *
      */
     function __SnapshotEngineModule_init_unchained(ISnapshotEngine snapshotEngine_)
-    internal onlyInitializing {
+    internal virtual onlyInitializing {
         if (address(snapshotEngine_) != address (0)) {
             SnapshotEngineModuleStorage storage $ = _getSnapshotEngineModuleStorage();
             _setSnapshotEngine($, snapshotEngine_);

@@ -3,6 +3,9 @@ const { DEBT_ROLE } = require('../../utils.js')
 
 function DebtModuleSetDebtEngineCommon () {
   context('DebtEngineSetTest', function () {
+    beforeEach(async function () {
+      this.debtEngineMock = await ethers.deployContract('DebtEngineMock')
+      })
     it('testCanBeSetByAdmin', async function () {
       // Act
       this.logs = await this.cmtat
@@ -43,7 +46,7 @@ function DebtModuleSetDebtEngineCommon () {
       const events = await this.cmtat.creditEvents()
 
       expect(events.flagDefault).to.equal(false)
-      expect(debt.interestRate).to.equal(0)
+      expect(debt.debtInstrument.interestRate).to.equal(0)
     })
   })
 }

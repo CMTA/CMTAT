@@ -38,7 +38,7 @@ abstract contract ExtraInformationModule is IERC7551Base, ICMTATBase, Authorizat
         string memory tokenId_,
         IERC1643CMTAT.DocumentInfo memory terms_,
         string memory information_
-    ) internal onlyInitializing {
+    ) internal virtual onlyInitializing {
         ExtraInformationModuleStorage storage $ = _getExtraInformationModuleStorage();
         // tokenId
         _setTokenId($, tokenId_);

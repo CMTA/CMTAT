@@ -11,7 +11,6 @@ const ERC20BurnModuleCommon = require('../../common/ERC20BurnModuleCommon')
 const EnforcementModuleCommon = require('../../common/EnforcementModuleCommon')
 const ERC20EnforcementModuleCommon = require('../../common/ERC20EnforcementModuleCommon')
 const DocumentModuleCommon = require('../../common/DocumentModule/DocumentModuleCommon')
-const DebtModuleCommon = require('../../common/DebtModule/DebtModuleCommon')
 const VALUE = 20n
 describe('CMTAT - ERC1363 Proxy Deployment', function () {
   beforeEach(async function () {
@@ -21,6 +20,7 @@ describe('CMTAT - ERC1363 Proxy Deployment', function () {
       this.admin.address,
       this.deployerAddress.address
     )
+    this.dontCheckTimestamp = true
     const ReceiverMockFactory = await ethers.getContractFactory(
       'ERC1363ReceiverMock'
     )
@@ -76,5 +76,4 @@ describe('CMTAT - ERC1363 Proxy Deployment', function () {
   // Extensions
   ERC20EnforcementModuleCommon()
   DocumentModuleCommon()
-  DebtModuleCommon()
 })

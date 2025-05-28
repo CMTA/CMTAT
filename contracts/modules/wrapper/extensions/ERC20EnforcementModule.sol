@@ -42,7 +42,7 @@ abstract contract ERC20EnforcementModule is ERC20Upgradeable, IERC7551ERC20Enfor
     }
 
     /* ============  Initializer Function ============ */
-    function __ERC20EnforcementModule_init_unchained() internal onlyInitializing {
+    function __ERC20EnforcementModule_init_unchained() internal virtual onlyInitializing {
         // no variable to initialize
     }
 

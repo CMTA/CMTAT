@@ -214,8 +214,9 @@ function ERC20EnforcementModuleCommon () {
       const AMOUNT_TO_TRANSFER = INITIAL_BALANCE - FREEZE_AMOUNT + 1
       // Act
       await this.cmtat.connect(this.admin).freezePartialTokens(this.address1, FREEZE_AMOUNT)
-      // Assert
-      expect(
+     if(!this.core){
+       // Assert
+       expect(
         await this.cmtat.detectTransferRestriction(
           this.address1,
           this.address2,
@@ -225,6 +226,8 @@ function ERC20EnforcementModuleCommon () {
       expect(await this.cmtat.messageForTransferRestriction(4)).to.equal(
         'AddrFrom:insufficientActiveBalance'
       )
+     }
+     
 
       await expect(
         this.cmtat
@@ -248,14 +251,24 @@ function ERC20EnforcementModuleCommon () {
       // Act
       await this.cmtat.connect(this.admin).freezePartialTokens(this.address1, FREEZE_AMOUNT)
 
-      // Assert
-      expect(
-        await this.cmtat.detectTransferRestriction(
+       // Assert
+       expect(
+        await this.cmtat.canTransfer(
           this.address1,
           this.address2,
           AMOUNT_TO_TRANSFER
         )
-      ).to.equal('0')
+      ).to.equal(true)
+      
+      if(!this.core){
+        expect(
+          await this.cmtat.detectTransferRestriction(
+            this.address1,
+            this.address2,
+            AMOUNT_TO_TRANSFER
+          )
+        ).to.equal('0')
+      }
     })
 
     // reverts if address3 transfers tokens from address1 to this.address2 when paused
@@ -269,15 +282,26 @@ function ERC20EnforcementModuleCommon () {
 
       // Assert
       expect(
-        await this.cmtat.detectTransferRestriction(
+        await this.cmtat.canTransfer(
           this.address1,
           this.address2,
           AMOUNT_TO_TRANSFER
         )
-      ).to.equal('4')
-      expect(await this.cmtat.messageForTransferRestriction(4)).to.equal(
-        'AddrFrom:insufficientActiveBalance'
-      )
+      ).to.equal(false)
+      
+      if(!this.core){
+        expect(
+          await this.cmtat.detectTransferRestriction(
+            this.address1,
+            this.address2,
+            AMOUNT_TO_TRANSFER
+          )
+        ).to.equal('4')
+        expect(await this.cmtat.messageForTransferRestriction(4)).to.equal(
+          'AddrFrom:insufficientActiveBalance'
+        )
+      }
+     
       await expect(
         this.cmtat
           .connect(this.address3)

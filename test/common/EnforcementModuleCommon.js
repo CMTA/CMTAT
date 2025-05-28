@@ -287,18 +287,18 @@ function EnforcementModuleCommon () {
         )
     })
 
-    it('testCannotTransferTokenWhenSpenderIsisFrozenWithTransferFrom', async function () {
+    it('testCannotTransferTokenWhenSpenderIsFrozenWithTransferFrom', async function () {
       const AMOUNT_TO_TRANSFER = 10
       // Arrange
       // Define allowance
       await this.cmtat.connect(this.address3).approve(this.address1, AMOUNT_TO_TRANSFER)
       // Act
-      await this.cmtat.connect(this.admin).setAddressFrozen(this.address3, true, reasonFreeze)
+      await this.cmtat.connect(this.admin).setAddressFrozen(this.address1, true, reasonFreeze)
 
       expect(
         await this.cmtat.canTransferFrom(
-          this.address3,
           this.address1,
+          this.address3,
           this.address2,
           AMOUNT_TO_TRANSFER
         )

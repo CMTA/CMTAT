@@ -31,7 +31,7 @@ abstract contract ValidationModuleRuleEngineInternal is
     }
 
     /* ============  Initializer Function ============ */
-    function __ValidationModule_init_unchained(
+    function __ValidationRuleEngine_init_unchained(
         IRuleEngine ruleEngine_
     ) internal onlyInitializing {
         if (address(ruleEngine_) != address(0)) {

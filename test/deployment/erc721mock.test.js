@@ -11,7 +11,8 @@ const {
 } = require('../deploymentUtils')
 const { ZERO_ADDRESS } = require('../utils')
 const DocumentModuleCommon = require('../common/DocumentModule/DocumentModuleCommon')
-const DebtModuleCommon = require('../common/DebtModule/DebtModuleCommon')
+const BaseModuleCommon = require('../common/BaseModuleCommon')
+const ExtraInfoModuleCommon = require('../common/ExtraInfoModuleCommon')
 describe('ERC721MockUpgradeable', function () {
   const SYMBOL = 'ERC721MockS'
   const NAME = 'ERC721MockN'
@@ -103,6 +104,9 @@ describe('ERC721MockUpgradeable', function () {
       this.cmtat,
       'CMTAT_InvalidTransfer').withArgs(ZERO_ADDRESS, this.admin, 1)
   })
+  // Core
+  BaseModuleCommon()
+  // Extensions
   DocumentModuleCommon()
-  DebtModuleCommon()
+  ExtraInfoModuleCommon()
 })

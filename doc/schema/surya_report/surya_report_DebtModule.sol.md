@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/wrapper/extensions/DebtModule.sol | [object Promise] |
+| ./modules/wrapper/options/DebtModule.sol | [object Promise] |
 
 
 ### Contracts Description Table
@@ -18,6 +18,7 @@
 | **DebtModule** | Implementation | AuthorizationModule, ICMTATDebt |||
 | └ | __DebtModule_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |
 | └ | setDebt | External ❗️ | 🛑  | onlyRole |
+| └ | setDebtInstrument | External ❗️ | 🛑  | onlyRole |
 | └ | debt | Public ❗️ |   |NO❗️ |
 | └ | _getDebtModuleStorage | Internal 🔒 |   | |
 

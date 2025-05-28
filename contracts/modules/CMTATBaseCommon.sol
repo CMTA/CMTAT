@@ -15,8 +15,7 @@ import {ERC20EnforcementModule} from "./wrapper/extensions/ERC20EnforcementModul
 // options
 import {ERC20BaseModule, ERC20Upgradeable} from "./wrapper/core/ERC20BaseModule.sol";
 // Other
-import {DebtModule} from "./wrapper/extensions/DebtModule.sol";
-import {DocumentEngineModule} from "./wrapper/extensions/DocumentEngineModule.sol";
+import {DocumentEngineModule,  IERC1643} from "./wrapper/extensions/DocumentEngineModule.sol";
 import {SnapshotEngineModule} from "./wrapper/extensions/SnapshotEngineModule.sol";
 
  /* ==== Interface and other library === */
@@ -30,7 +29,6 @@ abstract contract CMTATBaseCommon is
     ERC20BurnModule,
     ERC20BaseModule,
     // Extension
-    DebtModule,
     SnapshotEngineModule,
     ERC20EnforcementModule,
     DocumentEngineModule,
@@ -46,18 +44,23 @@ abstract contract CMTATBaseCommon is
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
-    function __CMTAT_commonModules_init_unchained(address admin, ICMTATConstructor.ERC20Attributes memory ERC20Attributes_, ICMTATConstructor.BaseModuleAttributes memory baseModuleAttributes_ ) internal virtual onlyInitializing {
+    function __CMTAT_commonModules_init_unchained(address admin, ICMTATConstructor.ERC20Attributes memory ERC20Attributes_, ICMTATConstructor.BaseModuleAttributes memory baseModuleAttributes_,
+     ISnapshotEngine snapshotEngine,
+        IERC1643 documentEngine ) internal virtual onlyInitializing {
         // AuthorizationModule_init_unchained is called firstly due to inheritance
         __AuthorizationModule_init_unchained(admin);
+        // Core
         __ERC20BurnModule_init_unchained();
         __ERC20MintModule_init_unchained();
+        
         // EnforcementModule_init_unchained is called before ValidationModule_init_unchained due to inheritance
         __ERC20BaseModule_init_unchained(ERC20Attributes_.decimalsIrrevocable, ERC20Attributes_.name, ERC20Attributes_.symbol);
+        /* Extensions */
         // PauseModule_init_unchained is called before ValidationModule_init_unchained due to inheritance
-        __DebtModule_init_unchained();
         __ERC20EnforcementModule_init_unchained();
-        /* Other modules */
         __ExtraInformationModule_init_unchained(baseModuleAttributes_.tokenId, baseModuleAttributes_.terms, baseModuleAttributes_.information);
+        __SnapshotEngineModule_init_unchained(snapshotEngine);
+        __DocumentEngineModule_init_unchained(documentEngine);
     }
 
     /*//////////////////////////////////////////////////////////////

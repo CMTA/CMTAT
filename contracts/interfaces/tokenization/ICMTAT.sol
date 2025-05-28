@@ -104,16 +104,25 @@ interface ICMTATCreditEvents {
 * @notice interface to represent debt tokens
 */
 interface ICMTATDebt {
-    struct debtIdentifier {
-        string issuer;
+    struct DebtInformation {
+        DebtIdentifier debtIdentifier;
+        DebtInstrument debtInstrument;
+    }
+    struct DebtIdentifier {
+        string issuerName;
         string issuerDescription;
         string guarantor;
-        string bondHolder;
+        string debtHolder;
     }
-    struct debtInstrument {
+    struct DebtInstrument {
+        // uint256
         uint256 interestRate;
         uint256 parValue;
+        uint256 minimumDenomination;
+        // string
+        string issuanceDate;
         string maturityDate;
+        string couponPaymentFrequency;
         /*
         * Interest schedule format (if any). The purpose of the interest schedule is to set, in the parameters of the smart
         *   contract, the dates on which the interest payments accrue.
@@ -130,45 +139,15 @@ interface ICMTATDebt {
         string interestPaymentDate;
         string dayCountConvention;
         string businessDayConvention;
-        string publicHolidaysCalendar;
-        string issuanceDate;
-        string couponFrequency;
-        address currencyContract;
         string currency; 
+        // address
+        address currencyContract;
     }
-    struct DebtBase {
-        uint256 interestRate;
-        uint256 parValue;
-        string guarantor;
-        string bondHolder;
-        string maturityDate;
-        /*
-        * Interest schedule format (if any). The purpose of the interest schedule is to set, in the parameters of the smart
-        *   contract, the dates on which the interest payments accrue.
-        *    - Format A: start date/end date/period
-        *   - Format B: start date/end date/day of period (e.g. quarter or year)
-        *    - Format C: date 1/date 2/date 3/….
-        */
-        string interestScheduleFormat;
-        /*
-        * - Format A: period (indicating the period between the accrual date for the interest payment and the date on
-        *   which the payment is scheduled to be made)
-        * - Format B: specific date
-        */
-        string interestPaymentDate;
-        string dayCountConvention;
-        string businessDayConvention;
-        string publicHolidaysCalendar;
-        string issuanceDate;
-        string couponFrequency;
-    }
-
-
-
+    function debt() external view returns(DebtInformation memory);
     /**
      * @notice Returns debt information
      */
-    function debt() external view returns(DebtBase memory);
+    //function debt() external view returns(DebtBase memory);
    
 }
 

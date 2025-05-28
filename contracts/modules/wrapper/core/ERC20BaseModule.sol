@@ -44,7 +44,7 @@ abstract contract ERC20BaseModule is ERC20Upgradeable, IERC20Allowance, IERC3643
         uint8 decimals_,
         string memory name_,
         string memory symbol_
-    ) internal onlyInitializing {
+    ) internal virtual onlyInitializing {
         ERC20BaseModuleStorage storage $ = _getERC20BaseModuleStorage();
         $._decimals = decimals_;
         $._symbol = symbol_;

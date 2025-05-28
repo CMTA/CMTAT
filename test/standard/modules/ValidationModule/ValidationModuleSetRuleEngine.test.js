@@ -12,7 +12,6 @@ describe('Standard - ValidationModule - setRuleEngine', function () {
       this.admin.address,
       this.deployerAddress.address
     )
-    this.ruleEngine = await ethers.deployContract('RuleEngineMock', [this.admin])
   })
   ValidationModuleSetRuleEngineCommon()
 })

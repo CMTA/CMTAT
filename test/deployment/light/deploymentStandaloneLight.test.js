@@ -95,4 +95,5 @@ describe('CMTAT Core - Standalone', function () {
     )
       .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_BurnEnforcement_AddressIsNotFrozen')
   })
+
 })

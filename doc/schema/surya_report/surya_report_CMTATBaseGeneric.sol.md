@@ -15,7 +15,7 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **CMTATBaseGeneric** | Implementation | Initializable, ContextUpgradeable, ValidationModule, BaseModule, DebtModule, DocumentEngineModule, ExtraInformationModule |||
+| **CMTATBaseGeneric** | Implementation | Initializable, ContextUpgradeable, ValidationModule, BaseModule, DocumentEngineModule, ExtraInformationModule |||
 | └ | __CMTAT_init | Internal 🔒 | 🛑  | onlyInitializing |
 | └ | __CMTAT_openzeppelin_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |
 | └ | __CMTAT_internal_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |

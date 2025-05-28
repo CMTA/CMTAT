@@ -17,7 +17,6 @@ function ValidationModuleProxyCommon () {
       this.ADDRESS2_INITIAL_BALANCE = 18n
       this.ADDRESS3_INITIAL_BALANCE = 19n
       Object.assign(this, await loadFixture(fixture))
-      this.ruleEngineMock = await ethers.deployContract('RuleEngineMock', [this.admin])
       if (!this.CMTATERC1363) {
         this.cmtat = await deployCMTATProxy(
           this._.address,
@@ -49,8 +48,8 @@ function ValidationModuleProxyCommon () {
       this.ADDRESS2_INITIAL_BALANCE = 18n
       this.ADDRESS3_INITIAL_BALANCE = 19n
       Object.assign(this, await loadFixture(fixture))
-      this.ruleEngineMock = await ethers.deployContract('RuleEngineMock', [this.admin])
       this.definedAtDeployment = true
+      this.ruleEngineMock = await ethers.deployContract('RuleEngineMock', [this.admin])
       this.cmtat = await deployCMTATProxyWithParameter(
         this.deployerAddress.address,
         this._.address,
@@ -91,7 +90,6 @@ function ValidationModuleProxyCommon () {
           this.deployerAddress.address
         )
       }
-      this.ruleEngine = await ethers.deployContract('RuleEngineMock', [this.admin])
     })
     ValidationModuleSetRuleEngineCommon()
   })

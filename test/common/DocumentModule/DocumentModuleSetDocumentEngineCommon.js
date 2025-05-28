@@ -3,6 +3,9 @@ const { DOCUMENT_ROLE } = require('../../utils.js')
 
 function DocumentModuleSetDocumentEngineCommon () {
   context('DocumentEngineSetTest', function () {
+    beforeEach(async function () {
+      this.documentEngineMock = await ethers.deployContract('DocumentEngineMock')
+    })
     it('testCanBeSetByAdmin', async function () {
       // Act
       this.logs = await this.cmtat

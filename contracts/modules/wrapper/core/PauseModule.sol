@@ -36,7 +36,7 @@ abstract contract PauseModule is PausableUpgradeable, AuthorizationModule, IERC3
         bool _isDeactivated;
     }
     /* ============  Initializer Function ============ */
-    function __PauseModule_init_unchained() internal onlyInitializing {
+    function __PauseModule_init_unchained() internal virtual onlyInitializing {
         // no variable to initialize
     }
     

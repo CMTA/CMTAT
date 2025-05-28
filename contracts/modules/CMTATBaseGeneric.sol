@@ -12,7 +12,6 @@ import {ValidationModule} from "./wrapper/controllers/ValidationModule.sol";
 import {BaseModule} from "./wrapper/core/BaseModule.sol";
 // Extensions
 import {ExtraInformationModule} from "./wrapper/extensions/ExtraInformationModule.sol";
-import {DebtModule} from "./wrapper/extensions/DebtModule.sol";
 import {DocumentEngineModule, IERC1643} from "./wrapper/extensions/DocumentEngineModule.sol";
 // Security
 import {AuthorizationModule} from "./security/AuthorizationModule.sol";
@@ -31,7 +30,6 @@ abstract contract CMTATBaseGeneric is
     // Core
     BaseModule,
     // Extension
-    DebtModule,
     DocumentEngineModule,
     ExtraInformationModule
 {  
@@ -93,7 +91,6 @@ abstract contract CMTATBaseGeneric is
         // PauseModule_init_unchained is called before ValidationModule_init_unchained due to inheritance
         __PauseModule_init_unchained();
         __DocumentEngineModule_init_unchained(documentEngine);
-        __DebtModule_init_unchained();
         /* Other modules */
         __ExtraInformationModule_init_unchained(baseModuleAttributes_.tokenId, baseModuleAttributes_.terms, baseModuleAttributes_.information);
     }

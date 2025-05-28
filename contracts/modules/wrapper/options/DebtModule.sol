@@ -16,6 +16,7 @@ import {IDebtEngine, ICMTATDebt} from "../../../interfaces/engine/IDebtEngine.so
 abstract contract DebtModule is AuthorizationModule, ICMTATDebt {
     // No paramater to reduce contract size
     event Debt();
+    event DebtInstrumentEvent();
     /* ============ State Variables ============ */
     bytes32 public constant DEBT_ROLE = keccak256("DEBT_ROLE");
     /* ============ ERC-7201 ============ */
@@ -24,7 +25,7 @@ abstract contract DebtModule is AuthorizationModule, ICMTATDebt {
  
     /* ==== ERC-7201 State Variables === */
     struct DebtModuleStorage {
-        ICMTATDebt.DebtBase _debt;
+        ICMTATDebt.DebtInformation _debt;
         // Can be used to set a debtEngine
         IDebtEngine _debtEngine;
     }
@@ -38,24 +39,36 @@ abstract contract DebtModule is AuthorizationModule, ICMTATDebt {
      *
      */
     function __DebtModule_init_unchained()
-    internal onlyInitializing {
+    internal virtual onlyInitializing {
        // nothing to do
     }
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
-    //////////////////////////////////////////////////////////////*/    /**
+    //////////////////////////////////////////////////////////////*/    
+    /**
      * @notice Set the debt
      */
     function setDebt(
-          ICMTATDebt.DebtBase calldata debt_
+          ICMTATDebt.DebtInformation calldata debt_
     ) external virtual onlyRole(DEBT_ROLE) {
         DebtModuleStorage storage $ = _getDebtModuleStorage();
         $._debt = debt_;
         emit Debt();
     }
-    function debt() public view virtual  returns(DebtBase memory debtBaseResult){
+
+    /**
+     * @notice Set the instrument
+     */
+    function setDebtInstrument(
+          ICMTATDebt.DebtInstrument calldata debtInstrument_
+    ) external virtual onlyRole(DEBT_ROLE) {
         DebtModuleStorage storage $ = _getDebtModuleStorage();
-        debtBaseResult = $._debt;
+        $._debt.debtInstrument = debtInstrument_;
+        emit DebtInstrumentEvent();
+    }
+    function debt() public view virtual  returns(DebtInformation memory DebtInformationResult){
+        DebtModuleStorage storage $ = _getDebtModuleStorage();
+        DebtInformationResult = $._debt;
     }
 
     /* ============ ERC-7201 ============ */
@@ -64,5 +77,4 @@ abstract contract DebtModule is AuthorizationModule, ICMTATDebt {
             $.slot := DebtModuleStorageLocation
         }
     }
-
 }

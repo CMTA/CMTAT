@@ -4,7 +4,7 @@ pragma solidity ^0.8.20;
 
 /* ==== Engine === */
 import {IDebtEngine, ICMTATDebt, ICMTATCreditEvents} from "../../../interfaces/engine/IDebtEngine.sol";
-import {DebtModule} from "../extensions/DebtModule.sol";
+import {DebtModule} from "./DebtModule.sol";
 /**
  * @title Debt module
  * @dev 
@@ -28,9 +28,8 @@ abstract contract DebtEngineModule is DebtModule, ICMTATCreditEvents {
         }
     }
 
-    function debt() public view virtual override(DebtModule) returns(DebtBase memory debtBaseResult){
+    function debt() public view virtual override(DebtModule) returns(DebtInformation memory debtBaseResult){
         DebtModuleStorage storage $ = _getDebtModuleStorage();
-        //debtBaseResult = $._debt;
         if(address($._debtEngine) != address(0)){
             debtBaseResult =  $._debtEngine.debt();
         } else {

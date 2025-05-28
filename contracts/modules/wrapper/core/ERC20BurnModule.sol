@@ -28,7 +28,7 @@ abstract contract ERC20BurnModule is ERC20Upgradeable, IERC20Allowance, IBurnERC
     
   
     /* ============  Initializer Function ============ */
-    function __ERC20BurnModule_init_unchained() internal onlyInitializing {
+    function __ERC20BurnModule_init_unchained() internal virtual onlyInitializing {
         // no variable to initialize
     }
 

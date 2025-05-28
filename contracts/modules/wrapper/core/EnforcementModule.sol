@@ -23,7 +23,7 @@ abstract contract EnforcementModule is
     bytes32 public constant ENFORCER_ROLE = keccak256("ENFORCER_ROLE");
 
     /* ============  Initializer Function ============ */
-    function __EnforcementModule_init_unchained() internal onlyInitializing {
+    function __EnforcementModule_init_unchained() internal virtual onlyInitializing {
         // no variable to initialize
     }
 

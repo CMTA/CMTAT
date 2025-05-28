@@ -40,10 +40,18 @@ abstract contract ValidationModuleWhitelist is
         address from,
         address to
     ) internal view virtual override returns (bool) {
-         if(activateWhitelist && (!isWhitelisted(spender) || !isWhitelisted(from) || !isWhitelisted(to))){
-            return false;
-         } else {
-            return ValidationModule._canTransferGenericByModule(spender, from, to);
+         if(activateWhitelist){
+            // Mint
+            if(from == address(0)){
+                return _canMintBurnByModule(to);
+            } // burn
+            else if(to == address(0)){
+                return _canMintBurnByModule(from);
+            }
+            else if ((spender != address(0) && !isWhitelisted(spender)) || !isWhitelisted(from) || !isWhitelisted(to)){
+                return false;
+            } 
          }
+         return ValidationModule._canTransferGenericByModule(spender, from, to);
     }
 }

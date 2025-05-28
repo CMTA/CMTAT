@@ -22,6 +22,7 @@ describe('CMTAT Core - Upgradeable', function () {
     )
     this.core = true
   })
+  // Core
   BaseModuleCommon()
   PauseModuleCommon()
   ERC20BaseModuleCommon()

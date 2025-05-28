@@ -41,7 +41,7 @@ abstract contract DocumentEngineModule is AuthorizationModule, IERC1643 {
      *
      */
     function __DocumentEngineModule_init_unchained(IERC1643 documentEngine_)
-    internal onlyInitializing {
+    internal virtual onlyInitializing {
         if (address(documentEngine_) != address (0)) {
             DocumentEngineModuleStorage storage $ = _getDocumentEngineModuleStorage();
             _setDocumentEngine($, documentEngine_);
