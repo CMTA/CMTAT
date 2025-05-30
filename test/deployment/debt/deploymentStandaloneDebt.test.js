@@ -48,7 +48,6 @@ describe('CMTAT Debt - Standalone', function () {
       [this.cmtat.target, this.admin]
     )
   })
-  ExtraInfoModuleCommon()
   BaseModuleCommon()
   PauseModuleCommon()
   ERC20BaseModuleCommon()
@@ -58,6 +57,7 @@ describe('CMTAT Debt - Standalone', function () {
   ValidationModuleCommonCore()
   // Extensions
   ERC20EnforcementModuleCommon()
+  ExtraInfoModuleCommon()
   DocumentModuleCommon()
   SnapshotModuleMultiplePlannedTest()
   SnapshotModuleOnePlannedSnapshotTest()

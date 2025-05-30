@@ -2,13 +2,13 @@
 
 pragma solidity ^0.8.20;
 
-import {CMTATBaseWhitelist, ISnapshotEngine, IERC1643} from "../../modules/CMTATBaseWhitelist.sol";
+import {CMTATBaseAllowlist, ISnapshotEngine, IERC1643} from "../../modules/CMTATBaseAllowlist.sol";
 import {ICMTATConstructor} from "../../modules/CMTATBase.sol";
 
 /**
 * @title CMTAT version for a standalone deployment (without proxy)
 */
-contract CMTATStandaloneWhitelist is CMTATBaseWhitelist {
+contract CMTATStandaloneAllowlist is CMTATBaseAllowlist {
     /**
      * @notice Contract version for standalone deployment
      * @param forwarderIrrevocable address of the forwarder, required for the gasless support

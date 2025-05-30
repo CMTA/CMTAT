@@ -190,7 +190,7 @@ abstract contract CMTATBaseCore is
         override(ERC20Upgradeable, ERC20BaseModule)
         returns (bool)
     {
-        require(ValidationModuleCore.canTransfer(from, to, value), Errors.CMTAT_InvalidTransfer(from, to, value) );
+        require(ValidationModuleCore.canTransferFrom(_msgSender(),from, to, value), Errors.CMTAT_InvalidTransfer(from, to, value) );
         return ERC20BaseModule.transferFrom(from, to, value);
     }
 

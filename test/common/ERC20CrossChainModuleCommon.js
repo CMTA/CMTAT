@@ -12,7 +12,7 @@ const REASON_MINT_EVENT = ethers.toUtf8Bytes('CrosschainMint')
 const REASON = ethers.Typed.bytes(REASON_EVENT)
 const REASON_EMPTY = ethers.Typed.bytes(ethers.toUtf8Bytes(''))
 const REASON_EMPTY_EVENT = ethers.toUtf8Bytes('')
-function CMTATBASEXTENDCommon () {
+function ERC20CrossChainModuleCommon () {
   context('CrosschainBurn', function () {
     const INITIAL_SUPPLY = 50
 
@@ -500,4 +500,4 @@ function CMTATBASEXTENDCommon () {
     })
   })
 }
-module.exports = CMTATBASEXTENDCommon
+module.exports = ERC20CrossChainModuleCommon

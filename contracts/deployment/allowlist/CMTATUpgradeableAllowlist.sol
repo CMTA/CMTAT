@@ -2,12 +2,12 @@
 
 pragma solidity ^0.8.20;
 
-import {CMTATBaseWhitelist} from "../../modules/CMTATBaseWhitelist.sol";
+import {CMTATBaseAllowlist} from "../../modules/CMTATBaseAllowlist.sol";
 
 /**
 * @title CMTAT version for a proxy deployment (Transparent or Beacon proxy)
 */
-contract CMTATUpgradeableWhitelist is CMTATBaseWhitelist {
+contract CMTATUpgradeableAllowlist is CMTATBaseAllowlist {
     /**
      * @notice Contract version for the deployment with a proxy
      * @param forwarderIrrevocable address of the forwarder, required for the gasless support

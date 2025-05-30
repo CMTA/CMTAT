@@ -4,14 +4,14 @@ pragma solidity ^0.8.20;
 
 /* ==== Module === */
 import {ValidationModule} from "./ValidationModule.sol";
-import {WhitelistModule} from "../options/WhitelistModule.sol";
+import {AllowlistModule} from "../options/AllowlistModule.sol";
 /**
  * @dev Validation module.
  *
  * Useful for to restrict and validate transfers
  */
-abstract contract ValidationModuleWhitelist is
-    WhitelistModule, ValidationModule
+abstract contract ValidationModuleAllowlist is
+    AllowlistModule, ValidationModule
 {
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
@@ -25,7 +25,7 @@ abstract contract ValidationModuleWhitelist is
     function _canMintBurnByModule(
         address target
     ) internal view virtual override returns (bool) {
-        if(activateWhitelist && !isWhitelisted(target)){
+        if(_isAllowlistEnabled() && !isAllowlisted(target)){
             return false;
         } else {
             return ValidationModule._canMintBurnByModule(target);
@@ -40,7 +40,7 @@ abstract contract ValidationModuleWhitelist is
         address from,
         address to
     ) internal view virtual override returns (bool) {
-         if(activateWhitelist){
+         if(_isAllowlistEnabled()){
             // Mint
             if(from == address(0)){
                 return _canMintBurnByModule(to);
@@ -48,7 +48,7 @@ abstract contract ValidationModuleWhitelist is
             else if(to == address(0)){
                 return _canMintBurnByModule(from);
             }
-            else if ((spender != address(0) && !isWhitelisted(spender)) || !isWhitelisted(from) || !isWhitelisted(to)){
+            else if ((spender != address(0) && !isAllowlisted(spender)) || !isAllowlisted(from) || !isAllowlisted(to)){
                 return false;
             } 
          }

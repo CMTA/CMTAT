@@ -1,7 +1,7 @@
-const { WHITELIST_ROLE, ZERO_ADDRESS } = require('../utils')
+const { ALLOWLIST_ROLE, ZERO_ADDRESS } = require('../utils')
 const { expect } = require('chai')
 
-const REASON_FREEZE_STRING = 'testWhitelist'
+const REASON_FREEZE_STRING = 'testAllowlist'
 const REASON_FREEZE_EVENT = ethers.toUtf8Bytes(REASON_FREEZE_STRING)
 const reasonFreeze = ethers.Typed.bytes(REASON_FREEZE_EVENT)
 const REASON_FREEZE_EMPTY = ethers.Typed.bytes(ethers.toUtf8Bytes(''))
@@ -11,60 +11,60 @@ const REASON_UNFREEZE_EVENT = ethers.toUtf8Bytes(REASON_STRING)
 const reasonUnfreeze = ethers.Typed.bytes(REASON_UNFREEZE_EVENT)
 const REASON_EMPTY = ethers.Typed.bytes(ethers.toUtf8Bytes(''))
 const REASON_EMPTY_EVENT = ethers.toUtf8Bytes('')
-function WhitelistModuleCommon () {
+function AllowlistModuleCommon () {
 
-  context('Freeze', function () {
+  context('Allowlist', function () {
     beforeEach(async function () {
       const accounts = [this.address1, this.address2, this.address3, this.admin]
-      const unwhitelist = [false,false, false, false]
+      const unAllowlist = [false,false, false, false]
       // Arrange - Assert
       this.logs = await this.cmtat
       .connect(this.admin)
-      .batchSetAddressWhitelisted(accounts,  unwhitelist)
+      .batchSetAddressAllowlist(accounts,  unAllowlist)
     })
-    async function testWhitelist (sender) {
+    async function testAllowlist (sender) {
       // Assert
       expect(
         await this.cmtat.canTransfer(this.address1, this.address2, 10)
       ).to.equal(false)
 
       // Arrange - Assert
-      expect(await this.cmtat.isWhitelisted(this.address1)).to.equal(false)
+      expect(await this.cmtat.isAllowlisted(this.address1)).to.equal(false)
       // Act
       this.logs = await this.cmtat
         .connect(sender)
-        .setAddressWhitelisted(this.address1, true, reasonFreeze)
+        .setAddressAllowlist(this.address1, true, reasonFreeze)
       this.logs2 = await this.cmtat
         .connect(sender)
-        .setAddressWhitelisted(this.address2, true, reasonFreeze)
+        .setAddressAllowlist(this.address2, true, reasonFreeze)
       
         // Assert
       expect(
         await this.cmtat.canTransfer(this.address1, this.address2, 10)
       ).to.equal(true)
 
-      expect(await this.cmtat.isWhitelisted(this.address1)).to.equal(true)
-      expect(await this.cmtat.isWhitelisted(this.address2)).to.equal(true)
+      expect(await this.cmtat.isAllowlisted(this.address1)).to.equal(true)
+      expect(await this.cmtat.isAllowlisted(this.address2)).to.equal(true)
      
       // emits a Freeze event
       await expect(this.logs)
-        .to.emit(this.cmtat, 'AddressWhitelisted')
+        .to.emit(this.cmtat, 'AddressAddedToAllowlist')
         .withArgs(this.address1, true, sender, REASON_FREEZE_EVENT)
       await expect(this.logs2)
-        .to.emit(this.cmtat, 'AddressWhitelisted')
+        .to.emit(this.cmtat, 'AddressAddedToAllowlist')
         .withArgs(this.address2, true, sender, REASON_FREEZE_EVENT)
     }
 
-    async function testWhitelistBatch (sender) {
+    async function testAllowlistBatch (sender) {
       const accounts = [this.address1, this.address2]
-      const whitelist = [true, true]
-      const unwhitelist = [false,false]
+      const Allowlist = [true, true]
+      const unAllowlist = [false,false]
       // Arrange - Assert
       this.logs = await this.cmtat
       .connect(sender)
-      .batchSetAddressWhitelisted(accounts,  unwhitelist)
-      expect(await this.cmtat.isWhitelisted(this.address1)).to.equal(false)
-      expect(await this.cmtat.isWhitelisted(this.address2)).to.equal(false)
+      .batchSetAddressAllowlist(accounts,  unAllowlist)
+      expect(await this.cmtat.isAllowlisted(this.address1)).to.equal(false)
+      expect(await this.cmtat.isAllowlisted(this.address2)).to.equal(false)
        
       // Assert - canTransfer
        expect(
@@ -80,7 +80,7 @@ function WhitelistModuleCommon () {
       // Act
       this.logs = await this.cmtat
         .connect(sender)
-        .batchSetAddressWhitelisted(accounts, whitelist)
+        .batchSetAddressAllowlist(accounts, Allowlist)
       
       // Assert
       expect(
@@ -92,15 +92,15 @@ function WhitelistModuleCommon () {
       expect(
         await this.cmtat.canTransfer(this.address1, this.address2, 10)
       ).to.equal(true)
-      expect(await this.cmtat.isWhitelisted(this.address1)).to.equal(true)
-      expect(await this.cmtat.isWhitelisted(this.address2)).to.equal(true)
+      expect(await this.cmtat.isAllowlisted(this.address1)).to.equal(true)
+      expect(await this.cmtat.isAllowlisted(this.address2)).to.equal(true)
       
-      // emits a Whitelist event
+      // emits a Allowlist event
       await expect(this.logs)
-        .to.emit(this.cmtat, 'AddressWhitelisted')
+        .to.emit(this.cmtat, 'AddressAddedToAllowlist')
         .withArgs(this.address1, true, sender, REASON_EMPTY_EVENT)
       await expect(this.logs)
-        .to.emit(this.cmtat, 'AddressWhitelisted')
+        .to.emit(this.cmtat, 'AddressAddedToAllowlist')
         .withArgs(this.address2, true, sender, REASON_EMPTY_EVENT)
     }
 
@@ -109,12 +109,12 @@ function WhitelistModuleCommon () {
       const freeze = [true, true, false]
 
       // Arrange
-      testWhitelistBatch(sender)
+      testAllowlistBatch(sender)
 
       // Act
       this.logs = await this.cmtat
         .connect(sender)
-        .batchSetAddressWhitelisted(accounts, freeze)
+        .batchSetAddressAllowlist(accounts, freeze)
 
       // Assert
       expect(
@@ -126,29 +126,29 @@ function WhitelistModuleCommon () {
       expect(
         await this.cmtat.canTransfer(this.address1, this.address2, 10)
       ).to.equal(true)
-      expect(await this.cmtat.isWhitelisted(this.address1)).to.equal(true)
-      expect(await this.cmtat.isWhitelisted(this.address2)).to.equal(true)
+      expect(await this.cmtat.isAllowlisted(this.address1)).to.equal(true)
+      expect(await this.cmtat.isAllowlisted(this.address2)).to.equal(true)
       
-      // emits a whitelist event
+      // emits a Allowlist event
       await expect(this.logs)
-        .to.emit(this.cmtat, 'AddressWhitelisted')
+        .to.emit(this.cmtat, 'AddressAddedToAllowlist')
         .withArgs(this.address1, true, sender, REASON_EMPTY_EVENT)
       
         await expect(this.logs)
-        .to.emit(this.cmtat, 'AddressWhitelisted')
+        .to.emit(this.cmtat, 'AddressAddedToAllowlist')
         .withArgs(this.address2, true, sender, REASON_EMPTY_EVENT)
       
         await expect(this.logs)
-        .to.emit(this.cmtat, 'AddressWhitelisted')
+        .to.emit(this.cmtat, 'AddressAddedToAllowlist')
         .withArgs(this.address3, false, sender, REASON_EMPTY_EVENT)
     }
 
-    async function testUnWhitelist (sender) {
+    async function testUnAllowlist (sender) {
       // Arrange
-      await this.cmtat.connect(sender).setAddressWhitelisted(this.address1, true, reasonFreeze)
+      await this.cmtat.connect(sender).setAddressAllowlist(this.address1, true, reasonFreeze)
       
       // Arrange - Assert
-      expect(await this.cmtat.isWhitelisted(this.address1)).to.equal(true)
+      expect(await this.cmtat.isAllowlisted(this.address1)).to.equal(true)
       expect(
         await this.cmtat.canTransfer(this.address1, this.address2, 10)
       ).to.equal(false)
@@ -156,149 +156,149 @@ function WhitelistModuleCommon () {
       // Act
       this.logs = await this.cmtat
         .connect(sender)
-        .setAddressWhitelisted(this.address1, false, reasonUnfreeze)
+        .setAddressAllowlist(this.address1, false, reasonUnfreeze)
       
         // Assert
-      expect(await this.cmtat.isWhitelisted(this.address1)).to.equal(false)
+      expect(await this.cmtat.isAllowlisted(this.address1)).to.equal(false)
       expect(
         await this.cmtat.canTransfer(this.address1, this.address2, 10)
       ).to.equal(false)
       
       await expect(this.logs)
-        .to.emit(this.cmtat, 'AddressWhitelisted')
+        .to.emit(this.cmtat, 'AddressAddedToAllowlist')
         .withArgs(this.address1, false, sender, REASON_UNFREEZE_EVENT)
     }
     beforeEach(async function () {
       await this.cmtat
       .connect(this.admin)
-      .setAddressWhitelisted(this.address1, true, reasonUnfreeze)
+      .setAddressAllowlist(this.address1, true, reasonUnfreeze)
       await this.cmtat
       .connect(this.admin)
-      .setAddressWhitelisted(ZERO_ADDRESS, true, reasonUnfreeze)
+      .setAddressAllowlist(ZERO_ADDRESS, true, reasonUnfreeze)
       await this.cmtat.connect(this.admin).mint(this.address1, 50)
       await this.cmtat
       .connect(this.admin)
-      .setAddressWhitelisted(this.address1, false, reasonUnfreeze)
+      .setAddressAllowlist(this.address1, false, reasonUnfreeze)
     })
 
-    it('testAdminCanWhitelistAddress', async function () {
-      const bindTest = testWhitelist.bind(this)
+    it('testAdminCanAllowlistAddress', async function () {
+      const bindTest = testAllowlist.bind(this)
       await bindTest(this.admin)
     })
 
-    it('testAdminCanBatchWhitelistAddress', async function () {
-      const bindTest = testWhitelistBatch.bind(this)
+    it('testAdminCanBatchAllowlistAddress', async function () {
+      const bindTest = testAllowlistBatch.bind(this)
       await bindTest(this.admin)
     })
 
-    it('testAdminCanBatchPartialWhitelistAddress', async function () {
+    it('testAdminCanBatchPartialAllowlistAddress', async function () {
       const bindTest = testPartialFreezeBatch.bind(this)
       await bindTest(this.admin)
     })
 
     it('testReasonParameterCanBeEmptyString', async function () {
       // Arrange - Assert
-      expect(await this.cmtat.isWhitelisted(this.address1)).to.equal(false)
+      expect(await this.cmtat.isAllowlisted(this.address1)).to.equal(false)
       // Act
       this.logs = await this.cmtat
         .connect(this.admin)
-        .setAddressWhitelisted(this.address1, true, REASON_EMPTY)
+        .setAddressAllowlist(this.address1, true, REASON_EMPTY)
       // Assert
-      expect(await this.cmtat.isWhitelisted(this.address1)).to.equal(true)
+      expect(await this.cmtat.isAllowlisted(this.address1)).to.equal(true)
       // emits a Freeze event
       await expect(this.logs)
-        .to.emit(this.cmtat, 'AddressWhitelisted')
+        .to.emit(this.cmtat, 'AddressAddedToAllowlist')
         .withArgs(this.address1, true, this.admin, REASON_EMPTY_EVENT)
     })
 
-    it('testEnforcerRoleCanWhitelistAddress', async function () {
+    it('testEnforcerRoleCanAllowlistAddress', async function () {
       // Arrange
       await this.cmtat
         .connect(this.admin)
-        .grantRole(WHITELIST_ROLE, this.address2)
+        .grantRole(ALLOWLIST_ROLE, this.address2)
 
-      const bindTest = testWhitelist.bind(this)
+      const bindTest = testAllowlist.bind(this)
       await bindTest(this.address2)
     })
 
-    it('testAdminCanUnWhitelistAddress', async function () {
-      const bindTest = testUnWhitelist.bind(this)
+    it('testAdminCanEnableAllowlistAddress', async function () {
+      // Act
+      await this.cmtat.connect(this.admin).enableAllowlist(false)
+      // Assert
+      expect(await this.cmtat.isAllowlistEnabled()).to.equal(false)
+      
+      // Act
+      await this.cmtat.connect(this.admin).enableAllowlist(true)
+      // Assert
+      expect(await this.cmtat.isAllowlistEnabled()).to.equal(true)
+    })
+
+    it('testAdminCanUnAllowlistAddress', async function () {
+      const bindTest = testUnAllowlist.bind(this)
       await bindTest(this.admin)
     })
 
-    it('testEnforcerRoleCanUnWhitelistAddress', async function () {
+    it('testEnforcerRoleCanUnAllowlistAddress', async function () {
       // Arrange
       await this.cmtat
         .connect(this.admin)
-        .grantRole(WHITELIST_ROLE, this.address2)
+        .grantRole(ALLOWLIST_ROLE, this.address2)
       // Act + assert
-      const bindTest = testUnWhitelist.bind(this)
+      const bindTest = testUnAllowlist.bind(this)
       await bindTest(this.address2)
     })
 
-    it('testCannotNonEnforcerWhitelistAddress', async function () {
+    it('testCannotNonEnforcerAllowlistAddress', async function () {
       // Act
       await expect(
-        this.cmtat.connect(this.address2).setAddressWhitelisted(this.address1, true, reasonFreeze)
+        this.cmtat.connect(this.address2).setAddressAllowlist(this.address1, true, reasonFreeze)
       )
         .to.be.revertedWithCustomError(
           this.cmtat,
           'AccessControlUnauthorizedAccount'
         )
-        .withArgs(this.address2.address, WHITELIST_ROLE)
+        .withArgs(this.address2.address, ALLOWLIST_ROLE)
       // Assert
-      expect(await this.cmtat.isWhitelisted(this.address1)).to.equal(false)
+      expect(await this.cmtat.isAllowlisted(this.address1)).to.equal(false)
     })
 
-    it('testCannotNonEnforcerBatchWhitelistAddress', async function () {
+    it('testCannotNonEnforcerBatchAllowlistAddress', async function () {
       const accounts = []
       const freezes = []
       // Act
       await expect(
-        this.cmtat.connect(this.address2).batchSetAddressWhitelisted(accounts, freezes)
+        this.cmtat.connect(this.address2).batchSetAddressAllowlist(accounts, freezes)
       )
         .to.be.revertedWithCustomError(
           this.cmtat,
           'AccessControlUnauthorizedAccount'
         )
-        .withArgs(this.address2.address, WHITELIST_ROLE)
+        .withArgs(this.address2.address, ALLOWLIST_ROLE)
     })
 
     it('testCannotNonEnforcerUnWhiteistAddress', async function () {
       // Arrange
-      await this.cmtat.connect(this.admin).setAddressWhitelisted(this.address1, true, reasonFreeze)
+      await this.cmtat.connect(this.admin).setAddressAllowlist(this.address1, true, reasonFreeze)
       // Act
       await expect(
-        this.cmtat.connect(this.address2).setAddressWhitelisted(this.address1, false, reasonFreeze)
+        this.cmtat.connect(this.address2).setAddressAllowlist(this.address1, false, reasonFreeze)
       )
         .to.be.revertedWithCustomError(
           this.cmtat,
           'AccessControlUnauthorizedAccount'
         )
-        .withArgs(this.address2.address, WHITELIST_ROLE)
+        .withArgs(this.address2.address, ALLOWLIST_ROLE)
       // Assert
-      expect(await this.cmtat.isWhitelisted(this.address1)).to.equal(true)
+      expect(await this.cmtat.isAllowlisted(this.address1)).to.equal(true)
     })
 
     // reverts if address1 transfers tokens to address2 when paused
-    it('testCannotTransferWhenFromIsNotWhitelistedWithTransfer', async function () {
+    it('testCannotTransferWhenFromIsNotAllowlistWithTransfer', async function () {
       const AMOUNT_TO_TRANSFER = 10
       // Act
-      await this.cmtat.connect(this.admin).setAddressWhitelisted(this.address2, true, reasonFreeze)
-      await this.cmtat.connect(this.admin).setAddressWhitelisted(this.address3, true, reasonFreeze)
+      await this.cmtat.connect(this.admin).setAddressAllowlist(this.address2, true, reasonFreeze)
+      await this.cmtat.connect(this.admin).setAddressAllowlist(this.address3, true, reasonFreeze)
       // Assert
-      if (!this.core) {
-        expect(
-          await this.cmtat.detectTransferRestriction(
-            this.address1,
-            this.address2,
-            AMOUNT_TO_TRANSFER
-          )
-        ).to.equal('2')
-        expect(await this.cmtat.messageForTransferRestriction(2)).to.equal(
-          'AddrFromisWhitelisted'
-        )
-      }
       await expect(
         this.cmtat
           .connect(this.address1)
@@ -313,27 +313,14 @@ function WhitelistModuleCommon () {
     })
 
     // reverts if address3 transfers tokens from address1 to this.address2 when paused
-    it('testCannotTransferTokenWhenToIsNotWhitelistedWithTransferFrom', async function () {
+    it('testCannotTransferTokenWhenToIsNotAllowlistWithTransferFrom', async function () {
       const AMOUNT_TO_TRANSFER = 10
       // Arrange
       // Define allowance
       await this.cmtat.connect(this.address3).approve(this.address1, AMOUNT_TO_TRANSFER)
       // Act
-      await this.cmtat.connect(this.admin).setAddressWhitelisted(this.address3, true, reasonFreeze)
-      await this.cmtat.connect(this.admin).setAddressWhitelisted(this.address1, true, reasonFreeze)
-      if (!this.core) {
-        // Assert
-        expect(
-          await this.cmtat.detectTransferRestriction(
-            this.address3,
-            this.address2,
-            AMOUNT_TO_TRANSFER
-          )
-        ).to.equal('3')
-        expect(await this.cmtat.messageForTransferRestriction(3)).to.equal(
-          'AddrToisWhitelisted'
-        )
-      }
+      await this.cmtat.connect(this.admin).setAddressAllowlist(this.address3, true, reasonFreeze)
+      await this.cmtat.connect(this.admin).setAddressAllowlist(this.address1, true, reasonFreeze)
 
       await expect(
         this.cmtat
@@ -348,13 +335,13 @@ function WhitelistModuleCommon () {
         )
     })
 
-    it('testCannotTransferTokenWhenSpenderIsNotWhitelistedWithTransferFrom', async function () {
+    it('testCannotTransferTokenWhenSpenderIsNotAllowlistWithTransferFrom', async function () {
       const AMOUNT_TO_TRANSFER = 10
       // Arrange
       // Define allowance
       await this.cmtat.connect(this.address3).approve(this.address1, AMOUNT_TO_TRANSFER)
-      await this.cmtat.connect(this.admin).setAddressWhitelisted(this.address3, true, reasonFreeze)
-      await this.cmtat.connect(this.admin).setAddressWhitelisted(this.address2, true, reasonFreeze)
+      await this.cmtat.connect(this.admin).setAddressAllowlist(this.address3, true, reasonFreeze)
+      await this.cmtat.connect(this.admin).setAddressAllowlist(this.address2, true, reasonFreeze)
       // Act
       expect(
         await this.cmtat.canTransferFrom(
@@ -379,4 +366,4 @@ function WhitelistModuleCommon () {
     })
   })
 }
-module.exports = WhitelistModuleCommon
+module.exports = AllowlistModuleCommon

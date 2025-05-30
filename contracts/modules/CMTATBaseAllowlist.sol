@@ -17,7 +17,7 @@ import {ExtraInformationModule} from "./wrapper/extensions/ExtraInformationModul
 import {ERC20EnforcementModule} from "./wrapper/extensions/ERC20EnforcementModule.sol";
 // options
 // Other
-import {ValidationModuleWhitelist} from "./wrapper/controllers/ValidationModuleWhitelist.sol";
+import {ValidationModuleAllowlist} from "./wrapper/controllers/ValidationModuleAllowlist.sol";
 // Security
 import {AuthorizationModule} from "./security/AuthorizationModule.sol";
  /* ==== Interface and other library === */
@@ -28,19 +28,19 @@ import {ValidationModule, ValidationModuleCore} from "./wrapper/core/ValidationM
 
 import {CMTATBaseCommon} from "./CMTATBaseCommon.sol";
 import {DocumentEngineModule, IERC1643} from "./wrapper/extensions/DocumentEngineModule.sol";
-abstract contract CMTATBaseWhitelist is
+abstract contract CMTATBaseAllowlist is
     // OpenZeppelin
     Initializable,
     ContextUpgradeable,
     // Core
     CMTATBaseCommon,
-    ValidationModuleWhitelist,
+    ValidationModuleAllowlist,
     ValidationModuleCore
 {  
 
     function _checkTransferred(address spender, address from, address to, uint256 value) internal virtual override {
         CMTATBaseCommon._checkTransferred(spender, from, to, value);
-        if (!ValidationModuleWhitelist._canTransferGenericByModule(spender, from, to)) {
+        if (!ValidationModuleAllowlist._canTransferGenericByModule(spender, from, to)) {
             revert Errors.CMTAT_InvalidTransfer(from, to, value);
         }
     } 
@@ -134,7 +134,7 @@ abstract contract CMTATBaseWhitelist is
         __EnforcementModule_init_unchained();
         __PauseModule_init_unchained();
         // option
-        __Whitelist_init_unchained();
+        __Allowlist_init_unchained();
     }
 
     function __CMTAT_init_unchained() internal virtual onlyInitializing {
@@ -155,7 +155,7 @@ abstract contract CMTATBaseWhitelist is
         address to,
         uint256 value
     ) public virtual override (ValidationModuleCore) view returns (bool) {
-        if(!ValidationModuleWhitelist._canTransferGenericByModule(address(0), from, to)){
+        if(!ValidationModuleAllowlist._canTransferGenericByModule(address(0), from, to)){
             return false;
         }
         if(!ERC20EnforcementModule._checkActiveBalance(from, value)){
@@ -172,7 +172,7 @@ abstract contract CMTATBaseWhitelist is
         address to,
         uint256 value
     ) public virtual override (ValidationModuleCore) view returns (bool) {
-        if(!ValidationModuleWhitelist._canTransferGenericByModule(spender, from, to)){
+        if(!ValidationModuleAllowlist._canTransferGenericByModule(spender, from, to)){
             return false;
         }else {
             return ValidationModuleCore.canTransferFrom(spender, from, to, value);
@@ -189,8 +189,8 @@ abstract contract CMTATBaseWhitelist is
     */
     function _canMintBurnByModule(
         address target
-    ) internal view virtual override(ValidationModuleWhitelist, ValidationModule) returns (bool) {
-        return ValidationModuleWhitelist._canMintBurnByModule(target);
+    ) internal view virtual override(ValidationModuleAllowlist, ValidationModule) returns (bool) {
+        return ValidationModuleAllowlist._canMintBurnByModule(target);
     }
 
     /**
@@ -200,7 +200,7 @@ abstract contract CMTATBaseWhitelist is
         address spender,
         address from,
         address to
-    ) internal view virtual override(ValidationModuleWhitelist, ValidationModule) returns (bool) {
-        return ValidationModuleWhitelist._canTransferGenericByModule(spender, from, to);
+    ) internal view virtual override(ValidationModuleAllowlist, ValidationModule) returns (bool) {
+        return ValidationModuleAllowlist._canTransferGenericByModule(spender, from, to);
     }
 }

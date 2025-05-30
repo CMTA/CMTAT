@@ -21,7 +21,6 @@ abstract contract EnforcementModuleInternal is
     /* ==== ERC-7201 State Variables === */
     struct EnforcementModuleInternalStorage {
         mapping(address => bool) _frozen;
-        // not used if you don't use the WhitelistModule
     }
 
     /*//////////////////////////////////////////////////////////////

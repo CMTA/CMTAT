@@ -17,17 +17,19 @@ function PauseModuleCommon () {
         .to.emit(this.cmtat, 'Paused')
         .withArgs(this.admin)
       // Transfer is reverted
-      await expect(
-        this.cmtat
-          .connect(this.address1)
-          .transfer(this.address2, AMOUNT_TO_TRANSFER)
-      )
-        .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
-        .withArgs(
-          this.address1.address,
-          this.address2.address,
-          AMOUNT_TO_TRANSFER
+      if(!this.generic){
+        await expect(
+          this.cmtat
+            .connect(this.address1)
+            .transfer(this.address2, AMOUNT_TO_TRANSFER)
         )
+          .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
+          .withArgs(
+            this.address1.address,
+            this.address2.address,
+            AMOUNT_TO_TRANSFER
+          )
+      }
     })
 
     it('testCanBePausedByPauserRole', async function () {
@@ -46,7 +48,8 @@ function PauseModuleCommon () {
       await expect(this.logs)
         .to.emit(this.cmtat, 'Paused')
         .withArgs(this.address1)
-      // Transfer is reverted
+      if(!this.generic){
+        // Transfer is reverted
       await expect(
         this.cmtat
           .connect(this.address1)
@@ -58,6 +61,7 @@ function PauseModuleCommon () {
           this.address2.address,
           AMOUNT_TO_TRANSFER
         )
+      }
     })
 
     it('testCannotBePausedByNonPauser', async function () {
@@ -83,7 +87,10 @@ function PauseModuleCommon () {
         .to.emit(this.cmtat, 'Unpaused')
         .withArgs(this.admin)
       // Transfer works
-      this.cmtat.connect(this.address1).transfer(this.address2, 10n)
+      if(!this.generic){
+        this.cmtat.connect(this.address1).transfer(this.address2, 10n)
+      }
+    
     })
 
     it('testCanBeUnpausedByANewPauser', async function () {
@@ -103,7 +110,9 @@ function PauseModuleCommon () {
         .to.emit(this.cmtat, 'Unpaused')
         .withArgs(this.address1)
       // Transfer works
-      this.cmtat.connect(this.address1).transfer(this.address2, 10n)
+      if(!this.generic){
+        this.cmtat.connect(this.address1).transfer(this.address2, 10n)
+      }
     })
 
     it('testCannotBeUnpausedByNonPauser', async function () {
@@ -124,15 +133,18 @@ function PauseModuleCommon () {
       // Act
       await this.cmtat.connect(this.admin).pause()
       // Act + Assert
-      expect(
-        await this.cmtat.canTransfer(
-          this.address1,
-          this.address2,
-          AMOUNT_TO_TRANSFER
-        )
-      ).to.equal(false)
+      if(!this.generic){
+        expect(
+          await this.cmtat.canTransfer(
+            this.address1,
+            this.address2,
+            AMOUNT_TO_TRANSFER
+          )
+        ).to.equal(false)
+      }
+    
 
-      if (!this.core) {
+      if (!this.core && !this.generic) {
         // Assert
         expect(
           await this.cmtat.detectTransferRestriction(
@@ -144,6 +156,8 @@ function PauseModuleCommon () {
         expect(await this.cmtat.messageForTransferRestriction(1)).to.equal(
           'EnforcedPause'
         )
+      }
+      if(!this.generic){
         await expect(
           this.cmtat
             .connect(this.address1)
@@ -163,12 +177,15 @@ function PauseModuleCommon () {
       const AMOUNT_TO_TRANSFER = 10n
       // Arrange
       // Define allowance
-      await this.cmtat.connect(this.address1).approve(this.address3, 20)
+      if ( !this.generic) {
+        await this.cmtat.connect(this.address1).approve(this.address3, 20)
+      }
+    
 
       // Act
       await this.cmtat.connect(this.admin).pause()
 
-      if (!this.core) {
+      if (!this.core && !this.generic) {
         // Assert
         expect(
           await this.cmtat.detectTransferRestriction(
@@ -213,18 +230,19 @@ function PauseModuleCommon () {
         .to.emit(this.cmtat, 'Deactivated')
         .withArgs(this.admin)
       // Transfer is reverted because contract is in paused state
-      await expect(
-        this.cmtat
-          .connect(this.address1)
-          .transfer(this.address2, AMOUNT_TO_TRANSFER)
-      )
-        .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
-        .withArgs(
-          this.address1.address,
-          this.address2.address,
-          AMOUNT_TO_TRANSFER
+      if(!this.generic){
+        await expect(
+          this.cmtat
+            .connect(this.address1)
+            .transfer(this.address2, AMOUNT_TO_TRANSFER)
         )
-
+          .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
+          .withArgs(
+            this.address1.address,
+            this.address2.address,
+            AMOUNT_TO_TRANSFER
+          )
+      }
       // Unpause is reverted
       await expect(
         this.cmtat.connect(this.admin).unpause()

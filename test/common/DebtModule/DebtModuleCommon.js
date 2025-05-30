@@ -1,6 +1,5 @@
 const { expect } = require('chai')
-const { ZERO_ADDRESS } = require('../../utils')
-
+const { ZERO_ADDRESS, DEBT_ROLE } = require('../../utils')
 function DebtModuleCommon () {
   context('Debt Module test', function () {
     let debtBase, creditEvents
@@ -63,6 +62,49 @@ function DebtModuleCommon () {
       )
       expect(debt.debtInstrument.issuanceDate).to.equal(debtBase.debtInstrument.issuanceDate)
       expect(debt.debtInstrument.couponPaymentFrequency).to.equal(debtBase.debtInstrument.couponPaymentFrequency)
+    })
+
+    it('testCanSetAndGetDebtInstrumentCorrectly', async function () {
+      this.logs = await this.cmtat.connect(this.admin).setDebtInstrument(debtBase.debtInstrument)
+      await expect(this.logs)
+        .to.emit(this.cmtat, 'DebtInstrumentEvent')
+      const debt = await this.cmtat.debt()
+      // debt instrument
+      expect(debt.debtInstrument.interestRate).to.equal(debtBase.debtInstrument.interestRate)
+      expect(debt.debtInstrument.parValue).to.equal(debtBase.debtInstrument.parValue)
+      expect(debt.debtInstrument.minimumDenomination).to.equal(debtBase.debtInstrument.minimumDenomination)
+      expect(debt.debtInstrument.maturityDate).to.equal(debtBase.debtInstrument.maturityDate)
+      expect(debt.debtInstrument.interestScheduleFormat).to.equal(
+        debtBase.debtInstrument.interestScheduleFormat
+      )
+      expect(debt.debtInstrument.interestPaymentDate).to.equal(debtBase.debtInstrument.interestPaymentDate)
+      expect(debt.debtInstrument.dayCountConvention).to.equal(debtBase.debtInstrument.dayCountConvention)
+      expect(debt.debtInstrument.businessDayConvention).to.equal(
+        debtBase.debtInstrument.businessDayConvention
+      )
+      expect(debt.debtInstrument.issuanceDate).to.equal(debtBase.debtInstrument.issuanceDate)
+      expect(debt.debtInstrument.couponPaymentFrequency).to.equal(debtBase.debtInstrument.couponPaymentFrequency)
+    })
+
+    it('testCannotBeSetDebtWithoutDebtRole', async function () {
+      await expect(
+        this.cmtat.connect(this.address2).setDebtInstrument(debtBase.debtInstrument)
+      )
+        .to.be.revertedWithCustomError(
+          this.cmtat,
+          'AccessControlUnauthorizedAccount'
+        )
+        .withArgs(this.address2.address, DEBT_ROLE)
+
+      // Without reason
+      await expect(
+        this.cmtat.connect(this.address2).setDebt(debtBase)
+      )
+        .to.be.revertedWithCustomError(
+          this.cmtat,
+          'AccessControlUnauthorizedAccount'
+        )
+        .withArgs(this.address2.address, DEBT_ROLE)
     })
   })
 }
