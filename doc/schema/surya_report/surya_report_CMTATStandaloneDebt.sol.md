@@ -15,7 +15,7 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **CMTATStandaloneDebt** | Implementation | CMTATBase, DebtEngineModule |||
+| **CMTATStandaloneDebt** | Implementation | CMTATBaseDebt |||
 | └ | <Constructor> | Public ❗️ | 🛑  |NO❗️ |
 
 

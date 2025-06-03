@@ -84,6 +84,13 @@ function ERC20CrossChainModuleCommon () {
       await bindTest(this.address2)
     })
 
+    it('testCanReturnSupportedInterface', async function () {
+      const IERC721Interface = '0x80ac58cd'
+      const crossChainInterace = '0x33331994'
+      expect(await this.cmtat.supportsInterface(crossChainInterace)).to.equal(true)
+      expect(await this.cmtat.supportsInterface(IERC721Interface)).to.equal(false)
+    })
+
     it('testCannotBeBurntIfBalanceExceeds', async function () {
       const AMOUNT_TO_BURN = 200n
       const ADDRESS1_BALANCE = await this.cmtat.balanceOf(this.address1)

@@ -7,19 +7,14 @@ import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Ini
 import {ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
 /* ==== Wrapper === */
 // Core
-import {BaseModule} from "./wrapper/core/BaseModule.sol";
-import {ERC20BurnModule} from "./wrapper/core/ERC20BurnModule.sol";
-import {ERC20MintModule} from "./wrapper/core/ERC20MintModule.sol";
 import {PauseModule} from "./wrapper/core/PauseModule.sol";
 import {EnforcementModule} from "./wrapper/core/EnforcementModule.sol";
 // Extensions
-import {ExtraInformationModule} from "./wrapper/extensions/ExtraInformationModule.sol";
 import {ERC20EnforcementModule} from "./wrapper/extensions/ERC20EnforcementModule.sol";
 // options
+import {MetaTxModule, ERC2771ContextUpgradeable} from "./wrapper/options/MetaTxModule.sol";
 // Other
 import {ValidationModuleAllowlist} from "./wrapper/controllers/ValidationModuleAllowlist.sol";
-// Security
-import {AuthorizationModule} from "./security/AuthorizationModule.sol";
  /* ==== Interface and other library === */
 import {ICMTATConstructor} from "../interfaces/technical/ICMTATConstructor.sol";
 import {ISnapshotEngine} from "../interfaces/engine/ISnapshotEngine.sol";
@@ -35,7 +30,8 @@ abstract contract CMTATBaseAllowlist is
     // Core
     CMTATBaseCommon,
     ValidationModuleAllowlist,
-    ValidationModuleCore
+    ValidationModuleCore,
+    MetaTxModule
 {  
 
     function _checkTransferred(address spender, address from, address to, uint256 value) internal virtual override {
@@ -122,7 +118,7 @@ abstract contract CMTATBaseAllowlist is
     * @dev CMTAT internal module
     */
     function __CMTAT_internal_init_unchained() internal virtual onlyInitializing {
-        __Enforcement_init_unchained();   
+        // nothing to do
     }
 
     /*
@@ -131,8 +127,6 @@ abstract contract CMTATBaseAllowlist is
     function __CMTAT_modules_init_unchained(address admin, ICMTATConstructor.ERC20Attributes memory ERC20Attributes_, ICMTATConstructor.BaseModuleAttributes memory baseModuleAttributes_,  ISnapshotEngine snapshotEngine,
         IERC1643 documentEngine ) internal virtual onlyInitializing {
          __CMTAT_commonModules_init_unchained(admin,ERC20Attributes_, baseModuleAttributes_, snapshotEngine, documentEngine);
-        __EnforcementModule_init_unchained();
-        __PauseModule_init_unchained();
         // option
         __Allowlist_init_unchained();
     }
@@ -150,6 +144,9 @@ abstract contract CMTATBaseAllowlist is
                 Functions requiring several modules
     //////////////////////////////////////////////////////////////*/
 
+    /**
+    * @inheritdoc ValidationModuleCore
+    */
     function canTransfer(
         address from,
         address to,
@@ -166,6 +163,9 @@ abstract contract CMTATBaseAllowlist is
         
     }
 
+    /**
+    * @inheritdoc ValidationModuleCore
+    */
    function canTransferFrom(
         address spender,
         address from,
@@ -202,5 +202,42 @@ abstract contract CMTATBaseAllowlist is
         address to
     ) internal view virtual override(ValidationModuleAllowlist, ValidationModule) returns (bool) {
         return ValidationModuleAllowlist._canTransferGenericByModule(spender, from, to);
+    }
+
+
+        /*//////////////////////////////////////////////////////////////
+                            METAXTX MODULE
+    //////////////////////////////////////////////////////////////*/
+       /**
+     * @dev This surcharge is not necessary if you do not use the MetaTxModule
+     */
+    function _msgSender()
+        internal virtual
+        view
+        override(ContextUpgradeable, ERC2771ContextUpgradeable)
+        returns (address sender)
+    {
+        return ERC2771ContextUpgradeable._msgSender();
+    }
+
+    /**
+     * @dev This surcharge is not necessary if you do not use the MetaTxModule
+     */
+    function _contextSuffixLength() internal virtual view 
+    override(ContextUpgradeable, ERC2771ContextUpgradeable)
+    returns (uint256) {
+         return ERC2771ContextUpgradeable._contextSuffixLength();
+    }
+
+    /**
+     * @dev This surcharge is not necessary if you do not use the MetaTxModule
+     */
+    function _msgData()
+        internal virtual
+        view
+        override(ContextUpgradeable, ERC2771ContextUpgradeable)
+        returns (bytes calldata)
+    {
+        return ERC2771ContextUpgradeable._msgData();
     }
 }

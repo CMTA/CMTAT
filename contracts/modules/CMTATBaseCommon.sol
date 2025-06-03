@@ -7,8 +7,6 @@ pragma solidity ^0.8.20;
 import {BaseModule} from "./wrapper/core/BaseModule.sol";
 import {ERC20BurnModule} from "./wrapper/core/ERC20BurnModule.sol";
 import {ERC20MintModule} from "./wrapper/core/ERC20MintModule.sol";
-import {PauseModule} from "./wrapper/core/PauseModule.sol";
-import {EnforcementModule} from "./wrapper/core/EnforcementModule.sol";
 // Extensions
 import {ExtraInformationModule} from "./wrapper/extensions/ExtraInformationModule.sol";
 import {ERC20EnforcementModule} from "./wrapper/extensions/ERC20EnforcementModule.sol";
@@ -49,15 +47,12 @@ abstract contract CMTATBaseCommon is
         IERC1643 documentEngine ) internal virtual onlyInitializing {
         // AuthorizationModule_init_unchained is called firstly due to inheritance
         __AuthorizationModule_init_unchained(admin);
+
         // Core
-        __ERC20BurnModule_init_unchained();
-        __ERC20MintModule_init_unchained();
-        
         // EnforcementModule_init_unchained is called before ValidationModule_init_unchained due to inheritance
         __ERC20BaseModule_init_unchained(ERC20Attributes_.decimalsIrrevocable, ERC20Attributes_.name, ERC20Attributes_.symbol);
         /* Extensions */
         // PauseModule_init_unchained is called before ValidationModule_init_unchained due to inheritance
-        __ERC20EnforcementModule_init_unchained();
         __ExtraInformationModule_init_unchained(baseModuleAttributes_.tokenId, baseModuleAttributes_.terms, baseModuleAttributes_.information);
         __SnapshotEngineModule_init_unchained(snapshotEngine);
         __DocumentEngineModule_init_unchained(documentEngine);
@@ -70,8 +65,8 @@ abstract contract CMTATBaseCommon is
     /* ============  View Functions ============ */
 
     /**
-     * @notice Returns the number of decimals used to get its user representation.
-     */
+    * @inheritdoc ERC20BaseModule
+    */
     function decimals()
         public
         view
@@ -84,26 +79,25 @@ abstract contract CMTATBaseCommon is
 
 
     /**
-     * @notice Returns the name of the token.
-     */
+    * @inheritdoc ERC20BaseModule
+    */
     function name() public virtual override(ERC20Upgradeable, ERC20BaseModule) view returns (string memory) {
         return ERC20BaseModule.name();
     }
 
     /**
-     * @notice Returns the symbol of the token, usually a shorter version of the
-     * name.
-     */
+    * @inheritdoc ERC20BaseModule
+    */
     function symbol() public virtual override(ERC20Upgradeable, ERC20BaseModule) view returns (string memory) {
         return ERC20BaseModule.symbol();
     }
 
 
     /* ============  State Functions ============ */
-    function transfer(address to, uint256 value) public virtual override returns (bool) {
+    function transfer(address to, uint256 value) public virtual override(ERC20Upgradeable) returns (bool) {
          address from = _msgSender();
         _checkTransferred(address(0), from, to, value);
-        _transfer(from, to, value);
+        ERC20Upgradeable._transfer(from, to, value);
         return true;
     }
     /*

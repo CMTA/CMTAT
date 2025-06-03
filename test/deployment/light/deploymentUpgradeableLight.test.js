@@ -16,7 +16,6 @@ describe('CMTAT Core - Upgradeable', function () {
   beforeEach(async function () {
     Object.assign(this, await loadFixture(fixture))
     this.cmtat = await deployCMTATLightProxy(
-      this._.address,
       this.admin.address,
       this.deployerAddress.address
     )

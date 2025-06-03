@@ -16,6 +16,7 @@
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
 | **CMTATBaseDebt** | Implementation | CMTATBase, DebtEngineModule |||
+| └ | __CMTAT_modules_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |
 
 
 ### Legend

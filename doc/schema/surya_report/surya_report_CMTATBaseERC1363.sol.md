@@ -15,7 +15,7 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **CMTATBaseERC1363** | Implementation | ERC1363Upgradeable, CMTATBase, MetaTxModule |||
+| **CMTATBaseERC1363** | Implementation | ERC1363Upgradeable, CMTATBaseOption |||
 | └ | supportsInterface | Public ❗️ |   |NO❗️ |
 | └ | transfer | Public ❗️ | 🛑  |NO❗️ |
 | └ | transferFrom | Public ❗️ | 🛑  |NO❗️ |

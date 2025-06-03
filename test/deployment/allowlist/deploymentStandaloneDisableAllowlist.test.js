@@ -17,8 +17,8 @@ const PauseModuleCommon = require('../../common/PauseModuleCommon')
 const ValidationModuleCommonCore = require('../../common/ValidationModule/ValidationModuleCommonCore')
 const ExtraInfoModuleCommon = require('../../common/ExtraInfoModuleCommon')
 const DocumentModuleCommon = require('../../common/DocumentModule/DocumentModuleCommon')
-const AllowlistModuleCommon = require('../../common/AllowlistModuleCommon')
-describe('CMTAT Allowlist- Standalone', function () {
+const ERC20EnforcementModuleCommon = require('../../common/ERC20EnforcementModuleCommon')
+describe('CMTAT Disable Allowlist- Standalone', function () {
   beforeEach(async function () {
     Object.assign(this, await loadFixture(fixture))
     this.cmtat = await deployCMTATAllowlistStandalone(
@@ -43,4 +43,5 @@ describe('CMTAT Allowlist- Standalone', function () {
   // Extensions
   DocumentModuleCommon()
   ExtraInfoModuleCommon()
+  ERC20EnforcementModuleCommon
 })

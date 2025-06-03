@@ -77,7 +77,7 @@ abstract contract CMTATBaseGeneric is
     * @dev CMTAT internal module
     */
     function __CMTAT_internal_init_unchained() internal virtual onlyInitializing {
-        __Enforcement_init_unchained();   
+        // nothing to do
     }
 
     /*
@@ -86,10 +86,6 @@ abstract contract CMTATBaseGeneric is
     function __CMTAT_modules_init_unchained(address admin, ICMTATConstructor.BaseModuleAttributes memory baseModuleAttributes_, IERC1643 documentEngine ) internal virtual onlyInitializing {
         // AuthorizationModule_init_unchained is called firstly due to inheritance
         __AuthorizationModule_init_unchained(admin);
-        // EnforcementModule_init_unchained is called before ValidationModule_init_unchained due to inheritance
-        __EnforcementModule_init_unchained();
-        // PauseModule_init_unchained is called before ValidationModule_init_unchained due to inheritance
-        __PauseModule_init_unchained();
         __DocumentEngineModule_init_unchained(documentEngine);
         /* Other modules */
         __ExtraInformationModule_init_unchained(baseModuleAttributes_.tokenId, baseModuleAttributes_.terms, baseModuleAttributes_.information);

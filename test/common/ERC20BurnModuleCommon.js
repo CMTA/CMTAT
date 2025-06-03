@@ -383,6 +383,38 @@ function ERC20BurnModuleCommon () {
       expect(await this.cmtat.totalSupply()).to.equal(TOTAL_SUPPLY_AFTER_BURN)
     }
 
+    async function testBatchBurnWithoutReason (sender) {
+      const TOKEN_HOLDER = [this.admin, this.address1, this.address2]
+      // Act
+      // Burn
+      this.logs = await this.cmtat
+        .connect(sender)
+        .batchBurn(TOKEN_HOLDER, TOKEN_BY_HOLDERS_TO_BURN)
+      // Assert
+      // emits a Transfer event
+      // Assert event
+      // emits a Transfer event
+      for (let i = 0; i < TOKEN_HOLDER.length; ++i) {
+        // emits a Transfer event
+        await expect(this.logs)
+          .to.emit(this.cmtat, 'Transfer')
+          .withArgs(TOKEN_HOLDER[i], ZERO_ADDRESS, TOKEN_BY_HOLDERS_TO_BURN[i])
+      }
+      // emits a Burn event
+      await expect(this.logs)
+        .to.emit(this.cmtat, 'BatchBurn')
+        .withArgs(sender, TOKEN_HOLDER, TOKEN_BY_HOLDERS_TO_BURN, '0x')
+      // Check balances and total supply
+      // Assert
+      for (let i = 0; i < TOKEN_HOLDER.length; ++i) {
+        expect(await this.cmtat.balanceOf(TOKEN_HOLDER[i])).to.equal(
+          TOKEN_BALANCE_BY_HOLDERS_AFTER_BURN[i]
+        )
+      }
+
+      expect(await this.cmtat.totalSupply()).to.equal(TOTAL_SUPPLY_AFTER_BURN)
+    }
+
     beforeEach(async function () {
       const TOKEN_HOLDER = [this.admin, this.address1, this.address2];
       ({ logs: this.logs1 } = await this.cmtat
@@ -395,6 +427,24 @@ function ERC20BurnModuleCommon () {
       const bindTest = testBatchBurn.bind(this)
       await bindTest(this.admin)
     })
+
+    it('testCanBeBurntBatchByAdminWithoutReason', async function () {
+      const bindTest = testBatchBurnWithoutReason.bind(this)
+      await bindTest(this.admin)
+    })
+
+    it('testCanBeBurntBatchByBurnerRoleWithoutReason', async function () {
+      const TOKEN_HOLDER = [this.admin, this.address1, this.address2]
+      // Arrange
+      await this.cmtat
+        .connect(this.admin)
+        .grantRole(BURNER_ROLE, this.address2)
+
+      // Act
+      const bindTest = testBatchBurnWithoutReason.bind(this)
+      await bindTest(this.address2)
+    })
+
 
     it('testCanBeBurntBatchByBurnerRole', async function () {
       const TOKEN_HOLDER = [this.admin, this.address1, this.address2]

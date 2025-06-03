@@ -108,12 +108,18 @@ interface ICMTATDebt {
         DebtIdentifier debtIdentifier;
         DebtInstrument debtInstrument;
     }
+    /**
+    * @dev Information on the issuer and other persons involved
+    */
     struct DebtIdentifier {
         string issuerName;
         string issuerDescription;
         string guarantor;
         string debtHolder;
     }
+    /**
+    * dev Information on the Instruments
+    */
     struct DebtInstrument {
         // uint256
         uint256 interestRate;

@@ -4,7 +4,6 @@ pragma solidity ^0.8.20;
 import {UUPSUpgradeable} from "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import {CMTATBaseOption} from "../modules/CMTATBaseOption.sol";
 import {MetaTxModule} from "../modules/wrapper/options/MetaTxModule.sol";
-import {ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
 import {ICMTATConstructor, CMTATBase} from "../modules/CMTATBase.sol";
 
 /**

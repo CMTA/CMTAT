@@ -90,9 +90,10 @@ interface IERC3643Enforcement {
      *  Emits an `AddressFrozen` event
      */
     function setAddressFrozen(address account, bool freeze) external;
-
-    // Not implemented to reduce contract size
-    ///function batchSetAddressFrozen(address[] calldata accounts, bool[] calldata freeze) external;
+    /**
+    * @notice Batch version of {setAddressFrozen}
+    */
+    function batchSetAddressFrozen(address[] calldata accounts, bool[] calldata freeze) external;
 }
 
 interface IERC3643ERC20Enforcement {
@@ -128,10 +129,6 @@ interface IERC3643ERC20Enforcement {
      *  @dev Emits a `TokensUnfrozen` event
      */
     function unfreezePartialTokens(address account, uint256 value) external;
-    /*
-    function batchFreezePartialTokens(address[] calldata _userAddresses, uint256[] calldata _amounts) external;
-    function batchUnfreezePartialTokens(address[] calldata _userAddresses, uint256[] calldata _amounts) external;
-    */
     /**
      *  
      *  @notice Triggers a forced transfer.
@@ -174,8 +171,11 @@ interface IERC3643Mint{
     function batchMint( address[] calldata accounts,uint256[] calldata values) external;
 }
 interface IERC3643Burn{
-    /**      * @notice {burn} withtout reason
-     *  @dev burn tokens on an address
+    /**
+     * @notice Burns tokens from a given address.
+     * @param account The address to burn tokens from.
+     * @param value The number of tokens to be burned.
+     * @dev burn tokens on an address, decreases the total supply.
      *  If IERC364320Enforcement is implemented:
      *      In case the `account` address has not enough free tokens (unfrozen tokens)
      *      but has a total balance higher or equal to the `value` amount
@@ -183,15 +183,7 @@ interface IERC3643Burn{
      *      to proceed the burn, in such a case, the remaining balance on the `account`
      *      is 100% composed of frozen tokens post-transaction.
      *      emits a `TokensUnfrozen` event if `_amount` is higher than the free balance of `account`
-     *  @param account Address to burn the tokens from.
-     *  @param value Amount of tokens to burn.
-     * 
-     *  emits a `Transfer` event
-       /// @notice Burns tokens from a given address..
-  /// @param account The address to burn tokens from.
-  /// @param value The number of tokens to be burned.
-  /// @dev this function decreases the total supply.
-  function burn(address account, uint256 value) external;
+     * Emits a `Transfer` event
      */
     function burn(address account,uint256 value) external;
     /**

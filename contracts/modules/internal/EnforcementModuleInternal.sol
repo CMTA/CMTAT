@@ -24,12 +24,6 @@ abstract contract EnforcementModuleInternal is
     }
 
     /*//////////////////////////////////////////////////////////////
-                         INITIALIZER FUNCTION
-    //////////////////////////////////////////////////////////////*/
-    function __Enforcement_init_unchained() internal onlyInitializing {
-        // no variable to initialize
-    }
-    /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
     function _addAddressToTheList(address account, bool status, bytes memory data) internal virtual{

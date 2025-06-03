@@ -15,9 +15,9 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **ValidationModule** | Implementation | ValidationModuleInternal, IERC1404 |||
-| └ | messageForTransferRestriction | Public ❗️ |   |NO❗️ |
-| └ | detectTransferRestriction | Public ❗️ |   |NO❗️ |
+| **ValidationModule** | Implementation | PauseModule, EnforcementModule |||
+| └ | _canMintBurnByModule | Internal 🔒 |   | |
+| └ | _canTransferGenericByModule | Internal 🔒 |   | |
 
 
 ### Legend

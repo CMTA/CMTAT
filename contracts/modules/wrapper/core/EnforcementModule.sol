@@ -22,11 +22,6 @@ abstract contract EnforcementModule is
     /* ============ State Variables ============ */
     bytes32 public constant ENFORCER_ROLE = keccak256("ENFORCER_ROLE");
 
-    /* ============  Initializer Function ============ */
-    function __EnforcementModule_init_unchained() internal virtual onlyInitializing {
-        // no variable to initialize
-    }
-
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
@@ -63,7 +58,7 @@ abstract contract EnforcementModule is
     */
     function batchSetAddressFrozen(
         address[] calldata accounts, bool[] calldata freezes
-    ) public virtual onlyRole(ENFORCER_ROLE) {
+    ) public virtual override(IERC3643Enforcement) onlyRole(ENFORCER_ROLE) {
          _addAddressesToTheList(accounts, freezes, "");
     }
 

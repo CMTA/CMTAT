@@ -16,7 +16,7 @@ abstract contract AllowlistModuleInternal is
 {
     /* ============ ERC-7201 ============ */
     // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.AllowlistModuleInternal")) - 1)) & ~bytes32(uint256(0xff))
-    bytes32 private constant AllowlistModuleInternalStorageLocation = 0x1c7bc8a17be064111d299d7669f49519cb26c58611b72d9f6ccc40a1e1184e00;
+    bytes32 private constant AllowlistModuleInternalStorageLocation = 0x53076eaf2d1e2f915f2e0487c9f92cca686c37fd47bf11f95f0da313b2809800;
     
     /* ==== ERC-7201 State Variables === */
     struct AllowlistModuleInternalStorage {

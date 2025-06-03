@@ -41,11 +41,6 @@ abstract contract ERC20EnforcementModule is ERC20Upgradeable, IERC7551ERC20Enfor
         mapping(address => uint256)  _frozenTokens;
     }
 
-    /* ============  Initializer Function ============ */
-    function __ERC20EnforcementModule_init_unchained() internal virtual onlyInitializing {
-        // no variable to initialize
-    }
-
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
@@ -85,6 +80,7 @@ abstract contract ERC20EnforcementModule is ERC20Upgradeable, IERC7551ERC20Enfor
        _forcedTransfer(from, to, value, "");
        return true;
     }
+
     /**
     *
     * @inheritdoc IERC3643ERC20Enforcement

@@ -35,11 +35,6 @@ abstract contract ERC20MintModule is ERC20Upgradeable, IERC3643Mint, IERC3643Bat
     /* ============ State Variables ============ */
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
 
-    /* ============  Initializer Function ============ */
-    function __ERC20MintModule_init_unchained() internal virtual onlyInitializing {
-        // no variable to initialize
-    }
-
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/

@@ -35,11 +35,7 @@ abstract contract PauseModule is PausableUpgradeable, AuthorizationModule, IERC3
     struct PauseModuleStorage {
         bool _isDeactivated;
     }
-    /* ============  Initializer Function ============ */
-    function __PauseModule_init_unchained() internal virtual onlyInitializing {
-        // no variable to initialize
-    }
-    
+
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/

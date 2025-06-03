@@ -7,11 +7,8 @@ import {ERC1363Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC2
 import {ERC20Upgradeable, IERC20} from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 /* ==== Module === */
 import {ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
-import {AccessControlUpgradeable} from "./security/AuthorizationModule.sol";
 import {CMTATBase, CMTATBaseCommon} from "./CMTATBase.sol";
 import {CMTATBaseOption, ERC20CrossChainModule} from "../modules/CMTATBaseOption.sol";
-import {MetaTxModule, ERC2771ContextUpgradeable} from "./wrapper/options/MetaTxModule.sol";
-
 /**
 * @title CMTAT Base for ERC-1363
 */
@@ -27,11 +24,16 @@ abstract contract CMTATBaseERC1363 is ERC1363Upgradeable,CMTATBaseOption{
         return ERC1363Upgradeable.supportsInterface(interfaceId) || ERC20CrossChainModule.supportsInterface(interfaceId);
     }
 
-
+    /**
+    * @inheritdoc CMTATBaseCommon
+    */
     function transfer(address to, uint256 value) public virtual override(ERC20Upgradeable, CMTATBaseCommon, IERC20) returns (bool) {
         return CMTATBaseCommon.transfer(to, value);
     }
 
+    /**
+    * @inheritdoc CMTATBaseCommon
+    */
     function transferFrom(
         address sender,
         address recipient,
@@ -45,7 +47,9 @@ abstract contract CMTATBaseERC1363 is ERC1363Upgradeable,CMTATBaseOption{
         return CMTATBaseCommon.transferFrom(sender, recipient, amount);
     }
 
-
+    /**
+    * @inheritdoc CMTATBaseCommon
+    */
     function decimals()
         public
         view
@@ -58,16 +62,15 @@ abstract contract CMTATBaseERC1363 is ERC1363Upgradeable,CMTATBaseOption{
 
 
     /**
-     * @notice Returns the name of the token.
-     */
+    * @inheritdoc CMTATBaseCommon
+    */
     function name() public virtual override(ERC20Upgradeable, CMTATBaseCommon) view returns (string memory) {
         return CMTATBaseCommon.name();
     }
 
     /**
-     * @notice Returns the symbol of the token, usually a shorter version of the
-     * name.
-     */
+    * @inheritdoc CMTATBaseCommon
+    */
     function symbol() public virtual override(ERC20Upgradeable, CMTATBaseCommon) view returns (string memory) {
         return CMTATBaseCommon.symbol();
     }
@@ -77,6 +80,9 @@ abstract contract CMTATBaseERC1363 is ERC1363Upgradeable,CMTATBaseOption{
      /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
+    /**
+    * @inheritdoc CMTATBaseCommon
+    */
     function _update(
         address from,
         address to,
@@ -97,8 +103,8 @@ abstract contract CMTATBaseERC1363 is ERC1363Upgradeable,CMTATBaseOption{
                             METAXTX MODULE
     //////////////////////////////////////////////////////////////*/
     /**
-     * @dev This surcharge is not necessary if you do not use the MetaTxModule
-     */
+    * @inheritdoc CMTATBaseOption
+    */
     function _msgSender()
         internal
         view
@@ -109,8 +115,8 @@ abstract contract CMTATBaseERC1363 is ERC1363Upgradeable,CMTATBaseOption{
     }
 
     /**
-     * @dev This surcharge is not necessary if you do not use the MetaTxModule
-     */
+    * @inheritdoc CMTATBaseOption
+    */
     function _contextSuffixLength() internal view 
     override(ContextUpgradeable, CMTATBaseOption)
     returns (uint256) {
@@ -118,8 +124,8 @@ abstract contract CMTATBaseERC1363 is ERC1363Upgradeable,CMTATBaseOption{
     }
 
     /**
-     * @dev This surcharge is not necessary if you do not use the MetaTxModule
-     */
+    * @inheritdoc CMTATBaseOption
+    */
     function _msgData()
         internal
         view

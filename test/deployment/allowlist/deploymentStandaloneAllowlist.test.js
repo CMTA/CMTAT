@@ -20,6 +20,7 @@ const ValidationModuleCommonCore = require('../../common/ValidationModule/Valida
 const ExtraInfoModuleCommon = require('../../common/ExtraInfoModuleCommon')
 const DocumentModuleCommon = require('../../common/DocumentModule/DocumentModuleCommon')
 const AllowlistModuleCommon = require('../../common/AllowlistModuleCommon')
+const ERC20EnforcementModuleCommon = require('../../common/ERC20EnforcementModuleCommon')
 describe('CMTAT Allowlist- Standalone', function () {
   beforeEach(async function () {
     Object.assign(this, await loadFixture(fixture))
@@ -45,6 +46,7 @@ describe('CMTAT Allowlist- Standalone', function () {
   EnforcementModuleCommon()
   ValidationModuleCommonCore()
   // Extensions
+  ERC20EnforcementModuleCommon()
   DocumentModuleCommon()
   ExtraInfoModuleCommon()
   // Options

@@ -338,39 +338,35 @@ function EnforcementModuleCommon () {
       }
     })
 
-    /* it('testFreezeDoesNotEmitEventIfAddressAlreadyisFrozen', async function () {
-      // Arrange - Assert
-      expect(await this.cmtat.isFrozen(this.address1)).to.equal(false)
-      // Arrange
-      await this.cmtat.connect(this.admin).setAddressFrozen(this.address1, true, reasonFreeze)
-      // Arrange - Assert
-      expect(await this.cmtat.isFrozen(this.address1)).to.equal(true)
+    it('testCannotBatchFrozenIfLengthMismatchTooManyAddresses', async function () {
+      // There are too many addresses
+      const accounts = [this.address1, this.address2, this.address3]
+      const freeze = [false, false]
+
       // Act
-      this.logs = await this.cmtat
-        .connect(this.admin)
-        .setAddressFrozen(this.address1, true, reasonFreeze)
-      // Assert
-      await expect(this.logs).to.not.emit(this.cmtat, 'AddressFrozen')
-      expect(await this.cmtat.isFrozen(this.address1)).to.equal(true)
+      await expect(
+        this.cmtat
+          .connect(this.admin)
+          .batchSetAddressFrozen(accounts, freeze)
+      ).to.be.revertedWithCustomError(
+        this.cmtat,
+        'CMTAT_Enforcement_AccountsValueslengthMismatch'
+      )
     })
 
-    it('testUnfreezeDoesNotEmitEventIfAddressAlreadyUnisFrozen', async function () {
-      // Arrange
-      await this.cmtat.connect(this.admin).setAddressFrozen(this.address1, true, reasonFreeze)
-      // Arrange - Assert
-      expect(await this.cmtat.isFrozen(this.address1)).to.equal(true)
-      await this.cmtat
-        .connect(this.admin)
-        .setAddressFrozen(this.address1, true, reasonFreeze)
+    it('testCannotBatchFrozenIfAccountsSIsEmpty', async function () {
+      const accounts = []
+      const freeze = [false, false]
+      await expect(
+        this.cmtat
+          .connect(this.admin)
+          .batchSetAddressFrozen(accounts, freeze)
+      ).to.be.revertedWithCustomError(
+        this.cmtat,
+        'CMTAT_Enforcement_EmptyAccounts'
+      )
+    })
 
-      // Act
-      this.logs = await this.cmtat
-        .connect(this.admin)
-        .setAddressFrozen(this.address1, true, reasonUnfreeze)
-      // Assert
-      await expect(this.logs).to.not.emit(this.cmtat, 'AddressFrozen')
-      expect(await this.cmtat.isFrozen(this.address1)).to.equal(false)
-    }) */
   })
 }
 module.exports = EnforcementModuleCommon

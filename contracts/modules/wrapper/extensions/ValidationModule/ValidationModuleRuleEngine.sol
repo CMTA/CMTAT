@@ -19,18 +19,22 @@ abstract contract ValidationModuleRuleEngine is
 {
     error CMTAT_ValidationModule_SameValue();
 /* ============ Transfer & TransferFrom ============ */
+    /**
+    * @inheritdoc ValidationModuleCore
+    * @dev call the ruleEngine if set
+    */
     function canTransfer(
         address from,
         address to,
         uint256 value
     ) public view virtual override(ValidationModuleCore) returns (bool) {
-        if (!ValidationModuleCore.canTransfer(from, to, value)) {
-            return false;
-        } else {
-            return _canTransferWithRuleEngine(from, to, value);
-        }
+       return _canTransfer(from, to, value);
     }
 
+    /**
+    * @inheritdoc ValidationModuleCore
+    * @dev call the ruleEngine if set
+    */
     function canTransferFrom(
         address spender,
         address from,
@@ -57,6 +61,17 @@ abstract contract ValidationModuleRuleEngine is
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
     /* ============ View functions ============ */
+    function _canTransfer(
+        address from,
+        address to,
+        uint256 value)
+    internal view virtual returns (bool) {
+       if (!ValidationModuleCore.canTransfer(from, to, value)) {
+            return false;
+        } else {
+            return _canTransferWithRuleEngine(from, to, value);
+        }
+    }
 
     function _canTransferFrom(
         address spender,

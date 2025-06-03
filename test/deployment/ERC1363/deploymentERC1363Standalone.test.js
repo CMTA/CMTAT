@@ -11,6 +11,8 @@ const ERC20MintModuleCommon = require('../../common/ERC20MintModuleCommon')
 const ERC20BurnModuleCommon = require('../../common/ERC20BurnModuleCommon')
 const EnforcementModuleCommon = require('../../common/EnforcementModuleCommon')
 const PauseModuleCommon = require('../../common/PauseModuleCommon')
+// options
+const ERC20CrossChainModuleCommon = require('../../common/ERC20CrossChainModuleCommon')
 // Extensions
 const ERC20EnforcementModuleCommon = require('../../common/ERC20EnforcementModuleCommon')
 const DocumentModuleCommon = require('../../common/DocumentModule/DocumentModuleCommon')
@@ -80,6 +82,9 @@ describe('CMTAT ERC1363 - Standalone', function () {
   ERC20BurnModuleCommon()
   ERC20MintModuleCommon()
   EnforcementModuleCommon()
+
+  // options
+  ERC20CrossChainModuleCommon()
 
   // Extensions
   ERC20EnforcementModuleCommon()

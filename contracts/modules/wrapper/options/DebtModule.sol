@@ -30,18 +30,6 @@ abstract contract DebtModule is AuthorizationModule, ICMTATDebt {
         IDebtEngine _debtEngine;
     }
 
-    /* ============  Initializer Function ============ */
-    /**
-     * @dev
-     *
-     * - The grant to the admin role is done by AccessControlDefaultAdminRules
-     * - The control of the zero address is done by AccessControlDefaultAdminRules
-     *
-     */
-    function __DebtModule_init_unchained()
-    internal virtual onlyInitializing {
-       // nothing to do
-    }
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/    
@@ -57,7 +45,7 @@ abstract contract DebtModule is AuthorizationModule, ICMTATDebt {
     }
 
     /**
-     * @notice Set the instrument
+     * @notice Set only the instrument
      */
     function setDebtInstrument(
           ICMTATDebt.DebtInstrument calldata debtInstrument_

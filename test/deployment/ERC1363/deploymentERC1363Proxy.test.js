@@ -15,6 +15,8 @@ const EnforcementModuleCommon = require('../../common/EnforcementModuleCommon')
 const ERC20EnforcementModuleCommon = require('../../common/ERC20EnforcementModuleCommon')
 const DocumentModuleCommon = require('../../common/DocumentModule/DocumentModuleCommon')
 const ExtraInfoModuleCommon = require('../../common/ExtraInfoModuleCommon')
+// options
+const ERC20CrossChainModuleCommon = require('../../common/ERC20CrossChainModuleCommon')
 // Snapshot
 const SnapshotModuleCommonRescheduling = require('../../common/SnapshotModuleCommon/SnapshotModuleCommonRescheduling')
 const SnapshotModuleCommonScheduling = require('../../common/SnapshotModuleCommon/SnapshotModuleCommonScheduling')
@@ -91,6 +93,9 @@ describe('CMTAT - ERC1363 Proxy Deployment', function () {
   ERC20EnforcementModuleCommon()
   DocumentModuleCommon()
   ExtraInfoModuleCommon()
+
+  // options
+  ERC20CrossChainModuleCommon()
 
   // Snapshot
   SnapshotModuleMultiplePlannedTest()

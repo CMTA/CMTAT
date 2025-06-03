@@ -25,17 +25,19 @@ interface IERC7551Mint {
 
 interface IERC7551Burn {
     /**
-    * @notice Emitted when the specified `value` amount of tokens owned by `owner`are destroyed with the given `reason`
+    * @notice Emitted when the specified `value` amount of tokens owned by `owner`are destroyed with the given `data`
     */
     event Burn(address indexed owner, uint256 value, bytes data);
     /*
-    * This function MUST increase the balance of to by amount without decreasing the amount of tokens from any other holder. 
-    * This function MUST throw if the sum of amount and the amount of already issued tokens is greater than the total supply. 
-    * It MUST emit a Transfer as well as an TokensIssued event. 
+    * This function MUST reduce the balance of `account` by amount without increasing the amount of tokens of any other holder. 
+    * It MUST emit a burn as well as a Transfer event. 
+    * The Transfer event MUST contain 0x0 as the recipient account address. 
+    * The function MUST throw if account’s balance is less than amount (including frozen tokens). 
+    * The data parameter MAY be used to further document the action.
     * If {IERC7551Pause} is implemented:
-    *   Paused transfers MUST NOT prevent an issuance. The data parameter MAY be used to further document the action.
+    *   Paused transfers MUST NOT prevent a burn
     */
-    function burn(address to, uint256 amount, bytes calldata data) external;
+    function burn(address account, uint256 amount, bytes calldata data) external;
 }
 
 interface IERC7551Pause {

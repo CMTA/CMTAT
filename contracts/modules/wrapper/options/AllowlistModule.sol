@@ -18,6 +18,7 @@ abstract contract AllowlistModule is
     AuthorizationModule
 {
     event AddressAddedToAllowlist(address indexed account, bool indexed status, address indexed enforcer, bytes data);
+    event AllowlistEnableStatus(address indexed operator, bool status);
     /* ============ State Variables ============ */
     bytes32 public constant ALLOWLIST_ROLE = keccak256("ALLOWLIST_ROLE");
    
@@ -61,6 +62,7 @@ abstract contract AllowlistModule is
         bool status
     ) public virtual onlyRole(ALLOWLIST_ROLE) {
         _enableAllowlist(status);
+        emit AllowlistEnableStatus(_msgSender(), status);
     }
 
     /**

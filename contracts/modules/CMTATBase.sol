@@ -95,7 +95,6 @@ abstract contract CMTATBase is
     * @dev CMTAT internal module
     */
     function __CMTAT_internal_init_unchained(ICMTATConstructor.Engine memory engines_) internal virtual onlyInitializing {
-        __Enforcement_init_unchained(); 
         __ValidationRuleEngine_init_unchained(engines_.ruleEngine);  
     }
 
@@ -104,8 +103,6 @@ abstract contract CMTATBase is
     */
     function __CMTAT_modules_init_unchained(address admin, ICMTATConstructor.ERC20Attributes memory ERC20Attributes_, ICMTATConstructor.BaseModuleAttributes memory baseModuleAttributes_, ICMTATConstructor.Engine memory engines_) internal virtual onlyInitializing {
         __CMTAT_commonModules_init_unchained(admin,ERC20Attributes_, baseModuleAttributes_, engines_.snapshotEngine, engines_ .documentEngine);
-        __PauseModule_init_unchained();
-        __EnforcementModule_init_unchained();
     }
 
     function __CMTAT_init_unchained() internal virtual onlyInitializing {
@@ -115,7 +112,10 @@ abstract contract CMTATBase is
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
-   
+    
+    /**
+    * @inheritdoc ValidationModuleERC1404
+    */
     function detectTransferRestriction(
         address from,
         address to,
@@ -131,6 +131,9 @@ abstract contract CMTATBase is
         return ValidationModuleERC1404.detectTransferRestriction(from, to, value);
     }
 
+    /**
+    * @inheritdoc ValidationModuleERC1404
+    */
     function messageForTransferRestriction(
         uint8 restrictionCode
     )  public view virtual override(ValidationModuleERC1404)  returns (string memory message) {
@@ -142,6 +145,9 @@ abstract contract CMTATBase is
 
     }
 
+    /**
+    * @inheritdoc ValidationModuleRuleEngine
+    */
     function canTransfer(
         address from,
         address to,

@@ -24,13 +24,6 @@ abstract contract ERC20BurnModule is ERC20Upgradeable, IERC20Allowance, IBurnERC
 
     /* ============ State Variables ============ */
     bytes32 public constant BURNER_ROLE = keccak256("BURNER_ROLE");
- 
-    
-  
-    /* ============  Initializer Function ============ */
-    function __ERC20BurnModule_init_unchained() internal virtual onlyInitializing {
-        // no variable to initialize
-    }
 
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS

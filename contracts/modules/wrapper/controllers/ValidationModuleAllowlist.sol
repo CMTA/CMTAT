@@ -44,7 +44,9 @@ abstract contract ValidationModuleAllowlist is
             // Mint
             if(from == address(0)){
                 return _canMintBurnByModule(to);
-            } // burn
+            } 
+            // burn
+            // Use forcedTransfer to burn tokens from a non-whitelsited address
             else if(to == address(0)){
                 return _canMintBurnByModule(from);
             }

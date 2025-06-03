@@ -29,6 +29,7 @@ abstract contract ERC20BaseModule is ERC20Upgradeable, IERC20Allowance, IERC3643
     /* ==== ERC-7201 State Variables === */
     struct ERC20BaseModuleStorage {
         uint8 _decimals;
+        // We don't use ERC20Upgradeable name and private because we can not modify them
         string _name;
         string _symbol;
     }
