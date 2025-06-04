@@ -128,9 +128,6 @@ The implemented interface is available in [IERC3643Partial](./contracts/interfac
 
 The main reason the argument names change is because CMTAT relies on OpenZeppelin to name the arguments.
 
- // Not implemented to reduce contract size
-    ///function batchSetAddressFrozen(address[] calldata accounts, bool[] calldata freeze) external;
-
 ##### All functions
 
 ```solidity
