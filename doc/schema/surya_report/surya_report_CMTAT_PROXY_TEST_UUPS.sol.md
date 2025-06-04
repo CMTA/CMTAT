@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./test/proxy/CMTAT_PROXY_TEST_UUPS.sol | [object Promise] |
+| ./mocks/test/proxy/CMTAT_PROXY_TEST_UUPS.sol | [object Promise] |
 
 
 ### Contracts Description Table
@@ -15,8 +15,8 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **CMTAT_PROXY_TEST_UUPS** | Implementation | CMTAT_PROXY_UUPS |||
-| └ | <Constructor> | Public ❗️ | 🛑  | CMTAT_PROXY_UUPS |
+| **CMTAT_PROXY_TEST_UUPS** | Implementation | CMTATUpgradeableUUPS |||
+| └ | <Constructor> | Public ❗️ | 🛑  | CMTATUpgradeableUUPS |
 
 
 ### Legend

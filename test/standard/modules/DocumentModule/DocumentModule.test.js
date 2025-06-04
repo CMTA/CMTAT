@@ -13,7 +13,6 @@ describe('Standard - DocumentModule', function () {
       this.admin.address,
       this.deployerAddress.address
     )
-    this.documentEngineMock = await ethers.deployContract('DocumentEngineMock')
   })
   DocumentModuleCommon()
   DocumentModuleSetDocumentEngineCommon()

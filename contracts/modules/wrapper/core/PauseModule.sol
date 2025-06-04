@@ -2,8 +2,15 @@
 
 pragma solidity ^0.8.20;
 
-import "@openzeppelin/contracts-upgradeable/utils/PausableUpgradeable.sol";
-import "../../security/AuthorizationModule.sol";
+/* ==== OpenZeppelin === */
+import {PausableUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/PausableUpgradeable.sol";
+/* ==== Module === */
+import {AuthorizationModule} from "../../security/AuthorizationModule.sol";
+/* ==== Tokenization === */
+import {IERC3643Pause} from "../../../interfaces/tokenization/IERC3643Partial.sol";
+import {IERC7551Pause} from "../../../interfaces/tokenization/draft-IERC7551.sol";
+import {ICMTATDeactivate} from "../../../interfaces/tokenization/ICMTAT.sol";
+
 
 /**
  * @title Pause Module
@@ -16,68 +23,67 @@ import "../../security/AuthorizationModule.sol";
  * period, or having an emergency switch for freezing all token transfers in the
  * event of a large bug.
  */
-abstract contract PauseModule is PausableUpgradeable, AuthorizationModule {
+abstract contract PauseModule is PausableUpgradeable, AuthorizationModule, IERC3643Pause, IERC7551Pause, ICMTATDeactivate {
+    error CMTAT_PauseModule_ContractIsDeactivated();
     /* ============ State Variables ============ */
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
-    string internal constant TEXT_TRANSFER_REJECTED_PAUSED =
-        "All transfers paused";
-    /* ============ Events ============ */
-    event Deactivated(address account);
+
     /* ============ ERC-7201 ============ */
-    // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.ERC20BaseModule")) - 1)) & ~bytes32(uint256(0xff))
-    bytes32 private constant PauseModuleStorageLocation = 0x9bd8d607565c0370ae5f91651ca67fd26d4438022bf72037316600e29e6a3a00;
+    // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.PauseModule")) - 1)) & ~bytes32(uint256(0xff))
+    bytes32 private constant PauseModuleStorageLocation = 0xab1527b6135145d8da1edcbd6b7b270624e17f2b41c74a8c746ff388ad454700;
     /* ==== ERC-7201 State Variables === */
     struct PauseModuleStorage {
         bool _isDeactivated;
     }
-    /* ============  Initializer Function ============ */
-    function __PauseModule_init_unchained() internal onlyInitializing {
-        // no variable to initialize
-    }
-    
+
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
     /**
-     * @notice Pauses all token transfers.
-     * @dev See {ERC20Pausable} and {Pausable-_pause}.
-     *
+    * @inheritdoc IERC3643Pause
+    */
+    function paused() public virtual view override(IERC3643Pause, IERC7551Pause, PausableUpgradeable)  returns (bool){
+        return PausableUpgradeable.paused();
+   }
+    
+    /**
+     * @inheritdoc IERC3643Pause
+     * @dev See {Pausable-_pause}.
+     * Emits a `Paused` event
      * Requirements:
      *
      * - the caller must have the `PAUSER_ROLE`.
      *
      */
-    function pause() public onlyRole(PAUSER_ROLE) {
+    function pause() public virtual override(IERC3643Pause, IERC7551Pause) onlyRole(PAUSER_ROLE) {
         _pause();
     }
 
     /**
-     * @notice Unpauses all token transfers.
-     * @dev See {ERC20Pausable} and {Pausable-_unpause}.
-     *
+     * @inheritdoc IERC3643Pause
+     * @dev See {Pausable-_unpause}.
+     * emits an `Unpaused` event
      * Requirements:
      *
      * - the caller must have the `PAUSER_ROLE`.
      */
-    function unpause() public onlyRole(PAUSER_ROLE) {
+    function unpause() public virtual override(IERC3643Pause, IERC7551Pause) onlyRole(PAUSER_ROLE) {
         PauseModuleStorage storage $ = _getPauseModuleStorage();
-        if($._isDeactivated){
-            revert Errors.CMTAT_PauseModule_ContractIsDeactivated();
-        }
+        require(!$._isDeactivated, CMTAT_PauseModule_ContractIsDeactivated());
         _unpause();
     }
 
     /**
-    * @notice  deactivate the contract
-    * Warning: the operation is irreversible, be careful
+    * @inheritdoc ICMTATDeactivate
     * @dev
     * Emits a {Deactivated} event indicating that the contract has been deactivated.
     * Requirements:
     *
     * - the caller must have the `DEFAULT_ADMIN_ROLE`.
+    * 
     */
     function deactivateContract()
-        public
+        public virtual override(ICMTATDeactivate)
         onlyRole(DEFAULT_ADMIN_ROLE)
     {
         PauseModuleStorage storage $ = _getPauseModuleStorage();
@@ -86,10 +92,11 @@ abstract contract PauseModule is PausableUpgradeable, AuthorizationModule {
        emit Deactivated(_msgSender());
     }
 
+
     /**
-    * @notice Returns true if the contract is deactivated, and false otherwise.
+    * @inheritdoc ICMTATDeactivate
     */
-    function deactivated() view public returns (bool){
+    function deactivated() public view virtual override(ICMTATDeactivate) returns (bool){
         PauseModuleStorage storage $ = _getPauseModuleStorage();
         return $._isDeactivated;
     }

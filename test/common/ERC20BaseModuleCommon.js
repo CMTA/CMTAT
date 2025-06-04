@@ -1,5 +1,9 @@
 const { expect } = require('chai')
-
+const { ERC20ENFORCER_ROLE, DEFAULT_ADMIN_ROLE } = require('../utils')
+const REASON_STRING = 'Bad guy'
+const REASON_EVENT = ethers.toUtf8Bytes(REASON_STRING)
+const REASON = ethers.Typed.bytes(REASON_EVENT)
+const REASON_EMPTY = ethers.Typed.bytes(ethers.toUtf8Bytes(''))
 function ERC20BaseModuleCommon () {
   context('Token structure', function () {
     it('testHasTheDefinedName', async function () {
@@ -13,6 +17,54 @@ function ERC20BaseModuleCommon () {
     it('testDecimalsEqual0', async function () {
       // Act + Assert
       expect(await this.cmtat.decimals()).to.equal('0')
+    })
+  })
+
+  context('Token Name', function () {
+    it('testAdminCanUpdateName', async function () {
+      const NEW_NAME = 'New Name'
+      // Act
+      this.logs = await this.cmtat.connect(this.admin).setName(NEW_NAME)
+      // Assert
+      expect(await this.cmtat.name()).to.equal(NEW_NAME)
+      await expect(this.logs)
+        .to.emit(this.cmtat, 'Name')
+        .withArgs(NEW_NAME, NEW_NAME)
+    })
+    it('testCannotNonAdminUpdateName', async function () {
+      // Act
+      await expect(this.cmtat.connect(this.address1).setName('New Name'))
+        .to.be.revertedWithCustomError(
+          this.cmtat,
+          'AccessControlUnauthorizedAccount'
+        )
+        .withArgs(this.address1.address, DEFAULT_ADMIN_ROLE)
+      // Assert
+      expect(await this.cmtat.name()).to.equal('CMTA Token')
+    })
+  })
+
+  context('Token Symbol', function () {
+    it('testAdminCanUpdateSymbol', async function () {
+      const NEW_SYMBOL = 'New Symbol'
+      // Act
+      this.logs = await this.cmtat.connect(this.admin).setSymbol(NEW_SYMBOL)
+      // Assert
+      expect(await this.cmtat.symbol()).to.equal(NEW_SYMBOL)
+      await expect(this.logs)
+        .to.emit(this.cmtat, 'Symbol')
+        .withArgs(NEW_SYMBOL, NEW_SYMBOL)
+    })
+    it('testCannotNonAdminUpdateName', async function () {
+      // Act
+      await expect(this.cmtat.connect(this.address1).setSymbol('New Symbol'))
+        .to.be.revertedWithCustomError(
+          this.cmtat,
+          'AccessControlUnauthorizedAccount'
+        )
+        .withArgs(this.address1.address, DEFAULT_ADMIN_ROLE)
+      // Assert
+      expect(await this.cmtat.symbol()).to.equal('CMTAT')
     })
   })
 
@@ -32,17 +84,17 @@ function ERC20BaseModuleCommon () {
         .connect(this.admin)
         .mint(this.address3, TOKEN_AMOUNTS[2])
     })
-    it('testHasTheCorrectBalanceInfo', async function () {
+    it('testHasTheCorrectBalanceBatch', async function () {
       // Act + Assert
       // Assert
       const ADDRESSES = [this.address1, this.address2, this.address3]
-      let result = await this.cmtat.balanceInfo(ADDRESSES)
+      let result = await this.cmtat.batchBalanceOf(ADDRESSES)
       expect(result[0][0]).to.equal(TOKEN_AMOUNTS[0])
       expect(result[0][1]).to.equal(TOKEN_AMOUNTS[1])
       expect(result[1]).to.equal(TOKEN_INITIAL_SUPPLY)
 
       const ADDRESSES2 = []
-      result = await this.cmtat.balanceInfo(ADDRESSES2)
+      result = await this.cmtat.batchBalanceOf(ADDRESSES2)
       expect(result[0].length).to.equal(0n)
       expect(result[1]).to.equal(TOKEN_INITIAL_SUPPLY)
     })
@@ -290,109 +342,6 @@ function ERC20BaseModuleCommon () {
       )
         .to.be.revertedWithCustomError(this.cmtat, 'ERC20InsufficientBalance')
         .withArgs(this.address1.address, ADDRESS1_BALANCE, AMOUNT_TO_TRANSFER)
-    })
-  })
-
-  context('transferBatch', function () {
-    const TOKEN_AMOUNTS = [10n, 100n, 1000n]
-
-    beforeEach(async function () {
-      // Only the admin has tokens
-      await this.cmtat.connect(this.admin).mint(
-        this.admin,
-        TOKEN_AMOUNTS.reduce((a, b) => {
-          return a + b
-        })
-      )
-    })
-
-    it('testTransferBatch', async function () {
-      const TOKEN_ADDRESS_TOS = [this.address1, this.address2, this.address3]
-      // Act
-      this.logs = await this.cmtat
-        .connect(this.admin)
-        .transferBatch(TOKEN_ADDRESS_TOS, TOKEN_AMOUNTS)
-      // Assert
-      for (let i = 0; i < TOKEN_ADDRESS_TOS.length; ++i) {
-        expect(await this.cmtat.balanceOf(TOKEN_ADDRESS_TOS[i])).to.equal(
-          TOKEN_AMOUNTS[i]
-        )
-      }
-      // emits a Transfer event
-      for (let i = 0; i < TOKEN_ADDRESS_TOS.length; ++i) {
-        await expect(this.logs)
-          .to.emit(this.cmtat, 'Transfer')
-          .withArgs(this.admin, TOKEN_ADDRESS_TOS[i], TOKEN_AMOUNTS[i])
-      }
-    })
-
-    // ADDRESS1 -> ADDRESS2
-    it('testCannotTransferBatchMoreTokensThanOwn', async function () {
-      const TOKEN_ADDRESS_TOS = [this.address1, this.address2, this.address3]
-      const BALANCE_AFTER_FIRST_TRANSFER =
-        (await this.cmtat.balanceOf(this.admin)) - TOKEN_AMOUNTS[0]
-      const AMOUNT_TO_TRANSFER_SECOND = BALANCE_AFTER_FIRST_TRANSFER + 1n
-      // Second amount is invalid
-      const TOKEN_AMOUNTS_INVALID = [
-        TOKEN_AMOUNTS[0],
-        AMOUNT_TO_TRANSFER_SECOND,
-        TOKEN_AMOUNTS[2]
-      ]
-      // Act
-      await expect(
-        this.cmtat
-          .connect(this.admin)
-          .transferBatch(TOKEN_ADDRESS_TOS, TOKEN_AMOUNTS_INVALID)
-      )
-        .to.be.revertedWithCustomError(this.cmtat, 'ERC20InsufficientBalance')
-        .withArgs(
-          this.admin.address,
-          BALANCE_AFTER_FIRST_TRANSFER,
-          AMOUNT_TO_TRANSFER_SECOND
-        )
-    })
-
-    it('testCannotTransferBatchIfLengthMismatchMissingAddresses', async function () {
-      // Number of addresses is insufficient
-      const TOKEN_ADDRESS_TOS_INVALID = [this.address1, this.address2]
-      await expect(
-        this.cmtat
-          .connect(this.admin)
-          .transferBatch(TOKEN_ADDRESS_TOS_INVALID, TOKEN_AMOUNTS)
-      ).to.be.revertedWithCustomError(
-        this.cmtat,
-        'CMTAT_ERC20BaseModule_TosValueslengthMismatch'
-      )
-    })
-
-    it('testCannotTransferBatchIfLengthMismatchTooManyAddresses', async function () {
-      // There are too many addresses
-      const TOKEN_ADDRESS_TOS_INVALID = [
-        this.address1,
-        this.address2,
-        this.address1,
-        this.address1
-      ]
-      await expect(
-        this.cmtat
-          .connect(this.admin)
-          .transferBatch(TOKEN_ADDRESS_TOS_INVALID, TOKEN_AMOUNTS)
-      ).to.be.revertedWithCustomError(
-        this.cmtat,
-        'CMTAT_ERC20BaseModule_TosValueslengthMismatch'
-      )
-    })
-
-    it('testCannotTransferBatchIfTOSIsEmpty', async function () {
-      const TOKEN_ADDRESS_TOS_INVALID = []
-      await expect(
-        this.cmtat
-          .connect(this.admin)
-          .transferBatch(TOKEN_ADDRESS_TOS_INVALID, TOKEN_AMOUNTS)
-      ).to.be.revertedWithCustomError(
-        this.cmtat,
-        'CMTAT_ERC20BaseModule_EmptyTos'
-      )
     })
   })
 }

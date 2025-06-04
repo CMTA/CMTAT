@@ -1,4 +1,5 @@
 const ValidationModuleCommon = require('../../../common/ValidationModule/ValidationModuleCommon')
+const ValidationModuleCommonCore = require('../../../common/ValidationModule/ValidationModuleCommonCore')
 const {
   deployCMTATStandalone,
   fixture,
@@ -10,7 +11,6 @@ describe('Standard - ValidationModule', function () {
     this.ADDRESS2_INITIAL_BALANCE = 32n
     this.ADDRESS3_INITIAL_BALANCE = 33n
     Object.assign(this, await loadFixture(fixture))
-    this.ruleEngineMock = await ethers.deployContract('RuleEngineMock')
     this.cmtat = await deployCMTATStandalone(
       this._.address,
       this.admin.address,
@@ -27,4 +27,5 @@ describe('Standard - ValidationModule', function () {
       .mint(this.address3, this.ADDRESS3_INITIAL_BALANCE)
   })
   ValidationModuleCommon()
+  ValidationModuleCommonCore()
 })

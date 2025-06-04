@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/wrapper/extensions/MetaTxModule.sol | [object Promise] |
+| ./modules/wrapper/options/MetaTxModule.sol | [object Promise] |
 
 
 ### Contracts Description Table

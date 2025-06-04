@@ -5,24 +5,24 @@ const {
   ZERO_ADDRESS
 } = require('../utils')
 const { expect } = require('chai')
-
+// const REASON = 'BURN_TEST'
+const REASON_STRING = 'BURN_TEST'
+const REASON_EVENT = ethers.toUtf8Bytes(REASON_STRING)
+const REASON = ethers.Typed.bytes(REASON_EVENT)
+const REASON_EMPTY = ethers.Typed.bytes(ethers.toUtf8Bytes(''))
 function ERC20BurnModuleCommon () {
   context('burn', function () {
-    const INITIAL_SUPPLY = 50
-    const REASON = 'BURN_TEST'
-    const VALUE1 = 20
+    const INITIAL_SUPPLY = 50n
+    const INITIAL_SUPPLY_TYPED = ethers.Typed.uint256(50)
+    const VALUE1 = 20n
+    const VALUE_TYPED = ethers.Typed.uint256(20)
     const DIFFERENCE = INITIAL_SUPPLY - VALUE1
-
-    beforeEach(async function () {
-      await this.cmtat.connect(this.admin).mint(this.address1, INITIAL_SUPPLY)
-      expect(await this.cmtat.totalSupply()).to.equal(INITIAL_SUPPLY)
-    })
-
-    it('testCanBeBurntByAdmin', async function () {
-      // Act
+    const DIFFERENCE_TYPED = ethers.Typed.uint256(30)
+    async function testBurn (sender) {
+    // Act
       // Burn 20
       this.logs = await this.cmtat
-        .connect(this.admin)
+        .connect(sender)
         .burn(this.address1, VALUE1, REASON)
       // Assert
       // emits a Transfer event
@@ -32,7 +32,7 @@ function ERC20BurnModuleCommon () {
       // Emits a Burn event
       await expect(this.logs)
         .to.emit(this.cmtat, 'Burn')
-        .withArgs(this.address1, VALUE1, REASON)
+        .withArgs(sender, this.address1, VALUE1, REASON_EVENT)
       // Check balances and total supply
       expect(await this.cmtat.balanceOf(this.address1)).to.equal(DIFFERENCE)
       expect(await this.cmtat.totalSupply()).to.equal(DIFFERENCE)
@@ -40,7 +40,7 @@ function ERC20BurnModuleCommon () {
       // Burn 30
       // Act
       this.logs = await this.cmtat
-        .connect(this.admin)
+        .connect(sender)
         .burn(this.address1, DIFFERENCE, REASON)
 
       // Assert
@@ -51,7 +51,56 @@ function ERC20BurnModuleCommon () {
       // Emits a Burn event
       await expect(this.logs)
         .to.emit(this.cmtat, 'Burn')
-        .withArgs(this.address1, DIFFERENCE, REASON)
+        .withArgs(sender, this.address1, DIFFERENCE, REASON_EVENT)
+      // Check balances and total supply
+      expect(await this.cmtat.balanceOf(this.address1)).to.equal(0)
+      expect(await this.cmtat.totalSupply()).to.equal(0)
+    }
+
+    beforeEach(async function () {
+      await this.cmtat.connect(this.admin).mint(this.address1, INITIAL_SUPPLY)
+      expect(await this.cmtat.totalSupply()).to.equal(INITIAL_SUPPLY)
+    })
+
+    it('testCanBeBurntByAdmin', async function () {
+      const bindTest = testBurn.bind(this)
+      await bindTest(this.admin)
+    })
+
+    it('testCanBeBurntByAdminWithoutReason', async function () {
+      // Act
+      // Burn 20
+      this.logs = await this.cmtat
+        .connect(this.admin)
+        .burn(this.address1, VALUE_TYPED)
+      // Assert
+      // emits a Transfer event
+      await expect(this.logs)
+        .to.emit(this.cmtat, 'Transfer')
+        .withArgs(this.address1, ZERO_ADDRESS, VALUE1)
+      // Emits a Burn event
+      await expect(this.logs)
+        .to.emit(this.cmtat, 'Burn')
+        .withArgs(this.admin, this.address1, VALUE1, '0x')
+      // Check balances and total supply
+      expect(await this.cmtat.balanceOf(this.address1)).to.equal(DIFFERENCE)
+      expect(await this.cmtat.totalSupply()).to.equal(DIFFERENCE)
+
+      // Burn 30
+      // Act
+      this.logs = await this.cmtat
+        .connect(this.admin)
+        .burn(this.address1, DIFFERENCE_TYPED)
+
+      // Assert
+      // Emits a Transfer event
+      await expect(this.logs)
+        .to.emit(this.cmtat, 'Transfer')
+        .withArgs(this.address1, ZERO_ADDRESS, DIFFERENCE)
+      // Emits a Burn event
+      await expect(this.logs)
+        .to.emit(this.cmtat, 'Burn')
+        .withArgs(this.admin, this.address1, DIFFERENCE, '0x')
       // Check balances and total supply
       expect(await this.cmtat.balanceOf(this.address1)).to.equal(0n)
       expect(await this.cmtat.totalSupply()).to.equal(0n)
@@ -63,21 +112,8 @@ function ERC20BurnModuleCommon () {
         .connect(this.admin)
         .grantRole(BURNER_ROLE, this.address2)
       // Act
-      this.logs = await this.cmtat
-        .connect(this.address2)
-        .burn(this.address1, VALUE1, REASON)
-      // Assert
-      expect(await this.cmtat.balanceOf(this.address1)).to.equal(DIFFERENCE)
-      expect(await this.cmtat.totalSupply()).to.equal(DIFFERENCE)
-
-      // Emits a Transfer event
-      await expect(this.logs)
-        .to.emit(this.cmtat, 'Transfer')
-        .withArgs(this.address1, ZERO_ADDRESS, VALUE1)
-      // Emits a Burn event
-      await expect(this.logs)
-        .to.emit(this.cmtat, 'Burn')
-        .withArgs(this.address1, VALUE1, REASON)
+      const bindTest = testBurn.bind(this)
+      await bindTest(this.address2)
     })
 
     it('testCannotBeBurntIfBalanceExceeds', async function () {
@@ -86,7 +122,7 @@ function ERC20BurnModuleCommon () {
       const ADDRESS1_BALANCE = await this.cmtat.balanceOf(this.address1)
       // Act
       await expect(
-        this.cmtat.connect(this.admin).burn(this.address1, AMOUNT_TO_BURN, '')
+        this.cmtat.connect(this.admin).burn(this.address1, AMOUNT_TO_BURN, REASON_EMPTY)
       )
         .to.be.revertedWithCustomError(this.cmtat, 'ERC20InsufficientBalance')
         .withArgs(this.address1.address, ADDRESS1_BALANCE, AMOUNT_TO_BURN)
@@ -94,7 +130,17 @@ function ERC20BurnModuleCommon () {
 
     it('testCannotBeBurntWithoutBurnerRole', async function () {
       await expect(
-        this.cmtat.connect(this.address2).burn(this.address1, 20n, '')
+        this.cmtat.connect(this.address2).burn(this.address1, 20n, REASON_EMPTY)
+      )
+        .to.be.revertedWithCustomError(
+          this.cmtat,
+          'AccessControlUnauthorizedAccount'
+        )
+        .withArgs(this.address2.address, BURNER_ROLE)
+
+      // Without reason
+      await expect(
+        this.cmtat.connect(this.address2).burn(this.address1, 20n, REASON_EMPTY)
       )
         .to.be.revertedWithCustomError(
           this.cmtat,
@@ -102,73 +148,63 @@ function ERC20BurnModuleCommon () {
         )
         .withArgs(this.address2.address, BURNER_ROLE)
     })
-  })
 
-  context('burnFrom', function () {
-    const INITIAL_SUPPLY = 50n
-    const VALUE1 = 20n
-
-    beforeEach(async function () {
-      await this.cmtat.connect(this.admin).mint(this.address1, INITIAL_SUPPLY)
-      expect(await this.cmtat.totalSupply()).to.equal(INITIAL_SUPPLY)
-    })
-
-    it('canBeBurnFrom', async function () {
-      // Arrange
-      const AMOUNT_TO_BURN = 20n
+    it('testCannotBeMBurnIfContractIsDeactivated', async function () {
       await this.cmtat
         .connect(this.admin)
-        .grantRole(BURNER_FROM_ROLE, this.address2)
-      await this.cmtat.connect(this.address1).approve(this.address2, 50n)
-      // Act
-      this.logs = await this.cmtat
-        .connect(this.address2)
-        .burnFrom(this.address1, AMOUNT_TO_BURN)
-      // Assert
-      await expect(this.logs)
-        .to.emit(this.cmtat, 'Transfer')
-        .withArgs(this.address1, ZERO_ADDRESS, AMOUNT_TO_BURN)
-      await expect(this.logs)
-        .to.emit(this.cmtat, 'BurnFrom')
-        .withArgs(this.address1, this.address2, AMOUNT_TO_BURN)
-      expect(await this.cmtat.balanceOf(this.address1)).to.equal(30n)
-      expect(await this.cmtat.totalSupply()).to.equal(30n)
-    })
-
-    it('TestCannotBeBurnWithoutAllowance', async function () {
-      const AMOUNT_TO_BURN = 20n
+        .deactivateContract()
       await expect(
-        this.cmtat.connect(this.admin).burnFrom(this.address1, AMOUNT_TO_BURN)
-      )
-        .to.be.revertedWithCustomError(this.cmtat, 'ERC20InsufficientAllowance')
-        .withArgs(this.admin.address, 0, AMOUNT_TO_BURN)
-    })
-
-    it('testCannotBeBurntWithoutBurnerFromRole', async function () {
-      await expect(
-        this.cmtat.connect(this.address2).burnFrom(this.address1, 20n)
+        this.cmtat.connect(this.admin).burn(this.address1, VALUE_TYPED)
       )
         .to.be.revertedWithCustomError(
           this.cmtat,
-          'AccessControlUnauthorizedAccount'
+          'CMTAT_InvalidTransfer'
+        ).withArgs(this.address1, ZERO_ADDRESS, VALUE1)
+    })
+
+    it('testCanBeBurnEvenIfContractIsPaused', async function () {
+      await this.cmtat
+        .connect(this.admin)
+        .pause()
+      const bindTest = testBurn.bind(this)
+      await bindTest(this.admin)
+    })
+
+    it('testCannotBeBurnIfAddressIsFrozen', async function () {
+      // Arrange
+      await this.cmtat.connect(this.admin).setAddressFrozen(this.address1, true)
+
+      // Act
+      const VALUE = 20
+      const VALUE_TYPED = ethers.Typed.uint256(20)
+      await expect(
+        this.cmtat
+          .connect(this.admin)
+          .burn(this.address1, VALUE_TYPED)
+      )
+        .to.be.revertedWithCustomError(
+          this.cmtat,
+          'CMTAT_InvalidTransfer'
         )
-        .withArgs(this.address2.address, BURNER_FROM_ROLE)
+        .withArgs(this.address1.address, ZERO_ADDRESS, VALUE)
     })
   })
 
   context('burnAndMint', function () {
     const INITIAL_SUPPLY = 50n
     const VALUE1 = 20n
-
+    const REASON_STRING_LOCAL = 'recovery'
+    const REASON_EVENT_LOCAL = ethers.toUtf8Bytes(REASON_STRING_LOCAL)
+    const REASON = ethers.Typed.bytes(REASON_EVENT_LOCAL)
+    const AMOUNT_TO_BURN = 20n
+    const AMOUNT_TO_MINT = 15n
     beforeEach(async function () {
       await this.cmtat.connect(this.admin).mint(this.address1, INITIAL_SUPPLY)
       expect(await this.cmtat.totalSupply()).to.equal(INITIAL_SUPPLY)
     })
 
-    it('canBeBurnAndMit', async function () {
+    it('testCanBurnAndMint', async function () {
       // Arrange
-      const AMOUNT_TO_BURN = 20n
-      const AMOUNT_TO_MINT = 15n
       await this.cmtat
         .connect(this.admin)
         .grantRole(BURNER_ROLE, this.address2)
@@ -183,7 +219,7 @@ function ERC20BurnModuleCommon () {
           this.address3,
           AMOUNT_TO_BURN,
           AMOUNT_TO_MINT,
-          'recovery'
+          REASON
         )
       // Assert
       await expect(this.logs)
@@ -196,11 +232,11 @@ function ERC20BurnModuleCommon () {
 
       await expect(this.logs)
         .to.emit(this.cmtat, 'Burn')
-        .withArgs(this.address1, AMOUNT_TO_BURN, 'recovery')
+        .withArgs(this.address2, this.address1, AMOUNT_TO_BURN, REASON_EVENT_LOCAL)
 
       await expect(this.logs)
         .to.emit(this.cmtat, 'Mint')
-        .withArgs(this.address3, AMOUNT_TO_MINT)
+        .withArgs(this.address2, this.address3, AMOUNT_TO_MINT, REASON_EVENT_LOCAL)
 
       expect(await this.cmtat.balanceOf(this.address1)).to.equal(
         INITIAL_SUPPLY - AMOUNT_TO_BURN
@@ -213,10 +249,8 @@ function ERC20BurnModuleCommon () {
       )
     })
 
-    it('canBeBurnAndMintWithoutMinterRole', async function () {
+    it('testCannotBurnAndMintWithoutMinterRole', async function () {
       // Arrange
-      const AMOUNT_TO_BURN = 20n
-      const AMOUNT_TO_MINT = 15n
       await this.cmtat
         .connect(this.admin)
         .grantRole(BURNER_ROLE, this.address2)
@@ -229,7 +263,7 @@ function ERC20BurnModuleCommon () {
             this.address3,
             AMOUNT_TO_BURN,
             AMOUNT_TO_MINT,
-            'recovery'
+            REASON
           )
       )
         .to.be.revertedWithCustomError(
@@ -239,10 +273,9 @@ function ERC20BurnModuleCommon () {
         .withArgs(this.address2.address, MINTER_ROLE)
     })
 
-    it('canBeBurnAndMintWithoutBurnerRole', async function () {
+    it('testCannotBurnAndMintWithoutBurnerRole', async function () {
       // Arrange
-      const AMOUNT_TO_BURN = 20n
-      const AMOUNT_TO_MINT = 15n
+
       await this.cmtat
         .connect(this.admin)
         .grantRole(MINTER_ROLE, this.address2)
@@ -255,7 +288,7 @@ function ERC20BurnModuleCommon () {
             this.address3,
             AMOUNT_TO_BURN,
             AMOUNT_TO_MINT,
-            'recovery'
+            REASON
           )
       )
         .to.be.revertedWithCustomError(
@@ -264,10 +297,44 @@ function ERC20BurnModuleCommon () {
         )
         .withArgs(this.address2.address, BURNER_ROLE)
     })
+
+    it('testCannotBeBurnAndMintIfContractIsDeactivated', async function () {
+      await this.cmtat
+        .connect(this.admin)
+        .deactivateContract()
+      await this.cmtat.connect(this.address1).approve(this.admin, 50n)
+      await expect(
+        this.cmtat.connect(this.admin).burnAndMint(
+          this.address1,
+          this.address3,
+          AMOUNT_TO_BURN,
+          AMOUNT_TO_MINT,
+          REASON
+        )
+      )
+        .to.be.revertedWithCustomError(
+          this.cmtat,
+          'CMTAT_InvalidTransfer'
+        ).withArgs(this.address1, ZERO_ADDRESS, AMOUNT_TO_BURN)
+    })
+
+    it('testCanBeBurnAndMintEvenIFContractIsPaused', async function () {
+      // Arrange
+      await this.cmtat
+        .connect(this.admin)
+        .pause()
+      await
+      this.cmtat.connect(this.admin).burnAndMint(
+        this.address1,
+        this.address3,
+        AMOUNT_TO_BURN,
+        AMOUNT_TO_MINT,
+        REASON
+      )
+    })
   })
 
-  context('burnBatch', function () {
-    const REASON = 'BURN_TEST'
+  context('batchBurn', function () {
     const TOKEN_SUPPLY_BY_HOLDERS = [10, 100, 1000]
     const INITIAL_SUPPLY = TOKEN_SUPPLY_BY_HOLDERS.reduce((a, b) => {
       return a + b
@@ -284,21 +351,13 @@ function ERC20BurnModuleCommon () {
         return a + b
       })
 
-    beforeEach(async function () {
-      const TOKEN_HOLDER = [this.admin, this.address1, this.address2];
-      ({ logs: this.logs1 } = await this.cmtat
-        .connect(this.admin)
-        .mintBatch(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS))
-      expect(await this.cmtat.totalSupply()).to.equal(INITIAL_SUPPLY)
-    })
-
-    it('testCanBeBurntBatchByAdmin', async function () {
+    async function testBatchBurn (sender) {
       const TOKEN_HOLDER = [this.admin, this.address1, this.address2]
       // Act
       // Burn
       this.logs = await this.cmtat
-        .connect(this.admin)
-        .burnBatch(TOKEN_HOLDER, TOKEN_BY_HOLDERS_TO_BURN, REASON)
+        .connect(sender)
+        .batchBurn(TOKEN_HOLDER, TOKEN_BY_HOLDERS_TO_BURN, REASON)
       // Assert
       // emits a Transfer event
       // Assert event
@@ -309,13 +368,10 @@ function ERC20BurnModuleCommon () {
           .to.emit(this.cmtat, 'Transfer')
           .withArgs(TOKEN_HOLDER[i], ZERO_ADDRESS, TOKEN_BY_HOLDERS_TO_BURN[i])
       }
-
-      for (let i = 0; i < TOKEN_HOLDER.length; ++i) {
-        // emits a Burn event
-        await expect(this.logs)
-          .to.emit(this.cmtat, 'Burn')
-          .withArgs(TOKEN_HOLDER[i], TOKEN_BY_HOLDERS_TO_BURN[i], REASON)
-      }
+      // emits a Burn event
+      await expect(this.logs)
+        .to.emit(this.cmtat, 'BatchBurn')
+        .withArgs(sender, TOKEN_HOLDER, TOKEN_BY_HOLDERS_TO_BURN, REASON_EVENT)
       // Check balances and total supply
       // Assert
       for (let i = 0; i < TOKEN_HOLDER.length; ++i) {
@@ -325,6 +381,68 @@ function ERC20BurnModuleCommon () {
       }
 
       expect(await this.cmtat.totalSupply()).to.equal(TOTAL_SUPPLY_AFTER_BURN)
+    }
+
+    async function testBatchBurnWithoutReason (sender) {
+      const TOKEN_HOLDER = [this.admin, this.address1, this.address2]
+      // Act
+      // Burn
+      this.logs = await this.cmtat
+        .connect(sender)
+        .batchBurn(TOKEN_HOLDER, TOKEN_BY_HOLDERS_TO_BURN)
+      // Assert
+      // emits a Transfer event
+      // Assert event
+      // emits a Transfer event
+      for (let i = 0; i < TOKEN_HOLDER.length; ++i) {
+        // emits a Transfer event
+        await expect(this.logs)
+          .to.emit(this.cmtat, 'Transfer')
+          .withArgs(TOKEN_HOLDER[i], ZERO_ADDRESS, TOKEN_BY_HOLDERS_TO_BURN[i])
+      }
+      // emits a Burn event
+      await expect(this.logs)
+        .to.emit(this.cmtat, 'BatchBurn')
+        .withArgs(sender, TOKEN_HOLDER, TOKEN_BY_HOLDERS_TO_BURN, '0x')
+      // Check balances and total supply
+      // Assert
+      for (let i = 0; i < TOKEN_HOLDER.length; ++i) {
+        expect(await this.cmtat.balanceOf(TOKEN_HOLDER[i])).to.equal(
+          TOKEN_BALANCE_BY_HOLDERS_AFTER_BURN[i]
+        )
+      }
+
+      expect(await this.cmtat.totalSupply()).to.equal(TOTAL_SUPPLY_AFTER_BURN)
+    }
+
+    beforeEach(async function () {
+      const TOKEN_HOLDER = [this.admin, this.address1, this.address2];
+      ({ logs: this.logs1 } = await this.cmtat
+        .connect(this.admin)
+        .batchMint(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS))
+      expect(await this.cmtat.totalSupply()).to.equal(INITIAL_SUPPLY)
+    })
+
+    it('testCanBeBurntBatchByAdmin', async function () {
+      const bindTest = testBatchBurn.bind(this)
+      await bindTest(this.admin)
+    })
+
+    it('testCanBeBurntBatchByAdminWithoutReason', async function () {
+      const bindTest = testBatchBurnWithoutReason.bind(this)
+      await bindTest(this.admin)
+    })
+
+    it('testCanBeBurntBatchByBurnerRoleWithoutReason', async function () {
+      const TOKEN_HOLDER = [this.admin, this.address1, this.address2]
+      // Arrange
+      await this.cmtat
+        .connect(this.admin)
+        .grantRole(BURNER_ROLE, this.address2)
+
+      // Act
+      const bindTest = testBatchBurnWithoutReason.bind(this)
+      await bindTest(this.address2)
     })
 
     it('testCanBeBurntBatchByBurnerRole', async function () {
@@ -335,36 +453,8 @@ function ERC20BurnModuleCommon () {
         .grantRole(BURNER_ROLE, this.address2)
 
       // Act
-      // Burn
-      this.logs = await this.cmtat
-        .connect(this.address2)
-        .burnBatch(TOKEN_HOLDER, TOKEN_BY_HOLDERS_TO_BURN, REASON)
-
-      // Assert
-      // emits a Transfer event
-      for (let i = 0; i < TOKEN_HOLDER.length; ++i) {
-        // emits a  transfer  event
-        await expect(this.logs)
-          .to.emit(this.cmtat, 'Transfer')
-          .withArgs(TOKEN_HOLDER[i], ZERO_ADDRESS, TOKEN_BY_HOLDERS_TO_BURN[i])
-      }
-
-      for (let i = 0; i < TOKEN_HOLDER.length; ++i) {
-        // emits a burn
-
-        await expect(this.logs)
-          .to.emit(this.cmtat, 'Burn')
-          .withArgs(TOKEN_HOLDER[i], TOKEN_BY_HOLDERS_TO_BURN[i], REASON)
-      }
-      // Check balances and total supply
-      // Assert
-      for (let i = 0; i < TOKEN_HOLDER.length; ++i) {
-        expect(await this.cmtat.balanceOf(TOKEN_HOLDER[i])).to.equal(
-          TOKEN_BALANCE_BY_HOLDERS_AFTER_BURN[i]
-        )
-      }
-
-      expect(await this.cmtat.totalSupply()).to.equal(TOTAL_SUPPLY_AFTER_BURN)
+      const bindTest = testBatchBurn.bind(this)
+      await bindTest(this.address2)
     })
 
     it('testCannotBeBurntBatchIfOneBalanceExceeds', async function () {
@@ -375,7 +465,7 @@ function ERC20BurnModuleCommon () {
       await expect(
         this.cmtat
           .connect(this.admin)
-          .burnBatch(TOKEN_HOLDER, TOKEN_BY_HOLDERS_TO_BURN_FAIL, '')
+          .batchBurn(TOKEN_HOLDER, TOKEN_BY_HOLDERS_TO_BURN_FAIL, REASON_EMPTY)
       )
         .to.be.revertedWithCustomError(this.cmtat, 'ERC20InsufficientBalance')
         .withArgs(
@@ -390,7 +480,7 @@ function ERC20BurnModuleCommon () {
       await expect(
         this.cmtat
           .connect(this.address2)
-          .burnBatch(TOKEN_HOLDER, TOKEN_BY_HOLDERS_TO_BURN, '')
+          .batchBurn(TOKEN_HOLDER, TOKEN_BY_HOLDERS_TO_BURN, REASON_EMPTY)
       )
         .to.be.revertedWithCustomError(
           this.cmtat,
@@ -399,20 +489,20 @@ function ERC20BurnModuleCommon () {
         .withArgs(this.address2.address, BURNER_ROLE)
     })
 
-    it('testCannotburnBatchIfLengthMismatchMissingAddresses', async function () {
+    it('testCannotBatchBurnIfLengthMismatchMissingAddresses', async function () {
       // Number of addresses is insufficient
       const TOKEN_HOLDER_INVALID = [this.admin, this.address1]
       await expect(
         this.cmtat
           .connect(this.admin)
-          .burnBatch(TOKEN_HOLDER_INVALID, TOKEN_BY_HOLDERS_TO_BURN, REASON)
+          .batchBurn(TOKEN_HOLDER_INVALID, TOKEN_BY_HOLDERS_TO_BURN, REASON_EMPTY)
       ).to.be.revertedWithCustomError(
         this.cmtat,
         'CMTAT_BurnModule_AccountsValueslengthMismatch'
       )
     })
 
-    it('testCannotburnBatchIfLengthMismatchTooManyAddresses', async function () {
+    it('testCannotBatchBurnIfLengthMismatchTooManyAddresses', async function () {
       // There are too many addresses
       const TOKEN_HOLDER_INVALID = [
         this.admin,
@@ -423,19 +513,19 @@ function ERC20BurnModuleCommon () {
       await expect(
         this.cmtat
           .connect(this.admin)
-          .burnBatch(TOKEN_HOLDER_INVALID, TOKEN_BY_HOLDERS_TO_BURN, REASON)
+          .batchBurn(TOKEN_HOLDER_INVALID, TOKEN_BY_HOLDERS_TO_BURN, REASON_EMPTY)
       ).to.be.revertedWithCustomError(
         this.cmtat,
         'CMTAT_BurnModule_AccountsValueslengthMismatch'
       )
     })
 
-    it('testCannotburnBatchIfAccountsIsEmpty', async function () {
+    it('testCannotBatchBurnIfAccountsIsEmpty', async function () {
       const TOKEN_ADDRESS_TOS_INVALID = []
       await expect(
         this.cmtat
           .connect(this.admin)
-          .burnBatch(
+          .batchBurn(
             TOKEN_ADDRESS_TOS_INVALID,
             TOKEN_BY_HOLDERS_TO_BURN,
             REASON

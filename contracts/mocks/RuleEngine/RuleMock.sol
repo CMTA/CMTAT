@@ -2,15 +2,15 @@
 
 pragma solidity ^0.8.20;
 
-import "./interfaces/IRule.sol";
-import "./CodeList.sol";
+import {IRule} from "./interfaces/IRule.sol";
+import {CodeList} from "./CodeList.sol";
 
 
 /*
 * @title a mock for testing, not suitable for production
 */
 contract RuleMock is IRule, CodeList {
-    function validateTransfer(
+    function canTransfer(
         address _from,
         address _to,
         uint256 _amount
@@ -22,14 +22,18 @@ contract RuleMock is IRule, CodeList {
     * @dev 20 the limit of the maximum amount
     */
     function detectTransferRestriction(
-        address /* _from */,
+        address _from,
         address /* _to */,
         uint256 _amount
     ) public pure override returns (uint8) {
-        return
-            _amount < 20
+        if(_from != address(0)){
+             return  _amount < 20
                 ? uint8(REJECTED_CODE_BASE.TRANSFER_OK)
                 : AMOUNT_TOO_HIGH;
+        } else{
+            return uint8(REJECTED_CODE_BASE.TRANSFER_OK);
+        }
+         
     }
 
     function canReturnTransferRestrictionCode(

@@ -6,14 +6,15 @@ const UpgradeProxyCommon = require('./UpgradeProxyCommon')
 const {
   DEPLOYMENT_DECIMAL,
   fixture,
-  loadFixture
+  loadFixture,
+  TERMS
 } = require('../../deploymentUtils')
 describe('CMTAT with UUPS Proxy', function () {
   beforeEach(async function () {
     Object.assign(this, await loadFixture(fixture))
 
     // Deploy the implementation contract
-    CMTAT_PROXY_FACTORY = await ethers.getContractFactory('CMTAT_PROXY_UUPS')
+    CMTAT_PROXY_FACTORY = await ethers.getContractFactory('CMTATUpgradeableUUPS')
     this.CMTAT_PROXY_TestFactory = await ethers.getContractFactory(
       'CMTAT_PROXY_TEST_UUPS'
     )
@@ -23,8 +24,8 @@ describe('CMTAT with UUPS Proxy', function () {
       [
         this.admin.address,
         ['CMTA Token', 'CMTAT', DEPLOYMENT_DECIMAL],
-        ['CMTAT_ISIN', 'https://cmta.ch', 'CMTAT_info'],
-        [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]
+        ['CMTAT_ISIN', TERMS, 'CMTAT_info'],
+        [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]
       ],
       {
         initializer: 'initialize',

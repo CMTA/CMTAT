@@ -18,6 +18,110 @@ Please follow <https://changelog.md/> conventions.
   
   - Update changelog
 
+## 3.0.0-rc.2
+
+- Deployment version
+  - Add CMTAT Allowlist (Whitelist) version
+  - Add CMTAT debt version
+    - Which means that `CMTATStandalone` and `CMTATUpgradeable`  no longer included  `DebtModule` and `DebtEngineModule`
+- Rename `forceBurn`in `forcedBurn`to use the same semantic as ERC-3643 `forcedTransfer`
+- Rename `balanceInfo`in `batchBalanceOf` to use the same semantic as ERC-3643 `batchBurn`and `batchMint`
+- Add several new interfaces for module, see interfaces/modules
+- Add a parameter `burner`and `minter`in the events Mint & Burn (ERC20MintModule / ERC20BurnModule)
+- Improve documentation & tests
+
+## 3.0.0-rc.1
+
+- Move `MetaTx` module to the option folder
+- Improve documentation
+
+## 3.0.0-rc.0
+
+The main goal of this version since the last version 2.3.0 is:
+
+- Add support for several new ERC standard (ERC-1363, ERC-1643, ERC-7802, ...)
+  - Better compliance with the German law by implementing [ERC-7551](https://ethereum-magicians.org/t/erc-7551-crypto-security-token-smart-contract-interface-ewpg/16416)
+  - Standardize several functions with ERC-3643
+  - Payable token with the support of [ERC-1363](https://eips.ethereum.org/EIPS/eip-1363)  (specific deployment version)
+  - Available from the previous version:
+    - [UUPS](https://eips.ethereum.org/EIPS/eip-1822) proxy support (specific deployment version)
+    - Document management with [ERC-1643](https://github.com/ethereum/eips/issues/1643) (requires DocumentEngine)
+    - Better storage management for upgradeable contract with [ERC-7201](https://eips.ethereum.org/EIPS/eip-7201)
+- Optimize contract call (batch function)
+- Be updated with the latest library (solidity & OpenZeppelin) and code practice
+
+- There are also seven variation of the CMTAT for deployment:
+  - CMTAT Proxy and standalone
+  - CMTAT for ERC-1363 (proxy and standalone)
+  - CMTAT for deployment with UUPS proxy
+  - CMTAT light version (only main core modules)
+
+### ValidationModule
+
+- Separate logic in  several contracts:
+  - ValidationModule (controllrs)
+  - ValidationModuleCore (core)
+  - ValidationModuleRuleEngineInternal (internal)
+  - ValidationModuleRuleEngine (extensions)
+  - ValidationModuleERC1404 (extensions)
+
+### Core module
+
+- ERC20BaseModule
+  - Add function to update ERC20 Symbol and Name
+
+- MintModule
+  - Add function `batchTransfer`
+- BaseModule: 
+  - Keep only the VERSION variable, move the rest to `ExtraInformationModule` 
+  - Add [ERC-3643](https://eips.ethereum.org/EIPS/eip-3643) function `version`
+
+### Extensions
+
+- Update `DocumentModule` to use a struct
+- ERC20EnforcementModule: 
+  - Add function`enforceTransfer` (forceTransfer)
+- ExtraInformationModule
+  - Terms are represented as document (name, hash, uri, last on-chain modification date).
+  - Add [ERC-7551](https://ethereum-magicians.org/t/erc-7551-crypto-security-token-smart-contract-interface-ewpg/16416) function `setMetaData`
+
+### Options
+
+- Create `DebtEngineModule`
+- Create `ERC20CrossChain`module, which implements  `IERC7802`([ERC-7802](https://eips.ethereum.org/EIPS/eip-7802))
+
+### Deployment
+
+- Add deployment version for [ERC-1363](https://eips.ethereum.org/EIPS/eip-1363)
+- Add light deployment with only core modules
+- Create a separate directory for factory contract. See [CMTATFactory](https://github.com/CMTA/CMTATFactory)
+
+### Base contract
+
+Add several base contracts to build the different deployment version:
+
+- CMTATBase for CMTATStandalone/Upgradeable/UUPS
+- CMTATBaseERC1363 for ERC-1363
+- CMTATBaseCore for light deployment
+- CMTATBaseGeneric to build non-ERC20 contracts (e.g ERC-721)
+
+### Engine
+
+- AuthorizationModule: Remove `AuthorizationEngine`
+- SnapshotEngineModule: Add `SnapshotEngine` instead of `snapshotModule`. See also [SnapshotEngine](https://github.com/CMTA/SnapshotEngine)
+- DebtEngine:  Engine configured in an option module 
+
+### Technical
+
+Library
+
+- Update solidity to version 0.8.28
+- Update OpenZeppelin to version 5.3.0
+
+Technical details:
+
+- Revert with custom error
+
 ## 2.5.1 - 20241003
 
 - Beacon Factory: deploy an implementation inside the constructor if no implementation is provided

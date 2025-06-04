@@ -1,9 +1,14 @@
 const { expect } = require('chai')
-const { DEFAULT_ADMIN_ROLE } = require('../../utils')
+const { DEFAULT_ADMIN_ROLE, ZERO_ADDRESS } = require('../../utils')
 
 function ValidationModuleSetRuleEngineCommon () {
   context('RuleEngineSetTest', function () {
+    beforeEach(async function () {
+      this.ruleEngineMock = await ethers.deployContract('RuleEngineMock', [this.admin])
+    })
     it('testCanBeSetByAdmin', async function () {
+      // Assert
+      expect(await this.cmtat.ruleEngine()).to.equal(ZERO_ADDRESS)
       // Act
       this.logs = await this.cmtat
         .connect(this.admin)
@@ -13,6 +18,7 @@ function ValidationModuleSetRuleEngineCommon () {
       await expect(this.logs)
         .to.emit(this.cmtat, 'RuleEngine')
         .withArgs(this.ruleEngine)
+      expect(await this.cmtat.ruleEngine()).to.equal(this.ruleEngine)
     })
 
     it('testCanNotBeSetByAdminWithTheSameValue', async function () {
@@ -42,7 +48,7 @@ function ValidationModuleSetRuleEngineCommon () {
     it('testCanReturnMessageWithNoRuleEngine&UnknownRestrictionCode', async function () {
       // Act + Assert
       expect(await this.cmtat.messageForTransferRestriction(254)).to.equal(
-        'Unknown code'
+        'UnknownCode'
       )
     })
 

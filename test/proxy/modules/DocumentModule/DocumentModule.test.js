@@ -5,7 +5,7 @@ const {
   fixture,
   loadFixture
 } = require('../../../deploymentUtils')
-describe('Standard - DocumentModule', function () {
+describe('Proxy - DocumentModule', function () {
   beforeEach(async function () {
     Object.assign(this, await loadFixture(fixture))
     this.cmtat = await deployCMTATProxy(
@@ -13,7 +13,6 @@ describe('Standard - DocumentModule', function () {
       this.admin.address,
       this.deployerAddress.address
     )
-    this.documentEngineMock = await ethers.deployContract('DocumentEngineMock')
   })
   DocumentModuleCommon()
   DocumentModuleSetDocumentEngineCommon()

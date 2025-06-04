@@ -1,32 +1,34 @@
 const { expect } = require('chai')
-const { ZERO_ADDRESS } = require('../../utils')
-
+const { ZERO_ADDRESS, DEBT_ROLE } = require('../../utils')
 function DebtModuleCommon () {
-  context('Debt Engine test', function () {
+  context('Debt Module test', function () {
     let debtBase, creditEvents
 
     beforeEach(async function () {
-      if ((await this.cmtat.debtEngine()) === ZERO_ADDRESS) {
-        this.debtEngineMock = await ethers.deployContract('DebtEngineMock')
-        await this.cmtat
-          .connect(this.admin)
-          .setDebtEngine(this.debtEngineMock.target)
+      debtIdentifier = {
+        issuerName: 'CMTA',
+        issuerDescription: 'Capital Market',
+        guarantor: 'Guarantor A',
+        debtHolder: 'debtHolder A'
       }
-      debtBase = {
+      debtInstrument = {
         interestRate: 500, // Example: 5.00%
         parValue: 1000000, // Example: 1,000,000
-        guarantor: 'Guarantor A',
-        bondHolder: 'BondHolder A',
+        minimumDenomination: 200,
         maturityDate: '2025-12-31',
         interestScheduleFormat: 'Semi-Annual',
         interestPaymentDate: '2024-06-30',
         dayCountConvention: '30/360',
         businessDayConvention: 'Following',
-        publicHolidaysCalendar: 'US',
         issuanceDate: '2024-01-01',
-        couponFrequency: 'Semi-Annual'
+        couponPaymentFrequency: 'Semi-Annual',
+        currencyContract: ethers.Typed.address('0x000000000000000000000000000000000000dEaD'),
+        currency: 'USDC'
       }
-
+      debtBase = {
+        debtIdentifier,
+        debtInstrument
+      }
       creditEvents = {
         flagDefault: false,
         flagRedeemed: false,
@@ -34,46 +36,75 @@ function DebtModuleCommon () {
       }
     })
 
-    it('testCanReturnTheRightAddressIfSet', async function () {
-      if (this.definedAtDeployment) {
-        expect(this.debtEngineMock.target).to.equal(
-          await this.cmtat.debtEngine()
-        )
-      }
-    })
-
     it('testCanSetAndGetDebtCorrectly', async function () {
-      await this.debtEngineMock.setDebt(debtBase)
+      this.logs = await this.cmtat.connect(this.admin).setDebt(debtBase)
+      await expect(this.logs)
+        .to.emit(this.cmtat, 'Debt')
       const debt = await this.cmtat.debt()
 
-      expect(debt.interestRate).to.equal(debtBase.interestRate)
-      expect(debt.parValue).to.equal(debtBase.parValue)
-      expect(debt.guarantor).to.equal(debtBase.guarantor)
-      expect(debt.bondHolder).to.equal(debtBase.bondHolder)
-      expect(debt.maturityDate).to.equal(debtBase.maturityDate)
-      expect(debt.interestScheduleFormat).to.equal(
-        debtBase.interestScheduleFormat
+      // debt identifier
+      expect(debt.debtIdentifier.issuerName).to.equal(debtBase.debtIdentifier.issuerName)
+      expect(debt.debtIdentifier.issuerDescription).to.equal(debtBase.debtIdentifier.issuerDescription)
+      expect(debt.debtIdentifier.guarantor).to.equal(debtBase.debtIdentifier.guarantor)
+      expect(debt.debtIdentifier.debtHolder).to.equal(debtBase.debtIdentifier.debtHolder)
+      // debt instrument
+      expect(debt.debtInstrument.interestRate).to.equal(debtBase.debtInstrument.interestRate)
+      expect(debt.debtInstrument.parValue).to.equal(debtBase.debtInstrument.parValue)
+      expect(debt.debtInstrument.minimumDenomination).to.equal(debtBase.debtInstrument.minimumDenomination)
+      expect(debt.debtInstrument.maturityDate).to.equal(debtBase.debtInstrument.maturityDate)
+      expect(debt.debtInstrument.interestScheduleFormat).to.equal(
+        debtBase.debtInstrument.interestScheduleFormat
       )
-      expect(debt.interestPaymentDate).to.equal(debtBase.interestPaymentDate)
-      expect(debt.dayCountConvention).to.equal(debtBase.dayCountConvention)
-      expect(debt.businessDayConvention).to.equal(
-        debtBase.businessDayConvention
+      expect(debt.debtInstrument.interestPaymentDate).to.equal(debtBase.debtInstrument.interestPaymentDate)
+      expect(debt.debtInstrument.dayCountConvention).to.equal(debtBase.debtInstrument.dayCountConvention)
+      expect(debt.debtInstrument.businessDayConvention).to.equal(
+        debtBase.debtInstrument.businessDayConvention
       )
-      expect(debt.publicHolidaysCalendar).to.equal(
-        debtBase.publicHolidaysCalendar
-      )
-      expect(debt.issuanceDate).to.equal(debtBase.issuanceDate)
-      expect(debt.couponFrequency).to.equal(debtBase.couponFrequency)
+      expect(debt.debtInstrument.issuanceDate).to.equal(debtBase.debtInstrument.issuanceDate)
+      expect(debt.debtInstrument.couponPaymentFrequency).to.equal(debtBase.debtInstrument.couponPaymentFrequency)
     })
 
-    it('testCanSetAndGetCreditEventsCorrectly', async function () {
-      await this.debtEngineMock.setCreditEvents(creditEvents)
+    it('testCanSetAndGetDebtInstrumentCorrectly', async function () {
+      this.logs = await this.cmtat.connect(this.admin).setDebtInstrument(debtBase.debtInstrument)
+      await expect(this.logs)
+        .to.emit(this.cmtat, 'DebtInstrumentEvent')
+      const debt = await this.cmtat.debt()
+      // debt instrument
+      expect(debt.debtInstrument.interestRate).to.equal(debtBase.debtInstrument.interestRate)
+      expect(debt.debtInstrument.parValue).to.equal(debtBase.debtInstrument.parValue)
+      expect(debt.debtInstrument.minimumDenomination).to.equal(debtBase.debtInstrument.minimumDenomination)
+      expect(debt.debtInstrument.maturityDate).to.equal(debtBase.debtInstrument.maturityDate)
+      expect(debt.debtInstrument.interestScheduleFormat).to.equal(
+        debtBase.debtInstrument.interestScheduleFormat
+      )
+      expect(debt.debtInstrument.interestPaymentDate).to.equal(debtBase.debtInstrument.interestPaymentDate)
+      expect(debt.debtInstrument.dayCountConvention).to.equal(debtBase.debtInstrument.dayCountConvention)
+      expect(debt.debtInstrument.businessDayConvention).to.equal(
+        debtBase.debtInstrument.businessDayConvention
+      )
+      expect(debt.debtInstrument.issuanceDate).to.equal(debtBase.debtInstrument.issuanceDate)
+      expect(debt.debtInstrument.couponPaymentFrequency).to.equal(debtBase.debtInstrument.couponPaymentFrequency)
+    })
 
-      const events = await this.cmtat.creditEvents()
+    it('testCannotBeSetDebtWithoutDebtRole', async function () {
+      await expect(
+        this.cmtat.connect(this.address2).setDebtInstrument(debtBase.debtInstrument)
+      )
+        .to.be.revertedWithCustomError(
+          this.cmtat,
+          'AccessControlUnauthorizedAccount'
+        )
+        .withArgs(this.address2.address, DEBT_ROLE)
 
-      expect(events.flagDefault).to.equal(creditEvents.flagDefault)
-      expect(events.flagRedeemed).to.equal(creditEvents.flagRedeemed)
-      expect(events.rating).to.equal(creditEvents.rating)
+      // Without reason
+      await expect(
+        this.cmtat.connect(this.address2).setDebt(debtBase)
+      )
+        .to.be.revertedWithCustomError(
+          this.cmtat,
+          'AccessControlUnauthorizedAccount'
+        )
+        .withArgs(this.address2.address, DEBT_ROLE)
     })
   })
 }

@@ -2,10 +2,9 @@
 
 pragma solidity ^0.8.20;
 
-import "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
-import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
-
+import {ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
+import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import {EnforcementModuleLibrary} from "./common/EnforcementModuleLibrary.sol";
 /**
  * @dev Enforcement module.
  *
@@ -15,101 +14,45 @@ abstract contract EnforcementModuleInternal is
     Initializable,
     ContextUpgradeable
 {
-    /* ============ Events ============ */
-    /**
-     * @notice Emitted when an address is frozen.
-     */
-    event Freeze(
-        address indexed enforcer,
-        address indexed owner,
-        string indexed reasonIndexed,
-        string reason
-    );
-
-    /**
-     * @notice Emitted when an address is unfrozen.
-     */
-    event Unfreeze(
-        address indexed enforcer,
-        address indexed owner,
-        string indexed reasonIndexed,
-        string reason
-    );
-
-     /* ============ ERC-7201 ============ */
+    /* ============ ERC-7201 ============ */
     // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.EnforcementModuleInternal")) - 1)) & ~bytes32(uint256(0xff))
     bytes32 private constant EnforcementModuleInternalStorageLocation = 0x0c7bc8a17be064111d299d7669f49519cb26c58611b72d9f6ccc40a1e1184e00;
-    
 
     /* ==== ERC-7201 State Variables === */
     struct EnforcementModuleInternalStorage {
-        mapping(address => bool) _frozen;
-    }
-
-
-    /*//////////////////////////////////////////////////////////////
-                         INITIALIZER FUNCTION
-    //////////////////////////////////////////////////////////////*/
-    function __Enforcement_init_unchained() internal onlyInitializing {
-        // no variable to initialize
-    }
-
-    /*//////////////////////////////////////////////////////////////
-                            PUBLIC/EXTERNAL FUNCTIONS
-    //////////////////////////////////////////////////////////////*/
-
-    /**
-     * @dev Returns true if the account is frozen, and false otherwise.
-     */
-    function frozen(address account) public view virtual returns (bool) {
-        EnforcementModuleInternalStorage storage $ = _getEnforcementModuleInternalStorage();
-        return $._frozen[account];
+        mapping(address => bool)_list;
     }
 
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
-
-    /**
-     * @dev Freezes an address.
-     * @param account the account to freeze
-     * @param reason indicate why the account was frozen.
-     *
-     */
-    function _freeze(
-        address account,
-        string calldata reason
-    ) internal virtual returns (bool) {
+    function _addAddressToTheList(address account, bool status, bytes memory data) internal virtual{
         EnforcementModuleInternalStorage storage $ = _getEnforcementModuleInternalStorage();
-        if ($._frozen[account]) {
-            return false;
+        _addAddressToTheList($, account, status, data);
+    }
+
+    function _addAddressToTheList(EnforcementModuleInternalStorage storage $,address account, bool status, bytes memory /*data */) internal virtual{
+        $._list[account] = status;
+    }
+
+  function _addAddressesToTheList(address[] calldata accounts, bool[] calldata status, bytes memory data) internal virtual{
+        EnforcementModuleLibrary._checkInput(accounts, status);
+        EnforcementModuleInternalStorage storage $ = _getEnforcementModuleInternalStorage();
+        for (uint256 i = 0; i < accounts.length; ++i) {
+            _addAddressToTheList($, accounts[i], status[i], data);
         }
-        $._frozen[account] = true;
-        emit Freeze(_msgSender(), account, reason, reason);
-        return true;
     }
 
     /**
-     * @dev Unfreezes an address.
-     * @param account the account to unfreeze
-     * @param reason indicate why the account was unfrozen.
+     * @dev Returns true if the account is frozen, and false otherwise.
      */
-    function _unfreeze(
-        address account,
-        string calldata reason
-    ) internal virtual returns (bool) {
+    function _addressIsListed(address account) internal view virtual returns (bool) {
         EnforcementModuleInternalStorage storage $ = _getEnforcementModuleInternalStorage();
-        if (!$._frozen[account]) {
-            return false;
-        }
-        $._frozen[account] = false;
-        emit Unfreeze(_msgSender(), account, reason, reason);
-
-        return true;
+        return $._list[account];
     }
 
     /* ============ ERC-7201 ============ */
-    function _getEnforcementModuleInternalStorage() private pure returns (EnforcementModuleInternalStorage storage $) {
+    function _getEnforcementModuleInternalStorage() internal pure returns (EnforcementModuleInternalStorage storage $) {
         assembly {
             $.slot := EnforcementModuleInternalStorageLocation
         }

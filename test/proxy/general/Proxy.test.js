@@ -1,11 +1,12 @@
 const { expect } = require('chai')
-const { DEFAULT_ADMIN_ROLE, PAUSER_ROLE } = require('../../utils')
+const { PAUSER_ROLE } = require('../../utils')
 const { ZERO_ADDRESS } = require('../../utils')
 const {
   deployCMTATProxy,
   fixture,
   loadFixture,
-  DEPLOYMENT_DECIMAL
+  DEPLOYMENT_DECIMAL,
+  TERMS
 } = require('../../deploymentUtils')
 const { upgrades } = require('hardhat')
 describe('Proxy - Security Test', function () {
@@ -20,7 +21,7 @@ describe('Proxy - Security Test', function () {
     const implementationContractAddress =
       await upgrades.erc1967.getImplementationAddress(this.CMTAT_PROXY.target)
 
-    const MyContract = await ethers.getContractFactory('CMTAT_PROXY')
+    const MyContract = await ethers.getContractFactory('CMTATUpgradeable')
     this.implementationContract = MyContract.attach(
       implementationContractAddress
     )
@@ -35,8 +36,8 @@ describe('Proxy - Security Test', function () {
           .initialize(
             this.attacker,
             ['CMTA Token', 'CMTAT', DEPLOYMENT_DECIMAL],
-            ['CMTAT_ISIN', 'https://cmta.ch', 'CMTAT_info'],
-            [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]
+            ['CMTAT_ISIN', TERMS, 'CMTAT_info'],
+            [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]
           )
       ).to.be.revertedWithCustomError(
         this.implementationContract,
