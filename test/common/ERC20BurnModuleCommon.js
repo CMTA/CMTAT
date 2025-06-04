@@ -32,7 +32,7 @@ function ERC20BurnModuleCommon () {
       // Emits a Burn event
       await expect(this.logs)
         .to.emit(this.cmtat, 'Burn')
-        .withArgs(this.address1, VALUE1, REASON_EVENT)
+        .withArgs(sender, this.address1, VALUE1, REASON_EVENT)
       // Check balances and total supply
       expect(await this.cmtat.balanceOf(this.address1)).to.equal(DIFFERENCE)
       expect(await this.cmtat.totalSupply()).to.equal(DIFFERENCE)
@@ -51,7 +51,7 @@ function ERC20BurnModuleCommon () {
       // Emits a Burn event
       await expect(this.logs)
         .to.emit(this.cmtat, 'Burn')
-        .withArgs(this.address1, DIFFERENCE, REASON_EVENT)
+        .withArgs(sender, this.address1, DIFFERENCE, REASON_EVENT)
       // Check balances and total supply
       expect(await this.cmtat.balanceOf(this.address1)).to.equal(0)
       expect(await this.cmtat.totalSupply()).to.equal(0)
@@ -81,7 +81,7 @@ function ERC20BurnModuleCommon () {
       // Emits a Burn event
       await expect(this.logs)
         .to.emit(this.cmtat, 'Burn')
-        .withArgs(this.address1, VALUE1, '0x')
+        .withArgs(this.admin, this.address1, VALUE1, '0x')
       // Check balances and total supply
       expect(await this.cmtat.balanceOf(this.address1)).to.equal(DIFFERENCE)
       expect(await this.cmtat.totalSupply()).to.equal(DIFFERENCE)
@@ -100,7 +100,7 @@ function ERC20BurnModuleCommon () {
       // Emits a Burn event
       await expect(this.logs)
         .to.emit(this.cmtat, 'Burn')
-        .withArgs(this.address1, DIFFERENCE, '0x')
+        .withArgs(this.admin, this.address1, DIFFERENCE, '0x')
       // Check balances and total supply
       expect(await this.cmtat.balanceOf(this.address1)).to.equal(0n)
       expect(await this.cmtat.totalSupply()).to.equal(0n)
@@ -232,11 +232,11 @@ function ERC20BurnModuleCommon () {
 
       await expect(this.logs)
         .to.emit(this.cmtat, 'Burn')
-        .withArgs(this.address1, AMOUNT_TO_BURN, REASON_EVENT_LOCAL)
+        .withArgs(this.address2, this.address1, AMOUNT_TO_BURN, REASON_EVENT_LOCAL)
 
       await expect(this.logs)
         .to.emit(this.cmtat, 'Mint')
-        .withArgs(this.address3, AMOUNT_TO_MINT, REASON_EVENT_LOCAL)
+        .withArgs(this.address2, this.address3, AMOUNT_TO_MINT, REASON_EVENT_LOCAL)
 
       expect(await this.cmtat.balanceOf(this.address1)).to.equal(
         INITIAL_SUPPLY - AMOUNT_TO_BURN
@@ -444,7 +444,6 @@ function ERC20BurnModuleCommon () {
       const bindTest = testBatchBurnWithoutReason.bind(this)
       await bindTest(this.address2)
     })
-
 
     it('testCanBeBurntBatchByBurnerRole', async function () {
       const TOKEN_HOLDER = [this.admin, this.address1, this.address2]

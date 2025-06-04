@@ -13,13 +13,13 @@ describe('Standard - MetaTxModule', function () {
     this.cmtat = await deployCMTATAllowlistStandalone(
       this.forwarder.target,
       this.admin.address,
-      this.deployerAddress.address,
+      this.deployerAddress.address
     )
     const accounts = [this.address1, this.address2, this.address3, this.admin]
     const Allowlist = [true, true, true, true]
     await this.cmtat
       .connect(this.admin)
-      .batchSetAddressAllowlist(accounts,  Allowlist)
+      .batchSetAddressAllowlist(accounts, Allowlist)
   })
 
   MetaTxModuleCommon()

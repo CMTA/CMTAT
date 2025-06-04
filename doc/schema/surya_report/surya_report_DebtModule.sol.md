@@ -15,8 +15,7 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **DebtModule** | Implementation | AuthorizationModule, ICMTATDebt |||
-| └ | __DebtModule_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |
+| **DebtModule** | Implementation | AuthorizationModule, IDebtModule |||
 | └ | setDebt | External ❗️ | 🛑  | onlyRole |
 | └ | setDebtInstrument | External ❗️ | 🛑  | onlyRole |
 | └ | debt | Public ❗️ |   |NO❗️ |

@@ -2,7 +2,7 @@ const MetaTxModuleCommon = require('../../common/MetaTxModuleCommon')
 const {
   deployCMTATStandalone,
   fixture,
-  loadFixture,
+  loadFixture
 } = require('../../deploymentUtils.js')
 const { ERC2771ForwarderDomain } = require('../../utils.js')
 describe('Standard - MetaTxModule', function () {
@@ -13,7 +13,7 @@ describe('Standard - MetaTxModule', function () {
     this.cmtat = await deployCMTATStandalone(
       this.forwarder.target,
       this.admin.address,
-      this.deployerAddress.address,
+      this.deployerAddress.address
     )
   })
   MetaTxModuleCommon()

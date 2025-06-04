@@ -6,43 +6,73 @@
 
 [TOC]
 
-
-
 ## Introduction
 
-The CMTA token (CMTAT) is a security token framework that includes various compliance features such as conditional transfer, account freeze, and token pause. CMTAT was initially optimized for the Swiss law framework, but can be suitable for other jurisdictions. This repository provides CMTA's reference Solidity implementation of CMTAT, suitable for EVM chains such as Ethereum.
+The CMTA token (CMTAT) is a security token framework that includes various compliance features such as conditional transfer, account freeze, and token pause, as well as technical features such as [ERC-7802](https://eips.ethereum.org/EIPS/eip-7802) for cross-chain transfer and upgradeadibility.
 
-The CMTAT is an open standard from the [Capital Markets and Technology Association](http://www.cmta.ch/) (CMTA), which gathers Swiss finance, legal, and technology organizations.
-The CMTAT was developed by a working group of CMTA's Technical Committee that includes members from Atpar, Bitcoin Suisse, Blockchain Innovation Group, Hypothekarbank Lenzburg, Lenz & Staehelin, Metaco, Mt Pelerin, SEBA, Swissquote, Sygnum, Taurus and Tezos Foundation. The design and security of the CMTAT was supported by ABDK, a leading team in smart contract security.
+### History
+
+The CMTAT is an open standard from the [Capital Markets and Technology Association](http://www.cmta.ch/) (CMTA), which gathers Swiss finance, legal, and technology organizations. The CMTAT was developed by a working group of CMTA's Technical Committee that includes members from Atpar, Bitcoin Suisse, Blockchain Innovation Group, Hypothekarbank Lenzburg, Lenz & Staehelin, Metaco, Mt Pelerin, SEBA, Swissquote, Sygnum, Taurus and Tezos Foundation. 
+
+### Use case
+
+This reference implementation allows the issuance and management of tokens representing equity securities, and other forms of financial instruments such as debt securities and stablecoin.
+
+CMTAT was initially optimized for the Swiss law framework, but is also suitable for other jurisdictions.
+
+You may modify the token code by adding, removing, or modifying features. However, the core modules must remain in place for compliance with CMTA specification.
+
+### Technical
+
+The design and security of the CMTAT was supported by [ABDK](https://abdk.consulting), a leading team in smart contract security.
 
 The preferred way to receive comments is through the GitHub issue tracker.  Private comments and questions can be sent to the CMTA secretariat at <a href="mailto:admin@cmta.ch">admin@cmta.ch</a>. For security matters, please see [SECURITY.md](./SECURITY.md).
 
-Note that CMTAT may be used in other jurisdictions than Switzerland, and for tokenizing various asset types, beyond equity and debt products. 
+This repository provides CMTA's reference Solidity implementation of CMTAT, suitable for EVM chains such as Ethereum.
 
 ### Overview
 
+> Core means that they are the main features to build CMTAT
+
+#### Core features
+
 The CMTAT supports the following core features:
 
-* Basic mint, burn, and transfer operations
-* Pause of the contract and freeze of specific accounts
+* ERC-20:
+  * Mint, burn, and transfer operations
+  * Configure `name`, `symbol`and `decimals`at deployment, as well as [ERC-3643](https://eips.ethereum.org/EIPS/eip-3643) functions to update `name`and `symbol`once deployed
+
+* Pause of the contract and mechanism to deactivate it
+* Freeze of specific accounts through ERC-3643 functions.
+
+#### Extended features
+
+> Extended features are nice-to-have features. They are generally included in the majority of deployment version.
+
+The CMTAT supports the following extended features:
+
+- Add information related to several documents ([ERC-1643](https://github.com/ethereum/EIPs/issues/1643)) though an external contract (`DocumentEngine`)
+
+- Perform snapshot on-chain through an external contract (`SnapshotEngine`)
+- Conditional transfers, via an external contract (`RuleEngine`)
+
+#### Optional features
+
+> Optional means that they are generally specific to deployment version
+
+The CMTAT supports the following optional features:
+
+- Transfer restriction through allowlisting/whitelisting (can be also done with a `RuleEngine`)
+- Put Debt information and Credit Events on-chain
+- Cross-chain functionalities with [ERC-7802](https://eips.ethereum.org/EIPS/eip-7802)
+- "Gasless" (MetaTx) transactions with [ERC-2771](https://eips.ethereum.org/EIPS/eip-2771)
 
 Furthermore, the present implementation uses standard mechanisms in
-order to support:
-
-* Upgradeability, via deployment of the token with a proxy
-* "Gasless" transactions
-* Conditional transfers, via a rule engine
-
-This reference implementation allows the issuance and management of tokens representing equity securities.
-It can however also be used for other forms of financial instruments such as debt securities.
-
-You may modify the token code by adding, removing, or modifying features. However, the core modules must remain in place for compliance with CMTA specification.
+order to support `upgradeability`, via deployment of the token with a proxy by implementing [ERC-7201](https://eips.ethereum.org/EIPS/eip-7201)
 
 ## Standard ERC
 
 Here the list of ERC used by CMTAT v3.0.0
-
-
 
 ### Schema
 
@@ -123,11 +153,10 @@ function version() external view returns (string memory)
 // EnforcementModule
 function isFrozen(address account) external view returns (bool)
 function setAddressFrozen(address account, bool freeze) external
+function batchSetAddressFrozen(address[] calldata accounts, bool[] calldata freeze) external;
 
 // IERC3643ERC20Enforcement
 // ERC20EnforcementModule
-event TokensFrozen(address indexed account, uint256 value);
-event TokensUnfrozen(address indexed account, uint256 value);
 function getFrozenTokens(address account) external view returns (uint256);
 function freezePartialTokens(address account, uint256 value) external;
 function unfreezePartialTokens(address account, uint256 value) external;
@@ -242,18 +271,63 @@ Since it is not yet an official standard, we decided to use the same name and si
 
 The implemented interface is available in [IERC7551](./contracts/interfaces/tokenization/draft-IERC7551.sol)
 
-| **N°** | **Functionalities**                                          | **ERC-7551 Functions**                    | **CMTAT 3.0.0**          | Implementations details                                      | Modules                      |
-| :----- | :----------------------------------------------------------- | :---------------------------------------- | :----------------------- | ------------------------------------------------------------ | ---------------------------- |
-| 1      | Freeze and unfreeze a specific amount of tokens              | freezeTokens<br />unfreezeTokens          | &#x2611;                 | Implement ERC-3643 function`setAddressFrozen`                | EnforcementModule            |
-| 2      | Pausing transfers The operator can pause and unpause transfers | pauseTransfers                            | &#x2611;                 | Implement ERC-3643 functions `pause/unpause`<br /> + `deactivateContract` | PauseModule                  |
-| 3      | Link to off-chain document<br />Add the hash of a document   | setPaperContractHash                      | Equivalent functionality | The hash can be put in the field` Terms`<br />Terms is represented as a Document (name, uri, hash, last on-chain modification date) based on [ERC-1643](https://github.com/ethereum/eips/issues/1643) | ExtraInformationModule       |
-| 4      | Metadata JSON file                                           | setMetaDataJSON                           | &#x2611;                 | Define function `setMetaData`                                | ExtraInformationModule       |
-| 5      | Forced transfersTransfer `amount` tokens to `to` without requiring the consent of `fro`m | forceTransferFrom                         | &#x2611;                 | Implement<br/>ERC-3643 function  `forcedTransfer`            | ERC20EnforcementModule       |
-| 6      | Token supply managementreduce the balance of `tokenHolder` by `amount` without increasing the amount of tokens of any other holder | destroyTokens                             | &#x2611;                 | Implement<br/>ERC-3643 function  `burn` / `batchBurn`        | BurnModule                   |
-| 7      | Token supply managementincrease the balance of `to` by `amount` without decreasing the amount of tokens from any other holder. | issue                                     | &#x2611;                 | Implement<br/>ERC-3643 function  `mint` / `batchMint`        | MintModule                   |
-| 8      | Transfer compliance<br />Check if a transfer is valid        | `canTransfer() `and a `canTransferFrom()` | &#x2611;                 | Implement<br/>ERC-3643 function `canTransfer`<br/>as well as a specific function `canTransferFrom` | ValidationInternalCoreModule |
+| **N°** | **Functionalities**                                          | **ERC-7551 Functions**                    | **CMTAT 3.0.0**          | Implementations details                                      | Modules                                       |
+| :----- | :----------------------------------------------------------- | :---------------------------------------- | :----------------------- | ------------------------------------------------------------ | --------------------------------------------- |
+| 1      | Freeze and unfreeze a specific amount of tokens              | freezeTokens<br />unfreezeTokens          | &#x2611;                 | Implement ERC-3643 function`freezePartialTokens`and `unfreezePartialTokens`(with and without a `data`parameter)<br />+ ERC-3643 function `setAddressFrozen`<br />(with and without a `data`parameter) | EnforcementModule<br />ERC20EnforcementModule |
+| 2      | Pausing transfers The operator can pause and unpause transfers | pauseTransfers                            | &#x2611;                 | Implement ERC-3643 functions `pause/unpause`<br /> + `deactivateContract` | PauseModule                                   |
+| 3      | Link to off-chain document<br />Add the hash of a document   | setPaperContractHash                      | Equivalent functionality | The hash can be put in the field` Terms`<br />Terms is represented as a Document (name, uri, hash, last on-chain modification date) based on [ERC-1643](https://github.com/ethereum/eips/issues/1643) | ExtraInformationModule                        |
+| 4      | Metadata JSON file                                           | setMetaDataJSON                           | &#x2611;                 | Define function `setMetaData`                                | ExtraInformationModule                        |
+| 5      | Forced transfersTransfer `amount` tokens to `to` without requiring the consent of `fro`m | forceTransferFrom                         | &#x2611;                 | Implement<br/>ERC-3643 function  `forcedTransfer` (with and without a `data`parameter) | ERC20EnforcementModule                        |
+| 6      | Token supply managementreduce the balance of `tokenHolder` by `amount` without increasing the amount of tokens of any other holder | destroyTokens                             | &#x2611;                 | Implement<br/>ERC-3643 function  `burn` / `batchBurn `(with and without a `data`parameter) | BurnModule                                    |
+| 7      | Token supply managementincrease the balance of `to` by `amount` without decreasing the amount of tokens from any other holder. | issue                                     | &#x2611;                 | Implement<br/>ERC-3643 function  `mint` / `batchMint` (with and without a `data`parameter) | MintModule                                    |
+| 8      | Transfer compliance<br />Check if a transfer is valid        | `canTransfer() `and a `canTransferFrom()` | &#x2611;                 | Implement<br/>ERC-3643 function `canTransfer`<br/>as well as a specific function `canTransferFrom` | ValidationModuleCore                          |
 
- 
+#####  Fulls functions
+
+```solidity
+// IERC7551Mint 
+// MintModule
+event Mint(address indexed minter, address indexed account, uint256 value, bytes data);
+function mint(address account, uint256 value, bytes calldata data) external;
+
+// IERC7551Burn
+// BurnModule
+event Burn(address indexed burner, address indexed account, uint256 value, bytes data);
+function burn(address account, uint256 amount, bytes calldata data) external;
+
+// IERC7551Pause
+// PauseModule
+function paused() external view returns (bool);
+function pause() external;
+function unpause() external;
+
+// IERC7551ERC20Enforcement
+// ERC20EnforcementModule
+function getActiveBalanceOf(address account) external view returns (uint256);
+function getFrozenTokens(address account) external view returns (uint256);
+function freezePartialTokens(address account, uint256 amount, bytes memory data) external;
+function unfreezePartialTokens(address account, uint256 amount, bytes memory data) external;
+function forcedTransfer(address account, address to, uint256 value, bytes calldata data) external returns (bool);
+
+
+// IERC7551Compliance
+// ValidationModuleCore
+function canTransfer(address from, address to, uint256 value) external view returns (bool);
+function canTransferFrom(
+        address spender,
+        address from,
+        address to,
+        uint256 value
+    )  external view returns (bool);
+
+
+// IERC7551Base
+// ExtraInformationModule
+function metaData() external view returns (string memory);
+function setMetaData(string calldata metaData_) external;
+```
+
+
 
 #### ERC-7802 (Crosschain transfers)
 
@@ -269,6 +343,24 @@ This standard is notably used by Optimism to provide cross-chain bridge between 
 More information here: [Cross-Chain bridge support](doc/general/crosschain-bridge-support.md)
 
 Deployment version: since it is an extension module, it is not currently used in the deployment version `debt`, `light` & `allowlist`.
+
+```solidity
+interface IERC7802 is IERC165 {
+    /// @notice Emitted when a crosschain transfer mints tokens.
+    event CrosschainMint(address indexed to, uint256 value, address indexed sender);
+
+    /// @notice Emitted when a crosschain transfer burns tokens.
+    event CrosschainBurn(address indexed from, uint256 value, address indexed sender);
+
+    /// @notice Mint tokens through a crosschain transfer.
+    function crosschainMint(address to, uint256 value) external;
+
+    /// @notice Burn tokens through a crosschain transfer.
+    function crosschainBurn(address from, uint256 value) external;
+}
+```
+
+
 
 -----
 
@@ -299,9 +391,9 @@ Base contracts are used by the different deployable contracts (CMTATStandalone, 
 
 #### CMTATBase
 
-![CMTATBase](./doc/schema/uml/CMTATBase.png)
+![CMTATBase](./doc/schema/uml/CMTATBaseUML.png)
 
-
+![CMTATBaseCommon](./doc/schema/uml/CMTATBaseCommonUML.png)
 
 CMTAT Base adds several functions: 
 
@@ -312,10 +404,11 @@ CMTAT Base adds several functions:
 CMTAT Base Core adds several functions: 
 
 - `burnAndMint`to burn and mint atomically in the same function.
-- `forceBurn`to allow the admin to burn tokens from a frozen address (defined in EnforcementModule)
+- `forcedBurn`to allow the admin to burn tokens from a frozen address (defined in EnforcementModule)
+  
   - This function is not required in CMTATBase because the function `forcedTransfer` (ERC20EnforcementModule) can be used instead.
-
-  ![CMTATBaseCore](./doc/schema/uml/CMTATBaseCore.png)
+  
+  ![CMTATBaseCore](./doc/schema/uml/CMTATBaseCoreUML.png)
 
 
 
@@ -435,10 +528,10 @@ Generally, these modules are required to be compliant with the CMTA specificatio
 
 | Modules                                                      | Description                    | File                                                         | CMTAT 1.0 | CMTAT 2.30                                                   | CMTAT 3.0.0                                                  |
 | ------------------------------------------------------------ | ------------------------------ | ------------------------------------------------------------ | --------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| [BaseModule](doc/modules/core/Base/base.md)                  | Contract version               | [BaseModule.sol](./dev/contracts/modules/wrapper/core/BaseModule.sol) | &#x2611;  | &#x2611;<br />(Add two fields: flag and information)         | &#x2611;<br />Remove field flag (not used)<br />Keep only the field VERSION and move the rest (tokenId, information,..) to an extension module `ExtraInformation` |
-| [ERC20 Burn](doc/modules/core/ERC20Burn/ERC20Burn.md)<br />(Prev. BurnModule) | Burn functions                 | [ERC20BurnModule.sol](./contracts/modules/wrapper/core/ERC20BurnModule.sol) | &#x2611;  | &#x2611;<br />Replace fn `burnFrom` by fn `forceBurn`        | Add fn `burnBatch`<br />Rename `forceBurn` in `burn`<br />`burnFrom` is moved to the option module `ERC20CrossChain` |
-| [Enforcement](doc/modules/core/Enforcement/enforcement.md)   | Freeze/unfreeze address        | [EnforcementModule.sol](./dev/contracts/modules/wrapper/core/EnforcementModule.sol) | &#x2611;  | &#x2611;                                                     | &#x2611;                                                     |
-| [ERC20Base](doc/modules/core/ERC20Base/ERC20base.md)         | decimals, set name & symbo     | [ERC20BaseModule.sol](./dev/contracts/modules/wrapper/core/ERC20BaseModule.sol) | &#x2611;  | &#x2611;<br />Remove fn `forceTransfer`<br />(replaced by `burn`and `mint`)<br /> | Add fn `balanceInfo` (useful to distribute dividends)<br />Add  fn `forcedTransfer`<br />Add fn `setName`and `setSymbol`<br />Remove custom fn `approve`(keep only ERC-20 approve) |
+| [BaseModule](doc/modules/core/Base/base.md)                  | Contract version               | [BaseModule.sol](./contracts/modules/wrapper/core/BaseModule.sol) | &#x2611;  | &#x2611;<br />(Add two fields: flag and information)         | &#x2611;<br />Remove field flag (not used)<br />Keep only the field VERSION and move the rest (tokenId, information,..) to an extension module `ExtraInformation` |
+| [ERC20 Burn](doc/modules/core/ERC20Burn/ERC20Burn.md)<br />(Prev. BurnModule) | Burn functions                 | [ERC20BurnModule.sol](./contracts/modules/wrapper/core/ERC20BurnModule.sol) | &#x2611;  | &#x2611;<br />Replace fn `burnFrom` by fn `forcedBurn`       | Add fn `burnBatch`<br />Rename `forceBurn` in `burn`<br />`burnFrom` is moved to the option module `ERC20CrossChain` |
+| [Enforcement](doc/modules/core/Enforcement/enforcement.md)   | Freeze/unfreeze address        | [EnforcementModule.sol](./contracts/modules/wrapper/core/EnforcementModule.sol) | &#x2611;  | &#x2611;                                                     | &#x2611;                                                     |
+| [ERC20Base](doc/modules/core/ERC20Base/ERC20base.md)         | decimals, set name & symbo     | [ERC20BaseModule.sol](./contracts/modules/wrapper/core/ERC20BaseModule.sol) | &#x2611;  | &#x2611;<br />Remove fn `forceTransfer`<br />(replaced by `burn`and `mint`)<br /> | Add fn `balanceInfo` (useful to distribute dividends)<br />Add  fn `forcedTransfer`<br />Add fn `setName`and `setSymbol`<br />Remove custom fn `approve`(keep only ERC-20 approve) |
 | [ERC20 Mint](doc/modules/core/ERC20Mint/ERC20Mint.md)        | Mint functions + BatchTransfer | [ERC20MintModule.sol](./contracts/modules/wrapper/core/ERC20MintModule.sol) | &#x2611;  | &#x2611;                                                     | Add fn `mintBatch`<br />Add fn `transferBatch` <br />        |
 | [Pause Module](doc/modules/core/Pause/pause.md)              | Pause and deactivate contract  | [PauseModule.sol](./contracts/modules/wrapper/core/PauseModule.sol) | &#x2611;  | &#x2611;                                                     | Replace fn `kill` by fn `deactivateContract`                 |
 
@@ -667,8 +760,19 @@ CMTAT only implements two functions from this standard, available in the interfa
 
 ```solidity
 interface IERC1643 {
-	function getDocument(bytes32 _name) external view returns (string memory , bytes32, uint256);
-	function getAllDocuments() external view returns (bytes32[] memory);
+    struct Document {
+        string uri;
+        bytes32 documentHash;
+        uint256 lastModified;
+    }
+    /**
+     * @notice return a document identified by its name
+     */
+    function getDocument(string memory name) external view returns (Document memory doc);
+    /**
+     * @notice return all documents
+     */
+    function getAllDocuments() external view returns (string[] memory);
 }
 ```
 
@@ -705,6 +809,27 @@ There was only one prototype available: [CMTA/AuthorizationEngine](https://githu
 
 ## Functionality details
 
+### ERC-20 properties 
+
+All ERC-20 properties (`name`, `symbol`and `decimals`) can be set at deployment or initialization if a proxy is used.
+
+Once the contract is deployed, the core module `ERC20BaseModule` offers two ERC-3643 function which allows to update the name and the symbol (but not the decimals).
+
+```solidity
+interface IERC3643ERC20Base {
+    /**
+     *  @notice sets the token name
+     */
+    function setName(string calldata name) external;
+    /**
+     *  @notice sets the token symbol
+     */
+    function setSymbol(string calldata symbol) external;
+}
+```
+
+
+
 ### Gasless support (ERC-2771 / MetaTx module)
 
 The CMTAT supports client-side gasless transactions using the [ERC-2771](https://eips.ethereum.org/EIPS/eip-2771)
@@ -729,55 +854,117 @@ References:
 
 There are several ways to restrict transfer as well as burn/mint operation
 
-**Enforcement Module**
+#### Enforcement Module
 
-- Specific addresses can be frozen with the following ERC-3643 functions `setAddressFrozen`and `batchSetAddressFrozen`
+Specific addresses can be frozen with the following ERC-3643 functions `setAddressFrozen`and `batchSetAddressFrozen`
 
-**ERC20EnforcementModule**
+```solidity
+interface IERC3643Enforcement {
+    function isFrozen(address account) external view returns (bool);
+    function setAddressFrozen(address account, bool freeze) external;
+    function batchSetAddressFrozen(address[] calldata accounts, bool[] calldata freeze) external;
+}
+```
+
+Additionally,  a `data`parameter can be also used, which will be emitted inside the smart contract
+
+```solidity
+function setAddressFrozen(address account, bool freeze, bytes calldata data)
+```
+
+Due to a limited contract size, there is no batch version with a data parameter available.
+
+When an address is frozen, it is not possible to mint tokens to this address or burn its tokens. To move tokens from a frozen address, the issuer must use the function `forcedTransfer`.
+
+#### ERC20EnforcementModule
 
 - A part of the balance of a specific address can be frozen with the following ERC3643 function `freezePartialTokens` and `unfreezePartialTokens`
 - Transfer/burn can be forced by the admin  (ERC20EnforcementModule) with the following ERC3643 function `forcedTransfer`.
   - In this case, if a part of the balance is frozen, the tokens are unfrozen before being burnt or transferred.
 
-**PauseModule**
+```solidity
+interface IERC3643ERC20Enforcement {
+    /**
+     *  @notice Returns the amount of tokens that are partially frozen on a wallet
+     */
+    function getFrozenTokens(address account) external view returns (uint256);
+
+    /**
+     *  @notice freezes token amount specified for given address.
+     */
+    function freezePartialTokens(address account, uint256 value) external;
+    /**
+     *  @notice unfreezes token amount specified for given address
+     */
+    function unfreezePartialTokens(address account, uint256 value) external;
+    /**
+     *  
+     *  @notice Triggers a forced transfer.
+     */ 
+    function forcedTransfer(address from, address to, uint256 value) external returns (bool);
+}
+```
+
+#### Pause & Deactivate contract (PauseModule)
+
+##### Pause
 
 - Transfers can be put in pause with the following ERC3643 function `pause`and `unpause`
-- Contract can be deactivated with the function `deactivateContract`
 
-When an address is frozen, it is not possible to mint tokens to this address or burn its tokens. To move tokens from a frozen address, the issuer must use the function `forcedTransfer`.
+- From ERC-3643
 
-#### Schema
+```solidity
+interface IERC3643Pause {
+    /**
+     * @notice Returns true if the contract is paused, and false otherwise.
+     */
+    function paused() external view returns (bool);
+    /**
+     *  @notice pauses the token contract, 
+     *  @dev When contract is paused token holders cannot transfer tokens anymore
+     *  
+     */
+    function pause() external;
 
-Here a schema describing the different check performed during:
+    /**
+     *  @notice unpauses the token contract, 
+     *  @dev When contract is unpaused token holders can transfer tokens
+     * 
+     */
+    function unpause() external;
+}
+```
 
-- transfer & transferFrom
-- burn / mint (supply management)
-- burn / mint for crosschain transfers
+##### Deactivate contracts
 
-![transfer_restriction.drawio](./doc/schema/drawio/transfer_restriction.drawio.png)
+```solidity
+interface ICMTATDeactivate {
+    event Deactivated(address account);
+    /**
+    * @notice deactivate the contract
+    * Warning: the operation is irreversible, be careful
+    */
+    function deactivateContract() external;
 
-
-
-##### Allowlist module
-
-With the `Allowlist` module and the associated `ValidationModuleAllowlist`, a supplementary check will be performed on the concerned address to determine if they are in the allowlist.
-
-![transfer_restriction-allowlist.drawio](./doc/schema/drawio/transfer_restriction-allowlist.drawio.png)
-
-#### Deactivate contracte (PauseModule)
+    /**
+    * @notice Returns true if the contract is deactivated, and false otherwise.
+    */
+    function deactivated() external view returns (bool) ;
+}
+```
 
 Since the version v2.3.1, a function `deactivateContract` is implemented in the PauseModule to deactivate the contract.
 
 If a contract is deactivated, it is no longer possible to perform transfer and burn/mint operations.
 
-##### Kill (previous version)
+###### Kill (previous version)
 
 CMTAT initially supported a `kill()` function relying on the SELFDESTRUCT opcode (which effectively destroyed the contract's storage and code).
 However, Ethereum's [Cancun upgrate](https://github.com/ethereum/execution-specs/blob/master/network-upgrades/mainnet-upgrades/cancun.md) (rolled out in Q1 of 2024)  has removed support for SELFDESTRUCT (see [EIP-6780](https://eips.ethereum.org/EIPS/eip-6780)).
 
 The `kill()` function will therefore not behave as it was used, and we have replaced it by the function `deactivateContract` .
 
-##### How it works
+###### How it works
 
 This function sets a boolean state variable `isDeactivated` to true and puts the contract in the pause state.
 The function `unpause `is updated to revert if the previous variable is set to true, thus the contract is in the pause state "forever".
@@ -786,6 +973,8 @@ The consequences are the following:
 
 - In standalone deployment, this operation is irreversible, it is not possible to rollback.
 - In upgradeable deployment (with a proxy), it is still possible to rollback by deploying a new implementation which sets the variable `isDeactivated`to false.
+
+
 
 #### Supply management (burn & mint)
 
@@ -805,25 +994,233 @@ This tab summarizes the different behavior of burn/mint functions if:
 
 
 
+#### Allowlist (whitelist) module
+
+With the `Allowlist` module and the associated `ValidationModuleAllowlist`, a supplementary check will be performed on the concerned address to determine if they are in the allowlist.
+
+```solidity
+interface IAllowlist {
+    event AddressAddedToAllowlist(address indexed account, bool indexed status, address indexed enforcer, bytes data);
+    event AllowlistEnableStatus(address indexed operator, bool status);
+    /**
+    * @notice return true if `account`is in the allowlist, false otherwise
+    */
+    function isAllowlisted(address account) external view virtual returns (bool);
+    /**
+     * @notice add/remove an address to/from the allowlist
+     */
+    function setAddressAllowlist(address account, bool status) external virtual;
+
+    /**
+     * @notice add/remove an address to/from the allowlist
+	*/
+    function setAddressAllowlist(address account, bool status, bytes calldata data) external virtual
+    /**
+    * @notice Batch version of {setAddressAllowlist}
+    */
+    function batchSetAddressAllowlist(address[] calldata accounts, bool[] calldata status) external virtual
+    /**
+    * @notice enable/disable allowlist
+    */
+    function enableAllowlist(bool status) external virtual
+    
+    /**
+    * @notice Returns true if the list is enabled, false otherwise
+    */
+    function isAllowlistEnabled() external view virtual returns (bool)
+}
+
+```
+
+![transfer_restriction-allowlist.drawio](./doc/schema/drawio/transfer_restriction-allowlist.drawio.png)
+
+
+
+#### Schema
+
+Here a schema describing the different check performed during:
+
+- transfer & transferFrom
+- burn / mint (supply management)
+- burn / mint for crosschain transfers
+
+![transfer_restriction.drawio](./doc/schema/drawio/transfer_restriction.drawio.png)
+
+
+
+### Supply management
+
+#### Event
+
+| Name                                                         | Defined                    | Stdanard                  | Concerned functions                                          |
+| ------------------------------------------------------------ | -------------------------- | ------------------------- | ------------------------------------------------------------ |
+| Transfer(address indexed from, address indexed to, uint256 value); | IERC20<br />(OpenZeppelin) | ERC-20                    | All functions which impacts the supply because a burn/mint is a transfer |
+| Mint(address indexed account, uint256 value, bytes data);    | IERC7551Mint               | ERC-7551 (draft standard) | mint <br />(ERC20MintModule)<br />                           |
+| BatchMint( address indexed minter, address[] accounts, uint256[] values |                            | -                         | BatchMint<br />(ERC20MintModule)                             |
+| Burn(address indexed account, uint256 value, bytes data);    | IERC7551Burn               | ERC-7551 (draft standard) | burn<br />(ERC20BurnModule)                                  |
+| BatchBurn(address indexed burner, address[] accounts,  uint256[] values) |                            | -                         | BatchMint<br />(ERC20BurnModule)                             |
+| BurnFrom(address indexed burner, address indexed account, address indexed spender, uint256 value); | IBurnERC20                 | -                         | brunFrom<br />(ERC20CrossChain)                              |
+| CrosschainMint(address indexed to, uint256 value, address indexed sender) | IERC7551                   | ERC-7551                  | crosschainMint<br />(ERC20CrossChain)                        |
+| CrosschainBurn(address indexed from, uint256 value, address indexed sender) | IERC7551                   | ERC-7551                  | crosschainBint<br />(ERC20CrossChain)                        |
+
+
+
+#### Burn (ERC20BurnModule)
+
+Core modue
+
+##### ERC-3643
+
+```solidity
+interface IERC3643Burn{
+	/**
+	*  @notice Burns tokens from a given address, by transferring them to address(0)
+	*/
+    function burn(address account,uint256 value) external;
+    /**
+    * @notice Batch version of {burn}
+    */
+    function batchBurn(address[] calldata accounts,uint256[] calldata values) external;
+}
+```
+
+##### ERC-7551
+
+```solidity
+interface IERC7551Burn {
+    /**
+    * @notice Emitted when the specified `value` amount of tokens owned by `owner`are destroyed with the given `data`
+    */
+    event Burn(address indexed burner, address indexed account, uint256 value, bytes data);
+    /**
+	*  @notice Burns tokens from a given address, by transferring them to address(0)
+	*/
+    function burn(address account, uint256 amount, bytes calldata data) external;
+}
+```
+
+#### Mint (ERC20MintModule)
+
+Core module
+
+##### ERC-3643
+
+```solidity
+interface IERC3643Mint{
+	/** 
+	* @notice Creates a `value` amount of tokens and assigns them to `account`, by transferring it from address(0)
+	*/
+    function mint(address account, uint256 value) external;
+    /**
+    * @notice batch version of {mint}
+    */
+    function batchMint( address[] calldata accounts,uint256[] calldata values) external;
+}
+```
+
+##### ERC7551
+
+```solidity
+interface IERC7551Mint {
+    /**
+     * @notice Emitted when the specified  `value` amount of new tokens are created and
+     * allocated to the specified `account`.
+     */
+    event Mint(address indexed minter, address indexed account, uint256 value, bytes data);
+    /** 
+	* @notice Creates a `value` amount of tokens and assigns them to `account`, by transferring it from address(0)
+	*/
+    function mint(address account, uint256 value, bytes calldata data) external;
+}
+```
+
+
+
+#### Cross-chain (ERC20Crosschain)
+
+Option module
+
+##### BurnFrom
+
+```solidity
+interface IBurnFromERC20 {
+  event BurnFrom(address indexed account, address indexed spender, uint256 value);
+  function burnFrom(address indexed burner, address indexed account, uint256 value) external;
+}
+```
+
+##### ERC-7802
+
+See the dedicated section (at the beginning of this document)
+
+### Manage on-chain document
+
+#### Terms
+
+Tokenization terms are defined by the extension module `ExtraInformationModule `
+
+The term is made of:
+
+- A name (string)
+- An `IERC1643.Document`document, which means:
+  - A string uri (optional)
+  - The document hash (optional)
+  - The last on-chain modification date (set by the smart contract)
+
+```solidity
+interface IERC1643 {
+    struct Document {
+        string uri;
+        bytes32 documentHash;
+        uint256 lastModified;
+    }
+   // rest of the interface
+}
+interface ICMTATBase {
+     /*
+     * @dev A reference to (e.g. in the form of an Internet address) or a hash of the tokenization terms
+     */ 
+     struct Terms {
+ 	    string name;
+ 	    IERC1643.Document doc;
+    }
+    event Term(Terms newTerm);
+    /*
+    * @notice returns tokenization terms
+    */
+    function terms() external view returns (Terms memory);
+    /*
+    * @notice set tokenization terms
+    */
+    function setTerms(IERC1643CMTAT.DocumentInfo calldata terms_) external;
+}
+```
+
+#### Additional documents through ERC1643 and DocumentEngine
+
+Additional documents can be added through the `DocumentEngine`
+
+For more information, see the section dedicated to the `DocumentEngine`
+
 ## Deployment model 
 
 Contracts for deployment are available in the directory [./contracts/deployment](./contracts/deployment)
 
-| CMTAT Model      | Description                                                  | Standalone/Proxy | Contract                                                     |
-| ---------------- | ------------------------------------------------------------ | ---------------- | ------------------------------------------------------------ |
-| CMTAT Standard   | Deployment without proxy <br />(immutable)                   | Standalone       | [CMTATStandalone](./contracts/deployment/CMTATStandalone.sol) |
-|                  | Deployment with a standard proxy (Transparent or Beacon Proxy) | Upgradeable      | [CMTATUpgradeable](./contracts/deployment/CMTATUpgradeable.sol) |
-| Upgradeable UUPS | Deployment with a UUPS proxy                                 | Only upgradeable | [CMTATUpgradeableUUPS](./contracts/deployment/CMTATUpgradeableUUPS.sol) |
-| ERC-1363         | Implements [ERC-1363](https://eips.ethereum.org/EIPS/eip-1363) | Standalone       | [CMTATStandaloneERC1363](./contracts/deployment/ERC1363/CMTATStandaloneERC1363.sol) |
-|                  | -                                                            | Upgradeable      | [CMTATUpgradeableERC1363](./contracts/deployment/ERC1363/CMTATUpgradeableERC1363.sol) |
-| Light            | Only core modules                                            | Standalone       | [CMTATStandaloneLight](./contracts/deployment/light/CMTATStandaloneLight.sol) |
-|                  |                                                              | Upgradeable      | [CMTATUpgradeableLight](./contracts/deployment/light/CMTATUpgradeableLight.sol) |
-| Debt             | Set Det information and CreditEvents (through DebtEngine)    | Standalone       | [CMTATStandaloneDebt](./contracts/deployment/debt/CMTATStandaloneDebt.sol) |
-|                  |                                                              | Upgradeable      | [CMTATUpgradeableDebt](./contracts/deployment/debt/CMTATUpgradeableDebt.sol) |
-| Allowlist        | Restrict transfer to an allowlist (whitelist)                | Standalone       | [CMTATStandaloneAllowlist](./contracts/deployment/allowlist/CMTATStandaloneAllowlist.sol) |
-|                  |                                                              | Upgradeable      | [CMTATUpgradeableAllowlist](./contracts/deployment/allowlist/CMTATUpgradeableAllowlist.sol) |
+| CMTAT Model      | Description                                                  | Standalone/Proxy | Contract                                                     | Remark                                                       |
+| ---------------- | ------------------------------------------------------------ | ---------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| CMTAT Standard   | Deployment without proxy <br />(immutable)                   | Standalone       | [CMTATStandalone](./contracts/deployment/CMTATStandalone.sol) | Core & extension module without Debt, Allowlist, ERC-3643 and UUPS<br />Include also two option modules: ERC20Crosschain & MetaTx |
+|                  | Deployment with a standard proxy (Transparent or Beacon Proxy) | Upgradeable      | [CMTATUpgradeable](./contracts/deployment/CMTATUpgradeable.sol) | -                                                            |
+| Upgradeable UUPS | Deployment with a UUPS proxy                                 | Only upgradeable | [CMTATUpgradeableUUPS](./contracts/deployment/CMTATUpgradeableUUPS.sol) | Same as standard version, but adds also the UUPS proxy support |
+| ERC-1363         | Implements [ERC-1363](https://eips.ethereum.org/EIPS/eip-1363) | Standalone       | [CMTATStandaloneERC1363](./contracts/deployment/ERC1363/CMTATStandaloneERC1363.sol) | Same as standard version, but adds also the ERC-3643 support |
+|                  | -                                                            | Upgradeable      | [CMTATUpgradeableERC1363](./contracts/deployment/ERC1363/CMTATUpgradeableERC1363.sol) |                                                              |
+| Light            | Only core modules                                            | Standalone       | [CMTATStandaloneLight](./contracts/deployment/light/CMTATStandaloneLight.sol) | -                                                            |
+|                  |                                                              | Upgradeable      | [CMTATUpgradeableLight](./contracts/deployment/light/CMTATUpgradeableLight.sol) |                                                              |
+| Debt             | Set Det information and CreditEvents (through DebtEngine)    | Standalone       | [CMTATStandaloneDebt](./contracts/deployment/debt/CMTATStandaloneDebt.sol) | Add the debt support.<br />Contrary to the standard version, it does not include the modules MetaTx and ERC20Crosschain |
+|                  |                                                              | Upgradeable      | [CMTATUpgradeableDebt](./contracts/deployment/debt/CMTATUpgradeableDebt.sol) | -                                                            |
+| Allowlist        | Restrict transfer to an allowlist (whitelist)                | Standalone       | [CMTATStandaloneAllowlist](./contracts/deployment/allowlist/CMTATStandaloneAllowlist.sol) | Contrary to the standard version, it does not include ERC-1404 support (ValidationModuleERC1404) & ERC20Crosschain |
+|                  |                                                              | Upgradeable      | [CMTATUpgradeableAllowlist](./contracts/deployment/allowlist/CMTATUpgradeableAllowlist.sol) |                                                              |
 
-### Standalone
+### Standard Standalone
 
 To deploy CMTAT without a proxy, in standalone mode, you need to use the contract version `CMTATStandalone`.
 
@@ -930,6 +1327,41 @@ See [CMTAT - Standard for the tokenization of debt instruments using distributed
 
 The debt information are defined by the struct `ICMTATDebt` in [./contracts/interfaces/tokenization/ICMTAT.sol](contracts/interfaces/tokenization/ICMTAT.sol)
 
+```solidity
+interface ICMTATDebt {
+    struct DebtInformation {
+        DebtIdentifier debtIdentifier;
+        DebtInstrument debtInstrument;
+    }
+    struct DebtIdentifier {
+        string issuerName;
+        string issuerDescription;
+        string guarantor;
+        string debtHolder;
+    }
+    struct DebtInstrument {
+        // uint256
+        uint256 interestRate;
+        uint256 parValue;
+        uint256 minimumDenomination;
+        // string
+        string issuanceDate;
+        string maturityDate;
+        string couponPaymentFrequency;
+        string interestScheduleFormat;
+        string interestPaymentDate;
+        string dayCountConvention;
+        string businessDayConvention;
+        string currency; 
+        // address
+        address currencyContract;
+    }
+    function debt() external view returns(DebtInformation memory);
+}
+```
+
+
+
 ##### Debt Identifier
 
 Information on the issuer and other persons involved.
@@ -969,6 +1401,19 @@ Defined by the struct `DebtInstrument`in [./contracts/interfaces/tokenization/IC
 Defined by the struct `CreditEvents`in [./contracts/interfaces/tokenization/ICMTAT.sol](contracts/interfaces/tokenization/ICMTAT.sol).
 
 Contrary to the debt information, it requires the external contract `DebtEngine`to set the information
+
+```solidity
+interface ICMTATCreditEvents {
+    function creditEvents() external view returns(CreditEvents memory);
+    struct CreditEvents {
+        bool flagDefault;
+        bool flagRedeemed;
+        string rating;
+    }
+}
+```
+
+
 
 |              | Type   |
 | ------------ | ------ |

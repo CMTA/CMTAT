@@ -8,7 +8,7 @@ import {ValidationModule} from "../controllers/ValidationModule.sol";
 import {IERC3643ComplianceRead} from "../../../interfaces/tokenization/IERC3643Partial.sol";
 import {IERC7551Compliance} from "../../../interfaces/tokenization/draft-IERC7551.sol";
 /**
- * @dev Validation module.
+ * @dev Validation module Core
  *
  * Useful for to restrict and validate transfers
  */

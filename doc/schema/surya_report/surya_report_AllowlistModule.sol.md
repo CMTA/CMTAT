@@ -15,7 +15,7 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **AllowlistModule** | Implementation | AllowlistModuleInternal, AuthorizationModule |||
+| **AllowlistModule** | Implementation | AllowlistModuleInternal, AuthorizationModule, IAllowlistModule |||
 | └ | isAllowlisted | Public ❗️ |   |NO❗️ |
 | └ | setAddressAllowlist | Public ❗️ | 🛑  | onlyRole |
 | └ | setAddressAllowlist | Public ❗️ | 🛑  | onlyRole |

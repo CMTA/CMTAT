@@ -20,7 +20,7 @@ abstract contract EnforcementModuleInternal is
 
     /* ==== ERC-7201 State Variables === */
     struct EnforcementModuleInternalStorage {
-        mapping(address => bool) _frozen;
+        mapping(address => bool)_list;
     }
 
     /*//////////////////////////////////////////////////////////////
@@ -32,7 +32,7 @@ abstract contract EnforcementModuleInternal is
     }
 
     function _addAddressToTheList(EnforcementModuleInternalStorage storage $,address account, bool status, bytes memory /*data */) internal virtual{
-        $._frozen[account] = status;
+        $._list[account] = status;
     }
 
   function _addAddressesToTheList(address[] calldata accounts, bool[] calldata status, bytes memory data) internal virtual{
@@ -48,7 +48,7 @@ abstract contract EnforcementModuleInternal is
      */
     function _addressIsListed(address account) internal view virtual returns (bool) {
         EnforcementModuleInternalStorage storage $ = _getEnforcementModuleInternalStorage();
-        return $._frozen[account];
+        return $._list[account];
     }
 
     /* ============ ERC-7201 ============ */

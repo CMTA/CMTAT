@@ -16,7 +16,6 @@
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
 | **EnforcementModule** | Implementation | EnforcementModuleInternal, AuthorizationModule, IERC3643Enforcement, IERC3643EnforcementEvent |||
-| └ | __EnforcementModule_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |
 | └ | isFrozen | Public ❗️ |   |NO❗️ |
 | └ | setAddressFrozen | Public ❗️ | 🛑  | onlyRole |
 | └ | setAddressFrozen | Public ❗️ | 🛑  | onlyRole |

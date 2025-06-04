@@ -10,7 +10,7 @@ function ExtraInfoModuleCommon () {
       const result = await myThis.cmtat.terms()
       expect(result[0]).to.equal(terms[0])
       expect(result[1][0]).to.equal(terms[1])
-      if(!myThis.dontCheckTimestamp){
+      if (!myThis.dontCheckTimestamp) {
         expect(result[1][2]).to.equal(blockTimestamp)
       }
     }

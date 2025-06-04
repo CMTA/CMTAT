@@ -15,7 +15,7 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **CMTATBaseCommon** | Implementation | BaseModule, ERC20MintModule, ERC20BurnModule, ERC20BaseModule, SnapshotEngineModule, ERC20EnforcementModule, DocumentEngineModule, ExtraInformationModule |||
+| **CMTATBaseCommon** | Implementation | BaseModule, ERC20MintModule, ERC20BurnModule, ERC20BaseModule, SnapshotEngineModule, ERC20EnforcementModule, DocumentEngineModule, ExtraInformationModule, IBurnMintERC20 |||
 | └ | _checkTransferred | Internal 🔒 | 🛑  | |
 | └ | __CMTAT_commonModules_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |
 | └ | decimals | Public ❗️ |   |NO❗️ |

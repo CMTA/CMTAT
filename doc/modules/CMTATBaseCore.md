@@ -1,18 +1,12 @@
-# CMTATBaseCore
+# CMTAT Base Core
 
-This document defines the ERC20Burn Module for the CMTA Token specification.
+This document defines the CMTAT Base Core Module for the CMTA Token specification.
 
 [TOC]
 
-
-
-## Rationale
-
-> This function allows the issuer to destroy specific tokens that are recorded on a distributed ledger address. This function is meant to be used if the issuer cancels tokenized shares (e.g. if it reduces its share capital, if it has decided to have the shares in a different form (e.g. “simple” uncertificated securities within the meaning of Article 973c CO or paper certificates), or to comply with a court order requiring the cancellation of tokens pursuant to Article 973h CO).
-
 ## Schema
 
-![CMTATBaseCore](../schema/uml/CMTATBaseCore.png)
+![CMTATBaseCore](../schema/uml/CMTATBaseCoreUML.png)
 
 ### Inheritance
 
@@ -30,31 +24,30 @@ This section describes the Ethereum API of Burn Module.
 
 ### Functions
 
-#### `forceBurn(address,uint256,string)`
-
-##### Definition
-
-```solidity
-function forceBurn(address account,uint256 amount,string memory reason) 
-public onlyRole(BURNER_ROLE)
-```
-
-##### Description
+#### `forceBurn(address,uint256,bytes)`
 
 Destroys a `value` amount of tokens from `account`, by transferring it to address(0).
 
-##### Requirements
-
-Only authorized users (*BURNER_ROLE*) are allowed to call this function.
-
-#### Events
-
-##### `Burn(address,uint,string)`
-
 ```solidity
-event Burn(address indexed owner, uint256 amount, string reason)
+function forcedBurn(
+        address account,
+        uint256 value,
+        bytes memory data
+    ) public virtual override(IForcedBurnERC20) onlyRole(DEFAULT_ADMIN_ROLE) 
 ```
 
-Emitted when the specified `value` amount of tokens owned by `owner`are destroyed with the given `reason`
+##### Requirements
+
+Only authorized users (*DEFAULT_ADMIN_ROLE*) are allowed to call this function.
+
+##### Events
+
+###### `Enforcement (address,address, uint256, bytes)`
+
+```solidity
+event Enforcement (address indexed enforcer, address indexed account, uint256 amount, bytes data);
+```
+
+Emitted when the specified `value` amount of tokens owned by `owner`are destroyed with the given `data`
 
 ​    

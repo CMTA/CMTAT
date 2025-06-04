@@ -7,7 +7,7 @@ pragma solidity ^0.8.20;
 import {IERC1404} from "../../../../interfaces/tokenization/draft-IERC1404.sol";
 import {ValidationModuleRuleEngine, IRuleEngine} from "./ValidationModuleRuleEngine.sol";
 /**
- * @dev Validation module.
+ * @dev Validation module (ERC-1404)
  *
  * Useful for to restrict and validate transfers
  */

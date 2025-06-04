@@ -12,15 +12,14 @@ const reasonUnfreeze = ethers.Typed.bytes(REASON_UNFREEZE_EVENT)
 const REASON_EMPTY = ethers.Typed.bytes(ethers.toUtf8Bytes(''))
 const REASON_EMPTY_EVENT = ethers.toUtf8Bytes('')
 function AllowlistModuleCommon () {
-
   context('Allowlist', function () {
     beforeEach(async function () {
       const accounts = [this.address1, this.address2, this.address3, this.admin]
-      const unAllowlist = [false,false, false, false]
+      const unAllowlist = [false, false, false, false]
       // Arrange - Assert
       this.logs = await this.cmtat
-      .connect(this.admin)
-      .batchSetAddressAllowlist(accounts,  unAllowlist)
+        .connect(this.admin)
+        .batchSetAddressAllowlist(accounts, unAllowlist)
     })
     async function testAllowlist (sender) {
       // Assert
@@ -37,15 +36,15 @@ function AllowlistModuleCommon () {
       this.logs2 = await this.cmtat
         .connect(sender)
         .setAddressAllowlist(this.address2, true, reasonFreeze)
-      
-        // Assert
+
+      // Assert
       expect(
         await this.cmtat.canTransfer(this.address1, this.address2, 10)
       ).to.equal(true)
 
       expect(await this.cmtat.isAllowlisted(this.address1)).to.equal(true)
       expect(await this.cmtat.isAllowlisted(this.address2)).to.equal(true)
-     
+
       // emits a Freeze event
       await expect(this.logs)
         .to.emit(this.cmtat, 'AddressAddedToAllowlist')
@@ -58,16 +57,16 @@ function AllowlistModuleCommon () {
     async function testAllowlistBatch (sender) {
       const accounts = [this.address1, this.address2]
       const Allowlist = [true, true]
-      const unAllowlist = [false,false]
+      const unAllowlist = [false, false]
       // Arrange - Assert
       this.logs = await this.cmtat
-      .connect(sender)
-      .batchSetAddressAllowlist(accounts,  unAllowlist)
+        .connect(sender)
+        .batchSetAddressAllowlist(accounts, unAllowlist)
       expect(await this.cmtat.isAllowlisted(this.address1)).to.equal(false)
       expect(await this.cmtat.isAllowlisted(this.address2)).to.equal(false)
-       
+
       // Assert - canTransfer
-       expect(
+      expect(
         await this.cmtat.canTransfer(this.address1, this.address3, 10)
       ).to.equal(false)
       expect(
@@ -76,12 +75,12 @@ function AllowlistModuleCommon () {
       expect(
         await this.cmtat.canTransfer(this.address1, this.address2, 10)
       ).to.equal(false)
-      
+
       // Act
       this.logs = await this.cmtat
         .connect(sender)
         .batchSetAddressAllowlist(accounts, Allowlist)
-      
+
       // Assert
       expect(
         await this.cmtat.canTransfer(this.address1, this.address3, 10)
@@ -94,7 +93,7 @@ function AllowlistModuleCommon () {
       ).to.equal(true)
       expect(await this.cmtat.isAllowlisted(this.address1)).to.equal(true)
       expect(await this.cmtat.isAllowlisted(this.address2)).to.equal(true)
-      
+
       // emits a Allowlist event
       await expect(this.logs)
         .to.emit(this.cmtat, 'AddressAddedToAllowlist')
@@ -128,17 +127,17 @@ function AllowlistModuleCommon () {
       ).to.equal(true)
       expect(await this.cmtat.isAllowlisted(this.address1)).to.equal(true)
       expect(await this.cmtat.isAllowlisted(this.address2)).to.equal(true)
-      
+
       // emits a Allowlist event
       await expect(this.logs)
         .to.emit(this.cmtat, 'AddressAddedToAllowlist')
         .withArgs(this.address1, true, sender, REASON_EMPTY_EVENT)
-      
-        await expect(this.logs)
+
+      await expect(this.logs)
         .to.emit(this.cmtat, 'AddressAddedToAllowlist')
         .withArgs(this.address2, true, sender, REASON_EMPTY_EVENT)
-      
-        await expect(this.logs)
+
+      await expect(this.logs)
         .to.emit(this.cmtat, 'AddressAddedToAllowlist')
         .withArgs(this.address3, false, sender, REASON_EMPTY_EVENT)
     }
@@ -146,39 +145,39 @@ function AllowlistModuleCommon () {
     async function testUnAllowlist (sender) {
       // Arrange
       await this.cmtat.connect(sender).setAddressAllowlist(this.address1, true, reasonFreeze)
-      
+
       // Arrange - Assert
       expect(await this.cmtat.isAllowlisted(this.address1)).to.equal(true)
       expect(
         await this.cmtat.canTransfer(this.address1, this.address2, 10)
       ).to.equal(false)
-      
+
       // Act
       this.logs = await this.cmtat
         .connect(sender)
         .setAddressAllowlist(this.address1, false, reasonUnfreeze)
-      
-        // Assert
+
+      // Assert
       expect(await this.cmtat.isAllowlisted(this.address1)).to.equal(false)
       expect(
         await this.cmtat.canTransfer(this.address1, this.address2, 10)
       ).to.equal(false)
-      
+
       await expect(this.logs)
         .to.emit(this.cmtat, 'AddressAddedToAllowlist')
         .withArgs(this.address1, false, sender, REASON_UNFREEZE_EVENT)
     }
     beforeEach(async function () {
       await this.cmtat
-      .connect(this.admin)
-      .setAddressAllowlist(this.address1, true, reasonUnfreeze)
+        .connect(this.admin)
+        .setAddressAllowlist(this.address1, true, reasonUnfreeze)
       await this.cmtat
-      .connect(this.admin)
-      .setAddressAllowlist(ZERO_ADDRESS, true, reasonUnfreeze)
+        .connect(this.admin)
+        .setAddressAllowlist(ZERO_ADDRESS, true, reasonUnfreeze)
       await this.cmtat.connect(this.admin).mint(this.address1, 50)
       await this.cmtat
-      .connect(this.admin)
-      .setAddressAllowlist(this.address1, false, reasonUnfreeze)
+        .connect(this.admin)
+        .setAddressAllowlist(this.address1, false, reasonUnfreeze)
     })
 
     it('testAdminCanAllowlistAddress', async function () {
@@ -188,13 +187,13 @@ function AllowlistModuleCommon () {
 
     it('testAdminCanAllowlistAddressWithoutReason', async function () {
       this.logs = await this.cmtat
-      .connect(this.admin)
-      .setAddressAllowlist(this.address1, true)
+        .connect(this.admin)
+        .setAddressAllowlist(this.address1, true)
       expect(await this.cmtat.isAllowlisted(this.address1)).to.equal(true)
 
       this.logs = await this.cmtat
-      .connect(this.admin)
-      .setAddressAllowlist(this.address1, false)
+        .connect(this.admin)
+        .setAddressAllowlist(this.address1, false)
       expect(await this.cmtat.isAllowlisted(this.address1)).to.equal(false)
     })
 
@@ -237,16 +236,16 @@ function AllowlistModuleCommon () {
       // Act
       this.logs = await this.cmtat.connect(this.admin).enableAllowlist(false)
       await expect(this.logs)
-      .to.emit(this.cmtat, 'AllowlistEnableStatus')
-      .withArgs(this.admin, false)
+        .to.emit(this.cmtat, 'AllowlistEnableStatus')
+        .withArgs(this.admin, false)
       // Assert
       expect(await this.cmtat.isAllowlistEnabled()).to.equal(false)
-      
+
       // Act
       this.logs = await this.cmtat.connect(this.admin).enableAllowlist(true)
       await expect(this.logs)
-      .to.emit(this.cmtat, 'AllowlistEnableStatus')
-      .withArgs(this.admin,true)
+        .to.emit(this.cmtat, 'AllowlistEnableStatus')
+        .withArgs(this.admin, true)
       // Assert
       expect(await this.cmtat.isAllowlistEnabled()).to.equal(true)
     })
@@ -322,7 +321,6 @@ function AllowlistModuleCommon () {
       expect(await this.cmtat.isAllowlisted(this.address1)).to.equal(true)
     })
 
-
     // reverts if address1 transfers tokens to address2 when paused
     it('testCannotTransferWhenFromIsNotAllowlistWithTransfer', async function () {
       const AMOUNT_TO_TRANSFER = 10
@@ -348,7 +346,7 @@ function AllowlistModuleCommon () {
       // Arrange
       // Define allowance
       await this.cmtat.connect(this.address3).approve(this.address1, AMOUNT_TO_TRANSFER)
-      
+
       await this.cmtat.connect(this.admin).setAddressAllowlist(this.address3, true, reasonFreeze)
       await this.cmtat.connect(this.admin).setAddressAllowlist(this.address2, true, reasonFreeze)
       await this.cmtat.connect(this.admin).setAddressAllowlist(this.address1, true, reasonFreeze)
@@ -363,8 +361,8 @@ function AllowlistModuleCommon () {
         )
       ).to.equal(true)
       await this.cmtat
-          .connect(this.address1)
-          .transferFrom(this.address3, this.address2, AMOUNT_TO_TRANSFER)
+        .connect(this.address1)
+        .transferFrom(this.address3, this.address2, AMOUNT_TO_TRANSFER)
     })
 
     it('testCannotMintToNoWhitelistAddress', async function () {
@@ -376,7 +374,7 @@ function AllowlistModuleCommon () {
           AMOUNT_TO_TRANSFER
         )
       ).to.equal(false)
-      
+
       await expect(
         this.cmtat
           .connect(this.admin)
@@ -394,8 +392,8 @@ function AllowlistModuleCommon () {
       const AMOUNT_TO_TRANSFER = 10
       await this.cmtat.connect(this.admin).setAddressAllowlist(this.address1, true, reasonFreeze)
       this.cmtat
-          .connect(this.admin)
-          .mint(this.address1, AMOUNT_TO_TRANSFER)
+        .connect(this.admin)
+        .mint(this.address1, AMOUNT_TO_TRANSFER)
       expect(
         await this.cmtat.canTransfer(
           this.address1,
@@ -403,10 +401,10 @@ function AllowlistModuleCommon () {
           AMOUNT_TO_TRANSFER
         )
       ).to.equal(true)
-      
+
       // Remove from the whitelist
       await this.cmtat.connect(this.admin).setAddressAllowlist(this.address1, false, reasonFreeze)
-      
+
       expect(
         await this.cmtat.canTransfer(
           this.address1,
@@ -426,7 +424,6 @@ function AllowlistModuleCommon () {
           ZERO_ADDRESS,
           AMOUNT_TO_TRANSFER
         )
-          
     })
 
     // reverts if address3 transfers tokens from address1 to this.address2 when paused

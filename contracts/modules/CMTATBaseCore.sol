@@ -14,7 +14,6 @@ import {ERC20BaseModule, ERC20Upgradeable} from "./wrapper/core/ERC20BaseModule.
 // Other
 import {BaseModule} from "./wrapper/core/BaseModule.sol";
 import {EnforcementModule} from "./wrapper/core/EnforcementModule.sol";
-import {PauseModule} from "./wrapper/core/PauseModule.sol";
 import {ValidationModule, ValidationModuleCore} from "./wrapper/core/ValidationModuleCore.sol";
 
 // Security
@@ -22,6 +21,9 @@ import {AuthorizationModule} from "./security/AuthorizationModule.sol";
 
 /* ==== Interface and other library === */
 import {ICMTATConstructor} from "../interfaces/technical/ICMTATConstructor.sol";
+import {IForcedBurnERC20} from "../interfaces/technical/IMintBurnToken.sol";
+import {IBurnMintERC20} from "../interfaces/technical/IMintBurnToken.sol";
+import {IERC7551ERC20EnforcementEvent} from "../interfaces/tokenization/draft-IERC7551.sol";
 import {Errors} from "../libraries/Errors.sol";
 
 /**
@@ -36,11 +38,12 @@ abstract contract CMTATBaseCore is
     ERC20MintModule,
     ERC20BurnModule,
     ValidationModuleCore,
-    ERC20BaseModule
+    ERC20BaseModule,
+    IForcedBurnERC20,
+    IBurnMintERC20,
+    IERC7551ERC20EnforcementEvent
 {  
     error CMTAT_BurnEnforcement_AddressIsNotFrozen(); 
-    event Enforcement (address indexed enforcer, address indexed account, uint256 amount, bytes data);
- 
     /*//////////////////////////////////////////////////////////////
                          INITIALIZER FUNCTION
     //////////////////////////////////////////////////////////////*/
@@ -194,29 +197,25 @@ abstract contract CMTATBaseCore is
     //////////////////////////////////////////////////////////////*/
 
     /**
-    * @notice burn and mint atomically
-    * @param from current token holder to burn tokens
-    * @param to receiver to send the new minted tokens
-    * @param amountToBurn number of tokens to burn
-    * @param amountToMint number of tokens to mint
+    * @inheritdoc IBurnMintERC20
     * @dev 
     * - The access control is managed by the functions burn (ERC20BurnModule) and mint (ERC20MintModule)
     * - Input validation is also managed by the functions burn and mint
     * - You can mint more tokens than burnt
     */
-    function burnAndMint(address from, address to, uint256 amountToBurn, uint256 amountToMint, bytes calldata data) public virtual  {
-        burn(from, amountToBurn, data);
-        mint(to, amountToMint, data);
+    function burnAndMint(address from, address to, uint256 amountToBurn, uint256 amountToMint, bytes calldata data) public virtual override(IBurnMintERC20) {
+        ERC20BurnModule.burn(from, amountToBurn, data);
+        ERC20MintModule.mint(to, amountToMint, data);
     }
 
     /**
-    * @notice allows the issuer to burn tokens from a frozen address
+    * @inheritdoc IForcedBurnERC20
     */
-    function forceBurn(
+    function forcedBurn(
         address account,
         uint256 value,
         bytes memory data
-    ) public virtual onlyRole(DEFAULT_ADMIN_ROLE) {
+    ) public virtual override(IForcedBurnERC20) onlyRole(DEFAULT_ADMIN_ROLE) {
         require(EnforcementModule.isFrozen(account), CMTAT_BurnEnforcement_AddressIsNotFrozen());
         // Skip ERC20BurnModule
         ERC20Upgradeable._burn(account, value);

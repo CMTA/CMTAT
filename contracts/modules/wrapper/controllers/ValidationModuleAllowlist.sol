@@ -6,7 +6,8 @@ pragma solidity ^0.8.20;
 import {ValidationModule} from "./ValidationModule.sol";
 import {AllowlistModule} from "../options/AllowlistModule.sol";
 /**
- * @dev Validation module.
+ * @title ValidationModule - Allowlist
+ * @dev Validation module with allowlist.
  *
  * Useful for to restrict and validate transfers
  */

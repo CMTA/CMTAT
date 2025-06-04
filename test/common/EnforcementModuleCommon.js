@@ -21,7 +21,7 @@ function EnforcementModuleCommon () {
         .connect(sender)
         .setAddressFrozen(this.address1, true, reasonFreeze)
       // Assert
-      if(!this.generic){
+      if (!this.generic) {
         expect(
           await this.cmtat.canTransfer(this.address1, this.address2, 10)
         ).to.equal(false)
@@ -44,7 +44,7 @@ function EnforcementModuleCommon () {
         .connect(sender)
         .batchSetAddressFrozen(accounts, freeze)
       // Assert
-      if(!this.generic){
+      if (!this.generic) {
         expect(
           await this.cmtat.canTransfer(this.address1, this.address3, 10)
         ).to.equal(false)
@@ -78,7 +78,7 @@ function EnforcementModuleCommon () {
         .connect(sender)
         .batchSetAddressFrozen(accounts, freeze)
       // Assert
-      if(!this.generic){
+      if (!this.generic) {
         expect(
           await this.cmtat.canTransfer(this.address1, this.address3, 10)
         ).to.equal(false)
@@ -89,7 +89,7 @@ function EnforcementModuleCommon () {
           await this.cmtat.canTransfer(this.address1, this.address2, 10)
         ).to.equal(true)
       }
-      
+
       expect(await this.cmtat.isFrozen(this.address1)).to.equal(false)
       expect(await this.cmtat.isFrozen(this.address2)).to.equal(false)
       // emits a Freeze event
@@ -109,19 +109,19 @@ function EnforcementModuleCommon () {
       await this.cmtat.connect(sender).setAddressFrozen(this.address1, true, reasonFreeze)
       // Arrange - Assert
       expect(await this.cmtat.isFrozen(this.address1)).to.equal(true)
-      if(!this.generic){
+      if (!this.generic) {
         expect(
           await this.cmtat.canTransfer(this.address1, this.address2, 10)
         ).to.equal(false)
       }
-     
+
       // Act
       this.logs = await this.cmtat
         .connect(sender)
         .setAddressFrozen(this.address1, false, reasonUnfreeze)
       // Assert
       expect(await this.cmtat.isFrozen(this.address1)).to.equal(false)
-      if(!this.generic){
+      if (!this.generic) {
         expect(
           await this.cmtat.canTransfer(this.address1, this.address2, 10)
         ).to.equal(true)
@@ -251,7 +251,7 @@ function EnforcementModuleCommon () {
           'AddrFromIsFrozen'
         )
       }
-      if(!this.generic){
+      if (!this.generic) {
         await expect(
           this.cmtat
             .connect(this.address1)
@@ -271,7 +271,7 @@ function EnforcementModuleCommon () {
       const AMOUNT_TO_TRANSFER = 10
       // Arrange
       // Define allowance
-      if(!this.generic){
+      if (!this.generic) {
         await this.cmtat.connect(this.address3).approve(this.address1, AMOUNT_TO_TRANSFER)
       }
       // Act
@@ -307,14 +307,14 @@ function EnforcementModuleCommon () {
       const AMOUNT_TO_TRANSFER = 10
       // Arrange
       // Define allowance
-      if(!this.generic){
+      if (!this.generic) {
         await this.cmtat.connect(this.address3).approve(this.address1, AMOUNT_TO_TRANSFER)
       }
-      
+
       // Act
       await this.cmtat.connect(this.admin).setAddressFrozen(this.address1, true, reasonFreeze)
-      
-      if(!this.generic){
+
+      if (!this.generic) {
         expect(
           await this.cmtat.canTransferFrom(
             this.address1,
@@ -323,7 +323,7 @@ function EnforcementModuleCommon () {
             AMOUNT_TO_TRANSFER
           )
         ).to.equal(false)
-  
+
         await expect(
           this.cmtat
             .connect(this.address1)
@@ -366,7 +366,6 @@ function EnforcementModuleCommon () {
         'CMTAT_Enforcement_EmptyAccounts'
       )
     })
-
   })
 }
 module.exports = EnforcementModuleCommon

@@ -13,6 +13,8 @@ This document defines Base Module for the CMTA Token specification.
 
 ## Schema
 
+![BaseUML](../../../schema/uml/BaseUML.png)
+
 ### Inheritance
 
 ![surya_inheritance_BaseModule.sol](../../../schema/surya_inheritance/surya_inheritance_BaseModule.sol.png)

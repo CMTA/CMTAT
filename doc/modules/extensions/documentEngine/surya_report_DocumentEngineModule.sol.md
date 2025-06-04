@@ -15,7 +15,7 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **DocumentEngineModule** | Implementation | AuthorizationModule, IERC1643 |||
+| **DocumentEngineModule** | Implementation | AuthorizationModule, IDocumentEngineModule |||
 | └ | __DocumentEngineModule_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |
 | └ | documentEngine | Public ❗️ |   |NO❗️ |
 | └ | getDocument | Public ❗️ |   |NO❗️ |

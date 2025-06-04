@@ -7,7 +7,7 @@ import {ERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/
 /* ==== Module === */
 import {AuthorizationModule} from "../../security/AuthorizationModule.sol";
 /* ==== Technical === */
-import {IBurnERC20} from "../../../interfaces/technical/IBurnToken.sol";
+import {IBurnERC20} from "../../../interfaces/technical/IMintBurnToken.sol";
 import {IERC20Allowance} from "../../../interfaces/technical/IERC20Allowance.sol";
 /* ==== Tokenization === */
 import {IERC3643Burn} from "../../../interfaces/tokenization/IERC3643Partial.sol";
@@ -135,6 +135,6 @@ abstract contract ERC20BurnModule is ERC20Upgradeable, IERC20Allowance, IBurnERC
         bytes memory data
     ) internal virtual {
         _burnOverride(account, value);
-        emit Burn(account, value, data);
+        emit Burn(_msgSender(), account, value, data);
     }
 }

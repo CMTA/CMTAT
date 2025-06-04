@@ -16,7 +16,6 @@
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
 | **ERC20BurnModule** | Implementation | ERC20Upgradeable, IERC20Allowance, IBurnERC20, IERC3643Burn, IERC7551Burn, AuthorizationModule |||
-| └ | __ERC20BurnModule_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |
 | └ | burn | Public ❗️ | 🛑  | onlyRole |
 | └ | burn | Public ❗️ | 🛑  | onlyRole |
 | └ | batchBurn | Public ❗️ | 🛑  | onlyRole |

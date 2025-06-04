@@ -149,12 +149,10 @@ interface ICMTATDebt {
         // address
         address currencyContract;
     }
-    function debt() external view returns(DebtInformation memory);
     /**
      * @notice Returns debt information
      */
-    //function debt() external view returns(DebtBase memory);
-   
+    function debt() external view returns(DebtInformation memory);
 }
 
 

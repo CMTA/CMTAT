@@ -6,7 +6,7 @@ This document defines  Document Module for the CMTA Token specification.
 
 ## Schema
 
-![DocumentUML](../../../schema/uml/DocumentUML.png)
+![DocumentUML](../../../schema/uml/DocumentEngineUML.png)
 
 ### Inheritance
 

@@ -31,7 +31,7 @@ describe('CMTAT Allowlist - Upgradeable', function () {
     const Allowlist = [true, true, true, true]
     await this.cmtat
       .connect(this.admin)
-      .batchSetAddressAllowlist(accounts,  Allowlist)
+      .batchSetAddressAllowlist(accounts, Allowlist)
     this.core = true
     this.dontCheckTimestamp = true
   })

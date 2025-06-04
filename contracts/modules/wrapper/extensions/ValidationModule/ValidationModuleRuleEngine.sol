@@ -9,7 +9,7 @@ import {IRuleEngine} from "../../../../interfaces/engine/IRuleEngine.sol";
 import {ValidationModuleCore} from "../../core/ValidationModuleCore.sol";
 import {ValidationModuleRuleEngineInternal} from "../../../internal/ValidationModuleRuleEngineInternal.sol";
 /**
- * @dev Validation module.
+ * @dev Validation module with RuleEngine
  *
  * Useful for to restrict and validate transfers
  */

@@ -13,8 +13,6 @@ import {BaseModule} from "./wrapper/core/BaseModule.sol";
 // Extensions
 import {ExtraInformationModule} from "./wrapper/extensions/ExtraInformationModule.sol";
 import {DocumentEngineModule, IERC1643} from "./wrapper/extensions/DocumentEngineModule.sol";
-// Security
-import {AuthorizationModule} from "./security/AuthorizationModule.sol";
  /* ==== Interface and other library === */
 import {ICMTATConstructor} from "../interfaces/technical/ICMTATConstructor.sol";
 

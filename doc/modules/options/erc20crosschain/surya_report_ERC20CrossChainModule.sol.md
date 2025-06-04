@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/options/ERC20CrossChainModule.sol | [object Promise] |
+| ./modules/wrapper/options/ERC20CrossChainModule.sol | [object Promise] |
 
 
 ### Contracts Description Table
@@ -15,7 +15,7 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **ERC20CrossChainModule** | Implementation | CMTAT_BASE, IERC7802, IBurnFromERC20 |||
+| **ERC20CrossChainModule** | Implementation | CMTATBase, IERC7802, IBurnFromERC20 |||
 | └ | crosschainMint | External ❗️ | 🛑  | onlyRole whenNotPaused |
 | └ | crosschainBurn | External ❗️ | 🛑  | onlyRole whenNotPaused |
 | └ | burnFrom | Public ❗️ | 🛑  | onlyRole whenNotPaused |

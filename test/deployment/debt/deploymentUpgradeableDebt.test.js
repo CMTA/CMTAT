@@ -26,7 +26,6 @@ const DebtModuleSetDebtEngineCommon = require('../../common/DebtModule/DebtModul
 const DebtEngineModuleCommon = require('../../common/DebtModule/DebtEngineModuleCommon')
 
 describe('CMTAT Debt - Upgradeable', function () {
- 
   beforeEach(async function () {
     Object.assign(this, await loadFixture(fixture))
     this.cmtat = await deployCMTATDebtProxy(
@@ -46,7 +45,7 @@ describe('CMTAT Debt - Upgradeable', function () {
   ERC20MintModuleCommon()
   EnforcementModuleCommon()
   ValidationModuleCommonCore()
-  
+
   // Extensions
   ERC20EnforcementModuleCommon
   DocumentModuleCommon()

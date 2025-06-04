@@ -35,6 +35,7 @@
 | **IERC3643Enforcement** | Interface |  |||
 | └ | isFrozen | External ❗️ |   |NO❗️ |
 | └ | setAddressFrozen | External ❗️ | 🛑  |NO❗️ |
+| └ | batchSetAddressFrozen | External ❗️ | 🛑  |NO❗️ |
 ||||||
 | **IERC3643ERC20Enforcement** | Interface |  |||
 | └ | getFrozenTokens | External ❗️ |   |NO❗️ |

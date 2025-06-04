@@ -13,14 +13,14 @@ interface IERC3643Pause {
     function paused() external view returns (bool);
     /**
      *  @notice pauses the token contract, 
-     *  when contract is paused token holders cannot transfer tokens anymore
+     *  @dev When contract is paused token holders cannot transfer tokens anymore
      *  
      */
     function pause() external;
 
     /**
      *  @notice unpauses the token contract, 
-     *  when contract is unpaused token holders can transfer tokens
+     *  @dev When contract is unpaused token holders can transfer tokens
      *  
      *  
      */
@@ -96,24 +96,20 @@ interface IERC3643Enforcement {
     function batchSetAddressFrozen(address[] calldata accounts, bool[] calldata freeze) external;
 }
 
+/**
+* 
+* @dev For events, see {IERC7551ERC20Enforcement}
+*/
 interface IERC3643ERC20Enforcement {
-     /**
-     *  this event is emitted when a certain amount of tokens is frozen on an address
-     *  the event is emitted by freezePartialTokens and batchFreezePartialTokens functions
-     *  `account` is the address that is concerned by the freezing status
-     *  `value` is the amount of tokens that are frozen
-     */
-    event TokensFrozen(address indexed account, uint256 value);
+
 
     /**
-     *  this event is emitted when a certain amount of tokens is unfrozen on an address
-     *  the event is emitted by unfreezePartialTokens and batchUnfreezePartialTokens functions
-     *  `account` is the address that is concerned by the freezing status
-     *  `value` is the amount of tokens that are unfrozen
+     *  @notice Returns the amount of tokens that are partially frozen on a wallet
+     *  @dev 
+     *  The amount of frozen tokens is always <= to the total balance of the wallet
+     *  @param `account` the address of the wallet on which getFrozenTokens is called
      */
-    event TokensUnfrozen(address indexed account, uint256 value);
     function getFrozenTokens(address account) external view returns (uint256);
-
 
     /**
      *  @notice freezes token amount specified for given address.
@@ -172,7 +168,7 @@ interface IERC3643Mint{
 }
 interface IERC3643Burn{
     /**
-     * @notice Burns tokens from a given address.
+     * @notice Burns tokens from a given address by transferring it to address(0)
      * @param account The address to burn tokens from.
      * @param value The number of tokens to be burned.
      * @dev burn tokens on an address, decreases the total supply.
@@ -199,7 +195,8 @@ interface IERC3643Burn{
 
 interface IERC3643ComplianceRead {
     /**
-     * @dev Returns true if the transfer is valid, and false otherwise.
+     * @notice Returns true if the transfer is valid, and false otherwise.
+     * @dev Don't check the balance and the user's right (access control)
      */
     function canTransfer(
         address from,
@@ -210,7 +207,8 @@ interface IERC3643ComplianceRead {
 
 interface IERC3643ComplianceWrite {
     /**
-     * @dev Returns true if the transfer is valid, and false otherwise.
+     * @notice Returns true if the transfer is valid, and false otherwise.
+     * @dev Don't check the balance and the user's right (access control)
      */
     function transferred(address from, address to, uint256 value) external returns (bool isValid);
 }

@@ -6,7 +6,7 @@ pragma solidity ^0.8.20;
 import {IDebtEngine, ICMTATDebt, ICMTATCreditEvents} from "../../../interfaces/engine/IDebtEngine.sol";
 import {DebtModule} from "./DebtModule.sol";
 /**
- * @title Debt module
+ * @title Debt Engine module
  * @dev 
  *
  * Retrieve debt and creditEvents information from a debtEngine

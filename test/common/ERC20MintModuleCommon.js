@@ -29,7 +29,7 @@ function ERC20MintModuleCommon () {
         // emits a Mint event
       await expect(this.logs)
         .to.emit(this.cmtat, 'Mint')
-        .withArgs(this.address1, VALUE1, '0x')
+        .withArgs(sender, this.address1, VALUE1, '0x')
 
       // Act
       // Issue 50 and check intermediate balances and total supply
@@ -49,7 +49,7 @@ function ERC20MintModuleCommon () {
         // emits a Mint event
       await expect(this.logs)
         .to.emit(this.cmtat, 'Mint')
-        .withArgs(this.address2, VALUE2, '0x')
+        .withArgs(sender, this.address2, VALUE2, '0x')
     }
 
     /**

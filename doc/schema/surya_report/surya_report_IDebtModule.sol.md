@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./interfaces/technical/IBurnToken.sol | [object Promise] |
+| ./interfaces/modules/IDebtModule.sol | [object Promise] |
 
 
 ### Contracts Description Table
@@ -15,10 +15,9 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **IBurnERC20** | Interface |  |||
-||||||
-| **IBurnFromERC20** | Interface |  |||
-| └ | burnFrom | External ❗️ | 🛑  |NO❗️ |
+| **IDebtModule** | Interface | ICMTATDebt |||
+| └ | setDebtInstrument | External ❗️ | 🛑  |NO❗️ |
+| └ | setDebt | External ❗️ | 🛑  |NO❗️ |
 
 
 ### Legend

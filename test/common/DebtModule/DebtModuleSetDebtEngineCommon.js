@@ -5,7 +5,7 @@ function DebtModuleSetDebtEngineCommon () {
   context('DebtEngineSetTest', function () {
     beforeEach(async function () {
       this.debtEngineMock = await ethers.deployContract('DebtEngineMock')
-      })
+    })
     it('testCanBeSetByAdmin', async function () {
       // Act
       this.logs = await this.cmtat

@@ -50,13 +50,13 @@ Only authorized users (*BURNER_ROLE*) are allowed to call this function.
 
 ##### Events
 
-###### `Burn(address,uint,string)`
+###### `Burn(address, address, uint,string)`
 
 ```solidity
-event Burn(address indexed owner, uint256 value, bytes data);
+event Burn(address indexed burner, address indexed account, uint256 value, bytes data)
 ```
 
-Emitted when the specified `value` amount of tokens owned by `owner`are destroyed with the given `reason`
+Emitted when the specified `value` amount of tokens owned by `owner`are destroyed with the given `data`
 
 #### `burn(address,uint256,bytes)`
 
@@ -78,13 +78,13 @@ Only authorized users (*BURNER_ROLE*) are allowed to call this function.
 
 ##### Events
 
-###### `Burn(address,uint,bytes)`
+###### `Burn(address,address, uint,bytes)`
 
 ```solidity
-event Burn(address indexed owner, uint256 value, bytes data);
+event Burn(address indexed burner, address indexed account, uint256 value, bytes data)
 ```
 
-Emitted when the specified `value` amount of tokens owned by `owner`are destroyed with the given `reason`
+Emitted when the specified `value` amount of tokens owned by `owner`are destroyed with the given `data`
 
 #### `batchBurn(address[],uint256[],bytes)  `
 
@@ -92,7 +92,7 @@ Emitted when the specified `value` amount of tokens owned by `owner`are destroye
 
 ```solidity
 function batchBurn(address[] calldata accounts,uint256[] calldata values,bytes memory data) 
-public virtual onlyRole(BURNER_ROLE
+public virtual onlyRole(BURNER_ROLE)
 ```
 
 ##### Description

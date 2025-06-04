@@ -6,6 +6,7 @@ pragma solidity ^0.8.20;
 import {AuthorizationModule} from "../../security/AuthorizationModule.sol";
 /* ==== Engine === */
 import {IDebtEngine, ICMTATDebt} from "../../../interfaces/engine/IDebtEngine.sol";
+import {IDebtModule} from "../../../interfaces/modules/IDebtModule.sol";
 
 /**
  * @title Debt module
@@ -13,10 +14,8 @@ import {IDebtEngine, ICMTATDebt} from "../../../interfaces/engine/IDebtEngine.so
  *
  * Set Debt info
  */
-abstract contract DebtModule is AuthorizationModule, ICMTATDebt {
-    // No paramater to reduce contract size
-    event Debt();
-    event DebtInstrumentEvent();
+abstract contract DebtModule is AuthorizationModule, IDebtModule {
+   
     /* ============ State Variables ============ */
     bytes32 public constant DEBT_ROLE = keccak256("DEBT_ROLE");
     /* ============ ERC-7201 ============ */
@@ -33,28 +32,33 @@ abstract contract DebtModule is AuthorizationModule, ICMTATDebt {
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/    
+
     /**
-     * @notice Set the debt
-     */
+    * @inheritdoc IDebtModule
+    */
     function setDebt(
           ICMTATDebt.DebtInformation calldata debt_
-    ) external virtual onlyRole(DEBT_ROLE) {
+    ) external virtual override(IDebtModule) onlyRole(DEBT_ROLE) {
         DebtModuleStorage storage $ = _getDebtModuleStorage();
         $._debt = debt_;
         emit Debt();
     }
 
     /**
-     * @notice Set only the instrument
-     */
+    * @inheritdoc IDebtModule
+    */
     function setDebtInstrument(
           ICMTATDebt.DebtInstrument calldata debtInstrument_
-    ) external virtual onlyRole(DEBT_ROLE) {
+    ) external virtual override(IDebtModule) onlyRole(DEBT_ROLE) {
         DebtModuleStorage storage $ = _getDebtModuleStorage();
         $._debt.debtInstrument = debtInstrument_;
         emit DebtInstrumentEvent();
     }
-    function debt() public view virtual  returns(DebtInformation memory DebtInformationResult){
+    
+    /**
+    * @inheritdoc ICMTATDebt
+    */
+    function debt() public view virtual override(ICMTATDebt) returns(DebtInformation memory DebtInformationResult){
         DebtModuleStorage storage $ = _getDebtModuleStorage();
         DebtInformationResult = $._debt;
     }

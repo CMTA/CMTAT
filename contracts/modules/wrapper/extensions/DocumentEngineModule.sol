@@ -6,23 +6,16 @@ pragma solidity ^0.8.20;
 import {AuthorizationModule} from "../../security/AuthorizationModule.sol";
 /* ==== Engine === */
 import {IERC1643, IDocumentEngine} from "../../../interfaces/engine/IDocumentEngine.sol";
+import {IDocumentEngineModule} from "../../../interfaces/modules/IDocumentEngineModule.sol";
 
 /**
- * @title Document module
+ * @title Document module (ERC1643)
  * @dev 
  *
  * Retrieve documents from a documentEngine
  */
 
-abstract contract DocumentEngineModule is AuthorizationModule, IERC1643 {
-    error CMTAT_DocumentEngineModule_SameValue();
-
-    /* ============ Events ============ */
-    /**
-     * @dev Emitted when a rule engine is set.
-     */
-    event DocumentEngine(IERC1643 indexed newDocumentEngine);
-   
+abstract contract DocumentEngineModule is AuthorizationModule, IDocumentEngineModule {
     /* ============ ERC-7201 ============ */
     bytes32 public constant DOCUMENT_ROLE = keccak256("DOCUMENT_ROLE");
     // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.DocumentEngineModule")) - 1)) & ~bytes32(uint256(0xff))
@@ -56,7 +49,7 @@ abstract contract DocumentEngineModule is AuthorizationModule, IERC1643 {
         return $._documentEngine;
     }
 
-    function getDocument(string memory name) public view  virtual returns (Document memory document){
+    function getDocument(string memory name) public view  virtual override(IERC1643) returns (Document memory document){
         DocumentEngineModuleStorage storage $ = _getDocumentEngineModuleStorage();
         if(address($._documentEngine) != address(0)){
             return $._documentEngine.getDocument(name);
@@ -65,7 +58,7 @@ abstract contract DocumentEngineModule is AuthorizationModule, IERC1643 {
         }
     }
 
-    function getAllDocuments() public view virtual returns (string[] memory documents){
+    function getAllDocuments() public view virtual override(IERC1643) returns (string[] memory documents){
         DocumentEngineModuleStorage storage $ = _getDocumentEngineModuleStorage();
         if(address($._documentEngine) != address(0)){
             documents =  $._documentEngine.getAllDocuments();
@@ -73,10 +66,7 @@ abstract contract DocumentEngineModule is AuthorizationModule, IERC1643 {
     }
 
     /* ============  Restricted Functions ============ */
-    /*
-    * @notice set an authorizationEngine if not already set
-    * 
-    */
+
     function setDocumentEngine(
         IERC1643 documentEngine_
     ) external virtual onlyRole(DOCUMENT_ROLE) {

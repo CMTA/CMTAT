@@ -15,7 +15,7 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **CMTATBaseCore** | Implementation | Initializable, ContextUpgradeable, BaseModule, ERC20MintModule, ERC20BurnModule, ValidationModuleCore, ERC20BaseModule |||
+| **CMTATBaseCore** | Implementation | Initializable, ContextUpgradeable, BaseModule, ERC20MintModule, ERC20BurnModule, ValidationModuleCore, ERC20BaseModule, IForcedBurnERC20, IBurnMintERC20, IERC7551ERC20EnforcementEvent |||
 | └ | initialize | Public ❗️ | 🛑  | initializer |
 | └ | __CMTAT_init | Internal 🔒 | 🛑  | onlyInitializing |
 | └ | __CMTAT_openzeppelin_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |
@@ -28,7 +28,7 @@
 | └ | transfer | Public ❗️ | 🛑  |NO❗️ |
 | └ | transferFrom | Public ❗️ | 🛑  |NO❗️ |
 | └ | burnAndMint | Public ❗️ | 🛑  |NO❗️ |
-| └ | forceBurn | Public ❗️ | 🛑  | onlyRole |
+| └ | forcedBurn | Public ❗️ | 🛑  | onlyRole |
 | └ | _mint | Internal 🔒 | 🛑  | |
 | └ | _burn | Internal 🔒 | 🛑  | |
 

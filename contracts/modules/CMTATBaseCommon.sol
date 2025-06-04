@@ -10,15 +10,14 @@ import {ERC20MintModule} from "./wrapper/core/ERC20MintModule.sol";
 // Extensions
 import {ExtraInformationModule} from "./wrapper/extensions/ExtraInformationModule.sol";
 import {ERC20EnforcementModule} from "./wrapper/extensions/ERC20EnforcementModule.sol";
-// options
-import {ERC20BaseModule, ERC20Upgradeable} from "./wrapper/core/ERC20BaseModule.sol";
-// Other
 import {DocumentEngineModule,  IERC1643} from "./wrapper/extensions/DocumentEngineModule.sol";
 import {SnapshotEngineModule} from "./wrapper/extensions/SnapshotEngineModule.sol";
-
+// options
+import {ERC20BaseModule, ERC20Upgradeable} from "./wrapper/core/ERC20BaseModule.sol";
  /* ==== Interface and other library === */
 import {ICMTATConstructor} from "../interfaces/technical/ICMTATConstructor.sol";
 import {ISnapshotEngine} from "../interfaces/engine/ISnapshotEngine.sol";
+import {IBurnMintERC20} from "../interfaces/technical/IMintBurnToken.sol";
 import {Errors} from "../libraries/Errors.sol";
 abstract contract CMTATBaseCommon is
     // Core
@@ -30,7 +29,8 @@ abstract contract CMTATBaseCommon is
     SnapshotEngineModule,
     ERC20EnforcementModule,
     DocumentEngineModule,
-    ExtraInformationModule
+    ExtraInformationModule,
+    IBurnMintERC20
 {  
  
     function _checkTransferred(address /*spender*/, address from, address to, uint256 value) internal virtual {
@@ -123,19 +123,15 @@ abstract contract CMTATBaseCommon is
     //////////////////////////////////////////////////////////////*/
 
     /**
-    * @notice burn and mint atomically
-    * @param from current token holder to burn tokens
-    * @param to receiver to send the new minted tokens
-    * @param amountToBurn number of tokens to burn
-    * @param amountToMint number of tokens to mint
+    * @inheritdoc IBurnMintERC20
     * @dev 
     * - The access control is managed by the functions burn (ERC20BurnModule) and mint (ERC20MintModule)
     * - Input validation is also managed by the functions burn and mint
     * - You can mint more tokens than burnt
     */
-    function burnAndMint(address from, address to, uint256 amountToBurn, uint256 amountToMint, bytes calldata data) public virtual  {
-        burn(from, amountToBurn, data);
-        mint(to, amountToMint, data);
+    function burnAndMint(address from, address to, uint256 amountToBurn, uint256 amountToMint, bytes calldata data) public virtual override(IBurnMintERC20) {
+        ERC20BurnModule.burn(from, amountToBurn, data);
+        ERC20MintModule.mint(to, amountToMint, data);
     }
 
 

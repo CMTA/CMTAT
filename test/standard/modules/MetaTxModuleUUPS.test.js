@@ -2,7 +2,7 @@ const MetaTxModuleCommon = require('../../common/MetaTxModuleCommon')
 const {
   deployCMTATUUPSProxy,
   fixture,
-  loadFixture,
+  loadFixture
 } = require('../../deploymentUtils.js')
 const { ZERO_ADDRESS, ERC2771ForwarderDomain } = require('../../utils.js')
 describe('Standard - MetaTxModule', function () {

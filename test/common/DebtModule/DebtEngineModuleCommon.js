@@ -13,10 +13,10 @@ function DebtEngineModuleCommon () {
           .setDebtEngine(this.debtEngineMock.target)
       }
       debtIdentifier = {
-        issuerName: "CMTA",
-        issuerDescription : "Capital Market",
+        issuerName: 'CMTA',
+        issuerDescription: 'Capital Market',
         guarantor: 'Guarantor A',
-        debtHolder: 'debtHolder A',
+        debtHolder: 'debtHolder A'
       }
       debtInstrument = {
         interestRate: 500, // Example: 5.00%
@@ -30,11 +30,11 @@ function DebtEngineModuleCommon () {
         issuanceDate: '2024-01-01',
         couponPaymentFrequency: 'Semi-Annual',
         currencyContract: ethers.Typed.address('0x000000000000000000000000000000000000dEaD'),
-        currency: "USDC"
+        currency: 'USDC'
       }
       debtBase = {
-        debtIdentifier:debtIdentifier,
-        debtInstrument: debtInstrument
+        debtIdentifier,
+        debtInstrument
       }
       creditEvents = {
         flagDefault: false,
@@ -59,7 +59,7 @@ function DebtEngineModuleCommon () {
       expect(debt.debtIdentifier.issuerDescription).to.equal(debtBase.debtIdentifier.issuerDescription)
       expect(debt.debtIdentifier.guarantor).to.equal(debtBase.debtIdentifier.guarantor)
       expect(debt.debtIdentifier.debtHolder).to.equal(debtBase.debtIdentifier.debtHolder)
-      
+
       // debt instrument
       expect(debt.debtInstrument.interestRate).to.equal(debtBase.debtInstrument.interestRate)
       expect(debt.debtInstrument.parValue).to.equal(debtBase.debtInstrument.parValue)

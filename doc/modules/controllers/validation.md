@@ -10,6 +10,8 @@ This document defines the Validation Module for the CMTA Token specification. Th
 
 ## Schema
 
+
+
 ### Inheritance
 
 ![surya_inheritance_ValidationModule.sol](../../schema/surya_inheritance/surya_inheritance_ValidationModule.sol.png)

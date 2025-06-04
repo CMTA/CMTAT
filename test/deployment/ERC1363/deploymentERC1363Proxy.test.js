@@ -88,7 +88,7 @@ describe('CMTAT - ERC1363 Proxy Deployment', function () {
   ERC20MintModuleCommon()
   EnforcementModuleCommon()
   PauseModuleCommon()
-  
+
   // Extensions
   ERC20EnforcementModuleCommon()
   DocumentModuleCommon()

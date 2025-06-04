@@ -4,6 +4,7 @@ pragma solidity ^0.8.20;
 
 /* ==== Module === */
 import {AuthorizationModule} from "../../security/AuthorizationModule.sol";
+import {IAllowlistModule} from "../../../interfaces/modules/IAllowlistModule.sol";
 import {AllowlistModuleInternal} from "../../internal/AllowlistModuleInternal.sol";
 
 /*
@@ -15,10 +16,9 @@ import {AllowlistModuleInternal} from "../../internal/AllowlistModuleInternal.so
  */
 abstract contract AllowlistModule is
     AllowlistModuleInternal,
-    AuthorizationModule
+    AuthorizationModule,
+    IAllowlistModule
 {
-    event AddressAddedToAllowlist(address indexed account, bool indexed status, address indexed enforcer, bytes data);
-    event AllowlistEnableStatus(address indexed operator, bool status);
     /* ============ State Variables ============ */
     bytes32 public constant ALLOWLIST_ROLE = keccak256("ALLOWLIST_ROLE");
    
@@ -26,28 +26,34 @@ abstract contract AllowlistModule is
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
+    
+    /** 
+    * @inheritdoc IAllowlistModule
+    */
     function isAllowlisted(address account) public view virtual returns (bool) {
        return _isAllowlisted(account);
     }
 
+    /** 
+    * @inheritdoc IAllowlistModule
+    */
     function setAddressAllowlist(address account, bool status) public virtual  onlyRole(ALLOWLIST_ROLE){
          _addToAllowlist(account, status, "");
     }
 
-    /**
-     * @notice add/remove an address to/from the allowlist
-     * @param account the account to add
-     * @param status true to freeze, false to unlist
-     * @param data further information if needed
-     */
+
+    /** 
+    * @inheritdoc IAllowlistModule
+    */
     function setAddressAllowlist(
         address account, bool status, bytes calldata data
     ) public virtual onlyRole(ALLOWLIST_ROLE)  {
          _addToAllowlist(account, status, data);
     }
 
-    /**
-    * @notice batch version of {setAddressFrozen}
+
+    /** 
+    * @inheritdoc IAllowlistModule
     */
     function batchSetAddressAllowlist(
         address[] calldata accounts, bool[] calldata status
@@ -55,8 +61,9 @@ abstract contract AllowlistModule is
          _addToAllowlist(accounts, status, "");
     }
 
-    /**
-    * @notice enable/disable allowlist
+
+    /** 
+    * @inheritdoc IAllowlistModule
     */
     function enableAllowlist(
         bool status
@@ -65,9 +72,9 @@ abstract contract AllowlistModule is
         emit AllowlistEnableStatus(_msgSender(), status);
     }
 
-    /**
-     * @notice Returns true if the list is enabled, false otherwise
-     */
+    /** 
+    * @inheritdoc IAllowlistModule
+    */
     function isAllowlistEnabled() public view virtual returns (bool) {
         return _isAllowlistEnabled();
     }

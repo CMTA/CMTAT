@@ -6,7 +6,7 @@ const {
 
 } = require('../../deploymentUtils')
 const {
-  ZERO_ADDRESS
+  ZERO_ADDRESS, DEFAULT_ADMIN_ROLE
 } = require('../../utils')
 const ERC20BaseModuleCommon = require('../../common/ERC20BaseModuleCommon')
 const ERC20MintModuleCommon = require('../../common/ERC20MintModuleCommon')
@@ -42,7 +42,7 @@ describe('CMTAT Core - Standalone', function () {
     // Burn 20
     this.logs = await this.cmtat
       .connect(sender)
-      .forceBurn(this.address1, VALUE1, REASON)
+      .forcedBurn(this.address1, VALUE1, REASON)
       // Assert
       // emits a Transfer event
     await expect(this.logs)
@@ -60,7 +60,7 @@ describe('CMTAT Core - Standalone', function () {
     // Act
     this.logs = await this.cmtat
       .connect(sender)
-      .forceBurn(this.address1, DIFFERENCE, REASON)
+      .forcedBurn(this.address1, DIFFERENCE, REASON)
 
     // Assert
     // Emits a Transfer event
@@ -84,15 +84,28 @@ describe('CMTAT Core - Standalone', function () {
     await bindTest(this.admin)
   })
 
+  it('testCannotBeForceBurnByNondAdmin', async function () {
+    // Act
+    await expect(
+      this.cmtat
+        .connect(this.address2)
+        .forcedBurn(this.address1, VALUE1, REASON)
+    )
+      .to.be.revertedWithCustomError(
+        this.cmtat,
+        'AccessControlUnauthorizedAccount'
+      )
+      .withArgs(this.address2.address, DEFAULT_ADMIN_ROLE)
+  })
+
   it('testCannotBeBurntByAdminIfNotFrozen', async function () {
     await this.cmtat.connect(this.admin).mint(this.address1, INITIAL_SUPPLY)
     expect(await this.cmtat.totalSupply()).to.equal(INITIAL_SUPPLY)
     await expect(
       this.cmtat
         .connect(this.admin)
-        .forceBurn(this.address1, DIFFERENCE, REASON)
+        .forcedBurn(this.address1, DIFFERENCE, REASON)
     )
       .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_BurnEnforcement_AddressIsNotFrozen')
   })
-
 })

@@ -23,8 +23,8 @@ abstract contract ValidationModuleRuleEngineInternal is
      */
     event RuleEngine(IRuleEngine indexed newRuleEngine);
     /* ============ ERC-7201 ============ */
-    // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.ValidationModuleRuleEngine")) - 1)) & ~bytes32(uint256(0xff))
-    bytes32 private constant ValidationModuleRuleEngineStorageLocation = 0xcdfcc2276162f6d911d58b232bc999d17d14128dc1d28508c945c59506d3c600;
+    // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.ValidationModuleRuleEngineInternal")) - 1)) & ~bytes32(uint256(0xff))
+    bytes32 private constant ValidationModuleRuleEngineStorageLocation = 0x77c8cc897d160e7bf5b10921804e357da17ae27460d4a6b5d9b27ffddf159d00;
     /* ==== ERC-7201 State Variables === */
     struct ValidationModuleRuleEngineStorage {
         IRuleEngine _ruleEngine;

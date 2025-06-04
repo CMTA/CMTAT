@@ -6,10 +6,10 @@ function DebtModuleCommon () {
 
     beforeEach(async function () {
       debtIdentifier = {
-        issuerName: "CMTA",
-        issuerDescription : "Capital Market",
+        issuerName: 'CMTA',
+        issuerDescription: 'Capital Market',
         guarantor: 'Guarantor A',
-        debtHolder: 'debtHolder A',
+        debtHolder: 'debtHolder A'
       }
       debtInstrument = {
         interestRate: 500, // Example: 5.00%
@@ -23,11 +23,11 @@ function DebtModuleCommon () {
         issuanceDate: '2024-01-01',
         couponPaymentFrequency: 'Semi-Annual',
         currencyContract: ethers.Typed.address('0x000000000000000000000000000000000000dEaD'),
-        currency: "USDC"
+        currency: 'USDC'
       }
       debtBase = {
-        debtIdentifier:debtIdentifier,
-        debtInstrument: debtInstrument
+        debtIdentifier,
+        debtInstrument
       }
       creditEvents = {
         flagDefault: false,

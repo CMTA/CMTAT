@@ -4,11 +4,11 @@ pragma solidity ^0.8.20;
 
 import {CMTATBaseCommon} from "./CMTATBaseCommon.sol";
 /* ==== Wrapper === */
+// Use by detectTransferRestriction
+import {ERC20BaseModule, ERC20Upgradeable} from "./wrapper/core/ERC20BaseModule.sol";
 // Extensions
 import {ERC20EnforcementModule} from "./wrapper/extensions/ERC20EnforcementModule.sol";
-// options
-import {ERC20BaseModule, ERC20Upgradeable} from "./wrapper/core/ERC20BaseModule.sol";
-// Other
+// Controllers
 import {ValidationModuleERC1404, IERC1404} from "./wrapper/extensions/ValidationModule/ValidationModuleERC1404.sol";
 import {ValidationModuleRuleEngine} from "./wrapper/extensions/ValidationModule/ValidationModuleRuleEngine.sol";
  /* ==== Interface and other library === */
@@ -16,7 +16,6 @@ import {ICMTATConstructor} from "../interfaces/technical/ICMTATConstructor.sol";
 import {Errors} from "../libraries/Errors.sol";
 abstract contract CMTATBase is
     CMTATBaseCommon,
-    // Core
     ValidationModuleERC1404
 {
     function _checkTransferred(address spender, address from, address to, uint256 value) internal virtual override {

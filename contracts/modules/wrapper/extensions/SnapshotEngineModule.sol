@@ -5,17 +5,12 @@ pragma solidity ^0.8.20;
 /* ==== Module === */
 import {AuthorizationModule} from "../../security/AuthorizationModule.sol";
 /* ==== Engine === */
-import {ISnapshotEngine} from "../../../interfaces/engine/ISnapshotEngine.sol";
+import {ISnapshotEngine, ISnapshotEngineModule} from "../../../interfaces/modules/ISnapshotEngineModule.sol";
 
-abstract contract SnapshotEngineModule is AuthorizationModule {
-    error CMTAT_SnapshotModule_SameValue();
+abstract contract SnapshotEngineModule is ISnapshotEngineModule, AuthorizationModule {
     /* ============ State Variables ============ */
     bytes32 public constant SNAPSHOOTER_ROLE = keccak256("SNAPSHOOTER_ROLE");
-    /* ============ Events ============ */
-    /**
-     * @dev Emitted when a rule engine is set.
-     */
-    event SnapshotEngine(ISnapshotEngine indexed newSnapshotEngine);
+
     /* ============ ERC-7201 ============ */
     // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.SnapshotEngineModule")) - 1)) & ~bytes32(uint256(0xff))
     bytes32 private constant SnapshotEngineModuleStorageLocation = 0x1387b97dfab601d3023cb57858a6be29329babb05c85597ddbe4926c1193a900;
@@ -45,20 +40,18 @@ abstract contract SnapshotEngineModule is AuthorizationModule {
     //////////////////////////////////////////////////////////////*/
 
     /**
-    * @notice returns the current snapshotEngine
+    * @inheritdoc ISnapshotEngineModule
     */
-    function snapshotEngine() public view virtual returns (ISnapshotEngine) {
+    function snapshotEngine() public view virtual override(ISnapshotEngineModule) returns (ISnapshotEngine) {
         SnapshotEngineModuleStorage storage $ = _getSnapshotEngineModuleStorage();
         return $._snapshotEngine;
     }
 
     /* ============  Restricted Functions ============ */
-    /*
-    * @notice Set the snapshotEngine
-    */
+
     function setSnapshotEngine(
         ISnapshotEngine snapshotEngine_
-    ) external virtual onlyRole(SNAPSHOOTER_ROLE) {
+    ) external virtual override(ISnapshotEngineModule) onlyRole(SNAPSHOOTER_ROLE) {
         SnapshotEngineModuleStorage storage $ = _getSnapshotEngineModuleStorage();
         require($._snapshotEngine != snapshotEngine_, CMTAT_SnapshotModule_SameValue());
         _setSnapshotEngine($, snapshotEngine_);
