@@ -7,7 +7,7 @@ import {ERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/
 /* ==== Module === */
 import {AuthorizationModule} from "../../security/AuthorizationModule.sol";
 /* ==== Technical === */
-//import {IMintERC20} from "../../../interfaces/technical/IMintBurnToken.sol";
+import {IMintERC20} from "../../../interfaces/technical/IMintBurnToken.sol";
 /* ==== Tokenization === */
 import {IERC3643Mint, IERC3643BatchTransfer} from "../../../interfaces/tokenization/IERC3643Partial.sol";
 import {IERC7551Mint} from "../../../interfaces/tokenization/draft-IERC7551.sol";
@@ -18,27 +18,14 @@ import {IERC7551Mint} from "../../../interfaces/tokenization/draft-IERC7551.sol"
  *
  * Contains all mint functions, inherits from ERC-20
  */
-abstract contract ERC20MintModule is ERC20Upgradeable, IERC3643Mint, IERC3643BatchTransfer, IERC7551Mint, AuthorizationModule {
+abstract contract ERC20MintModule is ERC20Upgradeable, IERC3643Mint, IERC3643BatchTransfer, IERC7551Mint, IMintERC20, AuthorizationModule {
     error CMTAT_MintModule_EmptyAccounts();
     error CMTAT_MintModule_AccountsValueslengthMismatch();
     error CMTAT_MintModule_EmptyTos();
     error CMTAT_MintModule_TosValueslengthMismatch();
 
-    /**
-     * @dev Emitted when performing mint in batch with one specific value by account
-     */
-    event BatchMint(
-        address indexed minter,
-        address[] accounts,
-        uint256[] values
-    );
     /* ============ State Variables ============ */
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
-
-    /* ============  Initializer Function ============ */
-    function __ERC20MintModule_init_unchained() internal onlyInitializing {
-        // no variable to initialize
-    }
 
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
@@ -155,7 +142,7 @@ abstract contract ERC20MintModule is ERC20Upgradeable, IERC3643Mint, IERC3643Bat
 
       function _mint(address account, uint256 value, bytes memory data) internal virtual {
         _mintOverride(account, value);
-        emit Mint(account, value, data);
+        emit Mint(_msgSender(), account, value, data);
       }
 
 }

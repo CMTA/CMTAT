@@ -6,7 +6,8 @@ pragma solidity ^0.8.20;
 import {PauseModule}  from "../core/PauseModule.sol";
 import {EnforcementModule} from "../core/EnforcementModule.sol";
 /**
- * @dev Validation module.
+ * @title Validation module
+ * @dev 
  *
  * Useful for to restrict and validate transfers
  */

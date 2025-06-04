@@ -15,12 +15,13 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **ERC20EnforcementModule** | Implementation | ERC20Upgradeable, IERC7551ERC20Enforcement, IERC3643ERC20Enforcement, AuthorizationModule |||
-| └ | __ERC20EnforcementModule_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |
+| **ERC20EnforcementModule** | Implementation | ERC20Upgradeable, IERC7551ERC20Enforcement, IERC3643ERC20Enforcement, IERC7551ERC20EnforcementEvent, AuthorizationModule |||
 | └ | getFrozenTokens | Public ❗️ |   |NO❗️ |
 | └ | getActiveBalanceOf | Public ❗️ |   |NO❗️ |
 | └ | forcedTransfer | Public ❗️ | 🛑  | onlyRole |
 | └ | forcedTransfer | Public ❗️ | 🛑  | onlyRole |
+| └ | freezePartialTokens | Public ❗️ | 🛑  | onlyRole |
+| └ | unfreezePartialTokens | Public ❗️ | 🛑  | onlyRole |
 | └ | freezePartialTokens | Public ❗️ | 🛑  | onlyRole |
 | └ | unfreezePartialTokens | Public ❗️ | 🛑  | onlyRole |
 | └ | _freezePartialTokens | Internal 🔒 | 🛑  | |

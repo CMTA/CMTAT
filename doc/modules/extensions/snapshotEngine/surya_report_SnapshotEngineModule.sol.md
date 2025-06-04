@@ -15,7 +15,7 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **SnapshotEngineModule** | Implementation | AuthorizationModule |||
+| **SnapshotEngineModule** | Implementation | ISnapshotEngineModule, AuthorizationModule |||
 | └ | __SnapshotEngineModule_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |
 | └ | snapshotEngine | Public ❗️ |   |NO❗️ |
 | └ | setSnapshotEngine | External ❗️ | 🛑  | onlyRole |

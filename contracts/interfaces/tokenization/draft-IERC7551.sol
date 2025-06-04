@@ -8,7 +8,7 @@ interface IERC7551Mint {
      * @notice Emitted when the specified  `value` amount of new tokens are created and
      * allocated to the specified `account`.
      */
-    event Mint(address indexed account, uint256 value, bytes data);
+    event Mint(address indexed minter, address indexed account, uint256 value, bytes data);
     /**
     * @notice Creates a `value` amount of tokens and assigns them to `account`, by transferring it from address(0)
     * @param account token receiver
@@ -25,17 +25,21 @@ interface IERC7551Mint {
 
 interface IERC7551Burn {
     /**
-    * @notice Emitted when the specified `value` amount of tokens owned by `owner`are destroyed with the given `reason`
+    * @notice Emitted when the specified `value` amount of tokens owned by `owner`are destroyed with the given `data`
     */
-    event Burn(address indexed owner, uint256 value, bytes data);
+    event Burn(address indexed burner, address indexed account, uint256 value, bytes data);
     /*
-    * This function MUST increase the balance of to by amount without decreasing the amount of tokens from any other holder. 
-    * This function MUST throw if the sum of amount and the amount of already issued tokens is greater than the total supply. 
-    * It MUST emit a Transfer as well as an TokensIssued event. 
+    * @notice  Burns tokens from a given address by transferring it to address(0)
+    * @dev 
+    * This function MUST reduce the balance of `account` by amount without increasing the amount of tokens of any other holder. 
+    * It MUST emit a burn as well as a Transfer event. 
+    * The Transfer event MUST contain 0x0 as the recipient account address. 
+    * The function MUST throw if account’s balance is less than amount (including frozen tokens). 
+    * The data parameter MAY be used to further document the action.
     * If {IERC7551Pause} is implemented:
-    *   Paused transfers MUST NOT prevent an issuance. The data parameter MAY be used to further document the action.
+    *   Paused transfers MUST NOT prevent a burn
     */
-    function burn(address to, uint256 amount, bytes calldata data) external;
+    function burn(address account, uint256 amount, bytes calldata data) external;
 }
 
 interface IERC7551Pause {
@@ -53,12 +57,33 @@ interface IERC7551Pause {
     function pause() external;
     function unpause() external;
 }
+interface IERC7551ERC20EnforcementEvent {
+    /**
+    * @notice Emitted when a transfer is forced.
+    */
+    event Enforcement (address indexed enforcer, address indexed account, uint256 amount, bytes data);
+}
 
 interface IERC7551ERC20Enforcement {
     /**
-    *  For events, see {IERC3643Partial - IERC3643EnforcementPartial}
-    *  
-    */
+     *  @notice this event is emitted when a certain amount of tokens is frozen on an address
+     *  @dev
+     *  Same name as ERC-3643 but with a supplementary data parameter
+     *  The event is emitted by freezePartialTokens and batchFreezePartialTokens functions
+     *  `account` is the address that is concerned by the freezing status
+     *  `value` is the amount of tokens that are frozen
+     */
+    event TokensFrozen(address indexed account, uint256 value, bytes data);
+
+    /**
+     *  @notice This event is emitted when a certain amount of tokens is unfrozen on an address
+     *  @dev 
+     *  Same name as ERC-3643 but with a supplementary data parameter
+     *  The event is emitted by unfreezePartialTokens and batchUnfreezePartialTokens functions
+     *  `account` is the address that is concerned by the freezing status
+     *  `value` is the amount of tokens that are unfrozen
+     */
+    event TokensUnfrozen(address indexed account, uint256 value, bytes data);
     /**
     * @notice This function  returns the unfrozen balance of an account. 
     * @dev This balance can be used by the account for transfers to other account addresses.
@@ -72,8 +97,8 @@ interface IERC7551ERC20Enforcement {
     * the canTransfer() and canTransferFrom() MUST return false.
     */
     function getFrozenTokens(address account) external view returns (uint256);
-    function freezePartialTokens(address account, uint256 amount) external;
-    function unfreezePartialTokens(address account, uint256 amount) external;
+    function freezePartialTokens(address account, uint256 amount, bytes memory data) external;
+    function unfreezePartialTokens(address account, uint256 amount, bytes memory data) external;
     /*
     * @notice Triggers a forced transfer.
     * @dev This function transfer amount tokens to to without requiring the consent of from. 
@@ -89,11 +114,13 @@ interface IERC7551ERC20Enforcement {
 interface IERC7551Compliance {
     /*
     * @notice This function return true if the message sender is able to transfer amount tokens to to respecting all compliance.
+    * @dev Don't check the balance and the user's right (access control)
     */
     function canTransfer(address from, address to, uint256 value) external view returns (bool);
 
     /*
     * @notice This function return true if the message sender is able to transfer amount tokens to to respecting all compliance.
+    * @dev Don't check the balance and the user's right (access control)
     */
     function canTransferFrom(
         address spender,

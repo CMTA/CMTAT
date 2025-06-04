@@ -24,8 +24,6 @@ However, this is not enforced in the functions that allow to change a user’s a
 
 ![surya_graph_PauseModule.sol](../../../schema/surya_graph/surya_graph_PauseModule.sol.png)
 
-## 
-
 ## API for Ethereum
 
 This section describes the Ethereum API of the Pause Module.

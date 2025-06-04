@@ -1,22 +1,31 @@
-# Base Module
+# Extra Information Module
 
-This document defines Base Module for the CMTA Token specification.
+This document defines the Extra Information Module, which allows to set additional information related to the token
 
 [TOC]
 
+
+
 ## Rationale
 
-> The Base Module set the basic properties common to the different CMTAT tokens.
->
-> Currently it only stores the contract version with the ERC-3643 function to retrieve it (`version`)
->
-> - The contract version
+The ExtraInformation Module set the basic properties common to the different CMTAT tokens to represent equity securities as well as tokens representing and debt securities. Here a quick list :
 
-> The Base Module sets forth the basic functionalities a token must have to comply with the CMTAT framework, for tokens representing equity securities as well as tokens representing and debt securities. Here a quick list :
->
-> - Terms of tokenization
-> - Token ID (ISIN or other identifier) 
-> - Others fields to allow the issuer to add additional information: information, flag
+- Terms of tokenization
+
+- Token ID (ISIN or other identifier) 
+
+- Metadata
+
+- Additional field to allow the issuer to add  supplementation information: information
+
+| Field name    | Type                                                         | Setter           | Description                                                  |
+| ------------- | ------------------------------------------------------------ | ---------------- | ------------------------------------------------------------ |
+| `tokenId`     | string                                                       | `setTokenId`     | ISIN or other identifier                                     |
+| `terms`       | IERC1643Document<br /> (string name, string URI, bytes32 documentHash, uint256 lastModified) | `setTerms`       | Reference to any legally required documentation about the distributed ledger or the smart contract, such as the tokenization terms, the terms of the instrument and other relevant documents (e.g. prospectus or key information document) |
+| `metaData`    | string                                                       | `setMetaData`    | Use case: a link towards a JSON file to describes metadata. See [ERC-7551](https://ethereum-magicians.org/t/erc-7551-crypto-security-token-smart-contract-interface-ewpg/16416) |
+| `information` | string                                                       | `setInformation` | Supplementary information related to the token               |
+
+
 
 ## Schema
 
@@ -24,11 +33,11 @@ This document defines Base Module for the CMTA Token specification.
 
 ### Inheritance
 
-![surya_inheritance_BaseModule.sol](../../../schema/surya_inheritance/surya_inheritance_BaseModule.sol.png)
+![surya_inheritance_BaseModule.sol](../../../schema/surya_inheritance/surya_inheritance_ExtraInformationModule.sol.png)
 
 ### Graph
 
-![surya_graph_BaseModule.sol](../../../schema/surya_graph/surya_graph_BaseModule.sol.png)
+![surya_graph_ExtraInformationModuleModule.sol](../../../schema/surya_graph/surya_graph_ExtraInformationModule.sol.png)
 
 
 
@@ -79,28 +88,6 @@ public onlyRole(DEFAULT_ADMIN_ROLE)
 
 Set the information` to the given `uint256`.
 Only authorized users are allowed to call this function.
-
-### Files Description Table
-
-
-| File Name                             | SHA-1 Hash                               |
-| ------------------------------------- | ---------------------------------------- |
-| ./modules/wrapper/core/BaseModule.sol | 88c3e7f8f49a491cc6432472783d33ac3127d536 |
-
-
-### Contracts Description Table
-
-
-|    Contract    |         Type          |        Bases        |                |                  |
-| :------------: | :-------------------: | :-----------------: | :------------: | :--------------: |
-|       └        |   **Function Name**   |   **Visibility**    | **Mutability** |  **Modifiers**   |
-|                |                       |                     |                |                  |
-| **BaseModule** |    Implementation     | AuthorizationModule |                |                  |
-|       └        |      __Base_init      |     Internal 🔒      |       🛑        | onlyInitializing |
-|       └        | __Base_init_unchained |     Internal 🔒      |       🛑        | onlyInitializing |
-|       └        |      setTokenId       |      Public ❗️       |       🛑        |     onlyRole     |
-|       └        |       setTerms        |      Public ❗️       |       🛑        |     onlyRole     |
-|       └        |    setInformation     |      Public ❗️       |       🛑        |     onlyRole     |
 
 ### Events
 

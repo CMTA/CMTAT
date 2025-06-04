@@ -4,10 +4,10 @@ const { ZERO_ADDRESS } = require('../../utils')
 function DocumentModuleCommon () {
   context('Document Module Test', function () {
     beforeEach(async function () {
+      if (!this.definedAtDeployment) {
+        this.documentEngineMock = await ethers.deployContract('DocumentEngineMock')
+      }
       if ((await this.cmtat.documentEngine()) === ZERO_ADDRESS) {
-        this.documentEngineMock = await ethers.deployContract(
-          'DocumentEngineMock'
-        )
         await this.cmtat
           .connect(this.admin)
           .setDocumentEngine(this.documentEngineMock.target)

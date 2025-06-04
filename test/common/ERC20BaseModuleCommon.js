@@ -84,17 +84,17 @@ function ERC20BaseModuleCommon () {
         .connect(this.admin)
         .mint(this.address3, TOKEN_AMOUNTS[2])
     })
-    it('testHasTheCorrectBalanceInfo', async function () {
+    it('testHasTheCorrectBalanceBatch', async function () {
       // Act + Assert
       // Assert
       const ADDRESSES = [this.address1, this.address2, this.address3]
-      let result = await this.cmtat.balanceInfo(ADDRESSES)
+      let result = await this.cmtat.batchBalanceOf(ADDRESSES)
       expect(result[0][0]).to.equal(TOKEN_AMOUNTS[0])
       expect(result[0][1]).to.equal(TOKEN_AMOUNTS[1])
       expect(result[1]).to.equal(TOKEN_INITIAL_SUPPLY)
 
       const ADDRESSES2 = []
-      result = await this.cmtat.balanceInfo(ADDRESSES2)
+      result = await this.cmtat.batchBalanceOf(ADDRESSES2)
       expect(result[0].length).to.equal(0n)
       expect(result[1]).to.equal(TOKEN_INITIAL_SUPPLY)
     })

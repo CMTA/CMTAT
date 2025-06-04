@@ -14,7 +14,6 @@ import {ERC20BaseModule, ERC20Upgradeable} from "./wrapper/core/ERC20BaseModule.
 // Other
 import {BaseModule} from "./wrapper/core/BaseModule.sol";
 import {EnforcementModule} from "./wrapper/core/EnforcementModule.sol";
-import {PauseModule} from "./wrapper/core/PauseModule.sol";
 import {ValidationModule, ValidationModuleCore} from "./wrapper/core/ValidationModuleCore.sol";
 
 // Security
@@ -22,6 +21,9 @@ import {AuthorizationModule} from "./security/AuthorizationModule.sol";
 
 /* ==== Interface and other library === */
 import {ICMTATConstructor} from "../interfaces/technical/ICMTATConstructor.sol";
+import {IForcedBurnERC20} from "../interfaces/technical/IMintBurnToken.sol";
+import {IBurnMintERC20} from "../interfaces/technical/IMintBurnToken.sol";
+import {IERC7551ERC20EnforcementEvent} from "../interfaces/tokenization/draft-IERC7551.sol";
 import {Errors} from "../libraries/Errors.sol";
 
 /**
@@ -36,11 +38,12 @@ abstract contract CMTATBaseCore is
     ERC20MintModule,
     ERC20BurnModule,
     ValidationModuleCore,
-    ERC20BaseModule
+    ERC20BaseModule,
+    IForcedBurnERC20,
+    IBurnMintERC20,
+    IERC7551ERC20EnforcementEvent
 {  
     error CMTAT_BurnEnforcement_AddressIsNotFrozen(); 
-    event Enforcement (address indexed enforcer, address indexed account, uint256 amount, bytes data);
- 
     /*//////////////////////////////////////////////////////////////
                          INITIALIZER FUNCTION
     //////////////////////////////////////////////////////////////*/
@@ -105,7 +108,7 @@ abstract contract CMTATBaseCore is
     * @dev CMTAT internal module
     */
     function __CMTAT_internal_init_unchained() internal virtual onlyInitializing {
-        __Enforcement_init_unchained();   
+        // nothing to do
     }
 
     /*
@@ -114,13 +117,7 @@ abstract contract CMTATBaseCore is
     function __CMTAT_modules_init_unchained(address admin, ICMTATConstructor.ERC20Attributes memory ERC20Attributes_ ) internal virtual onlyInitializing {
         // AuthorizationModule_init_unchained is called firstly due to inheritance
         __AuthorizationModule_init_unchained(admin);
-        __ERC20BurnModule_init_unchained();
-        __ERC20MintModule_init_unchained();
-        // EnforcementModule_init_unchained is called before ValidationModule_init_unchained due to inheritance
-        __EnforcementModule_init_unchained();
         __ERC20BaseModule_init_unchained(ERC20Attributes_.decimalsIrrevocable, ERC20Attributes_.name, ERC20Attributes_.symbol);
-        // PauseModule_init_unchained is called before ValidationModule_init_unchained due to inheritance
-        __PauseModule_init_unchained();
     }
 
     function __CMTAT_init_unchained() internal virtual onlyInitializing {
@@ -141,8 +138,8 @@ abstract contract CMTATBaseCore is
     /* ============  View Functions ============ */
 
     /**
-     * @notice Returns the number of decimals used to get its user representation.
-     */
+    * @inheritdoc ERC20BaseModule
+    */
     function decimals()
         public
         view
@@ -154,23 +151,24 @@ abstract contract CMTATBaseCore is
     }
 
 
-    /**
-     * @notice Returns the name of the token.
-     */
+    /*
+    * @inheritdoc ERC20BaseModule
+    */
     function name() public virtual override(ERC20Upgradeable, ERC20BaseModule) view returns (string memory) {
         return ERC20BaseModule.name();
     }
 
-    /**
-     * @notice Returns the symbol of the token, usually a shorter version of the
-     * name.
-     */
+    /*
+    * @inheritdoc ERC20BaseModule
+    */
     function symbol() public virtual override(ERC20Upgradeable, ERC20BaseModule) view returns (string memory) {
         return ERC20BaseModule.symbol();
     }
 
     /* ============  State Functions ============ */
-        /* ============  State Functions ============ */
+    /*
+    * @inheritdoc ERC20Upgradeable
+    */
     function transfer(address to, uint256 value) public virtual override returns (bool) {
         address from = _msgSender();
         require(ValidationModuleCore.canTransfer(from, to, value), Errors.CMTAT_InvalidTransfer(from, to, value) );
@@ -190,7 +188,7 @@ abstract contract CMTATBaseCore is
         override(ERC20Upgradeable, ERC20BaseModule)
         returns (bool)
     {
-        require(ValidationModuleCore.canTransfer(from, to, value), Errors.CMTAT_InvalidTransfer(from, to, value) );
+        require(ValidationModuleCore.canTransferFrom(_msgSender(),from, to, value), Errors.CMTAT_InvalidTransfer(from, to, value) );
         return ERC20BaseModule.transferFrom(from, to, value);
     }
 
@@ -199,31 +197,28 @@ abstract contract CMTATBaseCore is
     //////////////////////////////////////////////////////////////*/
 
     /**
-    * @notice burn and mint atomically
-    * @param from current token holder to burn tokens
-    * @param to receiver to send the new minted tokens
-    * @param amountToBurn number of tokens to burn
-    * @param amountToMint number of tokens to mint
+    * @inheritdoc IBurnMintERC20
     * @dev 
     * - The access control is managed by the functions burn (ERC20BurnModule) and mint (ERC20MintModule)
     * - Input validation is also managed by the functions burn and mint
     * - You can mint more tokens than burnt
     */
-    function burnAndMint(address from, address to, uint256 amountToBurn, uint256 amountToMint, bytes calldata data) public virtual  {
-        burn(from, amountToBurn, data);
-        mint(to, amountToMint, data);
+    function burnAndMint(address from, address to, uint256 amountToBurn, uint256 amountToMint, bytes calldata data) public virtual override(IBurnMintERC20) {
+        ERC20BurnModule.burn(from, amountToBurn, data);
+        ERC20MintModule.mint(to, amountToMint, data);
     }
 
     /**
-    * @notice allows the issuer to burn tokens from a frozen address
+    * @inheritdoc IForcedBurnERC20
     */
-    function forceBurn(
+    function forcedBurn(
         address account,
         uint256 value,
         bytes memory data
-    ) public virtual onlyRole(DEFAULT_ADMIN_ROLE) {
+    ) public virtual override(IForcedBurnERC20) onlyRole(DEFAULT_ADMIN_ROLE) {
         require(EnforcementModule.isFrozen(account), CMTAT_BurnEnforcement_AddressIsNotFrozen());
-        _burn(account, value);
+        // Skip ERC20BurnModule
+        ERC20Upgradeable._burn(account, value);
         emit Enforcement(_msgSender(), account, value, data);
     }
 
@@ -232,14 +227,16 @@ abstract contract CMTATBaseCore is
     //////////////////////////////////////////////////////////////*/
 
     /**
-    * @dev 
+    * @inheritdoc ERC20MintModule
     */
     function _mint(address account, uint256 value, bytes memory data) internal virtual override(ERC20MintModule) {
         require(ValidationModule._canMintBurnByModule(account), Errors.CMTAT_InvalidTransfer(address(0), account, value) );
         ERC20MintModule._mint(account, value, data);
     }
 
-
+    /**
+    * @inheritdoc ERC20BurnModule
+    */
     function _burn(address account, uint256 value, bytes memory data) internal virtual override(ERC20BurnModule) {
         require(ValidationModule._canMintBurnByModule(account), Errors.CMTAT_InvalidTransfer(account, address(0), value) );
         ERC20BurnModule._burn(account, value, data);

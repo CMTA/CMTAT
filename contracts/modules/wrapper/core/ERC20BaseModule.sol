@@ -8,6 +8,7 @@ import {ERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/
 import {AuthorizationModule} from "../../security/AuthorizationModule.sol";
 /* ==== Technical === */
 import {IERC20Allowance} from "../../../interfaces/technical/IERC20Allowance.sol";
+import {IERC20BatchBalance} from "../../../interfaces/engine/ISnapshotEngine.sol";
 /* ==== Tokenization === */
 import {IERC3643ERC20Base} from "../../../interfaces/tokenization/IERC3643Partial.sol";
 
@@ -19,7 +20,7 @@ import {IERC3643ERC20Base} from "../../../interfaces/tokenization/IERC3643Partia
  * Inherits from ERC-20
  * 
  */
-abstract contract ERC20BaseModule is ERC20Upgradeable, IERC20Allowance, IERC3643ERC20Base, AuthorizationModule {
+abstract contract ERC20BaseModule is ERC20Upgradeable, IERC20Allowance, IERC3643ERC20Base, IERC20BatchBalance, AuthorizationModule {
     event Name(string indexed newNameIndexed, string newName);
     event Symbol(string indexed newSymbolIndexed, string newSymbol);
 
@@ -29,6 +30,7 @@ abstract contract ERC20BaseModule is ERC20Upgradeable, IERC20Allowance, IERC3643
     /* ==== ERC-7201 State Variables === */
     struct ERC20BaseModuleStorage {
         uint8 _decimals;
+        // We don't use ERC20Upgradeable name and private because we can not modify them
         string _name;
         string _symbol;
     }
@@ -44,7 +46,7 @@ abstract contract ERC20BaseModule is ERC20Upgradeable, IERC20Allowance, IERC3643
         uint8 decimals_,
         string memory name_,
         string memory symbol_
-    ) internal onlyInitializing {
+    ) internal virtual onlyInitializing {
         ERC20BaseModuleStorage storage $ = _getERC20BaseModuleStorage();
         $._decimals = decimals_;
         $._symbol = symbol_;
@@ -108,11 +110,9 @@ abstract contract ERC20BaseModule is ERC20Upgradeable, IERC20Allowance, IERC3643
 
     /* ============  Custom functions ============ */
     /**
-    * @param addresses list of address to know their balance
-    * @return balances ,totalSupply array with balance for each address, totalSupply
-    * @dev useful to distribute dividend and to perform on-chain snapshot
+    * @inheritdoc IERC20BatchBalance
     */
-    function balanceInfo(address[] calldata addresses) public view virtual returns(uint256[] memory balances , uint256 totalSupply_) {
+    function batchBalanceOf(address[] calldata addresses) public view virtual override(IERC20BatchBalance) returns(uint256[] memory balances , uint256 totalSupply_) {
         balances = new uint256[](addresses.length);
         for(uint256 i = 0; i < addresses.length; ++i){
             balances[i] = ERC20Upgradeable.balanceOf(addresses[i]);

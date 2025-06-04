@@ -207,18 +207,6 @@ From the version v2.3.0, this command is not working and generates the following
 
 > RangeError: Maximum call stack size exceeded
 
-| Description                                                  | Command                                |
-| ------------------------------------------------------------ | -------------------------------------- |
-| Generate UML for all modules                                 | `npm run-script uml-all`               |
-| Generate UML for the interfaces EIP1404                      | `npm run-script uml-i-eip1404`         |
-| Generate UML for the contracts CMTAT_STANDALONE, CMTAT_PROXY && CMTAT_BASE | `npm run-script uml-partial`           |
-| Generate UML for core modules                                | `npm run-script uml-modules-mandatory` |
-| Generate UML for extensions modules                          | `npm run-script uml-modules-optional`  |
-| Generate UML for security modules                            | `npm run-script uml-modules-security`  |
-| Generate UML for mocks                                       | `npm run-script uml-mocks`             |
-
-
-
 ### [Surya](https://github.com/ConsenSys/surya)
 
 To generate documentation with surya, you can call the three bash scripts in doc/script

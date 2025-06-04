@@ -26,6 +26,8 @@
 | └ | pause | External ❗️ | 🛑  |NO❗️ |
 | └ | unpause | External ❗️ | 🛑  |NO❗️ |
 ||||||
+| **IERC7551ERC20EnforcementEvent** | Interface |  |||
+||||||
 | **IERC7551ERC20Enforcement** | Interface |  |||
 | └ | getActiveBalanceOf | External ❗️ |   |NO❗️ |
 | └ | getFrozenTokens | External ❗️ |   |NO❗️ |

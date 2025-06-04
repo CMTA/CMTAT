@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/wrapper/controllers/ValidationModuleCore.sol | [object Promise] |
+| ./modules/wrapper/core/ValidationModuleCore.sol | [object Promise] |
 
 
 ### Contracts Description Table
@@ -15,10 +15,9 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **ValidationModuleCore** | Implementation | PauseModule, EnforcementModule, IERC3643ComplianceRead, IERC7551Compliance |||
+| **ValidationModuleCore** | Implementation | ValidationModule, IERC3643ComplianceRead, IERC7551Compliance |||
 | └ | canTransfer | Public ❗️ |   |NO❗️ |
 | └ | canTransferFrom | Public ❗️ |   |NO❗️ |
-| └ | _canMintBurnByModule | Internal 🔒 |   | |
 | └ | _canTransferByModule | Internal 🔒 |   | |
 
 

@@ -6,10 +6,11 @@ import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/acce
 import {IERC165} from "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165Upgradeable.sol";
 /* ==== Module === */
 import {CMTATBase, ERC20Upgradeable} from "../../CMTATBase.sol";
+/* ==== Interfaces === */
 import {IERC7802} from "../../../interfaces/technical/IERC7802.sol";
-import {IBurnFromERC20} from "../../../interfaces/technical/IBurnToken.sol";
+import {IBurnFromERC20} from "../../../interfaces/technical/IMintBurnToken.sol";
 /**
- * @title ERC20Burn module.
+ * @title ERC20CrossChainModule (ERC-7802)
  * @dev 
  *
  * Contains all burn functions, inherits from ERC-20
@@ -26,9 +27,9 @@ abstract contract ERC20CrossChainModule is CMTATBase, IERC7802, IBurnFromERC20 {
     * @dev
     * Don't emit the same event as configured in the ERC20MintModule
     */
-    function crosschainMint(address _to, uint256 _amount) external virtual onlyRole(CROSS_CHAIN_ROLE) whenNotPaused {
-        _mintOverride(_to, _amount);
-        emit CrosschainMint(_to, _amount,_msgSender());
+    function crosschainMint(address to, uint256 value) external virtual onlyRole(CROSS_CHAIN_ROLE) whenNotPaused {
+        _mintOverride(to, value);
+        emit CrosschainMint(to, value,_msgSender());
     }
 
     /**
@@ -36,11 +37,10 @@ abstract contract ERC20CrossChainModule is CMTATBase, IERC7802, IBurnFromERC20 {
     * @dev
     * Don't emit the same event as configured in the ERC20BurnModule
     */
-    function crosschainBurn(address _from, uint256 _amount) external virtual onlyRole(CROSS_CHAIN_ROLE) whenNotPaused{
+    function crosschainBurn(address from, uint256 value) external virtual onlyRole(CROSS_CHAIN_ROLE) whenNotPaused{
         address sender =  _msgSender();
-        _burnFrom(sender, _from, _amount);
-        //_burnOverride(_from, _amount);
-        emit CrosschainBurn(_from, _amount, _msgSender());
+        _burnFrom(sender, from, value);
+        emit CrosschainBurn(from, value, _msgSender());
     }
 
     /**
@@ -90,6 +90,6 @@ abstract contract ERC20CrossChainModule is CMTATBase, IERC7802, IBurnFromERC20 {
         //_burn(account, value,  "burnFrom");
         // Specific event for the operation
         emit Spend(account, sender, value);
-        emit BurnFrom(account, sender, value);
+        emit BurnFrom(sender, account, sender, value);
     }
 }

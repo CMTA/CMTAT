@@ -3,6 +3,9 @@ const { DEFAULT_ADMIN_ROLE, ZERO_ADDRESS } = require('../../utils')
 
 function ValidationModuleSetRuleEngineCommon () {
   context('RuleEngineSetTest', function () {
+    beforeEach(async function () {
+      this.ruleEngineMock = await ethers.deployContract('RuleEngineMock', [this.admin])
+    })
     it('testCanBeSetByAdmin', async function () {
       // Assert
       expect(await this.cmtat.ruleEngine()).to.equal(ZERO_ADDRESS)

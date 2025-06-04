@@ -104,12 +104,31 @@ interface ICMTATCreditEvents {
 * @notice interface to represent debt tokens
 */
 interface ICMTATDebt {
-    struct DebtBase {
+    struct DebtInformation {
+        DebtIdentifier debtIdentifier;
+        DebtInstrument debtInstrument;
+    }
+    /**
+    * @dev Information on the issuer and other persons involved
+    */
+    struct DebtIdentifier {
+        string issuerName;
+        string issuerDescription;
+        string guarantor;
+        string debtHolder;
+    }
+    /**
+    * dev Information on the Instruments
+    */
+    struct DebtInstrument {
+        // uint256
         uint256 interestRate;
         uint256 parValue;
-        string guarantor;
-        string bondHolder;
+        uint256 minimumDenomination;
+        // string
+        string issuanceDate;
         string maturityDate;
+        string couponPaymentFrequency;
         /*
         * Interest schedule format (if any). The purpose of the interest schedule is to set, in the parameters of the smart
         *   contract, the dates on which the interest payments accrue.
@@ -126,18 +145,14 @@ interface ICMTATDebt {
         string interestPaymentDate;
         string dayCountConvention;
         string businessDayConvention;
-        string publicHolidaysCalendar;
-        string issuanceDate;
-        string couponFrequency;
+        string currency; 
+        // address
+        address currencyContract;
     }
-
-
-
     /**
      * @notice Returns debt information
      */
-    function debt() external view returns(DebtBase memory);
-   
+    function debt() external view returns(DebtInformation memory);
 }
 
 

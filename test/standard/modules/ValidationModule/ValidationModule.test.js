@@ -11,7 +11,6 @@ describe('Standard - ValidationModule', function () {
     this.ADDRESS2_INITIAL_BALANCE = 32n
     this.ADDRESS3_INITIAL_BALANCE = 33n
     Object.assign(this, await loadFixture(fixture))
-    this.ruleEngineMock = await ethers.deployContract('RuleEngineMock', [this.admin])
     this.cmtat = await deployCMTATStandalone(
       this._.address,
       this.admin.address,

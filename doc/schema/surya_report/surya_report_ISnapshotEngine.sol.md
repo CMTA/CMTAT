@@ -17,6 +17,9 @@
 ||||||
 | **ISnapshotEngine** | Interface |  |||
 | └ | operateOnTransfer | External ❗️ | 🛑  |NO❗️ |
+||||||
+| **IERC20BatchBalance** | Interface |  |||
+| └ | batchBalanceOf | External ❗️ |   |NO❗️ |
 
 
 ### Legend

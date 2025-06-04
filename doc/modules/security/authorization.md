@@ -11,6 +11,8 @@ This document defines Authorization Module for the CMTA Token specification.
 
 ## Schema
 
+![AuthorizationUML](../../schema/uml/AuthorizationUML.png)
+
 ### RBAC
 
 This diagram shows the different roles.
@@ -26,43 +28,9 @@ This behavior is implemented by overriding the function `hasRole` from OpenZeppe
 
 ![RBAC-diagram-RBAC.drawio](../../schema/accessControl/RBAC-diagram-RBAC.drawio.png)
 
-### UML
-
-![AuthorizationModule](../../schema/sol2uml/AuthorizationModule.svg)
-
 ### Graph
 
 ![surya_graph_AuthorizationModule.sol](../../schema/surya_graph/surya_graph_AuthorizationModule.sol.png)
-
-## Sūrya's Description Report
-
-### Files Description Table
-
-
-| File Name                                  | SHA-1 Hash                               |
-| ------------------------------------------ | ---------------------------------------- |
-| ./modules/security/AuthorizationModule.sol | b816390e7b0da6bbd9602af5a7f92dfc0095bbcd |
-
-
-### Contracts Description Table
-
-
-|        Contract         |                 Type                 |          Bases           |                |                  |
-| :---------------------: | :----------------------------------: | :----------------------: | :------------: | :--------------: |
-|            └            |          **Function Name**           |      **Visibility**      | **Mutability** |  **Modifiers**   |
-|                         |                                      |                          |                |                  |
-| **AuthorizationModule** |            Implementation            | AccessControlUpgradeable |                |                  |
-|            └            |      __AuthorizationModule_init      |        Internal 🔒        |       🛑        | onlyInitializing |
-|            └            | __AuthorizationModule_init_unchained |        Internal 🔒        |       🛑        | onlyInitializing |
-|            └            |               hasRole                |         Public ❗️         |                |       NO❗️        |
-
-
-### Legend
-
-| Symbol | Meaning                   |
-| :----: | ------------------------- |
-|   🛑    | Function can modify state |
-|   💵    | Function is payable       |
 
 ## API for Ethereum
 

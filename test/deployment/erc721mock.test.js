@@ -10,8 +10,13 @@ const {
   loadFixture
 } = require('../deploymentUtils')
 const { ZERO_ADDRESS } = require('../utils')
+// Core
+const PauseModuleCommon = require('../common/PauseModuleCommon')
+const EnforcementModuleCommon = require('../common/EnforcementModuleCommon')
+const BaseModuleCommon = require('../common/BaseModuleCommon')
+// Extensions
 const DocumentModuleCommon = require('../common/DocumentModule/DocumentModuleCommon')
-const DebtModuleCommon = require('../common/DebtModule/DebtModuleCommon')
+const ExtraInfoModuleCommon = require('../common/ExtraInfoModuleCommon')
 describe('ERC721MockUpgradeable', function () {
   const SYMBOL = 'ERC721MockS'
   const NAME = 'ERC721MockN'
@@ -34,6 +39,7 @@ describe('ERC721MockUpgradeable', function () {
         from: this.admin.address
       }
     )
+    this.generic = true
   })
 
   it('testHasTheRightNameAndSymbol', async function () {
@@ -103,6 +109,11 @@ describe('ERC721MockUpgradeable', function () {
       this.cmtat,
       'CMTAT_InvalidTransfer').withArgs(ZERO_ADDRESS, this.admin, 1)
   })
+  // Core
+  EnforcementModuleCommon()
+  BaseModuleCommon()
+  PauseModuleCommon()
+  // Extensions
   DocumentModuleCommon()
-  DebtModuleCommon()
+  ExtraInfoModuleCommon()
 })

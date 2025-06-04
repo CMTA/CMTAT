@@ -3,7 +3,7 @@
 pragma solidity ^0.8.20;
 import {IDebtEngine} from "../interfaces/engine/IDebtEngine.sol";
 interface IDebtEngineMock is IDebtEngine  {
-    function setDebt(DebtBase calldata debt_) external;
+    function setDebt(DebtInformation calldata debt_) external;
     function setCreditEvents(CreditEvents calldata creditEvents) external;
 }
 
@@ -11,10 +11,10 @@ interface IDebtEngineMock is IDebtEngine  {
 * @title a DebtEngine mock for testing, not suitable for production
 */
 contract DebtEngineMock is IDebtEngineMock {
-    DebtBase private _debt;
+    DebtInformation private _debt;
     CreditEvents private _creditEvents;
 
-    function debt() external view override returns (DebtBase memory) {
+    function debt() external view override returns (DebtInformation memory) {
         return _debt;
     }
 
@@ -22,7 +22,7 @@ contract DebtEngineMock is IDebtEngineMock {
         return _creditEvents;
     }
 
-    function setDebt(DebtBase calldata debt_) external override {
+    function setDebt(DebtInformation calldata debt_) external override {
         _debt = debt_;
     }
 

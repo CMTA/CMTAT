@@ -21,7 +21,7 @@
 | └ | _addAddressToTheList | Internal 🔒 | 🛑  | |
 | └ | _addAddressesToTheList | Internal 🔒 | 🛑  | |
 | └ | _addressIsListed | Internal 🔒 |   | |
-| └ | _getEnforcementModuleInternalStorage | Private 🔐 |   | |
+| └ | _getEnforcementModuleInternalStorage | Internal 🔒 |   | |
 
 
 ### Legend

@@ -18,6 +18,18 @@ Please follow <https://changelog.md/> conventions.
   
   - Update changelog
 
+## 3.0.0-rc.2
+
+- Deployment version
+  - Add CMTAT Allowlist (Whitelist) version
+  - Add CMTAT debt version
+    - Which means that `CMTATStandalone` and `CMTATUpgradeable`  no longer included  `DebtModule` and `DebtEngineModule`
+- Rename `forceBurn`in `forcedBurn`to use the same semantic as ERC-3643 `forcedTransfer`
+- Rename `balanceInfo`in `batchBalanceOf` to use the same semantic as ERC-3643 `batchBurn`and `batchMint`
+- Add several new interfaces for module, see interfaces/modules
+- Add a parameter `burner`and `minter`in the events Mint & Burn (ERC20MintModule / ERC20BurnModule)
+- Improve documentation & tests
+
 ## 3.0.0-rc.1
 
 - Move `MetaTx` module to the option folder

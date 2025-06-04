@@ -2,6 +2,8 @@
 
 This document defines the Snapshot Module for the CMTA Token specification. 
 
+This module allows to set a specific engine called `SnapshotEngine`to perform snapshot on-chain. 
+
 [TOC]
 
 ## Rationale
@@ -34,6 +36,8 @@ This document defines the Snapshot Module for the CMTA Token specification.
 
 Set the snapshotEngine
 
+
+
 #### snapshotEngine()
 
-returns the current snapshotEngine
+Returns the current snapshotEngine

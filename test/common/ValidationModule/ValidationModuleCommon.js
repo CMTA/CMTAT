@@ -5,8 +5,10 @@ function ValidationModuleCommon () {
   // Transferring with Rule Engine set
   context('RuleEngineTransferTest', function () {
     beforeEach(async function () {
-      if ((await this.cmtat.ruleEngine()) === ZERO_ADDRESS) {
+      if (!this.definedAtDeployment) {
         this.ruleEngineMock = await ethers.deployContract('RuleEngineMock', [this.admin])
+      }
+      if ((await this.cmtat.ruleEngine()) === ZERO_ADDRESS) {
         await this.cmtat
           .connect(this.admin)
           .setRuleEngine(this.ruleEngineMock.target)

@@ -15,8 +15,7 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **ERC20MintModule** | Implementation | ERC20Upgradeable, IERC3643Mint, IERC3643BatchTransfer, IERC7551Mint, AuthorizationModule |||
-| └ | __ERC20MintModule_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |
+| **ERC20MintModule** | Implementation | ERC20Upgradeable, IERC3643Mint, IERC3643BatchTransfer, IERC7551Mint, IMintERC20, AuthorizationModule |||
 | └ | mint | Public ❗️ | 🛑  | onlyRole |
 | └ | mint | Public ❗️ | 🛑  | onlyRole |
 | └ | batchMint | Public ❗️ | 🛑  | onlyRole |

@@ -53,11 +53,11 @@ public onlyRole(MINTER_ROLE)
 
 ##### Events
 
-###### Mint(address,uint256, bytes)
+###### Mint(address, address, uint256, bytes)
 
 
 ```solidity
-event Mint(address indexed account, uint256 value, bytes data);
+event Mint(address indexed minter, address indexed account, uint256 value, bytes data)
 ```
 
 Emitted when the specified  `value` amount of new tokens are created and
@@ -121,8 +121,6 @@ Only authorized users (`MINTER_ROLE`) are allowed to call this function
 ```
  event BatchMint(address indexed minter,address[] accounts,uint256[] values)
 ```
-
-
 
 #### `transferBatch(address[],uint256[])  `
 

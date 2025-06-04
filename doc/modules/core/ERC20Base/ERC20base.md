@@ -32,13 +32,12 @@ Base Module API for Ethereum blockchain extends the [ERC-20](https://github.com/
 
 ### Functions
 
-#### `balanceInfo(address[])`
+#### `batchBalanceOf(address[])`
 
 ###### Definition
 
 ```solidity
-function balanceInfo(address[] calldata addresses) 
-public view virtual 
+function batchBalanceOf(address[] calldata addresses) public view virtual override(IERC20BatchBalance) 
 returns(uint256[] memory balances , uint256 totalSupply_)
 ```
 
