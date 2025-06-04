@@ -25,7 +25,7 @@ interface ICMTATConstructor {
         uint8 decimalsIrrevocable;
     }
     struct BaseModuleAttributes {
-        // name of the tokenId
+        // ISIN or other identifier
         string tokenId;
         // terms associated with the token
         IERC1643CMTAT.DocumentInfo terms;

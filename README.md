@@ -55,6 +55,7 @@ The CMTAT supports the following extended features:
 
 - Perform snapshot on-chain through an external contract (`SnapshotEngine`)
 - Conditional transfers, via an external contract (`RuleEngine`)
+- Put several information on-chain such as `tokenId` (ISIN or other identifier), `terms` (reference to any legally required documentation) and additional information (`information`)
 
 #### Optional features
 
