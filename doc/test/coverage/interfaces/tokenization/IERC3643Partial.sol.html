@@ -1,0 +1,710 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for interfaces/tokenization/IERC3643Partial.sol</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../prettify.css" />
+    <link rel="stylesheet" href="../../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../../index.html">all files</a> / <a href="index.html">interfaces/tokenization/</a> IERC3643Partial.sol
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>0/0</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>0/0</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>0/0</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>0/0</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line high'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">//SPDX-License-Identifier: MPL-2.0
+&nbsp;
+pragma solidity ^0.8.20;
+&nbsp;
+/**
+* @dev  Common interface between CMTAT and ERC3643
+* Note that arguments name can change compare to ERC3643 because we use the same semantics as OpenZeppelin v.5.2.0 (e.g amount -&gt; value)
+*/
+interface IERC3643Pause {
+    /**
+     * @notice Returns true if the contract is paused, and false otherwise.
+     */
+    function paused() external view returns (bool);
+    /**
+     *  @notice pauses the token contract, 
+     *  @dev When contract is paused token holders cannot transfer tokens anymore
+     *  
+     */
+    function pause() external;
+&nbsp;
+    /**
+     *  @notice unpauses the token contract, 
+     *  @dev When contract is unpaused token holders can transfer tokens
+     *  
+     *  
+     */
+    function unpause() external;
+} 
+interface IERC3643ERC20Base {
+    /**
+     *  @notice sets the token name
+     *  @param name the name of token to set
+     */
+    function setName(string calldata name) external;
+    /**
+     *  @notice sets the token symbol
+     *  @param symbol the token symbol to set
+     */
+    function setSymbol(string calldata symbol) external;
+}
+&nbsp;
+interface IERC3643BatchTransfer {
+    /**
+     *  @notice batch version of transfer
+     *  @param tos The addresses of the receivers tos can not be empty
+     *  @param values The number of tokens to transfer to the corresponding receiver
+     *  @dev function allowing the minter to transfers in batch
+     *  If IERC3643Enforcement is implemented:
+     *      Require that the msg.sender and `to` addresses are not frozen.
+     *  If IERC364320Enforcement is implemented:
+     *      Require that the total value should not exceed available balance.
+     *  
+     *  Emits tos .length `Transfer` events
+     *  Warning: 
+     *  Contrary to ERC-3643 specification, return bool to keep the same behaviour as ERC-20 transfer
+     */
+    function batchTransfer(address[] calldata tos,uint256[] calldata values) external returns (bool);
+}
+&nbsp;
+interface IERC3643Base {
+    /**
+     * @dev Returns the current version of the token.
+     */
+    function version() external view returns (string memory);
+}
+&nbsp;
+interface IERC3643EnforcementEvent {
+    /**
+     *  this event is emitted when an address is frozen or unfrozen
+     *  the event is emitted by setAddressFrozen and batchSetAddressFrozen functions
+     *  `account` is the address that is concerned by the freezing status
+     *  `isFrozen` is the freezing status of the address
+     *  if `isFrozen` equals `true` the address is frozen after emission of the event
+     *  if `isFrozen` equals `false` the address is unfrozen after emission of the event
+     *  `enforcer` is the address of the enforcer  who called the function to freeze the address
+     *  Warning: contrary to ERC-3643 specification, add a supplementary field data to further document the action.
+     */
+    event AddressFrozen(address indexed account, bool indexed isFrozen, address indexed enforcer, bytes data);
+}
+interface IERC3643Enforcement {
+    /**
+     * @notice Returns true if the account is frozen, and false otherwise.
+     */
+    function isFrozen(address account) external view returns (bool);
+    /**
+     *  @notice sets an address frozen status for this token.
+     *  @param account The address for which to update frozen status
+     *  @param freeze Frozen status of the address
+     *  @dev
+     *  Emits an `AddressFrozen` event
+     */
+    function setAddressFrozen(address account, bool freeze) external;
+    /**
+    * @notice Batch version of {setAddressFrozen}
+    */
+    function batchSetAddressFrozen(address[] calldata accounts, bool[] calldata freeze) external;
+}
+&nbsp;
+/**
+* 
+* @dev For events, see {IERC7551ERC20Enforcement}
+*/
+interface IERC3643ERC20Enforcement {
+&nbsp;
+&nbsp;
+    /**
+     *  @notice Returns the amount of tokens that are partially frozen on a wallet
+     *  @dev 
+     *  The amount of frozen tokens is always &lt;= to the total balance of the wallet
+     *  @param `account` the address of the wallet on which getFrozenTokens is called
+     */
+    function getFrozenTokens(address account) external view returns (uint256);
+&nbsp;
+    /**
+     *  @notice freezes token amount specified for given address.
+     *  @param account The address for which to update frozen tokens
+     *  @param value Amount of Tokens to be frozen
+     *  @dev emits a `TokensFrozen` event
+     */
+    function freezePartialTokens(address account, uint256 value) external;
+    /**
+     *  @notice unfreezes token amount specified for given address
+     *  @param account The address for which to update frozen tokens
+     *  @param value Amount of Tokens to be unfrozen
+     *  @dev Emits a `TokensUnfrozen` event
+     */
+    function unfreezePartialTokens(address account, uint256 value) external;
+    /**
+     *  
+     *  @notice Triggers a forced transfer.
+     *  
+     *  @param from The address of the token holder
+     *  @param to The address of the receiver
+     *  @param value amount of tokens to transfer
+     *  @return `true` if successful and revert if unsuccessful
+     *  @dev 
+*    *  Force a transfer of tokens between 2 token holders
+     *  If IERC364320Enforcement is implemented:
+     *      Require that the total value should not exceed available balance.
+     *      In case the `from` address has not enough free tokens (unfrozen tokens)
+     *      but has a total balance higher or equal to the `amount`
+     *      the amount of frozen tokens is reduced in order to have enough free tokens
+     *      to proceed the transfer, in such a case, the remaining balance on the `from`
+     *      account is 100% composed of frozen tokens post-transfer.
+     *      emits a `TokensUnfrozen` event if `value` is higher than the free balance of `from`
+     *  emits a `Transfer` event
+     */
+    function forcedTransfer(address from, address to, uint256 value) external returns (bool);
+&nbsp;
+}
+interface IERC3643Mint{
+    /**
+     * @notice  Creates a `value` amount of tokens and assigns them to `account`, by transferring it from address(0)
+     * @param account token receiver
+     * @param value amount of tokens to mint
+     */
+    function mint(address account, uint256 value) external;
+    /**
+     *  @notice batch version of {mint}
+     *  @dev function allowing to mint tokens in batch
+     *  IMPORTANT : This transaction could exceed gas limit if `tos.length` is too heigh,
+     *  Use with care or you could lose TX fees with an "OUT OF GAS" transaction
+     *  @param accounts The addresses of the receivers
+     *  @param values The number of tokens to mint to the corresponding receiver
+     *  emits accounts.length `Transfer` events
+     */
+    function batchMint( address[] calldata accounts,uint256[] calldata values) external;
+}
+interface IERC3643Burn{
+    /**
+     * @notice Burns tokens from a given address by transferring it to address(0)
+     * @param account The address to burn tokens from.
+     * @param value The number of tokens to be burned.
+     * @dev burn tokens on an address, decreases the total supply.
+     *  If IERC364320Enforcement is implemented:
+     *      In case the `account` address has not enough free tokens (unfrozen tokens)
+     *      but has a total balance higher or equal to the `value` amount
+     *      the amount of frozen tokens is reduced in order to have enough free tokens
+     *      to proceed the burn, in such a case, the remaining balance on the `account`
+     *      is 100% composed of frozen tokens post-transaction.
+     *      emits a `TokensUnfrozen` event if `_amount` is higher than the free balance of `account`
+     * Emits a `Transfer` event
+     */
+    function burn(address account,uint256 value) external;
+    /**
+     *  @dev batch version of {burn}
+     *  IMPORTANT : This transaction could exceed gas limit if `tos.length` is too heigh,
+     *  Use with care or you could lose TX fees with an "OUT OF GAS" transaction
+     *  @param accounts The addresses of the wallets concerned by the burn
+     *  @param values Amount of tokens to burn from the corresponding addresses
+     *  emits accounts.length `Transfer` events
+     */
+    function batchBurn(address[] calldata accounts,uint256[] calldata values) external;
+}
+&nbsp;
+interface IERC3643ComplianceRead {
+    /**
+     * @notice Returns true if the transfer is valid, and false otherwise.
+     * @dev Don't check the balance and the user's right (access control)
+     */
+    function canTransfer(
+        address from,
+        address to,
+        uint256 value
+    ) external view returns (bool isValid);
+}
+&nbsp;
+interface IERC3643ComplianceWrite {
+    /**
+     * @notice Returns true if the transfer is valid, and false otherwise.
+     * @dev Don't check the balance and the user's right (access control)
+     */
+    function transferred(address from, address to, uint256 value) external returns (bool isValid);
+}
+&nbsp;
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Jun 04 2025 11:08:29 GMT+0200 (Central European Summer Time)
+</div>
+</div>
+<script src="../../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../../sorter.js"></script>
+</body>
+</html>

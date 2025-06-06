@@ -633,8 +633,6 @@ Engines are external smart contracts called by CMTAT modules.
 
 These engines are **optional** and their addresses can be left to zero.
 
-More details are available in [./doc/general/Engine.md](./doc/general/Engine.md)
-
 ![Engine-Engine.drawio](./doc/schema/drawio/Engine-Engine.drawio.png)
 
 #### RuleEngine (IERC-1404)
@@ -666,7 +664,7 @@ Since the version 2.4.0, the requirement to use a RuleEngine are the following:
 
 > The `RuleEngine` must import and implement the interface `IRuleEngine` which declares the function `transferred` and `canApprove`with several other functions related to IERC1404.
 
-This interface can be found in [./contracts/interfaces/engine/IRuleEngine.sol](./contracts/interfaces/engine/IRuleEngine.sol).
+This interface can be found in [interfaces/engine/IRuleEngine.sol](./contracts/interfaces/engine/IRuleEngine.sol).
 
 Warning: The `RuleEngine` has to restrict the access of the function `transferred` to only the `CMTAT contract`. 
 
@@ -680,11 +678,92 @@ Further reading: [Taurus - Token Transfer Management: How to Apply Restrictions 
 
 
 
+##### Interface
+
+```solidity
+interface IRuleEngine is IERC1404, IERC3643ComplianceRead, IERC7551Compliance {
+    /**
+     * @dev Returns true if the operation is a success, and false otherwise.
+     */
+    function canTransfer(address from, address to, uint256 value) 
+    external override(IERC3643ComplianceRead, IERC7551Compliance) 
+    view returns (bool);
+    
+    /*
+     /**
+     * @dev Returns true if the transfer is valid, and false otherwise.
+     * Same name as ERC-3643 but with one supplementary argument `spender`
+     * 
+     */
+    function transferred(address spender, address from, address to, uint256 value) external returns (bool isValid);
+}
+```
+
+###### ERC-3643 Compliance
+
+A RuleEngine must implement the ERC-3643 compliance function `canTransfer`
+
+```solidity
+interface IERC3643ComplianceRead {
+    /**
+     * @notice Returns true if the transfer is valid, and false otherwise.
+     * @dev Don't check the balance and the user's right (access control)
+     */
+    function canTransfer(
+        address from,
+        address to,
+        uint256 value
+    ) external view returns (bool isValid);
+}
+```
+
+
+
+###### ERC-1404
+
+```solidity
+interface IERC1404 {
+    /* 
+    * @dev leave the code 5-9 free/unused for further additions in your ruleEngine implementation
+    */
+    enum REJECTED_CODE_BASE {
+        TRANSFER_OK,
+        TRANSFER_REJECTED_PAUSED,
+        TRANSFER_REJECTED_FROM_FROZEN,
+        TRANSFER_REJECTED_TO_FROZEN,
+        TRANSFER_REJECTED_FROM_INSUFFICIENT_ACTIVE_BALANCE
+    }
+    /**
+     * @dev See {ERC-1404}
+     * This function is where an issuer enforces the restriction logic of their token transfers. 
+     * Some examples of this might include:
+     * - checking if the token recipient is whitelisted, 
+     * - checking if a sender's tokens are frozen in a lock-up period, etc.
+     *
+     */
+    function detectTransferRestriction(
+        address from,
+        address to,
+        uint256 value
+    ) external view returns (uint8);
+
+    /**
+     * @dev See {ERC-1404}
+     * This function is effectively an accessor for the "message", 
+     * a human-readable explanation as to why a transaction is restricted. 
+     *
+     */
+    function messageForTransferRestriction(
+        uint8 restrictionCode
+    ) external view returns (string memory);
+}
+```
+
+#### RuleEngine Example
+
 Example of a CMTAT using the [CMTA ruleEngine](https://github.com/CMTA/RuleEngine):
 
-In this example, the token holder calls the function `transfer` which triggers a call to the `RuleEngine` and the different rules associated.
-
-![RuleEngine](./doc/schema/drawio/Engine-RuleEngine.drawio.png)
+In this example, the token holder calls the function `transfer` which triggers a call to the `RuleEngine` and the different rules associated. The different rules are not mandatory by CMTAT an you are free to build a different RuleEngine.![RuleEngine](./doc/schema/drawio/Engine-RuleEngine.drawio.png)
 
 #### SnapshotEngine
 
@@ -1053,16 +1132,19 @@ Here a schema describing the different check performed during:
 
 #### Event
 
-| Name                                                         | Defined                    | Stdanard                  | Concerned functions                                          |
-| ------------------------------------------------------------ | -------------------------- | ------------------------- | ------------------------------------------------------------ |
-| Transfer(address indexed from, address indexed to, uint256 value); | IERC20<br />(OpenZeppelin) | ERC-20                    | All functions which impacts the supply because a burn/mint is a transfer |
-| Mint(address indexed account, uint256 value, bytes data);    | IERC7551Mint               | ERC-7551 (draft standard) | mint <br />(ERC20MintModule)<br />                           |
-| BatchMint( address indexed minter, address[] accounts, uint256[] values |                            | -                         | BatchMint<br />(ERC20MintModule)                             |
-| Burn(address indexed account, uint256 value, bytes data);    | IERC7551Burn               | ERC-7551 (draft standard) | burn<br />(ERC20BurnModule)                                  |
-| BatchBurn(address indexed burner, address[] accounts,  uint256[] values) |                            | -                         | BatchMint<br />(ERC20BurnModule)                             |
-| BurnFrom(address indexed burner, address indexed account, address indexed spender, uint256 value); | IBurnERC20                 | -                         | brunFrom<br />(ERC20CrossChain)                              |
-| CrosschainMint(address indexed to, uint256 value, address indexed sender) | IERC7551                   | ERC-7551                  | crosschainMint<br />(ERC20CrossChain)                        |
-| CrosschainBurn(address indexed from, uint256 value, address indexed sender) | IERC7551                   | ERC-7551                  | crosschainBint<br />(ERC20CrossChain)                        |
+Here the list of events emitted by functions, which modify the total supply.
+
+| Name                                                         | Defined                       | Standard                  | Concerned functions                                          |
+| ------------------------------------------------------------ | ----------------------------- | ------------------------- | ------------------------------------------------------------ |
+| Transfer(address indexed from, address indexed to, uint256 value); | IERC20<br />(OpenZeppelin)    | ERC-20                    | All functions which impacts the supply because a burn/mint is a transfer |
+| Mint(address indexed account, uint256 value, bytes data);    | IERC7551Mint                  | ERC-7551 (draft standard) | mint <br />(ERC20MintModule)<br />                           |
+| BatchMint( address indexed minter, address[] accounts, uint256[] values |                               | -                         | BatchMint<br />(ERC20MintModule)                             |
+| Burn(address indexed account, uint256 value, bytes data);    | IERC7551Burn                  | ERC-7551 (draft standard) | burn<br />(ERC20BurnModule)                                  |
+| BatchBurn(address indexed burner, address[] accounts,  uint256[] values) |                               | -                         | BatchMint<br />(ERC20BurnModule)                             |
+| BurnFrom(address indexed burner, address indexed account, address indexed spender, uint256 value); | IBurnERC20                    | -                         | brunFrom<br />(ERC20CrossChain)                              |
+| CrosschainMint(address indexed to, uint256 value, address indexed sender) | IERC7551                      | ERC-7551                  | crosschainMint<br />(ERC20CrossChain)                        |
+| CrosschainBurn(address indexed from, uint256 value, address indexed sender) | IERC7551                      | ERC-7551                  | crosschainBint<br />(ERC20CrossChain)                        |
+| Enforcement (address indexed enforcer, address indexed account, uint256 amount, bytes data)<br />(Enforcement )<br /> | IERC7551ERC20EnforcementEvent | ERC-7551                  | forcedTransfer<br />(ERC20EnforcementModule)<br />forcedBurn<br />(CMTATBaseCore) |
 
 
 
@@ -1499,15 +1581,17 @@ Currently, there is no available version but a mock contract which implements ER
 
 ## Documentation
 
-Here a summary of the main documents:
+The documentation is available in the directory `doc`
 
-| Document                            | Link/Files                                                   |
+Here a summary of the main documents
+
+| Document                            | Files                                                        |
 | ----------------------------------- | ------------------------------------------------------------ |
-| Documentation of the modules API.   | [doc/modules](doc/modules)                                   |
-| How to use the project + toolchains | [doc/USAGE.md](doc/USAGE.md)                                 |
+| Documentation of the modules API.   | [modules](doc/modules)                                       |
+| How to use the project + toolchains | [USAGE.md](doc/USAGE.md)                                     |
 | Project architecture                | [architecture.pdf](./doc/schema/drawio/architecture.pdf)     |
-| FAQ                                 | [doc/general/FAQ.md](doc/general/FAQ.md)                     |
-| Crosschain transfers                | [doc/general/crosschain-bridge-support.md](doc/general/crosschain-bridge-support.md) |
+| FAQ                                 | [FAQ.md](doc/general/FAQ.md)                                 |
+| Crosschain transfers                | [crosschain-bridge-support.md](doc/general/crosschain-bridge-support.md) |
 
 CMTA providers further documentation describing the CMTAT framework in a platform-agnostic way, and covering legal aspects, see
 
@@ -1529,7 +1613,7 @@ CMTA providers further documentation describing the CMTAT framework in a platfor
 
 ### Vulnerability disclosure
 
-Please see [SECURITY.md](./SECURITY.MD).
+Please see [SECURITY.md](./SECURITY.md).
 
 
 ### Module
@@ -1617,7 +1701,7 @@ A specific version is available for [Aztec](https://aztec.network/)
 
 The project is built with [Hardhat](https://hardhat.org) and uses [OpenZeppelin](https://www.openzeppelin.com/solidity-contracts)
 
-More information in [doc/USAGE.md](doc/USAGE.md)
+More information in [USAGE.md](doc/USAGE.md)
 
 - hardhat.config.js
   - Solidity 0.8.28

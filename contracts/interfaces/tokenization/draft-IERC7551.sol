@@ -59,7 +59,7 @@ interface IERC7551Pause {
 }
 interface IERC7551ERC20EnforcementEvent {
     /**
-    * @notice Emitted when a transfer is forced.
+    * @notice Emitted when a transfer or burn is forced.
     */
     event Enforcement (address indexed enforcer, address indexed account, uint256 amount, bytes data);
 }

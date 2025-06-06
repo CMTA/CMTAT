@@ -205,11 +205,3 @@ interface IERC3643ComplianceRead {
     ) external view returns (bool isValid);
 }
 
-interface IERC3643ComplianceWrite {
-    /**
-     * @notice Returns true if the transfer is valid, and false otherwise.
-     * @dev Don't check the balance and the user's right (access control)
-     */
-    function transferred(address from, address to, uint256 value) external returns (bool isValid);
-}
-
