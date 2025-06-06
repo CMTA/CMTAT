@@ -7,6 +7,9 @@ import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Ini
 import {ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
 /* ==== controllers === */
 import {ValidationModule} from "./wrapper/controllers/ValidationModule.sol";
+// Security
+import {AuthorizationModule, AccessControlUpgradeable} from "./security/AuthorizationModule.sol";
+
 /* ==== Wrapper === */
 // Core
 import {BaseModule} from "./wrapper/core/BaseModule.sol";
@@ -29,7 +32,8 @@ abstract contract CMTATBaseGeneric is
     BaseModule,
     // Extension
     DocumentEngineModule,
-    ExtraInformationModule
+    ExtraInformationModule,
+    AuthorizationModule
 {  
     /*//////////////////////////////////////////////////////////////
                          INITIALIZER FUNCTION
@@ -52,14 +56,9 @@ abstract contract CMTATBaseGeneric is
 
         // Openzeppelin
         __CMTAT_openzeppelin_init_unchained();
-        /* Internal Modules */
-       __CMTAT_internal_init_unchained();
 
         /* Wrapper modules */
         __CMTAT_modules_init_unchained(admin, baseModuleAttributes_, documentEngine );
-
-        /* own function */
-        __CMTAT_init_unchained();
     }
 
     /*
@@ -69,13 +68,6 @@ abstract contract CMTATBaseGeneric is
          // AuthorizationModule inherits from AccessControlUpgradeable
         __AccessControl_init_unchained();
         __Pausable_init_unchained();
-    }
-
-    /*
-    * @dev CMTAT internal module
-    */
-    function __CMTAT_internal_init_unchained() internal virtual onlyInitializing {
-        // nothing to do
     }
 
     /*
@@ -89,7 +81,10 @@ abstract contract CMTATBaseGeneric is
         __ExtraInformationModule_init_unchained(baseModuleAttributes_.tokenId, baseModuleAttributes_.terms, baseModuleAttributes_.information);
     }
 
-    function __CMTAT_init_unchained() internal virtual onlyInitializing {
-        // no variable to initialize
+    function hasRole(
+        bytes32 role,
+        address account
+    ) public view virtual override(AccessControlUpgradeable, AuthorizationModule) returns (bool) {
+        return AuthorizationModule.hasRole(role, account);
     }
 }

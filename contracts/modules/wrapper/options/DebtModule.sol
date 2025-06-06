@@ -3,7 +3,9 @@
 pragma solidity ^0.8.20;
 
 /* ==== Module === */
-import {AuthorizationModule} from "../../security/AuthorizationModule.sol";
+
+import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
+
 /* ==== Engine === */
 import {IDebtEngine, ICMTATDebt} from "../../../interfaces/engine/IDebtEngine.sol";
 import {IDebtModule} from "../../../interfaces/modules/IDebtModule.sol";
@@ -14,7 +16,7 @@ import {IDebtModule} from "../../../interfaces/modules/IDebtModule.sol";
  *
  * Set Debt info
  */
-abstract contract DebtModule is AuthorizationModule, IDebtModule {
+abstract contract DebtModule is AccessControlUpgradeable, IDebtModule {
    
     /* ============ State Variables ============ */
     bytes32 public constant DEBT_ROLE = keccak256("DEBT_ROLE");

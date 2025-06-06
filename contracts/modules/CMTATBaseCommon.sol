@@ -3,6 +3,8 @@
 pragma solidity ^0.8.20;
 
 /* ==== Wrapper === */
+// Security
+import {AuthorizationModule, AccessControlUpgradeable} from "./security/AuthorizationModule.sol";
 // Core
 import {BaseModule} from "./wrapper/core/BaseModule.sol";
 import {ERC20BurnModule} from "./wrapper/core/ERC20BurnModule.sol";
@@ -30,7 +32,8 @@ abstract contract CMTATBaseCommon is
     ERC20EnforcementModule,
     DocumentEngineModule,
     ExtraInformationModule,
-    IBurnMintERC20
+    IBurnMintERC20,
+    AuthorizationModule
 {  
  
     function _checkTransferred(address /*spender*/, address from, address to, uint256 value) internal virtual {
@@ -132,6 +135,14 @@ abstract contract CMTATBaseCommon is
     function burnAndMint(address from, address to, uint256 amountToBurn, uint256 amountToMint, bytes calldata data) public virtual override(IBurnMintERC20) {
         ERC20BurnModule.burn(from, amountToBurn, data);
         ERC20MintModule.mint(to, amountToMint, data);
+    }
+
+
+    function hasRole(
+        bytes32 role,
+        address account
+    ) public view virtual override(AccessControlUpgradeable, AuthorizationModule) returns (bool) {
+        return AuthorizationModule.hasRole(role, account);
     }
 
 

@@ -17,7 +17,7 @@ import {EnforcementModule} from "./wrapper/core/EnforcementModule.sol";
 import {ValidationModule, ValidationModuleCore} from "./wrapper/core/ValidationModuleCore.sol";
 
 // Security
-import {AuthorizationModule} from "./security/AuthorizationModule.sol";
+import {AuthorizationModule, AccessControlUpgradeable} from "./security/AuthorizationModule.sol";
 
 /* ==== Interface and other library === */
 import {ICMTATConstructor} from "../interfaces/technical/ICMTATConstructor.sol";
@@ -41,7 +41,8 @@ abstract contract CMTATBaseCore is
     ERC20BaseModule,
     IForcedBurnERC20,
     IBurnMintERC20,
-    IERC7551ERC20EnforcementEvent
+    IERC7551ERC20EnforcementEvent,
+    AuthorizationModule
 {  
     error CMTAT_BurnEnforcement_AddressIsNotFrozen(); 
     /*//////////////////////////////////////////////////////////////
@@ -81,14 +82,9 @@ abstract contract CMTATBaseCore is
 
         // Openzeppelin
         __CMTAT_openzeppelin_init_unchained();
-        /* Internal Modules */
-       __CMTAT_internal_init_unchained();
 
         /* Wrapper modules */
         __CMTAT_modules_init_unchained(admin, ERC20Attributes_);
-
-        /* own function */
-        __CMTAT_init_unchained();
     }
 
     /*
@@ -103,14 +99,6 @@ abstract contract CMTATBaseCore is
     }
 
 
-
-    /*
-    * @dev CMTAT internal module
-    */
-    function __CMTAT_internal_init_unchained() internal virtual onlyInitializing {
-        // nothing to do
-    }
-
     /*
     * @dev CMTAT wrapper modules
     */
@@ -118,11 +106,6 @@ abstract contract CMTATBaseCore is
         // AuthorizationModule_init_unchained is called firstly due to inheritance
         __AuthorizationModule_init_unchained(admin);
         __ERC20BaseModule_init_unchained(ERC20Attributes_.decimalsIrrevocable, ERC20Attributes_.name, ERC20Attributes_.symbol);
-    }
-
-    function __CMTAT_init_unchained() internal virtual onlyInitializing {
-        // no variable to initialize
-        
     }
 
 
@@ -220,6 +203,13 @@ abstract contract CMTATBaseCore is
         // Skip ERC20BurnModule
         ERC20Upgradeable._burn(account, value);
         emit Enforcement(_msgSender(), account, value, data);
+    }
+
+    function hasRole(
+        bytes32 role,
+        address account
+    ) public view virtual override(AccessControlUpgradeable, AuthorizationModule) returns (bool) {
+        return AuthorizationModule.hasRole(role, account);
     }
 
     /*//////////////////////////////////////////////////////////////

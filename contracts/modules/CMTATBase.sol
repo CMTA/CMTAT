@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.20;
 
-import {CMTATBaseCommon} from "./CMTATBaseCommon.sol";
+import {CMTATBaseCommon,AccessControlUpgradeable} from "./CMTATBaseCommon.sol";
 /* ==== Wrapper === */
 // Use by detectTransferRestriction
 import {ERC20BaseModule, ERC20Upgradeable} from "./wrapper/core/ERC20BaseModule.sol";
@@ -74,9 +74,6 @@ abstract contract CMTATBase is
 
         /* Wrapper modules */
         __CMTAT_modules_init_unchained(admin, ERC20Attributes_, baseModuleAttributes_, engines_ );
-
-        /* own function */
-        __CMTAT_init_unchained();
     }
 
     /*
@@ -102,10 +99,6 @@ abstract contract CMTATBase is
     */
     function __CMTAT_modules_init_unchained(address admin, ICMTATConstructor.ERC20Attributes memory ERC20Attributes_, ICMTATConstructor.BaseModuleAttributes memory baseModuleAttributes_, ICMTATConstructor.Engine memory engines_) internal virtual onlyInitializing {
         __CMTAT_commonModules_init_unchained(admin,ERC20Attributes_, baseModuleAttributes_, engines_.snapshotEngine, engines_ .documentEngine);
-    }
-
-    function __CMTAT_init_unchained() internal virtual onlyInitializing {
-        // no variable to initialize
     }
 
     /*//////////////////////////////////////////////////////////////
@@ -157,5 +150,12 @@ abstract contract CMTATBase is
         } else {
             return ValidationModuleRuleEngine.canTransfer(from, to, value);
         }
+    }
+
+    function hasRole(
+        bytes32 role,
+        address account
+    ) public view virtual override(AccessControlUpgradeable, CMTATBaseCommon) returns (bool) {
+        return CMTATBaseCommon.hasRole(role, account);
     }
 }

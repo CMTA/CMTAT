@@ -3,7 +3,7 @@
 pragma solidity ^0.8.20;
 
 /* ==== Module === */
-import {AuthorizationModule} from "../../security/AuthorizationModule.sol";
+import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 import {IAllowlistModule} from "../../../interfaces/modules/IAllowlistModule.sol";
 import {AllowlistModuleInternal} from "../../internal/AllowlistModuleInternal.sol";
 
@@ -16,7 +16,7 @@ import {AllowlistModuleInternal} from "../../internal/AllowlistModuleInternal.so
  */
 abstract contract AllowlistModule is
     AllowlistModuleInternal,
-    AuthorizationModule,
+    AccessControlUpgradeable,
     IAllowlistModule
 {
     /* ============ State Variables ============ */

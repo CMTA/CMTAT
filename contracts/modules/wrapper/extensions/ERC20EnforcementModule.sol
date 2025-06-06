@@ -5,7 +5,8 @@ pragma solidity ^0.8.20;
 /* ==== OpenZeppelin === */
 import {ERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 /* ==== Module === */
-import {AuthorizationModule} from "../../security/AuthorizationModule.sol";
+import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
+
 /* ==== Tokenization === */
 import {IERC3643ERC20Enforcement} from "../../../interfaces/tokenization/IERC3643Partial.sol";
 import {IERC7551ERC20Enforcement, IERC7551ERC20EnforcementEvent} from "../../../interfaces/tokenization/draft-IERC7551.sol";
@@ -15,7 +16,7 @@ import {IERC7551ERC20Enforcement, IERC7551ERC20EnforcementEvent} from "../../../
  *
  * Contains all burn functions, inherits from ERC-20
  */
-abstract contract ERC20EnforcementModule is ERC20Upgradeable, IERC7551ERC20Enforcement, IERC3643ERC20Enforcement, IERC7551ERC20EnforcementEvent, AuthorizationModule {
+abstract contract ERC20EnforcementModule is ERC20Upgradeable, IERC7551ERC20Enforcement, IERC3643ERC20Enforcement, IERC7551ERC20EnforcementEvent, AccessControlUpgradeable {
     error CMTAT_ERC20EnforcementModule_ValueExceedsAvailableBalance();
     error CMTAT_ERC20EnforcementModule_ValueExceedsFrozenBalance(); 
 

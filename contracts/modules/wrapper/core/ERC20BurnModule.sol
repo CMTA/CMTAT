@@ -5,7 +5,7 @@ pragma solidity ^0.8.20;
 /* ==== OpenZeppelin === */
 import {ERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 /* ==== Module === */
-import {AuthorizationModule} from "../../security/AuthorizationModule.sol";
+import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 /* ==== Technical === */
 import {IBurnERC20} from "../../../interfaces/technical/IMintBurnToken.sol";
 import {IERC20Allowance} from "../../../interfaces/technical/IERC20Allowance.sol";
@@ -18,7 +18,7 @@ import {IERC7551Burn} from "../../../interfaces/tokenization/draft-IERC7551.sol"
  *
  * Contains all burn functions, inherits from ERC-20
  */
-abstract contract ERC20BurnModule is ERC20Upgradeable, IERC20Allowance, IBurnERC20, IERC3643Burn, IERC7551Burn, AuthorizationModule {
+abstract contract ERC20BurnModule is ERC20Upgradeable, AccessControlUpgradeable, IERC20Allowance, IBurnERC20, IERC3643Burn, IERC7551Burn {
     error CMTAT_BurnModule_EmptyAccounts();
     error CMTAT_BurnModule_AccountsValueslengthMismatch();
 

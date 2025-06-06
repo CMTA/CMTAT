@@ -7,7 +7,7 @@ import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Ini
 import {ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
 /* ==== Wrapper === */
 // Base
-import {CMTATBaseCommon} from "./CMTATBaseCommon.sol";
+import {CMTATBaseCommon, AccessControlUpgradeable} from "./CMTATBaseCommon.sol";
 // Extensions
 import {ERC20EnforcementModule} from "./wrapper/extensions/ERC20EnforcementModule.sol";
 import {DocumentEngineModule, IERC1643} from "./wrapper/extensions/DocumentEngineModule.sol";
@@ -89,14 +89,9 @@ abstract contract CMTATBaseAllowlist is
 
         // Openzeppelin
         __CMTAT_openzeppelin_init_unchained();
-        /* Internal Modules */
-       __CMTAT_internal_init_unchained();
 
         /* Wrapper modules */
         __CMTAT_modules_init_unchained(admin, ERC20Attributes_, baseModuleAttributes_, snapshotEngine, documentEngine );
-
-        /* own function */
-        __CMTAT_init_unchained();
     }
 
     /*
@@ -115,9 +110,6 @@ abstract contract CMTATBaseAllowlist is
     /*
     * @dev CMTAT internal module
     */
-    function __CMTAT_internal_init_unchained() internal virtual onlyInitializing {
-        // nothing to do
-    }
 
     /*
     * @dev CMTAT wrapper modules
@@ -127,11 +119,6 @@ abstract contract CMTATBaseAllowlist is
          __CMTAT_commonModules_init_unchained(admin,ERC20Attributes_, baseModuleAttributes_, snapshotEngine, documentEngine);
         // option
         __Allowlist_init_unchained();
-    }
-
-    function __CMTAT_init_unchained() internal virtual onlyInitializing {
-        // no variable to initialize
-        
     }
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
@@ -175,6 +162,13 @@ abstract contract CMTATBaseAllowlist is
         }else {
             return ValidationModuleCore.canTransferFrom(spender, from, to, value);
         }  
+    }
+
+    function hasRole(
+        bytes32 role,
+        address account
+    ) public view virtual override(AccessControlUpgradeable, CMTATBaseCommon) returns (bool) {
+        return CMTATBaseCommon.hasRole(role, account);
     }
 
     /*//////////////////////////////////////////////////////////////

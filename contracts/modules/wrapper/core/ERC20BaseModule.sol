@@ -5,7 +5,7 @@ pragma solidity ^0.8.20;
 /* ==== OpenZeppelin === */
 import {ERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 /* ==== Module === */
-import {AuthorizationModule} from "../../security/AuthorizationModule.sol";
+import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 /* ==== Technical === */
 import {IERC20Allowance} from "../../../interfaces/technical/IERC20Allowance.sol";
 import {IERC20BatchBalance} from "../../../interfaces/engine/ISnapshotEngine.sol";
@@ -20,7 +20,7 @@ import {IERC3643ERC20Base} from "../../../interfaces/tokenization/IERC3643Partia
  * Inherits from ERC-20
  * 
  */
-abstract contract ERC20BaseModule is ERC20Upgradeable, IERC20Allowance, IERC3643ERC20Base, IERC20BatchBalance, AuthorizationModule {
+abstract contract ERC20BaseModule is ERC20Upgradeable, AccessControlUpgradeable, IERC20Allowance, IERC3643ERC20Base, IERC20BatchBalance{
     event Name(string indexed newNameIndexed, string newName);
     event Symbol(string indexed newSymbolIndexed, string newSymbol);
 

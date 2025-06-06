@@ -3,12 +3,13 @@
 pragma solidity ^0.8.20;
 
 /* ==== Module === */
-import {AuthorizationModule} from "../../security/AuthorizationModule.sol";
+import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
+
 /* ==== Tokenization === */
 import {IERC1643CMTAT, IERC1643} from "../../../interfaces/tokenization/draft-IERC1643CMTAT.sol";
 import {ICMTATBase} from "../../../interfaces/tokenization/ICMTAT.sol";
 import {IERC7551Base} from "../../../interfaces/tokenization/draft-IERC7551.sol";
-abstract contract ExtraInformationModule is IERC7551Base, ICMTATBase, AuthorizationModule {
+abstract contract ExtraInformationModule is AccessControlUpgradeable, IERC7551Base, ICMTATBase {
     /* ============ Events ============ */
     event Information(
         string newInformation

@@ -5,9 +5,16 @@ pragma solidity ^0.8.20;
 /* ==== Module === */
 import {DebtEngineModule, DebtModule, ICMTATDebt} from "./wrapper/options/DebtEngineModule.sol";
 import {CMTATBase} from "./wrapper/options/ERC20CrossChainModule.sol";
+import {CMTATBaseCommon, AccessControlUpgradeable, AuthorizationModule} from "./CMTATBaseCommon.sol";
 /**
 * @title Extend CMTAT Base with option modules
 */
 abstract contract CMTATBaseDebt is CMTATBase,DebtEngineModule {
+    function hasRole(
+        bytes32 role,
+        address account
+    ) public view virtual override(AccessControlUpgradeable, CMTATBase) returns (bool) {
+        return CMTATBase.hasRole(role, account);
+    }
   // nothing to do
 }
