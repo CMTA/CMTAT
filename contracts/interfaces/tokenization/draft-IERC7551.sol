@@ -64,8 +64,8 @@ interface IERC7551ERC20EnforcementEvent {
     event Enforcement (address indexed enforcer, address indexed account, uint256 amount, bytes data);
 }
 
-interface IERC7551ERC20Enforcement {
-    /**
+interface IERC7551ERC20EnforcementTokenFrozenEvent {
+       /**
      *  @notice this event is emitted when a certain amount of tokens is frozen on an address
      *  @dev
      *  Same name as ERC-3643 but with a supplementary data parameter
@@ -84,6 +84,9 @@ interface IERC7551ERC20Enforcement {
      *  `value` is the amount of tokens that are unfrozen
      */
     event TokensUnfrozen(address indexed account, uint256 value, bytes data);
+}
+
+interface IERC7551ERC20Enforcement {
     /**
     * @notice This function  returns the unfrozen balance of an account. 
     * @dev This balance can be used by the account for transfers to other account addresses.
@@ -130,8 +133,17 @@ interface IERC7551Compliance {
     )  external view returns (bool);
 }
 
+interface IERC7551Document {
+    /**
+    * @notice return the SHA-256 (or Keccak-256) hash of the “Terms” document.
+    */
+    function termsHash() external view returns (bytes32);
 
-interface IERC7551Base {
+ 
+
+    /// SHOULD revert if _hash == 0 || already set
+    function setTerms(bytes32 _hash, string calldata _uri) external;
+
     /*
     * @notice Returns the metadata file
     */
@@ -141,6 +153,5 @@ interface IERC7551Base {
     * @notice This function update the metaData value, generally an url
     */
     function setMetaData(string calldata metaData_) external;
+
 }
-
-

@@ -8,7 +8,7 @@ import {ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/Cont
 /* ==== controllers === */
 import {ValidationModule} from "./wrapper/controllers/ValidationModule.sol";
 // Security
-import {AuthorizationModule, AccessControlUpgradeable} from "./security/AuthorizationModule.sol";
+import {AuthorizationModule, AccessControlUpgradeable} from "./wrapper/security/AuthorizationModule.sol";
 
 /* ==== Wrapper === */
 // Core

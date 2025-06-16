@@ -6,6 +6,7 @@ pragma solidity ^0.8.20;
 import {ERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 /* ==== Module === */
 import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
+import {ERC20MintModuleInternal} from "../../internal/ERC20MintModuleInternal.sol";
 /* ==== Technical === */
 import {IMintERC20} from "../../../interfaces/technical/IMintBurnToken.sol";
 /* ==== Tokenization === */
@@ -18,11 +19,7 @@ import {IERC7551Mint} from "../../../interfaces/tokenization/draft-IERC7551.sol"
  *
  * Contains all mint functions, inherits from ERC-20
  */
-abstract contract ERC20MintModule is ERC20Upgradeable, AccessControlUpgradeable, IERC3643Mint, IERC3643BatchTransfer, IERC7551Mint, IMintERC20 {
-    error CMTAT_MintModule_EmptyAccounts();
-    error CMTAT_MintModule_AccountsValueslengthMismatch();
-    error CMTAT_MintModule_EmptyTos();
-    error CMTAT_MintModule_TosValueslengthMismatch();
+abstract contract ERC20MintModule is  ERC20MintModuleInternal, AccessControlUpgradeable, IERC3643Mint, IERC3643BatchTransfer, IERC7551Mint, IMintERC20 {
 
     /* ============ State Variables ============ */
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
@@ -82,6 +79,7 @@ abstract contract ERC20MintModule is ERC20Upgradeable, AccessControlUpgradeable,
         uint256[] calldata values
     ) public virtual override(IERC3643Mint) onlyRole(MINTER_ROLE) {
        _batchMint(accounts, values);
+        emit BatchMint(_msgSender(), accounts, values);
     }
     
     /* inheritdoc IERC3643BatchTransfer
@@ -100,47 +98,10 @@ abstract contract ERC20MintModule is ERC20Upgradeable, AccessControlUpgradeable,
         return _batchTransfer(tos, values);
     }
 
-
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
-
-    function _batchMint(
-        address[] calldata accounts,
-        uint256[] calldata values
-    ) internal virtual {
-        require(accounts.length > 0, CMTAT_MintModule_EmptyAccounts());
-        // We do not check that values is not empty since
-        // this require will throw an error in this case.
-        require(bool(accounts.length == values.length), CMTAT_MintModule_AccountsValueslengthMismatch());
-        for (uint256 i = 0; i < accounts.length; ++i ) {
-            _mintOverride(accounts[i], values[i]);
-        }
-        emit BatchMint(_msgSender(), accounts, values);
-    }
-    function _batchTransfer(
-        address[] calldata tos,
-        uint256[] calldata values
-    ) internal virtual returns (bool) {
-        require(tos.length > 0, CMTAT_MintModule_EmptyTos());
-        // We do not check that values is not empty since
-        // this require will throw an error in this case.
-        require(bool(tos.length == values.length), CMTAT_MintModule_TosValueslengthMismatch());
-        // No need of unchecked block since Soliditiy 0.8.22
-        for (uint256 i = 0; i < tos.length; ++i) {
-            // We call directly the internal OpenZeppelin function _transfer
-            // The reason is that the public function adds only the owner address recovery
-            ERC20Upgradeable._transfer(_msgSender(), tos[i], values[i]);
-        }
-        // not really useful
-        // Here only to keep the same behaviour as transfer
-        return true;
-    }
-    function _mintOverride(address account, uint256 value) internal virtual {
-        ERC20Upgradeable._mint(account, value);
-    }
-
-      function _mint(address account, uint256 value, bytes memory data) internal virtual {
+    function _mint(address account, uint256 value, bytes memory data) internal virtual {
         _mintOverride(account, value);
         emit Mint(_msgSender(), account, value, data);
       }

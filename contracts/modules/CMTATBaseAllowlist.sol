@@ -9,7 +9,7 @@ import {ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/Cont
 // Base
 import {CMTATBaseCommon, AccessControlUpgradeable} from "./CMTATBaseCommon.sol";
 // Extensions
-import {ERC20EnforcementModule} from "./wrapper/extensions/ERC20EnforcementModule.sol";
+import {ERC20EnforcementModule, ERC20EnforcementModuleInternal} from "./wrapper/extensions/ERC20EnforcementModule.sol";
 import {DocumentEngineModule, IERC1643} from "./wrapper/extensions/DocumentEngineModule.sol";
 // options
 import {MetaTxModule, ERC2771ContextUpgradeable} from "./wrapper/options/MetaTxModule.sol";
@@ -19,7 +19,6 @@ import {ValidationModule, ValidationModuleCore} from "./wrapper/core/ValidationM
  /* ==== Interface and other library === */
 import {ICMTATConstructor} from "../interfaces/technical/ICMTATConstructor.sol";
 import {ISnapshotEngine} from "../interfaces/engine/ISnapshotEngine.sol";
-import {Errors} from "../libraries/Errors.sol";
 
 abstract contract CMTATBaseAllowlist is
     // OpenZeppelin
@@ -35,7 +34,7 @@ abstract contract CMTATBaseAllowlist is
     function _checkTransferred(address spender, address from, address to, uint256 value) internal virtual override {
         CMTATBaseCommon._checkTransferred(spender, from, to, value);
         if (!ValidationModuleAllowlist._canTransferGenericByModule(spender, from, to)) {
-            revert Errors.CMTAT_InvalidTransfer(from, to, value);
+            revert CMTAT_InvalidTransfer(from, to, value);
         }
     } 
  
@@ -140,7 +139,7 @@ abstract contract CMTATBaseAllowlist is
         if(!ValidationModuleAllowlist._canTransferGenericByModule(address(0), from, to)){
             return false;
         }
-        if(!ERC20EnforcementModule._checkActiveBalance(from, value)){
+        if(!ERC20EnforcementModuleInternal._checkActiveBalance(from, value)){
             return false;
         } else {
             return ValidationModuleCore.canTransfer(from, to, value);

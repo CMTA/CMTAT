@@ -7,7 +7,7 @@ import {CMTATBaseCommon,AccessControlUpgradeable} from "./CMTATBaseCommon.sol";
 // Use by detectTransferRestriction
 import {ERC20BaseModule, ERC20Upgradeable} from "./wrapper/core/ERC20BaseModule.sol";
 // Extensions
-import {ERC20EnforcementModule} from "./wrapper/extensions/ERC20EnforcementModule.sol";
+import {ERC20EnforcementModule, ERC20EnforcementModuleInternal} from "./wrapper/extensions/ERC20EnforcementModule.sol";
 // Controllers
 import {ValidationModuleERC1404, IERC1404} from "./wrapper/extensions/ValidationModule/ValidationModuleERC1404.sol";
 import {ValidationModuleRuleEngine} from "./wrapper/extensions/ValidationModule/ValidationModuleRuleEngine.sol";
@@ -145,7 +145,7 @@ abstract contract CMTATBase is
         address to,
         uint256 value
     ) public virtual override (ValidationModuleRuleEngine) view returns (bool) {
-        if(!ERC20EnforcementModule._checkActiveBalance(from, value)){
+        if(!ERC20EnforcementModuleInternal._checkActiveBalance(from, value)){
             return false;
         } else {
             return ValidationModuleRuleEngine.canTransfer(from, to, value);

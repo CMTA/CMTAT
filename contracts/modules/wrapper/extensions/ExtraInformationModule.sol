@@ -8,14 +8,10 @@ import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/acce
 /* ==== Tokenization === */
 import {IERC1643CMTAT, IERC1643} from "../../../interfaces/tokenization/draft-IERC1643CMTAT.sol";
 import {ICMTATBase} from "../../../interfaces/tokenization/ICMTAT.sol";
-import {IERC7551Base} from "../../../interfaces/tokenization/draft-IERC7551.sol";
-abstract contract ExtraInformationModule is AccessControlUpgradeable, IERC7551Base, ICMTATBase {
+abstract contract ExtraInformationModule is AccessControlUpgradeable, ICMTATBase {
     /* ============ Events ============ */
     event Information(
         string newInformation
-    );
-    event MetaData(
-        string newMetaData
     );
     /* ============ ERC-7201 ============ */
     // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.ExtraInformationModule")) - 1)) & ~bytes32(uint256(0xff))
@@ -26,7 +22,6 @@ abstract contract ExtraInformationModule is AccessControlUpgradeable, IERC7551Ba
             string _tokenId;
             Terms _terms;
             string _information;
-            string _metadata;
     }
     /* ============  Initializer Function ============ */
     /**
@@ -76,14 +71,6 @@ abstract contract ExtraInformationModule is AccessControlUpgradeable, IERC7551Ba
         return $._information;
     }
 
-    /**
-    * @inheritdoc IERC7551Base
-    */
-    function metaData() public view virtual override(IERC7551Base) returns (string memory) {
-        ExtraInformationModuleStorage storage $ = _getExtraInformationModuleStorage();
-        return $._metadata;
-    }
-
 
     /* ============  Restricted Functions ============ */
     
@@ -102,6 +89,10 @@ abstract contract ExtraInformationModule is AccessControlUpgradeable, IERC7551Ba
     * @dev The terms will be changed even if the new value is the same as the current one
     */
     function setTerms(IERC1643CMTAT.DocumentInfo calldata terms_) public virtual override(ICMTATBase) onlyRole(DEFAULT_ADMIN_ROLE) {
+		_setTerms(terms_);
+    }
+
+    function _setTerms(IERC1643CMTAT.DocumentInfo memory terms_) internal{
 		ExtraInformationModuleStorage storage $ = _getExtraInformationModuleStorage();
         _setTerms($, terms_);
     }
@@ -118,27 +109,10 @@ abstract contract ExtraInformationModule is AccessControlUpgradeable, IERC7551Ba
         _setInformation($, information_);
     }
 
-
-
-    /** 
-    * @inheritdoc IERC7551Base
-    * @notice The metadata will be changed even if the new value is the same as the current one
-    */
-    function setMetaData(
-        string calldata metadata_
-    ) public override(IERC7551Base) onlyRole(DEFAULT_ADMIN_ROLE) {
-        ExtraInformationModuleStorage storage $ = _getExtraInformationModuleStorage();
-        _setMetaData($,  metadata_);
-    }
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
-    function _setMetaData(
-        ExtraInformationModuleStorage storage $, string memory metadata_
-    ) internal virtual  {
-        $._metadata = metadata_;
-        emit MetaData(metadata_);
-    }
+
 
     function _setTokenId(
         ExtraInformationModuleStorage storage $, string memory tokenId_

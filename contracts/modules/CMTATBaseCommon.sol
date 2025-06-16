@@ -4,14 +4,14 @@ pragma solidity ^0.8.20;
 
 /* ==== Wrapper === */
 // Security
-import {AuthorizationModule, AccessControlUpgradeable} from "./security/AuthorizationModule.sol";
+import {AuthorizationModule, AccessControlUpgradeable} from "./wrapper/security/AuthorizationModule.sol";
 // Core
 import {BaseModule} from "./wrapper/core/BaseModule.sol";
-import {ERC20BurnModule} from "./wrapper/core/ERC20BurnModule.sol";
-import {ERC20MintModule} from "./wrapper/core/ERC20MintModule.sol";
+import {ERC20BurnModule, ERC20BurnModuleInternal} from "./wrapper/core/ERC20BurnModule.sol";
+import {ERC20MintModule, ERC20MintModuleInternal} from "./wrapper/core/ERC20MintModule.sol";
 // Extensions
 import {ExtraInformationModule} from "./wrapper/extensions/ExtraInformationModule.sol";
-import {ERC20EnforcementModule} from "./wrapper/extensions/ERC20EnforcementModule.sol";
+import {ERC20EnforcementModule, ERC20EnforcementModuleInternal} from "./wrapper/extensions/ERC20EnforcementModule.sol";
 import {DocumentEngineModule,  IERC1643} from "./wrapper/extensions/DocumentEngineModule.sol";
 import {SnapshotEngineModule} from "./wrapper/extensions/SnapshotEngineModule.sol";
 // options
@@ -20,7 +20,8 @@ import {ERC20BaseModule, ERC20Upgradeable} from "./wrapper/core/ERC20BaseModule.
 import {ICMTATConstructor} from "../interfaces/technical/ICMTATConstructor.sol";
 import {ISnapshotEngine} from "../interfaces/engine/ISnapshotEngine.sol";
 import {IBurnMintERC20} from "../interfaces/technical/IMintBurnToken.sol";
-import {Errors} from "../libraries/Errors.sol";
+
+
 abstract contract CMTATBaseCommon is
     // Core
     BaseModule,
@@ -35,10 +36,11 @@ abstract contract CMTATBaseCommon is
     IBurnMintERC20,
     AuthorizationModule
 {  
+    error CMTAT_InvalidTransfer(address from, address to, uint256 amount);
  
     function _checkTransferred(address /*spender*/, address from, address to, uint256 value) internal virtual {
-        if(!ERC20EnforcementModule._checkActiveBalance(from, value)){
-            revert Errors.CMTAT_InvalidTransfer(from, to, value);
+        if(!ERC20EnforcementModuleInternal._checkActiveBalance(from, value)){
+            revert CMTAT_InvalidTransfer(from, to, value);
         }
     } 
 
@@ -52,10 +54,8 @@ abstract contract CMTATBaseCommon is
         __AuthorizationModule_init_unchained(admin);
 
         // Core
-        // EnforcementModule_init_unchained is called before ValidationModule_init_unchained due to inheritance
         __ERC20BaseModule_init_unchained(ERC20Attributes_.decimalsIrrevocable, ERC20Attributes_.name, ERC20Attributes_.symbol);
         /* Extensions */
-        // PauseModule_init_unchained is called before ValidationModule_init_unchained due to inheritance
         __ExtraInformationModule_init_unchained(baseModuleAttributes_.tokenId, baseModuleAttributes_.terms, baseModuleAttributes_.information);
         __SnapshotEngineModule_init_unchained(snapshotEngine);
         __DocumentEngineModule_init_unchained(documentEngine);
@@ -174,16 +174,16 @@ abstract contract CMTATBaseCommon is
     /**
     * @dev Check if the mint is valid
     */
-    function _mintOverride(address account, uint256 value) internal virtual override(ERC20MintModule) {
+    function _mintOverride(address account, uint256 value) internal virtual override(ERC20MintModuleInternal) {
         _checkTransferred(address(0), address(0), account, value);
-        ERC20MintModule._mintOverride(account, value);
+        ERC20MintModuleInternal._mintOverride(account, value);
     }
 
     /**
     * @dev Check if the burn is valid
     */
-    function _burnOverride(address account, uint256 value) internal virtual override(ERC20BurnModule) {
+    function _burnOverride(address account, uint256 value) internal virtual override(ERC20BurnModuleInternal) {
         _checkTransferred(address(0),  account, address(0), value);
-        ERC20BurnModule._burnOverride(account, value);
+        ERC20BurnModuleInternal._burnOverride(account, value);
     }
 }
