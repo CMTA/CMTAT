@@ -1,15 +1,16 @@
 //SPDX-License-Identifier: MPL-2.0
-import {ICMTATDebt} from "../tokenization/ICMTAT.sol";
+import {ICMTATDebt, ICMTATCreditEvents} from "../tokenization/ICMTAT.sol";
 
 pragma solidity ^0.8.20;
 /**
 * @notice interface to represent DebtModule
 */
-interface IDebtModule is ICMTATDebt {
+interface IDebtModule is ICMTATDebt, ICMTATCreditEvents {
     /* ============ Events ============ */
      // No paramater to reduce contract size
-    event Debt();
-    event DebtInstrumentEvent();
+    event DebtLogEvent();
+    event CreditEventsLogEvent();
+    event DebtInstrumentLogEvent();
 
     /* ============ Functions ============ */
     /**

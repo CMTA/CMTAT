@@ -2,26 +2,31 @@
 
 pragma solidity ^0.8.20;
 
-import {CMTATBaseCommon,AccessControlUpgradeable} from "./CMTATBaseCommon.sol";
+import {CMTATBaseCommon,AccessControlUpgradeable} from "./0_CMTATBaseCommon.sol";
 /* ==== Wrapper === */
 // Use by detectTransferRestriction
 import {ERC20BaseModule, ERC20Upgradeable} from "./wrapper/core/ERC20BaseModule.sol";
 // Extensions
 import {ERC20EnforcementModule, ERC20EnforcementModuleInternal} from "./wrapper/extensions/ERC20EnforcementModule.sol";
 // Controllers
-import {ValidationModuleERC1404, IERC1404} from "./wrapper/extensions/ValidationModule/ValidationModuleERC1404.sol";
 import {ValidationModuleRuleEngine} from "./wrapper/extensions/ValidationModule/ValidationModuleRuleEngine.sol";
+
  /* ==== Interface and other library === */
 import {ICMTATConstructor} from "../interfaces/technical/ICMTATConstructor.sol";
 import {Errors} from "../libraries/Errors.sol";
-abstract contract CMTATBase is
+abstract contract CMTATBaseRuleEngine is
     CMTATBaseCommon,
-    ValidationModuleERC1404
+    ValidationModuleRuleEngine
 {
-    function _checkTransferred(address spender, address from, address to, uint256 value) internal virtual override {
+    function _checkTransferred(address spender, address from, address to, uint256 value) internal virtual override(CMTATBaseCommon) {
         CMTATBaseCommon._checkTransferred(spender, from, to, value);
-        if (!ValidationModuleRuleEngine._transferred(spender, from, to, value)) {
-            revert Errors.CMTAT_InvalidTransfer(from, to, value);
+        if(spender != address(0)){
+            if (!ValidationModuleRuleEngine._transferred(spender, from, to, value)) {
+                revert Errors.CMTAT_InvalidTransfer(from, to, value);
+            }
+        } else
+           if( !ValidationModuleRuleEngine._transferred(spender, from, to, value)) {
+                revert Errors.CMTAT_InvalidTransfer(from, to, value);
         }
     } 
 
@@ -34,19 +39,19 @@ abstract contract CMTATBase is
      * The calls to this function will revert if the contract was deployed without a proxy
      * @param admin address of the admin of contract (Access Control)
      * @param ERC20Attributes_ ERC20 name, symbol and decimals
-     * @param baseModuleAttributes_ tokenId, terms, information
+     * @param extraInformationAttributes_ tokenId, terms, information
      * @param engines_ external contract
      */
     function initialize(
         address admin,
         ICMTATConstructor.ERC20Attributes memory ERC20Attributes_,
-        ICMTATConstructor.BaseModuleAttributes memory baseModuleAttributes_,
+        ICMTATConstructor.ExtraInformationAttributes memory extraInformationAttributes_,
         ICMTATConstructor.Engine memory engines_ 
     ) public virtual initializer {
         __CMTAT_init(
             admin,
             ERC20Attributes_,
-            baseModuleAttributes_,
+            extraInformationAttributes_,
             engines_
         );
     }
@@ -57,7 +62,7 @@ abstract contract CMTATBase is
     function __CMTAT_init(
         address admin,
         ICMTATConstructor.ERC20Attributes memory ERC20Attributes_,
-        ICMTATConstructor.BaseModuleAttributes memory baseModuleAttributes_,
+        ICMTATConstructor.ExtraInformationAttributes memory ExtraInformationAttributes_,
         ICMTATConstructor.Engine memory engines_ 
     ) internal virtual onlyInitializing {
         /* OpenZeppelin library */
@@ -73,7 +78,7 @@ abstract contract CMTATBase is
        __CMTAT_internal_init_unchained(engines_);
 
         /* Wrapper modules */
-        __CMTAT_modules_init_unchained(admin, ERC20Attributes_, baseModuleAttributes_, engines_ );
+        __CMTAT_modules_init_unchained(admin, ERC20Attributes_, ExtraInformationAttributes_, engines_ );
     }
 
     /*
@@ -97,45 +102,13 @@ abstract contract CMTATBase is
     /*
     * @dev CMTAT wrapper modules
     */
-    function __CMTAT_modules_init_unchained(address admin, ICMTATConstructor.ERC20Attributes memory ERC20Attributes_, ICMTATConstructor.BaseModuleAttributes memory baseModuleAttributes_, ICMTATConstructor.Engine memory engines_) internal virtual onlyInitializing {
-        __CMTAT_commonModules_init_unchained(admin,ERC20Attributes_, baseModuleAttributes_, engines_.snapshotEngine, engines_ .documentEngine);
+    function __CMTAT_modules_init_unchained(address admin, ICMTATConstructor.ERC20Attributes memory ERC20Attributes_, ICMTATConstructor.ExtraInformationAttributes memory extraInformationAttributes_, ICMTATConstructor.Engine memory engines_) internal virtual onlyInitializing {
+        __CMTAT_commonModules_init_unchained(admin,ERC20Attributes_, extraInformationAttributes_, engines_.snapshotEngine, engines_ .documentEngine);
     }
 
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
-    
-    /**
-    * @inheritdoc ValidationModuleERC1404
-    */
-    function detectTransferRestriction(
-        address from,
-        address to,
-        uint256 value
-    ) public virtual view override(ValidationModuleERC1404 ) returns (uint8 code) {
-        uint256 frozenTokensLocal = ERC20EnforcementModule.getFrozenTokens(from);
-        if(frozenTokensLocal > 0 ){
-            uint256 activeBalance = ERC20Upgradeable.balanceOf(from) - frozenTokensLocal;
-            if(value > activeBalance) {
-                return uint8(IERC1404.REJECTED_CODE_BASE.TRANSFER_REJECTED_FROM_INSUFFICIENT_ACTIVE_BALANCE);
-            }
-        } 
-        return ValidationModuleERC1404.detectTransferRestriction(from, to, value);
-    }
-
-    /**
-    * @inheritdoc ValidationModuleERC1404
-    */
-    function messageForTransferRestriction(
-        uint8 restrictionCode
-    )  public view virtual override(ValidationModuleERC1404)  returns (string memory message) {
-        if(restrictionCode == uint8(IERC1404.REJECTED_CODE_BASE.TRANSFER_REJECTED_FROM_INSUFFICIENT_ACTIVE_BALANCE)){
-            return ERC20EnforcementModule.TEXT_TRANSFER_REJECTED_FROM_INSUFFICIENT_ACTIVE_BALANCE;
-        } else {
-            return ValidationModuleERC1404.messageForTransferRestriction(restrictionCode);
-        }
-
-    }
 
     /**
     * @inheritdoc ValidationModuleRuleEngine
@@ -149,6 +122,22 @@ abstract contract CMTATBase is
             return false;
         } else {
             return ValidationModuleRuleEngine.canTransfer(from, to, value);
+        }
+    }
+
+    /**
+    * @inheritdoc ValidationModuleRuleEngine
+    */
+   function canTransferFrom(
+        address spender,
+        address from,
+        address to,
+        uint256 value
+    ) public virtual override (ValidationModuleRuleEngine) view returns (bool) {
+        if(!ERC20EnforcementModuleInternal._checkActiveBalance(from, value)){
+            return false;
+        } else {
+            return ValidationModuleRuleEngine.canTransferFrom(spender, from, to, value);
         }
     }
 

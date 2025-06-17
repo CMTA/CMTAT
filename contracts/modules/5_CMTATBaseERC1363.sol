@@ -7,8 +7,9 @@ import {ERC1363Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC2
 import {ERC20Upgradeable, IERC20} from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 /* ==== Module === */
 import {ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
-import {CMTATBase, CMTATBaseCommon} from "./CMTATBase.sol";
-import {CMTATBaseOption, ERC20CrossChainModule} from "../modules/CMTATBaseOption.sol";
+import {CMTATBase, CMTATBaseCommon} from "./2_CMTATBase.sol";
+import {CMTATBaseRuleEngine} from "./1_CMTATBaseRuleEngine.sol";
+import {CMTATBaseOption, CMTATBaseERC20CrossChain} from "../modules/4_CMTATBaseOption.sol";
 /**
 * @title CMTAT Base for ERC-1363
 */
@@ -20,8 +21,8 @@ abstract contract CMTATBaseERC1363 is ERC1363Upgradeable,CMTATBaseOption{
     /**
      * 
      */
-    function supportsInterface(bytes4 interfaceId) public view virtual override(ERC1363Upgradeable, ERC20CrossChainModule) returns (bool) {
-        return ERC1363Upgradeable.supportsInterface(interfaceId) || ERC20CrossChainModule.supportsInterface(interfaceId);
+    function supportsInterface(bytes4 interfaceId) public view virtual override(ERC1363Upgradeable, CMTATBaseERC20CrossChain) returns (bool) {
+        return ERC1363Upgradeable.supportsInterface(interfaceId) || CMTATBaseERC20CrossChain.supportsInterface(interfaceId);
     }
 
     /**
@@ -96,7 +97,7 @@ abstract contract CMTATBaseERC1363 is ERC1363Upgradeable,CMTATBaseOption{
     */
     function __CMTAT_openzeppelin_init_unchained() internal virtual override onlyInitializing {
         __ERC1363_init_unchained();
-        CMTATBase.__CMTAT_openzeppelin_init_unchained();
+        CMTATBaseRuleEngine.__CMTAT_openzeppelin_init_unchained();
     }
 
     /*//////////////////////////////////////////////////////////////

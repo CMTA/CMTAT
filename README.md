@@ -19,11 +19,11 @@ The CMTAT was developed by a working group of CMTA's Technical Committee that in
 
 ### Use case
 
-This reference implementation allows the issuance and management of tokens representing equity securities, and other forms of financial instruments such as debt securities and stablecoin.
+This reference implementation allows the issuance and management of tokens representing equity securities, and other forms of financial instruments such as debt securities and structured products. It can also be used for stablecoins.
 
 CMTAT was initially optimized for the Swiss law framework, but is also suitable for other jurisdictions.
 
-You may modify the token code by adding, removing, or modifying features. However, the core modules must remain in place for compliance with CMTA specification.
+You may modify the token code by adding, removing, or modifying features. However, the core modules must remain in place for compliance with the CMTA specification.
 
 ### Technical
 
@@ -118,7 +118,7 @@ The [ERC-3643](https://eips.ethereum.org/EIPS/eip-3643) is an official Ethereum 
 
 ERC-3643 enforces identity management as a core component of the standards by using a decentralized identity system called [onchainid](https://www.onchainid.com/).
 
-While CMTAT does not include directly the identity management system, it shares with ERC-3643 several same functions. The interface is available in [IERC3643Partial.sol](./contracts/interfaces/tokenization/IERC3643Partial.sol)
+While CMTAT does not include directly the identity management system, it shares with ERC-3643 many of the same functions. The interface is available in [IERC3643Partial.sol](./contracts/interfaces/tokenization/IERC3643Partial.sol)
 
 To represent the level of similarity between ERC-3643 interface and CMTAT functionnalities, we have created three levels of conformity.
 
@@ -195,7 +195,7 @@ All functions related to on-chain identity are **not** implemented inside CMTAT:
 
 - ` setOnchainID`
 - `setIdentityRegistry`
-- `recoveryAddress` because this function takes the ` investorOnchainID` as argument
+- `recoveryAddress` because this function takes the ` investorOnchainID` as an argument
 
 These following functions to reduce contract code size:
 
@@ -262,13 +262,13 @@ Note: `canTransfer` is defined for the compliance contract in ERC-3643.
 
 This section presents a correspondence table between [ERC-7551](https://ethereum-magicians.org/t/erc-7551-crypto-security-token-smart-contract-interface-ewpg/16416) and their equivalent functions inside CMTAT.
 
-The ERC-7551 is currently a draft ERC proposed by the Federal Association of Crypto Registrars from Germany to tokenize assets in compliance with [eWPG](https://www.gesetze-im-internet.de/ewpg/). 
+The ERC-7551 is currently a draft ERC proposed by the Federal Association of Electroni Registrars from Germany to tokenize assets in compliance with [eWPG](https://www.gesetze-im-internet.de/ewpg/). 
 
 The interface is supposed to work on top of additional standards that cover the actual storage of ownership of shares of a security in the form of a token (e.g. ERC-20 or ERC-1155).
 
 ##### CMTAT modification
 
-Since it is not yet an official standard, we decided to use the same name and signature as ERC-3643. Typically, we define a function `burn`instead of `destroyTokens`.
+Since ERC-7551 is not yet an official standard, we decided to use the same name and signature as ERC-3643. Typically, we define a function `burn`instead of `destroyTokens`.
 
 The implemented interface is available in [IERC7551](./contracts/interfaces/tokenization/draft-IERC7551.sol)
 
@@ -341,7 +341,7 @@ CMTAT implements this standard in the option module `ERC20CrossChain`.
 
 This standard is notably used by Optimism to provide cross-chain bridge between Optimism chain, see [docs.optimism.io/interop/superchain-erc20](https://docs.optimism.io/interop/superchain-erc20)
 
-More information here: [Cross-Chain bridge support](doc/general/crosschain-bridge-support.md)
+More information here: [Cross-Chain bridge support](./doc/general/crosschain-bridge-support.md)
 
 Deployment version: since it is an extension module, it is not currently used in the deployment version `debt`, `light` & `allowlist`.
 
@@ -371,6 +371,131 @@ CMTAT architecture is divided in two main components: module and engines
 
 The main schema describing the architecture can be found here: [architecture.pdf](./doc/schema/drawio/architecture.pdf) 
 
+### Arborescence
+
+- Contracts
+
+```
+├── deployment
+│   ├── allowlist
+│   │   ├── CMTATStandaloneAllowlist.sol
+│   │   └── CMTATUpgradeableAllowlist.sol
+│   ├── CMTATStandalone.sol
+│   ├── CMTATUpgradeable.sol
+│   ├── CMTATUpgradeableUUPS.sol
+│   ├── debt
+│   │   ├── CMTATStandaloneDebt.sol
+│   │   └── CMTATUpgradeableDebt.sol
+│   ├── ERC1363
+│   │   ├── CMTATStandaloneERC1363.sol
+│   │   └── CMTATUpgradeableERC1363.sol
+│   ├── ERC7551
+│   │   └── CMTATStandaloneERC7551.sol
+│   └── light
+│       ├── CMTATStandaloneLight.sol
+│       └── CMTATUpgradeableLight.sol
+├── interfaces
+│   ├── engine
+│   │   ├── IDebtEngine.sol
+│   │   ├── IDocumentEngine.sol
+│   │   ├── IRuleEngine.sol
+│   │   └── ISnapshotEngine.sol
+│   ├── modules
+│   │   ├── IAllowlistModule.sol
+│   │   ├── IDebtModule.sol
+│   │   ├── IDocumentEngineModule.sol
+│   │   └── ISnapshotEngineModule.sol
+│   ├── technical
+│   │   ├── ICMTATConstructor.sol
+│   │   ├── IERC20Allowance.sol
+│   │   ├── IERC7802.sol
+│   │   └── IMintBurnToken.sol
+│   └── tokenization
+│       ├── draft-IERC1404.sol
+│       ├── draft-IERC1643CMTAT.sol
+│       ├── draft-IERC1643.sol
+│       ├── draft-IERC7551.sol
+│       ├── ICMTAT.sol
+│       └── IERC3643Partial.sol
+├── libraries
+│   └── Errors.sol
+├── mocks
+│   ├── DebtEngineMock.sol
+│   ├── DocumentEngineMock.sol
+│   ├── ERC1363ReceiverMock.sol
+│   ├── ERC721MockUpgradeable.sol
+│   ├── library
+│   │   └── snapshot
+│   │       ├── ICMTATSnapshot.sol
+│   │       ├── SnapshotErrors.sol
+│   │       └── SnapshotModuleBase.sol
+│   ├── MinimalForwarderMock.sol
+│   ├── RuleEngine
+│   │   ├── CodeList.sol
+│   │   ├── interfaces
+│   │   │   ├── IRuleEngineMock.sol
+│   │   │   └── IRule.sol
+│   │   ├── RuleEngineMock.sol
+│   │   ├── RuleMockMint.sol
+│   │   └── RuleMock.sol
+│   ├── SnapshotEngineMock.sol
+│   └── test
+│       └── proxy
+│           ├── CMTAT_PROXY_TEST.sol
+│           └── CMTAT_PROXY_TEST_UUPS.sol
+└── modules
+    ├── CMTATBaseAllowlist.sol
+    ├── CMTATBaseCommon.sol
+    ├── CMTATBaseCore.sol
+    ├── CMTATBaseDebt.sol
+    ├── CMTATBaseERC1363.sol
+    ├── CMTATBaseERC7551.sol
+    ├── CMTATBaseGeneric.sol
+    ├── CMTATBaseOption.sol
+    ├── CMTATBase.sol
+    ├── internal
+    │   ├── AllowlistModuleInternal.sol
+    │   ├── common
+    │   │   └── EnforcementModuleLibrary.sol
+    │   ├── EnforcementModuleInternal.sol
+    │   ├── ERC20BurnModuleInternal.sol
+    │   ├── ERC20EnforcementModuleInternal.sol
+    │   ├── ERC20MintModuleInternal.sol
+    │   └── ValidationModuleRuleEngineInternal.sol
+    └── wrapper
+        ├── controllers
+        │   ├── ValidationModuleAllowlist.sol
+        │   └── ValidationModule.sol
+        ├── core
+        │   ├── BaseModule.sol
+        │   ├── EnforcementModule.sol
+        │   ├── ERC20BaseModule.sol
+        │   ├── ERC20BurnModule.sol
+        │   ├── ERC20MintModule.sol
+        │   ├── PauseModule.sol
+        │   └── ValidationModuleCore.sol
+        ├── extensions
+        │   ├── DocumentEngineModule.sol
+        │   ├── ERC20EnforcementModule.sol
+        │   ├── ExtraInformationModule.sol
+        │   ├── SnapshotEngineModule.sol
+        │   └── ValidationModule
+        │       ├── ValidationModuleERC1404.sol
+        │       └── ValidationModuleRuleEngine.sol
+        ├── options
+        │   ├── AllowlistModule.sol
+        │   ├── DebtEngineModule.sol
+        │   ├── DebtModule.sol
+        │   ├── ERC20CrossChainModule.sol
+        │   ├── ERC7551Module.sol
+        │   └── MetaTxModule.sol
+        └── security
+            └── AuthorizationModule.sol
+
+```
+
+- Docs
+
 
 
 ### Base contract
@@ -381,12 +506,12 @@ Base contracts are used by the different deployable contracts (CMTATStandalone, 
 
 | Name                                                         | Description                                                  | Associated contracts deployments                           |
 | ------------------------------------------------------------ | ------------------------------------------------------------ | ---------------------------------------------------------- |
-| [CMTATBase](./contracts/modules/CMTATBase.sol)               | Inherit from all core and extensions modules                 | CMTAT Standalone / Upgradeable<br />CMTAT Upgradeable UUPS |
-| [CMTATBaseCore](./contracts/modules/CMTATBaseCore.sol)       | Inherit from from all core modules                           | CMTAT Light (Upgradeadble & Standalone                     |
+| [CMTATBase](./contracts/modules/CMTATBase.sol)               | Inherits from all core and extension modules                 | CMTAT Standalone / Upgradeable<br />CMTAT Upgradeable UUPS |
+| [CMTATBaseCore](./contracts/modules/CMTATBaseCore.sol)       | Inherits from all core modules                               | CMTAT Light (Upgradeadble & Standalone                     |
 | [CMTATBaseGeneric](./contracts/modules/CMTATBaseGeneric.sol) | Inherits from non-ERC20 related modules                      | -<br />(Only mock available)                               |
-| [CMTATERC1363Base](./contracts/modules/CMTATERC1363Base.sol) | Inherit from CMTATBase, but also ERC-1363 OpenZeppelin contract and MetaTxModule (ERC-2771) | CMTAT ERC1363 (Upgradeable & Standalone)                   |
-| [CMTATBaseOption](./contracts/modules/CMTATBaseOption.sol)   | Inherit from CMTATBase, but also from several other option modules | CMTAT Standalone / Upgradeable                             |
-| [CMTATBaseAllowlist](./contracts/modules/CMTATBaseAllowlist.sol) | Inherit from CMTATBaseCommon, but also from ValidationModuleAllowlist | CMTAT Allowlist (upgradeable & Standalone)                 |
+| [CMTATERC1363Base](./contracts/modules/CMTATERC1363Base.sol) | Inherits from CMTATBase, but also ERC-1363 OpenZeppelin contract and MetaTxModule (ERC-2771) | CMTAT ERC1363 (Upgradeable & Standalone)                   |
+| [CMTATBaseOption](./contracts/modules/CMTATBaseOption.sol)   | Inherits from CMTATBase, but also from several other option modules | CMTAT Standalone / Upgradeable                             |
+| [CMTATBaseAllowlist](./contracts/modules/CMTATBaseAllowlist.sol) | Inherits from CMTATBaseCommon, but also from ValidationModuleAllowlist | CMTAT Allowlist (upgradeable & Standalone)                 |
 
 
 
@@ -448,7 +573,7 @@ CMTAT Base Core adds several functions:
 Modules describe a **logical** code separation inside CMTAT.  They are defined as abstract contracts.
 Their code and functionalities are part of the CMTAT and therefore are also included in the calculation of the contract size and the maximum size limit of 24 kB.
 
-It is always possible to delete a module, but this requires modifying the code and compiling it again, which require to perform a security audit on these modifications.
+It is always possible to delete a module, but this requires modifying the code and compiling it again, which would require a security audit to be performed on these modifications.
 
 Modules are also separated in different categories.
 
@@ -456,15 +581,16 @@ Modules are also separated in different categories.
 - **Wrapper** modules: abstract contract around OpenZeppelin contracts or internal module.
   For example, the wrapper `PauseModule` provides public functions to call the internal functions from OpenZeppelin.
   - **Core** (Wrapper sub-category): Contains the modules required to be CMTA compliant
+  - **Security**: module related to access control
   - **Extension** (Wrapper sub-category): not required to be CMTA compliant, "bonus features" (snapshotModule, debtModule)
-  - **Options**:  also bonus feature to meet specific use case through specific deployment version.
+  - **Options**:  also bonus features to meet specific use cases through specific deployment version.
   
 
 
 
 #### List
 
-Here is the list of modules supported between different versions and the difference.
+Here is the list of modules supported between different versions and the differences.
 
 For simplicity, the module names and function locations are those of version 3.0.0
 
@@ -529,12 +655,12 @@ Generally, these modules are required to be compliant with the CMTA specificatio
 
 | Modules                                                      | Description                    | File                                                         | CMTAT 1.0 | CMTAT 2.30                                                   | CMTAT 3.0.0                                                  |
 | ------------------------------------------------------------ | ------------------------------ | ------------------------------------------------------------ | --------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| [BaseModule](doc/modules/core/Base/base.md)                  | Contract version               | [BaseModule.sol](./contracts/modules/wrapper/core/BaseModule.sol) | &#x2611;  | &#x2611;<br />(Add two fields: flag and information)         | &#x2611;<br />Remove field flag (not used)<br />Keep only the field VERSION and move the rest (tokenId, information,..) to an extension module `ExtraInformation` |
-| [ERC20 Burn](doc/modules/core/ERC20Burn/ERC20Burn.md)<br />(Prev. BurnModule) | Burn functions                 | [ERC20BurnModule.sol](./contracts/modules/wrapper/core/ERC20BurnModule.sol) | &#x2611;  | &#x2611;<br />Replace fn `burnFrom` by fn `forcedBurn`       | Add fn `burnBatch`<br />Rename `forceBurn` in `burn`<br />`burnFrom` is moved to the option module `ERC20CrossChain` |
-| [Enforcement](doc/modules/core/Enforcement/enforcement.md)   | Freeze/unfreeze address        | [EnforcementModule.sol](./contracts/modules/wrapper/core/EnforcementModule.sol) | &#x2611;  | &#x2611;                                                     | &#x2611;                                                     |
-| [ERC20Base](doc/modules/core/ERC20Base/ERC20base.md)         | decimals, set name & symbo     | [ERC20BaseModule.sol](./contracts/modules/wrapper/core/ERC20BaseModule.sol) | &#x2611;  | &#x2611;<br />Remove fn `forceTransfer`<br />(replaced by `burn`and `mint`)<br /> | Add fn `balanceInfo` (useful to distribute dividends)<br />Add  fn `forcedTransfer`<br />Add fn `setName`and `setSymbol`<br />Remove custom fn `approve`(keep only ERC-20 approve) |
-| [ERC20 Mint](doc/modules/core/ERC20Mint/ERC20Mint.md)        | Mint functions + BatchTransfer | [ERC20MintModule.sol](./contracts/modules/wrapper/core/ERC20MintModule.sol) | &#x2611;  | &#x2611;                                                     | Add fn `mintBatch`<br />Add fn `transferBatch` <br />        |
-| [Pause Module](doc/modules/core/Pause/pause.md)              | Pause and deactivate contract  | [PauseModule.sol](./contracts/modules/wrapper/core/PauseModule.sol) | &#x2611;  | &#x2611;                                                     | Replace fn `kill` by fn `deactivateContract`                 |
+| [BaseModule](./doc/modules/core/Base/base.md)                | Contract version               | [BaseModule.sol](./contracts/modules/wrapper/core/BaseModule.sol) | &#x2611;  | &#x2611;<br />(Add two fields: flag and information)         | &#x2611;<br />Remove field flag (not used)<br />Keep only the field VERSION and move the rest (tokenId, information,..) to an extension module `ExtraInformation` |
+| [ERC20 Burn](./doc/modules/core/ERC20Burn/ERC20Burn.md)<br />(Prev. BurnModule) | Burn functions                 | [ERC20BurnModule.sol](./contracts/modules/wrapper/core/ERC20BurnModule.sol) | &#x2611;  | &#x2611;<br />Replace fn `burnFrom` by fn `forcedBurn`       | Add fn `burnBatch`<br />Rename `forceBurn` in `burn`<br />`burnFrom` is moved to the option module `ERC20CrossChain` |
+| [Enforcement](./doc/modules/core/Enforcement/enforcement.md) | Freeze/unfreeze address        | [EnforcementModule.sol](./contracts/modules/wrapper/core/EnforcementModule.sol) | &#x2611;  | &#x2611;                                                     | &#x2611;                                                     |
+| [ERC20Base](./doc/modules/core/ERC20Base/ERC20base.md)       | decimals, set name & symbol    | [ERC20BaseModule.sol](./contracts/modules/wrapper/core/ERC20BaseModule.sol) | &#x2611;  | &#x2611;<br />Remove fn `forceTransfer`<br />(replaced by `burn`and `mint`)<br /> | Add fn `balanceInfo` (useful to distribute dividends)<br />Add  fn `forcedTransfer`<br />Add fn `setName`and `setSymbol`<br />Remove custom fn `approve`(keep only ERC-20 approve) |
+| [ERC20 Mint](./doc/modules/core/ERC20Mint/ERC20Mint.md)      | Mint functions + BatchTransfer | [ERC20MintModule.sol](./contracts/modules/wrapper/core/ERC20MintModule.sol) | &#x2611;  | &#x2611;                                                     | Add fn `mintBatch`<br />Add fn `transferBatch` <br />        |
+| [Pause Module](./doc/modules/core/Pause/pause.md)            | Pause and deactivate contract  | [PauseModule.sol](./contracts/modules/wrapper/core/PauseModule.sol) | &#x2611;  | &#x2611;                                                     | Replace fn `kill` by fn `deactivateContract`                 |
 
 
 
@@ -546,10 +672,10 @@ Generally, these modules are not required to be compliant with the CMTA specific
 
 | Modules                                                      | Description                                                  | File                                                         | CMTAT 1.0            | CMTAT 2.30                                               | CMTAT 3.0.0                                         |
 | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | -------------------- | -------------------------------------------------------- | --------------------------------------------------- |
-| [ExtraInformation](doc/modules/extensions/ExtraInformation/extraInformation.md) | Set extra information (tokenId, terms, metadata)             | [ExtraInformationModule.sol](./contracts/modules/wrapper/extensions/ExtraInformationModule.sol) | &#x2611;(BaseModule) | &#x2611;(BaseModule)                                     | &#x2611;<br />                                      |
-| [SnapshotEngineModule](doc/modules/extensions/snapshotEngine/Snapshot.md)<br />(Prev. SnapshotModule) | Set snapshotEngine                                           | [SnapshotEngineModule.sol](./contracts/modules/wrapper/extensions/SnapshotEngineModule.sol) | &#x2611;             | Partial<br />(Not included by default because unaudited) | &#x2611; <br />(require an external SnapshotEngine) |
-| [DocumentEngineModule](doc/modules/extensions/documentEngine/document.md) | Set additional document (ERC1643) through a DocumentEngine   | [DocumentEngineModule.sol](./contracts/modules/wrapper/extensions/DocumentEngineModule.sol) | &#x2612;             | &#x2612;                                                 | &#x2611;                                            |
-| [ERC20EnforcementModule](doc/modules/extensions/ERC20Enforcement/erc20enforcement.md) | The admin (or a third party appointed by it) can partially freeze a part of the balance of a token holder. | [ERC20EnforcementModule.sol](./contracts/modules/wrapper/extensions/ERC20EnforcementModule.sol) | &#x2612;             | &#x2612;                                                 | &#x2611;                                            |
+| [ExtraInformation](./doc/modules/extensions/ExtraInformation/extraInformation.md) | Set extra information (tokenId, terms, metadata)             | [ExtraInformationModule.sol](./contracts/modules/wrapper/extensions/ExtraInformationModule.sol) | &#x2611;(BaseModule) | &#x2611;(BaseModule)                                     | &#x2611;<br />                                      |
+| [SnapshotEngineModule](./doc/modules/extensions/snapshotEngine/Snapshot.md)<br />(Prev. SnapshotModule) | Set snapshotEngine                                           | [SnapshotEngineModule.sol](./contracts/modules/wrapper/extensions/SnapshotEngineModule.sol) | &#x2611;             | Partial<br />(Not included by default because unaudited) | &#x2611; <br />(require an external SnapshotEngine) |
+| [DocumentEngineModule](./doc/modules/extensions/documentEngine/document.md) | Set additional document (ERC1643) through a DocumentEngine   | [DocumentEngineModule.sol](./contracts/modules/wrapper/extensions/DocumentEngineModule.sol) | &#x2612;             | &#x2612;                                                 | &#x2611;                                            |
+| [ERC20EnforcementModule](./doc/modules/extensions/ERC20Enforcement/erc20enforcement.md) | The admin (or a third party appointed by it) can partially freeze a part of the balance of a token holder. | [ERC20EnforcementModule.sol](./contracts/modules/wrapper/extensions/ERC20EnforcementModule.sol) | &#x2612;             | &#x2612;                                                 | &#x2611;                                            |
 
 ##### Options modules
 
@@ -568,7 +694,7 @@ Generally, these modules are not required to be compliant with the CMTA specific
 
 |                                                              | Description    | File                                                         | CMTAT 1.0 | CMTAT 2.30                                         | CMTAT 3.0.0 |
 | ------------------------------------------------------------ | -------------- | ------------------------------------------------------------ | --------- | -------------------------------------------------- | ----------- |
-| [AuthorizationModule](doc/modules/security/authorization.md) | Access Control | [AuthorizationModule.sol](./contracts/modules/security/AuthorizationModule.sol) | &#x2611;  | &#x2611;<br />(Admin has all the roles by default) | &#x2611;    |
+| [AuthorizationModule](doc/modules/security/authorization.md) | Access Control | [AuthorizationModule.sol](./contracts/modules/wrapper/security/AuthorizationModule.sol) | &#x2611;  | &#x2611;<br />(Admin has all the roles by default) | &#x2611;    |
 
 
 
@@ -576,7 +702,7 @@ Generally, these modules are not required to be compliant with the CMTA specific
 
 CMTAT uses a RBAC access control by using the contract `AccessControl`from OpenZeppelin.
 
-Each modules define the roles useful to restricts its functions.
+Each module defines the roles useful to restrict its functions.
 
 By default, the `admin` has all the roles and this behavior is defined in the `AuthorizationModule` by overriding the function `hasRole`.
 
@@ -623,9 +749,9 @@ To transfer the adminship to a new admin, the current admin must call two functi
 1) `grantRole()` by specifying the DEFAULT_ADMIN_ROLE identifier and the new admin address
 2) `renounceRole()` to revoke the DEFAULT_ADMIN_ROLE from its own account.
 
-The new admin can also revoke role from the current/old admin by calling `revokeRole`.
+The new admin can also revoke a role from the current/old admin by calling `revokeRole`.
 
-It is also possible to have several different admin.
+It is also possible to have several different admins.
 
 ### Engines
 
@@ -637,13 +763,13 @@ These engines are **optional** and their addresses can be left to zero.
 
 #### RuleEngine (IERC-1404)
 
-The `RuleEngine` is an external contract used to apply transfer restriction to the CMTAT through whitelisting, blacklisting,...
+The `RuleEngine` is an external contract used to apply transfer restrictions to the CMTAT through whitelisting, blacklisting,...
 
 This contract is defined in the `ValidationModule`.
 
 An example of RuleEngine is also available on [GitHub](https://github.com/CMTA/RuleEngine).
 
-Here is the list of the different version available for each CMTAT version.
+Here is the list of the different versions available for each CMTAT version.
 
 | CMTAT version           | RuleEngine                                                   |
 | ----------------------- | ------------------------------------------------------------ |
@@ -660,11 +786,11 @@ A possible rule is a whitelist rule where only the address inside the whitelist 
 
 ##### Requirement
 
-Since the version 2.4.0, the requirement to use a RuleEngine are the following:
+Since the version 2.4.0, the requirements to use a RuleEngine are the following:
 
 > The `RuleEngine` must import and implement the interface `IRuleEngine` which declares the function `transferred` and `canApprove`with several other functions related to IERC1404.
 
-This interface can be found in [interfaces/engine/IRuleEngine.sol](./contracts/interfaces/engine/IRuleEngine.sol).
+This interface can be found in [IRuleEngine.sol](./contracts/interfaces/engine/IRuleEngine.sol).
 
 Warning: The `RuleEngine` has to restrict the access of the function `transferred` to only the `CMTAT contract`. 
 
@@ -799,7 +925,7 @@ interface ISnapshotEngine {
 
 This engine can be used to configure Debt and Credits Events information
 
-- It defined in the `DebtEngineModule` (option module)
+- It is defined in the `DebtEngineModule` (option module)
 - It extends the `DebtModule`(option module) by allowing to set Credit Events while the DebtModule only allows to set debt info. 
 - If a `DebtEngine` is configured, the function `debt`() will return the debt configured by the RuleEngine instead of the `DebtModule`.
 
@@ -826,7 +952,7 @@ Here is the list of the different version available for each CMTAT version.
 
 #### DocumentEngine (IERC-1643)
 
-The `DocumentEngine` is an external contract to support [*ERC-1643*](https://github.com/ethereum/EIPs/issues/1643) inside CMTAT, a standard proposition to manage document on-chain. This standard is notably used by [ERC-1400](https://github.com/ethereum/eips/issues/1411) from Polymath. 
+The `DocumentEngine` is an external contract to support [*ERC-1643*](https://github.com/ethereum/EIPs/issues/1643) inside CMTAT, a standard proposition to manage documents on-chain. This standard is notably used by [ERC-1400](https://github.com/ethereum/eips/issues/1411) from Polymath. 
 
 This engine is defined in the module `DocumentModule`
 
@@ -858,10 +984,10 @@ interface IERC1643 {
 
 The `DocumentEngine` has to import and implement this interface. To manage the documents, the engine is completely free on how to do it.
 
-Use an external contract provides two advantages: 
+Using an external contract provides two advantages: 
 
-- Reduce code size of CMTAT, which is near of the maximal size limit 
-- Allow to manage documents for several different tokens  (CMTAT or not).
+- Reduce code size of CMTAT, which is near the maximal size limit 
+- Allow to manage documents management for several different tokens  (CMTAT or not).
 
 Here is the list of the different versions available for each CMTAT version.
 
@@ -874,7 +1000,7 @@ Here is the list of the different versions available for each CMTAT version.
 
 > Warning: this engine has been removed since CMTAT v3.0.0
 
-The `AuthorizationEngine` was an external contract to add supplementary check on AccessControl (functions `grantRole` and `revokeRole`) from the CMTAT. Since delegating access rights to an external contract is complicated and it is better to manage access control directly in CMTAT, we removed it in version 3.0.0.
+The `AuthorizationEngine` was an external contract to add supplementary checks on AccessControl (functions `grantRole` and `revokeRole`) from the CMTAT. Since delegating access rights to an external contract is complicated and it is better to manage access control directly in CMTAT, we removed it in version 3.0.0.
 
 There was only one prototype available: [CMTA/AuthorizationEngine](https://github.com/CMTA/AuthorizationEngine)
 
@@ -893,7 +1019,7 @@ There was only one prototype available: [CMTA/AuthorizationEngine](https://githu
 
 All ERC-20 properties (`name`, `symbol`and `decimals`) can be set at deployment or initialization if a proxy is used.
 
-Once the contract is deployed, the core module `ERC20BaseModule` offers two ERC-3643 function which allows to update the name and the symbol (but not the decimals).
+Once the contract is deployed, the core module `ERC20BaseModule` offers two ERC-3643 functions which allow to update the name and the symbol (but not the decimals).
 
 ```solidity
 interface IERC3643ERC20Base {
@@ -932,7 +1058,7 @@ References:
 
 ### Enforcement / Transfer restriction
 
-There are several ways to restrict transfer as well as burn/mint operation
+There are several ways to restrict transfers as well as burn/mint operations.
 
 #### Enforcement Module
 
@@ -1040,7 +1166,7 @@ If a contract is deactivated, it is no longer possible to perform transfer and b
 ###### Kill (previous version)
 
 CMTAT initially supported a `kill()` function relying on the SELFDESTRUCT opcode (which effectively destroyed the contract's storage and code).
-However, Ethereum's [Cancun upgrate](https://github.com/ethereum/execution-specs/blob/master/network-upgrades/mainnet-upgrades/cancun.md) (rolled out in Q1 of 2024)  has removed support for SELFDESTRUCT (see [EIP-6780](https://eips.ethereum.org/EIPS/eip-6780)).
+However, Ethereum's [Cancun upgrade](https://github.com/ethereum/execution-specs/blob/master/network-upgrades/mainnet-upgrades/cancun.md) (rolled out in Q1 of 2024)  has removed support for SELFDESTRUCT (see [EIP-6780](https://eips.ethereum.org/EIPS/eip-6780)).
 
 The `kill()` function will therefore not behave as it was used, and we have replaced it by the function `deactivateContract` .
 
@@ -1287,7 +1413,7 @@ For more information, see the section dedicated to the `DocumentEngine`
 
 ## Deployment model 
 
-Contracts for deployment are available in the directory [./contracts/deployment](./contracts/deployment)
+Contracts for deployment are available in the directory [contracts/deployment](./contracts/deployment)
 
 | CMTAT Model      | Description                                                  | Standalone/Proxy | Contract                                                     | Remark                                                       |
 | ---------------- | ------------------------------------------------------------ | ---------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
@@ -1307,7 +1433,7 @@ Contracts for deployment are available in the directory [./contracts/deployment]
 
 To deploy CMTAT without a proxy, in standalone mode, you need to use the contract version `CMTATStandalone`.
 
-Here the surya inheritance schema:
+Here is the surya inheritance schema:
 
 ![surya_inheritance_CMTAT_STANDALONE.sol](./doc/schema/surya_inheritance/surya_inheritance_CMTATStandalone.sol.png)
 
@@ -1342,7 +1468,7 @@ CMTAT also implements the standard [ERC-7201](https://eips.ethereum.org/EIPS/eip
 
 ##### Initialize functions
 
-For wrapper modules, we have removed the public function `{ContractName}_init`to reduce the size of the contracts since inside the public initializer function to initialize your proxy, you have to call the difference functions `__{ContractName}_init_unchained`.
+For wrapper modules, we have removed the public function `{ContractName}_init`to reduce the size of the contracts since inside the public initializer function to initialize your proxy, you have to call the different functions `__{ContractName}_init_unchained`.
 
 Do not forget to call the functions `init_unchained` from the parent initializer if you create your own contract from the different modules.
 
@@ -1386,7 +1512,7 @@ More information on this standard here: [erc1363.org](https://erc1363.org), [Rar
 
 The light version only includes core modules.
 
-It also includes a function `forceBurn`to allow the admin to burn a token from a frozen address. This function is not required for deployment version which includes the extension module `ERC20EnforcementModule` because this modules contains a function `forcedTransfer`which can be used instead.
+It also includes a function `forceBurn`to allow the admin to burn a token from a frozen address. This function is not required for deployment versions which include the extension module `ERC20EnforcementModule` because this module contains a function `forcedTransfer`which can be used instead.
 
 - CMTAT Upgradeable Light
 
@@ -1408,7 +1534,7 @@ See [CMTAT - Standard for the tokenization of debt instruments using distributed
 
 #### Struct
 
-The debt information are defined by the struct `ICMTATDebt` in [./contracts/interfaces/tokenization/ICMTAT.sol](contracts/interfaces/tokenization/ICMTAT.sol)
+The debt information are defined by the struct `ICMTATDebt` in [ICMTAT.sol](./contracts/interfaces/tokenization/ICMTAT.sol)
 
 ```solidity
 interface ICMTATDebt {
@@ -1449,7 +1575,7 @@ interface ICMTATDebt {
 
 Information on the issuer and other persons involved.
 
-Defined by the struct `DebtIdentifier`in [./contracts/interfaces/tokenization/ICMTAT.sol](contracts/interfaces/tokenization/ICMTAT.sol)
+Defined by the struct `DebtIdentifier`in [ICMTAT.sol](./contracts/interfaces/tokenization/ICMTAT.sol)
 
 | Field name        | Type   | Description                                                  |
 | ----------------- | ------ | ------------------------------------------------------------ |
@@ -1462,7 +1588,7 @@ Defined by the struct `DebtIdentifier`in [./contracts/interfaces/tokenization/IC
 
 Information on the Instruments.
 
-Defined by the struct `DebtInstrument`in [./contracts/interfaces/tokenization/ICMTAT.sol](contracts/interfaces/tokenization/ICMTAT.sol)
+Defined by the struct `DebtInstrument`in [ICMTAT.sol](./contracts/interfaces/tokenization/ICMTAT.sol)
 
 | Field name             | Type    | Description                                                  |
 | ---------------------- | ------- | ------------------------------------------------------------ |
@@ -1481,7 +1607,7 @@ Defined by the struct `DebtInstrument`in [./contracts/interfaces/tokenization/IC
 
 ##### Credits events
 
-Defined by the struct `CreditEvents`in [./contracts/interfaces/tokenization/ICMTAT.sol](contracts/interfaces/tokenization/ICMTAT.sol).
+Defined by the struct `CreditEvents`in [ICMTAT.sol](./contracts/interfaces/tokenization/ICMTAT.sol).
 
 Contrary to the debt information, it requires the external contract `DebtEngine`to set the information
 
@@ -1561,11 +1687,11 @@ These contracts have now their own GitHub project: [CMTAT Factory](https://githu
 
 Further reading: [Taurus - Making CMTAT Tokenization More Scalable and Cost-Effective with Proxy and Factory Contracts](https://www.taurushq.com/blog/cmtat-tokenization-deployment-with-proxy-and-factory/) (version used CMTAT v2.5.1)
 
-### Deployment for other type of tokens (ERC-721, ERC-1155, ...)
+### Deployment for other types of tokens (ERC-721, ERC-1155, ...)
 
-Deployment version using another type of tokens as ERC-20 (e.g ERC-721) or with a different logic (e.g [ZamaFHE - EncryptedERC20](https://www.zama.ai/post/confidential-erc-20-tokens-using-homomorphic-encryption)) can be build by using the base contract `CMTATBaseGeneric`. This base contract inherits from several non-ERC-20 modules
+Deployment version using another type of token than ERC-20 (e.g ERC-721) or with a different logic (e.g [ZamaFHE - EncryptedERC20](https://www.zama.ai/post/confidential-erc-20-tokens-using-homomorphic-encryption)) can be built by using the base contract `CMTATBaseGeneric`. This base contract inherits from several non-ERC-20 modules
 
-Currently, there is no available version but a mock contract which implements ERC-721 with `CMTATBaseGeneric`is available in the mock directory: [contracts/mocks/EC721MockUpgradeable](./contracts/mocks/ERC721MockUpgradeable.sol)
+Currently, there is no available version but a mock contract which implements ERC-721 with `CMTATBaseGeneric`is available in the mock directory: [EC721MockUpgradeable.sol](./contracts/mocks/ERC721MockUpgradeable.sol)
 
 - ERC721MockUpgradeable
 
@@ -1587,16 +1713,17 @@ Here a summary of the main documents
 
 | Document                            | Files                                                        |
 | ----------------------------------- | ------------------------------------------------------------ |
-| Documentation of the modules API.   | [modules](doc/modules)                                       |
-| How to use the project + toolchains | [USAGE.md](doc/USAGE.md)                                     |
+| Documentation of the modules API.   | [modules](./doc/modules)                                     |
+| How to use the project + toolchains | [USAGE.md](./doc/USAGE.md)                                   |
 | Project architecture                | [architecture.pdf](./doc/schema/drawio/architecture.pdf)     |
-| FAQ                                 | [FAQ.md](doc/general/FAQ.md)                                 |
-| Crosschain transfers                | [crosschain-bridge-support.md](doc/general/crosschain-bridge-support.md) |
+| FAQ                                 | [FAQ.md](./doc/general/FAQ.md)                               |
+| Crosschain transfers                | [crosschain-bridge-support.md](./doc/general/crosschain-bridge-support.md) |
 
 CMTA providers further documentation describing the CMTAT framework in a platform-agnostic way, and covering legal aspects, see
 
 -  [CMTA Token (CMTAT)](https://cmta.ch/standards/cmta-token-cmtat)
 -  [Standard for the tokenization of shares of Swiss corporations using the distributed ledger technology](https://cmta.ch/standards/standard-for-the-tokenization-of-shares-of-swiss-corporations-using-the-distributed-ledger-technology)
+-  [Standard for the tokenization of debt instruments using distributed ledger technology](https://cmta.ch/standards/standard-for-the-tokenization-of-debt-instruments-using-distributed-ledger-technology)
 
 ### Further reading
 
@@ -1618,7 +1745,7 @@ Please see [SECURITY.md](./SECURITY.md).
 
 ### Module
 
-See the code in [modules/security](./contracts/modules/security).
+See [AuthorizationModule.sol](./contracts/modules/wrapper/security/AuthorizationModule.sol)
 
 Access control is managed thanks to the module `AuthorizationModule`.
 
@@ -1633,7 +1760,7 @@ Fixed version: [1.0](https://github.com/CMTA/CMTAT/releases/tag/1.0)
 Fixes of security issues discovered by the initial audit were reviewed by ABDK and confirmed to be effective, as certified by the [report released](doc/audits/ABDK-CMTAT-audit-20210910.pdf) on September 10, 2021, covering [version c3afd7b](https://github.com/CMTA/CMTAT/tree/c3afd7b4a2ade160c9b581adb7a44896bfc7aaea) of the contracts.
 Version [1.0](https://github.com/CMTA/CMTAT/releases/tag/1.0) includes additional fixes of minor issues, compared to the version retested.
 
-A summary of all fixes and decisions taken is available in the file [CMTAT-Audit-20210910-summary.pdf](doc/audits/CMTAT-Audit-20210910-summary.pdf) 
+A summary of all fixes and decisions taken is available in the file [CMTAT-Audit-20210910-summary.pdf](./doc/audits/CMTAT-Audit-20210910-summary.pdf) 
 
 #### Second audit - March 2023
 
@@ -1651,7 +1778,7 @@ The report is available in [ABDK_CMTA_CMTATRuleEngine_v_1_0.pdf](doc/audits/ABDK
 
 | Version | File                                                         |
 | ------- | ------------------------------------------------------------ |
-| v3.0.0  | [v3.0.0-aderyn-report.md](doc/audits/tools/aderyn/v3.0.0-aderyn-report.md) |
+| v3.0.0  | [v3.0.0-aderyn-report.md](./doc/audits/tools/aderyn/v3.0.0-aderyn-report.md) |
 
 #### Slither
 
@@ -1659,15 +1786,15 @@ You will find the report produced by [Slither](https://github.com/crytic/slither
 
 | Version | File                                                         |
 | ------- | ------------------------------------------------------------ |
-| v3.0.0  | [v3.0.0-slither-report.md](doc/audits/tools/slither/v3.0.0-slither-report.md) |
-| v2.5.0  | [v2.5.0-slither-report.md](doc/audits/tools/slither/v2.5.0-slither-report.md) |
-| v2.3.0  | [v2.3.0-slither-report.md](doc/audits/tools/slither/v2.3.0-slither-report.md) |
+| v3.0.0  | [v3.0.0-slither-report.md](./doc/audits/tools/slither/v3.0.0-slither-report.md) |
+| v2.5.0  | [v2.5.0-slither-report.md](./doc/audits/tools/slither/v2.5.0-slither-report.md) |
+| v2.3.0  | [v2.3.0-slither-report.md](./doc/audits/tools/slither/v2.3.0-slither-report.md) |
 
 #### [Mythril](https://github.com/Consensys/mythril)
 
 | Version | File                                                         |
 | ------- | ------------------------------------------------------------ |
-| v2.5.0  | [mythril-report-standalone.md](doc/audits/tools/mythril/v2.5.0/myth_standalone_report.md)<br />[mythril-report-proxy.md](doc/audits/tools/mythril/v2.5.0/myth_proxy_report.md)<br /> |
+| v2.5.0  | [mythril-report-standalone.md](./doc/audits/tools/mythril/v2.5.0/myth_standalone_report.md)<br />[mythril-report-proxy.md](./doc/audits/tools/mythril/v2.5.0/myth_proxy_report.md)<br /> |
 
 
 

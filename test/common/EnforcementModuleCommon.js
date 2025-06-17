@@ -239,7 +239,7 @@ function EnforcementModuleCommon () {
       // Act
       await this.cmtat.connect(this.admin).setAddressFrozen(this.address1, true, reasonFreeze)
       // Assert
-      if (!this.core && !this.generic) {
+      if (!this.erc1404 && !this.generic) {
         expect(
           await this.cmtat.detectTransferRestriction(
             this.address1,
@@ -276,7 +276,7 @@ function EnforcementModuleCommon () {
       }
       // Act
       await this.cmtat.connect(this.admin).setAddressFrozen(this.address2, true, reasonFreeze)
-      if (!this.core && !this.generic) {
+      if (!this.erc1404 && !this.generic) {
         // Assert
         expect(
           await this.cmtat.detectTransferRestriction(
@@ -323,6 +323,21 @@ function EnforcementModuleCommon () {
             AMOUNT_TO_TRANSFER
           )
         ).to.equal(false)
+
+        if (!this.erc1404 && !this.generic) {
+          // Assert
+          expect(
+            await this.cmtat.detectTransferRestrictionFrom(
+              this.address1,
+              this.address3,
+              this.address2,
+              AMOUNT_TO_TRANSFER
+            )
+          ).to.equal('4')
+          expect(await this.cmtat.messageForTransferRestriction(4)).to.equal(
+            'AddrSpenderIsFrozen'
+          )
+        }
 
         await expect(
           this.cmtat

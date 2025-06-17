@@ -15,6 +15,7 @@ interface IERC1404 {
         TRANSFER_REJECTED_PAUSED,
         TRANSFER_REJECTED_FROM_FROZEN,
         TRANSFER_REJECTED_TO_FROZEN,
+        TRANSFER_REJECTED_SPENDER_FROZEN,
         TRANSFER_REJECTED_FROM_INSUFFICIENT_ACTIVE_BALANCE
     }
     /**
@@ -30,6 +31,15 @@ interface IERC1404 {
         address to,
         uint256 value
     ) external view returns (uint8);
+
+    function detectTransferRestrictionFrom(
+        address spender,
+        address from,
+        address to,
+        uint256 value
+    ) external view returns (uint8);
+
+ 
 
     /**
      * @dev See {ERC-1404}

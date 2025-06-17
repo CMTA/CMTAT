@@ -2,20 +2,21 @@
 
 pragma solidity ^0.8.20;
 
-import {CMTATBaseAllowlist} from "../../modules/1_CMTATBaseAllowlist.sol";
-import {MetaTxModule, ERC2771ContextUpgradeable} from "../../modules/wrapper/options/MetaTxModule.sol";
-
+import {MetaTxModule} from "../../modules/wrapper/options/MetaTxModule.sol";
+import {CMTATBaseERC7551} from "../../modules/5_CMTATBaseERC7551.sol";
 
 /**
 * @title CMTAT version for a proxy deployment (Transparent or Beacon proxy)
 */
-contract CMTATUpgradeableAllowlist is CMTATBaseAllowlist {
+contract CMTATUpgradeableERC7551 is CMTATBaseERC7551 {
     /**
      * @notice Contract version for the deployment with a proxy
      * @param forwarderIrrevocable address of the forwarder, required for the gasless support
      */
     /// @custom:oz-upgrades-unsafe-allow constructor
-    constructor(address forwarderIrrevocable) MetaTxModule(forwarderIrrevocable) {
+    constructor(
+        address forwarderIrrevocable
+    ) MetaTxModule(forwarderIrrevocable) {
         // Disable the possibility to initialize the implementation
         _disableInitializers();
     }

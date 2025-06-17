@@ -20,7 +20,7 @@ import {ERC20BaseModule, ERC20Upgradeable} from "./wrapper/core/ERC20BaseModule.
 import {ICMTATConstructor} from "../interfaces/technical/ICMTATConstructor.sol";
 import {ISnapshotEngine} from "../interfaces/engine/ISnapshotEngine.sol";
 import {IBurnMintERC20} from "../interfaces/technical/IMintBurnToken.sol";
-
+import {Errors} from "../libraries/Errors.sol";
 
 abstract contract CMTATBaseCommon is
     // Core
@@ -36,18 +36,16 @@ abstract contract CMTATBaseCommon is
     IBurnMintERC20,
     AuthorizationModule
 {  
-    error CMTAT_InvalidTransfer(address from, address to, uint256 amount);
- 
     function _checkTransferred(address /*spender*/, address from, address to, uint256 value) internal virtual {
         if(!ERC20EnforcementModuleInternal._checkActiveBalance(from, value)){
-            revert CMTAT_InvalidTransfer(from, to, value);
+            revert Errors.CMTAT_InvalidTransfer(from, to, value);
         }
     } 
 
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
-    function __CMTAT_commonModules_init_unchained(address admin, ICMTATConstructor.ERC20Attributes memory ERC20Attributes_, ICMTATConstructor.BaseModuleAttributes memory baseModuleAttributes_,
+    function __CMTAT_commonModules_init_unchained(address admin, ICMTATConstructor.ERC20Attributes memory ERC20Attributes_, ICMTATConstructor.ExtraInformationAttributes memory ExtraInformationModuleAttributes_,
      ISnapshotEngine snapshotEngine,
         IERC1643 documentEngine ) internal virtual onlyInitializing {
         // AuthorizationModule_init_unchained is called firstly due to inheritance
@@ -56,7 +54,7 @@ abstract contract CMTATBaseCommon is
         // Core
         __ERC20BaseModule_init_unchained(ERC20Attributes_.decimalsIrrevocable, ERC20Attributes_.name, ERC20Attributes_.symbol);
         /* Extensions */
-        __ExtraInformationModule_init_unchained(baseModuleAttributes_.tokenId, baseModuleAttributes_.terms, baseModuleAttributes_.information);
+        __ExtraInformationModule_init_unchained(ExtraInformationModuleAttributes_.tokenId, ExtraInformationModuleAttributes_.terms, ExtraInformationModuleAttributes_.information);
         __SnapshotEngineModule_init_unchained(snapshotEngine);
         __DocumentEngineModule_init_unchained(documentEngine);
     }

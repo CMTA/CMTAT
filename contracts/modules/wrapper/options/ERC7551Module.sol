@@ -9,14 +9,13 @@ import {ExtraInformationModule} from "../extensions/ExtraInformationModule.sol";
 import {IERC1643CMTAT, IERC1643} from "../../../interfaces/tokenization/draft-IERC1643CMTAT.sol";
 import {IERC7551Document} from "../../../interfaces/tokenization/draft-IERC7551.sol";
 abstract contract ERC7551Module is ExtraInformationModule, IERC7551Document {
-    error ERC7551Module_HashIsEmpty();
     /* ============ Events ============ */
     event MetaData(
         string newMetaData
     );
     /* ============ ERC-7201 ============ */
     // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.ERC7551Module")) - 1)) & ~bytes32(uint256(0xff))
-    bytes32 private constant ERC7551ModuleStorageLocation = 0xd2d5d34c4a4dea00599692d3257c0aebc5e0359176118cd2364ab9b008c2d100;
+    bytes32 private constant ERC7551ModuleStorageLocation = 0x2727314c926b592b6f70e7d6d2e4677ebcac070f293306927f71fe77858eec00;
 
     /* ==== ERC-7201 State Variables === */
     struct ERC7551ModuleStorage {
@@ -39,7 +38,7 @@ abstract contract ERC7551Module is ExtraInformationModule, IERC7551Document {
     */
     function setMetaData(
         string calldata metadata_
-    ) public override(IERC7551Document) onlyRole(DEFAULT_ADMIN_ROLE) {
+    ) public override(IERC7551Document) onlyRole(EXTRA_INFORMATION_ROLE) {
         ERC7551ModuleStorage storage $ = _getERC7551ModuleStorage();
         _setMetaData($,  metadata_);
     }
@@ -51,8 +50,7 @@ abstract contract ERC7551Module is ExtraInformationModule, IERC7551Document {
         return terms().doc.documentHash;
     }
 
-    function setTerms(bytes32 hash, string calldata uri) onlyRole(DEFAULT_ADMIN_ROLE) public virtual override{
-        // require(hash != 0x0, ERC7551Module_HashIsEmpty());
+    function setTerms(bytes32 hash, string calldata uri) onlyRole(EXTRA_INFORMATION_ROLE) public virtual override{
         IERC1643CMTAT.DocumentInfo memory terms = IERC1643CMTAT.DocumentInfo("", uri, hash);
         _setTerms(terms);
     }

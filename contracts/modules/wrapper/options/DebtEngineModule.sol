@@ -11,7 +11,7 @@ import {DebtModule} from "./DebtModule.sol";
  *
  * Retrieve debt and creditEvents information from a debtEngine
  */
-abstract contract DebtEngineModule is DebtModule, ICMTATCreditEvents {
+abstract contract DebtEngineModule is DebtModule {
     error CMTAT_DebtEngineModule_SameValue();
     /**
     * @dev Emitted when a rule engine is set.
@@ -21,10 +21,12 @@ abstract contract DebtEngineModule is DebtModule, ICMTATCreditEvents {
     /**
     * @inheritdoc ICMTATCreditEvents
     */
-    function creditEvents() public view virtual returns(CreditEvents memory creditEventsResult){
+    function creditEvents() public view virtual override(DebtModule) returns(CreditEvents memory creditEventsResult){
         DebtModuleStorage storage $ = _getDebtModuleStorage();
         if(address($._debtEngine) != address(0)){
             creditEventsResult =  $._debtEngine.creditEvents();
+        } else {
+            creditEventsResult = DebtModule.creditEvents();
         }
     }
 

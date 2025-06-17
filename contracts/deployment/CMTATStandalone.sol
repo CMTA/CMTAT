@@ -2,8 +2,8 @@
 
 pragma solidity ^0.8.20;
 
-import {CMTATBaseOption} from "../modules/CMTATBaseOption.sol";
-import {ICMTATConstructor} from "../modules/CMTATBase.sol";
+import {CMTATBaseOption} from "../modules/4_CMTATBaseOption.sol";
+import {ICMTATConstructor} from "../modules/2_CMTATBase.sol";
 import {MetaTxModule} from "../modules/wrapper/options/MetaTxModule.sol";
 
 
@@ -16,7 +16,7 @@ contract CMTATStandalone is CMTATBaseOption {
      * @param forwarderIrrevocable address of the forwarder, required for the gasless support
      * @param admin address of the admin of contract (Access Control)
      * @param ERC20Attributes_ ERC20 name, symbol and decimals
-     * @param baseModuleAttributes_ tokenId, terms, information
+     * @param extraInformationAttributes_ tokenId, terms, information
      * @param engines_ external contract
      */
     /// @custom:oz-upgrades-unsafe-allow constructor
@@ -24,7 +24,7 @@ contract CMTATStandalone is CMTATBaseOption {
         address forwarderIrrevocable,
         address admin,
         ICMTATConstructor.ERC20Attributes memory ERC20Attributes_,
-        ICMTATConstructor.BaseModuleAttributes memory baseModuleAttributes_,
+        ICMTATConstructor.ExtraInformationAttributes memory extraInformationAttributes_,
         ICMTATConstructor.Engine memory engines_ 
     ) MetaTxModule(forwarderIrrevocable) {
         // Initialize the contract to avoid front-running
@@ -32,7 +32,7 @@ contract CMTATStandalone is CMTATBaseOption {
         initialize(
             admin,
             ERC20Attributes_,
-            baseModuleAttributes_,
+            extraInformationAttributes_,
             engines_
         );
     }

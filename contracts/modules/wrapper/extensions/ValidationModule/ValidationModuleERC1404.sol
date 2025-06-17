@@ -25,6 +25,9 @@ abstract contract ValidationModuleERC1404 is
     string internal constant TEXT_TRANSFER_REJECTED_TO_FROZEN =
         "AddrToIsFrozen";
 
+    string internal constant TEXT_TRANSFER_REJECTED_SPENDER_FROZEN =
+        "AddrSpenderIsFrozen";
+
     /* PauseModule */
     string internal constant TEXT_TRANSFER_REJECTED_PAUSED =
         "EnforcedPause";
@@ -57,6 +60,11 @@ abstract contract ValidationModuleERC1404 is
             uint8(IERC1404.REJECTED_CODE_BASE.TRANSFER_REJECTED_TO_FROZEN)
         ) {
             return TEXT_TRANSFER_REJECTED_TO_FROZEN;
+        }  else if (
+            restrictionCode ==
+            uint8(IERC1404.REJECTED_CODE_BASE.TRANSFER_REJECTED_SPENDER_FROZEN)
+        ) {
+            return TEXT_TRANSFER_REJECTED_SPENDER_FROZEN;
         } else if (address(ruleEngine_) != address(0)) {
             return ruleEngine_.messageForTransferRestriction(restrictionCode);
         } else {
@@ -78,16 +86,49 @@ abstract contract ValidationModuleERC1404 is
         uint256 value
     ) public virtual view override(IERC1404) returns (uint8 code) {
          IRuleEngine ruleEngine_ = ruleEngine();
+         uint8 codeReturn = _detectTransferRestriction(from, to);
+         if(codeReturn != uint8(IERC1404.REJECTED_CODE_BASE.TRANSFER_OK) ){
+            return codeReturn;
+         } else if (address(ruleEngine_) != address(0)) {
+            return ruleEngine_.detectTransferRestriction(from, to, value);
+        } else{
+            return uint8(IERC1404.REJECTED_CODE_BASE.TRANSFER_OK);
+        }
+    }
+
+     function _detectTransferRestriction(
+        address from,
+        address to
+    ) public virtual view  returns (uint8 code) {
         if (paused()) {
             return uint8(IERC1404.REJECTED_CODE_BASE.TRANSFER_REJECTED_PAUSED);
         } else if (isFrozen(from)) {
             return uint8(IERC1404.REJECTED_CODE_BASE.TRANSFER_REJECTED_FROM_FROZEN);
         } else if (isFrozen(to)) {
             return uint8(IERC1404.REJECTED_CODE_BASE.TRANSFER_REJECTED_TO_FROZEN);
-        } else if (address(ruleEngine_) != address(0)) {
-            return ruleEngine_.detectTransferRestriction(from, to, value);
         } 
         else {
+            return uint8(IERC1404.REJECTED_CODE_BASE.TRANSFER_OK);
+        }
+    }
+
+
+    function detectTransferRestrictionFrom(
+        address spender,
+        address from,
+        address to,
+        uint256 value
+    ) public virtual view  returns (uint8 code) {
+        IRuleEngine ruleEngine_ = ruleEngine();
+        uint8 codeReturn = _detectTransferRestriction(from, to);
+         if (isFrozen(spender)) {
+            return uint8(IERC1404.REJECTED_CODE_BASE.TRANSFER_REJECTED_SPENDER_FROZEN);
+        }  else if (codeReturn != uint8(IERC1404.REJECTED_CODE_BASE.TRANSFER_OK) ){
+            return codeReturn;
+        }
+        else if (address(ruleEngine_) != address(0)) {
+            return ruleEngine_.detectTransferRestrictionFrom(spender, from, to, value);
+        } else{
             return uint8(IERC1404.REJECTED_CODE_BASE.TRANSFER_OK);
         }
     }

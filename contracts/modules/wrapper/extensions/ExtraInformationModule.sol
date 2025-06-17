@@ -9,6 +9,7 @@ import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/acce
 import {IERC1643CMTAT, IERC1643} from "../../../interfaces/tokenization/draft-IERC1643CMTAT.sol";
 import {ICMTATBase} from "../../../interfaces/tokenization/ICMTAT.sol";
 abstract contract ExtraInformationModule is AccessControlUpgradeable, ICMTATBase {
+     bytes32 public constant EXTRA_INFORMATION_ROLE = keccak256("EXTRA_INFORMATION_ROLE");
     /* ============ Events ============ */
     event Information(
         string newInformation
@@ -79,7 +80,7 @@ abstract contract ExtraInformationModule is AccessControlUpgradeable, ICMTATBase
     */
     function setTokenId(
         string calldata tokenId_
-    ) public virtual override(ICMTATBase)  onlyRole(DEFAULT_ADMIN_ROLE) {
+    ) public virtual override(ICMTATBase)  onlyRole(EXTRA_INFORMATION_ROLE) {
         ExtraInformationModuleStorage storage $ = _getExtraInformationModuleStorage();
         _setTokenId($, tokenId_);
     }
@@ -88,7 +89,7 @@ abstract contract ExtraInformationModule is AccessControlUpgradeable, ICMTATBase
     * @inheritdoc ICMTATBase
     * @dev The terms will be changed even if the new value is the same as the current one
     */
-    function setTerms(IERC1643CMTAT.DocumentInfo calldata terms_) public virtual override(ICMTATBase) onlyRole(DEFAULT_ADMIN_ROLE) {
+    function setTerms(IERC1643CMTAT.DocumentInfo calldata terms_) public virtual override(ICMTATBase) onlyRole(EXTRA_INFORMATION_ROLE) {
 		_setTerms(terms_);
     }
 
@@ -104,7 +105,7 @@ abstract contract ExtraInformationModule is AccessControlUpgradeable, ICMTATBase
     */
     function setInformation(
         string calldata information_
-    ) public onlyRole(DEFAULT_ADMIN_ROLE) {
+    ) public onlyRole(EXTRA_INFORMATION_ROLE) {
         ExtraInformationModuleStorage storage $ = _getExtraInformationModuleStorage();
         _setInformation($, information_);
     }

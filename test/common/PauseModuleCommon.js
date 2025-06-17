@@ -142,7 +142,7 @@ function PauseModuleCommon () {
         ).to.equal(false)
       }
 
-      if (!this.core && !this.generic) {
+      if (!this.erc1404 && !this.generic) {
         // Assert
         expect(
           await this.cmtat.detectTransferRestriction(
@@ -179,11 +179,53 @@ function PauseModuleCommon () {
         await this.cmtat.connect(this.address1).approve(this.address3, 20)
       }
 
+      expect(
+        await this.cmtat.canTransfer(
+          this.address1,
+          this.address2,
+          AMOUNT_TO_TRANSFER
+        )
+      ).to.equal(true)
+
+      expect(
+        await this.cmtat.canTransferFrom(
+          this.address3,
+          this.address1,
+          this.address2,
+          AMOUNT_TO_TRANSFER
+        )
+      ).to.equal(true)
+
       // Act
       await this.cmtat.connect(this.admin).pause()
 
-      if (!this.core && !this.generic) {
+      expect(
+        await this.cmtat.canTransfer(
+          this.address1,
+          this.address2,
+          AMOUNT_TO_TRANSFER
+        )
+      ).to.equal(false)
+
+      expect(
+        await this.cmtat.canTransferFrom(
+          this.address3,
+          this.address1,
+          this.address2,
+          AMOUNT_TO_TRANSFER
+        )
+      ).to.equal(false)
+
+      if (!this.erc1404 && !this.generic) {
         // Assert
+        expect(
+          await this.cmtat.detectTransferRestrictionFrom(
+            this.address3,
+            this.address1,
+            this.address2,
+            AMOUNT_TO_TRANSFER
+          )
+        ).to.equal('1')
         expect(
           await this.cmtat.detectTransferRestriction(
             this.address1,

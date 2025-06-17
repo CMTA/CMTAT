@@ -494,7 +494,7 @@ function ERC20EnforcementModuleCommon () {
       const AMOUNT_TO_TRANSFER = INITIAL_BALANCE - FREEZE_AMOUNT + 1
       // Act
       await this.cmtat.connect(this.admin).freezePartialTokens(this.address1, FREEZE_AMOUNT)
-      if (!this.core) {
+      if (!this.erc1404) {
         // Assert
         expect(
           await this.cmtat.detectTransferRestriction(
@@ -502,8 +502,8 @@ function ERC20EnforcementModuleCommon () {
             this.address2,
             AMOUNT_TO_TRANSFER
           )
-        ).to.equal('4')
-        expect(await this.cmtat.messageForTransferRestriction(4)).to.equal(
+        ).to.equal('5')
+        expect(await this.cmtat.messageForTransferRestriction(5)).to.equal(
           'AddrFrom:insufficientActiveBalance'
         )
       }
@@ -539,7 +539,7 @@ function ERC20EnforcementModuleCommon () {
         )
       ).to.equal(true)
 
-      if (!this.core) {
+      if (!this.erc1404) {
         expect(
           await this.cmtat.detectTransferRestriction(
             this.address1,
@@ -568,17 +568,77 @@ function ERC20EnforcementModuleCommon () {
         )
       ).to.equal(false)
 
-      if (!this.core) {
+      if (!this.erc1404) {
         expect(
           await this.cmtat.detectTransferRestriction(
             this.address1,
             this.address2,
             AMOUNT_TO_TRANSFER
           )
-        ).to.equal('4')
-        expect(await this.cmtat.messageForTransferRestriction(4)).to.equal(
+        ).to.equal('5')
+        expect(await this.cmtat.messageForTransferRestriction(5)).to.equal(
           'AddrFrom:insufficientActiveBalance'
         )
+      }
+
+      await expect(
+        this.cmtat
+          .connect(this.address3)
+          .transferFrom(this.address1, this.address2, AMOUNT_TO_TRANSFER)
+      )
+        .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
+        .withArgs(
+          this.address1.address,
+          this.address2.address,
+          AMOUNT_TO_TRANSFER
+        )
+    })
+
+        it('testCannotTransferFromTokenIfActiveBalanceIsNotEnough', async function () {
+      const AMOUNT_TO_TRANSFER = INITIAL_BALANCE - FREEZE_AMOUNT + 1
+      // Arrange
+      // Define allowance
+      await this.cmtat.connect(this.address1).approve(this.address3, AMOUNT_TO_TRANSFER)
+      // Act
+      await this.cmtat.connect(this.admin).freezePartialTokens(this.address1, FREEZE_AMOUNT)
+
+      // Assert
+      expect(
+        await this.cmtat.canTransfer(
+          this.address1,
+          this.address2,
+          AMOUNT_TO_TRANSFER
+        )
+      ).to.equal(false)
+
+      expect(
+        await this.cmtat.canTransferFrom(
+          this.address3,
+          this.address1,
+          this.address2,
+          AMOUNT_TO_TRANSFER
+        )
+      ).to.equal(false)
+
+      if (!this.erc1404) {
+        expect(
+          await this.cmtat.detectTransferRestriction(
+            this.address1,
+            this.address2,
+            AMOUNT_TO_TRANSFER
+          )
+        ).to.equal('5')
+        expect(await this.cmtat.messageForTransferRestriction(5)).to.equal(
+          'AddrFrom:insufficientActiveBalance'
+        )
+        expect(
+          await this.cmtat.detectTransferRestrictionFrom(
+            this.address3,
+            this.address1,
+            this.address2,
+            AMOUNT_TO_TRANSFER
+          )
+        ).to.equal('5')
       }
 
       await expect(

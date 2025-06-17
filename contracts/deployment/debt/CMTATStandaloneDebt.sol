@@ -2,8 +2,8 @@
 
 pragma solidity ^0.8.20;
 
-import {CMTATBaseDebt} from "../../modules/CMTATBaseDebt.sol";
-import {ICMTATConstructor} from "../../modules/CMTATBase.sol";
+import {CMTATBaseDebt} from "../../modules/2_CMTATBaseDebt.sol";
+import {ICMTATConstructor} from "../../modules/2_CMTATBase.sol";
 /**
 * @title CMTAT version for a standalone deployment (without proxy)
 */
@@ -20,7 +20,7 @@ contract CMTATStandaloneDebt is CMTATBaseDebt {
     constructor(
         address admin,
         ICMTATConstructor.ERC20Attributes memory ERC20Attributes_,
-        ICMTATConstructor.BaseModuleAttributes memory baseModuleAttributes_,
+        ICMTATConstructor.ExtraInformationAttributes memory extraInformationAttributes_,
         ICMTATConstructor.Engine memory engines_ 
     ) {
         // Initialize the contract to avoid front-running
@@ -28,7 +28,7 @@ contract CMTATStandaloneDebt is CMTATBaseDebt {
         initialize(
             admin,
             ERC20Attributes_,
-            baseModuleAttributes_,
+            extraInformationAttributes_,
             engines_ 
         );
     }
