@@ -39,7 +39,7 @@ function DebtModuleCommon () {
     it('testCanSetAndGetDebtCorrectly', async function () {
       this.logs = await this.cmtat.connect(this.admin).setDebt(debtBase)
       await expect(this.logs)
-        .to.emit(this.cmtat, 'Debt')
+        .to.emit(this.cmtat, 'DebtLogEvent')
       const debt = await this.cmtat.debt()
 
       // debt identifier
@@ -67,7 +67,7 @@ function DebtModuleCommon () {
     it('testCanSetAndGetDebtInstrumentCorrectly', async function () {
       this.logs = await this.cmtat.connect(this.admin).setDebtInstrument(debtBase.debtInstrument)
       await expect(this.logs)
-        .to.emit(this.cmtat, 'DebtInstrumentEvent')
+        .to.emit(this.cmtat, 'DebtInstrumentLogEvent')
       const debt = await this.cmtat.debt()
       // debt instrument
       expect(debt.debtInstrument.interestRate).to.equal(debtBase.debtInstrument.interestRate)
@@ -106,6 +106,28 @@ function DebtModuleCommon () {
         )
         .withArgs(this.address2.address, DEBT_ROLE)
     })
+
+    it('testCanSetAndGetCreditEventsCorrectly', async function () {
+      this.logs = await this.cmtat.connect(this.admin).setCreditEvents(creditEvents)
+      await expect(this.logs)
+      .to.emit(this.cmtat, 'CreditEventLogEvent')
+      const events = await this.cmtat.creditEvents()
+      expect(events.flagDefault).to.equal(creditEvents.flagDefault)
+      expect(events.flagRedeemed).to.equal(creditEvents.flagRedeemed)
+      expect(events.rating).to.equal(creditEvents.rating)
+    })
+
+    it('testCannotBeSetCreditEventWithoutDebtRole', async function () {
+      await expect(
+        this.cmtat.connect(this.address2).setCreditEvents(creditEvents)
+      )
+        .to.be.revertedWithCustomError(
+          this.cmtat,
+          'AccessControlUnauthorizedAccount'
+        )
+        .withArgs(this.address2.address, DEBT_ROLE)
+    })
+
   })
 }
 module.exports = DebtModuleCommon

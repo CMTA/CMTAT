@@ -2,14 +2,14 @@
 
 pragma solidity ^0.8.20;
 
-import {IERC1404} from "../tokenization/draft-IERC1404.sol";
+import {IERC1404Extend} from "../tokenization/draft-IERC1404.sol";
 import {IERC3643ComplianceRead} from "../tokenization/IERC3643Partial.sol";
 import {IERC7551Compliance} from "../tokenization/draft-IERC7551.sol";
 
 /*
 * @dev minimum interface to define a RuleEngine
 */
-interface IRuleEngine is IERC1404, IERC3643ComplianceRead, IERC7551Compliance {
+interface IRuleEngine is IERC1404Extend, IERC3643ComplianceRead, IERC7551Compliance {
     /**
      * @dev Returns true if the operation is a success, and false otherwise.
      */

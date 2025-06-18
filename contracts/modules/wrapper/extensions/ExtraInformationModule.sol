@@ -26,10 +26,8 @@ abstract contract ExtraInformationModule is AccessControlUpgradeable, ICMTATBase
     }
     /* ============  Initializer Function ============ */
     /**
-     * @dev Sets the values for {name} and {symbol}.
+     * @dev Sets the values for {tokenId}, {terms_} and {information}.
      *
-     * All two of these values are immutable: they can only be set once during
-     * construction.
      */
     function __ExtraInformationModule_init_unchained(
         string memory tokenId_,

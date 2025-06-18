@@ -7,7 +7,7 @@ pragma solidity ^0.8.20;
 import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 
 /* ==== Engine === */
-import {IDebtEngine, ICMTATDebt} from "../../../interfaces/engine/IDebtEngine.sol";
+import {IDebtEngine, ICMTATDebt, ICMTATCreditEvents} from "../../../interfaces/engine/IDebtEngine.sol";
 import {IDebtModule} from "../../../interfaces/modules/IDebtModule.sol";
 
 /**
@@ -27,13 +27,30 @@ abstract contract DebtModule is AccessControlUpgradeable, IDebtModule {
     /* ==== ERC-7201 State Variables === */
     struct DebtModuleStorage {
         ICMTATDebt.DebtInformation _debt;
+        ICMTATCreditEvents.CreditEvents _creditEvents;
         // Can be used to set a debtEngine
         IDebtEngine _debtEngine;
     }
 
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
-    //////////////////////////////////////////////////////////////*/    
+    //////////////////////////////////////////////////////////////*/  
+    /*
+    * @notice Set all attributes of creditEvents
+    * The values of all attributes will be changed even if the new values are the same as the current ones
+    */
+    function setCreditEvents(
+       CreditEvents calldata creditEvents_
+    ) public onlyRole(DEBT_ROLE) {
+        DebtModuleStorage storage $ = _getDebtModuleStorage();
+        $._creditEvents = creditEvents_;
+        emit CreditEventsLogEvent();
+    }  
+
+    function creditEvents() public view virtual override(ICMTATCreditEvents) returns(CreditEvents memory creditEventsResult){
+        DebtModuleStorage storage $ = _getDebtModuleStorage();
+        creditEventsResult = $._creditEvents;
+    }
 
     /**
     * @inheritdoc IDebtModule

@@ -5,7 +5,7 @@ function ValidationModuleCommonCore () {
   // Transferring with Rule Engine set
   context('ValidationCore test', function () {
     beforeEach(async function () {
-      if (this.core) {
+      if (this.erc1404) {
         this.ADDRESS1_INITIAL_BALANCE = 31n
         this.ADDRESS2_INITIAL_BALANCE = 32n
         this.ADDRESS3_INITIAL_BALANCE = 33n

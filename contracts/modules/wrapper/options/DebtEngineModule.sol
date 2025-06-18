@@ -21,10 +21,12 @@ abstract contract DebtEngineModule is DebtModule {
     /**
     * @inheritdoc ICMTATCreditEvents
     */
-    function creditEvents() public view virtual returns(CreditEvents memory creditEventsResult){
+    function creditEvents() public view virtual override(DebtModule) returns(CreditEvents memory creditEventsResult){
         DebtModuleStorage storage $ = _getDebtModuleStorage();
         if(address($._debtEngine) != address(0)){
             creditEventsResult =  $._debtEngine.creditEvents();
+        } else {
+            creditEventsResult = DebtModule.creditEvents();
         }
     }
 

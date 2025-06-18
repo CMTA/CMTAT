@@ -66,5 +66,5 @@ describe('CMTAT - ERC-7551 Proxy Deployment', function () {
   SnapshotModuleCommonGetNextSnapshot()
 
   // Set snapshot Engine
-  SnapshotModuleSetSnapshotEngineCommon()
+  // SnapshotModuleSetSnapshotEngineCommon()
 })

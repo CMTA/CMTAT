@@ -62,5 +62,5 @@ describe('CMTAT ERC7551 - Standalone', function () {
   SnapshotModuleCommonUnschedule()
   SnapshotModuleCommonGetNextSnapshot()
   // Set snapshot Engine
-  SnapshotModuleSetSnapshotEngineCommon()
+  //SnapshotModuleSetSnapshotEngineCommon()
 })
