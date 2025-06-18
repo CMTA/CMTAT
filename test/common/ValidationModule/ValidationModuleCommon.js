@@ -22,7 +22,7 @@ function ValidationModuleCommon () {
       }
     })
     it('testCanCanTransferWithoutRuleEngine', async function () {
-      if (!this.core) {
+      if (!this.erc1404) {
         // Arrange
         await this.cmtat.connect(this.admin).setRuleEngine(ZERO_ADDRESS)
       }
@@ -34,7 +34,7 @@ function ValidationModuleCommon () {
     })
 
     it('testCanDetectTransferRestrictionValidTransfer', async function () {
-      if (!this.core) {
+      if (!this.erc1404) {
         // Act + Assert
         expect(
           await this.cmtat.detectTransferRestriction(
@@ -51,7 +51,7 @@ function ValidationModuleCommon () {
     })
 
     it('testCanReturnMessageValidTransfer', async function () {
-      if (!this.core) {
+      if (!this.erc1404) {
         // Act + Assert
         expect(await this.cmtat.messageForTransferRestriction(0)).to.equal(
           'NoRestriction'
@@ -60,7 +60,7 @@ function ValidationModuleCommon () {
     })
 
     it('testCanDetectTransferRestrictionWithAmountTooHigh', async function () {
-      if (!this.core) {
+      if (!this.erc1404) {
         // Act + Assert
         expect(
           await this.cmtat.detectTransferRestriction(
@@ -81,7 +81,7 @@ function ValidationModuleCommon () {
     })
 
     it('testCanReturnMessageWithAmountTooHigh', async function () {
-      if (!this.core) {
+      if (!this.erc1404) {
         // Act + Assert
         expect(await this.cmtat.messageForTransferRestriction(10)).to.equal(
           'Amount too high'
@@ -157,7 +157,7 @@ function ValidationModuleCommon () {
   })
   context('RuleEngineTransferFromTest', function () {
     beforeEach(async function () {
-      if (!this.core) {
+      if (!this.erc1404) {
         if ((await this.cmtat.ruleEngine()) === ZERO_ADDRESS) {
           this.ruleEngineMock = await ethers.deployContract('RuleEngineMock', [this.admin])
           await this.cmtat
@@ -178,7 +178,7 @@ function ValidationModuleCommon () {
 
     it('testCanCanTransferFromWithoutRuleEngine', async function () {
       // Arrange
-      if (!this.core) {
+      if (!this.erc1404) {
         await this.cmtat.connect(this.admin).setRuleEngine(ZERO_ADDRESS)
       }
       // Act + Assert
@@ -257,7 +257,7 @@ function ValidationModuleCommon () {
     })
 
     it('testCanCanMintWithoutRuleEngine', async function () {
-      if (!this.core) {
+      if (!this.erc1404) {
         // Arrange
         await this.cmtat.connect(this.admin).setRuleEngine(ZERO_ADDRESS)
       }
@@ -269,7 +269,7 @@ function ValidationModuleCommon () {
     })
 
     it('testCanDetectTransferRestrictionValidTransfer', async function () {
-      if (!this.core) {
+      if (!this.erc1404) {
         // Act + Assert
         expect(
           await this.cmtat.detectTransferRestriction(
@@ -286,7 +286,7 @@ function ValidationModuleCommon () {
     })
 
     it('testCanDetectTransferRestrictionWitMintAmountTooHigh', async function () {
-      if (!this.core) {
+      if (!this.erc1404) {
         // Act + Assert
         expect(
           await this.cmtat.detectTransferRestriction(
@@ -307,7 +307,7 @@ function ValidationModuleCommon () {
     })
 
     it('testCanReturnMessageWithMintAmountTooHigh', async function () {
-      if (!this.core) {
+      if (!this.erc1404) {
         // Act + Assert
         expect(await this.cmtat.messageForTransferRestriction(20)).to.equal(
           'Mint amount too high'

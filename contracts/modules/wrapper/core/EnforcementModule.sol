@@ -3,7 +3,7 @@
 pragma solidity ^0.8.20;
 
 /* ==== Module === */
-import {AuthorizationModule} from "../../security/AuthorizationModule.sol";
+import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 import {EnforcementModuleInternal} from "../../internal/EnforcementModuleInternal.sol";
 import {IERC3643Enforcement, IERC3643EnforcementEvent} from "../../../interfaces/tokenization/IERC3643Partial.sol";
 /*
@@ -15,7 +15,7 @@ import {IERC3643Enforcement, IERC3643EnforcementEvent} from "../../../interfaces
  */
 abstract contract EnforcementModule is
     EnforcementModuleInternal,
-    AuthorizationModule,
+    AccessControlUpgradeable,
     IERC3643Enforcement,
     IERC3643EnforcementEvent
 {

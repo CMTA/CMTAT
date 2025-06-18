@@ -3,18 +3,16 @@
 pragma solidity ^0.8.20;
 
 /* ==== Module === */
-import {AuthorizationModule} from "../../security/AuthorizationModule.sol";
+import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
+
 /* ==== Tokenization === */
 import {IERC1643CMTAT, IERC1643} from "../../../interfaces/tokenization/draft-IERC1643CMTAT.sol";
 import {ICMTATBase} from "../../../interfaces/tokenization/ICMTAT.sol";
-import {IERC7551Base} from "../../../interfaces/tokenization/draft-IERC7551.sol";
-abstract contract ExtraInformationModule is IERC7551Base, ICMTATBase, AuthorizationModule {
+abstract contract ExtraInformationModule is AccessControlUpgradeable, ICMTATBase {
+     bytes32 public constant EXTRA_INFORMATION_ROLE = keccak256("EXTRA_INFORMATION_ROLE");
     /* ============ Events ============ */
     event Information(
         string newInformation
-    );
-    event MetaData(
-        string newMetaData
     );
     /* ============ ERC-7201 ============ */
     // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.ExtraInformationModule")) - 1)) & ~bytes32(uint256(0xff))
@@ -25,14 +23,11 @@ abstract contract ExtraInformationModule is IERC7551Base, ICMTATBase, Authorizat
             string _tokenId;
             Terms _terms;
             string _information;
-            string _metadata;
     }
     /* ============  Initializer Function ============ */
     /**
-     * @dev Sets the values for {name} and {symbol}.
+     * @dev Sets the values for {tokenId}, {terms_} and {information}.
      *
-     * All two of these values are immutable: they can only be set once during
-     * construction.
      */
     function __ExtraInformationModule_init_unchained(
         string memory tokenId_,
@@ -75,14 +70,6 @@ abstract contract ExtraInformationModule is IERC7551Base, ICMTATBase, Authorizat
         return $._information;
     }
 
-    /**
-    * @inheritdoc IERC7551Base
-    */
-    function metaData() public view virtual override(IERC7551Base) returns (string memory) {
-        ExtraInformationModuleStorage storage $ = _getExtraInformationModuleStorage();
-        return $._metadata;
-    }
-
 
     /* ============  Restricted Functions ============ */
     
@@ -91,7 +78,7 @@ abstract contract ExtraInformationModule is IERC7551Base, ICMTATBase, Authorizat
     */
     function setTokenId(
         string calldata tokenId_
-    ) public virtual override(ICMTATBase)  onlyRole(DEFAULT_ADMIN_ROLE) {
+    ) public virtual override(ICMTATBase)  onlyRole(EXTRA_INFORMATION_ROLE) {
         ExtraInformationModuleStorage storage $ = _getExtraInformationModuleStorage();
         _setTokenId($, tokenId_);
     }
@@ -100,7 +87,11 @@ abstract contract ExtraInformationModule is IERC7551Base, ICMTATBase, Authorizat
     * @inheritdoc ICMTATBase
     * @dev The terms will be changed even if the new value is the same as the current one
     */
-    function setTerms(IERC1643CMTAT.DocumentInfo calldata terms_) public virtual override(ICMTATBase) onlyRole(DEFAULT_ADMIN_ROLE) {
+    function setTerms(IERC1643CMTAT.DocumentInfo calldata terms_) public virtual override(ICMTATBase) onlyRole(EXTRA_INFORMATION_ROLE) {
+		_setTerms(terms_);
+    }
+
+    function _setTerms(IERC1643CMTAT.DocumentInfo memory terms_) internal{
 		ExtraInformationModuleStorage storage $ = _getExtraInformationModuleStorage();
         _setTerms($, terms_);
     }
@@ -112,32 +103,15 @@ abstract contract ExtraInformationModule is IERC7551Base, ICMTATBase, Authorizat
     */
     function setInformation(
         string calldata information_
-    ) public onlyRole(DEFAULT_ADMIN_ROLE) {
+    ) public onlyRole(EXTRA_INFORMATION_ROLE) {
         ExtraInformationModuleStorage storage $ = _getExtraInformationModuleStorage();
         _setInformation($, information_);
     }
 
-
-
-    /** 
-    * @inheritdoc IERC7551Base
-    * @notice The metadata will be changed even if the new value is the same as the current one
-    */
-    function setMetaData(
-        string calldata metadata_
-    ) public override(IERC7551Base) onlyRole(DEFAULT_ADMIN_ROLE) {
-        ExtraInformationModuleStorage storage $ = _getExtraInformationModuleStorage();
-        _setMetaData($,  metadata_);
-    }
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
-    function _setMetaData(
-        ExtraInformationModuleStorage storage $, string memory metadata_
-    ) internal virtual  {
-        $._metadata = metadata_;
-        emit MetaData(metadata_);
-    }
+
 
     function _setTokenId(
         ExtraInformationModuleStorage storage $, string memory tokenId_

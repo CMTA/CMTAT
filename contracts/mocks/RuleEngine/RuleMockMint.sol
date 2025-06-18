@@ -35,6 +35,16 @@ contract RuleMockMint is IRule, CodeList {
            
     }
 
+    function detectTransferRestrictionFrom(
+        address /* spender*/,
+        address _from,
+        address  _to,
+        uint256 _amount
+    ) public pure override returns (uint8) {
+        return detectTransferRestriction(_from,_to, _amount);
+           
+    }
+
     function canReturnTransferRestrictionCode(
         uint8 _restrictionCode
     ) public pure override returns (bool) {

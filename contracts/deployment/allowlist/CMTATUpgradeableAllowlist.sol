@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.20;
 
-import {CMTATBaseAllowlist} from "../../modules/CMTATBaseAllowlist.sol";
+import {CMTATBaseAllowlist} from "../../modules/1_CMTATBaseAllowlist.sol";
 import {MetaTxModule, ERC2771ContextUpgradeable} from "../../modules/wrapper/options/MetaTxModule.sol";
 
 

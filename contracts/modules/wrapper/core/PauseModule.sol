@@ -5,7 +5,8 @@ pragma solidity ^0.8.20;
 /* ==== OpenZeppelin === */
 import {PausableUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/PausableUpgradeable.sol";
 /* ==== Module === */
-import {AuthorizationModule} from "../../security/AuthorizationModule.sol";
+import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
+
 /* ==== Tokenization === */
 import {IERC3643Pause} from "../../../interfaces/tokenization/IERC3643Partial.sol";
 import {IERC7551Pause} from "../../../interfaces/tokenization/draft-IERC7551.sol";
@@ -23,7 +24,7 @@ import {ICMTATDeactivate} from "../../../interfaces/tokenization/ICMTAT.sol";
  * period, or having an emergency switch for freezing all token transfers in the
  * event of a large bug.
  */
-abstract contract PauseModule is PausableUpgradeable, AuthorizationModule, IERC3643Pause, IERC7551Pause, ICMTATDeactivate {
+abstract contract PauseModule is PausableUpgradeable, AccessControlUpgradeable, IERC3643Pause, IERC7551Pause, ICMTATDeactivate {
     error CMTAT_PauseModule_ContractIsDeactivated();
     /* ============ State Variables ============ */
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");

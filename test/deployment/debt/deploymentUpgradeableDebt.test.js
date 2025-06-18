@@ -34,7 +34,7 @@ describe('CMTAT Debt - Upgradeable', function () {
       this.deployerAddress.address
     )
     this.debtEngineMock = await ethers.deployContract('DebtEngineMock')
-    this.core = true
+    this.erc1404 = true
     this.dontCheckTimestamp = true
   })
   ExtraInfoModuleCommon()

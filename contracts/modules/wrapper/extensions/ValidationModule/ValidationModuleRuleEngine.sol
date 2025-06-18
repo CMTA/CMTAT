@@ -125,4 +125,17 @@ abstract contract ValidationModuleRuleEngine is
             }
         }
     }
+
+    function _transferred(address from, address to, uint256 value) internal virtual returns (bool){
+        if (!canTransfer(from, to, value)){
+            return false;
+        } else{
+            IRuleEngine ruleEngine_ = ruleEngine();
+            if (address(ruleEngine_) != address(0)){
+                return ruleEngine_.transferred(from, to, value);
+            }else {
+                return true;
+            }
+        }
+    }
 }

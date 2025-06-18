@@ -2,8 +2,8 @@
 
 pragma solidity ^0.8.20;
 
-import {CMTATBaseAllowlist, ISnapshotEngine, IERC1643} from "../../modules/CMTATBaseAllowlist.sol";
-import {ICMTATConstructor} from "../../modules/CMTATBase.sol";
+import {CMTATBaseAllowlist, ISnapshotEngine, IERC1643} from "../../modules/1_CMTATBaseAllowlist.sol";
+import {ICMTATConstructor} from "../../modules/2_CMTATBase.sol";
 import {MetaTxModule, ERC2771ContextUpgradeable} from "../../modules/wrapper/options/MetaTxModule.sol";
 
 /**
@@ -15,7 +15,7 @@ contract CMTATStandaloneAllowlist is CMTATBaseAllowlist {
      * @param forwarderIrrevocable address of the forwarder, required for the gasless support
      * @param admin address of the admin of contract (Access Control)
      * @param ERC20Attributes_ ERC20 name, symbol and decimals
-     * @param baseModuleAttributes_ tokenId, terms, information
+     * @param extraInformationAttributes_ tokenId, terms, information
      * @param engines_ external contract
      */
     /// @custom:oz-upgrades-unsafe-allow constructor
@@ -23,7 +23,7 @@ contract CMTATStandaloneAllowlist is CMTATBaseAllowlist {
         address forwarderIrrevocable,
         address admin,
         ICMTATConstructor.ERC20Attributes memory ERC20Attributes_,
-        ICMTATConstructor.BaseModuleAttributes memory baseModuleAttributes_,
+        ICMTATConstructor.ExtraInformationAttributes memory extraInformationAttributes_,
         ISnapshotEngine snapshotEngine,
         IERC1643 documentEngine
         
@@ -33,7 +33,7 @@ contract CMTATStandaloneAllowlist is CMTATBaseAllowlist {
         initialize(
             admin,
             ERC20Attributes_,
-            baseModuleAttributes_,
+            extraInformationAttributes_,
             snapshotEngine,
             documentEngine
         );

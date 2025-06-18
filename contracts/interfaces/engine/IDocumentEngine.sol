@@ -11,11 +11,11 @@ interface IDocumentEngine is IERC1643 {
 }
 
 interface IDocumentEngineModule {
-      /**
+   /**
      * @dev Emitted when a rule engine is set.
      */
-    event DocumentEngine(IERC1643 indexed newDocumentEngine);
-
+   event DocumentEngine(IERC1643 indexed newDocumentEngine);
+   error CMTAT_DocumentEngineModule_SameValue();
    function setDocumentEngine(
         IERC1643 documentEngine_
     ) external;

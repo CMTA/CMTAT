@@ -22,7 +22,7 @@ describe('CMTAT Core - Upgradeable', function () {
       this.admin.address,
       this.deployerAddress.address
     )
-    this.core = true
+    this.erc1404 = true
   })
   // Core
   BaseModuleCommon()

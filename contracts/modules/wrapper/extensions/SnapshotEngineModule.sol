@@ -3,11 +3,12 @@
 pragma solidity ^0.8.20;
 
 /* ==== Module === */
-import {AuthorizationModule} from "../../security/AuthorizationModule.sol";
+import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
+
 /* ==== Engine === */
 import {ISnapshotEngine, ISnapshotEngineModule} from "../../../interfaces/modules/ISnapshotEngineModule.sol";
 
-abstract contract SnapshotEngineModule is ISnapshotEngineModule, AuthorizationModule {
+abstract contract SnapshotEngineModule is AccessControlUpgradeable, ISnapshotEngineModule {
     /* ============ State Variables ============ */
     bytes32 public constant SNAPSHOOTER_ROLE = keccak256("SNAPSHOOTER_ROLE");
 

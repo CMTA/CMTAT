@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.20;
 
-import {CMTATBaseDebt} from "../../modules/CMTATBaseDebt.sol";
+import {CMTATBaseDebt} from "../../modules/2_CMTATBaseDebt.sol";
 /**
 * @title CMTAT version for a proxy deployment (Transparent or Beacon proxy)
 */
