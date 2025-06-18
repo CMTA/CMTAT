@@ -140,12 +140,29 @@ function PauseModuleCommon () {
             AMOUNT_TO_TRANSFER
           )
         ).to.equal(false)
+
+        expect(
+          await this.cmtat.canTransferFrom(
+            this.address3,
+            this.address1,
+            this.address2,
+            AMOUNT_TO_TRANSFER
+          )
+        ).to.equal(false)
       }
 
       if (!this.erc1404 && !this.generic) {
         // Assert
         expect(
           await this.cmtat.detectTransferRestriction(
+            this.address1,
+            this.address2,
+            AMOUNT_TO_TRANSFER
+          )
+        ).to.equal('1')
+        expect(
+          await this.cmtat.detectTransferRestrictionFrom(
+            this.address3,
             this.address1,
             this.address2,
             AMOUNT_TO_TRANSFER

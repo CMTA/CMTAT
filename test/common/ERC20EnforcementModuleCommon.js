@@ -539,6 +539,15 @@ function ERC20EnforcementModuleCommon () {
         )
       ).to.equal(true)
 
+      expect(
+        await this.cmtat.canTransferFrom(
+          this.address3,
+          this.address1,
+          this.address2,
+          AMOUNT_TO_TRANSFER
+        )
+      ).to.equal(true)
+
       if (!this.erc1404) {
         expect(
           await this.cmtat.detectTransferRestriction(
@@ -562,6 +571,15 @@ function ERC20EnforcementModuleCommon () {
       // Assert
       expect(
         await this.cmtat.canTransfer(
+          this.address1,
+          this.address2,
+          AMOUNT_TO_TRANSFER
+        )
+      ).to.equal(false)
+
+      expect(
+        await this.cmtat.canTransferFrom(
+          this.address3,
           this.address1,
           this.address2,
           AMOUNT_TO_TRANSFER

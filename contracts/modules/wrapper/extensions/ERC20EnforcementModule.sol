@@ -17,6 +17,9 @@ import {IERC7551ERC20Enforcement, IERC7551ERC20EnforcementEvent} from "../../../
  * Contains all burn functions, inherits from ERC-20
  */
 abstract contract ERC20EnforcementModule is ERC20EnforcementModuleInternal, AccessControlUpgradeable , IERC7551ERC20Enforcement, IERC3643ERC20Enforcement{
+    /**
+    * @dev if ERC-1404 is not used, this variable will not be include in the final bytecode (compiler optimization)
+    */
     string internal constant TEXT_TRANSFER_REJECTED_FROM_INSUFFICIENT_ACTIVE_BALANCE =
         "AddrFrom:insufficientActiveBalance";
    

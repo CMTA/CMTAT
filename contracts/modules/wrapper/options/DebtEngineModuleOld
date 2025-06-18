@@ -1,17 +1,18 @@
 //SPDX-License-Identifier: MPL-2.0
 
 pragma solidity ^0.8.20;
-
+import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 /* ==== Engine === */
 import {IDebtEngine, ICMTATDebt, ICMTATCreditEvents} from "../../../interfaces/engine/IDebtEngine.sol";
-import {DebtModule} from "./DebtModule.sol";
+import {DebtModuleCommon} from "./DebtModuleCommon.sol";
+import {IDebtModule} from "../../../interfaces/modules/IDebtModule.sol";
 /**
  * @title Debt Engine module
  * @dev 
  *
  * Retrieve debt and creditEvents information from a debtEngine
  */
-abstract contract DebtEngineModule is DebtModule {
+abstract contract DebtEngineModule is DebtModuleCommon, AccessControlUpgradeable, ICMTATDebt, ICMTATCreditEvents {
     error CMTAT_DebtEngineModule_SameValue();
     /**
     * @dev Emitted when a rule engine is set.
@@ -21,20 +22,18 @@ abstract contract DebtEngineModule is DebtModule {
     /**
     * @inheritdoc ICMTATCreditEvents
     */
-    function creditEvents() public view virtual returns(CreditEvents memory creditEventsResult){
+    function creditEvents() public view virtual override(ICMTATCreditEvents) returns(CreditEvents memory creditEventsResult){
         DebtModuleStorage storage $ = _getDebtModuleStorage();
         if(address($._debtEngine) != address(0)){
-            creditEventsResult =  $._debtEngine.creditEvents();
-        }
+            creditEventsResult =  _creditEvents($._debtEngine);
+        } 
     }
 
-    function debt() public view virtual override(DebtModule) returns(DebtInformation memory debtBaseResult){
+    function debt() public view virtual override(ICMTATDebt) returns(DebtInformation memory debtBaseResult){
         DebtModuleStorage storage $ = _getDebtModuleStorage();
         if(address($._debtEngine) != address(0)){
-            debtBaseResult =  $._debtEngine.debt();
-        } else {
-            debtBaseResult = DebtModule.debt();
-        }
+            debtBaseResult =  _debt($._debtEngine);
+        } 
     }
 
     function debtEngine() public view virtual returns (IDebtEngine) {
@@ -58,6 +57,12 @@ abstract contract DebtEngineModule is DebtModule {
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
+    function _creditEvents(IDebtEngine debtEngine_) internal view returns(CreditEvents memory creditEventsResult){
+        creditEventsResult =  debtEngine_.creditEvents();
+    }
+    function _debt(IDebtEngine debtEngine_) internal view  returns(DebtInformation memory debtBaseResult){
+        return debtBaseResult =  debtEngine_.debt();
+    }
     function _setDebtEngine(
         DebtModuleStorage storage $, IDebtEngine debtEngine_
     ) internal {
