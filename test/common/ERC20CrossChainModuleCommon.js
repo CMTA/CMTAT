@@ -20,7 +20,7 @@ function ERC20CrossChainModuleCommon () {
     const DIFFERENCE = INITIAL_SUPPLY - VALUE1
 
     async function testBurn (sender) {
-    // Act
+      // Act
       // Burn 20
       this.logs = await this.cmtat
         .connect(sender)
@@ -87,8 +87,12 @@ function ERC20CrossChainModuleCommon () {
     it('testCanReturnSupportedInterface', async function () {
       const IERC721Interface = '0x80ac58cd'
       const crossChainInterace = '0x33331994'
-      expect(await this.cmtat.supportsInterface(crossChainInterace)).to.equal(true)
-      expect(await this.cmtat.supportsInterface(IERC721Interface)).to.equal(false)
+      expect(await this.cmtat.supportsInterface(crossChainInterace)).to.equal(
+        true
+      )
+      expect(await this.cmtat.supportsInterface(IERC721Interface)).to.equal(
+        false
+      )
     })
 
     it('testCannotBeBurntIfBalanceExceeds', async function () {
@@ -99,7 +103,9 @@ function ERC20CrossChainModuleCommon () {
         .approve(this.admin, AMOUNT_TO_BURN)
       // Act
       await expect(
-        this.cmtat.connect(this.admin).crosschainBurn(this.address1, AMOUNT_TO_BURN)
+        this.cmtat
+          .connect(this.admin)
+          .crosschainBurn(this.address1, AMOUNT_TO_BURN)
       )
         .to.be.revertedWithCustomError(this.cmtat, 'ERC20InsufficientBalance')
         .withArgs(this.address1.address, ADDRESS1_BALANCE, AMOUNT_TO_BURN)
@@ -117,46 +123,32 @@ function ERC20CrossChainModuleCommon () {
     })
 
     it('testCannotBeBurnIfContractIsDeactivated', async function () {
-      await this.cmtat
-        .connect(this.admin)
-        .deactivateContract()
+      await this.cmtat.connect(this.admin).pause()
+      await this.cmtat.connect(this.admin).deactivateContract()
       await expect(
         this.cmtat.connect(this.admin).crosschainBurn(this.address1, VALUE1)
-      )
-        .to.be.revertedWithCustomError(
-          this.cmtat,
-          'EnforcedPause'
-        )
+      ).to.be.revertedWithCustomError(this.cmtat, 'EnforcedPause')
     })
 
     it('testCannotBeBurnIfContractIsPaused', async function () {
-      await this.cmtat
-        .connect(this.admin)
-        .pause()
+      await this.cmtat.connect(this.admin).pause()
       await expect(
         this.cmtat.connect(this.admin).crosschainBurn(this.address1, VALUE1)
-      )
-        .to.be.revertedWithCustomError(
-          this.cmtat,
-          'EnforcedPause'
-        )
+      ).to.be.revertedWithCustomError(this.cmtat, 'EnforcedPause')
     })
 
     it('testCannotBeBurnIfAddressIsFrozen', async function () {
       // Arrange
-      await this.cmtat.connect(this.admin).setAddressFrozen(this.address1, true)
+      await this.cmtat
+        .connect(this.admin)
+        .setAddressFrozen(this.address1, true)
 
       // Act
       const VALUE = 20
       await expect(
-        this.cmtat
-          .connect(this.admin)
-          .crosschainBurn(this.address1, VALUE)
+        this.cmtat.connect(this.admin).crosschainBurn(this.address1, VALUE)
       )
-        .to.be.revertedWithCustomError(
-          this.cmtat,
-          'CMTAT_InvalidTransfer'
-        )
+        .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
         .withArgs(this.address1.address, ZERO_ADDRESS, VALUE)
     })
   })
@@ -169,11 +161,9 @@ function ERC20CrossChainModuleCommon () {
     const DIFFERENCE = INITIAL_SUPPLY - VALUE1
     const DIFFERENCE_TYPED = ethers.Typed.uint256(30)
     async function testBurn (sender) {
-    // Act
+      // Act
       // Burn 20
-      this.logs = await this.cmtat
-        .connect(sender)
-        .burn(VALUE1)
+      this.logs = await this.cmtat.connect(sender).burn(VALUE1)
       // Assert
       // emits a Transfer event
       await expect(this.logs)
@@ -189,14 +179,11 @@ function ERC20CrossChainModuleCommon () {
 
       // Burn 30
       // Act
-      this.logs = await this.cmtat
-        .connect(sender)
-        .burn(DIFFERENCE)
+      this.logs = await this.cmtat.connect(sender).burn(DIFFERENCE)
 
       // Assert
       // Emits a Transfer event
-      await expect(this.logs)
-        .to.emit(this.cmtat, 'Transfer')
+      await expect(this.logs).to.emit(this.cmtat, 'Transfer')
       // Emits a Burn event
       await expect(this.logs)
         .to.emit(this.cmtat, 'CrosschainBurn')
@@ -229,17 +216,13 @@ function ERC20CrossChainModuleCommon () {
       const AMOUNT_TO_BURN = 200n
       const ADDRESS1_BALANCE = await this.cmtat.balanceOf(this.address1)
       // Act
-      await expect(
-        this.cmtat.connect(this.address1).burn(AMOUNT_TO_BURN)
-      )
+      await expect(this.cmtat.connect(this.address1).burn(AMOUNT_TO_BURN))
         .to.be.revertedWithCustomError(this.cmtat, 'ERC20InsufficientBalance')
         .withArgs(this.address1.address, ADDRESS1_BALANCE, AMOUNT_TO_BURN)
     })
 
     it('testCannotBeBurntWithoutBurnerRole', async function () {
-      await expect(
-        this.cmtat.connect(this.address2).burn(20n)
-      )
+      await expect(this.cmtat.connect(this.address2).burn(20n))
         .to.be.revertedWithCustomError(
           this.cmtat,
           'AccessControlUnauthorizedAccount'
@@ -247,9 +230,7 @@ function ERC20CrossChainModuleCommon () {
         .withArgs(this.address2.address, BURNER_FROM_ROLE)
 
       // Without reason
-      await expect(
-        this.cmtat.connect(this.address2).burn(20n)
-      )
+      await expect(this.cmtat.connect(this.address2).burn(20n))
         .to.be.revertedWithCustomError(
           this.cmtat,
           'AccessControlUnauthorizedAccount'
@@ -258,52 +239,38 @@ function ERC20CrossChainModuleCommon () {
     })
 
     it('testCannotBeMBurnIfContractIsDeactivated', async function () {
-      await this.cmtat
-        .connect(this.admin)
-        .deactivateContract()
+      // Arrange
+      await this.cmtat.connect(this.admin).pause()
+      await this.cmtat.connect(this.admin).deactivateContract()
+      // Act
       await expect(
         this.cmtat.connect(this.admin).burn(VALUE_TYPED)
-      )
-        .to.be.revertedWithCustomError(
-          this.cmtat,
-          'EnforcedPause'
-        )
+      ).to.be.revertedWithCustomError(this.cmtat, 'EnforcedPause')
     })
 
     it('testCanBeBurnEvenIfContractIsPaused', async function () {
       await this.cmtat
         .connect(this.admin)
         .grantRole(BURNER_FROM_ROLE, this.address1)
-      await this.cmtat
-        .connect(this.admin)
-        .pause()
+      await this.cmtat.connect(this.admin).pause()
       await expect(
         this.cmtat.connect(this.admin).burn(VALUE_TYPED)
-      )
-        .to.be.revertedWithCustomError(
-          this.cmtat,
-          'EnforcedPause'
-        )
+      ).to.be.revertedWithCustomError(this.cmtat, 'EnforcedPause')
     })
 
     it('testCannotBeBurnIfAddressIsFrozen', async function () {
       // Arrange
-      await this.cmtat.connect(this.admin).setAddressFrozen(this.address1, true)
+      await this.cmtat
+        .connect(this.admin)
+        .setAddressFrozen(this.address1, true)
       await this.cmtat
         .connect(this.admin)
         .grantRole(BURNER_FROM_ROLE, this.address1)
       // Act
       const VALUE = 20
       const VALUE_TYPED = ethers.Typed.uint256(20)
-      await expect(
-        this.cmtat
-          .connect(this.address1)
-          .burn(VALUE_TYPED)
-      )
-        .to.be.revertedWithCustomError(
-          this.cmtat,
-          'CMTAT_InvalidTransfer'
-        )
+      await expect(this.cmtat.connect(this.address1).burn(VALUE_TYPED))
+        .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
         .withArgs(this.address1.address, ZERO_ADDRESS, VALUE)
     })
   })
@@ -361,30 +328,23 @@ function ERC20CrossChainModuleCommon () {
 
     it('testCannotBeBurnFromIfContractIsPaused', async function () {
       // Arrange
-      await this.cmtat
-        .connect(this.admin)
-        .pause()
+      await this.cmtat.connect(this.admin).pause()
       await this.cmtat.connect(this.address1).approve(this.admin, 50n)
       // Act
       await expect(
         this.cmtat.connect(this.admin).burnFrom(this.address1, 20n)
-      )
-        .to.be.revertedWithCustomError(
-          this.cmtat,
-          'EnforcedPause')
+      ).to.be.revertedWithCustomError(this.cmtat, 'EnforcedPause')
     })
 
     it('testCannotBeBurnFromIfContractIsDeactivated', async function () {
-      await this.cmtat
-        .connect(this.admin)
-        .deactivateContract()
+      // Arrange
+      await this.cmtat.connect(this.admin).pause()
+      await this.cmtat.connect(this.admin).deactivateContract()
       await this.cmtat.connect(this.address1).approve(this.admin, 50n)
+      // Act
       await expect(
         this.cmtat.connect(this.admin).burnFrom(this.address1, 20n)
-      )
-        .to.be.revertedWithCustomError(
-          this.cmtat,
-          'EnforcedPause')
+      ).to.be.revertedWithCustomError(this.cmtat, 'EnforcedPause')
     })
   })
   context('CrossChainMinting', function () {
@@ -431,7 +391,7 @@ function ERC20CrossChainModuleCommon () {
       await expect(this.logs)
         .to.emit(this.cmtat, 'Transfer')
         .withArgs(ZERO_ADDRESS, this.address2, VALUE2)
-        // emits a Mint event
+      // emits a Mint event
       await expect(this.logs)
         .to.emit(this.cmtat, 'CrosschainMint')
         .withArgs(this.address2, VALUE2, sender)
@@ -455,7 +415,6 @@ function ERC20CrossChainModuleCommon () {
       await bindTest(this.address1)
     })
 
-    // reverts when issuing by a non minter
     it('testCannotMintByNonMinter', async function () {
       await expect(
         this.cmtat.connect(this.address1).crosschainMint(this.address1, VALUE1)
@@ -468,29 +427,20 @@ function ERC20CrossChainModuleCommon () {
     })
 
     it('testCannotBeMintedIfContractIsPaused', async function () {
-      await this.cmtat
-        .connect(this.admin)
-        .pause()
+      await this.cmtat.connect(this.admin).pause()
       await expect(
         this.cmtat.connect(this.admin).crosschainMint(this.address1, VALUE1)
-      )
-        .to.be.revertedWithCustomError(
-          this.cmtat,
-          'EnforcedPause'
-        )
+      ).to.be.revertedWithCustomError(this.cmtat, 'EnforcedPause')
     })
 
     it('testCannotBeMintedIfContractIsDeactivated', async function () {
-      await this.cmtat
-        .connect(this.admin)
-        .deactivateContract()
+      // Arrange
+      await this.cmtat.connect(this.admin).pause()
+      await this.cmtat.connect(this.admin).deactivateContract()
+      // Act
       await expect(
         this.cmtat.connect(this.admin).crosschainMint(this.address1, VALUE1)
-      )
-        .to.be.revertedWithCustomError(
-          this.cmtat,
-          'EnforcedPause'
-        )
+      ).to.be.revertedWithCustomError(this.cmtat, 'EnforcedPause')
     })
 
     it('testCannotBeMintedIfToIsFrozen', async function () {
@@ -500,10 +450,8 @@ function ERC20CrossChainModuleCommon () {
       await expect(
         this.cmtat.connect(this.admin).crosschainMint(this.address1, VALUE1)
       )
-        .to.be.revertedWithCustomError(
-          this.cmtat,
-          'CMTAT_InvalidTransfer'
-        ).withArgs(ZERO_ADDRESS, this.address1, VALUE1)
+        .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
+        .withArgs(ZERO_ADDRESS, this.address1, VALUE1)
     })
   })
 }

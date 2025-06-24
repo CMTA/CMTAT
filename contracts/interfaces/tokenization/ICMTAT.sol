@@ -39,8 +39,7 @@ interface ICMTATDeactivate {
 
 
 /**
-*  BASIC PARAMETERS OF THE TOKEN
-* 
+*  @title BASIC PARAMETERS OF THE TOKEN
 * 
 */
 interface ICMTATBase {

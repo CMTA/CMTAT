@@ -10,7 +10,13 @@ pragma solidity ^0.8.20;
 */
 interface IAllowlistModule {
     /* ============ Events ============ */
+    /**
+    * @notice Emitted when an address is added to the allowlist
+    */
     event AddressAddedToAllowlist(address indexed account, bool indexed status, address indexed enforcer, bytes data);
+    /**
+    * @notice Emitted the allowlist is enabled & disabled
+    */
     event AllowlistEnableStatus(address indexed operator, bool status);
     /* ============ Functions ============ */
     /**

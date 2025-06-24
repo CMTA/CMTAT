@@ -3,11 +3,8 @@ const {
   deployCMTATDebtStandalone,
   fixture,
   loadFixture
-
 } = require('../../deploymentUtils')
-const {
-  ZERO_ADDRESS
-} = require('../../utils')
+const { ZERO_ADDRESS } = require('../../utils')
 // Core
 const ERC20BaseModuleCommon = require('../../common/ERC20BaseModuleCommon')
 const ERC20MintModuleCommon = require('../../common/ERC20MintModuleCommon')
@@ -41,7 +38,7 @@ describe('CMTAT Debt - Standalone', function () {
       this.deployerAddress.address
     )
     // this.debtEngineMock = await ethers.deployContract('DebtEngineMock')
-    this.core = true
+    this.erc1404 = true
     this.dontCheckTimestamp = true
     this.transferEngineMock = await ethers.deployContract(
       'SnapshotEngineMock',

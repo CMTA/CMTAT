@@ -3,11 +3,8 @@ const {
   deployCMTATAllowlistProxy,
   fixture,
   loadFixture
-
 } = require('../../deploymentUtils')
-const {
-  ZERO_ADDRESS
-} = require('../../utils')
+const { ZERO_ADDRESS } = require('../../utils')
 const ERC20BaseModuleCommon = require('../../common/ERC20BaseModuleCommon')
 const ERC20MintModuleCommon = require('../../common/ERC20MintModuleCommon')
 const ERC20BurnModuleCommon = require('../../common/ERC20BurnModuleCommon')
@@ -32,7 +29,7 @@ describe('CMTAT Allowlist - Upgradeable', function () {
     await this.cmtat
       .connect(this.admin)
       .batchSetAddressAllowlist(accounts, Allowlist)
-    this.core = true
+    this.erc1404 = true
     this.dontCheckTimestamp = true
   })
   // Core

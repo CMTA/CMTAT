@@ -15,8 +15,8 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **CMTATUpgradeable** | Implementation | CMTATBaseOption |||
-| └ | <Constructor> | Public ❗️ | 🛑  | MetaTxModule |
+| **CMTATUpgradeable** | Implementation | CMTATBaseERC2771 |||
+| └ | <Constructor> | Public ❗️ | 🛑  | ERC2771Module |
 
 
 ### Legend

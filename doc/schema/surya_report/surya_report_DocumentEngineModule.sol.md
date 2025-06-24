@@ -15,7 +15,7 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **DocumentEngineModule** | Implementation | AuthorizationModule, IDocumentEngineModule |||
+| **DocumentEngineModule** | Implementation | IDocumentEngineModule, AccessControlUpgradeable |||
 | └ | __DocumentEngineModule_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |
 | └ | documentEngine | Public ❗️ |   |NO❗️ |
 | └ | getDocument | Public ❗️ |   |NO❗️ |

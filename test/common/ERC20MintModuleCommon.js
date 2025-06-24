@@ -13,9 +13,7 @@ function ERC20MintModuleCommon () {
 
       // Act
       // Issue 20 and check balances and total supply
-      this.logs = await this.cmtat
-        .connect(sender)
-        .mint(this.address1, VALUE1)
+      this.logs = await this.cmtat.connect(sender).mint(this.address1, VALUE1)
 
       // Assert
       expect(await this.cmtat.balanceOf(this.address1)).to.equal(VALUE1)
@@ -26,16 +24,14 @@ function ERC20MintModuleCommon () {
       await expect(this.logs)
         .to.emit(this.cmtat, 'Transfer')
         .withArgs(ZERO_ADDRESS, this.address1, VALUE1)
-        // emits a Mint event
+      // emits a Mint event
       await expect(this.logs)
         .to.emit(this.cmtat, 'Mint')
         .withArgs(sender, this.address1, VALUE1, '0x')
 
       // Act
       // Issue 50 and check intermediate balances and total supply
-      this.logs = await this.cmtat
-        .connect(sender)
-        .mint(this.address2, VALUE2)
+      this.logs = await this.cmtat.connect(sender).mint(this.address2, VALUE2)
 
       // Assert
       expect(await this.cmtat.balanceOf(this.address2)).to.equal(VALUE2)
@@ -46,7 +42,7 @@ function ERC20MintModuleCommon () {
       await expect(this.logs)
         .to.emit(this.cmtat, 'Transfer')
         .withArgs(ZERO_ADDRESS, this.address2, VALUE2)
-        // emits a Mint event
+      // emits a Mint event
       await expect(this.logs)
         .to.emit(this.cmtat, 'Mint')
         .withArgs(sender, this.address2, VALUE2, '0x')
@@ -83,37 +79,28 @@ function ERC20MintModuleCommon () {
     })
 
     it('testCanBeMintedEvenIfContractIsPaused', async function () {
-      await this.cmtat
-        .connect(this.admin)
-        .pause()
+      await this.cmtat.connect(this.admin).pause()
       const bindTest = testMint.bind(this)
       await bindTest(this.admin)
     })
 
     it('testCannotBeMintedIfContractIsDeactivated', async function () {
-      await this.cmtat
-        .connect(this.admin)
-        .deactivateContract()
-      await expect(
-        this.cmtat.connect(this.admin).mint(this.address1, VALUE1)
-      )
-        .to.be.revertedWithCustomError(
-          this.cmtat,
-          'CMTAT_InvalidTransfer'
-        ).withArgs(ZERO_ADDRESS, this.address1, VALUE1)
+      // Arrange
+      await this.cmtat.connect(this.admin).pause()
+      await this.cmtat.connect(this.admin).deactivateContract()
+      // Act
+      await expect(this.cmtat.connect(this.admin).mint(this.address1, VALUE1))
+        .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
+        .withArgs(ZERO_ADDRESS, this.address1, VALUE1)
     })
 
     it('testCannotBeMintedIfToIsFrozen', async function () {
       await this.cmtat
         .connect(this.admin)
         .setAddressFrozen(this.address1, true)
-      await expect(
-        this.cmtat.connect(this.admin).mint(this.address1, VALUE1)
-      )
-        .to.be.revertedWithCustomError(
-          this.cmtat,
-          'CMTAT_InvalidTransfer'
-        ).withArgs(ZERO_ADDRESS, this.address1, VALUE1)
+      await expect(this.cmtat.connect(this.admin).mint(this.address1, VALUE1))
+        .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
+        .withArgs(ZERO_ADDRESS, this.address1, VALUE1)
     })
   })
 
@@ -176,9 +163,7 @@ function ERC20MintModuleCommon () {
     })
 
     it('testCanBeMintedBatchEvenIfContractIsPaused', async function () {
-      await this.cmtat
-        .connect(this.admin)
-        .pause()
+      await this.cmtat.connect(this.admin).pause()
       const bindTest = testMintBatch.bind(this)
       await bindTest(this.admin)
     })
@@ -340,10 +325,7 @@ function ERC20MintModuleCommon () {
         this.cmtat
           .connect(this.admin)
           .batchTransfer(TOKEN_ADDRESS_TOS_INVALID, TOKEN_AMOUNTS)
-      ).to.be.revertedWithCustomError(
-        this.cmtat,
-        'CMTAT_MintModule_EmptyTos'
-      )
+      ).to.be.revertedWithCustomError(this.cmtat, 'CMTAT_MintModule_EmptyTos')
     })
   })
 }

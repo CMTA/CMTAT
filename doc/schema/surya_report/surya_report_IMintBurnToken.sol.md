@@ -27,6 +27,7 @@
 ||||||
 | **IBurnFromERC20** | Interface |  |||
 | └ | burnFrom | External ❗️ | 🛑  |NO❗️ |
+| └ | burn | External ❗️ | 🛑  |NO❗️ |
 
 
 ### Legend

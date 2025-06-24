@@ -15,7 +15,7 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **ValidationModuleCore** | Implementation | ValidationModule, IERC3643ComplianceRead, IERC7551Compliance |||
+| **ValidationModuleCore** | Implementation | ValidationModule, IERC7551Compliance |||
 | └ | canTransfer | Public ❗️ |   |NO❗️ |
 | └ | canTransferFrom | Public ❗️ |   |NO❗️ |
 | └ | _canTransferByModule | Internal 🔒 |   | |

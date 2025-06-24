@@ -4,7 +4,7 @@ pragma solidity ^0.8.20;
 
 
 /* ==== Tokenization === */
-import {IERC1404} from "../../../../interfaces/tokenization/draft-IERC1404.sol";
+import {IERC1404, IERC1404Extend} from "../../../../interfaces/tokenization/draft-IERC1404.sol";
 import {ValidationModuleRuleEngine, IRuleEngine} from "./ValidationModuleRuleEngine.sol";
 /**
  * @dev Validation module (ERC-1404)
@@ -12,7 +12,7 @@ import {ValidationModuleRuleEngine, IRuleEngine} from "./ValidationModuleRuleEng
  * Useful for to restrict and validate transfers
  */
 abstract contract ValidationModuleERC1404 is
-   ValidationModuleRuleEngine, IERC1404
+   ValidationModuleRuleEngine, IERC1404Extend
 {
     /* ============ State Variables ============ */
     string constant TEXT_TRANSFER_OK = "NoRestriction";
@@ -25,10 +25,16 @@ abstract contract ValidationModuleERC1404 is
     string internal constant TEXT_TRANSFER_REJECTED_TO_FROZEN =
         "AddrToIsFrozen";
 
+    string internal constant TEXT_TRANSFER_REJECTED_SPENDER_FROZEN =
+        "AddrSpenderIsFrozen";
+
     /* PauseModule */
     string internal constant TEXT_TRANSFER_REJECTED_PAUSED =
         "EnforcedPause";
 
+    /*//////////////////////////////////////////////////////////////
+                            PUBLIC/EXTERNAL FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
     /**
      * @notice returns the human readable explaination 
      * corresponding to the error code returned by detectTransferRestriction
@@ -40,23 +46,28 @@ abstract contract ValidationModuleERC1404 is
         uint8 restrictionCode
     ) public virtual view override(IERC1404) returns (string memory message) {
           IRuleEngine ruleEngine_ = ruleEngine();
-        if (restrictionCode == uint8(IERC1404.REJECTED_CODE_BASE.TRANSFER_OK)) {
+        if (restrictionCode == uint8(IERC1404Extend.REJECTED_CODE_BASE.TRANSFER_OK)) {
             return TEXT_TRANSFER_OK;
         } else if (
             restrictionCode ==
-            uint8(IERC1404.REJECTED_CODE_BASE.TRANSFER_REJECTED_PAUSED)
+            uint8(IERC1404Extend.REJECTED_CODE_BASE.TRANSFER_REJECTED_PAUSED)
         ) {
             return TEXT_TRANSFER_REJECTED_PAUSED;
         } else if (
             restrictionCode ==
-            uint8(IERC1404.REJECTED_CODE_BASE.TRANSFER_REJECTED_FROM_FROZEN)
+            uint8(IERC1404Extend.REJECTED_CODE_BASE.TRANSFER_REJECTED_FROM_FROZEN)
         ) {
             return TEXT_TRANSFER_REJECTED_FROM_FROZEN;
         } else if (
             restrictionCode ==
-            uint8(IERC1404.REJECTED_CODE_BASE.TRANSFER_REJECTED_TO_FROZEN)
+            uint8(IERC1404Extend.REJECTED_CODE_BASE.TRANSFER_REJECTED_TO_FROZEN)
         ) {
             return TEXT_TRANSFER_REJECTED_TO_FROZEN;
+        }  else if (
+            restrictionCode ==
+            uint8(IERC1404Extend.REJECTED_CODE_BASE.TRANSFER_REJECTED_SPENDER_FROZEN)
+        ) {
+            return TEXT_TRANSFER_REJECTED_SPENDER_FROZEN;
         } else if (address(ruleEngine_) != address(0)) {
             return ruleEngine_.messageForTransferRestriction(restrictionCode);
         } else {
@@ -78,17 +89,58 @@ abstract contract ValidationModuleERC1404 is
         uint256 value
     ) public virtual view override(IERC1404) returns (uint8 code) {
          IRuleEngine ruleEngine_ = ruleEngine();
-        if (paused()) {
-            return uint8(IERC1404.REJECTED_CODE_BASE.TRANSFER_REJECTED_PAUSED);
-        } else if (isFrozen(from)) {
-            return uint8(IERC1404.REJECTED_CODE_BASE.TRANSFER_REJECTED_FROM_FROZEN);
-        } else if (isFrozen(to)) {
-            return uint8(IERC1404.REJECTED_CODE_BASE.TRANSFER_REJECTED_TO_FROZEN);
-        } else if (address(ruleEngine_) != address(0)) {
+         uint8 codeReturn = _detectTransferRestriction(from, to, value);
+         if(codeReturn != uint8(IERC1404Extend.REJECTED_CODE_BASE.TRANSFER_OK) ){
+            return codeReturn;
+         } else if (address(ruleEngine_) != address(0)) {
             return ruleEngine_.detectTransferRestriction(from, to, value);
+        } else{
+            return uint8(IERC1404Extend.REJECTED_CODE_BASE.TRANSFER_OK);
+        }
+    }
+
+    function detectTransferRestrictionFrom(
+        address spender,
+        address from,
+        address to,
+        uint256 value
+    ) public virtual view override(IERC1404Extend) returns (uint8 code) {
+        IRuleEngine ruleEngine_ = ruleEngine();
+        if (isFrozen(spender)) {
+            return uint8(IERC1404Extend.REJECTED_CODE_BASE.TRANSFER_REJECTED_SPENDER_FROZEN);
+        } else {
+            uint8 codeReturn = _detectTransferRestriction(from, to, value);
+            if (codeReturn != uint8(IERC1404Extend.REJECTED_CODE_BASE.TRANSFER_OK) ){
+                return codeReturn;
+            } else if (address(ruleEngine_) != address(0)) {
+                return ruleEngine_.detectTransferRestrictionFrom(spender, from, to, value);
+            } else { 
+                return uint8(IERC1404Extend.REJECTED_CODE_BASE.TRANSFER_OK);
+            }
+        } 
+    }
+
+     /*//////////////////////////////////////////////////////////////
+                            INTERNAL/PRIVATE FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
+
+    /**
+    * @dev override this function to add further restriction
+    */
+    function _detectTransferRestriction(
+        address from,
+        address to,
+        uint256 /* value */
+    ) internal virtual view  returns (uint8 code) {
+        if (paused()) {
+            return uint8(IERC1404Extend.REJECTED_CODE_BASE.TRANSFER_REJECTED_PAUSED);
+        } else if (isFrozen(from)) {
+            return uint8(IERC1404Extend.REJECTED_CODE_BASE.TRANSFER_REJECTED_FROM_FROZEN);
+        } else if (isFrozen(to)) {
+            return uint8(IERC1404Extend.REJECTED_CODE_BASE.TRANSFER_REJECTED_TO_FROZEN);
         } 
         else {
-            return uint8(IERC1404.REJECTED_CODE_BASE.TRANSFER_OK);
+            return uint8(IERC1404Extend.REJECTED_CODE_BASE.TRANSFER_OK);
         }
     }
 }

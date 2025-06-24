@@ -2,8 +2,9 @@
 
 pragma solidity ^0.8.20;
 
-/* ==== Module === */
-import {AuthorizationModule} from "../../security/AuthorizationModule.sol";
+/* ==== OpenZeppelin=== */
+import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
+
 /* ==== Engine === */
 import {IERC1643, IDocumentEngine} from "../../../interfaces/engine/IDocumentEngine.sol";
 import {IDocumentEngineModule} from "../../../interfaces/modules/IDocumentEngineModule.sol";
@@ -15,7 +16,7 @@ import {IDocumentEngineModule} from "../../../interfaces/modules/IDocumentEngine
  * Retrieve documents from a documentEngine
  */
 
-abstract contract DocumentEngineModule is AuthorizationModule, IDocumentEngineModule {
+abstract contract DocumentEngineModule is IDocumentEngineModule, AccessControlUpgradeable {
     /* ============ ERC-7201 ============ */
     bytes32 public constant DOCUMENT_ROLE = keccak256("DOCUMENT_ROLE");
     // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.DocumentEngineModule")) - 1)) & ~bytes32(uint256(0xff))

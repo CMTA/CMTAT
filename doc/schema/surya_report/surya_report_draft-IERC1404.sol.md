@@ -18,6 +18,9 @@
 | **IERC1404** | Interface |  |||
 | └ | detectTransferRestriction | External ❗️ |   |NO❗️ |
 | └ | messageForTransferRestriction | External ❗️ |   |NO❗️ |
+||||||
+| **IERC1404Extend** | Interface | IERC1404 |||
+| └ | detectTransferRestrictionFrom | External ❗️ |   |NO❗️ |
 
 
 ### Legend

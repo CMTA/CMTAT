@@ -15,8 +15,8 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **CMTATUpgradeableUUPS** | Implementation | CMTATBaseOption, UUPSUpgradeable |||
-| └ | <Constructor> | Public ❗️ | 🛑  | MetaTxModule |
+| **CMTATUpgradeableUUPS** | Implementation | CMTATBaseERC2771, UUPSUpgradeable |||
+| └ | <Constructor> | Public ❗️ | 🛑  | ERC2771Module |
 | └ | initialize | Public ❗️ | 🛑  | initializer |
 | └ | _authorizeUpgrade | Internal 🔒 | 🛑  | onlyRole |
 

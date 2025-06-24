@@ -10,13 +10,13 @@ This document defines the CMTAT Base Core Module for the CMTA Token specificatio
 
 ### Inheritance
 
-![surya_inheritance_BurnModule.sol](../schema/surya_inheritance/surya_inheritance_CMTATBaseCore.sol.png)
+![surya_inheritance_BurnModule.sol](../schema/surya_inheritance/surya_inheritance_0_CMTATBaseCore.sol.png)
 
 
 
 ### Graph
 
-![surya_graph_CMTATBaseCoreModule.sol](../schema/surya_graph/surya_graph_CMTATBaseCore.sol.png)
+![surya_graph_CMTATBaseCoreModule.sol](../schema/surya_graph/surya_graph_0_CMTATBaseCore.sol.png)
 
 ## API for Ethereum
 
@@ -24,7 +24,7 @@ This section describes the Ethereum API of Burn Module.
 
 ### Functions
 
-#### `forceBurn(address,uint256,bytes)`
+#### `forcedBurn(address,uint256,bytes)`
 
 Destroys a `value` amount of tokens from `account`, by transferring it to address(0).
 

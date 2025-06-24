@@ -16,7 +16,7 @@
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
 | **CMTATStandaloneERC1363** | Implementation | CMTATBaseERC1363 |||
-| └ | <Constructor> | Public ❗️ | 🛑  | MetaTxModule |
+| └ | <Constructor> | Public ❗️ | 🛑  | ERC2771Module |
 
 
 ### Legend

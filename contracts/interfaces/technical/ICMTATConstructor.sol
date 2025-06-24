@@ -24,7 +24,7 @@ interface ICMTATConstructor {
         // number of decimals of the token, must be 0 to be compliant with Swiss law as per CMTAT specifications (non-zero decimal number may be needed for other use cases)
         uint8 decimalsIrrevocable;
     }
-    struct BaseModuleAttributes {
+    struct ExtraInformationAttributes {
         // ISIN or other identifier
         string tokenId;
         // terms associated with the token

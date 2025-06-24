@@ -2,8 +2,9 @@
 
 pragma solidity ^0.8.20;
 
+/* ==== OpenZeppelin === */
+import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 /* ==== Module === */
-import {AuthorizationModule} from "../../security/AuthorizationModule.sol";
 import {EnforcementModuleInternal} from "../../internal/EnforcementModuleInternal.sol";
 import {IERC3643Enforcement, IERC3643EnforcementEvent} from "../../../interfaces/tokenization/IERC3643Partial.sol";
 /*
@@ -15,7 +16,7 @@ import {IERC3643Enforcement, IERC3643EnforcementEvent} from "../../../interfaces
  */
 abstract contract EnforcementModule is
     EnforcementModuleInternal,
-    AuthorizationModule,
+    AccessControlUpgradeable,
     IERC3643Enforcement,
     IERC3643EnforcementEvent
 {
@@ -25,15 +26,7 @@ abstract contract EnforcementModule is
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
-    
-    /**
-    * @inheritdoc IERC3643Enforcement
-    */
-    function isFrozen(address account) public override(IERC3643Enforcement) view virtual returns (bool) {
-       return _addressIsListed(account);
-       
-    }
-
+    /* ============ State restricted functions ============ */
     /**
     * @inheritdoc IERC3643Enforcement
     */
@@ -60,6 +53,15 @@ abstract contract EnforcementModule is
         address[] calldata accounts, bool[] calldata freezes
     ) public virtual override(IERC3643Enforcement) onlyRole(ENFORCER_ROLE) {
          _addAddressesToTheList(accounts, freezes, "");
+    }
+
+    /* ============ View functions ============ */
+    /**
+    * @inheritdoc IERC3643Enforcement
+    */
+    function isFrozen(address account) public override(IERC3643Enforcement) view virtual returns (bool) {
+       return _addressIsListed(account);
+       
     }
 
     /*//////////////////////////////////////////////////////////////

@@ -15,9 +15,10 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **IDebtModule** | Interface | ICMTATDebt |||
+| **IDebtModule** | Interface | ICMTATDebt, ICMTATCreditEvents |||
 | └ | setDebtInstrument | External ❗️ | 🛑  |NO❗️ |
 | └ | setDebt | External ❗️ | 🛑  |NO❗️ |
+| └ | setCreditEvents | External ❗️ | 🛑  |NO❗️ |
 
 
 ### Legend

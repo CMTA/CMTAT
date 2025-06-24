@@ -54,8 +54,8 @@
 | **IERC3643ComplianceRead** | Interface |  |||
 | └ | canTransfer | External ❗️ |   |NO❗️ |
 ||||||
-| **IERC3643ComplianceWrite** | Interface |  |||
-| └ | transferred | External ❗️ | 🛑  |NO❗️ |
+| **IERC3743IComplianceContract** | Interface |  |||
+| └ | transferred | External ❗️ |   |NO❗️ |
 
 
 ### Legend

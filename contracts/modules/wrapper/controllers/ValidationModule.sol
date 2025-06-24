@@ -20,14 +20,13 @@ abstract contract ValidationModule is
     //////////////////////////////////////////////////////////////*/
     /* ============ View functions ============ */
     /**
-    * @dev function used by canTransfer and operateOnTransfer
-    * Block mint if the contract is deactivated (PauseModule) 
-    * or if to is frozen
-    */
+    * @dev check if the contract is deativated or the address is frozen
+    * check revlevant for mint and burn operations
+    */ 
     function _canMintBurnByModule(
         address target
     ) internal view virtual returns (bool) {
-        if(PauseModule.deactivated() || isFrozen(target)){
+        if(PauseModule.deactivated() || EnforcementModule.isFrozen(target)){
             // can not mint or burn if the contract is deactivated
             // cannot burn if target is frozen (used forcedTransfer instead if available)
             // cannot mint if target is frozen
@@ -37,7 +36,7 @@ abstract contract ValidationModule is
     }
 
     /**
-    * @dev function used by canTransfer and operateOnTransfer
+    * @dev calls Pause and Enforcement module
     */
     function _canTransferGenericByModule(
         address spender,

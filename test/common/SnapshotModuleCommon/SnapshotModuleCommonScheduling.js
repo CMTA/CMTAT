@@ -221,11 +221,10 @@ function SnapshotModuleCommonScheduling () {
         this.transferEngineMock
           .connect(this.admin)
           .scheduleSnapshotNotOptimized(SNAPSHOT_TIME)
+      ).to.be.revertedWithCustomError(
+        this.transferEngineMock,
+        'CMTAT_SnapshotModule_SnapshotScheduledInThePast'
       )
-        .to.be.revertedWithCustomError(
-          this.transferEngineMock,
-          'CMTAT_SnapshotModule_SnapshotScheduledInThePast'
-        )
       /* await expect(
         this.transferEngineMock
           .connect(this.admin)

@@ -20,8 +20,8 @@
 | └ | _addToAllowlist | Internal 🔒 | 🛑  | |
 | └ | _addToAllowlist | Internal 🔒 | 🛑  | |
 | └ | _addToAllowlist | Internal 🔒 | 🛑  | |
-| └ | _isAllowlisted | Internal 🔒 |   | |
 | └ | _enableAllowlist | Internal 🔒 | 🛑  | |
+| └ | _isAllowlisted | Internal 🔒 |   | |
 | └ | _isAllowlistEnabled | Internal 🔒 |   | |
 | └ | _getAllowlistModuleInternalStorage | Internal 🔒 |   | |
 

@@ -2,19 +2,20 @@
 
 pragma solidity ^0.8.20;
 
-/* ==== Module === */
-import {AuthorizationModule} from "../../security/AuthorizationModule.sol";
+/* ==== OpenZeppelin === */
+import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
+
 /* ==== Engine === */
-import {IDebtEngine, ICMTATDebt} from "../../../interfaces/engine/IDebtEngine.sol";
+import {IDebtEngine, ICMTATDebt, ICMTATCreditEvents} from "../../../interfaces/engine/IDebtEngine.sol";
 import {IDebtModule} from "../../../interfaces/modules/IDebtModule.sol";
 
 /**
  * @title Debt module
  * @dev 
  *
- * Set Debt info
+ * Set Debt and Credit Events info
  */
-abstract contract DebtModule is AuthorizationModule, IDebtModule {
+abstract contract DebtModule is AccessControlUpgradeable, IDebtModule {
    
     /* ============ State Variables ============ */
     bytes32 public constant DEBT_ROLE = keccak256("DEBT_ROLE");
@@ -25,23 +26,36 @@ abstract contract DebtModule is AuthorizationModule, IDebtModule {
     /* ==== ERC-7201 State Variables === */
     struct DebtModuleStorage {
         ICMTATDebt.DebtInformation _debt;
+        ICMTATCreditEvents.CreditEvents _creditEvents;
         // Can be used to set a debtEngine
         IDebtEngine _debtEngine;
     }
 
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
-    //////////////////////////////////////////////////////////////*/    
+    //////////////////////////////////////////////////////////////*/  
+    /* ============ State functions ============ */
+    /**
+    * @inheritdoc IDebtModule
+    * @dev The values of all attributes will be changed even if the new values are the same as the current ones
+    */
+    function setCreditEvents(
+       CreditEvents calldata creditEvents_
+    ) public onlyRole(DEBT_ROLE) {
+        DebtModuleStorage storage $ = _getDebtModuleStorage();
+        $._creditEvents = creditEvents_;
+        emit CreditEventsLogEvent();
+    }  
 
     /**
     * @inheritdoc IDebtModule
     */
     function setDebt(
           ICMTATDebt.DebtInformation calldata debt_
-    ) external virtual override(IDebtModule) onlyRole(DEBT_ROLE) {
+    ) public virtual override(IDebtModule) onlyRole(DEBT_ROLE) {
         DebtModuleStorage storage $ = _getDebtModuleStorage();
         $._debt = debt_;
-        emit Debt();
+        emit DebtLogEvent();
     }
 
     /**
@@ -49,12 +63,21 @@ abstract contract DebtModule is AuthorizationModule, IDebtModule {
     */
     function setDebtInstrument(
           ICMTATDebt.DebtInstrument calldata debtInstrument_
-    ) external virtual override(IDebtModule) onlyRole(DEBT_ROLE) {
+    ) public virtual override(IDebtModule) onlyRole(DEBT_ROLE) {
         DebtModuleStorage storage $ = _getDebtModuleStorage();
         $._debt.debtInstrument = debtInstrument_;
-        emit DebtInstrumentEvent();
+        emit DebtInstrumentLogEvent();
     }
-    
+
+    /* ============ View functions ============ */
+    /**
+    * @inheritdoc ICMTATCreditEvents
+    */
+    function creditEvents() public view virtual override(ICMTATCreditEvents) returns(CreditEvents memory creditEventsResult){
+        DebtModuleStorage storage $ = _getDebtModuleStorage();
+        creditEventsResult = $._creditEvents;
+    }
+
     /**
     * @inheritdoc ICMTATDebt
     */
@@ -62,7 +85,10 @@ abstract contract DebtModule is AuthorizationModule, IDebtModule {
         DebtModuleStorage storage $ = _getDebtModuleStorage();
         DebtInformationResult = $._debt;
     }
-
+    
+    /*//////////////////////////////////////////////////////////////
+                            INTERNAL/PRIVATE FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
     /* ============ ERC-7201 ============ */
     function _getDebtModuleStorage() internal pure returns (DebtModuleStorage storage $) {
         assembly {
