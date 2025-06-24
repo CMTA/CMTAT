@@ -205,7 +205,7 @@ interface IERC3643ComplianceRead {
     ) external view returns (bool isValid);
 }
 
-interface IERC3743IComplianceContract {
+interface IERC3643IComplianceContract {
     /**
      *  @dev function called whenever tokens are transferred
      *  from one wallet to another
@@ -215,6 +215,6 @@ interface IERC3743IComplianceContract {
      *  @param to The address of the receiver
      *  @param value value of tokens involved in the transfer
      */
-    function transferred(address from, address to, uint256 value) external view;
+    function transferred(address from, address to, uint256 value) external;
 }
 
