@@ -1,5 +1,5 @@
 //SPDX-License-Identifier: MPL-2.0
-
+import {IERC3643ComplianceRead} from "./IERC3643Partial.sol";
 pragma solidity ^0.8.20;
 
 
@@ -59,13 +59,13 @@ interface IERC7551Pause {
 }
 interface IERC7551ERC20EnforcementEvent {
     /**
-    * @notice Emitted when a transfer is forced.
+    * @notice Emitted when a transfer or burn is forced.
     */
     event Enforcement (address indexed enforcer, address indexed account, uint256 amount, bytes data);
 }
 
-interface IERC7551ERC20Enforcement {
-    /**
+interface IERC7551ERC20EnforcementTokenFrozenEvent {
+       /**
      *  @notice this event is emitted when a certain amount of tokens is frozen on an address
      *  @dev
      *  Same name as ERC-3643 but with a supplementary data parameter
@@ -84,6 +84,9 @@ interface IERC7551ERC20Enforcement {
      *  `value` is the amount of tokens that are unfrozen
      */
     event TokensUnfrozen(address indexed account, uint256 value, bytes data);
+}
+
+interface IERC7551ERC20Enforcement {
     /**
     * @notice This function  returns the unfrozen balance of an account. 
     * @dev This balance can be used by the account for transfers to other account addresses.
@@ -111,13 +114,7 @@ interface IERC7551ERC20Enforcement {
 
 }
 
-interface IERC7551Compliance {
-    /*
-    * @notice This function return true if the message sender is able to transfer amount tokens to to respecting all compliance.
-    * @dev Don't check the balance and the user's right (access control)
-    */
-    function canTransfer(address from, address to, uint256 value) external view returns (bool);
-
+interface IERC7551Compliance is IERC3643ComplianceRead {
     /*
     * @notice This function return true if the message sender is able to transfer amount tokens to to respecting all compliance.
     * @dev Don't check the balance and the user's right (access control)
@@ -130,8 +127,18 @@ interface IERC7551Compliance {
     )  external view returns (bool);
 }
 
+interface IERC7551Document {
+    /**
+    * @notice return the bytes32 hash of the “Terms” document.
+    */
+    function termsHash() external view returns (bytes32);
 
-interface IERC7551Base {
+
+    /**
+    * @notice set hash and uri terms
+    */
+    function setTerms(bytes32 _hash, string calldata _uri) external;
+
     /*
     * @notice Returns the metadata file
     */
@@ -141,6 +148,5 @@ interface IERC7551Base {
     * @notice This function update the metaData value, generally an url
     */
     function setMetaData(string calldata metaData_) external;
+
 }
-
-

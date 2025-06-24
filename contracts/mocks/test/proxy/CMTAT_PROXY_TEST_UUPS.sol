@@ -3,8 +3,7 @@
 pragma solidity ^0.8.20;
 
 import {CMTATUpgradeableUUPS} from "../../../deployment/CMTATUpgradeableUUPS.sol";
-
-
+import {CMTATBaseRuleEngine} from "../../../modules/1_CMTATBaseRuleEngine.sol";
 /**
  * @title a contrat used to test the proxy upgrade functionality
  */

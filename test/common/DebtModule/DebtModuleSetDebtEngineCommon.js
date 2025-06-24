@@ -24,7 +24,10 @@ function DebtModuleSetDebtEngineCommon () {
         this.cmtat
           .connect(this.admin)
           .setDebtEngine(await this.cmtat.debtEngine())
-      ).to.be.revertedWithCustomError(this.cmtat, 'CMTAT_DebtEngineModule_SameValue')
+      ).to.be.revertedWithCustomError(
+        this.cmtat,
+        'CMTAT_DebtEngineModule_SameValue'
+      )
     })
 
     it('testCannotBeSetByNonAdmin', async function () {

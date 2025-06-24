@@ -1,10 +1,10 @@
 node_modules
 build
-coverage
-coverage.json
+/coverage
+./coverage.json
 bin/*
 #exception
-!doc/general/test/coverage
+#!doc/general/test/coverage
 /.openzeppelin
 .vscode/
 #PlantUML

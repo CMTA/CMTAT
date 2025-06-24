@@ -6,7 +6,7 @@ import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/acce
 import {IERC165} from "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
 
-import "../modules/CMTATBaseGeneric.sol";
+import "../modules/0_CMTATBaseGeneric.sol";
 
 /**
  * @dev This is an example contract implementation of NFToken.
@@ -16,9 +16,9 @@ contract ERC721MockUpgradeable is ERC721Upgradeable, CMTATBaseGeneric {
 
     function initialize(
       string memory name_, string memory symbol_, 
-      address admin, ICMTATConstructor.BaseModuleAttributes memory baseModuleAttributes_,IERC1643 documentEngine) public virtual initializer{
+      address admin, ICMTATConstructor.ExtraInformationAttributes memory extraInformationAttributes_,IERC1643 documentEngine) public virtual initializer{
         __ERC721_init_unchained(name_, symbol_);
-        __CMTAT_init(admin, baseModuleAttributes_, documentEngine);
+        __CMTAT_init(admin, extraInformationAttributes_, documentEngine);
   }
   /**
    * @notice Mints a new NFT.

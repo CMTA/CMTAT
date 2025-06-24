@@ -27,12 +27,15 @@ See [docs.chain.link/ccip/concepts/cross-chain-tokens#requirements-for-cross-cha
 |                          | getCCIPAdmin                              | No           |                                    |                  |
 | Burn & Mint Requirements |                                           |              |                                    |                  |
 |                          | mint(address account, uint256 amount)     | Yes          | MintModule<br />(Core module)      | MINTER_ROLE      |
-|                          | burn(uint256 amount)                      | yes          | ERC20CrossChain                    | BURNER_FROM_ROLE |
+|                          | burn(uint256 amount)                      | yes          | CMTATBaseERC20CrossChain           | BURNER_FROM_ROLE |
 |                          | decimals()                                | yes (ERC-20) | ERC20BaseModule<br />(Core module) |                  |
 |                          | balanceOf(address account)                | yes (ERC-20) | OpenZeppelin inheritance           |                  |
-|                          | burnFrom(address account, uint256 amount) | Yes          | ERC20BurnModule (Core module)      | BURNER_FROM_ROLE |
+|                          | burnFrom(address account, uint256 amount) | Yes          | CMTATBaseERC20CrossChain           | BURNER_FROM_ROLE |
 
+Warning:
 
+If you put the contract in pause through the PauseModule, it will not affect the `mint` function from MintModule.
+In this case, the alternative solution is to revoke the MINT_ROLE from the concerned addresses to prevent any mint
 
 ## Optimism superchain ERC-20 (ERC-7802)
 

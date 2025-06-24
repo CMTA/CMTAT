@@ -5,7 +5,7 @@ function ValidationModuleCommonCore () {
   // Transferring with Rule Engine set
   context('ValidationCore test', function () {
     beforeEach(async function () {
-      if (this.core) {
+      if (this.erc1404) {
         this.ADDRESS1_INITIAL_BALANCE = 31n
         this.ADDRESS2_INITIAL_BALANCE = 32n
         this.ADDRESS3_INITIAL_BALANCE = 33n
@@ -35,7 +35,7 @@ function ValidationModuleCommonCore () {
     })
 
     // this.address1 may transfer tokens to this.address2
-    it('testCanTransferAllowedByRule', async function () {
+    it('testCanTransferAllowed', async function () {
       const AMOUNT_TO_TRANSFER = 11n
 
       // Act
@@ -73,6 +73,7 @@ function ValidationModuleCommonCore () {
           AMOUNT_TO_TRANSFER
         )
       ).to.equal(true)
+
       await this.cmtat
         .connect(this.address1)
         .transfer(this.address2, AMOUNT_TO_TRANSFER)

@@ -5,7 +5,7 @@ pragma solidity ^0.8.20;
 
 /* ==== Engine === */
 import {IRuleEngine} from "../../../../interfaces/engine/IRuleEngine.sol";
-
+/* ==== ValidationModule === */
 import {ValidationModuleCore} from "../../core/ValidationModuleCore.sol";
 import {ValidationModuleRuleEngineInternal} from "../../../internal/ValidationModuleRuleEngineInternal.sol";
 /**
@@ -18,7 +18,23 @@ abstract contract ValidationModuleRuleEngine is
     ValidationModuleRuleEngineInternal
 {
     error CMTAT_ValidationModule_SameValue();
-/* ============ Transfer & TransferFrom ============ */
+
+    /*//////////////////////////////////////////////////////////////
+                            PUBLIC/EXTERNAL FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
+
+    /* ============ State functions ============ */
+    /*
+    * @notice set a RuleEngine
+    * @param ruleEngine_ the call will be reverted if the new value of ruleEngine is the same as the current one
+    */
+    function setRuleEngine(
+        IRuleEngine ruleEngine_
+    ) public virtual onlyRole(DEFAULT_ADMIN_ROLE) {
+         require(ruleEngine_ != ruleEngine(), CMTAT_ValidationModule_SameValue());
+        _setRuleEngine(ruleEngine_);
+    }
+    /* ============ View functions ============ */
     /**
     * @inheritdoc ValidationModuleCore
     * @dev call the ruleEngine if set
@@ -43,19 +59,6 @@ abstract contract ValidationModuleRuleEngine is
     ) public view virtual override(ValidationModuleCore) returns (bool) {
         return _canTransferFrom(spender, from, to, value);
     }
-
-
-    /*
-    * @notice set a RuleEngine
-    * @param ruleEngine_ the call will be reverted if the new value of ruleEngine is the same as the current one
-    */
-    function setRuleEngine(
-        IRuleEngine ruleEngine_
-    ) public virtual onlyRole(DEFAULT_ADMIN_ROLE) {
-         require(ruleEngine_ != ruleEngine(), CMTAT_ValidationModule_SameValue());
-        _setRuleEngine(ruleEngine_);
-    }
-
 
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
@@ -114,15 +117,18 @@ abstract contract ValidationModuleRuleEngine is
 
     /* ============ State functions ============ */
     function _transferred(address spender, address from, address to, uint256 value) internal virtual returns (bool){
-        if (!canTransferFrom(spender, from, to, value)){
+        if(!_canTransferGenericByModule(spender, from, to)){
             return false;
-        } else{
-            IRuleEngine ruleEngine_ = ruleEngine();
-            if (address(ruleEngine_) != address(0)){
-                return ruleEngine_.transferred(spender, from, to, value);
-            }else {
-                return true;
+        } else {
+             IRuleEngine ruleEngine_ = ruleEngine();
+             if (address(ruleEngine_) != address(0)){
+                 if(spender != address(0)){
+                    ruleEngine_.transferred(spender, from, to, value);
+                  } else {
+                     ruleEngine_.transferred(from, to, value);
+                  }
             }
         }
+        return true;
     }
 }

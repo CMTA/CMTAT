@@ -4,6 +4,7 @@ pragma solidity ^0.8.20;
 
 /* ==== Engine === */
 import {IDebtEngine, ICMTATDebt, ICMTATCreditEvents} from "../../../interfaces/engine/IDebtEngine.sol";
+/* ==== Module === */
 import {DebtModule} from "./DebtModule.sol";
 /**
  * @title Debt Engine module
@@ -11,8 +12,23 @@ import {DebtModule} from "./DebtModule.sol";
  *
  * Retrieve debt and creditEvents information from a debtEngine
  */
-abstract contract DebtEngineModule is DebtModule, ICMTATCreditEvents {
+abstract contract DebtEngineModule is DebtModule {
     error CMTAT_DebtEngineModule_SameValue();
+
+    /* ============  State Restricted Functions ============ */
+    /*
+    * @notice set a DebtEngine
+    * 
+    */
+    function setDebtEngine(
+        IDebtEngine debtEngine_
+    ) external virtual onlyRole(DEBT_ROLE) {
+        DebtModuleStorage storage $ = _getDebtModuleStorage();
+        require($._debtEngine != debtEngine_, CMTAT_DebtEngineModule_SameValue());
+        _setDebtEngine($, debtEngine_);
+    }
+
+    /* ============ View functions ============ */
     /**
     * @dev Emitted when a rule engine is set.
     */
@@ -21,10 +37,12 @@ abstract contract DebtEngineModule is DebtModule, ICMTATCreditEvents {
     /**
     * @inheritdoc ICMTATCreditEvents
     */
-    function creditEvents() public view virtual returns(CreditEvents memory creditEventsResult){
+    function creditEvents() public view virtual override(DebtModule) returns(CreditEvents memory creditEventsResult){
         DebtModuleStorage storage $ = _getDebtModuleStorage();
         if(address($._debtEngine) != address(0)){
             creditEventsResult =  $._debtEngine.creditEvents();
+        } else {
+            creditEventsResult = DebtModule.creditEvents();
         }
     }
 
@@ -40,19 +58,6 @@ abstract contract DebtEngineModule is DebtModule, ICMTATCreditEvents {
     function debtEngine() public view virtual returns (IDebtEngine) {
         DebtModuleStorage storage $ = _getDebtModuleStorage();
         return $._debtEngine;
-    }
-
-    /* ============  Restricted Functions ============ */
-    /*
-    * @notice set a DebtEngine
-    * 
-    */
-    function setDebtEngine(
-        IDebtEngine debtEngine_
-    ) external virtual onlyRole(DEBT_ROLE) {
-        DebtModuleStorage storage $ = _getDebtModuleStorage();
-        require($._debtEngine != debtEngine_, CMTAT_DebtEngineModule_SameValue());
-        _setDebtEngine($, debtEngine_);
     }
 
     /*//////////////////////////////////////////////////////////////

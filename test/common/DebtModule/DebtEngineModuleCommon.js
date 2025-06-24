@@ -29,7 +29,9 @@ function DebtEngineModuleCommon () {
         businessDayConvention: 'Following',
         issuanceDate: '2024-01-01',
         couponPaymentFrequency: 'Semi-Annual',
-        currencyContract: ethers.Typed.address('0x000000000000000000000000000000000000dEaD'),
+        currencyContract: ethers.Typed.address(
+          '0x000000000000000000000000000000000000dEaD'
+        ),
         currency: 'USDC'
       }
       debtBase = {
@@ -55,26 +57,50 @@ function DebtEngineModuleCommon () {
       await this.debtEngineMock.setDebt(debtBase)
       const debt = await this.cmtat.debt()
       // debt identifier
-      expect(debt.debtIdentifier.issuerName).to.equal(debtBase.debtIdentifier.issuerName)
-      expect(debt.debtIdentifier.issuerDescription).to.equal(debtBase.debtIdentifier.issuerDescription)
-      expect(debt.debtIdentifier.guarantor).to.equal(debtBase.debtIdentifier.guarantor)
-      expect(debt.debtIdentifier.debtHolder).to.equal(debtBase.debtIdentifier.debtHolder)
+      expect(debt.debtIdentifier.issuerName).to.equal(
+        debtBase.debtIdentifier.issuerName
+      )
+      expect(debt.debtIdentifier.issuerDescription).to.equal(
+        debtBase.debtIdentifier.issuerDescription
+      )
+      expect(debt.debtIdentifier.guarantor).to.equal(
+        debtBase.debtIdentifier.guarantor
+      )
+      expect(debt.debtIdentifier.debtHolder).to.equal(
+        debtBase.debtIdentifier.debtHolder
+      )
 
       // debt instrument
-      expect(debt.debtInstrument.interestRate).to.equal(debtBase.debtInstrument.interestRate)
-      expect(debt.debtInstrument.parValue).to.equal(debtBase.debtInstrument.parValue)
-      expect(debt.debtInstrument.minimumDenomination).to.equal(debtBase.debtInstrument.minimumDenomination)
-      expect(debt.debtInstrument.maturityDate).to.equal(debtBase.debtInstrument.maturityDate)
+      expect(debt.debtInstrument.interestRate).to.equal(
+        debtBase.debtInstrument.interestRate
+      )
+      expect(debt.debtInstrument.parValue).to.equal(
+        debtBase.debtInstrument.parValue
+      )
+      expect(debt.debtInstrument.minimumDenomination).to.equal(
+        debtBase.debtInstrument.minimumDenomination
+      )
+      expect(debt.debtInstrument.maturityDate).to.equal(
+        debtBase.debtInstrument.maturityDate
+      )
       expect(debt.debtInstrument.interestScheduleFormat).to.equal(
         debtBase.debtInstrument.interestScheduleFormat
       )
-      expect(debt.debtInstrument.interestPaymentDate).to.equal(debtBase.debtInstrument.interestPaymentDate)
-      expect(debt.debtInstrument.dayCountConvention).to.equal(debtBase.debtInstrument.dayCountConvention)
+      expect(debt.debtInstrument.interestPaymentDate).to.equal(
+        debtBase.debtInstrument.interestPaymentDate
+      )
+      expect(debt.debtInstrument.dayCountConvention).to.equal(
+        debtBase.debtInstrument.dayCountConvention
+      )
       expect(debt.debtInstrument.businessDayConvention).to.equal(
         debtBase.debtInstrument.businessDayConvention
       )
-      expect(debt.debtInstrument.issuanceDate).to.equal(debtBase.debtInstrument.issuanceDate)
-      expect(debt.debtInstrument.couponPaymentFrequency).to.equal(debtBase.debtInstrument.couponPaymentFrequency)
+      expect(debt.debtInstrument.issuanceDate).to.equal(
+        debtBase.debtInstrument.issuanceDate
+      )
+      expect(debt.debtInstrument.couponPaymentFrequency).to.equal(
+        debtBase.debtInstrument.couponPaymentFrequency
+      )
     })
 
     it('testCanSetAndGetCreditEventsCorrectly', async function () {

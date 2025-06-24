@@ -3,12 +3,11 @@
 pragma solidity ^0.8.20;
 
 /* ==== OpenZeppelin === */
-import {ERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
+import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 /* ==== Module === */
-import {AuthorizationModule} from "../../security/AuthorizationModule.sol";
+import {ERC20BurnModuleInternal} from "../../internal/ERC20BurnModuleInternal.sol";
 /* ==== Technical === */
 import {IBurnERC20} from "../../../interfaces/technical/IMintBurnToken.sol";
-import {IERC20Allowance} from "../../../interfaces/technical/IERC20Allowance.sol";
 /* ==== Tokenization === */
 import {IERC3643Burn} from "../../../interfaces/tokenization/IERC3643Partial.sol";
 import {IERC7551Burn} from "../../../interfaces/tokenization/draft-IERC7551.sol";
@@ -18,10 +17,7 @@ import {IERC7551Burn} from "../../../interfaces/tokenization/draft-IERC7551.sol"
  *
  * Contains all burn functions, inherits from ERC-20
  */
-abstract contract ERC20BurnModule is ERC20Upgradeable, IERC20Allowance, IBurnERC20, IERC3643Burn, IERC7551Burn, AuthorizationModule {
-    error CMTAT_BurnModule_EmptyAccounts();
-    error CMTAT_BurnModule_AccountsValueslengthMismatch();
-
+abstract contract ERC20BurnModule is  ERC20BurnModuleInternal, AccessControlUpgradeable, IBurnERC20, IERC3643Burn, IERC7551Burn {
     /* ============ State Variables ============ */
     bytes32 public constant BURNER_ROLE = keccak256("BURNER_ROLE");
 
@@ -77,7 +73,8 @@ abstract contract ERC20BurnModule is ERC20Upgradeable, IERC20Allowance, IBurnERC
         uint256[] calldata values,
         bytes memory data
     ) public virtual onlyRole(BURNER_ROLE) {
-        _batchBurn(accounts, values, data);
+        _batchBurn(accounts, values);
+        emit BatchBurn(_msgSender(),accounts, values, data );
     }
 
     /**
@@ -97,37 +94,13 @@ abstract contract ERC20BurnModule is ERC20Upgradeable, IERC20Allowance, IBurnERC
         address[] calldata accounts,
         uint256[] calldata values
     ) public virtual override (IERC3643Burn) onlyRole(BURNER_ROLE) {
-        _batchBurn(accounts, values, "");
+        _batchBurn(accounts, values);
+        emit BatchBurn(_msgSender(),accounts, values, "" );
     }
 
-
-    /**
-    * @dev internal function to burn in batch
-    */
-    function _batchBurn(
-        address[] calldata accounts,
-        uint256[] calldata values,
-        bytes memory data
-    ) internal virtual {
-        require(accounts.length != 0, CMTAT_BurnModule_EmptyAccounts());
-        // We do not check that values is not empty since
-        // this require will throw an error in this case.
-        require(bool(accounts.length == values.length), CMTAT_BurnModule_AccountsValueslengthMismatch());
-        for (uint256 i = 0; i < accounts.length; ++i ) {
-             _burnOverride(accounts[i], values[i]);
-        }
-        emit BatchBurn(_msgSender(),accounts, values, data );
-    }
-
-    /**
-    * @dev Internal function to burn
-    */
-    function _burnOverride(
-        address account,
-        uint256 value
-    ) internal virtual {
-        ERC20Upgradeable._burn(account, value);
-    }
+    /*//////////////////////////////////////////////////////////////
+                            INTERNAL/PRIVATE FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
 
     function _burn(
         address account,

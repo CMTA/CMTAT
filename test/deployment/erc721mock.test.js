@@ -5,10 +5,7 @@ const TERMS = [
   'https://example.com/doc1',
   '0x6a12eff2f559a5e529ca2c563c53194f6463ed5c61d1ae8f8731137467ab0279'
 ]
-const {
-  fixture,
-  loadFixture
-} = require('../deploymentUtils')
+const { fixture, loadFixture } = require('../deploymentUtils')
 const { ZERO_ADDRESS } = require('../utils')
 // Core
 const PauseModuleCommon = require('../common/PauseModuleCommon')
@@ -28,7 +25,8 @@ describe('ERC721MockUpgradeable', function () {
     this.cmtat = await upgrades.deployProxy(
       ETHERS_CMTAT_PROXY_FACTORY,
       [
-        NAME, SYMBOL,
+        NAME,
+        SYMBOL,
         this.admin.address,
         ['CMTAT_ISIN', TERMS, 'CMTAT_info'],
         ZERO_ADDRESS
@@ -55,27 +53,38 @@ describe('ERC721MockUpgradeable', function () {
 
   it('testCanTransferTokenDirectly', async function () {
     await this.cmtat.mint(this.admin, 1)
-    await this.cmtat.connect(this.admin).transferFrom(this.admin, this.address1, 1)
+    await this.cmtat
+      .connect(this.admin)
+      .transferFrom(this.admin, this.address1, 1)
     expect(await this.cmtat.ownerOf(1)).to.equal(this.address1)
   })
 
   it('testFailedTransferIfNotOwned', async function () {
     await this.cmtat.mint(this.address1, 1)
-    this.cmtat.connect(this.address2).transferFrom(this.address1, this.address2, 1)
+    this.cmtat
+      .connect(this.address2)
+      .transferFrom(this.address1, this.address2, 1)
   })
 
   it('testApprovedAndTransfer', async function () {
     await this.cmtat.mint(this.address1, 1)
     await this.cmtat.connect(this.address1).approve(this.address2, 1)
-    await this.cmtat.connect(this.address2).transferFrom(this.address1, this.address2, 1)
+    await this.cmtat
+      .connect(this.address2)
+      .transferFrom(this.address1, this.address2, 1)
     expect(await this.cmtat.ownerOf(1)).to.equal(this.address2)
   })
 
   it('testSetAndRespectOperatorApprovals', async function () {
     await this.cmtat.mint(this.address1, 1)
-    await this.cmtat.connect(this.address1).setApprovalForAll(this.address2, true)
-    expect(await this.cmtat.isApprovedForAll(this.address1, this.address2)).to.be.true
-    await this.cmtat.connect(this.address2).transferFrom(this.address1, this.admin, 1)
+    await this.cmtat
+      .connect(this.address1)
+      .setApprovalForAll(this.address2, true)
+    expect(await this.cmtat.isApprovedForAll(this.address1, this.address2)).to
+      .be.true
+    await this.cmtat
+      .connect(this.address2)
+      .transferFrom(this.address1, this.admin, 1)
     expect(await this.cmtat.ownerOf(1)).to.equal(this.admin)
   })
 
@@ -88,26 +97,27 @@ describe('ERC721MockUpgradeable', function () {
   it('testCannotTransferToAFrozenAddress', async function () {
     await this.cmtat.mint(this.admin, 1)
     await this.cmtat.connect(this.admin).setAddressFrozen(this.address1, true)
-    await expect(this.cmtat.transferFrom(this.admin, this.address1, 1)).to.be.revertedWithCustomError(
-      this.cmtat,
-      'CMTAT_InvalidTransfer')
+    await expect(this.cmtat.transferFrom(this.admin, this.address1, 1))
+      .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
       .withArgs(this.admin, this.address1, 1)
   })
 
   it('testCannotTransferIfContractIsPaused', async function () {
     await this.cmtat.mint(this.admin, 1)
     await this.cmtat.connect(this.admin).pause()
-    await expect(this.cmtat.transferFrom(this.admin, this.address1, 1)).to.be.revertedWithCustomError(
-      this.cmtat,
-      'CMTAT_InvalidTransfer')
+    await expect(this.cmtat.transferFrom(this.admin, this.address1, 1))
+      .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
       .withArgs(this.admin, this.address1, 1)
   })
 
   it('testCannotMintIfContractIsDeactivated', async function () {
+    // Arrange
+    await this.cmtat.connect(this.admin).pause()
     await this.cmtat.connect(this.admin).deactivateContract()
-    await expect(this.cmtat.mint(this.admin, 1)).to.be.revertedWithCustomError(
-      this.cmtat,
-      'CMTAT_InvalidTransfer').withArgs(ZERO_ADDRESS, this.admin, 1)
+    // Act
+    await expect(this.cmtat.mint(this.admin, 1))
+      .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
+      .withArgs(ZERO_ADDRESS, this.admin, 1)
   })
   // Core
   EnforcementModuleCommon()

@@ -205,11 +205,16 @@ interface IERC3643ComplianceRead {
     ) external view returns (bool isValid);
 }
 
-interface IERC3643ComplianceWrite {
+interface IERC3743IComplianceContract {
     /**
-     * @notice Returns true if the transfer is valid, and false otherwise.
-     * @dev Don't check the balance and the user's right (access control)
+     *  @dev function called whenever tokens are transferred
+     *  from one wallet to another
+     *  this function can be used to update state variables of the compliance contract
+     *  This function can be called ONLY by the token contract bound to the compliance
+     *  @param from The address of the sender
+     *  @param to The address of the receiver
+     *  @param value value of tokens involved in the transfer
      */
-    function transferred(address from, address to, uint256 value) external returns (bool isValid);
+    function transferred(address from, address to, uint256 value) external view;
 }
 

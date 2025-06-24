@@ -11,7 +11,7 @@ import {IRuleEngine} from "../../interfaces/engine/IRuleEngine.sol";
 /*
  * @dev Set a ruleEngine for the ValidationModule
  *
- * Useful for to restrict and validate transfers
+ * Useful to restrict and validate transfers
  */
 abstract contract ValidationModuleRuleEngineInternal is
     Initializable,
@@ -49,7 +49,10 @@ abstract contract ValidationModuleRuleEngineInternal is
         return $._ruleEngine;
     }
 
-     /*
+    /*//////////////////////////////////////////////////////////////
+                            INTERNAL/PRIVATE FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
+    /*
     * @dev set a RuleEngine
     * @param ruleEngine_ 
     * The call will be reverted if the new value of ruleEngine is the same as the current one

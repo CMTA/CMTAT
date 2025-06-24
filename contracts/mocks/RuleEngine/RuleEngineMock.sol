@@ -12,6 +12,7 @@ import {RuleMockMint} from "./RuleMockMint.sol";
 contract RuleEngineMock is IRuleEngineMock {
     IRule[] internal _rules;
     address immutable authorizedSpender;
+    error RuleEngine_InvalidTransfer(address from, address to, uint256 value);
 
     constructor(address spender) {
         _rules.push(new RuleMock());
@@ -58,6 +59,29 @@ contract RuleEngineMock is IRuleEngineMock {
         return uint8(REJECTED_CODE_BASE.TRANSFER_OK);
     }
 
+
+    function detectTransferRestrictionFrom(
+        address spender,
+        address from,
+        address to,
+        uint256 value
+    ) public view override returns (uint8) {
+        uint256 ruleArrayLength = _rules.length;
+        for (uint256 i = 0; i < ruleArrayLength; ++i) {
+            uint8 restriction = _rules[i].detectTransferRestrictionFrom(
+               spender,
+               from,
+               to, 
+               value
+            );
+            if (restriction != uint8(REJECTED_CODE_BASE.TRANSFER_OK)) {
+                return restriction;
+            }
+        }
+        return uint8(REJECTED_CODE_BASE.TRANSFER_OK);
+    }
+
+
     function canTransfer(
         address from,
         address to,
@@ -87,9 +111,15 @@ contract RuleEngineMock is IRuleEngineMock {
         address spender,
         address from,
         address to,
-        uint256 value) view public override returns (bool){
-        
-        return canTransferFrom(spender, from, to, value);
+        uint256 value) view public override{
+        require(canTransferFrom(spender, from, to, value), RuleEngine_InvalidTransfer(from, to, value));
+    }
+
+    function transferred( 
+        address from,
+        address to,
+        uint256 value) view public override {
+        require(canTransfer(from, to, value), RuleEngine_InvalidTransfer(from, to, value));
     }
 
     /**

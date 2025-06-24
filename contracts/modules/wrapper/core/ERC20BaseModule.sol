@@ -4,8 +4,7 @@ pragma solidity ^0.8.20;
 
 /* ==== OpenZeppelin === */
 import {ERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
-/* ==== Module === */
-import {AuthorizationModule} from "../../security/AuthorizationModule.sol";
+import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 /* ==== Technical === */
 import {IERC20Allowance} from "../../../interfaces/technical/IERC20Allowance.sol";
 import {IERC20BatchBalance} from "../../../interfaces/engine/ISnapshotEngine.sol";
@@ -20,7 +19,7 @@ import {IERC3643ERC20Base} from "../../../interfaces/tokenization/IERC3643Partia
  * Inherits from ERC-20
  * 
  */
-abstract contract ERC20BaseModule is ERC20Upgradeable, IERC20Allowance, IERC3643ERC20Base, IERC20BatchBalance, AuthorizationModule {
+abstract contract ERC20BaseModule is ERC20Upgradeable, AccessControlUpgradeable, IERC20Allowance, IERC3643ERC20Base, IERC20BatchBalance{
     event Name(string indexed newNameIndexed, string newName);
     event Symbol(string indexed newSymbolIndexed, string newSymbol);
 
@@ -57,17 +56,9 @@ abstract contract ERC20BaseModule is ERC20Upgradeable, IERC20Allowance, IERC3643
     //////////////////////////////////////////////////////////////*/
 
     /* ============  ERC-20 standard ============ */
-    /**
-     *
-     * @notice Returns the number of decimals used to get its user representation.
-     * @inheritdoc ERC20Upgradeable
-     */
-    function decimals() public view virtual override(ERC20Upgradeable) returns (uint8) {
-        ERC20BaseModuleStorage storage $ = _getERC20BaseModuleStorage();
-        return $._decimals;
-    }
-
-    /**
+    
+    /* ======== State functions ======= */
+        /**
      * @notice Transfers `value` amount of tokens from address `from` to address `to`
      * @custom:dev-cmtat
      * Emits a {Spend} event indicating the spended allowance.
@@ -88,7 +79,16 @@ abstract contract ERC20BaseModule is ERC20Upgradeable, IERC20Allowance, IERC3643
         return result;
     }
 
-
+    /* ======== View functions ======= */
+    /**
+     *
+     * @notice Returns the number of decimals used to get its user representation.
+     * @inheritdoc ERC20Upgradeable
+     */
+    function decimals() public view virtual override(ERC20Upgradeable) returns (uint8) {
+        ERC20BaseModuleStorage storage $ = _getERC20BaseModuleStorage();
+        return $._decimals;
+    }
 
     /**
      * @notice Returns the name of the token.
@@ -109,18 +109,7 @@ abstract contract ERC20BaseModule is ERC20Upgradeable, IERC20Allowance, IERC3643
 
 
     /* ============  Custom functions ============ */
-    /**
-    * @inheritdoc IERC20BatchBalance
-    */
-    function batchBalanceOf(address[] calldata addresses) public view virtual override(IERC20BatchBalance) returns(uint256[] memory balances , uint256 totalSupply_) {
-        balances = new uint256[](addresses.length);
-        for(uint256 i = 0; i < addresses.length; ++i){
-            balances[i] = ERC20Upgradeable.balanceOf(addresses[i]);
-        }
-        totalSupply_ = ERC20Upgradeable.totalSupply();
-    }
-
-    /* ============  Restricted Functions ============ */
+    /* ========  State Functions ======= */
     /**
      *  @inheritdoc IERC3643ERC20Base
      *  @dev 
@@ -139,7 +128,18 @@ abstract contract ERC20BaseModule is ERC20Upgradeable, IERC20Allowance, IERC3643
         $._symbol = symbol_;
         emit Symbol(symbol_, symbol_);
     }
-    
+    /* ======== View functions ======= */
+    /**
+    * @inheritdoc IERC20BatchBalance
+    */
+    function batchBalanceOf(address[] calldata addresses) public view virtual override(IERC20BatchBalance) returns(uint256[] memory balances , uint256 totalSupply_) {
+        balances = new uint256[](addresses.length);
+        for(uint256 i = 0; i < addresses.length; ++i){
+            balances[i] = ERC20Upgradeable.balanceOf(addresses[i]);
+        }
+        totalSupply_ = ERC20Upgradeable.totalSupply();
+    }
+
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/

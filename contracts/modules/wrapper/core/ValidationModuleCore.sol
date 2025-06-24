@@ -14,15 +14,14 @@ import {IERC7551Compliance} from "../../../interfaces/tokenization/draft-IERC755
  */
 abstract contract ValidationModuleCore is
     ValidationModule,
-    IERC3643ComplianceRead,
     IERC7551Compliance
 {
-    /* ============ Transfer & TransferFrom ============ */
+    /* ============ View functions ============ */
     function canTransfer(
         address from,
         address to,
         uint256 value
-    ) public view virtual override(IERC3643ComplianceRead, IERC7551Compliance) returns (bool) {
+    ) public view virtual override(IERC3643ComplianceRead) returns (bool) {
         return _canTransferByModule(address(0), from, to, value);
     }
 
@@ -38,7 +37,6 @@ abstract contract ValidationModuleCore is
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
-    /* ============ View functions ============ */
 
     /**
     * @dev function used by canTransfer and operateOnTransfer

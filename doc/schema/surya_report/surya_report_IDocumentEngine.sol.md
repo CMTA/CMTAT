@@ -16,10 +16,6 @@
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
 | **IDocumentEngine** | Interface | IERC1643 |||
-||||||
-| **IDocumentEngineModule** | Interface |  |||
-| └ | setDocumentEngine | External ❗️ | 🛑  |NO❗️ |
-| └ | documentEngine | External ❗️ |   |NO❗️ |
 
 
 ### Legend

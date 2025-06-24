@@ -2,8 +2,8 @@
 
 pragma solidity ^0.8.20;
 
-import {CMTATBaseCore, ICMTATConstructor} from "../../modules/CMTATBaseCore.sol";
-
+import {CMTATBaseCore} from "../../modules/0_CMTATBaseCore.sol";
+import {ICMTATConstructor} from "../../interfaces/technical/ICMTATConstructor.sol";
 
 /**
 * @title CMTAT version for a standalone deployment (without proxy)

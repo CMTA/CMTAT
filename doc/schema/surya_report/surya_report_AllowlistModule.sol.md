@@ -15,13 +15,13 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **AllowlistModule** | Implementation | AllowlistModuleInternal, AuthorizationModule, IAllowlistModule |||
-| └ | isAllowlisted | Public ❗️ |   |NO❗️ |
+| **AllowlistModule** | Implementation | AllowlistModuleInternal, AccessControlUpgradeable, IAllowlistModule |||
 | └ | setAddressAllowlist | Public ❗️ | 🛑  | onlyRole |
 | └ | setAddressAllowlist | Public ❗️ | 🛑  | onlyRole |
 | └ | batchSetAddressAllowlist | Public ❗️ | 🛑  | onlyRole |
 | └ | enableAllowlist | Public ❗️ | 🛑  | onlyRole |
 | └ | isAllowlistEnabled | Public ❗️ |   |NO❗️ |
+| └ | isAllowlisted | Public ❗️ |   |NO❗️ |
 | └ | _addToAllowlist | Internal 🔒 | 🛑  | |
 
 

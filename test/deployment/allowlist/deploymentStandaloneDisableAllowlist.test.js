@@ -3,11 +3,8 @@ const {
   deployCMTATAllowlistStandalone,
   fixture,
   loadFixture
-
 } = require('../../deploymentUtils')
-const {
-  ZERO_ADDRESS
-} = require('../../utils')
+const { ZERO_ADDRESS } = require('../../utils')
 const ERC20BaseModuleCommon = require('../../common/ERC20BaseModuleCommon')
 const ERC20MintModuleCommon = require('../../common/ERC20MintModuleCommon')
 const ERC20BurnModuleCommon = require('../../common/ERC20BurnModuleCommon')
@@ -26,10 +23,8 @@ describe('CMTAT Disable Allowlist- Standalone', function () {
       this.admin.address,
       this.deployerAddress.address
     )
-    await this.cmtat
-      .connect(this.admin)
-      .enableAllowlist(false)
-    this.core = true
+    await this.cmtat.connect(this.admin).enableAllowlist(false)
+    this.erc1404 = true
     this.dontCheckTimestamp = true
   })
   // core

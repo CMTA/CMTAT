@@ -3,8 +3,8 @@ const { expect } = require('chai')
 function PauseModuleCommon () {
   context('Pause', function () {
     /**
-    The admin is assigned the PAUSER role when the contract is deployed
-    */
+     * The admin is assigned the PAUSER role when the contract is deployed
+     */
     it('testCanBePausedByAdmin', async function () {
       const AMOUNT_TO_TRANSFER = 10n
       // Act
@@ -140,12 +140,29 @@ function PauseModuleCommon () {
             AMOUNT_TO_TRANSFER
           )
         ).to.equal(false)
+
+        expect(
+          await this.cmtat.canTransferFrom(
+            this.address3,
+            this.address1,
+            this.address2,
+            AMOUNT_TO_TRANSFER
+          )
+        ).to.equal(false)
       }
 
-      if (!this.core && !this.generic) {
+      if (!this.erc1404 && !this.generic) {
         // Assert
         expect(
           await this.cmtat.detectTransferRestriction(
+            this.address1,
+            this.address2,
+            AMOUNT_TO_TRANSFER
+          )
+        ).to.equal('1')
+        expect(
+          await this.cmtat.detectTransferRestrictionFrom(
+            this.address3,
             this.address1,
             this.address2,
             AMOUNT_TO_TRANSFER
@@ -178,15 +195,68 @@ function PauseModuleCommon () {
       if (!this.generic) {
         await this.cmtat.connect(this.address1).approve(this.address3, 20)
       }
+      if (!this.generic) {
+        expect(
+          await this.cmtat.canTransfer(
+            this.address1,
+            this.address2,
+            AMOUNT_TO_TRANSFER
+          )
+        ).to.equal(true)
+
+        expect(
+          await this.cmtat.canTransferFrom(
+            this.address3,
+            this.address1,
+            this.address2,
+            AMOUNT_TO_TRANSFER
+          )
+        ).to.equal(true)
+      }
 
       // Act
       await this.cmtat.connect(this.admin).pause()
+      if (!this.generic) {
+        expect(
+          await this.cmtat.canTransfer(
+            this.address1,
+            this.address2,
+            AMOUNT_TO_TRANSFER
+          )
+        ).to.equal(false)
 
-      if (!this.core && !this.generic) {
+        expect(
+          await this.cmtat.canTransferFrom(
+            this.address3,
+            this.address1,
+            this.address2,
+            AMOUNT_TO_TRANSFER
+          )
+        ).to.equal(false)
+      }
+
+      if (!this.erc1404 && !this.generic) {
         // Assert
+        expect(
+          await this.cmtat.detectTransferRestrictionFrom(
+            this.address3,
+            this.address1,
+            this.address2,
+            AMOUNT_TO_TRANSFER
+          )
+        ).to.equal('1')
         expect(
           await this.cmtat.detectTransferRestriction(
             this.address1,
+            this.address2,
+            AMOUNT_TO_TRANSFER
+          )
+        ).to.equal('1')
+        // Assert
+        expect(
+          await this.cmtat.detectTransferRestrictionFrom(
+            this.address1,
+            this.address3,
             this.address2,
             AMOUNT_TO_TRANSFER
           )
@@ -213,8 +283,11 @@ function PauseModuleCommon () {
     /**
     The admin is assigned the PAUSER role when the contract is deployed
     */
-    it('testCanDeactivatedByAdmin', async function () {
+    it('testCanDeactivatedByAdminIfContractIsPaused', async function () {
       const AMOUNT_TO_TRANSFER = 10n
+      // Arrange
+      await this.cmtat.connect(this.admin).pause()
+
       // Act
       this.logs = await this.cmtat.connect(this.admin).deactivateContract()
 
@@ -240,6 +313,68 @@ function PauseModuleCommon () {
             AMOUNT_TO_TRANSFER
           )
       }
+
+      if (!this.generic) {
+        expect(
+          await this.cmtat.canTransfer(
+            this.address1,
+            this.address2,
+            AMOUNT_TO_TRANSFER
+          )
+        ).to.equal(false)
+
+        expect(
+          await this.cmtat.canTransferFrom(
+            this.address3,
+            this.address1,
+            this.address2,
+            AMOUNT_TO_TRANSFER
+          )
+        ).to.equal(false)
+      }
+
+      if (!this.erc1404 && !this.generic) {
+        // Assert
+        expect(
+          await this.cmtat.detectTransferRestrictionFrom(
+            this.address3,
+            this.address1,
+            this.address2,
+            AMOUNT_TO_TRANSFER
+          )
+        ).to.equal('1')
+        expect(
+          await this.cmtat.detectTransferRestriction(
+            this.address1,
+            this.address2,
+            AMOUNT_TO_TRANSFER
+          )
+        ).to.equal('1')
+        // Assert
+        expect(
+          await this.cmtat.detectTransferRestrictionFrom(
+            this.address1,
+            this.address3,
+            this.address2,
+            AMOUNT_TO_TRANSFER
+          )
+        ).to.equal('1')
+        expect(await this.cmtat.messageForTransferRestriction(1)).to.equal(
+          'EnforcedPause'
+        )
+        await expect(
+          this.cmtat
+            .connect(this.address3)
+            .transferFrom(this.address1, this.address2, AMOUNT_TO_TRANSFER)
+        )
+          .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
+          .withArgs(
+            this.address1.address,
+            this.address2.address,
+            AMOUNT_TO_TRANSFER
+          )
+      }
+
       // Unpause is reverted
       await expect(
         this.cmtat.connect(this.admin).unpause()
@@ -247,6 +382,13 @@ function PauseModuleCommon () {
         this.cmtat,
         'CMTAT_PauseModule_ContractIsDeactivated'
       )
+    })
+
+    it('testCannotDeactivatedIfNotInPause', async function () {
+      // Arrange
+      await expect(
+        this.cmtat.connect(this.admin).deactivateContract()
+      ).to.be.revertedWithCustomError(this.cmtat, 'ExpectedPause')
     })
 
     it('testCannotBeDeactivatedByNonAdmin', async function () {

@@ -14,7 +14,7 @@ are the latest ones that we tested:
 ### Smart contract
 
 - hardhat.config.js
-  - Solidity 0.8.28 (via solc-js)
+  - Solidity 0.8.30 (via solc-js)
   - EVM version: Prague (Pectra upgrade)
 
 - Package.json
@@ -241,16 +241,32 @@ slither .  --checklist --filter-paths "mocks|openzeppelin-contracts-upgradeable|
 
 ### [Mythril](https://github.com/Consensys/mythril)
 
+It seems that Mythril version [v.0.24.8](https://github.com/ConsenSysDiligence/mythril/releases/tag/v0.24.8) does not support custom error or maybe it is an error related to `solc`.
+
+```
+Solc experienced a fatal error.
+
+TypeError: No matching declaration found after argument-dependent lookup.
+  --> contracts/modules/internal/ERC20BurnModuleInternal.sol:27:9:
+   |
+27 |         require(accounts.length != 0, CMTAT_BurnModule_EmptyAccounts());
+   |         ^^^^^^^
+Note: Candidate: function require(bool)
+Note: Candidate: function require(bool, string memory)
+```
+
+
+
 - Standalone
 
 ```bash
-myth analyze contracts/CMTAT_STANDALONE.sol --solc-json solc_setting.json > myth_standalone_report.md
+myth analyze contracts/deployment/CMTATStandalone.sol --solc-json solc_setting.json > myth_standalone_report.md
 ```
 
 - With proxy
 
 ```bash
-myth analyze contracts/CMTAT_PROXY.sol --solc-json solc_setting.json > myth_proxy_report.md
+myth analyze contracts/deployment/CMTATUpgradeable.sol --solc-json solc_setting.json > myth_proxy_report.md
 ```
 
 File path for `solc` is configured in `solc_setting.json`

@@ -19,7 +19,7 @@ function ERC20BurnModuleCommon () {
     const DIFFERENCE = INITIAL_SUPPLY - VALUE1
     const DIFFERENCE_TYPED = ethers.Typed.uint256(30)
     async function testBurn (sender) {
-    // Act
+      // Act
       // Burn 20
       this.logs = await this.cmtat
         .connect(sender)
@@ -122,7 +122,9 @@ function ERC20BurnModuleCommon () {
       const ADDRESS1_BALANCE = await this.cmtat.balanceOf(this.address1)
       // Act
       await expect(
-        this.cmtat.connect(this.admin).burn(this.address1, AMOUNT_TO_BURN, REASON_EMPTY)
+        this.cmtat
+          .connect(this.admin)
+          .burn(this.address1, AMOUNT_TO_BURN, REASON_EMPTY)
       )
         .to.be.revertedWithCustomError(this.cmtat, 'ERC20InsufficientBalance')
         .withArgs(this.address1.address, ADDRESS1_BALANCE, AMOUNT_TO_BURN)
@@ -149,43 +151,35 @@ function ERC20BurnModuleCommon () {
         .withArgs(this.address2.address, BURNER_ROLE)
     })
 
-    it('testCannotBeMBurnIfContractIsDeactivated', async function () {
-      await this.cmtat
-        .connect(this.admin)
-        .deactivateContract()
+    it('testCannotBeBurnIfContractIsDeactivated', async function () {
+      await this.cmtat.connect(this.admin).pause()
+      await this.cmtat.connect(this.admin).deactivateContract()
       await expect(
         this.cmtat.connect(this.admin).burn(this.address1, VALUE_TYPED)
       )
-        .to.be.revertedWithCustomError(
-          this.cmtat,
-          'CMTAT_InvalidTransfer'
-        ).withArgs(this.address1, ZERO_ADDRESS, VALUE1)
+        .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
+        .withArgs(this.address1, ZERO_ADDRESS, VALUE1)
     })
 
     it('testCanBeBurnEvenIfContractIsPaused', async function () {
-      await this.cmtat
-        .connect(this.admin)
-        .pause()
+      await this.cmtat.connect(this.admin).pause()
       const bindTest = testBurn.bind(this)
       await bindTest(this.admin)
     })
 
     it('testCannotBeBurnIfAddressIsFrozen', async function () {
       // Arrange
-      await this.cmtat.connect(this.admin).setAddressFrozen(this.address1, true)
+      await this.cmtat
+        .connect(this.admin)
+        .setAddressFrozen(this.address1, true)
 
       // Act
       const VALUE = 20
       const VALUE_TYPED = ethers.Typed.uint256(20)
       await expect(
-        this.cmtat
-          .connect(this.admin)
-          .burn(this.address1, VALUE_TYPED)
+        this.cmtat.connect(this.admin).burn(this.address1, VALUE_TYPED)
       )
-        .to.be.revertedWithCustomError(
-          this.cmtat,
-          'CMTAT_InvalidTransfer'
-        )
+        .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
         .withArgs(this.address1.address, ZERO_ADDRESS, VALUE)
     })
   })
@@ -232,11 +226,21 @@ function ERC20BurnModuleCommon () {
 
       await expect(this.logs)
         .to.emit(this.cmtat, 'Burn')
-        .withArgs(this.address2, this.address1, AMOUNT_TO_BURN, REASON_EVENT_LOCAL)
+        .withArgs(
+          this.address2,
+          this.address1,
+          AMOUNT_TO_BURN,
+          REASON_EVENT_LOCAL
+        )
 
       await expect(this.logs)
         .to.emit(this.cmtat, 'Mint')
-        .withArgs(this.address2, this.address3, AMOUNT_TO_MINT, REASON_EVENT_LOCAL)
+        .withArgs(
+          this.address2,
+          this.address3,
+          AMOUNT_TO_MINT,
+          REASON_EVENT_LOCAL
+        )
 
       expect(await this.cmtat.balanceOf(this.address1)).to.equal(
         INITIAL_SUPPLY - AMOUNT_TO_BURN
@@ -299,38 +303,38 @@ function ERC20BurnModuleCommon () {
     })
 
     it('testCannotBeBurnAndMintIfContractIsDeactivated', async function () {
+      // Arrange
+      await this.cmtat.connect(this.admin).pause()
+      await this.cmtat.connect(this.admin).deactivateContract()
+      await this.cmtat.connect(this.address1).approve(this.admin, 50n)
+      // Act
+      await expect(
+        this.cmtat
+          .connect(this.admin)
+          .burnAndMint(
+            this.address1,
+            this.address3,
+            AMOUNT_TO_BURN,
+            AMOUNT_TO_MINT,
+            REASON
+          )
+      )
+        .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
+        .withArgs(this.address1, ZERO_ADDRESS, AMOUNT_TO_BURN)
+    })
+
+    it('testCanBeBurnAndMintEvenIFContractIsPaused', async function () {
+      // Arrange
+      await this.cmtat.connect(this.admin).pause()
       await this.cmtat
         .connect(this.admin)
-        .deactivateContract()
-      await this.cmtat.connect(this.address1).approve(this.admin, 50n)
-      await expect(
-        this.cmtat.connect(this.admin).burnAndMint(
+        .burnAndMint(
           this.address1,
           this.address3,
           AMOUNT_TO_BURN,
           AMOUNT_TO_MINT,
           REASON
         )
-      )
-        .to.be.revertedWithCustomError(
-          this.cmtat,
-          'CMTAT_InvalidTransfer'
-        ).withArgs(this.address1, ZERO_ADDRESS, AMOUNT_TO_BURN)
-    })
-
-    it('testCanBeBurnAndMintEvenIFContractIsPaused', async function () {
-      // Arrange
-      await this.cmtat
-        .connect(this.admin)
-        .pause()
-      await
-      this.cmtat.connect(this.admin).burnAndMint(
-        this.address1,
-        this.address3,
-        AMOUNT_TO_BURN,
-        AMOUNT_TO_MINT,
-        REASON
-      )
     })
   })
 
@@ -495,7 +499,11 @@ function ERC20BurnModuleCommon () {
       await expect(
         this.cmtat
           .connect(this.admin)
-          .batchBurn(TOKEN_HOLDER_INVALID, TOKEN_BY_HOLDERS_TO_BURN, REASON_EMPTY)
+          .batchBurn(
+            TOKEN_HOLDER_INVALID,
+            TOKEN_BY_HOLDERS_TO_BURN,
+            REASON_EMPTY
+          )
       ).to.be.revertedWithCustomError(
         this.cmtat,
         'CMTAT_BurnModule_AccountsValueslengthMismatch'
@@ -513,7 +521,11 @@ function ERC20BurnModuleCommon () {
       await expect(
         this.cmtat
           .connect(this.admin)
-          .batchBurn(TOKEN_HOLDER_INVALID, TOKEN_BY_HOLDERS_TO_BURN, REASON_EMPTY)
+          .batchBurn(
+            TOKEN_HOLDER_INVALID,
+            TOKEN_BY_HOLDERS_TO_BURN,
+            REASON_EMPTY
+          )
       ).to.be.revertedWithCustomError(
         this.cmtat,
         'CMTAT_BurnModule_AccountsValueslengthMismatch'

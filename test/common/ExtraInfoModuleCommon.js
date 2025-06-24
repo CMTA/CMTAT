@@ -1,5 +1,5 @@
 const { expect } = require('chai')
-const { DEFAULT_ADMIN_ROLE } = require('../utils')
+const { DEFAULT_ADMIN_ROLE, EXTRA_INFORMATION_ROLE } = require('../utils')
 const { TERMS } = require('../deploymentUtils')
 
 function ExtraInfoModuleCommon () {
@@ -46,7 +46,7 @@ function ExtraInfoModuleCommon () {
           this.cmtat,
           'AccessControlUnauthorizedAccount'
         )
-        .withArgs(this.address1.address, DEFAULT_ADMIN_ROLE)
+        .withArgs(this.address1.address, EXTRA_INFORMATION_ROLE)
       // Assert
       expect(await this.cmtat.tokenId()).to.equal('CMTAT_ISIN')
     })
@@ -93,7 +93,7 @@ function ExtraInfoModuleCommon () {
           this.cmtat,
           'AccessControlUnauthorizedAccount'
         )
-        .withArgs(this.address1.address, DEFAULT_ADMIN_ROLE)
+        .withArgs(this.address1.address, EXTRA_INFORMATION_ROLE)
       // Assert
       checkTerms(TERMS)
     })
@@ -121,35 +121,9 @@ function ExtraInfoModuleCommon () {
           this.cmtat,
           'AccessControlUnauthorizedAccount'
         )
-        .withArgs(this.address1.address, DEFAULT_ADMIN_ROLE)
+        .withArgs(this.address1.address, EXTRA_INFORMATION_ROLE)
       // Assert
       expect(await this.cmtat.information()).to.equal('CMTAT_info')
-    })
-
-    it('testAdminCanUpdateMetadata', async function () {
-      const NEW_METADATA = 'https://example.com/metadata2'
-      // Act
-      this.logs = await this.cmtat.connect(this.admin).setMetaData(NEW_METADATA)
-      // Assert
-      expect(await this.cmtat.metaData()).to.equal(NEW_METADATA)
-      await expect(this.logs)
-        .to.emit(this.cmtat, 'MetaData')
-        .withArgs(NEW_METADATA)
-    })
-
-    it('testCannotNonAdminUpdateMetadata', async function () {
-      const NEW_METADATA = 'https://example.com/metadata2'
-      // Act
-      await expect(
-        this.cmtat.connect(this.address1).setMetaData(NEW_METADATA)
-      )
-        .to.be.revertedWithCustomError(
-          this.cmtat,
-          'AccessControlUnauthorizedAccount'
-        )
-        .withArgs(this.address1.address, DEFAULT_ADMIN_ROLE)
-      // Assert
-      expect(await this.cmtat.metaData()).to.equal('')
     })
   })
 }
