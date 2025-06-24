@@ -43,8 +43,8 @@ abstract contract ERC7551Module is ExtraInformationModule, IERC7551Document {
     *  @inheritdoc IERC7551Document
     */
     function setTerms(bytes32 hash, string calldata uri) public virtual override(IERC7551Document) onlyRole(EXTRA_INFORMATION_ROLE) {
-        IERC1643CMTAT.DocumentInfo memory terms = IERC1643CMTAT.DocumentInfo("", uri, hash);
-        _setTerms(terms);
+        IERC1643CMTAT.DocumentInfo memory terms_ = IERC1643CMTAT.DocumentInfo("", uri, hash);
+        _setTerms(terms_);
     }
 
     /* ============ View functions ============ */

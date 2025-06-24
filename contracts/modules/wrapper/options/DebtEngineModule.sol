@@ -4,6 +4,7 @@ pragma solidity ^0.8.20;
 
 /* ==== Engine === */
 import {IDebtEngine, ICMTATDebt, ICMTATCreditEvents} from "../../../interfaces/engine/IDebtEngine.sol";
+/* ==== Module === */
 import {DebtModule} from "./DebtModule.sol";
 /**
  * @title Debt Engine module

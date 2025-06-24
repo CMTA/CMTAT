@@ -12,9 +12,9 @@ function AuthorizationModuleCommon () {
         .connect(this.admin)
         .grantRole(DEFAULT_ADMIN_ROLE, this.address1)
       // Assert
-      expect(await this.cmtat.hasRole(DEFAULT_ADMIN_ROLE, this.address1)).to.equal(
-        true
-      )
+      expect(
+        await this.cmtat.hasRole(DEFAULT_ADMIN_ROLE, this.address1)
+      ).to.equal(true)
       // emits a RoleGranted event
       await expect(this.logs)
         .to.emit(this.cmtat, 'RoleGranted')

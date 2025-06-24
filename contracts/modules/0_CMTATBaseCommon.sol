@@ -20,7 +20,6 @@ import {ERC20BaseModule, ERC20Upgradeable} from "./wrapper/core/ERC20BaseModule.
 import {ICMTATConstructor} from "../interfaces/technical/ICMTATConstructor.sol";
 import {ISnapshotEngine} from "../interfaces/engine/ISnapshotEngine.sol";
 import {IBurnMintERC20} from "../interfaces/technical/IMintBurnToken.sol";
-import {Errors} from "../libraries/Errors.sol";
 
 abstract contract CMTATBaseCommon is
     // Core
@@ -41,8 +40,8 @@ abstract contract CMTATBaseCommon is
                             PUBLIC/EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
     function __CMTAT_commonModules_init_unchained(address admin, ICMTATConstructor.ERC20Attributes memory ERC20Attributes_, ICMTATConstructor.ExtraInformationAttributes memory ExtraInformationModuleAttributes_,
-     ISnapshotEngine snapshotEngine,
-        IERC1643 documentEngine ) internal virtual onlyInitializing {
+     ISnapshotEngine snapshotEngine_,
+        IERC1643 documentEngine_ ) internal virtual onlyInitializing {
         // AccessControlModule_init_unchained is called firstly due to inheritance
         __AccessControlModule_init_unchained(admin);
 
@@ -50,8 +49,8 @@ abstract contract CMTATBaseCommon is
         __ERC20BaseModule_init_unchained(ERC20Attributes_.decimalsIrrevocable, ERC20Attributes_.name, ERC20Attributes_.symbol);
         /* Extensions */
         __ExtraInformationModule_init_unchained(ExtraInformationModuleAttributes_.tokenId, ExtraInformationModuleAttributes_.terms, ExtraInformationModuleAttributes_.information);
-        __SnapshotEngineModule_init_unchained(snapshotEngine);
-        __DocumentEngineModule_init_unchained(documentEngine);
+        __SnapshotEngineModule_init_unchained(snapshotEngine_);
+        __DocumentEngineModule_init_unchained(documentEngine_);
     }
 
     /*//////////////////////////////////////////////////////////////
@@ -141,7 +140,7 @@ abstract contract CMTATBaseCommon is
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
-    function _checkTransferred(address /*spender*/, address from, address to, uint256 value) internal virtual {
+    function _checkTransferred(address /*spender*/, address from, address /* to */, uint256 value) internal virtual {
         ERC20EnforcementModuleInternal._checkActiveBalanceAndRevert(from, value);
     } 
     /**

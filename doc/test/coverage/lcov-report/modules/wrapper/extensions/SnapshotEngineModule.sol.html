@@ -120,13 +120,7 @@
 75
 76
 77
-78
-79
-80
-81
-82
-83
-84</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+78</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -156,12 +150,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1875×</span>
+<span class="cline-any cline-yes">2377×</span>
 <span class="cline-any cline-yes">138×</span>
 <span class="cline-any cline-yes">138×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -176,8 +165,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2921×</span>
-<span class="cline-any cline-yes">2921×</span>
+<span class="cline-any cline-yes">364×</span>
+<span class="cline-any cline-yes">364×</span>
+<span class="cline-any cline-yes">364×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -187,9 +177,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">228×</span>
-<span class="cline-any cline-yes">228×</span>
-<span class="cline-any cline-yes">228×</span>
+<span class="cline-any cline-yes">3635×</span>
+<span class="cline-any cline-yes">3635×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -197,14 +186,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">366×</span>
-<span class="cline-any cline-yes">366×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">502×</span>
+<span class="cline-any cline-yes">502×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3287×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4137×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -213,20 +201,15 @@
 &nbsp;
 pragma solidity ^0.8.20;
 &nbsp;
-/* ==== Module === */
-import {AuthorizationModule} from "../../security/AuthorizationModule.sol";
+/* ==== OpenZeppelin === */
+import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 /* ==== Engine === */
-import {ISnapshotEngine} from "../../../interfaces/engine/ISnapshotEngine.sol";
+import {ISnapshotEngine, ISnapshotEngineModule} from "../../../interfaces/modules/ISnapshotEngineModule.sol";
 &nbsp;
-abstract contract SnapshotEngineModule is AuthorizationModule {
-    error CMTAT_SnapshotModule_SameValue();
+abstract contract SnapshotEngineModule is AccessControlUpgradeable, ISnapshotEngineModule {
     /* ============ State Variables ============ */
     bytes32 public constant SNAPSHOOTER_ROLE = keccak256("SNAPSHOOTER_ROLE");
-    /* ============ Events ============ */
-    /**
-     * @dev Emitted when a rule engine is set.
-     */
-    event SnapshotEngine(ISnapshotEngine indexed newSnapshotEngine);
+&nbsp;
     /* ============ ERC-7201 ============ */
     // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.SnapshotEngineModule")) - 1)) &amp; ~bytes32(uint256(0xff))
     bytes32 private constant SnapshotEngineModuleStorageLocation = 0x1387b97dfab601d3023cb57858a6be29329babb05c85597ddbe4926c1193a900;
@@ -255,26 +238,25 @@ abstract contract SnapshotEngineModule is AuthorizationModule {
                             PUBLIC/EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
 &nbsp;
-    /**
-    * @notice returns the current snapshotEngine
-    */
-    function snapshotEngine() public view virtual returns (ISnapshotEngine) {
-        SnapshotEngineModuleStorage storage $ = _getSnapshotEngineModuleStorage();
-        return $._snapshotEngine;
-    }
-&nbsp;
-    /* ============  Restricted Functions ============ */
-    /*
-    * @notice Set the snapshotEngine
-    */
+    /* ============  State Restricted Functions ============ */
     function setSnapshotEngine(
         ISnapshotEngine snapshotEngine_
-    ) external virtual <span class="missing-if-branch" title="else path not taken" >E</span>onlyRole(SNAPSHOOTER_ROLE) {
+    ) external virtual override(ISnapshotEngineModule) <span class="missing-if-branch" title="else path not taken" >E</span>onlyRole(SNAPSHOOTER_ROLE) {
         SnapshotEngineModuleStorage storage $ = _getSnapshotEngineModuleStorage();
         <span class="missing-if-branch" title="else path not taken" >E</span>require($._snapshotEngine != snapshotEngine_, CMTAT_SnapshotModule_SameValue());
         _setSnapshotEngine($, snapshotEngine_);
     }
 &nbsp;
+    
+    /* ============ View functions ============ */
+&nbsp;
+    /**
+    * @inheritdoc ISnapshotEngineModule
+    */
+    function snapshotEngine() public view virtual override(ISnapshotEngineModule) returns (ISnapshotEngine) {
+        SnapshotEngineModuleStorage storage $ = _getSnapshotEngineModuleStorage();
+        return $._snapshotEngine;
+    }
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
@@ -298,7 +280,7 @@ abstract contract SnapshotEngineModule is AuthorizationModule {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Jun 04 2025 11:08:29 GMT+0200 (Central European Summer Time)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Tue Jun 24 2025 18:01:05 GMT+0200 (Central European Summer Time)
 </div>
 </div>
 <script src="../../../prettify.js"></script>

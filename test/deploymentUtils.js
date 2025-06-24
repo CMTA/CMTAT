@@ -83,13 +83,18 @@ async function deployCMTATLightStandalone (admin, deployerAddress) {
   return cmtat
 }
 
-async function deployCMTATAllowlistStandalone (forwarder, admin, deployerAddress) {
+async function deployCMTATAllowlistStandalone (
+  forwarder,
+  admin,
+  deployerAddress
+) {
   const cmtat = await ethers.deployContract('CMTATStandaloneAllowlist', [
     forwarder,
     admin,
     ['CMTA Token', 'CMTAT', DEPLOYMENT_DECIMAL],
     ['CMTAT_ISIN', TERMS, 'CMTAT_info'],
-    ZERO_ADDRESS, ZERO_ADDRESS
+    ZERO_ADDRESS,
+    ZERO_ADDRESS
   ])
   return cmtat
 }
@@ -169,7 +174,8 @@ async function deployCMTATAllowlistProxy (forwarder, admin, deployerAddress) {
       admin,
       ['CMTA Token', 'CMTAT', DEPLOYMENT_DECIMAL],
       ['CMTAT_ISIN', TERMS, 'CMTAT_info'],
-      ZERO_ADDRESS, ZERO_ADDRESS
+      ZERO_ADDRESS,
+      ZERO_ADDRESS
     ],
     {
       initializer: 'initialize',
@@ -187,10 +193,7 @@ async function deployCMTATLightProxy (admin, deployerAddress) {
   )
   const ETHERS_CMTAT_PROXY = await upgrades.deployProxy(
     ETHERS_CMTAT_PROXY_FACTORY,
-    [
-      admin,
-      ['CMTA Token', 'CMTAT', DEPLOYMENT_DECIMAL]
-    ],
+    [admin, ['CMTA Token', 'CMTAT', DEPLOYMENT_DECIMAL]],
     {
       initializer: 'initialize',
       constructorArgs: [],

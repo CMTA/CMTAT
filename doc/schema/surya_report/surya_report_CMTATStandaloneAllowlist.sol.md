@@ -16,7 +16,7 @@
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
 | **CMTATStandaloneAllowlist** | Implementation | CMTATBaseAllowlist |||
-| └ | <Constructor> | Public ❗️ | 🛑  | MetaTxModule |
+| └ | <Constructor> | Public ❗️ | 🛑  | ERC2771Module |
 
 
 ### Legend

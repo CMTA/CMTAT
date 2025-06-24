@@ -71,4 +71,11 @@ interface IBurnFromERC20 {
   * 
   **/
   function burnFrom(address account, uint256 value) external;
+
+/*
+* @notice Burns `value` amount of tokens from `msg.sender
+* @param value The number of tokens to be burned.
+* @dev the function must be restricted
+**/
+ function burn(uint256 value) external;
 }

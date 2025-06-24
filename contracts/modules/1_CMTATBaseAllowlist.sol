@@ -40,22 +40,22 @@ abstract contract CMTATBaseAllowlist is
      * @param admin address of the admin of contract (Access Control)
      * @param ERC20Attributes_ ERC20 name, symbol and decimals
      * @param extraInformationAttributes_ tokenId, terms, information
-     * @param snapshotEngine external contract
-     * @param documentEngine external contract
+     * @param snapshotEngine_ external contract
+     * @param documentEngine_ external contract
      */
     function initialize(
         address admin,
         ICMTATConstructor.ERC20Attributes memory ERC20Attributes_,
         ICMTATConstructor.ExtraInformationAttributes memory extraInformationAttributes_,
-        ISnapshotEngine snapshotEngine,
-        IERC1643 documentEngine
+        ISnapshotEngine snapshotEngine_,
+        IERC1643 documentEngine_
     ) public virtual initializer {
         __CMTAT_init(
             admin,
             ERC20Attributes_,
             extraInformationAttributes_,
-            snapshotEngine,
-            documentEngine
+            snapshotEngine_,
+            documentEngine_
         );
     }
 
@@ -67,8 +67,8 @@ abstract contract CMTATBaseAllowlist is
         address admin,
         ICMTATConstructor.ERC20Attributes memory ERC20Attributes_,
         ICMTATConstructor.ExtraInformationAttributes memory extraInformationAttributes_,
-        ISnapshotEngine snapshotEngine,
-        IERC1643 documentEngine
+        ISnapshotEngine snapshotEngine_,
+        IERC1643 documentEngine_
     ) internal virtual onlyInitializing {
         /* OpenZeppelin library */
         // OZ init_unchained functions are called firstly due to inheritance
@@ -81,7 +81,7 @@ abstract contract CMTATBaseAllowlist is
         __CMTAT_openzeppelin_init_unchained();
 
         /* Wrapper modules */
-        __CMTAT_modules_init_unchained(admin, ERC20Attributes_, extraInformationAttributes_, snapshotEngine, documentEngine );
+        __CMTAT_modules_init_unchained(admin, ERC20Attributes_, extraInformationAttributes_, snapshotEngine_, documentEngine_ );
     }
 
     /*
@@ -104,9 +104,9 @@ abstract contract CMTATBaseAllowlist is
     /*
     * @dev CMTAT wrapper modules
     */
-    function __CMTAT_modules_init_unchained(address admin, ICMTATConstructor.ERC20Attributes memory ERC20Attributes_, ICMTATConstructor.ExtraInformationAttributes memory ExtraInformationAttributes_,  ISnapshotEngine snapshotEngine,
-        IERC1643 documentEngine ) internal virtual onlyInitializing {
-         __CMTAT_commonModules_init_unchained(admin,ERC20Attributes_, ExtraInformationAttributes_, snapshotEngine, documentEngine);
+    function __CMTAT_modules_init_unchained(address admin, ICMTATConstructor.ERC20Attributes memory ERC20Attributes_, ICMTATConstructor.ExtraInformationAttributes memory ExtraInformationAttributes_,  ISnapshotEngine snapshotEngine_,
+        IERC1643 documentEngine_ ) internal virtual onlyInitializing {
+         __CMTAT_commonModules_init_unchained(admin,ERC20Attributes_, ExtraInformationAttributes_, snapshotEngine_, documentEngine_);
         // option
         __Allowlist_init_unchained();
     }
@@ -127,7 +127,7 @@ abstract contract CMTATBaseAllowlist is
         address to,
         uint256 value
     ) public virtual override (ValidationModuleCore) view returns (bool) {
-        if(!ValidationModuleAllowlist._canTransferGenericByModule(address(0), from, to)){
+        if(!_canTransferGenericByModule(address(0), from, to)){
             return false;
         } else if(!ERC20EnforcementModuleInternal._checkActiveBalance(from, value)){
             return false;
@@ -146,7 +146,7 @@ abstract contract CMTATBaseAllowlist is
         address to,
         uint256 value
     ) public virtual override (ValidationModuleCore) view returns (bool) {
-        if(!ValidationModuleAllowlist._canTransferGenericByModule(spender, from, to)){
+        if(!_canTransferGenericByModule(spender, from, to)){
             return false;
         }else if(!ERC20EnforcementModuleInternal._checkActiveBalance(from, value)){
             return false;
@@ -177,7 +177,7 @@ abstract contract CMTATBaseAllowlist is
     /**
     * @inheritdoc ValidationModuleAllowlist
     */
-    function _canTransferGenericByModule(
+   function _canTransferGenericByModule(
         address spender,
         address from,
         address to

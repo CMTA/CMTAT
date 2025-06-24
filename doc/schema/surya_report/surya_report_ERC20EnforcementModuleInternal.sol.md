@@ -16,13 +16,14 @@
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
 | **ERC20EnforcementModuleInternal** | Implementation | ERC20Upgradeable, IERC7551ERC20EnforcementEvent, IERC7551ERC20EnforcementTokenFrozenEvent |||
-| └ | _getFrozenTokens | Internal 🔒 |   | |
-| └ | _getActiveBalanceOf | Internal 🔒 |   | |
 | └ | _freezePartialTokens | Internal 🔒 | 🛑  | |
 | └ | _unfreezePartialTokens | Internal 🔒 | 🛑  | |
 | └ | _unfreezeTokens | Internal 🔒 | 🛑  | |
 | └ | _forcedTransfer | Internal 🔒 | 🛑  | |
+| └ | _checkActiveBalanceAndRevert | Internal 🔒 |   | |
 | └ | _checkActiveBalance | Internal 🔒 |   | |
+| └ | _getFrozenTokens | Internal 🔒 |   | |
+| └ | _getActiveBalanceOf | Internal 🔒 |   | |
 | └ | _getEnforcementModuleStorage | Private 🔐 |   | |
 
 

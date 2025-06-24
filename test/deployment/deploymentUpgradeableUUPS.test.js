@@ -46,14 +46,13 @@ describe('CMTAT Core - Upgradeable', function () {
   ERC20MintModuleCommon()
   EnforcementModuleCommon()
 
-    // Extensions
+  // Extensions
   ERC20EnforcementModuleCommon()
   DocumentModuleCommon()
   ExtraInfoModuleCommon()
-  
+
   // options
   ERC20CrossChainModuleCommon()
-
 
   // options
   ERC20CrossChainModuleCommon()

@@ -44,7 +44,7 @@ abstract contract CMTATBaseGeneric is
     function __CMTAT_init(
         address admin,
         ICMTATConstructor.ExtraInformationAttributes memory extraInformationAttributes_,
-        IERC1643 documentEngine
+        IERC1643 documentEngine_
     ) internal virtual onlyInitializing {
         /* OpenZeppelin library */
         // OZ init_unchained functions are called firstly due to inheritance
@@ -57,7 +57,7 @@ abstract contract CMTATBaseGeneric is
         __CMTAT_openzeppelin_init_unchained();
 
         /* Wrapper modules */
-        __CMTAT_modules_init_unchained(admin, extraInformationAttributes_, documentEngine );
+        __CMTAT_modules_init_unchained(admin, extraInformationAttributes_, documentEngine_ );
     }
 
     /*
@@ -72,10 +72,10 @@ abstract contract CMTATBaseGeneric is
     /*
     * @dev CMTAT wrapper modules
     */
-    function __CMTAT_modules_init_unchained(address admin, ICMTATConstructor.ExtraInformationAttributes memory extraInformationAttributes_, IERC1643 documentEngine ) internal virtual onlyInitializing {
+    function __CMTAT_modules_init_unchained(address admin, ICMTATConstructor.ExtraInformationAttributes memory extraInformationAttributes_, IERC1643 documentEngine_ ) internal virtual onlyInitializing {
         // AccessControlModule_init_unchained is called firstly due to inheritance
         __AccessControlModule_init_unchained(admin);
-        __DocumentEngineModule_init_unchained(documentEngine);
+        __DocumentEngineModule_init_unchained(documentEngine_);
         /* Other modules */
         __ExtraInformationModule_init_unchained(extraInformationAttributes_.tokenId, extraInformationAttributes_.terms, extraInformationAttributes_.information);
     }

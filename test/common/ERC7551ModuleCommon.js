@@ -25,19 +25,25 @@ function ERC7551ModuleCommon () {
         '0xe405e5dad3b45f611e35717af4430b4560f12cd4054380b856446d286c341d05'
       ]
       // Act
-      this.logs = await this.cmtat.connect(this.admin).setTerms(ethers.Typed.bytes32(NEW_TERMS[2]), NEW_TERMS[1])
+      this.logs = await this.cmtat
+        .connect(this.admin)
+        .setTerms(ethers.Typed.bytes32(NEW_TERMS[2]), NEW_TERMS[1])
       // Assert
 
       await checkTerms(this, NEW_TERMS)
 
-      let hash = await this.cmtat.termsHash()
+      const hash = await this.cmtat.termsHash()
       expect(hash).to.equal(NEW_TERMS[2])
     })
     it('testCannotNonAdminUpdateTerms', async function () {
       // Arrange - Assert
       checkTerms(TERMS)
       // Act
-      await expect(this.cmtat.connect(this.address1).setTerms(ethers.Typed.bytes32(TERMS[2]), TERMS[1]))
+      await expect(
+        this.cmtat
+          .connect(this.address1)
+          .setTerms(ethers.Typed.bytes32(TERMS[2]), TERMS[1])
+      )
         .to.be.revertedWithCustomError(
           this.cmtat,
           'AccessControlUnauthorizedAccount'
@@ -48,7 +54,9 @@ function ERC7551ModuleCommon () {
     it('testAdminCanUpdateMetadata', async function () {
       const NEW_METADATA = 'https://example.com/metadata2'
       // Act
-      this.logs = await this.cmtat.connect(this.admin).setMetaData(NEW_METADATA)
+      this.logs = await this.cmtat
+        .connect(this.admin)
+        .setMetaData(NEW_METADATA)
       // Assert
       expect(await this.cmtat.metaData()).to.equal(NEW_METADATA)
       await expect(this.logs)
@@ -59,9 +67,7 @@ function ERC7551ModuleCommon () {
     it('testCannotNonAdminUpdateMetadata', async function () {
       const NEW_METADATA = 'https://example.com/metadata2'
       // Act
-      await expect(
-        this.cmtat.connect(this.address1).setMetaData(NEW_METADATA)
-      )
+      await expect(this.cmtat.connect(this.address1).setMetaData(NEW_METADATA))
         .to.be.revertedWithCustomError(
           this.cmtat,
           'AccessControlUnauthorizedAccount'

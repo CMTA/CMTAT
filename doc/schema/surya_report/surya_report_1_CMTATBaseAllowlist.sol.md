@@ -15,8 +15,7 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **CMTATBaseAllowlist** | Implementation | Initializable, ContextUpgradeable, CMTATBaseCommon, ValidationModuleAllowlist, ValidationModuleCore, MetaTxModule |||
-| └ | _checkTransferred | Internal 🔒 | 🛑  | |
+| **CMTATBaseAllowlist** | Implementation | Initializable, ContextUpgradeable, CMTATBaseCommon, ValidationModuleAllowlist, ValidationModuleCore, ERC2771Module |||
 | └ | initialize | Public ❗️ | 🛑  | initializer |
 | └ | __CMTAT_init | Internal 🔒 | 🛑  | onlyInitializing |
 | └ | __CMTAT_openzeppelin_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |
@@ -26,6 +25,7 @@
 | └ | hasRole | Public ❗️ |   |NO❗️ |
 | └ | _canMintBurnByModule | Internal 🔒 |   | |
 | └ | _canTransferGenericByModule | Internal 🔒 |   | |
+| └ | _checkTransferred | Internal 🔒 | 🛑  | |
 | └ | _msgSender | Internal 🔒 |   | |
 | └ | _contextSuffixLength | Internal 🔒 |   | |
 | └ | _msgData | Internal 🔒 |   | |

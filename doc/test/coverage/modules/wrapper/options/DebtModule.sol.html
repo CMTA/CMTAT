@@ -22,22 +22,22 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>5/5</span>
+        <span class='fraction'>8/8</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>4/4</span>
+        <span class='fraction'>6/6</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>4/4</span>
+        <span class='fraction'>6/6</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>9/9</span>
+        <span class='fraction'>14/14</span>
       </div>
     </div>
   </div>
@@ -111,7 +111,39 @@
 66
 67
 68
-69</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -166,6 +198,30 @@
 <span class="cline-any cline-yes">2×</span>
 <span class="cline-any cline-yes">2×</span>
 <span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">6×</span>
@@ -174,8 +230,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">40×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">48×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -183,21 +241,21 @@
 &nbsp;
 pragma solidity ^0.8.20;
 &nbsp;
-/* ==== Module === */
-import {AuthorizationModule} from "../../security/AuthorizationModule.sol";
+/* ==== OpenZeppelin === */
+import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
+&nbsp;
 /* ==== Engine === */
-import {IDebtEngine, ICMTATDebt} from "../../../interfaces/engine/IDebtEngine.sol";
+import {IDebtEngine, ICMTATDebt, ICMTATCreditEvents} from "../../../interfaces/engine/IDebtEngine.sol";
+import {IDebtModule} from "../../../interfaces/modules/IDebtModule.sol";
 &nbsp;
 /**
  * @title Debt module
  * @dev 
  *
- * Set Debt info
+ * Set Debt and Credit Events info
  */
-abstract contract DebtModule is AuthorizationModule, ICMTATDebt {
-    // No paramater to reduce contract size
-    event Debt();
-    event DebtInstrumentEvent();
+abstract contract DebtModule is AccessControlUpgradeable, IDebtModule {
+   
     /* ============ State Variables ============ */
     bytes32 public constant DEBT_ROLE = keccak256("DEBT_ROLE");
     /* ============ ERC-7201 ============ */
@@ -207,53 +265,82 @@ abstract contract DebtModule is AuthorizationModule, ICMTATDebt {
     /* ==== ERC-7201 State Variables === */
     struct DebtModuleStorage {
         ICMTATDebt.DebtInformation _debt;
+        ICMTATCreditEvents.CreditEvents _creditEvents;
         // Can be used to set a debtEngine
         IDebtEngine _debtEngine;
     }
 &nbsp;
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
-    //////////////////////////////////////////////////////////////*/    
+    //////////////////////////////////////////////////////////////*/  
+    /* ============ State functions ============ */
     /**
-     * @notice Set the debt
-     */
+    * @inheritdoc IDebtModule
+    * @dev The values of all attributes will be changed even if the new values are the same as the current ones
+    */
+    function setCreditEvents(
+       CreditEvents calldata creditEvents_
+    ) public onlyRole(DEBT_ROLE) {
+        DebtModuleStorage storage $ = _getDebtModuleStorage();
+        $._creditEvents = creditEvents_;
+        emit CreditEventsLogEvent();
+    }  
+&nbsp;
+    /**
+    * @inheritdoc IDebtModule
+    */
     function setDebt(
           ICMTATDebt.DebtInformation calldata debt_
-    ) external virtual onlyRole(DEBT_ROLE) {
+    ) public virtual override(IDebtModule) onlyRole(DEBT_ROLE) {
         DebtModuleStorage storage $ = _getDebtModuleStorage();
         $._debt = debt_;
-        emit Debt();
+        emit DebtLogEvent();
     }
 &nbsp;
     /**
-     * @notice Set only the instrument
-     */
+    * @inheritdoc IDebtModule
+    */
     function setDebtInstrument(
           ICMTATDebt.DebtInstrument calldata debtInstrument_
-    ) external virtual onlyRole(DEBT_ROLE) {
+    ) public virtual override(IDebtModule) onlyRole(DEBT_ROLE) {
         DebtModuleStorage storage $ = _getDebtModuleStorage();
         $._debt.debtInstrument = debtInstrument_;
-        emit DebtInstrumentEvent();
+        emit DebtInstrumentLogEvent();
     }
-    function debt() public view virtual  returns(DebtInformation memory DebtInformationResult){
+&nbsp;
+    /* ============ View functions ============ */
+    /**
+    * @inheritdoc ICMTATCreditEvents
+    */
+    function creditEvents() public view virtual override(ICMTATCreditEvents) returns(CreditEvents memory creditEventsResult){
+        DebtModuleStorage storage $ = _getDebtModuleStorage();
+        creditEventsResult = $._creditEvents;
+    }
+&nbsp;
+    /**
+    * @inheritdoc ICMTATDebt
+    */
+    function debt() public view virtual override(ICMTATDebt) returns(DebtInformation memory DebtInformationResult){
         DebtModuleStorage storage $ = _getDebtModuleStorage();
         DebtInformationResult = $._debt;
     }
-&nbsp;
+    
+    /*//////////////////////////////////////////////////////////////
+                            INTERNAL/PRIVATE FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
     /* ============ ERC-7201 ============ */
     function _getDebtModuleStorage() internal pure returns (DebtModuleStorage storage $) {
         assembly {
             $.slot := DebtModuleStorageLocation
         }
     }
-}
-&nbsp;</pre></td></tr>
+}</pre></td></tr>
 </table></pre>
 <div class='push'></div><!-- for sticky footer -->
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Jun 04 2025 11:08:29 GMT+0200 (Central European Summer Time)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Tue Jun 24 2025 18:01:05 GMT+0200 (Central European Summer Time)
 </div>
 </div>
 <script src="../../../prettify.js"></script>

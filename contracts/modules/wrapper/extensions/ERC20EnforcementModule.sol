@@ -3,7 +3,6 @@
 pragma solidity ^0.8.20;
 
 /* ==== OpenZeppelin === */
-import {ERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 /* ==== Module === */
 import {ERC20EnforcementModuleInternal} from "../../internal/ERC20EnforcementModuleInternal.sol";
@@ -17,12 +16,6 @@ import {IERC7551ERC20Enforcement, IERC7551ERC20EnforcementEvent} from "../../../
  * Contains all burn functions, inherits from ERC-20
  */
 abstract contract ERC20EnforcementModule is ERC20EnforcementModuleInternal, AccessControlUpgradeable , IERC7551ERC20Enforcement, IERC3643ERC20Enforcement{
-    /**
-    * @dev if ERC-1404 is not used, this variable will not be include in the final bytecode (compiler optimization)
-    */
-    string internal constant TEXT_TRANSFER_REJECTED_FROM_INSUFFICIENT_ACTIVE_BALANCE =
-        "AddrFrom:insufficientActiveBalance";
-   
     /* ============ State Variables ============ */
     bytes32 public constant ERC20ENFORCER_ROLE = keccak256("ERC20ENFORCER_ROLE");
 

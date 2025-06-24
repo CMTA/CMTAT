@@ -24,6 +24,9 @@ Please follow <https://changelog.md/> conventions.
   - Create specific option module ERC-7551
   - Create specific deployment version for ERC-7551
 - Add prefix numbers for each CMTAT base file depending of inheritance level
+- ERC20 Burn and Mint modules: create internal version
+  - ERC20BurnModuleInternal & ERC20MintModuleInternal
+
 - Debt version
   - Add function `setCreditEvents`in `DebtModule`
   - Remove ERC-1404 inheritance from `CMTATBaseDebt` to reduce contract code size
@@ -31,6 +34,7 @@ Please follow <https://changelog.md/> conventions.
   - Create a second interface `ERC1404Extend` which inherits from `ERC1404`
     - Add function `detectTransferRestrictionFrom`in `ERC-1404Extend`
     - Implement function `detectTransferRestrictionFrom`in ValidationModuleERC1404
+- Upgrade solidity version in Hardhat config file from 0.8.28 to 0.8.30
 
 ## 3.0.0-rc.2
 

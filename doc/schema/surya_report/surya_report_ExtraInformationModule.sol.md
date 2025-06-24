@@ -17,12 +17,12 @@
 ||||||
 | **ExtraInformationModule** | Implementation | AccessControlUpgradeable, ICMTATBase |||
 | └ | __ExtraInformationModule_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |
-| └ | tokenId | Public ❗️ |   |NO❗️ |
-| └ | terms | Public ❗️ |   |NO❗️ |
-| └ | information | Public ❗️ |   |NO❗️ |
 | └ | setTokenId | Public ❗️ | 🛑  | onlyRole |
 | └ | setTerms | Public ❗️ | 🛑  | onlyRole |
 | └ | setInformation | Public ❗️ | 🛑  | onlyRole |
+| └ | tokenId | Public ❗️ |   |NO❗️ |
+| └ | terms | Public ❗️ |   |NO❗️ |
+| └ | information | Public ❗️ |   |NO❗️ |
 | └ | _setTerms | Internal 🔒 | 🛑  | |
 | └ | _setTokenId | Internal 🔒 | 🛑  | |
 | └ | _setTerms | Internal 🔒 | 🛑  | |

@@ -17,9 +17,9 @@
 ||||||
 | **DebtModule** | Implementation | AccessControlUpgradeable, IDebtModule |||
 | └ | setCreditEvents | Public ❗️ | 🛑  | onlyRole |
-| └ | creditEvents | Public ❗️ |   |NO❗️ |
 | └ | setDebt | Public ❗️ | 🛑  | onlyRole |
 | └ | setDebtInstrument | Public ❗️ | 🛑  | onlyRole |
+| └ | creditEvents | Public ❗️ |   |NO❗️ |
 | └ | debt | Public ❗️ |   |NO❗️ |
 | └ | _getDebtModuleStorage | Internal 🔒 |   | |
 

@@ -3,11 +3,8 @@ const {
   deployCMTATLightStandalone,
   fixture,
   loadFixture
-
 } = require('../../deploymentUtils')
-const {
-  ZERO_ADDRESS, DEFAULT_ADMIN_ROLE
-} = require('../../utils')
+const { ZERO_ADDRESS, DEFAULT_ADMIN_ROLE } = require('../../utils')
 const ERC20BaseModuleCommon = require('../../common/ERC20BaseModuleCommon')
 const ERC20MintModuleCommon = require('../../common/ERC20MintModuleCommon')
 const ERC20BurnModuleCommon = require('../../common/ERC20BurnModuleCommon')
@@ -43,16 +40,16 @@ describe('CMTAT Core - Standalone', function () {
     this.logs = await this.cmtat
       .connect(sender)
       .forcedBurn(this.address1, VALUE1, REASON)
-      // Assert
-      // emits a Transfer event
+    // Assert
+    // emits a Transfer event
     await expect(this.logs)
       .to.emit(this.cmtat, 'Transfer')
       .withArgs(this.address1, ZERO_ADDRESS, VALUE1)
-      // Emits a Burn event
+    // Emits a Burn event
     await expect(this.logs)
       .to.emit(this.cmtat, 'Enforcement')
       .withArgs(sender, this.address1, VALUE1, REASON_EVENT)
-      // Check balances and total supply
+    // Check balances and total supply
     expect(await this.cmtat.balanceOf(this.address1)).to.equal(DIFFERENCE)
     expect(await this.cmtat.totalSupply()).to.equal(DIFFERENCE)
 
@@ -67,11 +64,11 @@ describe('CMTAT Core - Standalone', function () {
     await expect(this.logs)
       .to.emit(this.cmtat, 'Transfer')
       .withArgs(this.address1, ZERO_ADDRESS, DIFFERENCE)
-      // Emits a Burn event
+    // Emits a Burn event
     await expect(this.logs)
       .to.emit(this.cmtat, 'Enforcement')
       .withArgs(this.admin, this.address1, DIFFERENCE, REASON_EVENT)
-      // Check balances and total supply
+    // Check balances and total supply
     expect(await this.cmtat.balanceOf(this.address1)).to.equal(0)
     expect(await this.cmtat.totalSupply()).to.equal(0)
   }
@@ -105,7 +102,9 @@ describe('CMTAT Core - Standalone', function () {
       this.cmtat
         .connect(this.admin)
         .forcedBurn(this.address1, DIFFERENCE, REASON)
+    ).to.be.revertedWithCustomError(
+      this.cmtat,
+      'CMTAT_BurnEnforcement_AddressIsNotFrozen'
     )
-      .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_BurnEnforcement_AddressIsNotFrozen')
   })
 })

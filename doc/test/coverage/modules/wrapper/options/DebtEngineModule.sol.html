@@ -37,7 +37,7 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>14/14</span>
+        <span class='fraction'>15/15</span>
       </div>
     </div>
   </div>
@@ -110,7 +110,11 @@
 65
 66
 67
-68</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+68
+69
+70
+71
+72</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -134,9 +138,27 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4×</span>
-<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">6×</span>
 <span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -160,22 +182,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">10×</span>
-<span class="cline-any cline-yes">10×</span>
-<span class="cline-any cline-yes">8×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">8×</span>
 <span class="cline-any cline-yes">8×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">//SPDX-License-Identifier: MPL-2.0
 &nbsp;
@@ -183,6 +191,7 @@ pragma solidity ^0.8.20;
 &nbsp;
 /* ==== Engine === */
 import {IDebtEngine, ICMTATDebt, ICMTATCreditEvents} from "../../../interfaces/engine/IDebtEngine.sol";
+/* ==== Module === */
 import {DebtModule} from "./DebtModule.sol";
 /**
  * @title Debt Engine module
@@ -190,8 +199,23 @@ import {DebtModule} from "./DebtModule.sol";
  *
  * Retrieve debt and creditEvents information from a debtEngine
  */
-abstract contract DebtEngineModule is DebtModule, ICMTATCreditEvents {
+abstract contract DebtEngineModule is DebtModule {
     error CMTAT_DebtEngineModule_SameValue();
+&nbsp;
+    /* ============  State Restricted Functions ============ */
+    /*
+    * @notice set a DebtEngine
+    * 
+    */
+    function setDebtEngine(
+        IDebtEngine debtEngine_
+    ) external virtual onlyRole(DEBT_ROLE) {
+        DebtModuleStorage storage $ = _getDebtModuleStorage();
+        require($._debtEngine != debtEngine_, CMTAT_DebtEngineModule_SameValue());
+        _setDebtEngine($, debtEngine_);
+    }
+&nbsp;
+    /* ============ View functions ============ */
     /**
     * @dev Emitted when a rule engine is set.
     */
@@ -200,10 +224,12 @@ abstract contract DebtEngineModule is DebtModule, ICMTATCreditEvents {
     /**
     * @inheritdoc ICMTATCreditEvents
     */
-    function creditEvents() public view virtual returns(CreditEvents memory creditEventsResult){
+    function creditEvents() public view virtual override(DebtModule) returns(CreditEvents memory creditEventsResult){
         DebtModuleStorage storage $ = _getDebtModuleStorage();
         if(address($._debtEngine) != address(0)){
             creditEventsResult =  $._debtEngine.creditEvents();
+        } else {
+            creditEventsResult = DebtModule.creditEvents();
         }
     }
 &nbsp;
@@ -221,19 +247,6 @@ abstract contract DebtEngineModule is DebtModule, ICMTATCreditEvents {
         return $._debtEngine;
     }
 &nbsp;
-    /* ============  Restricted Functions ============ */
-    /*
-    * @notice set a DebtEngine
-    * 
-    */
-    function setDebtEngine(
-        IDebtEngine debtEngine_
-    ) external virtual onlyRole(DEBT_ROLE) {
-        DebtModuleStorage storage $ = _getDebtModuleStorage();
-        require($._debtEngine != debtEngine_, CMTAT_DebtEngineModule_SameValue());
-        _setDebtEngine($, debtEngine_);
-    }
-&nbsp;
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
@@ -243,14 +256,13 @@ abstract contract DebtEngineModule is DebtModule, ICMTATCreditEvents {
         $._debtEngine = debtEngine_;
         emit DebtEngine(debtEngine_);
     }
-}
-&nbsp;</pre></td></tr>
+}</pre></td></tr>
 </table></pre>
 <div class='push'></div><!-- for sticky footer -->
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Jun 04 2025 11:08:29 GMT+0200 (Central European Summer Time)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Tue Jun 24 2025 18:01:05 GMT+0200 (Central European Summer Time)
 </div>
 </div>
 <script src="../../../prettify.js"></script>

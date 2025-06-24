@@ -16,14 +16,13 @@
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
 | **ValidationModuleRuleEngine** | Implementation | ValidationModuleCore, ValidationModuleRuleEngineInternal |||
+| └ | setRuleEngine | Public ❗️ | 🛑  | onlyRole |
 | └ | canTransfer | Public ❗️ |   |NO❗️ |
 | └ | canTransferFrom | Public ❗️ |   |NO❗️ |
-| └ | setRuleEngine | Public ❗️ | 🛑  | onlyRole |
 | └ | _canTransfer | Internal 🔒 |   | |
 | └ | _canTransferFrom | Internal 🔒 |   | |
 | └ | _canTransferFromWithRuleEngine | Internal 🔒 |   | |
 | └ | _canTransferWithRuleEngine | Internal 🔒 |   | |
-| └ | _transferred | Internal 🔒 | 🛑  | |
 | └ | _transferred | Internal 🔒 | 🛑  | |
 
 

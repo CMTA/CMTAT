@@ -16,11 +16,6 @@ abstract contract CMTATBaseRuleEngine is
     CMTATBaseCommon,
     ValidationModuleRuleEngine
 {
-    function _checkTransferred(address spender, address from, address to, uint256 value) internal virtual override(CMTATBaseCommon) {
-        CMTATBaseCommon._checkTransferred(spender, from, to, value);
-        require(ValidationModuleRuleEngine._transferred(spender, from, to, value), Errors.CMTAT_InvalidTransfer(from, to, value));
-    } 
-
     /*//////////////////////////////////////////////////////////////
                          INITIALIZER FUNCTION
     //////////////////////////////////////////////////////////////*/
@@ -137,4 +132,12 @@ abstract contract CMTATBaseRuleEngine is
     ) public view virtual override(AccessControlUpgradeable, CMTATBaseCommon) returns (bool) {
         return CMTATBaseCommon.hasRole(role, account);
     }
+
+    /*//////////////////////////////////////////////////////////////
+                            INTERNAL/PRIVATE FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
+    function _checkTransferred(address spender, address from, address to, uint256 value) internal virtual override(CMTATBaseCommon) {
+        CMTATBaseCommon._checkTransferred(spender, from, to, value);
+        require(ValidationModuleRuleEngine._transferred(spender, from, to, value), Errors.CMTAT_InvalidTransfer(from, to, value));
+    } 
 }

@@ -132,7 +132,10 @@
 87
 88
 89
-90</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+90
+91
+92
+93</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -160,12 +163,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">702×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -192,7 +189,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">320×</span>
+<span class="cline-any cline-yes">319×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -202,8 +199,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">107×</span>
-<span class="cline-any cline-yes">107×</span>
+<span class="cline-any cline-yes">106×</span>
+<span class="cline-any cline-yes">106×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -217,17 +216,25 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1420×</span>
-<span class="cline-any cline-yes">1420×</span>
+<span class="cline-any cline-yes">754×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1416×</span>
+<span class="cline-any cline-yes">1416×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">//SPDX-License-Identifier: MPL-2.0
 &nbsp;
 pragma solidity ^0.8.20;
 &nbsp;
+/* ==== OpenZeppelin === */
+import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 /* ==== Module === */
-import {AuthorizationModule} from "../../security/AuthorizationModule.sol";
-import {IAllowlist} from "../../../interfaces/tokenization/IAllowlist.sol";
+import {IAllowlistModule} from "../../../interfaces/modules/IAllowlistModule.sol";
 import {AllowlistModuleInternal} from "../../internal/AllowlistModuleInternal.sol";
 &nbsp;
 /*
@@ -239,8 +246,8 @@ import {AllowlistModuleInternal} from "../../internal/AllowlistModuleInternal.so
  */
 abstract contract AllowlistModule is
     AllowlistModuleInternal,
-    AuthorizationModule,
-    IAllowlist
+    AccessControlUpgradeable,
+    IAllowlistModule
 {
     /* ============ State Variables ============ */
     bytes32 public constant ALLOWLIST_ROLE = keccak256("ALLOWLIST_ROLE");
@@ -249,16 +256,9 @@ abstract contract AllowlistModule is
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
-    
+    /* ============ State functions ============ */
     /** 
-    * @inheritdoc IAllowlist
-    */
-    function isAllowlisted(address account) public view virtual returns (bool) {
-       return _isAllowlisted(account);
-    }
-&nbsp;
-    /** 
-    * @inheritdoc IAllowlist
+    * @inheritdoc IAllowlistModule
     */
     function setAddressAllowlist(address account, bool status) public virtual  onlyRole(ALLOWLIST_ROLE){
          _addToAllowlist(account, status, "");
@@ -266,7 +266,7 @@ abstract contract AllowlistModule is
 &nbsp;
 &nbsp;
     /** 
-    * @inheritdoc IAllowlist
+    * @inheritdoc IAllowlistModule
     */
     function setAddressAllowlist(
         address account, bool status, bytes calldata data
@@ -276,7 +276,7 @@ abstract contract AllowlistModule is
 &nbsp;
 &nbsp;
     /** 
-    * @inheritdoc IAllowlist
+    * @inheritdoc IAllowlistModule
     */
     function batchSetAddressAllowlist(
         address[] calldata accounts, bool[] calldata status
@@ -286,7 +286,7 @@ abstract contract AllowlistModule is
 &nbsp;
 &nbsp;
     /** 
-    * @inheritdoc IAllowlist
+    * @inheritdoc IAllowlistModule
     */
     function enableAllowlist(
         bool status
@@ -295,13 +295,22 @@ abstract contract AllowlistModule is
         emit AllowlistEnableStatus(_msgSender(), status);
     }
 &nbsp;
+    /* ============ View functions ============ */
+&nbsp;
     /** 
-    * @inheritdoc IAllowlist
+    * @inheritdoc IAllowlistModule
     */
     function isAllowlistEnabled() public view virtual returns (bool) {
         return _isAllowlistEnabled();
     }
 &nbsp;
+    /** 
+    * @inheritdoc IAllowlistModule
+    */
+    function isAllowlisted(address account) public view virtual returns (bool) {
+       return _isAllowlisted(account);
+    }
+    
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
@@ -316,7 +325,7 @@ abstract contract AllowlistModule is
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Jun 04 2025 11:08:29 GMT+0200 (Central European Summer Time)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Tue Jun 24 2025 18:01:05 GMT+0200 (Central European Summer Time)
 </div>
 </div>
 <script src="../../../prettify.js"></script>

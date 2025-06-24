@@ -49,7 +49,9 @@ function ValidationModuleProxyCommon () {
       this.ADDRESS3_INITIAL_BALANCE = 19n
       Object.assign(this, await loadFixture(fixture))
       this.definedAtDeployment = true
-      this.ruleEngineMock = await ethers.deployContract('RuleEngineMock', [this.admin])
+      this.ruleEngineMock = await ethers.deployContract('RuleEngineMock', [
+        this.admin
+      ])
       this.cmtat = await deployCMTATProxyWithParameter(
         this.deployerAddress.address,
         this._.address,

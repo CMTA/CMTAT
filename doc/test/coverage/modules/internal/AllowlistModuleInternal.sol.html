@@ -130,7 +130,9 @@
 85
 86
 87
-88</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+88
+89
+90</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -159,8 +161,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">373×</span>
-<span class="cline-any cline-yes">373×</span>
+<span class="cline-any cline-yes">371×</span>
+<span class="cline-any cline-yes">371×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -173,46 +176,47 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1420×</span>
+<span class="cline-any cline-yes">1416×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">320×</span>
-<span class="cline-any cline-yes">316×</span>
-<span class="cline-any cline-yes">316×</span>
-<span class="cline-any cline-yes">1254×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">702×</span>
-<span class="cline-any cline-yes">702×</span>
+<span class="cline-any cline-yes">319×</span>
+<span class="cline-any cline-yes">315×</span>
+<span class="cline-any cline-yes">315×</span>
+<span class="cline-any cline-yes">1250×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">107×</span>
-<span class="cline-any cline-yes">107×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">106×</span>
+<span class="cline-any cline-yes">106×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1213×</span>
-<span class="cline-any cline-yes">1213×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">754×</span>
+<span class="cline-any cline-yes">754×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2877×</span>
+<span class="cline-any cline-yes">1243×</span>
+<span class="cline-any cline-yes">1243×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2955×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -225,7 +229,7 @@ import {ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/Cont
 import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import {EnforcementModuleLibrary} from "./common/EnforcementModuleLibrary.sol";
 /**
- * @dev Enforcement module.
+ * @dev Allowlist module internal.
  *
  * Allows the issuer to freeze transfers from a given address
  */
@@ -253,6 +257,7 @@ abstract contract AllowlistModuleInternal is
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
+    /* ============ State functions ============ */
 &nbsp;
     function _addToAllowlist(address account, bool status, bytes memory data) internal virtual{
         AllowlistModuleInternalStorage storage $ = _getAllowlistModuleInternalStorage();
@@ -274,17 +279,18 @@ abstract contract AllowlistModuleInternal is
     /**
      * @dev Returns true if the account is frozen, and false otherwise.
      */
-    function _isAllowlisted(address account) internal view virtual returns (bool) {
-        AllowlistModuleInternalStorage storage $ = _getAllowlistModuleInternalStorage();
-        return $._allowlist[account];
-    }
-&nbsp;
-    /**
-     * @dev Returns true if the account is frozen, and false otherwise.
-     */
     function _enableAllowlist(bool status) internal virtual {
         AllowlistModuleInternalStorage storage $ = _getAllowlistModuleInternalStorage();
         $._enableAllowlist = status;
+    }
+&nbsp;
+    /* ============ View functions ============ */
+    /**
+     * @dev Returns true if the account is frozen, and false otherwise.
+     */
+    function _isAllowlisted(address account) internal view virtual returns (bool) {
+        AllowlistModuleInternalStorage storage $ = _getAllowlistModuleInternalStorage();
+        return $._allowlist[account];
     }
 &nbsp;
     /**
@@ -310,7 +316,7 @@ abstract contract AllowlistModuleInternal is
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Jun 04 2025 11:08:29 GMT+0200 (Central European Summer Time)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Tue Jun 24 2025 18:01:05 GMT+0200 (Central European Summer Time)
 </div>
 </div>
 <script src="../../prettify.js"></script>

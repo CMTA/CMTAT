@@ -15,8 +15,7 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **CMTATBaseCommon** | Implementation | BaseModule, ERC20MintModule, ERC20BurnModule, ERC20BaseModule, SnapshotEngineModule, ERC20EnforcementModule, DocumentEngineModule, ExtraInformationModule, IBurnMintERC20, AuthorizationModule |||
-| └ | _checkTransferred | Internal 🔒 | 🛑  | |
+| **CMTATBaseCommon** | Implementation | BaseModule, ERC20MintModule, ERC20BurnModule, ERC20BaseModule, SnapshotEngineModule, ERC20EnforcementModule, DocumentEngineModule, ExtraInformationModule, AccessControlModule, IBurnMintERC20 |||
 | └ | __CMTAT_commonModules_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |
 | └ | decimals | Public ❗️ |   |NO❗️ |
 | └ | name | Public ❗️ |   |NO❗️ |
@@ -25,6 +24,7 @@
 | └ | transferFrom | Public ❗️ | 🛑  |NO❗️ |
 | └ | burnAndMint | Public ❗️ | 🛑  |NO❗️ |
 | └ | hasRole | Public ❗️ |   |NO❗️ |
+| └ | _checkTransferred | Internal 🔒 | 🛑  | |
 | └ | _update | Internal 🔒 | 🛑  | |
 | └ | _mintOverride | Internal 🔒 | 🛑  | |
 | └ | _burnOverride | Internal 🔒 | 🛑  | |

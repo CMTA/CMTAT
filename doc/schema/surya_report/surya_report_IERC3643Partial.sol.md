@@ -53,6 +53,9 @@
 ||||||
 | **IERC3643ComplianceRead** | Interface |  |||
 | └ | canTransfer | External ❗️ |   |NO❗️ |
+||||||
+| **IERC3743IComplianceContract** | Interface |  |||
+| └ | transferred | External ❗️ |   |NO❗️ |
 
 
 ### Legend

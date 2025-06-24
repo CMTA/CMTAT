@@ -5,7 +5,9 @@ function DocumentModuleCommon () {
   context('Document Module Test', function () {
     beforeEach(async function () {
       if (!this.definedAtDeployment) {
-        this.documentEngineMock = await ethers.deployContract('DocumentEngineMock')
+        this.documentEngineMock = await ethers.deployContract(
+          'DocumentEngineMock'
+        )
       }
       if ((await this.cmtat.documentEngine()) === ZERO_ADDRESS) {
         await this.cmtat

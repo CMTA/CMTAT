@@ -16,10 +16,10 @@
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
 | **EnforcementModule** | Implementation | EnforcementModuleInternal, AccessControlUpgradeable, IERC3643Enforcement, IERC3643EnforcementEvent |||
-| └ | isFrozen | Public ❗️ |   |NO❗️ |
 | └ | setAddressFrozen | Public ❗️ | 🛑  | onlyRole |
 | └ | setAddressFrozen | Public ❗️ | 🛑  | onlyRole |
 | └ | batchSetAddressFrozen | Public ❗️ | 🛑  | onlyRole |
+| └ | isFrozen | Public ❗️ |   |NO❗️ |
 | └ | _addAddressToTheList | Internal 🔒 | 🛑  | |
 
 

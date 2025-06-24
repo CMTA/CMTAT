@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for modules/internal/ERC20EnforcementModuleInternal.sol</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../prettify.css" />
+    <link rel="stylesheet" href="../../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../../index.html">all files</a> / <a href="index.html">modules/internal/</a> ERC20EnforcementModuleInternal.sol
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>36/36</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">85% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>17/20</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>9/9</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">97.67% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>42/43</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line high'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">144×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">144×</span>
+<span class="cline-any cline-yes">144×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">144×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">144×</span>
+<span class="cline-any cline-yes">144×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">36×</span>
+<span class="cline-any cline-yes">36×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">36×</span>
+<span class="cline-any cline-yes">36×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">72×</span>
+<span class="cline-any cline-yes">72×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">72×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">72×</span>
+<span class="cline-any cline-yes">72×</span>
+<span class="cline-any cline-yes">18×</span>
+<span class="cline-any cline-yes">18×</span>
+<span class="cline-any cline-yes">18×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">72×</span>
+<span class="cline-any cline-yes">72×</span>
+<span class="cline-any cline-yes">18×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">54×</span>
+<span class="cline-any cline-yes">54×</span>
+<span class="cline-any cline-yes">18×</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">54×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">72×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3241×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3865×</span>
+<span class="cline-any cline-yes">3865×</span>
+<span class="cline-any cline-yes">297×</span>
+<span class="cline-any cline-yes">297×</span>
+<span class="cline-any cline-yes">171×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3694×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4294×</span>
+<span class="cline-any cline-yes">4294×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">234×</span>
+<span class="cline-any cline-yes">234×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4780×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">//SPDX-License-Identifier: MPL-2.0
+&nbsp;
+pragma solidity ^0.8.20;
+&nbsp;
+/* ==== OpenZeppelin === */
+import {ERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
+/* ==== Tokenization === */
+import { IERC7551ERC20EnforcementTokenFrozenEvent, IERC7551ERC20EnforcementEvent} from "../../interfaces/tokenization/draft-IERC7551.sol";
+/**
+ * @title ERC20Enforcement module internal.
+ * @dev 
+ *
+ * Contains specific ERC-20 enforcement actions
+ */
+abstract contract ERC20EnforcementModuleInternal is ERC20Upgradeable,IERC7551ERC20EnforcementEvent,  IERC7551ERC20EnforcementTokenFrozenEvent {
+    // no argument to reduce conract code size
+    error CMTAT_ERC20EnforcementModule_ValueExceedsAvailableBalance();
+    error CMTAT_ERC20EnforcementModule_ValueExceedsActiveBalance();
+    error CMTAT_ERC20EnforcementModule_ValueExceedsFrozenBalance(); 
+    /* ============ ERC-7201 ============ */
+    // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.ERC20EnforcementModule")) - 1)) &amp; ~bytes32(uint256(0xff))
+    bytes32 private constant ERC20EnforcementModuleStorageLocation = 0x9d8059a24cb596f1948a937c2c163cf14465c2a24abfd3cd009eec4ac4c39800;
+&nbsp;
+    /* ==== ERC-7201 State Variables === */
+    struct ERC20EnforcementModuleStorage {
+        mapping(address =&gt; uint256)  _frozenTokens;
+    }
+    /*//////////////////////////////////////////////////////////////
+                            INTERNAL/PRIVATE FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
+     function _freezePartialTokens(address account, uint256 value, bytes memory data) internal virtual{
+       ERC20EnforcementModuleStorage storage $ = _getEnforcementModuleStorage();
+        // Retrieve current value
+        uint256 balance = ERC20Upgradeable.balanceOf(account);
+        uint256 frozenBalance = $._frozenTokens[account] + value;
+        // Check
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(balance &gt;= frozenBalance, CMTAT_ERC20EnforcementModule_ValueExceedsAvailableBalance());
+        // Update frozenBalance
+        $._frozenTokens[account] = frozenBalance;
+        emit TokensFrozen(account, value, data);
+    }
+&nbsp;
+    function _unfreezePartialTokens(address account, uint256 value, bytes memory data) internal virtual{
+        ERC20EnforcementModuleStorage storage $ = _getEnforcementModuleStorage();
+        <span class="missing-if-branch" title="else path not taken" >E</span>require($._frozenTokens[account] &gt;= value, CMTAT_ERC20EnforcementModule_ValueExceedsFrozenBalance());
+        // Update frozenBalance
+        $._frozenTokens[account] = $._frozenTokens[account] - value;
+        emit TokensUnfrozen(account, value, data);
+    }
+&nbsp;
+    /**
+    * @dev unfreeze tokens during a forced transfer/burn
+    */
+    function _unfreezeTokens(address from, uint256 value, bytes memory data) internal virtual{
+        uint256 balance = ERC20Upgradeable.balanceOf(from);
+        <span class="missing-if-branch" title="if path not taken" >I</span>if(value &gt; balance){
+            revert ERC20InsufficientBalance(_msgSender(), balance, value-balance);
+        }
+        ERC20EnforcementModuleStorage storage $ = _getEnforcementModuleStorage();
+        // Frozen token can not be &lt; balance
+        uint256 activeBalance = balance - $._frozenTokens[from];
+        if (value &gt; activeBalance) {
+            uint256 tokensToUnfreeze = value - activeBalance;
+            $._frozenTokens[from] = $._frozenTokens[from] - tokensToUnfreeze;
+            emit TokensUnfrozen(from, tokensToUnfreeze, data);
+        }
+    }
+&nbsp;
+    function _forcedTransfer(address from, address to, uint256 value, bytes memory data) internal virtual {
+        _unfreezeTokens(from, value, data);
+        if(to == address(0)){
+            _burn(from, value);
+        } else{
+            // Spend allowance
+            // See https://ethereum-magicians.org/t/erc-3643-the-t-rex-token-standard/6844/11
+            uint256 currentAllowance = allowance(from, to);
+            if (currentAllowance &gt; 0 &amp;&amp; currentAllowance &lt; type(uint256).max) {
+                if (currentAllowance &lt; value) {
+                     unchecked {
+                        _approve(from, to, 0, false);
+                     }
+                } else{
+                    unchecked {
+                         _approve(from, to, currentAllowance - value, false);
+                    }
+                }
+              
+            }
+            _transfer(from, to, value);
+        }
+        emit Enforcement(_msgSender(), from, value, data);
+    }
+&nbsp;
+    /* ============ View functions ============ */
+    function _checkActiveBalanceAndRevert(address from, uint256 value) internal virtual view{
+        require(_checkActiveBalance(from, value),  CMTAT_ERC20EnforcementModule_ValueExceedsActiveBalance() );
+    }
+&nbsp;
+    function _checkActiveBalance(address from, uint256 value) internal virtual view returns(bool){
+        uint256 frozenTokensLocal = _getFrozenTokens(from);
+        if(frozenTokensLocal &gt; 0 ){
+            uint256 activeBalance = balanceOf(from) - frozenTokensLocal;
+            if(value &gt; activeBalance) {
+                   return false;
+            }
+        } 
+        return true;
+    }
+&nbsp;
+    function _getFrozenTokens(address account) internal view virtual returns (uint256) {
+        ERC20EnforcementModuleStorage storage $ = _getEnforcementModuleStorage();
+        return $._frozenTokens[account];
+     }
+&nbsp;
+    function _getActiveBalanceOf(address account) internal view  returns (uint256){
+        ERC20EnforcementModuleStorage storage $ = _getEnforcementModuleStorage();
+        return ERC20Upgradeable.balanceOf(account) - $._frozenTokens[account];
+     }
+&nbsp;
+    /* ============ ERC-7201 ============ */
+    function _getEnforcementModuleStorage() private pure returns (ERC20EnforcementModuleStorage storage $) {
+        assembly {
+            $.slot := ERC20EnforcementModuleStorageLocation
+        }
+    }
+}
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Tue Jun 24 2025 18:01:05 GMT+0200 (Central European Summer Time)
+</div>
+</div>
+<script src="../../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../../sorter.js"></script>
+</body>
+</html>

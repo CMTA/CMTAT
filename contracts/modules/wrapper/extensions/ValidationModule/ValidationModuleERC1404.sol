@@ -89,7 +89,7 @@ abstract contract ValidationModuleERC1404 is
         uint256 value
     ) public virtual view override(IERC1404) returns (uint8 code) {
          IRuleEngine ruleEngine_ = ruleEngine();
-         uint8 codeReturn = _detectTransferRestriction(from, to);
+         uint8 codeReturn = _detectTransferRestriction(from, to, value);
          if(codeReturn != uint8(IERC1404Extend.REJECTED_CODE_BASE.TRANSFER_OK) ){
             return codeReturn;
          } else if (address(ruleEngine_) != address(0)) {
@@ -106,25 +106,31 @@ abstract contract ValidationModuleERC1404 is
         uint256 value
     ) public virtual view override(IERC1404Extend) returns (uint8 code) {
         IRuleEngine ruleEngine_ = ruleEngine();
-        uint8 codeReturn = _detectTransferRestriction(from, to);
-         if (isFrozen(spender)) {
+        if (isFrozen(spender)) {
             return uint8(IERC1404Extend.REJECTED_CODE_BASE.TRANSFER_REJECTED_SPENDER_FROZEN);
-        }  else if (codeReturn != uint8(IERC1404Extend.REJECTED_CODE_BASE.TRANSFER_OK) ){
-            return codeReturn;
-        } else if (address(ruleEngine_) != address(0)) {
-            return ruleEngine_.detectTransferRestrictionFrom(spender, from, to, value);
-        } else { 
-            return uint8(IERC1404Extend.REJECTED_CODE_BASE.TRANSFER_OK);
-        }
+        } else {
+            uint8 codeReturn = _detectTransferRestriction(from, to, value);
+            if (codeReturn != uint8(IERC1404Extend.REJECTED_CODE_BASE.TRANSFER_OK) ){
+                return codeReturn;
+            } else if (address(ruleEngine_) != address(0)) {
+                return ruleEngine_.detectTransferRestrictionFrom(spender, from, to, value);
+            } else { 
+                return uint8(IERC1404Extend.REJECTED_CODE_BASE.TRANSFER_OK);
+            }
+        } 
     }
 
      /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
 
+    /**
+    * @dev override this function to add further restriction
+    */
     function _detectTransferRestriction(
         address from,
-        address to
+        address to,
+        uint256 /* value */
     ) internal virtual view  returns (uint8 code) {
         if (paused()) {
             return uint8(IERC1404Extend.REJECTED_CODE_BASE.TRANSFER_REJECTED_PAUSED);

@@ -26,7 +26,7 @@ interface IDebtModule is ICMTATDebt, ICMTATCreditEvents {
     function setDebt(
           ICMTATDebt.DebtInformation calldata debt_
     ) external;
-      /**
+    /**
      * @notice Set Credit Events
      */
     function setCreditEvents(

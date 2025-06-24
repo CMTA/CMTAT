@@ -5,7 +5,6 @@ pragma solidity ^0.8.20;
 /* ==== OpenZeppelin === */
 import {ERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 /* ==== Tokenization === */
-import {IERC3643ERC20Enforcement} from "../../interfaces/tokenization/IERC3643Partial.sol";
 import { IERC7551ERC20EnforcementTokenFrozenEvent, IERC7551ERC20EnforcementEvent} from "../../interfaces/tokenization/draft-IERC7551.sol";
 /**
  * @title ERC20Enforcement module internal.

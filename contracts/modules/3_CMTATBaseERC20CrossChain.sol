@@ -27,7 +27,7 @@ abstract contract CMTATBaseERC20CrossChain is CMTATBaseERC1404, IERC7802, IBurnF
     * @dev
     * Don't emit the same event as configured in the ERC20MintModule
     */
-    function crosschainMint(address to, uint256 value) external virtual onlyRole(CROSS_CHAIN_ROLE) whenNotPaused {
+    function crosschainMint(address to, uint256 value) public virtual onlyRole(CROSS_CHAIN_ROLE) whenNotPaused {
         _mintOverride(to, value);
         emit CrosschainMint(to, value,_msgSender());
     }
@@ -37,7 +37,7 @@ abstract contract CMTATBaseERC20CrossChain is CMTATBaseERC1404, IERC7802, IBurnF
     * @dev
     * Don't emit the same event as configured in the ERC20BurnModule
     */
-    function crosschainBurn(address from, uint256 value) external virtual onlyRole(CROSS_CHAIN_ROLE) whenNotPaused{
+    function crosschainBurn(address from, uint256 value) public virtual onlyRole(CROSS_CHAIN_ROLE) whenNotPaused{
         address sender =  _msgSender();
         _burnFrom(sender, from, value);
         emit CrosschainBurn(from, value, _msgSender());
@@ -58,7 +58,7 @@ abstract contract CMTATBaseERC20CrossChain is CMTATBaseERC1404, IERC7802, IBurnF
      * `value`.
      */
     function burnFrom(address account, uint256 value)
-        public override(IBurnFromERC20)
+        public virtual override(IBurnFromERC20) 
         onlyRole(BURNER_FROM_ROLE) whenNotPaused
     {
         address sender =  _msgSender();
@@ -66,6 +66,9 @@ abstract contract CMTATBaseERC20CrossChain is CMTATBaseERC1404, IERC7802, IBurnF
        
     }
 
+    /**
+    * @inheritdoc IBurnFromERC20
+    */
     function burn(
         uint256 value
     ) public virtual onlyRole(BURNER_FROM_ROLE) whenNotPaused {
@@ -86,9 +89,7 @@ abstract contract CMTATBaseERC20CrossChain is CMTATBaseERC1404, IERC7802, IBurnF
         // Allowance check
         ERC20Upgradeable._spendAllowance(account, sender, value );
         // burn
-        // We also emit a burn event since its a burn operation
         _burnOverride(account, value);
-        //_burn(account, value,  "burnFrom");
         // Specific event for the operation
         emit Spend(account, sender, value);
         emit BurnFrom(sender, account, sender, value);

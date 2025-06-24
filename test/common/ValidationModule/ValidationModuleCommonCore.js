@@ -73,7 +73,7 @@ function ValidationModuleCommonCore () {
           AMOUNT_TO_TRANSFER
         )
       ).to.equal(true)
-      
+
       await this.cmtat
         .connect(this.address1)
         .transfer(this.address2, AMOUNT_TO_TRANSFER)

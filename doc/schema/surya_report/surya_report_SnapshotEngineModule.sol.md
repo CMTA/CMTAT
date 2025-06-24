@@ -17,8 +17,8 @@
 ||||||
 | **SnapshotEngineModule** | Implementation | AccessControlUpgradeable, ISnapshotEngineModule |||
 | └ | __SnapshotEngineModule_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |
-| └ | snapshotEngine | Public ❗️ |   |NO❗️ |
 | └ | setSnapshotEngine | External ❗️ | 🛑  | onlyRole |
+| └ | snapshotEngine | Public ❗️ |   |NO❗️ |
 | └ | _setSnapshotEngine | Internal 🔒 | 🛑  | |
 | └ | _getSnapshotEngineModuleStorage | Private 🔐 |   | |
 

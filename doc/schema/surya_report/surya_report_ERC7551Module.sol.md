@@ -16,10 +16,10 @@
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
 | **ERC7551Module** | Implementation | ExtraInformationModule, IERC7551Document |||
-| └ | metaData | Public ❗️ |   |NO❗️ |
 | └ | setMetaData | Public ❗️ | 🛑  | onlyRole |
-| └ | termsHash | Public ❗️ |   |NO❗️ |
 | └ | setTerms | Public ❗️ | 🛑  | onlyRole |
+| └ | metaData | Public ❗️ |   |NO❗️ |
+| └ | termsHash | Public ❗️ |   |NO❗️ |
 | └ | _setMetaData | Internal 🔒 | 🛑  | |
 | └ | _getERC7551ModuleStorage | Private 🔐 |   | |
 

@@ -28,9 +28,46 @@ The interface and struct to represent Debt is available in `/contracts/interface
 
 This section describes the Ethereum API of Debt Module.
 
-<To do>
+### Interfaces
 
-### setDebt(ICMTATDebt.DebtInformation calldata debt_) 
+See `IDebtModule`
+
+```solidity
+<To do>interface IDebtModule is ICMTATDebt, ICMTATCreditEvents {
+    /* ============ Events ============ */
+     // No paramater to reduce contract size
+    event DebtLogEvent();
+    event CreditEventsLogEvent();
+    event DebtInstrumentLogEvent();
+
+    /* ============ Functions ============ */
+    /**
+     * @notice Set only the instrument
+     */
+    function setDebtInstrument(
+          ICMTATDebt.DebtInstrument calldata debtInstrument_
+    ) external;
+    
+    /**
+     * @notice Set the debt
+     */
+    function setDebt(
+          ICMTATDebt.DebtInformation calldata debt_
+    ) external;
+    /**
+     * @notice Set Credit Events
+     */
+    function setCreditEvents(
+       CreditEvents calldata creditEvents_
+    ) external; 
+}
+```
+
+
+
+### Functions
+
+#### setDebt(ICMTATDebt.DebtInformation calldata debt_) 
 
 Set debt
 
@@ -40,7 +77,7 @@ Set debt
  onlyRole(DEBT_ROLE)
 ```
 
-### setDebtInstrument(ICMTATDebt.DebtInstrument calldata debtInstrument_)
+#### setDebtInstrument(ICMTATDebt.DebtInstrument calldata debtInstrument_)
 
 Set only the instruments
 

@@ -12,49 +12,19 @@ import {ERC20EnforcementModule, ERC20EnforcementModuleInternal} from "./wrapper/
 // Controllers
 import {ValidationModuleERC1404, IERC1404, IERC1404Extend} from "./wrapper/extensions/ValidationModule/ValidationModuleERC1404.sol";
 import {ValidationModuleRuleEngine} from "./wrapper/extensions/ValidationModule/ValidationModuleRuleEngine.sol";
- /* ==== Interface and other library === */
-import {Errors} from "../libraries/Errors.sol";
+
 abstract contract CMTATBaseERC1404 is
     CMTATBaseRuleEngine,
     ValidationModuleERC1404
 {
+    /**
+    * @dev ERC20EnforcementModule error text
+    */
+    string internal constant TEXT_TRANSFER_REJECTED_FROM_INSUFFICIENT_ACTIVE_BALANCE =
+        "AddrFrom:insufficientActiveBalance";
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
-    /**
-    * @inheritdoc ValidationModuleERC1404
-    */
-    function detectTransferRestriction(
-        address from,
-        address to,
-        uint256 value
-    ) public virtual view override(ValidationModuleERC1404 ) returns (uint8 code) {
-        uint256 frozenTokensLocal = ERC20EnforcementModule.getFrozenTokens(from);
-        if(frozenTokensLocal > 0 ){
-            uint256 activeBalance = ERC20Upgradeable.balanceOf(from) - frozenTokensLocal;
-            if(value > activeBalance) {
-                return uint8(IERC1404Extend.REJECTED_CODE_BASE.TRANSFER_REJECTED_FROM_INSUFFICIENT_ACTIVE_BALANCE);
-            }
-        } 
-        return ValidationModuleERC1404.detectTransferRestriction(from, to, value);
-    }
-
-    /**
-    * @inheritdoc ValidationModuleERC1404
-    */
-    function detectTransferRestrictionFrom(
-        address spender,
-        address from,
-        address to,
-        uint256 value
-    ) public virtual view override(ValidationModuleERC1404 ) returns (uint8 code) {
-       uint8 returnCode = detectTransferRestriction(from, to, value);
-       if(returnCode != uint8(IERC1404Extend.REJECTED_CODE_BASE.TRANSFER_OK)){
-            return returnCode;
-       } else{
-            return ValidationModuleERC1404.detectTransferRestrictionFrom(spender, from, to, value);
-       }
-    }
 
     /**
     * @inheritdoc ValidationModuleERC1404
@@ -63,7 +33,7 @@ abstract contract CMTATBaseERC1404 is
         uint8 restrictionCode
     )  public view virtual override(ValidationModuleERC1404)  returns (string memory message) {
         if(restrictionCode == uint8(IERC1404Extend.REJECTED_CODE_BASE.TRANSFER_REJECTED_FROM_INSUFFICIENT_ACTIVE_BALANCE)){
-            return ERC20EnforcementModule.TEXT_TRANSFER_REJECTED_FROM_INSUFFICIENT_ACTIVE_BALANCE;
+            return TEXT_TRANSFER_REJECTED_FROM_INSUFFICIENT_ACTIVE_BALANCE;
         } else {
             return ValidationModuleERC1404.messageForTransferRestriction(restrictionCode);
         }
@@ -98,5 +68,23 @@ abstract contract CMTATBaseERC1404 is
         address account
     ) public view virtual override(AccessControlUpgradeable, CMTATBaseRuleEngine) returns (bool) {
         return CMTATBaseRuleEngine.hasRole(role, account);
+    }
+
+    /*//////////////////////////////////////////////////////////////
+                            INTERNAL/PRIVATE FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
+    function _detectTransferRestriction(
+        address from,
+        address to,
+        uint256 value
+    ) internal virtual override( ValidationModuleERC1404) view  returns (uint8 code) {
+        uint256 frozenTokensLocal = ERC20EnforcementModule.getFrozenTokens(from);
+        if(frozenTokensLocal > 0 ){
+            uint256 activeBalance = ERC20Upgradeable.balanceOf(from) - frozenTokensLocal;
+            if(value > activeBalance) {
+                return uint8(IERC1404Extend.REJECTED_CODE_BASE.TRANSFER_REJECTED_FROM_INSUFFICIENT_ACTIVE_BALANCE);
+            }
+        } 
+        return ValidationModuleERC1404._detectTransferRestriction(from, to, value);
     }
 }

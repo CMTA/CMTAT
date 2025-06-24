@@ -3,9 +3,13 @@
 pragma solidity ^0.8.20;
 import {IDocumentEngine} from "../interfaces/engine/IDocumentEngine.sol";
 interface IERC1643Whole is IDocumentEngine{
-    /// uri The URI of the document
-    /// @return documentHash The hash of the document contents
-    /// @return lastModified The timestamp of the last modification
+
+    /** 
+    * @dev 
+    * uri The URI of the document
+    * documentHash The hash of the document contents
+    * lastModified The timestamp of the last modification
+    */ 
     struct DocumentInfo {
         string name;
         string uri;

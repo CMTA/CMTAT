@@ -106,7 +106,9 @@ function EnforcementModuleCommon () {
 
     async function testUnfreeze (sender) {
       // Arrange
-      await this.cmtat.connect(sender).setAddressFrozen(this.address1, true, reasonFreeze)
+      await this.cmtat
+        .connect(sender)
+        .setAddressFrozen(this.address1, true, reasonFreeze)
       // Arrange - Assert
       expect(await this.cmtat.isFrozen(this.address1)).to.equal(true)
       if (!this.generic) {
@@ -192,7 +194,9 @@ function EnforcementModuleCommon () {
     it('testCannotNonEnforcerFreezeAddress', async function () {
       // Act
       await expect(
-        this.cmtat.connect(this.address2).setAddressFrozen(this.address1, true, reasonFreeze)
+        this.cmtat
+          .connect(this.address2)
+          .setAddressFrozen(this.address1, true, reasonFreeze)
       )
         .to.be.revertedWithCustomError(
           this.cmtat,
@@ -208,7 +212,9 @@ function EnforcementModuleCommon () {
       const freezes = []
       // Act
       await expect(
-        this.cmtat.connect(this.address2).batchSetAddressFrozen(accounts, freezes)
+        this.cmtat
+          .connect(this.address2)
+          .batchSetAddressFrozen(accounts, freezes)
       )
         .to.be.revertedWithCustomError(
           this.cmtat,
@@ -219,10 +225,14 @@ function EnforcementModuleCommon () {
 
     it('testCannotNonEnforcerUnfreezeAddress', async function () {
       // Arrange
-      await this.cmtat.connect(this.admin).setAddressFrozen(this.address1, true, reasonFreeze)
+      await this.cmtat
+        .connect(this.admin)
+        .setAddressFrozen(this.address1, true, reasonFreeze)
       // Act
       await expect(
-        this.cmtat.connect(this.address2).setAddressFrozen(this.address1, false, reasonFreeze)
+        this.cmtat
+          .connect(this.address2)
+          .setAddressFrozen(this.address1, false, reasonFreeze)
       )
         .to.be.revertedWithCustomError(
           this.cmtat,
@@ -236,7 +246,9 @@ function EnforcementModuleCommon () {
     it('testCannotTransferWhenFromIsFrozenWithTransfer', async function () {
       const AMOUNT_TO_TRANSFER = 10
       // Act
-      await this.cmtat.connect(this.admin).setAddressFrozen(this.address1, true, reasonFreeze)
+      await this.cmtat
+        .connect(this.admin)
+        .setAddressFrozen(this.address1, true, reasonFreeze)
       // Assert
       if (!this.erc1404 && !this.generic) {
         expect(
@@ -270,10 +282,14 @@ function EnforcementModuleCommon () {
       // Arrange
       // Define allowance
       if (!this.generic) {
-        await this.cmtat.connect(this.address3).approve(this.address1, AMOUNT_TO_TRANSFER)
+        await this.cmtat
+          .connect(this.address3)
+          .approve(this.address1, AMOUNT_TO_TRANSFER)
       }
       // Act
-      await this.cmtat.connect(this.admin).setAddressFrozen(this.address2, true, reasonFreeze)
+      await this.cmtat
+        .connect(this.admin)
+        .setAddressFrozen(this.address2, true, reasonFreeze)
       if (!this.erc1404 && !this.generic) {
         // Assert
         expect(
@@ -306,11 +322,15 @@ function EnforcementModuleCommon () {
       // Arrange
       // Define allowance
       if (!this.generic) {
-        await this.cmtat.connect(this.address3).approve(this.address1, AMOUNT_TO_TRANSFER)
+        await this.cmtat
+          .connect(this.address3)
+          .approve(this.address1, AMOUNT_TO_TRANSFER)
       }
 
       // Act
-      await this.cmtat.connect(this.admin).setAddressFrozen(this.address1, true, reasonFreeze)
+      await this.cmtat
+        .connect(this.admin)
+        .setAddressFrozen(this.address1, true, reasonFreeze)
 
       if (!this.generic) {
         expect(
@@ -358,9 +378,7 @@ function EnforcementModuleCommon () {
 
       // Act
       await expect(
-        this.cmtat
-          .connect(this.admin)
-          .batchSetAddressFrozen(accounts, freeze)
+        this.cmtat.connect(this.admin).batchSetAddressFrozen(accounts, freeze)
       ).to.be.revertedWithCustomError(
         this.cmtat,
         'CMTAT_Enforcement_AccountsValueslengthMismatch'
@@ -371,9 +389,7 @@ function EnforcementModuleCommon () {
       const accounts = []
       const freeze = [false, false]
       await expect(
-        this.cmtat
-          .connect(this.admin)
-          .batchSetAddressFrozen(accounts, freeze)
+        this.cmtat.connect(this.admin).batchSetAddressFrozen(accounts, freeze)
       ).to.be.revertedWithCustomError(
         this.cmtat,
         'CMTAT_Enforcement_EmptyAccounts'
