@@ -2,15 +2,15 @@
 
 pragma solidity ^0.8.20;
 import {UUPSUpgradeable} from "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
-import {CMTATBaseOption} from "../modules/4_CMTATBaseOption.sol";
+import {CMTATBaseERC2771} from "../modules/4_CMTATBaseERC2771.sol";
 import {CMTATBaseRuleEngine} from "../modules/1_CMTATBaseRuleEngine.sol";
-import {MetaTxModule} from "../modules/wrapper/options/MetaTxModule.sol";
-import {ICMTATConstructor, CMTATBase} from "../modules/2_CMTATBase.sol";
+import {ERC2771Module} from "../modules/wrapper/options/ERC2771Module.sol";
+import {ICMTATConstructor} from "../interfaces/technical/ICMTATConstructor.sol";
 
 /**
 * @title CMTAT version for a proxy deployment with UUPS proxy
 */
-contract CMTATUpgradeableUUPS is CMTATBaseOption, UUPSUpgradeable  {
+contract CMTATUpgradeableUUPS is CMTATBaseERC2771, UUPSUpgradeable  {
     bytes32 public constant PROXY_UPGRADE_ROLE = keccak256("PROXY_UPGRADE_ROLE");
     /**
      * @notice Contract version for the deployment with a proxy
@@ -19,7 +19,7 @@ contract CMTATUpgradeableUUPS is CMTATBaseOption, UUPSUpgradeable  {
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor(
         address forwarderIrrevocable
-    ) MetaTxModule(forwarderIrrevocable) {
+    ) ERC2771Module(forwarderIrrevocable) {
         // Disable the possibility to initialize the implementation
         _disableInitializers();
     }

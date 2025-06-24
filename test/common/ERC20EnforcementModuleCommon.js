@@ -489,7 +489,6 @@ function ERC20EnforcementModuleCommon () {
       expect(await this.cmtat.getFrozenTokens(this.address1)).to.equal(FREEZE_AMOUNT)
     })
 
-    // reverts if address1 transfers tokens to address2 when paused
     it('testCannotTransferMoreThanActiveBalance', async function () {
       const AMOUNT_TO_TRANSFER = INITIAL_BALANCE - FREEZE_AMOUNT + 1
       // Act
@@ -513,15 +512,9 @@ function ERC20EnforcementModuleCommon () {
           .connect(this.address1)
           .transfer(this.address2, AMOUNT_TO_TRANSFER)
       )
-        .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
-        .withArgs(
-          this.address1.address,
-          this.address2.address,
-          AMOUNT_TO_TRANSFER
-        )
+        .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_ERC20EnforcementModule_ValueExceedsActiveBalance')
     })
 
-    // reverts if address3 transfers tokens from address1 to this.address2 when paused
     it('testCanTransferTokenIfActiveBalanceIsEnough', async function () {
       const AMOUNT_TO_TRANSFER = INITIAL_BALANCE - FREEZE_AMOUNT
       // Arrange
@@ -559,7 +552,6 @@ function ERC20EnforcementModuleCommon () {
       }
     })
 
-    // reverts if address3 transfers tokens from address1 to this.address2 when paused
     it('testCannotTransferFromTokenIfActiveBalanceIsNotEnough', async function () {
       const AMOUNT_TO_TRANSFER = INITIAL_BALANCE - FREEZE_AMOUNT + 1
       // Arrange
@@ -576,7 +568,6 @@ function ERC20EnforcementModuleCommon () {
           AMOUNT_TO_TRANSFER
         )
       ).to.equal(false)
-
       expect(
         await this.cmtat.canTransferFrom(
           this.address3,
@@ -604,12 +595,7 @@ function ERC20EnforcementModuleCommon () {
           .connect(this.address3)
           .transferFrom(this.address1, this.address2, AMOUNT_TO_TRANSFER)
       )
-        .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
-        .withArgs(
-          this.address1.address,
-          this.address2.address,
-          AMOUNT_TO_TRANSFER
-        )
+        .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_ERC20EnforcementModule_ValueExceedsActiveBalance')
     })
 
         it('testCannotTransferFromTokenIfActiveBalanceIsNotEnough', async function () {
@@ -664,12 +650,7 @@ function ERC20EnforcementModuleCommon () {
           .connect(this.address3)
           .transferFrom(this.address1, this.address2, AMOUNT_TO_TRANSFER)
       )
-        .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
-        .withArgs(
-          this.address1.address,
-          this.address2.address,
-          AMOUNT_TO_TRANSFER
-        )
+        .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_ERC20EnforcementModule_ValueExceedsActiveBalance')
     })
 
     /* it('testFreezeDoesNotEmitEventIfAddressAlreadyisFrozen', async function () {

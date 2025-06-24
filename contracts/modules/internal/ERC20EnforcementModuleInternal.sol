@@ -4,20 +4,19 @@ pragma solidity ^0.8.20;
 
 /* ==== OpenZeppelin === */
 import {ERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
-/* ==== Module === */
-import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
-
 /* ==== Tokenization === */
 import {IERC3643ERC20Enforcement} from "../../interfaces/tokenization/IERC3643Partial.sol";
 import { IERC7551ERC20EnforcementTokenFrozenEvent, IERC7551ERC20EnforcementEvent} from "../../interfaces/tokenization/draft-IERC7551.sol";
 /**
- * @title ERC20Enforcement module.
+ * @title ERC20Enforcement module internal.
  * @dev 
  *
- * Contains all burn functions, inherits from ERC-20
+ * Contains specific ERC-20 enforcement actions
  */
 abstract contract ERC20EnforcementModuleInternal is ERC20Upgradeable,IERC7551ERC20EnforcementEvent,  IERC7551ERC20EnforcementTokenFrozenEvent {
+    // no argument to reduce conract code size
     error CMTAT_ERC20EnforcementModule_ValueExceedsAvailableBalance();
+    error CMTAT_ERC20EnforcementModule_ValueExceedsActiveBalance();
     error CMTAT_ERC20EnforcementModule_ValueExceedsFrozenBalance(); 
     /* ============ ERC-7201 ============ */
     // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.ERC20EnforcementModule")) - 1)) & ~bytes32(uint256(0xff))
@@ -30,16 +29,6 @@ abstract contract ERC20EnforcementModuleInternal is ERC20Upgradeable,IERC7551ERC
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
-    function _getFrozenTokens(address account) internal view virtual returns (uint256) {
-        ERC20EnforcementModuleStorage storage $ = _getEnforcementModuleStorage();
-        return $._frozenTokens[account];
-     }
-
-    function _getActiveBalanceOf(address account) internal view  returns (uint256){
-        ERC20EnforcementModuleStorage storage $ = _getEnforcementModuleStorage();
-        return ERC20Upgradeable.balanceOf(account) - $._frozenTokens[account];
-     }
-
      function _freezePartialTokens(address account, uint256 value, bytes memory data) internal virtual{
        ERC20EnforcementModuleStorage storage $ = _getEnforcementModuleStorage();
         // Retrieve current value
@@ -103,8 +92,13 @@ abstract contract ERC20EnforcementModuleInternal is ERC20Upgradeable,IERC7551ERC
         emit Enforcement(_msgSender(), from, value, data);
     }
 
+    /* ============ View functions ============ */
+    function _checkActiveBalanceAndRevert(address from, uint256 value) internal virtual view{
+        require(_checkActiveBalance(from, value),  CMTAT_ERC20EnforcementModule_ValueExceedsActiveBalance() );
+    }
+
     function _checkActiveBalance(address from, uint256 value) internal virtual view returns(bool){
-         uint256 frozenTokensLocal = _getFrozenTokens(from);
+        uint256 frozenTokensLocal = _getFrozenTokens(from);
         if(frozenTokensLocal > 0 ){
             uint256 activeBalance = balanceOf(from) - frozenTokensLocal;
             if(value > activeBalance) {
@@ -112,8 +106,17 @@ abstract contract ERC20EnforcementModuleInternal is ERC20Upgradeable,IERC7551ERC
             }
         } 
         return true;
-
     }
+
+    function _getFrozenTokens(address account) internal view virtual returns (uint256) {
+        ERC20EnforcementModuleStorage storage $ = _getEnforcementModuleStorage();
+        return $._frozenTokens[account];
+     }
+
+    function _getActiveBalanceOf(address account) internal view  returns (uint256){
+        ERC20EnforcementModuleStorage storage $ = _getEnforcementModuleStorage();
+        return ERC20Upgradeable.balanceOf(account) - $._frozenTokens[account];
+     }
 
     /* ============ ERC-7201 ============ */
     function _getEnforcementModuleStorage() private pure returns (ERC20EnforcementModuleStorage storage $) {

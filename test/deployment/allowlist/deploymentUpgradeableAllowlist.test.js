@@ -32,7 +32,7 @@ describe('CMTAT Allowlist - Upgradeable', function () {
     await this.cmtat
       .connect(this.admin)
       .batchSetAddressAllowlist(accounts, Allowlist)
-    this.core = true
+    this.erc1404 = true
     this.dontCheckTimestamp = true
   })
   // Core

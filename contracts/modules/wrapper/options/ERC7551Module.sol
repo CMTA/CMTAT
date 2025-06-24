@@ -3,7 +3,6 @@
 pragma solidity ^0.8.20;
 
 /* ==== Module === */
-import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 import {ExtraInformationModule} from "../extensions/ExtraInformationModule.sol";
 /* ==== Tokenization === */
 import {IERC1643CMTAT, IERC1643} from "../../../interfaces/tokenization/draft-IERC1643CMTAT.sol";
@@ -25,35 +24,42 @@ abstract contract ERC7551Module is ExtraInformationModule, IERC7551Document {
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
+
+    /* ============ State Restricted Functions ============ */
+
+    /** 
+    *   
+    * @inheritdoc IERC7551Document
+    * @dev The metadata will be changed even if the new value is the same as the current one
+    */
+    function setMetaData(
+        string calldata metadata_
+    ) public virtual override(IERC7551Document) onlyRole(EXTRA_INFORMATION_ROLE) {
+        ERC7551ModuleStorage storage $ = _getERC7551ModuleStorage();
+        _setMetaData($,  metadata_);
+    }
+
+    /**
+    *  @inheritdoc IERC7551Document
+    */
+    function setTerms(bytes32 hash, string calldata uri) public virtual override(IERC7551Document) onlyRole(EXTRA_INFORMATION_ROLE) {
+        IERC1643CMTAT.DocumentInfo memory terms = IERC1643CMTAT.DocumentInfo("", uri, hash);
+        _setTerms(terms);
+    }
+
+    /* ============ View functions ============ */
     function metaData() public view virtual override(IERC7551Document) returns (string memory) {
         ERC7551ModuleStorage storage $ = _getERC7551ModuleStorage();
         return $._metadata;
     }
 
-    /* ============  Restricted Functions ============ */
-
-    /** 
-    * 
-    * @notice The metadata will be changed even if the new value is the same as the current one
+    /**
+    *  @inheritdoc IERC7551Document
     */
-    function setMetaData(
-        string calldata metadata_
-    ) public override(IERC7551Document) onlyRole(EXTRA_INFORMATION_ROLE) {
-        ERC7551ModuleStorage storage $ = _getERC7551ModuleStorage();
-        _setMetaData($,  metadata_);
-    }
-
-        /**
-    *  @notice MUST return the SHA-256 (or Keccak-256) hash of the “Terms” document.
-    */
-    function termsHash() public view virtual override returns (bytes32){
+    function termsHash() public view virtual override(IERC7551Document) returns (bytes32){
         return terms().doc.documentHash;
     }
 
-    function setTerms(bytes32 hash, string calldata uri) onlyRole(EXTRA_INFORMATION_ROLE) public virtual override{
-        IERC1643CMTAT.DocumentInfo memory terms = IERC1643CMTAT.DocumentInfo("", uri, hash);
-        _setTerms(terms);
-    }
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/

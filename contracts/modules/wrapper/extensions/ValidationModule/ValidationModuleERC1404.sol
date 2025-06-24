@@ -32,6 +32,9 @@ abstract contract ValidationModuleERC1404 is
     string internal constant TEXT_TRANSFER_REJECTED_PAUSED =
         "EnforcedPause";
 
+    /*//////////////////////////////////////////////////////////////
+                            PUBLIC/EXTERNAL FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
     /**
      * @notice returns the human readable explaination 
      * corresponding to the error code returned by detectTransferRestriction
@@ -108,10 +111,9 @@ abstract contract ValidationModuleERC1404 is
             return uint8(IERC1404Extend.REJECTED_CODE_BASE.TRANSFER_REJECTED_SPENDER_FROZEN);
         }  else if (codeReturn != uint8(IERC1404Extend.REJECTED_CODE_BASE.TRANSFER_OK) ){
             return codeReturn;
-        }
-        else if (address(ruleEngine_) != address(0)) {
+        } else if (address(ruleEngine_) != address(0)) {
             return ruleEngine_.detectTransferRestrictionFrom(spender, from, to, value);
-        } else{
+        } else { 
             return uint8(IERC1404Extend.REJECTED_CODE_BASE.TRANSFER_OK);
         }
     }
@@ -123,7 +125,7 @@ abstract contract ValidationModuleERC1404 is
     function _detectTransferRestriction(
         address from,
         address to
-    ) public virtual view  returns (uint8 code) {
+    ) internal virtual view  returns (uint8 code) {
         if (paused()) {
             return uint8(IERC1404Extend.REJECTED_CODE_BASE.TRANSFER_REJECTED_PAUSED);
         } else if (isFrozen(from)) {

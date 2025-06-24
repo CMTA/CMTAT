@@ -110,7 +110,7 @@ function DebtModuleCommon () {
     it('testCanSetAndGetCreditEventsCorrectly', async function () {
       this.logs = await this.cmtat.connect(this.admin).setCreditEvents(creditEvents)
       await expect(this.logs)
-      .to.emit(this.cmtat, 'CreditEventLogEvent')
+      .to.emit(this.cmtat, 'CreditEventsLogEvent')
       const events = await this.cmtat.creditEvents()
       expect(events.flagDefault).to.equal(creditEvents.flagDefault)
       expect(events.flagRedeemed).to.equal(creditEvents.flagRedeemed)

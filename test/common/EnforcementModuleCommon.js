@@ -233,7 +233,6 @@ function EnforcementModuleCommon () {
       expect(await this.cmtat.isFrozen(this.address1)).to.equal(true)
     })
 
-    // reverts if address1 transfers tokens to address2 when paused
     it('testCannotTransferWhenFromIsFrozenWithTransfer', async function () {
       const AMOUNT_TO_TRANSFER = 10
       // Act
@@ -266,7 +265,6 @@ function EnforcementModuleCommon () {
       }
     })
 
-    // reverts if address3 transfers tokens from address1 to this.address2 when paused
     it('testCannotTransferTokenWhenToIsisFrozenWithTransferFrom', async function () {
       const AMOUNT_TO_TRANSFER = 10
       // Arrange

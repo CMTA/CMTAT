@@ -24,10 +24,6 @@ abstract contract DocumentEngineModule is IDocumentEngineModule, AccessControlUp
     /* ==== ERC-7201 State Variables === */
     struct DocumentEngineModuleStorage {
         IERC1643  _documentEngine;
-        // DocumentModule
-        // Mapping from contract addresses to document names to their corresponding Document structs
-        mapping(string => Document)  _documents;
-        string[]  _documentNames;
     }
 
     /* ============  Initializer Function ============ */
@@ -92,7 +88,7 @@ abstract contract DocumentEngineModule is IDocumentEngineModule, AccessControlUp
     }
 
     /* ============ ERC-7201 ============ */
-    function _getDocumentEngineModuleStorage() internal pure returns (DocumentEngineModuleStorage storage $) {
+    function _getDocumentEngineModuleStorage() private pure returns (DocumentEngineModuleStorage storage $) {
         assembly {
             $.slot := DocumentEngineModuleStorageLocation
         }

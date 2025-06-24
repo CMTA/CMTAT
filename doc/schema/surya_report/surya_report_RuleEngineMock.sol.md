@@ -22,8 +22,10 @@
 | └ | rule | External ❗️ |   |NO❗️ |
 | └ | rules | External ❗️ |   |NO❗️ |
 | └ | detectTransferRestriction | Public ❗️ |   |NO❗️ |
+| └ | detectTransferRestrictionFrom | Public ❗️ |   |NO❗️ |
 | └ | canTransfer | Public ❗️ |   |NO❗️ |
 | └ | canTransferFrom | Public ❗️ |   |NO❗️ |
+| └ | transferred | Public ❗️ |   |NO❗️ |
 | └ | transferred | Public ❗️ |   |NO❗️ |
 | └ | messageForTransferRestriction | Public ❗️ |   |NO❗️ |
 

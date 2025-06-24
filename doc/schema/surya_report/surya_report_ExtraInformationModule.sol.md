@@ -15,17 +15,15 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **ExtraInformationModule** | Implementation | IERC7551Base, ICMTATBase, AuthorizationModule |||
+| **ExtraInformationModule** | Implementation | AccessControlUpgradeable, ICMTATBase |||
 | └ | __ExtraInformationModule_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |
 | └ | tokenId | Public ❗️ |   |NO❗️ |
 | └ | terms | Public ❗️ |   |NO❗️ |
 | └ | information | Public ❗️ |   |NO❗️ |
-| └ | metaData | Public ❗️ |   |NO❗️ |
 | └ | setTokenId | Public ❗️ | 🛑  | onlyRole |
 | └ | setTerms | Public ❗️ | 🛑  | onlyRole |
 | └ | setInformation | Public ❗️ | 🛑  | onlyRole |
-| └ | setMetaData | Public ❗️ | 🛑  | onlyRole |
-| └ | _setMetaData | Internal 🔒 | 🛑  | |
+| └ | _setTerms | Internal 🔒 | 🛑  | |
 | └ | _setTokenId | Internal 🔒 | 🛑  | |
 | └ | _setTerms | Internal 🔒 | 🛑  | |
 | └ | _setInformation | Internal 🔒 | 🛑  | |

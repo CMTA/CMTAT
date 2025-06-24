@@ -6,7 +6,7 @@ import {ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/Cont
 import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import {EnforcementModuleLibrary} from "./common/EnforcementModuleLibrary.sol";
 /**
- * @dev Enforcement module.
+ * @dev Allowlist module internal.
  *
  * Allows the issuer to freeze transfers from a given address
  */
@@ -34,6 +34,7 @@ abstract contract AllowlistModuleInternal is
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
+    /* ============ State functions ============ */
 
     function _addToAllowlist(address account, bool status, bytes memory data) internal virtual{
         AllowlistModuleInternalStorage storage $ = _getAllowlistModuleInternalStorage();
@@ -55,17 +56,18 @@ abstract contract AllowlistModuleInternal is
     /**
      * @dev Returns true if the account is frozen, and false otherwise.
      */
-    function _isAllowlisted(address account) internal view virtual returns (bool) {
-        AllowlistModuleInternalStorage storage $ = _getAllowlistModuleInternalStorage();
-        return $._allowlist[account];
-    }
-
-    /**
-     * @dev Returns true if the account is frozen, and false otherwise.
-     */
     function _enableAllowlist(bool status) internal virtual {
         AllowlistModuleInternalStorage storage $ = _getAllowlistModuleInternalStorage();
         $._enableAllowlist = status;
+    }
+
+    /* ============ View functions ============ */
+    /**
+     * @dev Returns true if the account is frozen, and false otherwise.
+     */
+    function _isAllowlisted(address account) internal view virtual returns (bool) {
+        AllowlistModuleInternalStorage storage $ = _getAllowlistModuleInternalStorage();
+        return $._allowlist[account];
     }
 
     /**

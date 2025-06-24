@@ -104,7 +104,10 @@ describe('ERC721MockUpgradeable', function () {
   })
 
   it('testCannotMintIfContractIsDeactivated', async function () {
+    // Arrange
+    await this.cmtat.connect(this.admin).pause()
     await this.cmtat.connect(this.admin).deactivateContract()
+    // Act
     await expect(this.cmtat.mint(this.admin, 1)).to.be.revertedWithCustomError(
       this.cmtat,
       'CMTAT_InvalidTransfer').withArgs(ZERO_ADDRESS, this.admin, 1)

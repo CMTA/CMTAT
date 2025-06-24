@@ -24,6 +24,7 @@
 | └ | _canTransferFromWithRuleEngine | Internal 🔒 |   | |
 | └ | _canTransferWithRuleEngine | Internal 🔒 |   | |
 | └ | _transferred | Internal 🔒 | 🛑  | |
+| └ | _transferred | Internal 🔒 | 🛑  | |
 
 
 ### Legend

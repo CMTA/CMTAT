@@ -3,20 +3,24 @@
 pragma solidity ^0.8.20;
 /* ==== OpenZeppelin === */
 import {ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
+import {AccessControlUpgradeable} from "./wrapper/security/AccessControlModule.sol";
 /* ==== Module === */
-import {AccessControlUpgradeable, CMTATBase, CMTATBaseOption, CMTATBaseERC20CrossChain} from "./4_CMTATBaseOption.sol";
-import {CMTATBase} from "./2_CMTATBase.sol";
+import {CMTATBaseERC1404, CMTATBaseERC2771, CMTATBaseERC20CrossChain} from "./4_CMTATBaseERC2771.sol";
 import {ERC7551Module} from "./wrapper/options/ERC7551Module.sol";
 /**
 * @title Extend CMTAT Base Option with ERC7551Module
 */
-abstract contract CMTATBaseERC7551 is CMTATBaseOption, ERC7551Module {
-    // nothing to do
+abstract contract CMTATBaseERC7551 is CMTATBaseERC2771, ERC7551Module {
+    /*//////////////////////////////////////////////////////////////
+                            PUBLIC/EXTERNAL FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
+
+    /* ============ View functions ============ */
     function hasRole(
         bytes32 role,
         address account
-    ) public view virtual override(AccessControlUpgradeable, CMTATBase) returns (bool) {
-        return CMTATBase.hasRole(role, account);
+    ) public view virtual override(AccessControlUpgradeable, CMTATBaseERC1404) returns (bool) {
+        return CMTATBaseERC1404.hasRole(role, account);
     }
 
      /**
@@ -26,40 +30,40 @@ abstract contract CMTATBaseERC7551 is CMTATBaseOption, ERC7551Module {
         return AccessControlUpgradeable.supportsInterface(interfaceId) || CMTATBaseERC20CrossChain.supportsInterface(interfaceId);
     }
 
-        /*//////////////////////////////////////////////////////////////
-                            METAXTX MODULE
+    /*//////////////////////////////////////////////////////////////
+                           ERC2771 MODULE
     //////////////////////////////////////////////////////////////*/
     /**
-    * @inheritdoc CMTATBaseOption
+    * @inheritdoc CMTATBaseERC2771
     */
     function _msgSender()
         internal
         view
-        override(ContextUpgradeable, CMTATBaseOption)
+        override(ContextUpgradeable, CMTATBaseERC2771)
         returns (address sender)
     {
-        return CMTATBaseOption._msgSender();
+        return CMTATBaseERC2771._msgSender();
     }
 
     /**
-    * @inheritdoc CMTATBaseOption
+    * @inheritdoc CMTATBaseERC2771
     */
     function _contextSuffixLength() internal view 
-    override(ContextUpgradeable, CMTATBaseOption)
+    override(ContextUpgradeable, CMTATBaseERC2771)
     returns (uint256) {
-         return CMTATBaseOption._contextSuffixLength();
+         return CMTATBaseERC2771._contextSuffixLength();
     }
 
     /**
-    * @inheritdoc CMTATBaseOption
+    * @inheritdoc CMTATBaseERC2771
     */
     function _msgData()
         internal
         view
-        override(ContextUpgradeable, CMTATBaseOption)
+        override(ContextUpgradeable, CMTATBaseERC2771)
         returns (bytes calldata)
     {
-        return CMTATBaseOption._msgData();
+        return CMTATBaseERC2771._msgData();
     }
 
 }

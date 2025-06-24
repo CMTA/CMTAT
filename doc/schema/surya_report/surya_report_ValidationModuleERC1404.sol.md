@@ -15,9 +15,11 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **ValidationModuleERC1404** | Implementation | ValidationModuleRuleEngine, IERC1404 |||
+| **ValidationModuleERC1404** | Implementation | ValidationModuleRuleEngine, IERC1404Extend |||
 | └ | messageForTransferRestriction | Public ❗️ |   |NO❗️ |
 | └ | detectTransferRestriction | Public ❗️ |   |NO❗️ |
+| └ | detectTransferRestrictionFrom | Public ❗️ |   |NO❗️ |
+| └ | _detectTransferRestriction | Internal 🔒 |   | |
 
 
 ### Legend

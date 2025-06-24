@@ -246,7 +246,7 @@ Warning: `batchTransfer` is restricted to the MINTER_ROLE to avoid the possibili
 | `forcedTransfer(address _from, address _to, uint256 _amount) external returns (bool)` | `forcedTransfer(address from, address to, uint256 value) external returns (bool)` | All except Light version |
 | `batchForcedTransfer(address[] calldata _fromList, address[] calldata _toList, uint256[] calldata _amounts) external` | Not implemented                                              | -                        |
 
-##### ValidationModuleC
+##### ValidationModuleCore
 
 Note: `canTransfer` is defined for the compliance contract in ERC-3643.
 
@@ -313,6 +313,8 @@ function forcedTransfer(address account, address to, uint256 value, bytes callda
 
 // IERC7551Compliance
 // ValidationModuleCore
+
+// Same as IERC3643ComplianceRead
 function canTransfer(address from, address to, uint256 value) external view returns (bool);
 function canTransferFrom(
         address spender,
@@ -322,8 +324,10 @@ function canTransferFrom(
     )  external view returns (bool);
 
 
-// IERC7551Base
-// ExtraInformationModule
+// IERC7551Document
+// IERC7551Module
+function termsHash() external view returns (bytes32);
+function setTerms(bytes32 _hash, string calldata _uri) external;
 function metaData() external view returns (string memory);
 function setMetaData(string calldata metaData_) external;
 ```
@@ -513,11 +517,11 @@ Base contracts are used by the different deployable contracts (CMTATStandalone, 
 | [CMTATBaseOption](./contracts/modules/CMTATBaseOption.sol)   | Inherits from CMTATBase, but also from several other option modules | CMTAT Standalone / Upgradeable                             |
 | [CMTATBaseAllowlist](./contracts/modules/CMTATBaseAllowlist.sol) | Inherits from CMTATBaseCommon, but also from ValidationModuleAllowlist | CMTAT Allowlist (upgradeable & Standalone)                 |
 
+#### Level 0 (main modules)
+
+#### CMTAT Base Common
 
 
-#### CMTATBase
-
-![CMTATBase](./doc/schema/uml/CMTATBaseUML.png)
 
 ![CMTATBaseCommon](./doc/schema/uml/CMTATBaseCommonUML.png)
 
@@ -525,7 +529,7 @@ CMTAT Base adds several functions:
 
 - `burnAndMint`to burn and mint atomically in the same function.
 
-#### CMTAT Base Core
+##### CMTAT Base Core
 
 CMTAT Base Core adds several functions: 
 
@@ -538,31 +542,67 @@ CMTAT Base Core adds several functions:
 
 
 
-#### CMTAT ERC1363 Base
+##### CMTAT Base Generic
+
+![surya_inheritance_CMTATBaseGeneric.sol](./doc/schema/surya_inheritance/surya_inheritance_0_CMTATBaseGeneric.sol.png)
+
+
+
+#### Level 1 (ERC-20 Transfer restriction)
+
+##### CMTAT Base RuleEngine
+
+![surya_inheritance_CMTATBaseWhitelist.sol](./doc/schema/surya_inheritance/surya_inheritance_1_CMTATBaseRuleEngine.sol.png)
+
+##### CMTAT Base Allowlist
+
+![surya_inheritance_CMTATBaseWhitelist.sol](./doc/schema/surya_inheritance/surya_inheritance_1_CMTATBaseAllowlist.sol.png)
+
+
+
+##### Level 2 (add heavy modules)
+
+##### CMTATBaseERC1404
+
+![surya_inheritance_CMTATBase.sol](./doc/schema/surya_inheritance/surya_inheritance_2_CMTATBase.sol.png)
+
+
+
+#### Level 3 (Add cross-chain modules)
+
+![surya_inheritance_CMTATBase.sol](./doc/schema/surya_inheritance/surya_inheritance_3_CMTATBaseERC20CrossChain.sol.png)
+
+#### Level 4
+
+##### CMTAT Base ERC2771
+
+![surya_inheritance_CMTATBaseOption.sol](./doc/schema/surya_inheritance/surya_inheritance_4_CMTATBaseOption.sol.png)
+
+#### Level 5 (use case)
+
+##### CMTAT Base ERC1363  (payable token)
 
 
 
 
 
-![surya_inheritance_CMTATERC1363Base.sol](./doc/schema/surya_inheritance/surya_inheritance_CMTATBaseERC1363.sol.png)
+![surya_inheritance_CMTATERC1363Base.sol](./doc/schema/surya_inheritance/surya_inheritance_5_CMTATBaseERC1363.sol.png)
 
 
 
 
 
-#### CMTAT Base Option
-
-![surya_inheritance_CMTATBaseOption.sol](./doc/schema/surya_inheritance/surya_inheritance_CMTATBaseOption.sol.png)
-
-#### CMTAT Base Generic
-
-![surya_inheritance_CMTATBaseGeneric.sol](./doc/schema/surya_inheritance/surya_inheritance_CMTATBaseGeneric.sol.png)
+##### CMTAT  Base ERC7551 ()
 
 
 
-#### CMTAT Base Allowlist
 
-![surya_inheritance_CMTATBaseWhitelist.sol](./doc/schema/surya_inheritance/surya_inheritance_CMTATBaseAllowlist.sol.png)
+
+![surya_inheritance_CMTATERC1363Base.sol](./doc/schema/surya_inheritance/surya_inheritance_5_CMTATBaseERC7551.sol.png)
+
+
+
+
 
 
 
@@ -1172,7 +1212,9 @@ The `kill()` function will therefore not behave as it was used, and we have repl
 
 ###### How it works
 
-This function sets a boolean state variable `isDeactivated` to true and puts the contract in the pause state.
+Firstly, the contract must be in `pause`state, by calling the function `pause`, otherwise the function reverts.
+
+This function sets a boolean state variable `isDeactivated` to true.
 The function `unpause `is updated to revert if the previous variable is set to true, thus the contract is in the pause state "forever".
 
 The consequences are the following:
@@ -1753,6 +1795,12 @@ Access control is managed thanks to the module `AuthorizationModule`.
 
 The contracts have been audited by [ABDKConsulting](https://www.abdk.consulting/), a globally recognized firm specialized in smart contracts security.
 
+#### Out of scope
+
+Mocks contracts in the directory [contracts/mocks](./contracts/mocks) are not audited and are not intended for use in production.
+
+They are only used for testing.
+
 #### First audit - September 2021
 
 Fixed version: [1.0](https://github.com/CMTA/CMTAT/releases/tag/1.0)
@@ -1810,21 +1858,45 @@ A code coverage is available in [index.html](doc/test/coverage/index.html).
 As with any token contract, access to the owner key must be adequately restricted.
 Likewise, access to the proxy contract must be restricted and seggregated from the token contract.
 
----
+## Usage
 
-## Other implementations
+### Solidity style guideline
 
-Two versions are available for the blockchain [Tezos](https://tezos.com)
-- [CMTAT FA2](https://github.com/CMTA/CMTAT-Tezos-FA2) Official version written in SmartPy
-- [@ligo/cmtat](https://github.com/ligolang/CMTAT-Ligo/) Unofficial version written in Ligo
-  - See also [Tokenization of securities on Tezos by Frank Hillard](https://medium.com/@frank.hillard_62931/tokenization-of-securities-on-tezos-2e3c3e90fc5a)
+CMTAT tries to follow the solidity style guideline present here: [https://docs.soliditylang.org/en/latest/style-guide.html](https://docs.soliditylang.org/en/latest/style-guide.html)
 
-A specific version is available for [Aztec](https://aztec.network/)
+- Orders of Functions
 
-- [Aztec Private CMTAT](https://github.com/taurushq-io/private-CMTAT-aztec)
-  - See also [Taurus - Addressing the Privacy and Compliance Challenge in Public Blockchain Token Transactions](https://www.taurushq.com/blog/enhancing-token-transaction-privacy-on-public-blockchains-while-ensuring-compliance/) 
+Functions are grouped according to their visibility and ordered:
 
-## Configuration & toolchain
+```
+1. constructor
+
+2. receive function (if exists)
+
+3. fallback function (if exists)
+
+4. external
+
+5. public
+
+6. internal
+
+7. private
+```
+
+Within a grouping, place the `view` and `pure` functions last
+
+- Function declaration
+
+```
+1. Visibility
+2. Mutability
+3. Virtual
+4. Override
+5. Custom modifiers
+```
+
+### Configuration & toolchain
 
 The project is built with [Hardhat](https://hardhat.org) and uses [OpenZeppelin](https://www.openzeppelin.com/solidity-contracts)
 
@@ -1839,8 +1911,7 @@ More information in [USAGE.md](doc/USAGE.md)
   - OpenZeppelin Contracts (Node.js module): [v5.3.0](https://github.com/OpenZeppelin/openzeppelin-contracts/releases/tag/v5.3.0) 
   - OpenZeppelin Contracts Upgradeable (Node.js module): [v5.3.0](https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/releases/tag/v5.3.0)
 
-
-## Contract size
+### Contract size
 
 ```bash
 npm run-script size
@@ -1848,6 +1919,21 @@ npm run-script size
 
 
 ![contract-size](./doc/general/contract-size.png)
+
+---
+
+## Other implementations
+
+Two versions are available for the blockchain [Tezos](https://tezos.com)
+- [CMTAT FA2](https://github.com/CMTA/CMTAT-Tezos-FA2) Official version written in SmartPy
+- [@ligo/cmtat](https://github.com/ligolang/CMTAT-Ligo/) Unofficial version written in Ligo
+  - See also [Tokenization of securities on Tezos by Frank Hillard](https://medium.com/@frank.hillard_62931/tokenization-of-securities-on-tezos-2e3c3e90fc5a)
+
+A specific version is available for [Aztec](https://aztec.network/)
+
+- [Aztec Private CMTAT](https://github.com/taurushq-io/private-CMTAT-aztec)
+  - See also [Taurus - Addressing the Privacy and Compliance Challenge in Public Blockchain Token Transactions](https://www.taurushq.com/blog/enhancing-token-transaction-privacy-on-public-blockchains-while-ensuring-compliance/) 
+
 ## Intellectual property
 
 The code is copyright (c) Capital Market and Technology Association, 2018-2025, and is released under [Mozilla Public License 2.0](./LICENSE.md).

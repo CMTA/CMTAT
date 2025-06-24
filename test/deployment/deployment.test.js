@@ -36,7 +36,7 @@ describe('CMTAT - Deployment', function () {
       )
     ).to.be.revertedWithCustomError(
       this.cmtatCustomError,
-      'CMTAT_AuthorizationModule_AddressZeroNotAllowed'
+      'CMTAT_AccessControlModule_AddressZeroNotAllowed'
     )
   })
   it('testCannotDeployStandaloneWithAdminSetToAddressZero', async function () {
@@ -56,7 +56,7 @@ describe('CMTAT - Deployment', function () {
       )
     ).to.be.revertedWithCustomError(
       this.cmtatCustomError,
-      'CMTAT_AuthorizationModule_AddressZeroNotAllowed'
+      'CMTAT_AccessControlModule_AddressZeroNotAllowed'
     )
   })
 })

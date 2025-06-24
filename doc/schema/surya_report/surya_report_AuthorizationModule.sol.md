@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/security/AuthorizationModule.sol | [object Promise] |
+| ./modules/wrapper/security/AuthorizationModule.sol | [object Promise] |
 
 
 ### Contracts Description Table

@@ -7,10 +7,9 @@ import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Ini
 import {ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
 /* ==== controllers === */
 import {ValidationModule} from "./wrapper/controllers/ValidationModule.sol";
-// Security
-import {AuthorizationModule, AccessControlUpgradeable} from "./wrapper/security/AuthorizationModule.sol";
-
 /* ==== Wrapper === */
+// Security
+import {AccessControlModule, AccessControlUpgradeable} from "./wrapper/security/AccessControlModule.sol";
 // Core
 import {BaseModule} from "./wrapper/core/BaseModule.sol";
 // Extensions
@@ -33,7 +32,7 @@ abstract contract CMTATBaseGeneric is
     // Extension
     DocumentEngineModule,
     ExtraInformationModule,
-    AuthorizationModule
+    AccessControlModule
 {  
     /*//////////////////////////////////////////////////////////////
                          INITIALIZER FUNCTION
@@ -65,7 +64,7 @@ abstract contract CMTATBaseGeneric is
     * @dev OpenZeppelin
     */
     function __CMTAT_openzeppelin_init_unchained() internal virtual onlyInitializing {
-         // AuthorizationModule inherits from AccessControlUpgradeable
+         // AccessControlModule inherits from AccessControlUpgradeable
         __AccessControl_init_unchained();
         __Pausable_init_unchained();
     }
@@ -74,17 +73,21 @@ abstract contract CMTATBaseGeneric is
     * @dev CMTAT wrapper modules
     */
     function __CMTAT_modules_init_unchained(address admin, ICMTATConstructor.ExtraInformationAttributes memory extraInformationAttributes_, IERC1643 documentEngine ) internal virtual onlyInitializing {
-        // AuthorizationModule_init_unchained is called firstly due to inheritance
-        __AuthorizationModule_init_unchained(admin);
+        // AccessControlModule_init_unchained is called firstly due to inheritance
+        __AccessControlModule_init_unchained(admin);
         __DocumentEngineModule_init_unchained(documentEngine);
         /* Other modules */
         __ExtraInformationModule_init_unchained(extraInformationAttributes_.tokenId, extraInformationAttributes_.terms, extraInformationAttributes_.information);
     }
 
+    /*//////////////////////////////////////////////////////////////
+                            PUBLIC/EXTERNAL FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
+
     function hasRole(
         bytes32 role,
         address account
-    ) public view virtual override(AccessControlUpgradeable, AuthorizationModule) returns (bool) {
-        return AuthorizationModule.hasRole(role, account);
+    ) public view virtual override(AccessControlUpgradeable, AccessControlModule) returns (bool) {
+        return AccessControlModule.hasRole(role, account);
     }
 }

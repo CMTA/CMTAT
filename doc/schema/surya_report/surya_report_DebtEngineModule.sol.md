@@ -15,7 +15,7 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **DebtEngineModule** | Implementation | DebtModule, ICMTATCreditEvents |||
+| **DebtEngineModule** | Implementation | DebtModule |||
 | └ | creditEvents | Public ❗️ |   |NO❗️ |
 | └ | debt | Public ❗️ |   |NO❗️ |
 | └ | debtEngine | Public ❗️ |   |NO❗️ |

@@ -6,24 +6,29 @@ import {ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/Cont
 import {ERC1363Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/ERC1363Upgradeable.sol";
 import {ERC20Upgradeable, IERC20} from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 /* ==== Module === */
-import {ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
-import {CMTATBase, CMTATBaseCommon} from "./2_CMTATBase.sol";
+import {CMTATBaseERC1404, CMTATBaseCommon} from "./2_CMTATBaseERC1404.sol";
 import {CMTATBaseRuleEngine} from "./1_CMTATBaseRuleEngine.sol";
-import {CMTATBaseOption, CMTATBaseERC20CrossChain} from "../modules/4_CMTATBaseOption.sol";
+import {CMTATBaseERC2771, CMTATBaseERC20CrossChain} from "../modules/4_CMTATBaseERC2771.sol";
 /**
 * @title CMTAT Base for ERC-1363
 */
-abstract contract CMTATBaseERC1363 is ERC1363Upgradeable,CMTATBaseOption{
+abstract contract CMTATBaseERC1363 is ERC1363Upgradeable,CMTATBaseERC2771{
+    /*//////////////////////////////////////////////////////////////
+                         INITIALIZER FUNCTION
+    //////////////////////////////////////////////////////////////*/
+    /**
+    * @dev initializer function
+    */
+    function __CMTAT_openzeppelin_init_unchained() internal virtual override onlyInitializing {
+        __ERC1363_init_unchained();
+        CMTATBaseRuleEngine.__CMTAT_openzeppelin_init_unchained();
+    }
+    
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
     
-    /**
-     * 
-     */
-    function supportsInterface(bytes4 interfaceId) public view virtual override(ERC1363Upgradeable, CMTATBaseERC20CrossChain) returns (bool) {
-        return ERC1363Upgradeable.supportsInterface(interfaceId) || CMTATBaseERC20CrossChain.supportsInterface(interfaceId);
-    }
+    /* ============ State functions ============ */
 
     /**
     * @inheritdoc CMTATBaseCommon
@@ -47,6 +52,15 @@ abstract contract CMTATBaseERC1363 is ERC1363Upgradeable,CMTATBaseOption{
     {
         return CMTATBaseCommon.transferFrom(sender, recipient, amount);
     }
+
+    /* ============ View functions ============ */
+    /**
+     * 
+     */
+    function supportsInterface(bytes4 interfaceId) public view virtual override(ERC1363Upgradeable, CMTATBaseERC20CrossChain) returns (bool) {
+        return ERC1363Upgradeable.supportsInterface(interfaceId) || CMTATBaseERC20CrossChain.supportsInterface(interfaceId);
+    }
+
 
     /**
     * @inheritdoc CMTATBaseCommon
@@ -92,47 +106,39 @@ abstract contract CMTATBaseERC1363 is ERC1363Upgradeable,CMTATBaseOption{
         CMTATBaseCommon._update(from, to, amount);
     }
 
-    /**
-    * @dev initializer function
-    */
-    function __CMTAT_openzeppelin_init_unchained() internal virtual override onlyInitializing {
-        __ERC1363_init_unchained();
-        CMTATBaseRuleEngine.__CMTAT_openzeppelin_init_unchained();
-    }
-
     /*//////////////////////////////////////////////////////////////
-                            METAXTX MODULE
+                            ERC2771 MODULE
     //////////////////////////////////////////////////////////////*/
     /**
-    * @inheritdoc CMTATBaseOption
+    * @inheritdoc CMTATBaseERC2771
     */
     function _msgSender()
         internal
         view
-        override(ContextUpgradeable, CMTATBaseOption)
+        override(ContextUpgradeable, CMTATBaseERC2771)
         returns (address sender)
     {
-        return CMTATBaseOption._msgSender();
+        return CMTATBaseERC2771._msgSender();
     }
 
     /**
-    * @inheritdoc CMTATBaseOption
+    * @inheritdoc CMTATBaseERC2771
     */
     function _contextSuffixLength() internal view 
-    override(ContextUpgradeable, CMTATBaseOption)
+    override(ContextUpgradeable, CMTATBaseERC2771)
     returns (uint256) {
-         return CMTATBaseOption._contextSuffixLength();
+         return CMTATBaseERC2771._contextSuffixLength();
     }
 
     /**
-    * @inheritdoc CMTATBaseOption
+    * @inheritdoc CMTATBaseERC2771
     */
     function _msgData()
         internal
         view
-        override(ContextUpgradeable, CMTATBaseOption)
+        override(ContextUpgradeable, CMTATBaseERC2771)
         returns (bytes calldata)
     {
-        return CMTATBaseOption._msgData();
+        return CMTATBaseERC2771._msgData();
     }
 }

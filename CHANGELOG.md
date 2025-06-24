@@ -18,6 +18,20 @@ Please follow <https://changelog.md/> conventions.
   
   - Update changelog
 
+## 3.0.0-rc.3
+
+- ERC-7551
+  - Create specific option module ERC-7551
+  - Create specific deployment version for ERC-7551
+- Add prefix numbers for each CMTAT base file depending of inheritance level
+- Debt version
+  - Add function `setCreditEvents`in `DebtModule`
+  - Remove ERC-1404 inheritance from `CMTATBaseDebt` to reduce contract code size
+- ERC-1404
+  - Create a second interface `ERC1404Extend` which inherits from `ERC1404`
+    - Add function `detectTransferRestrictionFrom`in `ERC-1404Extend`
+    - Implement function `detectTransferRestrictionFrom`in ValidationModuleERC1404
+
 ## 3.0.0-rc.2
 
 - Deployment version
@@ -26,7 +40,7 @@ Please follow <https://changelog.md/> conventions.
     - Which means that `CMTATStandalone` and `CMTATUpgradeable`  no longer included  `DebtModule` and `DebtEngineModule`
 - Rename `forceBurn`in `forcedBurn`to use the same semantic as ERC-3643 `forcedTransfer`
 - Rename `balanceInfo`in `batchBalanceOf` to use the same semantic as ERC-3643 `batchBurn`and `batchMint`
-- Add several new interfaces for module, see interfaces/modules
+- Add several new interfaces for module, see `interfaces/modules`
 - Add a parameter `burner`and `minter`in the events Mint & Burn (ERC20MintModule / ERC20BurnModule)
 - Improve documentation & tests
 

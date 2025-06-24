@@ -35,7 +35,7 @@ function ValidationModuleCommonCore () {
     })
 
     // this.address1 may transfer tokens to this.address2
-    it('testCanTransferAllowedByRule', async function () {
+    it('testCanTransferAllowed', async function () {
       const AMOUNT_TO_TRANSFER = 11n
 
       // Act
@@ -73,6 +73,7 @@ function ValidationModuleCommonCore () {
           AMOUNT_TO_TRANSFER
         )
       ).to.equal(true)
+      
       await this.cmtat
         .connect(this.address1)
         .transfer(this.address2, AMOUNT_TO_TRANSFER)

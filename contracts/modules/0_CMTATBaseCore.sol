@@ -17,7 +17,7 @@ import {EnforcementModule} from "./wrapper/core/EnforcementModule.sol";
 import {ValidationModule, ValidationModuleCore} from "./wrapper/core/ValidationModuleCore.sol";
 
 // Security
-import {AuthorizationModule, AccessControlUpgradeable} from "./wrapper/security/AuthorizationModule.sol";
+import {AccessControlModule, AccessControlUpgradeable} from "./wrapper/security/AccessControlModule.sol";
 
 /* ==== Interface and other library === */
 import {ICMTATConstructor} from "../interfaces/technical/ICMTATConstructor.sol";
@@ -42,7 +42,7 @@ abstract contract CMTATBaseCore is
     IForcedBurnERC20,
     IBurnMintERC20,
     IERC7551ERC20EnforcementEvent,
-    AuthorizationModule
+    AccessControlModule
 {  
     error CMTAT_BurnEnforcement_AddressIsNotFrozen(); 
     /*//////////////////////////////////////////////////////////////
@@ -91,7 +91,7 @@ abstract contract CMTATBaseCore is
     * @dev OpenZeppelin
     */
     function __CMTAT_openzeppelin_init_unchained() internal virtual onlyInitializing {
-         // AuthorizationModule inherits from AccessControlUpgradeable
+         // AccessControlModule inherits from AccessControlUpgradeable
         __AccessControl_init_unchained();
         __Pausable_init_unchained();
         // We don'use name and symbol set by the OpenZeppelin module
@@ -103,8 +103,8 @@ abstract contract CMTATBaseCore is
     * @dev CMTAT wrapper modules
     */
     function __CMTAT_modules_init_unchained(address admin, ICMTATConstructor.ERC20Attributes memory ERC20Attributes_ ) internal virtual onlyInitializing {
-        // AuthorizationModule_init_unchained is called firstly due to inheritance
-        __AuthorizationModule_init_unchained(admin);
+        // AccessControlModule_init_unchained is called firstly due to inheritance
+        __AccessControlModule_init_unchained(admin);
         __ERC20BaseModule_init_unchained(ERC20Attributes_.decimalsIrrevocable, ERC20Attributes_.name, ERC20Attributes_.symbol);
     }
 
@@ -208,8 +208,8 @@ abstract contract CMTATBaseCore is
     function hasRole(
         bytes32 role,
         address account
-    ) public view virtual override(AccessControlUpgradeable, AuthorizationModule) returns (bool) {
-        return AuthorizationModule.hasRole(role, account);
+    ) public view virtual override(AccessControlUpgradeable, AccessControlModule) returns (bool) {
+        return AccessControlModule.hasRole(role, account);
     }
 
     /*//////////////////////////////////////////////////////////////

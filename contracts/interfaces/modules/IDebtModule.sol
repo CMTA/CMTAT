@@ -7,7 +7,7 @@ pragma solidity ^0.8.20;
 */
 interface IDebtModule is ICMTATDebt, ICMTATCreditEvents {
     /* ============ Events ============ */
-     // No paramater to reduce contract size
+      // No paramater to reduce contract size
     event DebtLogEvent();
     event CreditEventsLogEvent();
     event DebtInstrumentLogEvent();
@@ -26,6 +26,12 @@ interface IDebtModule is ICMTATDebt, ICMTATCreditEvents {
     function setDebt(
           ICMTATDebt.DebtInformation calldata debt_
     ) external;
+      /**
+     * @notice Set Credit Events
+     */
+    function setCreditEvents(
+       CreditEvents calldata creditEvents_
+    ) external; 
 }
 
 

@@ -91,9 +91,12 @@ function ERC20MintModuleCommon () {
     })
 
     it('testCannotBeMintedIfContractIsDeactivated', async function () {
+      // Arrange
+      await this.cmtat.connect(this.admin).pause()
       await this.cmtat
         .connect(this.admin)
         .deactivateContract()
+      // Act
       await expect(
         this.cmtat.connect(this.admin).mint(this.address1, VALUE1)
       )

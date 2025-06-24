@@ -2,8 +2,9 @@
 
 pragma solidity ^0.8.20;
 
-/* ==== Module === */
+/* ==== OpenZeppelin === */
 import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
+/* ==== Module === */
 import {IAllowlistModule} from "../../../interfaces/modules/IAllowlistModule.sol";
 import {AllowlistModuleInternal} from "../../internal/AllowlistModuleInternal.sol";
 
@@ -26,14 +27,7 @@ abstract contract AllowlistModule is
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
-    
-    /** 
-    * @inheritdoc IAllowlistModule
-    */
-    function isAllowlisted(address account) public view virtual returns (bool) {
-       return _isAllowlisted(account);
-    }
-
+    /* ============ State functions ============ */
     /** 
     * @inheritdoc IAllowlistModule
     */
@@ -72,6 +66,8 @@ abstract contract AllowlistModule is
         emit AllowlistEnableStatus(_msgSender(), status);
     }
 
+    /* ============ View functions ============ */
+
     /** 
     * @inheritdoc IAllowlistModule
     */
@@ -79,6 +75,13 @@ abstract contract AllowlistModule is
         return _isAllowlistEnabled();
     }
 
+    /** 
+    * @inheritdoc IAllowlistModule
+    */
+    function isAllowlisted(address account) public view virtual returns (bool) {
+       return _isAllowlisted(account);
+    }
+    
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/

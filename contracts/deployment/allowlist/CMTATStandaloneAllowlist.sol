@@ -3,8 +3,8 @@
 pragma solidity ^0.8.20;
 
 import {CMTATBaseAllowlist, ISnapshotEngine, IERC1643} from "../../modules/1_CMTATBaseAllowlist.sol";
-import {ICMTATConstructor} from "../../modules/2_CMTATBase.sol";
-import {MetaTxModule, ERC2771ContextUpgradeable} from "../../modules/wrapper/options/MetaTxModule.sol";
+import {ERC2771Module, ERC2771ContextUpgradeable} from "../../modules/wrapper/options/ERC2771Module.sol";
+import {ICMTATConstructor} from "../../interfaces/technical/ICMTATConstructor.sol";
 
 /**
 * @title CMTAT version for a standalone deployment (without proxy)
@@ -27,7 +27,7 @@ contract CMTATStandaloneAllowlist is CMTATBaseAllowlist {
         ISnapshotEngine snapshotEngine,
         IERC1643 documentEngine
         
-    ) MetaTxModule(forwarderIrrevocable){
+    ) ERC2771Module(forwarderIrrevocable){
         // Initialize the contract to avoid front-running
         // Warning : do not initialize the proxy
         initialize(

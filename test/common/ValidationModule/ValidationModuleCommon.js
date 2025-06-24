@@ -141,13 +141,17 @@ function ValidationModuleCommon () {
           AMOUNT_TO_TRANSFER
         )
       ).to.equal(false)
+     /* this.cmtat
+          .connect(this.address1)
+          .transfer(this.address2, AMOUNT_TO_TRANSFER)*/
+      
       // Act
       await expect(
         this.cmtat
           .connect(this.address1)
           .transfer(this.address2, AMOUNT_TO_TRANSFER)
       )
-        .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
+        .to.be.revertedWithCustomError(this.ruleEngineMock, 'RuleEngine_InvalidTransfer')
         .withArgs(
           this.address1.address,
           this.address2.address,
@@ -203,13 +207,16 @@ function ValidationModuleCommon () {
       expect(
         await this.cmtat.canTransferFrom(this.address1, this.address2, this.admin, AMOUNT_TO_TRANSFER)
       ).to.equal(false)
+     /* this.cmtat
+      .connect(this.address1)
+      .transferFrom(this.address2, this.admin, AMOUNT_TO_TRANSFER);*/
       // Act
       await expect(
         this.cmtat
           .connect(this.address1)
           .transferFrom(this.address2, this.admin, AMOUNT_TO_TRANSFER)
       )
-        .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
+        .to.be.revertedWithCustomError(this.ruleEngineMock, 'RuleEngine_InvalidTransfer')
         .withArgs(
           this.address2.address,
           this.admin,
@@ -316,11 +323,18 @@ function ValidationModuleCommon () {
     })
 
     // this.address1 may transfer tokens to this.address2
-    it('testCanMintAllowedByRule', async function () {
+   it('testCanMintAllowedByRule', async function () {
       const AMOUNT_TO_TRANSFER = 11n
       // Act
       expect(
         await this.cmtat.canTransfer(
+          ZERO_ADDRESS,
+          this.address2,
+          AMOUNT_TO_TRANSFER
+        )
+      ).to.equal(true)
+      expect(
+        await this.ruleEngineMock.canTransfer(
           ZERO_ADDRESS,
           this.address2,
           AMOUNT_TO_TRANSFER
@@ -342,8 +356,15 @@ function ValidationModuleCommon () {
 
     // reverts if this.address1 transfers more tokens than rule allows
     it('testCannotMintIfNotAllowedByRule', async function () {
-      const AMOUNT_TO_TRANSFER = RULE_MOCK_AMOUNT_MAX + 1
+      const AMOUNT_TO_TRANSFER = 21n
       // Act
+      expect(
+        await this.cmtat.canTransfer(
+          ZERO_ADDRESS,
+          this.address2,
+         19n
+        )
+      ).to.equal(true)
       expect(
         await this.cmtat.canTransfer(
           ZERO_ADDRESS,
@@ -351,13 +372,29 @@ function ValidationModuleCommon () {
           AMOUNT_TO_TRANSFER
         )
       ).to.equal(false)
+      expect(
+        await this.ruleEngineMock.canTransfer(
+          ZERO_ADDRESS,
+          this.address2,
+          AMOUNT_TO_TRANSFER
+        )
+      ).to.equal(false)
+
+     /* await this.cmtat.connect(this.admin).mint(this.address2, AMOUNT_TO_TRANSFER)
+
+      expect(await this.cmtat.balanceOf(this.address2)).to.equal(
+        this.ADDRESS2_INITIAL_BALANCE + AMOUNT_TO_TRANSFER
+      )
+      expect(await this.cmtat.balanceOf(this.address3)).to.equal(
+        this.ADDRESS3_INITIAL_BALANCE
+      )*/
       // Act
-      await expect(
+     await expect(
         this.cmtat
           .connect(this.admin)
           .mint(this.address2, AMOUNT_TO_TRANSFER)
       )
-        .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
+        .to.be.revertedWithCustomError(this.ruleEngineMock, 'RuleEngine_InvalidTransfer')
         .withArgs(
           ZERO_ADDRESS,
           this.address2.address,

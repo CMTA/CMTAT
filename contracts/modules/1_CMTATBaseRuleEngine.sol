@@ -4,8 +4,6 @@ pragma solidity ^0.8.20;
 
 import {CMTATBaseCommon,AccessControlUpgradeable} from "./0_CMTATBaseCommon.sol";
 /* ==== Wrapper === */
-// Use by detectTransferRestriction
-import {ERC20BaseModule, ERC20Upgradeable} from "./wrapper/core/ERC20BaseModule.sol";
 // Extensions
 import {ERC20EnforcementModule, ERC20EnforcementModuleInternal} from "./wrapper/extensions/ERC20EnforcementModule.sol";
 // Controllers
@@ -20,14 +18,7 @@ abstract contract CMTATBaseRuleEngine is
 {
     function _checkTransferred(address spender, address from, address to, uint256 value) internal virtual override(CMTATBaseCommon) {
         CMTATBaseCommon._checkTransferred(spender, from, to, value);
-        if(spender != address(0)){
-            if (!ValidationModuleRuleEngine._transferred(spender, from, to, value)) {
-                revert Errors.CMTAT_InvalidTransfer(from, to, value);
-            }
-        } else
-           if( !ValidationModuleRuleEngine._transferred(spender, from, to, value)) {
-                revert Errors.CMTAT_InvalidTransfer(from, to, value);
-        }
+        require(ValidationModuleRuleEngine._transferred(spender, from, to, value), Errors.CMTAT_InvalidTransfer(from, to, value));
     } 
 
     /*//////////////////////////////////////////////////////////////
@@ -109,7 +100,6 @@ abstract contract CMTATBaseRuleEngine is
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
-
     /**
     * @inheritdoc ValidationModuleRuleEngine
     */

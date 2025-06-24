@@ -15,9 +15,11 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **DebtModule** | Implementation | AuthorizationModule, IDebtModule |||
-| └ | setDebt | External ❗️ | 🛑  | onlyRole |
-| └ | setDebtInstrument | External ❗️ | 🛑  | onlyRole |
+| **DebtModule** | Implementation | AccessControlUpgradeable, IDebtModule |||
+| └ | setCreditEvents | Public ❗️ | 🛑  | onlyRole |
+| └ | creditEvents | Public ❗️ |   |NO❗️ |
+| └ | setDebt | Public ❗️ | 🛑  | onlyRole |
+| └ | setDebtInstrument | Public ❗️ | 🛑  | onlyRole |
 | └ | debt | Public ❗️ |   |NO❗️ |
 | └ | _getDebtModuleStorage | Internal 🔒 |   | |
 

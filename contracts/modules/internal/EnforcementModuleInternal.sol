@@ -6,9 +6,9 @@ import {ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/Cont
 import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import {EnforcementModuleLibrary} from "./common/EnforcementModuleLibrary.sol";
 /**
- * @dev Enforcement module.
+ * @dev Enforcement module internal.
  *
- * Allows the issuer to freeze transfers from a given address
+ * Allows the issuer to set an allowlist
  */
 abstract contract EnforcementModuleInternal is
     Initializable,
@@ -26,6 +26,7 @@ abstract contract EnforcementModuleInternal is
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
+    /* ============ View functions ============ */
     function _addAddressToTheList(address account, bool status, bytes memory data) internal virtual{
         EnforcementModuleInternalStorage storage $ = _getEnforcementModuleInternalStorage();
         _addAddressToTheList($, account, status, data);
@@ -43,6 +44,7 @@ abstract contract EnforcementModuleInternal is
         }
     }
 
+    /* ============ View functions ============ */
     /**
      * @dev Returns true if the account is frozen, and false otherwise.
      */

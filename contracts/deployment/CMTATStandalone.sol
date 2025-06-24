@@ -2,15 +2,15 @@
 
 pragma solidity ^0.8.20;
 
-import {CMTATBaseOption} from "../modules/4_CMTATBaseOption.sol";
-import {ICMTATConstructor} from "../modules/2_CMTATBase.sol";
-import {MetaTxModule} from "../modules/wrapper/options/MetaTxModule.sol";
+import {CMTATBaseERC2771} from "../modules/4_CMTATBaseERC2771.sol";
+import {ERC2771Module} from "../modules/wrapper/options/ERC2771Module.sol";
+import {ICMTATConstructor} from "../interfaces/technical/ICMTATConstructor.sol";
 
 
 /**
 * @title CMTAT version for a standalone deployment (without proxy)
 */
-contract CMTATStandalone is CMTATBaseOption {
+contract CMTATStandalone is CMTATBaseERC2771 {
     /**
      * @notice Contract version for standalone deployment
      * @param forwarderIrrevocable address of the forwarder, required for the gasless support
@@ -26,7 +26,7 @@ contract CMTATStandalone is CMTATBaseOption {
         ICMTATConstructor.ERC20Attributes memory ERC20Attributes_,
         ICMTATConstructor.ExtraInformationAttributes memory extraInformationAttributes_,
         ICMTATConstructor.Engine memory engines_ 
-    ) MetaTxModule(forwarderIrrevocable) {
+    ) ERC2771Module(forwarderIrrevocable) {
         // Initialize the contract to avoid front-running
         // Warning : do not initialize the proxy
         initialize(

@@ -3,8 +3,8 @@
 pragma solidity ^0.8.20;
 
 import {CMTATBaseERC7551} from "../../modules/5_CMTATBaseERC7551.sol";
-import {ICMTATConstructor} from "../../modules/2_CMTATBase.sol";
-import {MetaTxModule} from "../../modules/wrapper/options/MetaTxModule.sol";
+import {ERC2771Module} from "../../modules/wrapper/options/ERC2771Module.sol";
+import {ICMTATConstructor} from "../../interfaces/technical/ICMTATConstructor.sol";
 
 /**
 * @title CMTAT version for a standalone deployment (without proxy)
@@ -25,7 +25,7 @@ contract CMTATStandaloneERC7551 is CMTATBaseERC7551 {
         ICMTATConstructor.ERC20Attributes memory ERC20Attributes_,
         ICMTATConstructor.ExtraInformationAttributes memory extraInformationAttributes_,
         ICMTATConstructor.Engine memory engines_ 
-    ) MetaTxModule(forwarderIrrevocable) {
+    ) ERC2771Module(forwarderIrrevocable) {
         // Initialize the contract to avoid front-running
         // Warning : do not initialize the proxy
         initialize(

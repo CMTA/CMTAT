@@ -117,6 +117,7 @@ function ERC20CrossChainModuleCommon () {
     })
 
     it('testCannotBeBurnIfContractIsDeactivated', async function () {
+      await this.cmtat.connect(this.admin).pause()
       await this.cmtat
         .connect(this.admin)
         .deactivateContract()
@@ -258,9 +259,12 @@ function ERC20CrossChainModuleCommon () {
     })
 
     it('testCannotBeMBurnIfContractIsDeactivated', async function () {
+        // Arrange
+      await this.cmtat.connect(this.admin).pause()
       await this.cmtat
         .connect(this.admin)
         .deactivateContract()
+      // Act
       await expect(
         this.cmtat.connect(this.admin).burn(VALUE_TYPED)
       )
@@ -375,10 +379,13 @@ function ERC20CrossChainModuleCommon () {
     })
 
     it('testCannotBeBurnFromIfContractIsDeactivated', async function () {
+       // Arrange
+      await this.cmtat.connect(this.admin).pause()
       await this.cmtat
         .connect(this.admin)
         .deactivateContract()
       await this.cmtat.connect(this.address1).approve(this.admin, 50n)
+      // Act
       await expect(
         this.cmtat.connect(this.admin).burnFrom(this.address1, 20n)
       )
@@ -455,7 +462,6 @@ function ERC20CrossChainModuleCommon () {
       await bindTest(this.address1)
     })
 
-    // reverts when issuing by a non minter
     it('testCannotMintByNonMinter', async function () {
       await expect(
         this.cmtat.connect(this.address1).crosschainMint(this.address1, VALUE1)
@@ -481,9 +487,12 @@ function ERC20CrossChainModuleCommon () {
     })
 
     it('testCannotBeMintedIfContractIsDeactivated', async function () {
+      // Arrange
+      await this.cmtat.connect(this.admin).pause()
       await this.cmtat
         .connect(this.admin)
         .deactivateContract()
+      // Act
       await expect(
         this.cmtat.connect(this.admin).crosschainMint(this.address1, VALUE1)
       )

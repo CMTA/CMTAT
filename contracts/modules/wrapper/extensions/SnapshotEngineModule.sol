@@ -2,9 +2,8 @@
 
 pragma solidity ^0.8.20;
 
-/* ==== Module === */
+/* ==== OpenZeppelin === */
 import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
-
 /* ==== Engine === */
 import {ISnapshotEngine, ISnapshotEngineModule} from "../../../interfaces/modules/ISnapshotEngineModule.sol";
 
@@ -40,16 +39,7 @@ abstract contract SnapshotEngineModule is AccessControlUpgradeable, ISnapshotEng
                             PUBLIC/EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
 
-    /**
-    * @inheritdoc ISnapshotEngineModule
-    */
-    function snapshotEngine() public view virtual override(ISnapshotEngineModule) returns (ISnapshotEngine) {
-        SnapshotEngineModuleStorage storage $ = _getSnapshotEngineModuleStorage();
-        return $._snapshotEngine;
-    }
-
-    /* ============  Restricted Functions ============ */
-
+    /* ============  State Restricted Functions ============ */
     function setSnapshotEngine(
         ISnapshotEngine snapshotEngine_
     ) external virtual override(ISnapshotEngineModule) onlyRole(SNAPSHOOTER_ROLE) {
@@ -58,6 +48,16 @@ abstract contract SnapshotEngineModule is AccessControlUpgradeable, ISnapshotEng
         _setSnapshotEngine($, snapshotEngine_);
     }
 
+    
+    /* ============ View functions ============ */
+
+    /**
+    * @inheritdoc ISnapshotEngineModule
+    */
+    function snapshotEngine() public view virtual override(ISnapshotEngineModule) returns (ISnapshotEngine) {
+        SnapshotEngineModuleStorage storage $ = _getSnapshotEngineModuleStorage();
+        return $._snapshotEngine;
+    }
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/

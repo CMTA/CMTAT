@@ -38,6 +38,7 @@
     "test:deployment-erc721": "npx hardhat test test/deployment/erc721mock.test.js",
     "test:deployment-uups": "npx hardhat test test/deployment/deploymentUpgradeableUUPS.test.js",
     "test:deployment-debt": "npx hardhat test test/deployment/debt/deploymentStandaloneDebt.test.js test/deployment/debt/deploymentUpgradeableDebt.test.js",
+    "test:deployment-erc1363": "npx hardhat test test/deployment/ERC1363/deploymentERC1363Proxy.test.js test/deployment/ERC1363/deploymentERC1363ProxyValidation.test.js test/deployment/ERC1363/deploymentERC1363Standalone.test.js",
     "test:deployment-erc7551": "npx hardhat test test/deployment/erc7551/deploymentERC7551Standalone.test.js test/deployment/erc7551/deploymentERC7551Upgradeable.test.js",
     "test:deployment-allowlist": "npx hardhat test test/deployment/allowlist/deploymentStandaloneAllowlist.test.js test/deployment/allowlist/deploymentUpgradeableAllowlist.test.js",
     "test:document": "npx hardhat test test/standard/modules/DocumentModule/DocumentModule.test.js test/standard/modules/DocumentModule/DocumentModuleConstructor.test.js test/proxy/modules/DocumentModule/DocumentModule.test.js test/proxy/modules/DocumentModule/DocumentModuleConstructor.test.js",

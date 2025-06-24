@@ -149,7 +149,8 @@ function ERC20BurnModuleCommon () {
         .withArgs(this.address2.address, BURNER_ROLE)
     })
 
-    it('testCannotBeMBurnIfContractIsDeactivated', async function () {
+    it('testCannotBeBurnIfContractIsDeactivated', async function () {
+      await this.cmtat.connect(this.admin).pause()
       await this.cmtat
         .connect(this.admin)
         .deactivateContract()
@@ -299,10 +300,13 @@ function ERC20BurnModuleCommon () {
     })
 
     it('testCannotBeBurnAndMintIfContractIsDeactivated', async function () {
+      // Arrange
+      await this.cmtat.connect(this.admin).pause()
       await this.cmtat
         .connect(this.admin)
         .deactivateContract()
       await this.cmtat.connect(this.address1).approve(this.admin, 50n)
+      // Act
       await expect(
         this.cmtat.connect(this.admin).burnAndMint(
           this.address1,

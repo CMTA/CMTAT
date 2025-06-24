@@ -1,12 +1,11 @@
 //SPDX-License-Identifier: MPL-2.0
 
 pragma solidity ^0.8.20;
-/* ==== OpenZeppelin === */
 /* ==== Module === */
 import {IDebtEngine, DebtEngineModule, ICMTATDebt} from "./wrapper/options/DebtEngineModule.sol";
 import {DebtEngineModule, DebtModule, ICMTATDebt} from "./wrapper/options/DebtEngineModule.sol";
 import {CMTATBaseRuleEngine} from "./1_CMTATBaseRuleEngine.sol";
-import {CMTATBaseCommon, AccessControlUpgradeable, AuthorizationModule} from "./0_CMTATBaseCommon.sol";
+import {CMTATBaseCommon, AccessControlUpgradeable} from "./0_CMTATBaseCommon.sol";
 /**
 * @title Extend CMTAT Base with option modules
 */

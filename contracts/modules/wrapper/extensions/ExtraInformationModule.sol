@@ -2,9 +2,8 @@
 
 pragma solidity ^0.8.20;
 
-/* ==== Module === */
+/* ==== Openzeppelin === */
 import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
-
 /* ==== Tokenization === */
 import {IERC1643CMTAT, IERC1643} from "../../../interfaces/tokenization/draft-IERC1643CMTAT.sol";
 import {ICMTATBase} from "../../../interfaces/tokenization/ICMTAT.sol";
@@ -46,6 +45,39 @@ abstract contract ExtraInformationModule is AccessControlUpgradeable, ICMTATBase
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
+
+    /* ============  Restricted Functions ============ */
+    
+    /** 
+    * @notice the tokenId will be changed even if the new value is the same as the current one
+    */
+    function setTokenId(
+        string calldata tokenId_
+    ) public virtual override(ICMTATBase)  onlyRole(EXTRA_INFORMATION_ROLE) {
+        ExtraInformationModuleStorage storage $ = _getExtraInformationModuleStorage();
+        _setTokenId($, tokenId_);
+    }
+
+    /** 
+    * @inheritdoc ICMTATBase
+    * @dev The terms will be changed even if the new value is the same as the current one
+    */
+    function setTerms(IERC1643CMTAT.DocumentInfo calldata terms_) public virtual override(ICMTATBase) onlyRole(EXTRA_INFORMATION_ROLE) {
+		_setTerms(terms_);
+    }
+
+    /** 
+    * @inheritdoc ICMTATBase
+    * @dev The information will be changed even if the new value is the same as the current one
+    */
+    function setInformation(
+        string calldata information_
+    ) public onlyRole(EXTRA_INFORMATION_ROLE) {
+        ExtraInformationModuleStorage storage $ = _getExtraInformationModuleStorage();
+        _setInformation($, information_);
+    }
+
+    /* ============ View functions ============ */
     /**
     * @inheritdoc ICMTATBase
     */
@@ -70,48 +102,13 @@ abstract contract ExtraInformationModule is AccessControlUpgradeable, ICMTATBase
         return $._information;
     }
 
-
-    /* ============  Restricted Functions ============ */
-    
-    /** 
-    * @notice the tokenId will be changed even if the new value is the same as the current one
-    */
-    function setTokenId(
-        string calldata tokenId_
-    ) public virtual override(ICMTATBase)  onlyRole(EXTRA_INFORMATION_ROLE) {
-        ExtraInformationModuleStorage storage $ = _getExtraInformationModuleStorage();
-        _setTokenId($, tokenId_);
-    }
-
-    /** 
-    * @inheritdoc ICMTATBase
-    * @dev The terms will be changed even if the new value is the same as the current one
-    */
-    function setTerms(IERC1643CMTAT.DocumentInfo calldata terms_) public virtual override(ICMTATBase) onlyRole(EXTRA_INFORMATION_ROLE) {
-		_setTerms(terms_);
-    }
-
+    /*//////////////////////////////////////////////////////////////
+                            INTERNAL/PRIVATE FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
     function _setTerms(IERC1643CMTAT.DocumentInfo memory terms_) internal{
 		ExtraInformationModuleStorage storage $ = _getExtraInformationModuleStorage();
         _setTerms($, terms_);
     }
-
-
-    /** 
-    * @inheritdoc ICMTATBase
-    * @dev The information will be changed even if the new value is the same as the current one
-    */
-    function setInformation(
-        string calldata information_
-    ) public onlyRole(EXTRA_INFORMATION_ROLE) {
-        ExtraInformationModuleStorage storage $ = _getExtraInformationModuleStorage();
-        _setInformation($, information_);
-    }
-
-    /*//////////////////////////////////////////////////////////////
-                            INTERNAL/PRIVATE FUNCTIONS
-    //////////////////////////////////////////////////////////////*/
-
 
     function _setTokenId(
         ExtraInformationModuleStorage storage $, string memory tokenId_

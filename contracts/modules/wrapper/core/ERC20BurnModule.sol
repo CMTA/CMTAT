@@ -3,13 +3,11 @@
 pragma solidity ^0.8.20;
 
 /* ==== OpenZeppelin === */
-import {ERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
+import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 /* ==== Module === */
 import {ERC20BurnModuleInternal} from "../../internal/ERC20BurnModuleInternal.sol";
-import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 /* ==== Technical === */
 import {IBurnERC20} from "../../../interfaces/technical/IMintBurnToken.sol";
-import {IERC20Allowance} from "../../../interfaces/technical/IERC20Allowance.sol";
 /* ==== Tokenization === */
 import {IERC3643Burn} from "../../../interfaces/tokenization/IERC3643Partial.sol";
 import {IERC7551Burn} from "../../../interfaces/tokenization/draft-IERC7551.sol";
@@ -99,6 +97,10 @@ abstract contract ERC20BurnModule is  ERC20BurnModuleInternal, AccessControlUpgr
         _batchBurn(accounts, values);
         emit BatchBurn(_msgSender(),accounts, values, "" );
     }
+
+    /*//////////////////////////////////////////////////////////////
+                            INTERNAL/PRIVATE FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
 
     function _burn(
         address account,

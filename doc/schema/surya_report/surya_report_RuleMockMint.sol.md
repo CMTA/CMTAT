@@ -18,6 +18,7 @@
 | **RuleMockMint** | Implementation | IRule, CodeList |||
 | └ | canTransfer | Public ❗️ |   |NO❗️ |
 | └ | detectTransferRestriction | Public ❗️ |   |NO❗️ |
+| └ | detectTransferRestrictionFrom | Public ❗️ |   |NO❗️ |
 | └ | canReturnTransferRestrictionCode | Public ❗️ |   |NO❗️ |
 | └ | messageForTransferRestriction | External ❗️ |   |NO❗️ |
 

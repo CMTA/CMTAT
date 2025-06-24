@@ -28,6 +28,8 @@
 ||||||
 | **IERC7551ERC20EnforcementEvent** | Interface |  |||
 ||||||
+| **IERC7551ERC20EnforcementTokenFrozenEvent** | Interface |  |||
+||||||
 | **IERC7551ERC20Enforcement** | Interface |  |||
 | └ | getActiveBalanceOf | External ❗️ |   |NO❗️ |
 | └ | getFrozenTokens | External ❗️ |   |NO❗️ |
@@ -35,11 +37,12 @@
 | └ | unfreezePartialTokens | External ❗️ | 🛑  |NO❗️ |
 | └ | forcedTransfer | External ❗️ | 🛑  |NO❗️ |
 ||||||
-| **IERC7551Compliance** | Interface |  |||
-| └ | canTransfer | External ❗️ |   |NO❗️ |
+| **IERC7551Compliance** | Interface | IERC3643ComplianceRead |||
 | └ | canTransferFrom | External ❗️ |   |NO❗️ |
 ||||||
-| **IERC7551Base** | Interface |  |||
+| **IERC7551Document** | Interface |  |||
+| └ | termsHash | External ❗️ |   |NO❗️ |
+| └ | setTerms | External ❗️ | 🛑  |NO❗️ |
 | └ | metaData | External ❗️ |   |NO❗️ |
 | └ | setMetaData | External ❗️ | 🛑  |NO❗️ |
 

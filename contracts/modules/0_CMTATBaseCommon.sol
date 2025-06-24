@@ -4,7 +4,7 @@ pragma solidity ^0.8.20;
 
 /* ==== Wrapper === */
 // Security
-import {AuthorizationModule, AccessControlUpgradeable} from "./wrapper/security/AuthorizationModule.sol";
+import {AccessControlModule, AccessControlUpgradeable} from "./wrapper/security/AccessControlModule.sol";
 // Core
 import {BaseModule} from "./wrapper/core/BaseModule.sol";
 import {ERC20BurnModule, ERC20BurnModuleInternal} from "./wrapper/core/ERC20BurnModule.sol";
@@ -33,23 +33,18 @@ abstract contract CMTATBaseCommon is
     ERC20EnforcementModule,
     DocumentEngineModule,
     ExtraInformationModule,
-    IBurnMintERC20,
-    AuthorizationModule
+    AccessControlModule,
+    // Interfaces
+    IBurnMintERC20
 {  
-    function _checkTransferred(address /*spender*/, address from, address to, uint256 value) internal virtual {
-        if(!ERC20EnforcementModuleInternal._checkActiveBalance(from, value)){
-            revert Errors.CMTAT_InvalidTransfer(from, to, value);
-        }
-    } 
-
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
     function __CMTAT_commonModules_init_unchained(address admin, ICMTATConstructor.ERC20Attributes memory ERC20Attributes_, ICMTATConstructor.ExtraInformationAttributes memory ExtraInformationModuleAttributes_,
      ISnapshotEngine snapshotEngine,
         IERC1643 documentEngine ) internal virtual onlyInitializing {
-        // AuthorizationModule_init_unchained is called firstly due to inheritance
-        __AuthorizationModule_init_unchained(admin);
+        // AccessControlModule_init_unchained is called firstly due to inheritance
+        __AccessControlModule_init_unchained(admin);
 
         // Core
         __ERC20BaseModule_init_unchained(ERC20Attributes_.decimalsIrrevocable, ERC20Attributes_.name, ERC20Attributes_.symbol);
@@ -82,14 +77,14 @@ abstract contract CMTATBaseCommon is
     /**
     * @inheritdoc ERC20BaseModule
     */
-    function name() public virtual override(ERC20Upgradeable, ERC20BaseModule) view returns (string memory) {
+    function name() public view virtual override(ERC20Upgradeable, ERC20BaseModule)  returns (string memory) {
         return ERC20BaseModule.name();
     }
 
     /**
     * @inheritdoc ERC20BaseModule
     */
-    function symbol() public virtual override(ERC20Upgradeable, ERC20BaseModule) view returns (string memory) {
+    function symbol() public view virtual override(ERC20Upgradeable, ERC20BaseModule) returns (string memory) {
         return ERC20BaseModule.symbol();
     }
 
@@ -139,15 +134,16 @@ abstract contract CMTATBaseCommon is
     function hasRole(
         bytes32 role,
         address account
-    ) public view virtual override(AccessControlUpgradeable, AuthorizationModule) returns (bool) {
-        return AuthorizationModule.hasRole(role, account);
+    ) public view virtual override(AccessControlUpgradeable, AccessControlModule) returns (bool) {
+        return AccessControlModule.hasRole(role, account);
     }
 
-
-   
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
+    function _checkTransferred(address /*spender*/, address from, address to, uint256 value) internal virtual {
+        ERC20EnforcementModuleInternal._checkActiveBalanceAndRevert(from, value);
+    } 
     /**
      * @dev we don't check the transfer validity here
      * 

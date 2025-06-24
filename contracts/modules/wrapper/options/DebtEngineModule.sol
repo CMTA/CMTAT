@@ -13,6 +13,21 @@ import {DebtModule} from "./DebtModule.sol";
  */
 abstract contract DebtEngineModule is DebtModule {
     error CMTAT_DebtEngineModule_SameValue();
+
+    /* ============  State Restricted Functions ============ */
+    /*
+    * @notice set a DebtEngine
+    * 
+    */
+    function setDebtEngine(
+        IDebtEngine debtEngine_
+    ) external virtual onlyRole(DEBT_ROLE) {
+        DebtModuleStorage storage $ = _getDebtModuleStorage();
+        require($._debtEngine != debtEngine_, CMTAT_DebtEngineModule_SameValue());
+        _setDebtEngine($, debtEngine_);
+    }
+
+    /* ============ View functions ============ */
     /**
     * @dev Emitted when a rule engine is set.
     */
@@ -42,19 +57,6 @@ abstract contract DebtEngineModule is DebtModule {
     function debtEngine() public view virtual returns (IDebtEngine) {
         DebtModuleStorage storage $ = _getDebtModuleStorage();
         return $._debtEngine;
-    }
-
-    /* ============  Restricted Functions ============ */
-    /*
-    * @notice set a DebtEngine
-    * 
-    */
-    function setDebtEngine(
-        IDebtEngine debtEngine_
-    ) external virtual onlyRole(DEBT_ROLE) {
-        DebtModuleStorage storage $ = _getDebtModuleStorage();
-        require($._debtEngine != debtEngine_, CMTAT_DebtEngineModule_SameValue());
-        _setDebtEngine($, debtEngine_);
     }
 
     /*//////////////////////////////////////////////////////////////

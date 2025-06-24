@@ -1,5 +1,5 @@
 //SPDX-License-Identifier: MPL-2.0
-
+import {IERC3643ComplianceRead} from "./IERC3643Partial.sol";
 pragma solidity ^0.8.20;
 
 
@@ -114,13 +114,7 @@ interface IERC7551ERC20Enforcement {
 
 }
 
-interface IERC7551Compliance {
-    /*
-    * @notice This function return true if the message sender is able to transfer amount tokens to to respecting all compliance.
-    * @dev Don't check the balance and the user's right (access control)
-    */
-    function canTransfer(address from, address to, uint256 value) external view returns (bool);
-
+interface IERC7551Compliance is IERC3643ComplianceRead {
     /*
     * @notice This function return true if the message sender is able to transfer amount tokens to to respecting all compliance.
     * @dev Don't check the balance and the user's right (access control)
@@ -135,13 +129,14 @@ interface IERC7551Compliance {
 
 interface IERC7551Document {
     /**
-    * @notice return the SHA-256 (or Keccak-256) hash of the “Terms” document.
+    * @notice return the bytes32 hash of the “Terms” document.
     */
     function termsHash() external view returns (bytes32);
 
- 
 
-    /// SHOULD revert if _hash == 0 || already set
+    /**
+    * @notice set hash and uri terms
+    */
     function setTerms(bytes32 _hash, string calldata _uri) external;
 
     /*

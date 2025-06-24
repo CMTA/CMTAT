@@ -3,9 +3,8 @@
 pragma solidity ^0.8.20;
 
 /* ==== OpenZeppelin === */
-import {ERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
-/* ==== Module === */
 import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
+/* ==== Module === */
 import {ERC20MintModuleInternal} from "../../internal/ERC20MintModuleInternal.sol";
 /* ==== Technical === */
 import {IMintERC20} from "../../../interfaces/technical/IMintBurnToken.sol";

@@ -2,8 +2,7 @@
 
 pragma solidity ^0.8.20;
 
-/* ==== Module === */
-
+/* ==== OpenZeppelin === */
 import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 
 /* ==== Engine === */
@@ -14,7 +13,7 @@ import {IDebtModule} from "../../../interfaces/modules/IDebtModule.sol";
  * @title Debt module
  * @dev 
  *
- * Set Debt info
+ * Set Debt and Credit Events info
  */
 abstract contract DebtModule is AccessControlUpgradeable, IDebtModule {
    
@@ -35,9 +34,10 @@ abstract contract DebtModule is AccessControlUpgradeable, IDebtModule {
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/  
-    /*
-    * @notice Set all attributes of creditEvents
-    * The values of all attributes will be changed even if the new values are the same as the current ones
+    /* ============ State functions ============ */
+    /**
+    * @inheritdoc IDebtModule
+    * @dev The values of all attributes will be changed even if the new values are the same as the current ones
     */
     function setCreditEvents(
        CreditEvents calldata creditEvents_
@@ -47,17 +47,12 @@ abstract contract DebtModule is AccessControlUpgradeable, IDebtModule {
         emit CreditEventsLogEvent();
     }  
 
-    function creditEvents() public view virtual override(ICMTATCreditEvents) returns(CreditEvents memory creditEventsResult){
-        DebtModuleStorage storage $ = _getDebtModuleStorage();
-        creditEventsResult = $._creditEvents;
-    }
-
     /**
     * @inheritdoc IDebtModule
     */
     function setDebt(
           ICMTATDebt.DebtInformation calldata debt_
-    ) external virtual override(IDebtModule) onlyRole(DEBT_ROLE) {
+    ) public virtual override(IDebtModule) onlyRole(DEBT_ROLE) {
         DebtModuleStorage storage $ = _getDebtModuleStorage();
         $._debt = debt_;
         emit DebtLogEvent();
@@ -68,12 +63,21 @@ abstract contract DebtModule is AccessControlUpgradeable, IDebtModule {
     */
     function setDebtInstrument(
           ICMTATDebt.DebtInstrument calldata debtInstrument_
-    ) external virtual override(IDebtModule) onlyRole(DEBT_ROLE) {
+    ) public virtual override(IDebtModule) onlyRole(DEBT_ROLE) {
         DebtModuleStorage storage $ = _getDebtModuleStorage();
         $._debt.debtInstrument = debtInstrument_;
         emit DebtInstrumentLogEvent();
     }
-    
+
+    /* ============ View functions ============ */
+    /**
+    * @inheritdoc ICMTATCreditEvents
+    */
+    function creditEvents() public view virtual override(ICMTATCreditEvents) returns(CreditEvents memory creditEventsResult){
+        DebtModuleStorage storage $ = _getDebtModuleStorage();
+        creditEventsResult = $._creditEvents;
+    }
+
     /**
     * @inheritdoc ICMTATDebt
     */
@@ -81,7 +85,10 @@ abstract contract DebtModule is AccessControlUpgradeable, IDebtModule {
         DebtModuleStorage storage $ = _getDebtModuleStorage();
         DebtInformationResult = $._debt;
     }
-
+    
+    /*//////////////////////////////////////////////////////////////
+                            INTERNAL/PRIVATE FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
     /* ============ ERC-7201 ============ */
     function _getDebtModuleStorage() internal pure returns (DebtModuleStorage storage $) {
         assembly {

@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.20;
 
-import {MetaTxModule} from "../../modules/wrapper/options/MetaTxModule.sol";
+import {ERC2771Module} from "../../modules/wrapper/options/ERC2771Module.sol";
 import {CMTATBaseERC7551} from "../../modules/5_CMTATBaseERC7551.sol";
 
 /**
@@ -16,7 +16,7 @@ contract CMTATUpgradeableERC7551 is CMTATBaseERC7551 {
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor(
         address forwarderIrrevocable
-    ) MetaTxModule(forwarderIrrevocable) {
+    ) ERC2771Module(forwarderIrrevocable) {
         // Disable the possibility to initialize the implementation
         _disableInitializers();
     }

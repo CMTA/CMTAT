@@ -1,0 +1,35 @@
+## Sūrya's Description Report
+
+### Files Description Table
+
+
+|  File Name  |  SHA-1 Hash  |
+|-------------|--------------|
+| ./modules/1_CMTATBaseRuleEngine.sol | [object Promise] |
+
+
+### Contracts Description Table
+
+
+|  Contract  |         Type        |       Bases      |                  |                 |
+|:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
+|     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
+||||||
+| **CMTATBaseRuleEngine** | Implementation | CMTATBaseCommon, ValidationModuleRuleEngine |||
+| └ | _checkTransferred | Internal 🔒 | 🛑  | |
+| └ | initialize | Public ❗️ | 🛑  | initializer |
+| └ | __CMTAT_init | Internal 🔒 | 🛑  | onlyInitializing |
+| └ | __CMTAT_openzeppelin_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |
+| └ | __CMTAT_internal_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |
+| └ | __CMTAT_modules_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |
+| └ | canTransfer | Public ❗️ |   |NO❗️ |
+| └ | canTransferFrom | Public ❗️ |   |NO❗️ |
+| └ | hasRole | Public ❗️ |   |NO❗️ |
+
+
+### Legend
+
+|  Symbol  |  Meaning  |
+|:--------:|-----------|
+|    🛑    | Function can modify state |
+|    💵    | Function is payable |

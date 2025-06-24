@@ -5,7 +5,7 @@ pragma solidity ^0.8.20;
 import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 import {IERC165} from "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165Upgradeable.sol";
 /* ==== Module === */
-import {CMTATBase, ERC20Upgradeable} from "./2_CMTATBase.sol";
+import {CMTATBaseERC1404, ERC20Upgradeable} from "./2_CMTATBaseERC1404.sol";
 /* ==== Interfaces === */
 import {IERC7802} from "../interfaces/technical/IERC7802.sol";
 import {IBurnFromERC20} from "../interfaces/technical/IMintBurnToken.sol";
@@ -15,7 +15,7 @@ import {IBurnFromERC20} from "../interfaces/technical/IMintBurnToken.sol";
  *
  * Contains all burn functions, inherits from ERC-20
  */
-abstract contract CMTATBaseERC20CrossChain is CMTATBase, IERC7802, IBurnFromERC20 {
+abstract contract CMTATBaseERC20CrossChain is CMTATBaseERC1404, IERC7802, IBurnFromERC20 {
     bytes32 public constant BURNER_FROM_ROLE = keccak256("BURNER_FROM_ROLE");
     bytes32 public constant CROSS_CHAIN_ROLE = keccak256("CROSS_CHAIN_ROLE");
     /*//////////////////////////////////////////////////////////////
@@ -73,6 +73,7 @@ abstract contract CMTATBaseERC20CrossChain is CMTATBase, IERC7802, IBurnFromERC2
         emit CrosschainBurn(_msgSender() , value, _msgSender());
     }
 
+    /* ============ View functions ============ */
     function supportsInterface(bytes4 _interfaceId) public view virtual override(AccessControlUpgradeable, IERC165) returns (bool) {
         return _interfaceId == type(IERC7802).interfaceId || AccessControlUpgradeable.supportsInterface( _interfaceId);
     }

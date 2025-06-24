@@ -29,7 +29,7 @@ describe('CMTAT Disable Allowlist- Standalone', function () {
     await this.cmtat
       .connect(this.admin)
       .enableAllowlist(false)
-    this.core = true
+    this.erc1404 = true
     this.dontCheckTimestamp = true
   })
   // core

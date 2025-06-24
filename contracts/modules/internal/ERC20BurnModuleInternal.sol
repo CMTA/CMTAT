@@ -13,6 +13,10 @@ import {ERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/
 abstract contract ERC20BurnModuleInternal is ERC20Upgradeable {
     error CMTAT_BurnModule_EmptyAccounts();
     error CMTAT_BurnModule_AccountsValueslengthMismatch();
+
+    /*//////////////////////////////////////////////////////////////
+                            INTERNAL/PRIVATE FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
     /**
     * @dev internal function to burn in batch
     */

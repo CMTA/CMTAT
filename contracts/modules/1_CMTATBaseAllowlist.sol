@@ -12,7 +12,7 @@ import {CMTATBaseCommon, AccessControlUpgradeable} from "./0_CMTATBaseCommon.sol
 import {ERC20EnforcementModule, ERC20EnforcementModuleInternal} from "./wrapper/extensions/ERC20EnforcementModule.sol";
 import {DocumentEngineModule, IERC1643} from "./wrapper/extensions/DocumentEngineModule.sol";
 // options
-import {MetaTxModule, ERC2771ContextUpgradeable} from "./wrapper/options/MetaTxModule.sol";
+import {ERC2771Module, ERC2771ContextUpgradeable} from "./wrapper/options/ERC2771Module.sol";
 // controller
 import {ValidationModuleAllowlist} from "./wrapper/controllers/ValidationModuleAllowlist.sol";
 import {ValidationModule, ValidationModuleCore} from "./wrapper/core/ValidationModuleCore.sol";
@@ -28,17 +28,8 @@ abstract contract CMTATBaseAllowlist is
     CMTATBaseCommon,
     ValidationModuleAllowlist,
     ValidationModuleCore,
-    MetaTxModule
+    ERC2771Module
 {  
-
-    function _checkTransferred(address spender, address from, address to, uint256 value) internal virtual override {
-        CMTATBaseCommon._checkTransferred(spender, from, to, value);
-        if (!ValidationModuleAllowlist._canTransferGenericByModule(spender, from, to)) {
-            revert Errors.CMTAT_InvalidTransfer(from, to, value);
-        }
-    } 
- 
-
     /*//////////////////////////////////////////////////////////////
                          INITIALIZER FUNCTION
     //////////////////////////////////////////////////////////////*/
@@ -138,8 +129,7 @@ abstract contract CMTATBaseAllowlist is
     ) public virtual override (ValidationModuleCore) view returns (bool) {
         if(!ValidationModuleAllowlist._canTransferGenericByModule(address(0), from, to)){
             return false;
-        }
-        if(!ERC20EnforcementModuleInternal._checkActiveBalance(from, value)){
+        } else if(!ERC20EnforcementModuleInternal._checkActiveBalance(from, value)){
             return false;
         } else {
             return ValidationModuleCore.canTransfer(from, to, value);
@@ -157,6 +147,8 @@ abstract contract CMTATBaseAllowlist is
         uint256 value
     ) public virtual override (ValidationModuleCore) view returns (bool) {
         if(!ValidationModuleAllowlist._canTransferGenericByModule(spender, from, to)){
+            return false;
+        }else if(!ERC20EnforcementModuleInternal._checkActiveBalance(from, value)){
             return false;
         }else {
             return ValidationModuleCore.canTransferFrom(spender, from, to, value);
@@ -193,12 +185,19 @@ abstract contract CMTATBaseAllowlist is
         return ValidationModuleAllowlist._canTransferGenericByModule(spender, from, to);
     }
 
+    function _checkTransferred(address spender, address from, address to, uint256 value) internal virtual override {
+        CMTATBaseCommon._checkTransferred(spender, from, to, value);
+        if (!ValidationModuleAllowlist._canTransferGenericByModule(spender, from, to)) {
+            revert Errors.CMTAT_InvalidTransfer(from, to, value);
+        }
+    } 
 
-        /*//////////////////////////////////////////////////////////////
+
+    /*//////////////////////////////////////////////////////////////
                             METAXTX MODULE
     //////////////////////////////////////////////////////////////*/
        /**
-     * @dev This surcharge is not necessary if you do not use the MetaTxModule
+     * @dev This surcharge is not necessary if you do not use the ERC2771Module
      */
     function _msgSender()
         internal virtual
@@ -210,7 +209,7 @@ abstract contract CMTATBaseAllowlist is
     }
 
     /**
-     * @dev This surcharge is not necessary if you do not use the MetaTxModule
+     * @dev This surcharge is not necessary if you do not use the ERC2771Module
      */
     function _contextSuffixLength() internal virtual view 
     override(ContextUpgradeable, ERC2771ContextUpgradeable)
@@ -219,7 +218,7 @@ abstract contract CMTATBaseAllowlist is
     }
 
     /**
-     * @dev This surcharge is not necessary if you do not use the MetaTxModule
+     * @dev This surcharge is not necessary if you do not use the ERC2771Module
      */
     function _msgData()
         internal virtual
