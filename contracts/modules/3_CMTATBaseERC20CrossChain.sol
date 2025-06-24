@@ -28,8 +28,9 @@ abstract contract CMTATBaseERC20CrossChain is CMTATBaseERC1404, IERC7802, IBurnF
     * Don't emit the same event as configured in the ERC20MintModule
     */
     function crosschainMint(address to, uint256 value) public virtual onlyRole(CROSS_CHAIN_ROLE) whenNotPaused {
+         // Put before to avoid reentrancy-events (slither)
+         emit CrosschainMint(to, value,_msgSender());
         _mintOverride(to, value);
-        emit CrosschainMint(to, value,_msgSender());
     }
 
     /**
@@ -39,8 +40,9 @@ abstract contract CMTATBaseERC20CrossChain is CMTATBaseERC1404, IERC7802, IBurnF
     */
     function crosschainBurn(address from, uint256 value) public virtual onlyRole(CROSS_CHAIN_ROLE) whenNotPaused{
         address sender =  _msgSender();
-        _burnFrom(sender, from, value);
+        // Put before to avoid reentrancy-events (slither)
         emit CrosschainBurn(from, value, _msgSender());
+        _burnFrom(sender, from, value);  
     }
 
     /**
@@ -72,8 +74,9 @@ abstract contract CMTATBaseERC20CrossChain is CMTATBaseERC1404, IERC7802, IBurnF
     function burn(
         uint256 value
     ) public virtual onlyRole(BURNER_FROM_ROLE) whenNotPaused {
-        _burnOverride(_msgSender(), value);
+        // Put before to avoid reentrancy-events (slither)
         emit CrosschainBurn(_msgSender() , value, _msgSender());
+        _burnOverride(_msgSender(), value);
     }
 
     /* ============ View functions ============ */
@@ -88,10 +91,11 @@ abstract contract CMTATBaseERC20CrossChain is CMTATBaseERC1404, IERC7802, IBurnF
     function _burnFrom(address sender, address account, uint256 value) internal virtual{
         // Allowance check
         ERC20Upgradeable._spendAllowance(account, sender, value );
-        // burn
-        _burnOverride(account, value);
-        // Specific event for the operation
+         // Specific event for the operation
+        // Put before to avoid reentrancy-events (slither)
         emit Spend(account, sender, value);
         emit BurnFrom(sender, account, sender, value);
+        // burn
+        _burnOverride(account, value);
     }
 }
