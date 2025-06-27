@@ -18,11 +18,18 @@ Please follow <https://changelog.md/> conventions.
   
   - Update changelog
 
-## 3.0.0-rc.4
+## 3.0.0-rc.5
 
 - Add & improve Solidity Natspec comment
   - Few improvement as a result (e.g rename return variables)
 - Improve & update documentation
+
+## 3.0.0-rc.4
+
+- Fix typo for IERC3643IComplianceContract
+  -- IERC3743IComplianceContract -> IERC3643IComplianceContract
+- CMTATBaseERC20CrossChain:
+  Put events before internal functions calls `mintOverride`and `burnOverride`(avoid reentrancy-event)
 
 ## 3.0.0-rc.3
 
