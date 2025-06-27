@@ -15,13 +15,11 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **ERC20BurnModule** | Implementation | ERC20Upgradeable, IERC20Allowance, IBurnERC20, IERC3643Burn, IERC7551Burn, AuthorizationModule |||
+| **ERC20BurnModule** | Implementation | ERC20BurnModuleInternal, AccessControlUpgradeable, IBurnBatchERC20, IERC3643Burn, IERC7551Burn |||
 | └ | burn | Public ❗️ | 🛑  | onlyRole |
 | └ | burn | Public ❗️ | 🛑  | onlyRole |
 | └ | batchBurn | Public ❗️ | 🛑  | onlyRole |
 | └ | batchBurn | Public ❗️ | 🛑  | onlyRole |
-| └ | _batchBurn | Internal 🔒 | 🛑  | |
-| └ | _burnOverride | Internal 🔒 | 🛑  | |
 | └ | _burn | Internal 🔒 | 🛑  | |
 
 

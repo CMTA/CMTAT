@@ -15,12 +15,12 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **DocumentEngineModule** | Implementation | AuthorizationModule, IDocumentEngineModule |||
+| **DocumentEngineModule** | Implementation | IDocumentEngineModule, AccessControlUpgradeable |||
 | └ | __DocumentEngineModule_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |
 | └ | documentEngine | Public ❗️ |   |NO❗️ |
 | └ | getDocument | Public ❗️ |   |NO❗️ |
 | └ | getAllDocuments | Public ❗️ |   |NO❗️ |
-| └ | setDocumentEngine | External ❗️ | 🛑  | onlyRole |
+| └ | setDocumentEngine | Public ❗️ | 🛑  | onlyRole |
 | └ | _setDocumentEngine | Internal 🔒 | 🛑  | |
 | └ | _getDocumentEngineModuleStorage | Private 🔐 |   | |
 

@@ -41,12 +41,8 @@ abstract contract PauseModule is PausableUpgradeable, AccessControlUpgradeable, 
     /* ============ State restricted functions ============ */
     /**
      * @inheritdoc IERC3643Pause
-     * @dev See {Pausable-_pause}.
-     * Emits a `Paused` event
-     * Requirements:
-     *
+     * @custom:access-control
      * - the caller must have the `PAUSER_ROLE`.
-     *
      */
     function pause() public virtual override(IERC3643Pause, IERC7551Pause) onlyRole(PAUSER_ROLE) {
         PausableUpgradeable._pause();
@@ -54,10 +50,7 @@ abstract contract PauseModule is PausableUpgradeable, AccessControlUpgradeable, 
 
     /**
      * @inheritdoc IERC3643Pause
-     * @dev See {Pausable-_unpause}.
-     * emits an `Unpaused` event
-     * Requirements:
-     *
+     * @custom:access-control
      * - the caller must have the `PAUSER_ROLE`.
      */
     function unpause() public virtual override(IERC3643Pause, IERC7551Pause) onlyRole(PAUSER_ROLE) {
@@ -68,13 +61,10 @@ abstract contract PauseModule is PausableUpgradeable, AccessControlUpgradeable, 
 
     /**
     * @inheritdoc ICMTATDeactivate
-    * @dev
-    * Emits a {Deactivated} event indicating that the contract has been deactivated.
-    * Requirements:
-    *
+    * @custom:access-control
     * - the caller must have the `DEFAULT_ADMIN_ROLE`.
-    * - Contract must be paused to be deactivated
-    * 
+    * @custom:devimpl
+    * With a proxy architecture, it is still possible to rollback by deploying a new implementation which sets the variable to false.
     */
     function deactivateContract()
         public virtual override(ICMTATDeactivate)

@@ -9,11 +9,14 @@ pragma solidity ^0.8.20;
 interface IERC1404 {
 
     /**
-     * @dev See {ERC-1404}
+     * @notice Returns a uint8 code to indicate if a transfer is restricted or not
+     * @dev 
+     * See {ERC-1404}
      * This function is where an issuer enforces the restriction logic of their token transfers. 
      * Some examples of this might include:
      * - checking if the token recipient is whitelisted, 
      * - checking if a sender's tokens are frozen in a lock-up period, etc.
+     * @return uint8 restricted code, 0 means the transfer is authorized
      *
      */
     function detectTransferRestriction(
@@ -34,6 +37,9 @@ interface IERC1404 {
     ) external view returns (string memory);
 }
 
+/**
+* @title IERC1404 with custom related extensions
+*/
 interface IERC1404Extend is IERC1404{
     /* 
     * @dev leave the code 6-9 free/unused for further CMTAT additions in your ruleEngine implementation
@@ -47,13 +53,23 @@ interface IERC1404Extend is IERC1404{
         TRANSFER_REJECTED_FROM_INSUFFICIENT_ACTIVE_BALANCE
     }
 
+    /**
+     * @notice Returns a uint8 code to indicate if a transfer is restricted or not
+     * @dev 
+     * See {ERC-1404}
+     * Add an additionnal argument `spender`
+     * This function is where an issuer enforces the restriction logic of their token transfers. 
+     * Some examples of this might include:
+     * - checking if the token recipient is whitelisted, 
+     * - checking if a sender's tokens are frozen in a lock-up period, etc.
+     * @return uint8 restricted code, 0 means the transfer is authorized
+     *
+     */
     function detectTransferRestrictionFrom(
         address spender,
         address from,
         address to,
         uint256 value
     ) external view returns (uint8);
-
-
 }
 

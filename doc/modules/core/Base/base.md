@@ -29,15 +29,31 @@ This document defines Base Module for the CMTA Token specification.
 
 ### Functions
 
-#### `version`
+#### IERC3643Base
 
-##### Definition:
+##### `version()`
 
 ```solidity
-function version() public view virtual override(IERC3643Base) returns (string memory)
+function version() external view returns (string memory version_);
+```
+```solidity
+function version() 
+public view virtual override(IERC3643Base) 
+returns (string memory version_)
 ```
 
-##### Description:
+ **Description**
 
-Return the current contract version (ERC-3643)
+Returns the current version of the token contract.
+ Useful for identifying which version of the smart contract is deployed and in use. 
+
+**Return**
+
+| Name       | Type   | Description                                                  |
+| ---------- | ------ | ------------------------------------------------------------ |
+| `version_` | string | The version string of the token implementation (e.g., "1.0.0"). |
+
+
+
+
 

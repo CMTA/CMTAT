@@ -29,17 +29,25 @@ abstract contract EnforcementModule is
     /* ============ State restricted functions ============ */
     /**
     * @inheritdoc IERC3643Enforcement
+    * @custom:access-control
+    * - the caller must have the `ENFORCER_ROLE`.
     */
     function setAddressFrozen(address account, bool freeze) public virtual override(IERC3643Enforcement) onlyRole(ENFORCER_ROLE){
          _addAddressToTheList(account, freeze, "");
     }
-
+    
     /**
-     * @notice Freezes/unfreeze an address.
-     * @param account the account to freeze
-     * @param freeze true to freeze, false to unfreeze
-     * @param data indicate why the account was frozen.
-     */
+    * @notice Sets the frozen status of a specific account.
+    * @dev 
+    * Extend ERC-3643 functions `setAddressFrozen` with a supplementary `data` parameter
+    * - Freezing an account prevents it from transferring or receiving tokens depending on enforcement logic.
+    * - Emits an `AddressFrozen` event.
+    * @param account The address whose frozen status is being updated.
+    * @param freeze Set to `true` to freeze the account, or `false` to unfreeze it.
+    * @param data Optional metadata providing context or justification for the action (e.g. compliance reason).
+    * @custom:access-control
+    * - the caller must have the `ENFORCER_ROLE`.
+    */
     function setAddressFrozen(
         address account, bool freeze, bytes calldata data
     ) public virtual onlyRole(ENFORCER_ROLE)  {
@@ -47,7 +55,9 @@ abstract contract EnforcementModule is
     }
 
     /**
-    * @notice batch version of {setAddressFrozen}
+    * @inheritdoc IERC3643Enforcement
+    * @custom:access-control
+    * - the caller must have the `ENFORCER_ROLE`.
     */
     function batchSetAddressFrozen(
         address[] calldata accounts, bool[] calldata freezes
@@ -59,7 +69,7 @@ abstract contract EnforcementModule is
     /**
     * @inheritdoc IERC3643Enforcement
     */
-    function isFrozen(address account) public override(IERC3643Enforcement) view virtual returns (bool) {
+    function isFrozen(address account) public override(IERC3643Enforcement) view virtual returns (bool isFrozen_) {
        return _addressIsListed(account);
        
     }

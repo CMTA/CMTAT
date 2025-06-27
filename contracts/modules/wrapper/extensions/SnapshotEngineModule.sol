@@ -40,9 +40,14 @@ abstract contract SnapshotEngineModule is AccessControlUpgradeable, ISnapshotEng
     //////////////////////////////////////////////////////////////*/
 
     /* ============  State Restricted Functions ============ */
+    /**
+    * @inheritdoc ISnapshotEngineModule
+    * @custom:access-control
+    * - The caller must have the `SNAPSHOOTER_ROLE`.
+    */
     function setSnapshotEngine(
         ISnapshotEngine snapshotEngine_
-    ) external virtual override(ISnapshotEngineModule) onlyRole(SNAPSHOOTER_ROLE) {
+    ) public virtual override(ISnapshotEngineModule) onlyRole(SNAPSHOOTER_ROLE) {
         SnapshotEngineModuleStorage storage $ = _getSnapshotEngineModuleStorage();
         require($._snapshotEngine != snapshotEngine_, CMTAT_SnapshotModule_SameValue());
         _setSnapshotEngine($, snapshotEngine_);

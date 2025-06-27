@@ -17,6 +17,9 @@ abstract contract ValidationModuleRuleEngine is
     ValidationModuleCore,
     ValidationModuleRuleEngineInternal
 {
+    /**
+    * @notice Reverts if attempting to set the RuleEngine to its current value.
+    */
     error CMTAT_ValidationModule_SameValue();
 
     /*//////////////////////////////////////////////////////////////
@@ -24,9 +27,15 @@ abstract contract ValidationModuleRuleEngine is
     //////////////////////////////////////////////////////////////*/
 
     /* ============ State functions ============ */
-    /*
-    * @notice set a RuleEngine
-    * @param ruleEngine_ the call will be reverted if the new value of ruleEngine is the same as the current one
+    /**
+    * @notice Updates the RuleEngine used for validation/compliance transfer logic.
+    * @dev Reverts with `CMTAT_ValidationModule_SameValue` if the new RuleEngine is the same as the current one.
+    * Requirements:
+    * - Caller must have `DEFAULT_ADMIN_ROLE`.
+    * Emits a {RuleEngine} event.
+    * @param ruleEngine_ The new RuleEngine contract to set.
+    * @custom:access-control
+    * - The caller must have the `DEFAULT_ADMIN_ROLE`.
     */
     function setRuleEngine(
         IRuleEngine ruleEngine_

@@ -20,7 +20,7 @@
 | └ | documentEngine | Public ❗️ |   |NO❗️ |
 | └ | getDocument | Public ❗️ |   |NO❗️ |
 | └ | getAllDocuments | Public ❗️ |   |NO❗️ |
-| └ | setDocumentEngine | External ❗️ | 🛑  | onlyRole |
+| └ | setDocumentEngine | Public ❗️ | 🛑  | onlyRole |
 | └ | _setDocumentEngine | Internal 🔒 | 🛑  | |
 | └ | _getDocumentEngineModuleStorage | Private 🔐 |   | |
 

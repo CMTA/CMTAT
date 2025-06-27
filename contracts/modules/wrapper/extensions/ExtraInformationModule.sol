@@ -9,10 +9,6 @@ import {IERC1643CMTAT, IERC1643} from "../../../interfaces/tokenization/draft-IE
 import {ICMTATBase} from "../../../interfaces/tokenization/ICMTAT.sol";
 abstract contract ExtraInformationModule is AccessControlUpgradeable, ICMTATBase {
      bytes32 public constant EXTRA_INFORMATION_ROLE = keccak256("EXTRA_INFORMATION_ROLE");
-    /* ============ Events ============ */
-    event Information(
-        string newInformation
-    );
     /* ============ ERC-7201 ============ */
     // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.ExtraInformationModule")) - 1)) & ~bytes32(uint256(0xff))
     bytes32 private constant ExtraInformationModuleStorageLocation = 0xd2d5d34c4a4dea00599692d3257c0aebc5e0359176118cd2364ab9b008c2d100;
@@ -49,7 +45,9 @@ abstract contract ExtraInformationModule is AccessControlUpgradeable, ICMTATBase
     /* ============  Restricted Functions ============ */
     
     /** 
-    * @notice the tokenId will be changed even if the new value is the same as the current one
+    * @dev the tokenId will be changed even if the new value is the same as the current one
+    * @custom:access-control
+    * - the caller must have the `EXTRA_INFORMATION_ROLE`.
     */
     function setTokenId(
         string calldata tokenId_
@@ -61,6 +59,8 @@ abstract contract ExtraInformationModule is AccessControlUpgradeable, ICMTATBase
     /** 
     * @inheritdoc ICMTATBase
     * @dev The terms will be changed even if the new value is the same as the current one
+    * @custom:access-control
+    * - the caller must have the `EXTRA_INFORMATION_ROLE`.
     */
     function setTerms(IERC1643CMTAT.DocumentInfo calldata terms_) public virtual override(ICMTATBase) onlyRole(EXTRA_INFORMATION_ROLE) {
 		_setTerms(terms_);
@@ -69,10 +69,13 @@ abstract contract ExtraInformationModule is AccessControlUpgradeable, ICMTATBase
     /** 
     * @inheritdoc ICMTATBase
     * @dev The information will be changed even if the new value is the same as the current one
+    * @custom:access-control
+    * - the caller must have the `EXTRA_INFORMATION_ROLE`.
     */
+    
     function setInformation(
         string calldata information_
-    ) public onlyRole(EXTRA_INFORMATION_ROLE) {
+    ) public virtual onlyRole(EXTRA_INFORMATION_ROLE) {
         ExtraInformationModuleStorage storage $ = _getExtraInformationModuleStorage();
         _setInformation($, information_);
     }
@@ -81,7 +84,7 @@ abstract contract ExtraInformationModule is AccessControlUpgradeable, ICMTATBase
     /**
     * @inheritdoc ICMTATBase
     */
-    function tokenId() public view  virtual override(ICMTATBase) returns (string memory) {
+    function tokenId() public view  virtual override(ICMTATBase) returns (string memory tokenId_) {
         ExtraInformationModuleStorage storage $ = _getExtraInformationModuleStorage();
         return $._tokenId;
     }
@@ -89,7 +92,7 @@ abstract contract ExtraInformationModule is AccessControlUpgradeable, ICMTATBase
     /**
     * @inheritdoc ICMTATBase
     */
-    function terms() public view virtual override(ICMTATBase)  returns (Terms memory) {
+    function terms() public view virtual override(ICMTATBase)  returns (Terms memory terms_) {
         ExtraInformationModuleStorage storage $ = _getExtraInformationModuleStorage();
         return $._terms;
     }
@@ -97,7 +100,7 @@ abstract contract ExtraInformationModule is AccessControlUpgradeable, ICMTATBase
     /**
     * @inheritdoc ICMTATBase
     */
-    function information() public view virtual override(ICMTATBase) returns (string memory) {
+    function information() public view virtual override(ICMTATBase) returns (string memory information_) {
         ExtraInformationModuleStorage storage $ = _getExtraInformationModuleStorage();
         return $._information;
     }

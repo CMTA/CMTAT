@@ -9,6 +9,11 @@ import {IERC1643CMTAT, IERC1643} from "../../../interfaces/tokenization/draft-IE
 import {IERC7551Document} from "../../../interfaces/tokenization/draft-IERC7551.sol";
 abstract contract ERC7551Module is ExtraInformationModule, IERC7551Document {
     /* ============ Events ============ */
+    /**
+    * @notice Emitted when the metadata string is updated.
+    * @param newMetaData The new metadata value (e.g. a URL or reference hash).
+    */
+
     event MetaData(
         string newMetaData
     );
@@ -29,8 +34,10 @@ abstract contract ERC7551Module is ExtraInformationModule, IERC7551Document {
 
     /** 
     *   
-    * @inheritdoc IERC7551Document
     * @dev The metadata will be changed even if the new value is the same as the current one
+    * @inheritdoc IERC7551Document
+    * @custom:access-control
+    * - the caller must have the `EXTRA_INFORMATION_ROLE`.
     */
     function setMetaData(
         string calldata metadata_
@@ -41,6 +48,8 @@ abstract contract ERC7551Module is ExtraInformationModule, IERC7551Document {
 
     /**
     *  @inheritdoc IERC7551Document
+    * @custom:access-control
+    * - the caller must have the `EXTRA_INFORMATION_ROLE`.
     */
     function setTerms(bytes32 hash, string calldata uri) public virtual override(IERC7551Document) onlyRole(EXTRA_INFORMATION_ROLE) {
         IERC1643CMTAT.DocumentInfo memory terms_ = IERC1643CMTAT.DocumentInfo("", uri, hash);
@@ -48,7 +57,7 @@ abstract contract ERC7551Module is ExtraInformationModule, IERC7551Document {
     }
 
     /* ============ View functions ============ */
-    function metaData() public view virtual override(IERC7551Document) returns (string memory) {
+    function metaData() public view virtual override(IERC7551Document) returns (string memory metadata_) {
         ERC7551ModuleStorage storage $ = _getERC7551ModuleStorage();
         return $._metadata;
     }
@@ -56,7 +65,7 @@ abstract contract ERC7551Module is ExtraInformationModule, IERC7551Document {
     /**
     *  @inheritdoc IERC7551Document
     */
-    function termsHash() public view virtual override(IERC7551Document) returns (bytes32){
+    function termsHash() public view virtual override(IERC7551Document) returns (bytes32 hash_){
         return terms().doc.documentHash;
     }
 

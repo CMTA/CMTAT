@@ -18,7 +18,7 @@ abstract contract BaseModule is IERC3643Base {
     /**
     * @inheritdoc IERC3643Base
     */
-    function version() public view virtual override(IERC3643Base) returns (string memory) {
+    function version() public view virtual override(IERC3643Base) returns (string memory version_) {
        return VERSION;
     }
 }

@@ -7,6 +7,7 @@ const {
 
 describe('Proxy - PauseModule', function () {
   beforeEach(async function () {
+    const VALUE_TYPED = ethers.Typed.uint256(20)
     Object.assign(this, await loadFixture(fixture))
     this.cmtat = await deployCMTATProxy(
       this._.address,
@@ -14,7 +15,7 @@ describe('Proxy - PauseModule', function () {
       this.deployerAddress.address
     )
     // Mint tokens to test the transfer
-    await this.cmtat.connect(this.admin).mint(this.address1, 20)
+    await this.cmtat.connect(this.admin).mint(this.address1, VALUE_TYPED)
   })
   PauseModuleCommon()
 })
