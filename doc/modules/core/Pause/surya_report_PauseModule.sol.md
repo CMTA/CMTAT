@@ -15,11 +15,11 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **PauseModule** | Implementation | PausableUpgradeable, AuthorizationModule, IERC3643Pause, IERC7551Pause, ICMTATDeactivate |||
-| └ | paused | Public ❗️ |   |NO❗️ |
+| **PauseModule** | Implementation | PausableUpgradeable, AccessControlUpgradeable, IERC3643Pause, IERC7551Pause, ICMTATDeactivate |||
 | └ | pause | Public ❗️ | 🛑  | onlyRole |
 | └ | unpause | Public ❗️ | 🛑  | onlyRole |
 | └ | deactivateContract | Public ❗️ | 🛑  | onlyRole |
+| └ | paused | Public ❗️ |   |NO❗️ |
 | └ | deactivated | Public ❗️ |   |NO❗️ |
 | └ | _getPauseModuleStorage | Private 🔐 |   | |
 

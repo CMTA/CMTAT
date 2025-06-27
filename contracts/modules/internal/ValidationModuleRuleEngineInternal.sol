@@ -19,8 +19,9 @@ abstract contract ValidationModuleRuleEngineInternal is
 {
     /* ============ Events ============ */
     /**
-     * @dev Emitted when a rule engine is set.
-     */
+    * @notice Emitted when a new RuleEngine contract is set.
+    * @param newRuleEngine The address of the RuleEngine that was configured.
+    */
     event RuleEngine(IRuleEngine indexed newRuleEngine);
     /* ============ ERC-7201 ============ */
     // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.ValidationModuleRuleEngineInternal")) - 1)) & ~bytes32(uint256(0xff))
@@ -44,6 +45,10 @@ abstract contract ValidationModuleRuleEngineInternal is
                             PUBLIC/EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
     
+    /**
+    * @notice Returns the current RuleEngine contract used for validation.
+    * @return ruleEngine_ The address of the active RuleEngine.
+    */
     function ruleEngine() public view returns(IRuleEngine){
         ValidationModuleRuleEngineStorage storage $ = _getValidationModuleRuleEngineStorage();
         return $._ruleEngine;

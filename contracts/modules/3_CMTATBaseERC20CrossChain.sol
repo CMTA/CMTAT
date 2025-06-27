@@ -26,8 +26,10 @@ abstract contract CMTATBaseERC20CrossChain is CMTATBaseERC1404, IERC7802, IBurnF
     * @inheritdoc IERC7802
     * @dev
     * Don't emit the same event as configured in the ERC20MintModule
+    * @custom:access-control
+    * - the caller must have the `CROSS_CHAIN_ROLE`.
     */
-    function crosschainMint(address to, uint256 value) public virtual onlyRole(CROSS_CHAIN_ROLE) whenNotPaused {
+    function crosschainMint(address to, uint256 value) public virtual override(IERC7802) onlyRole(CROSS_CHAIN_ROLE) whenNotPaused {
          // Put before to avoid reentrancy-events (slither)
          emit CrosschainMint(to, value,_msgSender());
         _mintOverride(to, value);
@@ -37,8 +39,10 @@ abstract contract CMTATBaseERC20CrossChain is CMTATBaseERC1404, IERC7802, IBurnF
     * @inheritdoc IERC7802
     * @dev
     * Don't emit the same event as configured in the ERC20BurnModule
+    * @custom:access-control
+    * - the caller must have the `CROSS_CHAIN_ROLE`.
     */
-    function crosschainBurn(address from, uint256 value) public virtual onlyRole(CROSS_CHAIN_ROLE) whenNotPaused{
+    function crosschainBurn(address from, uint256 value) public virtual override(IERC7802) onlyRole(CROSS_CHAIN_ROLE) whenNotPaused{
         address sender =  _msgSender();
         // Put before to avoid reentrancy-events (slither)
         emit CrosschainBurn(from, value, _msgSender());
@@ -47,36 +51,31 @@ abstract contract CMTATBaseERC20CrossChain is CMTATBaseERC1404, IERC7802, IBurnF
 
     /**
      * @inheritdoc IBurnFromERC20
-     * @dev 
-     * This function decreases the total supply.
-     * Can be used to authorize a bridge (e.g. CCIP) to burn token owned by the bridge
-     * No data parameter reason to be compatible with Bridge, e.g. CCIP
-     * 
-     * See {ERC20-_burn} and {ERC20-allowance}.
-     *
-     * Requirements:
-     *
-     * - the caller must have allowance for ``accounts``'s tokens of at least
-     * `value`.
+     * @custom:access-control
+     * - the caller must have the `BURNER_FROM_ROLE`.
      */
     function burnFrom(address account, uint256 value)
         public virtual override(IBurnFromERC20) 
         onlyRole(BURNER_FROM_ROLE) whenNotPaused
     {
         address sender =  _msgSender();
-        _burnFrom(sender, account, value);
-       
+        _burnFrom(sender, account, value); 
     }
 
     /**
     * @inheritdoc IBurnFromERC20
+    * @custom:access-control
+    * - the caller must have the `BURNER_FROM_ROLE`.
     */
     function burn(
         uint256 value
     ) public virtual onlyRole(BURNER_FROM_ROLE) whenNotPaused {
         // Put before to avoid reentrancy-events (slither)
-        emit CrosschainBurn(_msgSender() , value, _msgSender());
-        _burnOverride(_msgSender(), value);
+        // Don't emit CrossChainBurn because this function burn is not part of the IERC7802 interface
+        // Don't emit Spend event because allowance is not used here
+        address sender = _msgSender();
+        emit BurnFrom(sender, sender, sender, value);
+        _burnOverride(sender, value);
     }
 
     /* ============ View functions ============ */

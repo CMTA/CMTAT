@@ -50,7 +50,7 @@ abstract contract EnforcementModuleInternal is
     /**
      * @dev Returns true if the account is frozen, and false otherwise.
      */
-    function _addressIsListed(address account) internal view virtual returns (bool) {
+    function _addressIsListed(address account) internal view virtual returns (bool _isListed) {
         EnforcementModuleInternalStorage storage $ = _getEnforcementModuleInternalStorage();
         return $._list[account];
     }

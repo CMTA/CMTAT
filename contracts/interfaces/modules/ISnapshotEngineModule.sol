@@ -5,26 +5,38 @@ pragma solidity ^0.8.20;
 /* ==== Engine === */
 import {ISnapshotEngine} from "../engine/ISnapshotEngine.sol";
 
-/*
-* @dev minimum interface to define a DocumentEngineModule
-*/
+/**
+ * @title ISnapshotEngineModule
+ * @notice Minimal interface for integrating a snapshot engine module.
+ * @dev Provides methods to set and retrieve a snapshot engine used for capturing and referencing token states.
+ */
 interface ISnapshotEngineModule {
     /* ============ Events ============ */
     /**
-     * @dev Emitted when a rule engine is set.
+     * @notice Emitted when a new snapshot engine is set.
+     * @param newSnapshotEngine The address of the newly assigned snapshot engine contract.
      */
+
     event SnapshotEngine(ISnapshotEngine indexed newSnapshotEngine);
     /* ============ Error ============ */
+    /**
+     * @dev Reverts if the new snapshot engine is the same as the current one.
+     */
     error CMTAT_SnapshotModule_SameValue();
     /* ============ Functions ============ */
-    /*
-    * @notice Set the snapshotEngine
-    */
+    /**
+     * @notice Sets the address of the snapshot engine contract.
+     * @dev The snapshot engine is responsible for recording historical balances and supply snapshots.
+     * Emits a {SnapshotEngine} event.
+     * Reverts with {CMTAT_SnapshotModule_SameValue} if the new engine is the same as the current one.
+     * @param snapshotEngine_ The new snapshot engine contract address to set.
+     */
     function setSnapshotEngine(
         ISnapshotEngine snapshotEngine_
     ) external;
     /**
-    * @notice returns the current snapshotEngine
-    */
+     * @notice Returns the currently set snapshot engine.
+     * @return The address of the active snapshot engine contract.
+     */
     function  snapshotEngine() external view returns (ISnapshotEngine);
 }

@@ -15,10 +15,10 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **SnapshotEngineModule** | Implementation | ISnapshotEngineModule, AuthorizationModule |||
+| **SnapshotEngineModule** | Implementation | AccessControlUpgradeable, ISnapshotEngineModule |||
 | └ | __SnapshotEngineModule_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |
+| └ | setSnapshotEngine | Public ❗️ | 🛑  | onlyRole |
 | └ | snapshotEngine | Public ❗️ |   |NO❗️ |
-| └ | setSnapshotEngine | External ❗️ | 🛑  | onlyRole |
 | └ | _setSnapshotEngine | Internal 🔒 | 🛑  | |
 | └ | _getSnapshotEngineModuleStorage | Private 🔐 |   | |
 

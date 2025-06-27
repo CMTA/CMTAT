@@ -2,6 +2,8 @@
 
 This document defines the Extra Information Module, which allows to set additional information related to the token
 
+> Defines standard metadata for a tokenized asset, including token ID, contractual terms (via document), and general-purpose information.
+
 [TOC]
 
 
@@ -43,86 +45,196 @@ The ExtraInformation Module set the basic properties common to the different CMT
 
 ## API for Ethereum
 
-### Functions
+### Structs
 
-#### `setTokenId(string)`
+#### `Terms`
 
-##### Definition:
+Represents the tokenization terms, including a name and an associated document reference.
 
-```solidity
- function setTokenId(string calldata tokenId_) 
- public virtual override(ICMTATBase)  
- onlyRole(DEFAULT_ADMIN_ROLE)
-```
+| Name   | Type                | Description                                                  |
+| ------ | ------------------- | ------------------------------------------------------------ |
+| `name` | `string`            | Human-readable label for the terms (e.g. "Loan Terms").      |
+| `doc`  | `IERC1643.Document` | Metadata for the associated document (URI, hash, timestamp). |
 
-##### Description:
 
-Set the `token id` to the given `string`.
-Only authorized users are allowed to call this function.
 
-#### `setTerms(...)`
-
-##### Definition:
-
-```solidity
-function setTerms(IERC1643CMTAT.DocumentInfo calldata terms_) 
-public virtual override(ICMTATBase) 
-onlyRole(DEFAULT_ADMIN_ROLE)
-```
-
-##### Description:
-
-Set the `terms` to the given `string`.
-Only authorized users are allowed to call this function.
-
-#### `setInformation(string)`
-
-##### Definition:
-
-```solidity
-function setInformation(string calldata information_) 
-public onlyRole(DEFAULT_ADMIN_ROLE)
-```
-
-##### Description:
-
-Set the information` to the given `uint256`.
-Only authorized users are allowed to call this function.
+------
 
 ### Events
 
-#### `Term(string)`
-
-##### Definition:
+#### `Information`
 
 ```solidity
-event Term(string indexed newTermIndexed, string newTerm)
+event Information(string newInformation)
 ```
 
-##### Description:
+Emitted when the information field is updated (typically containing free-form metadata, context, or documentation URI).
 
-Emitted when the variable `terms` is set to `newTerm`.
+| Name             | Type     | Description                             |
+| ---------------- | -------- | --------------------------------------- |
+| `newInformation` | `string` | The new metadata or description string. |
 
-#### `tokenId(string,string`
+#### `Term(...)`
 
-##### Definition:
+```solidity
+event Term(Terms newTerm)
+```
+
+Emitted when new tokenization terms are set.
+
+| Name      | Type    | Description                            |
+| --------- | ------- | -------------------------------------- |
+| `newTerm` | `Terms` | The new terms structure being applied. |
+
+
+
+#### `TokenId(string, string)`
 
 ```solidity
 event TokenId(string indexed newTokenIdIndexed, string newTokenId)
 ```
 
-##### Description:
+Emitted when a token ID is set or updated.
 
-Emitted when `tokenId` is set to `newTokenId`.
+| Name                | Type     | Description                          |
+| ------------------- | -------- | ------------------------------------ |
+| `newTokenIdIndexed` | `string` | Indexed version of the new token ID. |
+| `newTokenId`        | `string` | The full token ID string.            |
 
-#### `Information(string,string)`
 
-##### Definition:
+
+### Functions
+
+#### `tokenId`
 
 ```solidity
-event Information(string indexed newInformationIndexed, string newInformation)
+function tokenId() external view returns (string tokenId_)
 ```
 
-##### Description:
+```solidity
+function tokenId() 
+public view  virtual override(ICMTATBase) 
+returns (string memory tokenId_)
+```
 
-Emitted when the variable `information` is set to `newInformation`.
+Returns the current tokenization token ID.
+
+| Returns    | Type     | Description                 |
+| ---------- | -------- | --------------------------- |
+| `tokenId_` | `string` | The token ID for the asset. |
+
+
+
+------
+
+#### `terms`
+
+```solidity
+function terms() external view returns (Terms)
+```
+
+```solidity
+function terms() 
+public view virtual override(ICMTATBase)  
+returns (Terms memory terms_)
+```
+
+Returns the current tokenization terms.
+
+| Returns  | Type    | Description                             |
+| -------- | ------- | --------------------------------------- |
+| `terms_` | `Terms` | Struct with name and document metadata. |
+
+
+
+------
+
+#### `information`
+
+```solidity
+function information() external view returns (string information_)
+```
+
+```solidity
+function information() 
+public view virtual override(ICMTATBase) 
+returns (string memory information_)
+```
+
+Returns the general-purpose information string.
+
+| Returns        | Type     | Description                                   |
+| -------------- | -------- | --------------------------------------------- |
+| `information_` | `string` | Additional metadata or context for the token. |
+
+
+
+------
+
+#### `setTokenId`
+
+```solidity
+function setTokenId(string tokenId_) external
+```
+
+```solidity
+function setTokenId(string calldata tokenId_) 
+public virtual override(ICMTATBase)  
+onlyRole(EXTRA_INFORMATION_ROLE)
+```
+
+Sets a new token ID for the asset.
+
+Only authorized users are allowed to call this function.
+
+| Name       | Type     | Description             |
+| ---------- | -------- | ----------------------- |
+| `tokenId_` | `string` | The token ID to assign. |
+
+
+
+------
+
+#### `setTerms`
+
+```solidity
+function setTerms(IERC1643CMTAT.DocumentInfo terms_) external
+```
+
+```solidity
+function setTerms(IERC1643CMTAT.DocumentInfo calldata terms_) 
+public virtual override(ICMTATBase) 
+onlyRole(EXTRA_INFORMATION_ROLE)
+```
+
+Sets the legal/contractual terms for the token using a document reference.
+
+Only authorized users are allowed to call this function.
+
+| Name     | Type                                  | Description                          |
+| -------- | ------------------------------------- | ------------------------------------ |
+| `terms_` | `DocumentInfo` (from `IERC1643CMTAT`) | The document info (name, URI, hash). |
+
+
+
+------
+
+#### `setInformation`
+
+```solidity
+function setInformation(string information_) external
+```
+
+```solidity
+function setInformation(string calldata information_) 
+public virtual
+onlyRole(EXTRA_INFORMATION_ROLE)
+```
+
+Sets or updates the general-purpose information string.
+
+Only authorized users are allowed to call this function.
+
+| Name           | Type     | Description                           |
+| -------------- | -------- | ------------------------------------- |
+| `information_` | `string` | The new metadata or descriptive text. |

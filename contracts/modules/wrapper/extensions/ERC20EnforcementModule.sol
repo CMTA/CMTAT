@@ -19,8 +19,6 @@ abstract contract ERC20EnforcementModule is ERC20EnforcementModuleInternal, Acce
     /* ============ State Variables ============ */
     bytes32 public constant ERC20ENFORCER_ROLE = keccak256("ERC20ENFORCER_ROLE");
 
-
-
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
@@ -33,6 +31,10 @@ abstract contract ERC20EnforcementModule is ERC20EnforcementModuleInternal, Acce
         return _getFrozenTokens(account);
      }
 
+   /**
+    *
+    * @inheritdoc IERC7551ERC20Enforcement
+    */
     function getActiveBalanceOf(address account) public view override(IERC7551ERC20Enforcement) returns (uint256){
         return _getActiveBalanceOf(account);
      }
@@ -41,6 +43,8 @@ abstract contract ERC20EnforcementModule is ERC20EnforcementModuleInternal, Acce
     /**
     *
     * @inheritdoc IERC7551ERC20Enforcement
+    * @custom:access-control
+    * - the caller must have the `DEFAULT_ADMIN_ROLE`.
     */
     function forcedTransfer(address from, address to, uint256 value, bytes calldata data) public virtual override(IERC7551ERC20Enforcement)  onlyRole(DEFAULT_ADMIN_ROLE) returns (bool) {
        _forcedTransfer(from, to, value, data);
@@ -50,6 +54,8 @@ abstract contract ERC20EnforcementModule is ERC20EnforcementModuleInternal, Acce
     /**
     *
     * @inheritdoc IERC3643ERC20Enforcement
+    * @custom:access-control
+    * - the caller must have the `DEFAULT_ADMIN_ROLE`.
     */
     function forcedTransfer(address from, address to, uint256 value) public virtual override(IERC3643ERC20Enforcement) onlyRole(DEFAULT_ADMIN_ROLE) returns (bool)  {
        _forcedTransfer(from, to, value, "");
@@ -59,6 +65,8 @@ abstract contract ERC20EnforcementModule is ERC20EnforcementModuleInternal, Acce
     /**
     *
     * @inheritdoc IERC3643ERC20Enforcement
+    * @custom:access-control
+    * - the caller must have the `ERC20ENFORCER_ROLE`.
     */
     function freezePartialTokens(address account, uint256 value) public virtual override(IERC3643ERC20Enforcement) onlyRole(ERC20ENFORCER_ROLE){
         _freezePartialTokens(account, value, "");
@@ -67,16 +75,29 @@ abstract contract ERC20EnforcementModule is ERC20EnforcementModuleInternal, Acce
     /**
     *
     * @inheritdoc IERC3643ERC20Enforcement
+    * @custom:access-control
+    * - the caller must have the `ERC20ENFORCER_ROLE`.
     */
     function unfreezePartialTokens(address account, uint256 value) public virtual override(IERC3643ERC20Enforcement) onlyRole(ERC20ENFORCER_ROLE) {
         _unfreezePartialTokens(account, value, "");
     }
 
+    /**
+    *
+    * @inheritdoc IERC7551ERC20Enforcement
+    * @custom:access-control
+    * - the caller must have the `ERC20ENFORCER_ROLE`.
+    */
     function freezePartialTokens(address account, uint256 value, bytes calldata data) public virtual override(IERC7551ERC20Enforcement) onlyRole(ERC20ENFORCER_ROLE){
         _freezePartialTokens(account, value, data);
     }
 
-
+    /**
+    *
+    * @inheritdoc IERC7551ERC20Enforcement
+    * @custom:access-control
+    * - the caller must have the `ERC20ENFORCER_ROLE`.
+    */
     function unfreezePartialTokens(address account, uint256 value, bytes calldata data) public virtual override(IERC7551ERC20Enforcement) onlyRole(ERC20ENFORCER_ROLE) {
         _unfreezePartialTokens(account, value, data);
     }

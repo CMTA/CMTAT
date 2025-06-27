@@ -36,8 +36,10 @@ abstract contract DebtModule is AccessControlUpgradeable, IDebtModule {
     //////////////////////////////////////////////////////////////*/  
     /* ============ State functions ============ */
     /**
-    * @inheritdoc IDebtModule
     * @dev The values of all attributes will be changed even if the new values are the same as the current ones
+    * @inheritdoc IDebtModule
+    * @custom:access-control
+    * - the caller must have the `DEBT_ROLE`.
     */
     function setCreditEvents(
        CreditEvents calldata creditEvents_
@@ -49,6 +51,8 @@ abstract contract DebtModule is AccessControlUpgradeable, IDebtModule {
 
     /**
     * @inheritdoc IDebtModule
+    * @custom:access-control
+    * - the caller must have the `DEBT_ROLE`.
     */
     function setDebt(
           ICMTATDebt.DebtInformation calldata debt_
@@ -60,6 +64,8 @@ abstract contract DebtModule is AccessControlUpgradeable, IDebtModule {
 
     /**
     * @inheritdoc IDebtModule
+    * @custom:access-control
+    * - the caller must have the `DEBT_ROLE`.
     */
     function setDebtInstrument(
           ICMTATDebt.DebtInstrument calldata debtInstrument_
@@ -73,17 +79,17 @@ abstract contract DebtModule is AccessControlUpgradeable, IDebtModule {
     /**
     * @inheritdoc ICMTATCreditEvents
     */
-    function creditEvents() public view virtual override(ICMTATCreditEvents) returns(CreditEvents memory creditEventsResult){
+    function creditEvents() public view virtual override(ICMTATCreditEvents) returns(CreditEvents memory creditEvents_){
         DebtModuleStorage storage $ = _getDebtModuleStorage();
-        creditEventsResult = $._creditEvents;
+        creditEvents_ = $._creditEvents;
     }
 
     /**
     * @inheritdoc ICMTATDebt
     */
-    function debt() public view virtual override(ICMTATDebt) returns(DebtInformation memory DebtInformationResult){
+    function debt() public view virtual override(ICMTATDebt) returns(DebtInformation memory debtInformation_){
         DebtModuleStorage storage $ = _getDebtModuleStorage();
-        DebtInformationResult = $._debt;
+        debtInformation_ = $._debt;
     }
     
     /*//////////////////////////////////////////////////////////////

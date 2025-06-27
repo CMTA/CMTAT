@@ -16,7 +16,7 @@
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
 | **DebtEngineModule** | Implementation | DebtModule |||
-| └ | setDebtEngine | External ❗️ | 🛑  | onlyRole |
+| └ | setDebtEngine | Public ❗️ | 🛑  | onlyRole |
 | └ | creditEvents | Public ❗️ |   |NO❗️ |
 | └ | debt | Public ❗️ |   |NO❗️ |
 | └ | debtEngine | Public ❗️ |   |NO❗️ |

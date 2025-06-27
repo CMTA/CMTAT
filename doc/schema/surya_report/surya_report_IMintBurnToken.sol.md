@@ -15,7 +15,7 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **IMintERC20** | Interface |  |||
+| **IMintBatchERC20Event** | Interface |  |||
 ||||||
 | **IBurnMintERC20** | Interface |  |||
 | └ | burnAndMint | External ❗️ | 🛑  |NO❗️ |
@@ -23,7 +23,8 @@
 | **IForcedBurnERC20** | Interface |  |||
 | └ | forcedBurn | External ❗️ | 🛑  |NO❗️ |
 ||||||
-| **IBurnERC20** | Interface |  |||
+| **IBurnBatchERC20** | Interface |  |||
+| └ | batchBurn | External ❗️ | 🛑  |NO❗️ |
 ||||||
 | **IBurnFromERC20** | Interface |  |||
 | └ | burnFrom | External ❗️ | 🛑  |NO❗️ |

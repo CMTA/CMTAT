@@ -30,8 +30,7 @@ abstract contract DocumentEngineModule is IDocumentEngineModule, AccessControlUp
     /**
      * @dev
      *
-     * - The grant to the admin role is done by AccessControlDefaultAdminRules
-     * - The control of the zero address is done by AccessControlDefaultAdminRules
+     * - set a DocumentEngine if address different from zero
      *
      */
     function __DocumentEngineModule_init_unchained(IERC1643 documentEngine_)
@@ -45,11 +44,17 @@ abstract contract DocumentEngineModule is IDocumentEngineModule, AccessControlUp
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
-    function documentEngine() public view virtual returns (IERC1643) {
+    /**
+    * @inheritdoc IDocumentEngineModule
+    */
+    function documentEngine() public view virtual override(IDocumentEngineModule) returns (IERC1643 documentEngine_) {
         DocumentEngineModuleStorage storage $ = _getDocumentEngineModuleStorage();
         return $._documentEngine;
     }
 
+    /**
+    * @inheritdoc IERC1643
+    */
     function getDocument(string memory name) public view  virtual override(IERC1643) returns (Document memory document){
         DocumentEngineModuleStorage storage $ = _getDocumentEngineModuleStorage();
         if(address($._documentEngine) != address(0)){
@@ -59,18 +64,24 @@ abstract contract DocumentEngineModule is IDocumentEngineModule, AccessControlUp
         }
     }
 
-    function getAllDocuments() public view virtual override(IERC1643) returns (string[] memory documents){
+    /**
+    * @inheritdoc IERC1643
+    */
+    function getAllDocuments() public view virtual override(IERC1643) returns (string[] memory documentNames_){
         DocumentEngineModuleStorage storage $ = _getDocumentEngineModuleStorage();
         if(address($._documentEngine) != address(0)){
-            documents =  $._documentEngine.getAllDocuments();
+            documentNames_ =  $._documentEngine.getAllDocuments();
         }
     }
 
     /* ============  Restricted Functions ============ */
 
+    /**
+    * @inheritdoc IDocumentEngineModule
+    */
     function setDocumentEngine(
         IERC1643 documentEngine_
-    ) external virtual onlyRole(DOCUMENT_ROLE) {
+    ) public virtual override(IDocumentEngineModule) onlyRole(DOCUMENT_ROLE) {
         DocumentEngineModuleStorage storage $ = _getDocumentEngineModuleStorage();
         require($._documentEngine != documentEngine_, CMTAT_DocumentEngineModule_SameValue());
         _setDocumentEngine($, documentEngine_);

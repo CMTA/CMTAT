@@ -16,7 +16,6 @@
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
 | **EnforcementModuleInternal** | Implementation | Initializable, ContextUpgradeable |||
-| └ | __Enforcement_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |
 | └ | _addAddressToTheList | Internal 🔒 | 🛑  | |
 | └ | _addAddressToTheList | Internal 🔒 | 🛑  | |
 | └ | _addAddressesToTheList | Internal 🔒 | 🛑  | |
