@@ -171,8 +171,8 @@ function ERC20CrossChainModuleCommon () {
         .withArgs(sender, ZERO_ADDRESS, VALUE1)
       // Emits a Burn event
       await expect(this.logs)
-        .to.emit(this.cmtat, 'CrosschainBurn')
-        .withArgs(sender, VALUE1, sender)
+        .to.emit(this.cmtat, 'BurnFrom')
+        .withArgs(sender, sender, sender, VALUE1)
       // Check balances and total supply
       expect(await this.cmtat.balanceOf(sender)).to.equal(DIFFERENCE)
       expect(await this.cmtat.totalSupply()).to.equal(DIFFERENCE)
@@ -186,8 +186,8 @@ function ERC20CrossChainModuleCommon () {
       await expect(this.logs).to.emit(this.cmtat, 'Transfer')
       // Emits a Burn event
       await expect(this.logs)
-        .to.emit(this.cmtat, 'CrosschainBurn')
-        .withArgs(sender, DIFFERENCE, sender)
+        .to.emit(this.cmtat, 'BurnFrom')
+        .withArgs(sender, sender, sender, DIFFERENCE)
       // Check balances and total supply
       expect(await this.cmtat.balanceOf(sender)).to.equal(0)
       expect(await this.cmtat.totalSupply()).to.equal(0)

@@ -30,20 +30,7 @@ The ERC20Base Module sets forth the ERC20 basic functionalities a token must hav
 
 Base Module API for Ethereum blockchain extends the [ERC-20](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-20.md) API, the standard fungible token API for Ethereum.
 
-### Functions
 
-#### `batchBalanceOf(address[])`
-
-###### Definition
-
-```solidity
-function batchBalanceOf(address[] calldata addresses) public view virtual override(IERC20BatchBalance) 
-returns(uint256[] memory balances , uint256 totalSupply_)
-```
-
-###### Description
-
-Return the number of tokens currently owned by the given `addresses` and the current `totalSupply`.
 
 #### `transferFrom(address,address,uint256)`
 
@@ -79,25 +66,82 @@ Emitted when the specified `spender` spends the specified `value` tokens owned b
 
 This event is not defined by ERC-20 and is needed to track allowance changes.
 
-#### setName(string)
+### IERC20Allowance
 
- Sets the token name
-
-```solidity
-function setName(string calldata name_) 
-public virtual override(IERC3643ERC20Base) 
-onlyRole(DEFAULT_ADMIN_ROLE)
-```
-
-
-
-#### setSymbol(string)
-
- Sets the token symbol
+### `Spend(address,address,uint256)`
 
 ```solidity
-function setSymbol(string calldata symbol_) 
-public virtual override(IERC3643ERC20Base) 
-onlyRole(DEFAULT_ADMIN_ROLE)
+event Spend(address indexed account, address indexed spender, uint256 value);
 ```
+
+| Name      | Type    | Description                                             |
+| --------- | ------- | ------------------------------------------------------- |
+| `account` | address | The owner of the tokens whose allowance is being spent. |
+| `spender` | address | The address authorized to spend the tokens.             |
+| `value`   | uint256 | The amount of tokens that were spent.                   |
+
+
+
+> **Note:**
+>  This event is similar in semantics to the ERC-20 `Approval` event:
+>  `Approval(address indexed owner, address indexed spender, uint256 value)`.
+>  It represents a reduction in the spender’s allowance and may also be emitted by functions that consume allowances, such as `burnFrom`.
+
+### IERC20BatchBalance
+
+### `batchBalanceOf(address[])`
+
+```solidity
+function batchBalanceOf(address[] calldata addresses) external view returns (uint256[] memory balances, uint256 totalSupply_);
+```
+
+| Name           | Type      | Description                               |
+| -------------- | --------- | ----------------------------------------- |
+| `addresses`    | address[] | The list of addresses to query.           |
+| **Returns**    |           |                                           |
+| `balances`     | uint256[] | Token balances for each address provided. |
+| `totalSupply_` | uint256   | The total supply of the token.            |
+
+
+
+> **Usage Tip:**
+>  Useful for on-chain snapshots or proportional distributions like dividends.
+
+### `IERC3643ERC20Base`
+
+#### Functions
+
+------
+
+#### `setName(string)`
+
+```solidity
+function setName(string calldata name) external;
+```
+
+Sets the name of the token.
+
+| Name   | Type   | Description                          |
+| ------ | ------ | ------------------------------------ |
+| `name` | string | The new name to assign to the token. |
+
+
+
+------
+
+#### `setSymbol(string)`
+
+```solidity
+function setSymbol(string calldata symbol) external;
+```
+
+Sets the symbol of the token.
+
+| Name     | Type   | Description                            |
+| -------- | ------ | -------------------------------------- |
+| `symbol` | string | The new symbol to assign to the token. |
+
+
+
+------
 

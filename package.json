@@ -30,7 +30,7 @@
     "test:authorization": "npx hardhat test test/standard/modules/AuthorizationModule/AuthorizationModule.test.js test/proxy/modules/AuthorizationModule/AuthorizationModule.test.js",
     "test:snapshot": "npx hardhat test test/standard/modules/SnapshotModule/SnapshotModule.test.js test/standard/modules/SnapshotModule/SnapshotModuleConstructor.test.js test/proxy/modules/SnapshotModule/SnapshotModule.test.js test/proxy/modules/SnapshotModule/SnapshotModuleConstructor.test.js",
     "test:enforcement": "npx hardhat test test/standard/modules/EnforcementModule.test.js test/proxy/modules/EnforcementModule.test.js",
-    "test:erc20Crosschain": "npx hardhat test test/standard/modules/ERC20CrossChainModule.test.js test/proxy/modules/ERC20CrossChainModule.test.js",
+    "test:erc20CrossChain": "npx hardhat test test/standard/modules/ERC20CrossChainModule.test.js test/proxy/modules/ERC20CrossChainModule.test.js",
     "test:metaTx": "npx hardhat test test/standard/modules/MetaTxModule.test.js test/proxy/modules/MetaTxModule.test.js",
     "test:proxy": "npx hardhat test test/proxy/general/factory/Beacon.test.js test/proxy/general/factory/Transparent.test.js test/proxy/general/factory/TransparentSalt.test.js test/proxy/general/Proxy.test.js test/proxy/general/UpgradeProxy.test.js test/proxy/general/UpgradeProxyUUPS.test.js",
     "test:deployment": "npx hardhat test test/deployment/deployment.test.js test/deployment/ERC1363/deploymentERC1363Proxy.test.js test/deployment/deploymentERC1363ProxyValidation.test.js test/deployment/ERC1363/deploymentERC1363Standalone.test.js",

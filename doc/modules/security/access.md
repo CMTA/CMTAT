@@ -1,4 +1,4 @@
-# Access Module
+# Access Control Module
 
 This document defines Authorization Module for the CMTA Token specification.
 
@@ -11,7 +11,7 @@ This document defines Authorization Module for the CMTA Token specification.
 
 ## Schema
 
-![AuthorizationUML](../../schema/uml/AuthorizationUML.png)
+![AuthorizationUML](../../schema/uml/AccessControlUML.png)
 
 ### RBAC
 

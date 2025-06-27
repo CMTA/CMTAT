@@ -22,7 +22,21 @@ This document defines the CMTAT Base Core Module for the CMTA Token specificatio
 
 This section describes the Ethereum API of Burn Module.
 
-### Functions
+### IForcedBurnERC20
+
+#### forcedBurn(address,uint256,bytes)
+
+Allows an authorized issuer to burn tokens from a frozen account.
+
+| Parameter | Type    | Description                             |
+| --------- | ------- | --------------------------------------- |
+| `account` | address | The frozen account to burn tokens from. |
+| `value`   | uint256 | Number of tokens to burn.               |
+| `data`    | bytes   | Metadata related to the burn action.    |
+
+
+
+**Returns:** None
 
 #### `forcedBurn(address,uint256,bytes)`
 

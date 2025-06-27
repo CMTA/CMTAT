@@ -137,21 +137,7 @@
 92
 93
 94
-95
-96
-97
-98
-99
-100
-101
-102
-103
-104
-105
-106
-107
-108
-109</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+95</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -188,12 +174,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">84×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">28×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -224,18 +206,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">210×</span>
 <span class="cline-any cline-yes">168×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -254,8 +226,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2118×</span>
-<span class="cline-any cline-yes">2086×</span>
+<span class="cline-any cline-yes">2174×</span>
+<span class="cline-any cline-yes">2142×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -268,7 +240,7 @@ import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/acce
 /* ==== Module === */
 import {ERC20MintModuleInternal} from "../../internal/ERC20MintModuleInternal.sol";
 /* ==== Technical === */
-import {IMintERC20} from "../../../interfaces/technical/IMintBurnToken.sol";
+import {IMintBatchERC20Event} from "../../../interfaces/technical/IMintBurnToken.sol";
 /* ==== Tokenization === */
 import {IERC3643Mint, IERC3643BatchTransfer} from "../../../interfaces/tokenization/IERC3643Partial.sol";
 import {IERC7551Mint} from "../../../interfaces/tokenization/draft-IERC7551.sol";
@@ -279,7 +251,7 @@ import {IERC7551Mint} from "../../../interfaces/tokenization/draft-IERC7551.sol"
  *
  * Contains all mint functions, inherits from ERC-20
  */
-abstract contract ERC20MintModule is  ERC20MintModuleInternal, AccessControlUpgradeable, IERC3643Mint, IERC3643BatchTransfer, IERC7551Mint, IMintERC20 {
+abstract contract ERC20MintModule is  ERC20MintModuleInternal, AccessControlUpgradeable, IERC3643Mint, IERC3643BatchTransfer, IERC7551Mint, IMintBatchERC20Event {
 &nbsp;
     /* ============ State Variables ============ */
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
@@ -289,16 +261,11 @@ abstract contract ERC20MintModule is  ERC20MintModuleInternal, AccessControlUpgr
     //////////////////////////////////////////////////////////////*/
     /**
      * @inheritdoc IERC7551Mint
-     * @notice  Creates a `value` amount of tokens and assigns them to `account`, by transferring it from address(0)
-&nbsp;
-     * @dev
-     * See {OpenZeppelin ERC20-_mint} &amp; {IERC7551Mint}.
-     * Emits a {Mint} event.
-     * Emits a {Transfer} event with `from` set to the zero address (emits inside _mint).
-     *
+     * @custom:devimpl
      * Requirements:
      * - `account` cannot be the zero address (check made by _mint).
-     * - The caller must have the `MINTER_ROLE`.
+     * @custom:access-control
+     * - the caller must have the `MINTER_ROLE`.
      */
     function mint(address account, uint256 value, bytes calldata data) public virtual override(IERC7551Mint) onlyRole(MINTER_ROLE) {
         _mint(account, value, data);
@@ -307,13 +274,14 @@ abstract contract ERC20MintModule is  ERC20MintModuleInternal, AccessControlUpgr
     /**
      * @inheritdoc IERC3643Mint
      * @dev
-     * See {OpenZeppelin ERC20-_mint} &amp; {IERC3643Mint}.
+&nbsp;
      * Emits a {Mint} event.
      * Emits a {Transfer} event with `from` set to the zero address (emits inside _mint).
      *
      * Requirements:
      * - `account` cannot be the zero address (check made by _mint).
-     * - The caller must have the `MINTER_ROLE`.
+     * @custom:access-control
+     * - the caller must have the `MINTER_ROLE`.
      */
     function mint(address account, uint256 value) public virtual override(IERC3643Mint) onlyRole(MINTER_ROLE) {
        _mint(account, value, "");
@@ -322,16 +290,10 @@ abstract contract ERC20MintModule is  ERC20MintModuleInternal, AccessControlUpgr
     /**
      *
      * @inheritdoc IERC3643Mint
-     * @dev
-     * See {OpenZeppelin ERC20-_mint} and {OpenZeppelin ERC1155_mintBatch}.
-     *
-     * For each mint action:
-     * - Emits a {Mint} event.
-     * - Emits a {Transfer} event with `from` set to the zero address (emits inside _mint).
-     *
-     * Requirements:
-     * - `accounts` and `values` must have the same length
+     * @custom:devimpl
+     * Requirement 
      * - `accounts` cannot contain a zero address (check made by _mint).
+     * @custom:access-control
      * - the caller must have the `MINTER_ROLE`.
      */
     function batchMint(
@@ -342,19 +304,15 @@ abstract contract ERC20MintModule is  ERC20MintModuleInternal, AccessControlUpgr
         emit BatchMint(_msgSender(), accounts, values);
     }
     
-    /* inheritdoc IERC3643BatchTransfer
-     * @dev See {OpenZeppelin ERC20-transfer}.
-     *
-     *
-     * Requirements:
-     * - `tos` and `values` must have the same length
-     * - `tos`cannot contain a zero address (check made by transfer)
-     * - the caller must have a balance cooresponding to the total values
+    /**
+     * @inheritdoc IERC3643BatchTransfer
+     * @custom:access-control
+     * - the caller must have the `MINTER_ROLE`.
      */
    function batchTransfer(
         address[] calldata tos,
         uint256[] calldata values
-    ) public override(IERC3643BatchTransfer) <span class="missing-if-branch" title="else path not taken" >E</span>onlyRole(MINTER_ROLE) returns (bool) {
+    ) public override(IERC3643BatchTransfer) <span class="missing-if-branch" title="else path not taken" >E</span>onlyRole(MINTER_ROLE) returns (bool success_) {
         return _batchTransfer(tos, values);
     }
 &nbsp;
@@ -373,7 +331,7 @@ abstract contract ERC20MintModule is  ERC20MintModuleInternal, AccessControlUpgr
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Tue Jun 24 2025 18:01:05 GMT+0200 (Central European Summer Time)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Fri Jun 27 2025 08:40:02 GMT+0200 (Central European Summer Time)
 </div>
 </div>
 <script src="../../../prettify.js"></script>

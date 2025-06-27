@@ -18,6 +18,12 @@ Please follow <https://changelog.md/> conventions.
   
   - Update changelog
 
+## 3.0.0-rc.4
+
+- Add & improve Solidity Natspec comment
+  - Few improvement as a result (e.g rename return variables)
+- Improve & update documentation
+
 ## 3.0.0-rc.3
 
 - ERC-7551

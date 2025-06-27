@@ -15,14 +15,25 @@ import {DebtModule} from "./DebtModule.sol";
 abstract contract DebtEngineModule is DebtModule {
     error CMTAT_DebtEngineModule_SameValue();
 
+    /**
+    * @notice Emitted when a new DebtEngine is set.
+    * @dev Indicates that the contract will delegate debt logic to a new external engine.
+    * @param newDebtEngine The address of the new debt engine contract.
+    */
+    event DebtEngine(IDebtEngine indexed newDebtEngine);
+
     /* ============  State Restricted Functions ============ */
-    /*
-    * @notice set a DebtEngine
-    * 
+    /**
+    * @notice Sets a new external DebtEngine contract to delegate debt logic.
+    * @dev Only callable by accounts with the `DEBT_ROLE`.
+    * Emits a {DebtEngine} event upon successful update.
+    * @param debtEngine_ The address of the new DebtEngine contract.
+    * @custom:access-control
+    * - the caller must have the `DEBT_ROLE`.
     */
     function setDebtEngine(
         IDebtEngine debtEngine_
-    ) external virtual onlyRole(DEBT_ROLE) {
+    ) public virtual onlyRole(DEBT_ROLE) {
         DebtModuleStorage storage $ = _getDebtModuleStorage();
         require($._debtEngine != debtEngine_, CMTAT_DebtEngineModule_SameValue());
         _setDebtEngine($, debtEngine_);
@@ -30,32 +41,40 @@ abstract contract DebtEngineModule is DebtModule {
 
     /* ============ View functions ============ */
     /**
-    * @dev Emitted when a rule engine is set.
-    */
-    event DebtEngine(IDebtEngine indexed newDebtEngine);
-
-    /**
+    * @notice Returns the current credit events information.
+    * @dev Delegates to the external DebtEngine if set; otherwise returns the base implementation from DebtModule.
+    * @return creditEvents_ The current credit events structure.
     * @inheritdoc ICMTATCreditEvents
     */
-    function creditEvents() public view virtual override(DebtModule) returns(CreditEvents memory creditEventsResult){
+    function creditEvents() public view virtual override(DebtModule) returns(CreditEvents memory creditEvents_){
         DebtModuleStorage storage $ = _getDebtModuleStorage();
         if(address($._debtEngine) != address(0)){
-            creditEventsResult =  $._debtEngine.creditEvents();
+            creditEvents_ =  $._debtEngine.creditEvents();
         } else {
-            creditEventsResult = DebtModule.creditEvents();
+            creditEvents_= DebtModule.creditEvents();
         }
     }
 
-    function debt() public view virtual override(DebtModule) returns(DebtInformation memory debtBaseResult){
+    /**
+    * @notice Returns the current debt information.
+    * @dev Delegates to the external DebtEngine if set; otherwise returns the base implementation from DebtModule.
+    * @return debtInformation_ The current debt data structure.
+    * @inheritdoc DebtModule
+    */
+    function debt() public view virtual override(DebtModule) returns(DebtInformation memory debtInformation_){
         DebtModuleStorage storage $ = _getDebtModuleStorage();
         if(address($._debtEngine) != address(0)){
-            debtBaseResult =  $._debtEngine.debt();
+            debtInformation_ =  $._debtEngine.debt();
         } else {
-            debtBaseResult = DebtModule.debt();
+            debtInformation_ = DebtModule.debt();
         }
     }
 
-    function debtEngine() public view virtual returns (IDebtEngine) {
+    /**
+    * @notice Returns the address of the currently active DebtEngine.
+    * @return debtEngine_ The contract address of the debt engine in use.
+    */
+    function debtEngine() public view virtual returns (IDebtEngine debtEngine_) {
         DebtModuleStorage storage $ = _getDebtModuleStorage();
         return $._debtEngine;
     }

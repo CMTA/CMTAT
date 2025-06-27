@@ -15,20 +15,15 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **ERC20EnforcementModule** | Implementation | ERC20Upgradeable, IERC7551ERC20Enforcement, IERC3643ERC20Enforcement, AuthorizationModule |||
-| └ | __ERC20EnforcementModule_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |
+| **ERC20EnforcementModule** | Implementation | ERC20EnforcementModuleInternal, AccessControlUpgradeable, IERC7551ERC20Enforcement, IERC3643ERC20Enforcement |||
 | └ | getFrozenTokens | Public ❗️ |   |NO❗️ |
 | └ | getActiveBalanceOf | Public ❗️ |   |NO❗️ |
 | └ | forcedTransfer | Public ❗️ | 🛑  | onlyRole |
 | └ | forcedTransfer | Public ❗️ | 🛑  | onlyRole |
 | └ | freezePartialTokens | Public ❗️ | 🛑  | onlyRole |
 | └ | unfreezePartialTokens | Public ❗️ | 🛑  | onlyRole |
-| └ | _freezePartialTokens | Internal 🔒 | 🛑  | |
-| └ | _unfreezePartialTokens | Internal 🔒 | 🛑  | |
-| └ | _unfreezeTokens | Internal 🔒 | 🛑  | |
-| └ | _forcedTransfer | Internal 🔒 | 🛑  | |
-| └ | _checkActiveBalance | Internal 🔒 |   | |
-| └ | _getEnforcementModuleStorage | Private 🔐 |   | |
+| └ | freezePartialTokens | Public ❗️ | 🛑  | onlyRole |
+| └ | unfreezePartialTokens | Public ❗️ | 🛑  | onlyRole |
 
 
 ### Legend

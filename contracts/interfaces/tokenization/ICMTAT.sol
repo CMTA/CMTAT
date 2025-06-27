@@ -24,25 +24,40 @@ import {IERC1643CMTAT, IERC1643} from "./draft-IERC1643CMTAT.sol";
 * 
 */
 interface ICMTATDeactivate {
+     /**
+     * @notice Emitted when the contract is permanently deactivated.
+     * @param account The address that performed the deactivation.
+     */
     event Deactivated(address account);
-    /**
-    * @notice deactivate the contract
-    * Warning: the operation is irreversible, be careful
-    */
+
+     /* 
+     * @notice Permanently deactivates the contract.
+     * @dev 
+     * This action is irreversible — once executed, the contract cannot be reactivated.
+     * Requirements:
+     * - The contract MUST be paused before deactivation is allowed.
+     * Emits a {Deactivated} event.
+     * WARNING: Use with caution. This action permanently disables core contract functionality.
+     */
     function deactivateContract() external;
 
-    /**
-    * @notice Returns true if the contract is deactivated, and false otherwise.
-    */
-    function deactivated() external view returns (bool) ;
+     /**
+     * @notice Returns whether the contract has been permanently deactivated.
+     * @return isDeactivated A boolean indicating the deactivation status.
+     * @dev Returns `true` if `deactivateContract()` has been successfully called.
+     */
+    function deactivated() external view returns (bool isDeactivated) ;
 }
 
 
-/**
-*  @title BASIC PARAMETERS OF THE TOKEN
-* 
+
+/** 
+* @title ICMTATBase - Core Tokenization Metadata Interface as part of CMTAT specification
+* @notice Defines base properties and metadata structure for a tokenized asset.
+* @dev Includes token ID, terms (using IERC1643-compliant document), and a general information field.
 */
 interface ICMTATBase {
+    /* ============ Struct ============ */
      /*
      * @dev A reference to (e.g. in the form of an Internet address) or a hash of the tokenization terms
      */ 
@@ -51,37 +66,62 @@ interface ICMTATBase {
  	    IERC1643.Document doc;
     }
     /* ============ Events ============ */
+    /**
+    * @notice Emitted when the general information field is updated.
+    * @param newInformation The newly assigned metadata or descriptive text.
+    */
+    event Information(
+        string newInformation
+    );
+    /**
+     * @notice Emitted when new tokenization terms are set.
+     * @param newTerm The new Terms structure containing name and document reference.
+     */
     event Term(Terms newTerm);
+
+    /**
+     * @notice Emitted when the token ID is set or updated.
+     * @param newTokenIdIndexed The token ID (indexed for filtering).
+     * @param newTokenId The full token ID string.
+     */
     event TokenId(string indexed newTokenIdIndexed, string newTokenId);
-    /* ============ Functions ============ */
+
+    /* ============ View Functions ============ */
+
     /*
     * @notice return tokenization tokenId
     */
-    function tokenId() external view returns (string memory);
+    function tokenId() external view returns (string memory tokenId_);
     /*
     * @notice returns tokenization terms
     */
-    function terms() external view returns (Terms memory);
+    function terms() external view returns (Terms memory terms_);
 
     /*
     * @notice returns information field
     */
-    function information() external view returns (string memory);
+    function information() external view returns (string memory information_);
 
-    /*
-    * @notice set tokenization tokenId
-    */
+
+    /* ============ Write Functions ============ */
+    /**
+     * @notice Sets a new tokenization token ID.
+     * @param tokenId_ The token ID string to assign to the tokenized asset.
+     */
     function setTokenId(
         string calldata tokenId_
     ) external ;
-    /*
-    * @notice set tokenization terms
-    */
+
+    /**
+     * @notice Sets new tokenization terms using a document reference.
+     * @param terms_ The `DocumentInfo` structure referencing the terms document (name + URI + hash).
+     */
     function setTerms(IERC1643CMTAT.DocumentInfo calldata terms_) external;
 
-    /*
-    * @notice set information field
-    */
+    /**
+     * @notice Sets or updates the general information field.
+     * @param information_ A string describing token attributes, usage, or metadata URI.
+     */
     function setInformation(
         string calldata information_
     ) external;
@@ -91,7 +131,7 @@ interface ICMTATCreditEvents {
      /**
      * @notice Returns credit events
      */
-    function creditEvents() external view returns(CreditEvents memory);
+    function creditEvents() external view returns(CreditEvents memory creditEvents_);
 
     struct CreditEvents {
         bool flagDefault;
@@ -151,7 +191,7 @@ interface ICMTATDebt {
     /**
      * @notice Returns debt information
      */
-    function debt() external view returns(DebtInformation memory);
+    function debt() external view returns(DebtInformation memory debtInformation_);
 }
 
 

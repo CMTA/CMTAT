@@ -185,6 +185,8 @@ abstract contract CMTATBaseCore is
     * - The access control is managed by the functions burn (ERC20BurnModule) and mint (ERC20MintModule)
     * - Input validation is also managed by the functions burn and mint
     * - You can mint more tokens than burnt
+    * @custom:access-control
+    * - See {burn} and {mint}
     */
     function burnAndMint(address from, address to, uint256 amountToBurn, uint256 amountToMint, bytes calldata data) public virtual override(IBurnMintERC20) {
         ERC20BurnModule.burn(from, amountToBurn, data);
@@ -193,6 +195,8 @@ abstract contract CMTATBaseCore is
 
     /**
     * @inheritdoc IForcedBurnERC20
+    * @custom:access-control
+    * - The caller must have the `DEFAULT_ADMIN_ROLE`.
     */
     function forcedBurn(
         address account,

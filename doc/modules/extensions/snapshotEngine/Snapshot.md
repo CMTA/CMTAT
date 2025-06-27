@@ -32,12 +32,61 @@ This module allows to set a specific engine called `SnapshotEngine`to perform sn
 
 ### API Ethereum
 
-#### setSnapshotEngine(address)
+#### ISnapshotEngineModule
 
-Set the snapshotEngine
+Minimal interface for configuring a snapshot engine module.
+
+#### Events
+
+------
+
+##### `SnapshotEngine(ISnapshotEngine newSnapshotEngine)`
+
+Emitted when a new snapshot engine is set.
+
+| Parameter           | Type              | Description                                             |
+| ------------------- | ----------------- | ------------------------------------------------------- |
+| `newSnapshotEngine` | `ISnapshotEngine` | Address of the newly assigned snapshot engine contract. |
 
 
 
-#### snapshotEngine()
+------
 
-Returns the current snapshotEngine
+#### Errors
+
+------
+
+##### `CMTAT_SnapshotModule_SameValue()`
+
+Reverts if the new snapshot engine is the same as the current one.
+
+------
+
+#### Functions
+
+------
+
+##### `setSnapshotEngine(ISnapshotEngine snapshotEngine_)`
+
+Sets the address of the snapshot engine contract.
+
+| Parameter         | Type              | Description                                      |
+| ----------------- | ----------------- | ------------------------------------------------ |
+| `snapshotEngine_` | `ISnapshotEngine` | The new snapshot engine contract address to set. |
+
+
+
+**Requirements:**
+
+- Reverts with `CMTAT_SnapshotModule_SameValue` if the same engine is provided.
+- Emits a `SnapshotEngine` event.
+
+------
+
+##### `snapshotEngine() → ISnapshotEngine`
+
+Returns the currently active snapshot engine.
+
+| Returns          | Type              | Description                                   |
+| ---------------- | ----------------- | --------------------------------------------- |
+| `snapshotEngine` | `ISnapshotEngine` | Address of the currently set snapshot engine. |

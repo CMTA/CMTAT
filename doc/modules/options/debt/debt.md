@@ -2,6 +2,9 @@
 
 This document defines Debt Module for the CMTA Token specification.
 
+- This modules manages debt information and credit events.
+- Inherits from `ICMTATDebt` and `ICMTATCreditEvents`.
+
 [TOC]
 
 ## Interface
@@ -28,62 +31,99 @@ The interface and struct to represent Debt is available in `/contracts/interface
 
 This section describes the Ethereum API of Debt Module.
 
-### Interfaces
-
 See `IDebtModule`
-
-```solidity
-<To do>interface IDebtModule is ICMTATDebt, ICMTATCreditEvents {
-    /* ============ Events ============ */
-     // No paramater to reduce contract size
-    event DebtLogEvent();
-    event CreditEventsLogEvent();
-    event DebtInstrumentLogEvent();
-
-    /* ============ Functions ============ */
-    /**
-     * @notice Set only the instrument
-     */
-    function setDebtInstrument(
-          ICMTATDebt.DebtInstrument calldata debtInstrument_
-    ) external;
-    
-    /**
-     * @notice Set the debt
-     */
-    function setDebt(
-          ICMTATDebt.DebtInformation calldata debt_
-    ) external;
-    /**
-     * @notice Set Credit Events
-     */
-    function setCreditEvents(
-       CreditEvents calldata creditEvents_
-    ) external; 
-}
-```
-
-
 
 ### Functions
 
-#### setDebt(ICMTATDebt.DebtInformation calldata debt_) 
+#### `setDebtInstrument(...)`
 
-Set debt
-
-```solidity
- function setDebt(ICMTATDebt.DebtInformation calldata debt_) 
- external virtual 
- onlyRole(DEBT_ROLE)
+```public
+function setDebtInstrument(ICMTATDebt.DebtInstrument debtInstrument_) public
 ```
 
-#### setDebtInstrument(ICMTATDebt.DebtInstrument calldata debtInstrument_)
+Sets only the debt instrument data.
 
-Set only the instruments
+##### Parameters
+
+| Name              | Type                        | Description                   |
+| ----------------- | --------------------------- | ----------------------------- |
+| `debtInstrument_` | `ICMTATDebt.DebtInstrument` | The debt instrument to store. |
+
+**Requirements:**
+
+- Only authorized users (*DEBT_ROLE*) are allowed to call this function.
+
+------
+
+#### `setDebt(...)`
 
 ```solidity
-function setDebtInstrument(ICMTATDebt.DebtInstrument calldata debtInstrument_) 
-external virtual 
-onlyRole(DEBT_ROLE)
+function setDebt(ICMTATDebt.DebtInformation debt_) public
 ```
+
+Sets the full debt information (including instrument and values).
+
+##### Parameters
+
+| Name    | Type                         | Description             |
+| ------- | ---------------------------- | ----------------------- |
+| `debt_` | `ICMTATDebt.DebtInformation` | The debt data to store. |
+
+**Requirements:**
+
+- Only authorized users (*DEBT_ROLE*) are allowed to call this function.
+
+------
+
+#### `setCreditEvents(...)`
+
+```solidity
+function setCreditEvents(CreditEvents creditEvents_) public
+```
+
+Sets the credit events associated with a debt.
+
+##### Parameters
+
+| Name            | Type           | Description                 |
+| --------------- | -------------- | --------------------------- |
+| `creditEvents_` | `CreditEvents` | The credit events to store. |
+
+**Requirements:**
+
+- Only authorized users (*DEBT_ROLE*) are allowed to call this function.
+
+### Events
+
+Uses the `Log` suffix to avoid naming conflict with the `CreditEvents()` view function.
+
+#### `DebtLogEvent()`
+
+```solidity
+event DebtLogEvent()
+```
+
+Emitted when the full debt information is updated.
+
+------
+
+#### `CreditEventsLogEvent()`
+
+```solidity
+event CreditEventsLogEvent()
+```
+
+Emitted when the credit events are updated.
+
+------
+
+#### `DebtInstrumentLogEvent()`
+
+```solidity
+event DebtInstrumentLogEvent()
+```
+
+Emitted when only the debt instrument portion of the data is updated.
+
+
 

@@ -7,14 +7,14 @@ import {AccessControlUpgradeable} from "./wrapper/security/AccessControlModule.s
 /* ==== Module === */
 import {CMTATBaseERC1404, CMTATBaseERC2771, CMTATBaseERC20CrossChain} from "./4_CMTATBaseERC2771.sol";
 import {ERC7551Module} from "./wrapper/options/ERC7551Module.sol";
+
 /**
 * @title Extend CMTAT Base Option with ERC7551Module
 */
-abstract contract CMTATBaseERC7551 is CMTATBaseERC2771, ERC7551Module {
+abstract contract CMTATBaseERC7551 is CMTATBaseERC2771, ERC7551Module{
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
-
     /* ============ View functions ============ */
     function hasRole(
         bytes32 role,

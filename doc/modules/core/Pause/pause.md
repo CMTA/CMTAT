@@ -24,32 +24,19 @@ However, this is not enforced in the functions that allow to change a user’s a
 
 ![surya_graph_PauseModule.sol](../../../schema/surya_graph/surya_graph_PauseModule.sol.png)
 
-## API for Ethereum
+
+
+## Ethereum API
 
 This section describes the Ethereum API of the Pause Module.
 
-### Functions
+### OpenZepplin PausableUpgradeable
 
-#### `pause()`
+See [docs.openzeppelin.com/contracts/5.x/api/utils#Pausable](https://docs.openzeppelin.com/contracts/5.x/api/utils#Pausable)
 
-##### Definition:
+#### Events
 
-```solidity
-function pause() 
-public onlyRole(PAUSER_ROLE)
-```
-
-##### Description:
-
-Pause all the token transfers.
-This function doesn't affect issuance, redemption, and approves.
-Only authorized users are allowed to call this function.
-
-##### Events
-
-###### `Paused(address)`
-
-Origin: OpenZeppelin (PausableUpgradeable)
+##### `Paused(address)`
 
 ```solidity
 event Paused(address account)
@@ -57,54 +44,155 @@ event Paused(address account)
 
 Emitted when token transfers were paused.
 
-#### `unpause()`
-
-##### Definition:
-
-```solidity
-function unpause() 
-public onlyRole(PAUSER_ROLE)
-```
-
-##### Description
-
-Unpause token transfers.
-Only authorized users are allowed to call this function.
-
-##### Events
-
-###### `Unpaused(address)`
+##### `Unpaused(address)`
 
 ```solidity
 event Unpaused(address account)
 ```
 
-Description:
-
 Emitted when token transfers were unpaused.
 
-#### `deactivateContract() `
+### Interface: `ICMTATDeactivate`
 
-##### Definition:
+ This interface defines functions and events for irreversibly deactivating a smart contract. Once deactivated, the contract becomes permanently non-functional. This mechanism is useful for compliance-focused or end-of-life lifecycle token contracts.
+
+------
+
+#### Events
+
+##### `Deactivated`
 
 ```solidity
-function deactivateContract()
-public onlyRole(DEFAULT_ADMIN_ROLE)
-```
-
-This function set the variable `isDeactivated` to true.
-In standalone mode, this operation is irreversible, it is not possible to rollback*******.
-
-This function puts also the contract in the pause state
-The variable `isDeactivated` will also have an impact on the function `unpause`. This one will revert if the previous variable is set to true, thus the contract will be in the pause state forever*******.
-
-***With a proxy, it is still possible to rollback by deploying a new implementation.
-
-##### Events
-
-###### Deactivated
-
-```
 event Deactivated(address account);
 ```
 
+| Name      | Type    | Description                                            |
+| --------- | ------- | ------------------------------------------------------ |
+| `account` | address | The address that permanently deactivated the contract. |
+
+#### Functions
+
+##### `deactivateContract`
+
+```solidity
+function deactivateContract() external;
+```
+
+```solidity
+function deactivateContract()
+public virtual override(ICMTATDeactivate)
+onlyRole(DEFAULT_ADMIN_ROLE)
+```
+
+Permanently disables the contract.
+**Warning:** This action is irreversible. Once the contract is deactivated, it can never be used again.
+
+**Requirement**
+
+- The contract must be paused before it can be deactivated.
+  - Error: `ExpectedPause()`
+- Only authorized users (`PAUSER_ROLE`) are allowed to call this function.
+
+**Emits** 
+
+- Deactivated
+
+##### `deactivated`
+
+```solidity
+function deactivated() external view returns (bool isDeactivated);
+```
+
+```solidity
+function deactivated() public view 
+virtual override(ICMTATDeactivate) 
+returns (bool)
+```
+
+Returns the current deactivation status of the contract.
+
+**Returns**
+
+| Returns         | Type | Description                                      |
+| --------------- | ---- | ------------------------------------------------ |
+| `isDeactivated` | bool | True if the contract is permanently deactivated. |
+
+
+
+### `IERC3643Pause`
+
+> Interface for pausing and unpausing token transfers, used in both CMTAT and ERC3643 token standards.
+>  This interface allows toggling a pause state that disables or enables token transfers.
+
+------
+
+#### `paused`
+
+```solidity
+function paused() external view returns (bool);
+```
+
+```solidity
+function paused() 
+public virtual view override(IERC3643Pause, IERC7551Pause, PausableUpgradeable) returns (bool){
+```
+
+Returns whether the contract is currently paused.
+
+| Name     | Type | Description                                          |
+| -------- | ---- | ---------------------------------------------------- |
+| `return` | bool | `true` if the contract is paused, otherwise `false`. |
+
+#### `pause`
+
+```solidity
+function pause() external;
+```
+
+```solidity
+function pause() 
+public virtual override(IERC3643Pause, IERC7551Pause) 
+onlyRole(PAUSER_ROLE)
+```
+
+| Description                                                  |
+| ------------------------------------------------------------ |
+| Disables transfer functions across the contract. <br />Pauses all token transfers. |
+
+##### Emits
+
+Emits a `Paused` event.
+
+##### Requirements
+
+- Only authorized users (`PAUSER_ROLE`) are allowed to call this function.
+- The contract must not be paused 
+  - error: `EnforcedPause()`
+
+#### `unpause`
+
+```solidity
+function unpause() external;
+```
+
+```solidity
+function unpause() 
+public virtual override(IERC3643Pause, IERC7551Pause) 
+onlyRole(PAUSER_ROLE)
+```
+
+
+| Description                                                  |
+| ------------------------------------------------------------ |
+| Unpauses all token transfers.  <br />Re-enables transfer functions across the contract. |
+
+
+##### Emits
+
+Emits an `Unpaused` event.
+
+##### Requirements
+
+- Only authorized users (`PAUSER_ROLE`) are allowed to call this function.
+- The contract must be paused 
+  - error: `ExpectedPause()`

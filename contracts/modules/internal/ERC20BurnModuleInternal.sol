@@ -5,13 +5,16 @@ pragma solidity ^0.8.20;
 /* ==== OpenZeppelin === */
 import {ERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 /**
- * @title ERC20Burn module.
+ * @title ERC20Burn module Internal.
  * @dev 
  *
  * Contains all burn functions, inherits from ERC-20
  */
 abstract contract ERC20BurnModuleInternal is ERC20Upgradeable {
+    /// @notice Reverts when the `accounts` array provided for a batch burn operation is empty.
     error CMTAT_BurnModule_EmptyAccounts();
+    /// @notice Reverts when the `accounts` and `values` arrays provided for batch burning have mismatched lengths.
+    /// @dev Both arrays must contain the same number of elements.
     error CMTAT_BurnModule_AccountsValueslengthMismatch();
 
     /*//////////////////////////////////////////////////////////////
