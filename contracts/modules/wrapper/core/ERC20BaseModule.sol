@@ -61,7 +61,7 @@ abstract contract ERC20BaseModule is ERC20Upgradeable, AccessControlUpgradeable,
      /**
      * @notice Transfers `value` amount of tokens from address `from` to address `to`
      * @custom:devimpl
-     * Emits a {Spend} event indicating the spended allowance.
+     * Emits a {Spend} event indicating the allowance spent.
      * @inheritdoc ERC20Upgradeable
      *
      */

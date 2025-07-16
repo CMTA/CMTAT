@@ -48,7 +48,6 @@ abstract contract ERC20MintModuleInternal is ERC20Upgradeable {
         // We do not check that values is not empty since
         // this require will throw an error in this case.
         require(bool(tos.length == values.length), CMTAT_MintModule_TosValueslengthMismatch());
-        // No need of unchecked block since Soliditiy 0.8.22
         for (uint256 i = 0; i < tos.length; ++i) {
             // We call directly the internal OpenZeppelin function _transfer
             // The reason is that the public function adds only the owner address recovery

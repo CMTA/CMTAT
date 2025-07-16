@@ -40,10 +40,10 @@ abstract contract ValidationModuleERC1404 is
                             PUBLIC/EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
     /**
-     * @notice returns the human readable explaination 
+     * @notice returns the human readable explanation 
      * corresponding to the error code returned by detectTransferRestriction
      * @param restrictionCode The error code returned by detectTransferRestriction
-     * @return message The human readable explaination corresponding to the error code returned by detectTransferRestriction
+     * @return message The human readable explanation corresponding to the error code returned by detectTransferRestriction
      * @dev see {ERC-1404}
      */
     function messageForTransferRestriction(

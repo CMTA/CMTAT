@@ -38,7 +38,7 @@ abstract contract ERC20BurnModuleInternal is ERC20Upgradeable {
 
     /**
     * @dev Internal function to burn
-    * Can be override to perform supplémentary check on burn action
+    * Can be override to perform supplementary check on burn action
     */
     function _burnOverride(
         address account,

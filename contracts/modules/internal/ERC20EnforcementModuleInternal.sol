@@ -13,7 +13,7 @@ import { IERC7551ERC20EnforcementTokenFrozenEvent, IERC7551ERC20EnforcementEvent
  * Contains specific ERC-20 enforcement actions
  */
 abstract contract ERC20EnforcementModuleInternal is ERC20Upgradeable,IERC7551ERC20EnforcementEvent,  IERC7551ERC20EnforcementTokenFrozenEvent {
-    // no argument to reduce conract code size
+    // no argument to reduce contract code size
     error CMTAT_ERC20EnforcementModule_ValueExceedsAvailableBalance();
     error CMTAT_ERC20EnforcementModule_ValueExceedsActiveBalance();
     error CMTAT_ERC20EnforcementModule_ValueExceedsFrozenBalance(); 

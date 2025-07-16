@@ -5,7 +5,7 @@ pragma solidity ^0.8.20;
 /**
  * @dev Enforcement module library
  *
- * Common funtions and errors between AllowlistModuleInternal & EnforcementModuleInternal
+ * Common functions and errors between AllowlistModuleInternal & EnforcementModuleInternal
  */
 library EnforcementModuleLibrary
 {
