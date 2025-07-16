@@ -57,7 +57,7 @@ abstract contract ERC20EnforcementModuleInternal is ERC20Upgradeable,IERC7551ERC
             revert ERC20InsufficientBalance(_msgSender(), balance, value-balance);
         }
         ERC20EnforcementModuleStorage storage $ = _getEnforcementModuleStorage();
-        // Frozen token can not be < balance
+        // Frozen tokens can not be > balance
         uint256 activeBalance = balance - $._frozenTokens[from];
         if (value > activeBalance) {
             uint256 tokensToUnfreeze = value - activeBalance;
