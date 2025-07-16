@@ -99,7 +99,7 @@ abstract contract ERC20EnforcementModuleInternal is ERC20Upgradeable,IERC7551ERC
     function _checkActiveBalance(address from, uint256 value) internal virtual view returns(bool){
         uint256 frozenTokensLocal = _getFrozenTokens(from);
         if(frozenTokensLocal > 0 ){
-            uint256 activeBalance = balanceOf(from) - frozenTokensLocal;
+            uint256 activeBalance = ERC20Upgradeable.balanceOf(from) - frozenTokensLocal;
             if(value > activeBalance) {
                    return false;
             }
