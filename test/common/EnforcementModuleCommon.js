@@ -1,4 +1,5 @@
-const { ENFORCER_ROLE } = require('../utils')
+const { ENFORCER_ROLE, REJECTED_CODE_BASE_TRANSFER_REJECTED_FROM_FROZEN,
+REJECTED_CODE_BASE_TRANSFER_REJECTED_TO_FROZEN, REJECTED_CODE_BASE_TRANSFER_REJECTED_SPENDER_FROZEN } = require('../utils')
 const { expect } = require('chai')
 
 const REASON_FREEZE_STRING = 'testFreeze'
@@ -257,8 +258,8 @@ function EnforcementModuleCommon () {
             this.address2,
             AMOUNT_TO_TRANSFER
           )
-        ).to.equal('2')
-        expect(await this.cmtat.messageForTransferRestriction(2)).to.equal(
+        ).to.equal(REJECTED_CODE_BASE_TRANSFER_REJECTED_FROM_FROZEN)
+        expect(await this.cmtat.messageForTransferRestriction(REJECTED_CODE_BASE_TRANSFER_REJECTED_FROM_FROZEN)).to.equal(
           'AddrFromIsFrozen'
         )
       }
@@ -298,8 +299,8 @@ function EnforcementModuleCommon () {
             this.address2,
             AMOUNT_TO_TRANSFER
           )
-        ).to.equal('3')
-        expect(await this.cmtat.messageForTransferRestriction(3)).to.equal(
+        ).to.equal(REJECTED_CODE_BASE_TRANSFER_REJECTED_TO_FROZEN)
+        expect(await this.cmtat.messageForTransferRestriction(REJECTED_CODE_BASE_TRANSFER_REJECTED_TO_FROZEN)).to.equal(
           'AddrToIsFrozen'
         )
       }
@@ -351,8 +352,8 @@ function EnforcementModuleCommon () {
               this.address2,
               AMOUNT_TO_TRANSFER
             )
-          ).to.equal('4')
-          expect(await this.cmtat.messageForTransferRestriction(4)).to.equal(
+          ).to.equal(REJECTED_CODE_BASE_TRANSFER_REJECTED_SPENDER_FROZEN)
+          expect(await this.cmtat.messageForTransferRestriction(REJECTED_CODE_BASE_TRANSFER_REJECTED_SPENDER_FROZEN)).to.equal(
             'AddrSpenderIsFrozen'
           )
         }

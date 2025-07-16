@@ -42,10 +42,11 @@ interface IERC1404 {
 */
 interface IERC1404Extend is IERC1404{
     /* 
-    * @dev leave the code 6-9 free/unused for further CMTAT additions in your ruleEngine implementation
+    * @dev leave the code 7-12 free/unused for further CMTAT additions in your ruleEngine implementation
     */
     enum REJECTED_CODE_BASE {
         TRANSFER_OK,
+        TRANSFER_REJECTED_DEACTIVATED,
         TRANSFER_REJECTED_PAUSED,
         TRANSFER_REJECTED_FROM_FROZEN,
         TRANSFER_REJECTED_TO_FROZEN,

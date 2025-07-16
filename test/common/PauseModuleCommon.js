@@ -1,4 +1,6 @@
-const { PAUSER_ROLE, DEFAULT_ADMIN_ROLE } = require('../utils')
+const { PAUSER_ROLE, DEFAULT_ADMIN_ROLE,
+  REJECTED_CODE_BASE_TRANSFER_REJECTED_PAUSED,
+  REJECTED_CODE_BASE_TRANSFER_REJECTED_DEACTIVATED} = require('../utils')
 const { expect } = require('chai')
 function PauseModuleCommon () {
   context('Pause', function () {
@@ -159,7 +161,7 @@ function PauseModuleCommon () {
             this.address2,
             AMOUNT_TO_TRANSFER
           )
-        ).to.equal('1')
+        ).to.equal(REJECTED_CODE_BASE_TRANSFER_REJECTED_PAUSED)
         expect(
           await this.cmtat.detectTransferRestrictionFrom(
             this.address3,
@@ -167,8 +169,8 @@ function PauseModuleCommon () {
             this.address2,
             AMOUNT_TO_TRANSFER
           )
-        ).to.equal('1')
-        expect(await this.cmtat.messageForTransferRestriction(1)).to.equal(
+        ).to.equal(REJECTED_CODE_BASE_TRANSFER_REJECTED_PAUSED)
+        expect(await this.cmtat.messageForTransferRestriction(REJECTED_CODE_BASE_TRANSFER_REJECTED_PAUSED)).to.equal(
           'EnforcedPause'
         )
       }
@@ -244,14 +246,14 @@ function PauseModuleCommon () {
             this.address2,
             AMOUNT_TO_TRANSFER
           )
-        ).to.equal('1')
+        ).to.equal(REJECTED_CODE_BASE_TRANSFER_REJECTED_PAUSED)
         expect(
           await this.cmtat.detectTransferRestriction(
             this.address1,
             this.address2,
             AMOUNT_TO_TRANSFER
           )
-        ).to.equal('1')
+        ).to.equal(REJECTED_CODE_BASE_TRANSFER_REJECTED_PAUSED)
         // Assert
         expect(
           await this.cmtat.detectTransferRestrictionFrom(
@@ -260,8 +262,8 @@ function PauseModuleCommon () {
             this.address2,
             AMOUNT_TO_TRANSFER
           )
-        ).to.equal('1')
-        expect(await this.cmtat.messageForTransferRestriction(1)).to.equal(
+        ).to.equal(REJECTED_CODE_BASE_TRANSFER_REJECTED_PAUSED)
+        expect(await this.cmtat.messageForTransferRestriction(REJECTED_CODE_BASE_TRANSFER_REJECTED_PAUSED)).to.equal(
           'EnforcedPause'
         )
         await expect(
@@ -281,7 +283,7 @@ function PauseModuleCommon () {
 
   context('DeactivateContract', function () {
     /**
-    The admin is assigned the PAUSER role when the contract is deployed
+    * The admin is assigned the PAUSER role when the contract is deployed
     */
     it('testCanDeactivatedByAdminIfContractIsPaused', async function () {
       const AMOUNT_TO_TRANSFER = 10n
@@ -342,14 +344,14 @@ function PauseModuleCommon () {
             this.address2,
             AMOUNT_TO_TRANSFER
           )
-        ).to.equal('1')
+        ).to.equal(REJECTED_CODE_BASE_TRANSFER_REJECTED_DEACTIVATED)
         expect(
           await this.cmtat.detectTransferRestriction(
             this.address1,
             this.address2,
             AMOUNT_TO_TRANSFER
           )
-        ).to.equal('1')
+        ).to.equal(REJECTED_CODE_BASE_TRANSFER_REJECTED_DEACTIVATED)
         // Assert
         expect(
           await this.cmtat.detectTransferRestrictionFrom(
@@ -358,9 +360,9 @@ function PauseModuleCommon () {
             this.address2,
             AMOUNT_TO_TRANSFER
           )
-        ).to.equal('1')
-        expect(await this.cmtat.messageForTransferRestriction(1)).to.equal(
-          'EnforcedPause'
+        ).to.equal(REJECTED_CODE_BASE_TRANSFER_REJECTED_DEACTIVATED)
+        expect(await this.cmtat.messageForTransferRestriction(REJECTED_CODE_BASE_TRANSFER_REJECTED_DEACTIVATED)).to.equal(
+          'ContractDeactivated'
         )
         await expect(
           this.cmtat
