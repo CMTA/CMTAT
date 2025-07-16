@@ -21,7 +21,7 @@ abstract contract AllowlistModuleInternal is
     /* ==== ERC-7201 State Variables === */
     struct AllowlistModuleInternalStorage {
         bool _enableAllowlist;
-        mapping(address => bool) _allowlist;
+        mapping(address account => bool status) _allowlist;
     }
     /*//////////////////////////////////////////////////////////////
                          INITIALIZER FUNCTION

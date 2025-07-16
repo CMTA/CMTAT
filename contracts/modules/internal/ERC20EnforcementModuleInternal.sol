@@ -23,7 +23,7 @@ abstract contract ERC20EnforcementModuleInternal is ERC20Upgradeable,IERC7551ERC
 
     /* ==== ERC-7201 State Variables === */
     struct ERC20EnforcementModuleStorage {
-        mapping(address => uint256)  _frozenTokens;
+        mapping(address account => uint256 frozenTokens)  _frozenTokens;
     }
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS

@@ -22,7 +22,7 @@ abstract contract EnforcementModuleInternal is
 
     /* ==== ERC-7201 State Variables === */
     struct EnforcementModuleInternalStorage {
-        mapping(address => bool)_list;
+        mapping(address account => bool status)_list;
     }
 
     /*//////////////////////////////////////////////////////////////
