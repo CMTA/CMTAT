@@ -17,7 +17,7 @@ This repository provides CMTA's reference Solidity implementation of CMTAT, suit
 The CMTA token (CMTAT) is a security token framework that includes various compliance features such as conditional transfer, account freeze, and token pause. CMTAT was initially optimized for the Swiss law framework, however, these numerous features and extensions make it suitable for other jurisdictions too. 
 
 The CMTAT is an open standard from the [Capital Markets and Technology Association](https://www.cmta.ch/) (CMTA), which gathers organizations from the financial, legal and technology sectors.
-The CMTAT was developed by a working group of CMTA's Technical Committee that includes members from Atpar, Bitcoin Suisse, Blockchain Innovation Group, Hypothekarbank Lenzburg, [Lenz & Staehelin](https://www.lenzstaehelin.com), Metaco, [Mt Pelerin](https://www.mtpelerin.com), SEBA, [Swissquote](https://www.swissquote.ch/), [Sygnum](https://www.sygnum.com), [Taurus](https://www.taurushq.com) and [Tezos Foundation](https://tezos.foundation). 
+The CMTAT was first developed by a working group of CMTA's [members](https://che01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fcmta.ch%2Fmembers&data=05|02|ryan.sauge@taurushq.com|74eed7d98767466e3a6008ddc527bf99|2aef1e0a410e4ef9b0aad8a3be429e91|0|0|638883497151712901|Unknown|TWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D|0|||&sdata=HFKVQ%2Fel0BQrlGfqbVIWPv1VoSxjyZ7faOCaBcqv%2FhM%3D&reserved=0) and its development is now overseen by the [Technical Committee of CMTA's Advisory Board](https://che01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fcmta.ch%2Fadvisory-board&data=05|02|ryan.sauge@taurushq.com|74eed7d98767466e3a6008ddc527bf99|2aef1e0a410e4ef9b0aad8a3be429e91|0|0|638883497151731812|Unknown|TWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D|0|||&sdata=iz7mXlzgn8NRXIt7A%2Bo2MdAmktsTBq8iQlmyLxhqLYs%3D&reserved=0). 
 
 ### Goal
 
@@ -101,7 +101,7 @@ Here is a comparison between the features present in major custodian stablecoin 
 |                                |                                                              | **Monerium**                                                 | **USDC**                                                     | **USDT**                                                     | **CMTAT 3.0.0 Light**                                        | CMTAT 3.0.0 Standard                                         |
 | :----------------------------- | :----------------------------------------------------------- | :----------------------------------------------------------- | :----------------------------------------------------------- | :----------------------------------------------------------- | :----------------------------------------------------------- | ------------------------------------------------------------ |
 | Source                         |                                                              | [ec59a36](https://github.com/monerium/smart-contracts/commit/ec59a3677a17a06610d7e4788211c19da561241b) | [Ehteum USDC implementation contract](https://etherscan.io/address/0x43506849d7c04f9138d1a2050bbf3a0c054402dd#code) | [Ethereum USDT address](https://etherscan.io/address/0xdac17f958d2ee523a2206206994597c13d831ec7) |                                                              |                                                              |
-| Devise                         |                                                              | $, euros, live Sterling,  Icelandic króna                    | $                                                            | $                                                            | -                                                            | -                                                            |
+| Currency                       |                                                              | $, euros, live Sterling,  Icelandic króna                    | $                                                            | $                                                            | -                                                            | -                                                            |
 | Company behind                 |                                                              | [Monerium](https://monerium.com)                             | [Circle](https://www.circle.com)                             | [Tether](https://tether.to/en/)                              | [CMTA](https://cmta.ch/)                                     | [CMTA](https://cmta.ch/)                                     |
 | **Standard**                   |                                                              |                                                              |                                                              |                                                              |                                                              |                                                              |
 |                                | [ERC-20](https://eips.ethereum.org/EIPS/eip-20)              | &#x2611;                                                     | &#x2611;                                                     | &#x2611;                                                     | &#x2611;                                                     | &#x2611;                                                     |
@@ -138,7 +138,7 @@ Here is a comparison between the features present in known tokenized market fund
 
 
 
-|                                                              |                                                              | Spiko<br />(EUTBL and USTBL)                                 | Franklin Templeton <br />(FOBXX / Benji)                     | Blackrock<br />(BUILD)                                       | CMTAT 3.0.0 Standard                                | CMTAT 3.00 ERC-1363                                 |
+|                                                              |                                                              | Spiko<br />(EUTBL and USTBL)                                 | Franklin Templeton <br />(FOBXX / Benji)                     | Blackrock<br />(BUIDL)                                       | CMTAT 3.0.0 Standard                                | CMTAT 3.00 ERC-1363                                 |
 | :----------------------------------------------------------- | :----------------------------------------------------------- | :----------------------------------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ | --------------------------------------------------- | --------------------------------------------------- |
 | Reference                                                    |                                                              |                                                              | [Franklin OnChain U.S. Government Money Fund (FOBXX)](https://www.franklintempleton.com/investments/options/money-market-funds/products/29386/SINGLCLASS/franklin-on-chain-u-s-government-money-fund/FOBXX)<br />[Avalanche - Franklin Templeton Launches Tokenized Money Market Fund BENJI On The Avalanche Network](https://www.avax.network/about/blog/franklin-templeton-launches-tokenized-money-market-fund-benji-avalanche) | Securitize contracts<br />[Proxy](https://etherscan.io/address/0x7712c34205737192402172409a8f7ccef8aa2aec)<br />[Implementation](https://etherscan.io/address/0x603bb6909be14f83282e03632280d91be7fb83b2#code) | -                                                   | -                                                   |
 | Source                                                       |                                                              | [9ef58f3](https://github.com/spiko-tech/contracts/commit/9ef58f31bc8dc9cb562dfcbae6091866b3da5121) | [Franklin Templeton Digital Assets - contracts](https://digitalassets.franklintempleton.com/benji/benji-contracts/)<br />[Contract proxy](https://snowtrace.io/token/0xE08b4c1005603427420e64252a8b120cacE4D122?chainid=43114)<br />[Contract implementation](https://snowtrace.io/address/0x5c118e6A0bD2de0AF66655806E3001727C13d105/contract/43114/code) |                                                              | -                                                   | -                                                   |
@@ -179,7 +179,7 @@ Here is a comparison between the features present in known tokenized market fund
 - *Fasanara Capital Ltd* has also tokenized a money market funds. Since they have worked with [Tokeny](https://tokeny.com) and uses therefore the ERC-3643 standard, a comparison with this standard is provided in others sections of this document. See also [Tokeny - How Tokeny Powers Fasanara’s Tokenized Money Market Funds](https://tokeny.com/customer-story-fasanaras-tokenized-mmf/)
 - Upgradeability: a specific CMTAT deployment version allows to use UUPS proxy
 
-### Comparison of CMTAT and other tokenizations framework
+### Comparison of CMTAT and other tokenization frameworks
 
 Here is a comparison between the features present in known tokenization framework and the library CMTAT.
 
@@ -224,7 +224,7 @@ Here is a comparison between the features present in known tokenization framewor
 
 At the time of our analysis (July 2025), the next version of T-REX/ERC-3643 had not yet been merged into the main branch and officially released. However, we assumed that it would be merged soon and that it would also be audited.
 
-### Who use CMTAT and for what?
+### Who uses CMTAT and for what?
 
 CMTAT is suitable for the digitalization of various financial assets. Below is a selection of public case studies 
 
@@ -251,13 +251,13 @@ The CMTAT was initially designed for the digitalization of company shares. For S
 
 - CMTAT was used by a bank to tokenize a fund on Ethereum. The use of CMTAT by this bank is not yet officially public.
 
-#### Others assets
+#### Other assets
 
 - [21.co](https://www.21.co) uses CMTAT through their own [fork](https://github.com/amun/CMTAT) to create Wrapped Tokens on Ethereum.
 
 ### Where CMTAT is mentionned ?
 
-CMTAT is mentioned in several different reports. While these report do not take into account the latest change with the version v.3.0.0, it gives already a good indication of how CMTAT can be used. The points raised by these also allowed for numerous improvements to be made to the CMTAT.
+CMTAT is mentioned in several different reports. While these reports do not take into account the latest changes with the version v.3.0.0, it gives already a good indication of how CMTAT can be used. The points raised by these also allowed for numerous improvements to be made to the CMTAT.
 
 - [Forum - Asset Tokenization in Financial Markets: The Next Generation of Value Exchange (2025)](https://reports.weforum.org/docs/WEF_Asset_Tokenization_in_Financial_Markets_2025.pdf), page 38
 - [King's Buisness School/Rhys Bidder - What Is The Future Of Stablecoins, And How Do We Get There? (2025)](https://www.kcl.ac.uk/business/assets/PDF/qcgbf-working-papers/taking-the-next-step-v5.pdf), page 33
@@ -1666,7 +1666,7 @@ interface IERC3643Pause {
 
 The pause function does not affect burn and mint operations implemented in the contracts `ERC20MintModule` and `ERC20BurnModule`.
 
-By separating, burn/mint and standard transfer, the admin can re-adjust the supply while the standard transfers are paused. The alternative in this case to block mint and burn operations is to remove the MINTER and BURNER roles from the addresses concerned.
+By separating, burn/mint from standard transfer, the admin can re-adjust the supply while the standard transfers are paused. The alternative in this case to block mint and burn operations is to remove the MINTER and BURNER roles from the addresses concerned.
 
 On the other hand, specific function for cross-chain bridge (`3_CMTATBaseERC20CrossChain.sol`) will revert if contract is paused because they are not intended to be used by the issuer to manage the supply.
 
@@ -2288,7 +2288,7 @@ Here a summary of the main documents
 | FAQ                                 | [FAQ.md](./doc/general/FAQ.md)                               |
 | Crosschain transfers                | [crosschain-bridge-support.md](./doc/general/crosschain-bridge-support.md) |
 
-CMTA providers further documentation describing the CMTAT framework in a platform-agnostic way, and covering legal aspects, see
+CMTA provides further documentation describing the CMTAT framework in a platform-agnostic way, and covering legal aspects, see
 
 -  [CMTA Token (CMTAT)](https://cmta.ch/standards/cmta-token-cmtat)
 -  [Standard for the tokenization of shares of Swiss corporations using the distributed ledger technology](https://cmta.ch/standards/standard-for-the-tokenization-of-shares-of-swiss-corporations-using-the-distributed-ledger-technology)
@@ -2296,13 +2296,18 @@ CMTA providers further documentation describing the CMTAT framework in a platfor
 
 ### Further reading
 
-- [CMTA - A comparison of different security token standards](https://cmta.ch/news-articles/a-comparison-of-different-security-token-standards)
-- [Taurus - Security Token Standards: A Closer Look at CMTAT](https://www.taurushq.com/blog/security-token-standards-a-closer-look-at-cmtat/)
-- [Taurus - Equity Tokenization: How to Pay Dividend On-Chain Using CMTAT](https://www.taurushq.com/blog/equity-tokenization-how-to-pay-dividend-on-chain-using-cmtat/) (CMTAT v2.4.0)
-- [Taurus - Token Transfer Management: How to Apply Restrictions with CMTAT and ERC-1404](https://www.taurushq.com/blog/token-transfer-management-how-to-apply-restrictions-with-cmtat-and-erc-1404/) (CMTAT v2.4.0)
-- [Taurus - Making CMTAT Tokenization More Scalable and Cost-Effective with Proxy and Factory Contracts](https://www.taurushq.com/blog/cmtat-tokenization-deployment-with-proxy-and-factory/) (CMTAT v2.5.1)
-- [Conditional Transfers with CMTAT & Taurus-CAPITAL: A Step-by-Step Guide](https://www.taurushq.com/blog/tokenization-conditionaltransfer-with-cmtat/) (v2.5.0)
-- [Taurus - Addressing the Privacy and Compliance Challenge in Public Blockchain Token Transactions](https://www.taurushq.com/blog/enhancing-token-transaction-privacy-on-public-blockchains-while-ensuring-compliance/) (Aztec)
+- Solidity (EVM version)
+  - [CMTA - A comparison of different security token standards](https://cmta.ch/news-articles/a-comparison-of-different-security-token-standards)
+  - [Taurus - Security Token Standards: A Closer Look at CMTAT](https://www.taurushq.com/blog/security-token-standards-a-closer-look-at-cmtat/)
+  - [Taurus - Equity Tokenization: How to Pay Dividend On-Chain Using CMTAT](https://www.taurushq.com/blog/equity-tokenization-how-to-pay-dividend-on-chain-using-cmtat/) (CMTAT v2.4.0)
+  - [Taurus - Token Transfer Management: How to Apply Restrictions with CMTAT and ERC-1404](https://www.taurushq.com/blog/token-transfer-management-how-to-apply-restrictions-with-cmtat-and-erc-1404/) (CMTAT v2.4.0)
+  - [Taurus - Making CMTAT Tokenization More Scalable and Cost-Effective with Proxy and Factory Contracts](https://www.taurushq.com/blog/cmtat-tokenization-deployment-with-proxy-and-factory/) (CMTAT v2.5.1)
+  - [Taurus - Conditional Transfers with CMTAT & Taurus-CAPITAL: A Step-by-Step Guide](https://www.taurushq.com/blog/tokenization-conditionaltransfer-with-cmtat/) (CMTAT v2.5.0)
+
+- Aztec
+  - [Taurus - Addressing the Privacy and Compliance Challenge in Public Blockchain Token Transactions](https://www.taurushq.com/blog/enhancing-token-transaction-privacy-on-public-blockchains-while-ensuring-compliance/) (Aztec)
+  - [Taurus Deploys the First Private Stablecoin Contract](https://www.taurushq.com/blog/taurus-deploys-the-first-private-stablecoin-contract/)
+
 
 ------
 
@@ -2458,8 +2463,8 @@ More information in [USAGE.md](doc/USAGE.md)
   - Optimizer: true, 200 runs
 
 - Package.json
-  - OpenZeppelin Contracts (Node.js module): [v5.3.0](https://github.com/OpenZeppelin/openzeppelin-contracts/releases/tag/v5.3.0) 
-  - OpenZeppelin Contracts Upgradeable (Node.js module): [v5.3.0](https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/releases/tag/v5.3.0)
+  - OpenZeppelin Contracts (Node.js module): [v5.4.0](https://github.com/OpenZeppelin/openzeppelin-contracts/releases/tag/v5.4.0) 
+  - OpenZeppelin Contracts Upgradeable (Node.js module): [v5.4.0](https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/releases/tag/v5.3.0)
 
 #### Installation & Compilation
 
