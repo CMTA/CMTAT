@@ -18,6 +18,16 @@ import {IBurnFromERC20} from "../interfaces/technical/IMintBurnToken.sol";
 abstract contract CMTATBaseERC20CrossChain is CMTATBaseERC1404, IERC7802, IBurnFromERC20 {
     bytes32 public constant BURNER_FROM_ROLE = keccak256("BURNER_FROM_ROLE");
     bytes32 public constant CROSS_CHAIN_ROLE = keccak256("CROSS_CHAIN_ROLE");
+
+    /// @dev Modifier to restrict access to the token bridge.
+    /// Source: OpenZeppelin v5.4.0 - draft-ERC20Bridgeable.sol
+    modifier onlyTokenBridge() {
+        // Token bridge should never be impersonated using a relayer/forwarder. Using msg.sender is preferable to
+        // _msgSender() for security reasons.
+        _checkTokenBridge(msg.sender);
+        _;
+    }
+
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
@@ -29,7 +39,7 @@ abstract contract CMTATBaseERC20CrossChain is CMTATBaseERC1404, IERC7802, IBurnF
     * @custom:access-control
     * - the caller must have the `CROSS_CHAIN_ROLE`.
     */
-    function crosschainMint(address to, uint256 value) public virtual override(IERC7802) onlyRole(CROSS_CHAIN_ROLE) whenNotPaused {
+    function crosschainMint(address to, uint256 value) public virtual override(IERC7802) whenNotPaused onlyTokenBridge {
          // Put before to avoid reentrancy-events (slither)
          emit CrosschainMint(to, value,_msgSender());
         _mintOverride(to, value);
@@ -42,7 +52,7 @@ abstract contract CMTATBaseERC20CrossChain is CMTATBaseERC1404, IERC7802, IBurnF
     * @custom:access-control
     * - the caller must have the `CROSS_CHAIN_ROLE`.
     */
-    function crosschainBurn(address from, uint256 value) public virtual override(IERC7802) onlyRole(CROSS_CHAIN_ROLE) whenNotPaused{
+    function crosschainBurn(address from, uint256 value) public virtual override(IERC7802) whenNotPaused onlyTokenBridge{
         address sender =  _msgSender();
         // Put before to avoid reentrancy-events (slither)
         emit CrosschainBurn(from, value, _msgSender());
@@ -96,5 +106,14 @@ abstract contract CMTATBaseERC20CrossChain is CMTATBaseERC1404, IERC7802, IBurnF
         emit BurnFrom(sender, account, sender, value);
         // burn
         _burnOverride(account, value);
+    }
+
+    /**
+     * @dev Checks if the caller is a trusted token bridge. MUST revert otherwise.
+     *
+     * Source: OpenZeppelin v5.4.0 - draft-ERC20Bridgeable.sol
+     */
+    function _checkTokenBridge(address caller) internal virtual {
+        _checkRole(CROSS_CHAIN_ROLE, caller); 
     }
 }
