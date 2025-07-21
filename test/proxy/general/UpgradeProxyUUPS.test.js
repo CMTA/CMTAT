@@ -32,7 +32,8 @@ describe('CMTAT with UUPS Proxy', function () {
       {
         initializer: 'initialize',
         kind: 'uups',
-        constructorArgs: [this._.address]
+        constructorArgs: [this._.address],
+        unsafeAllow: ['missing-initializer', 'missing-initializer-call']
       }
     )
   })
@@ -45,7 +46,8 @@ describe('CMTAT with UUPS Proxy', function () {
       this.CMTAT_PROXY_TestFactory.connect(this.admin),
       {
         constructorArgs: [this._.address],
-        kind: 'uups'
+        kind: 'uups',
+        unsafeAllow: ['missing-initializer', 'missing-initializer-call']
       }
     )
   })
@@ -57,7 +59,8 @@ describe('CMTAT with UUPS Proxy', function () {
         this.CMTAT_PROXY_TestFactory.connect(this.address1),
         {
           constructorArgs: [this._.address],
-          kind: 'uups'
+          kind: 'uups', 
+          unsafeAllow: ['missing-initializer', 'missing-initializer-call']
         }
       )
     )

@@ -30,7 +30,8 @@ function UpgradeProxyCommon () {
         this.CMTAT_PROXY_TestFactory.connect(this.admin),
         {
           constructorArgs: [this._.address],
-          kind: 'uups'
+          kind: 'uups',
+          unsafeAllow: ['missing-initializer', 'missing-initializer-call']
         }
       )
     } else {
@@ -38,7 +39,8 @@ function UpgradeProxyCommon () {
         CMTAT_PROXY_ADDRESS,
         this.CMTAT_PROXY_TestFactory,
         {
-          constructorArgs: [this._.address]
+          constructorArgs: [this._.address],
+          unsafeAllow: ['missing-initializer', 'missing-initializer-call']
         }
       )
     }

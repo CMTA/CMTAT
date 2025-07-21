@@ -72,19 +72,28 @@ function SnapshotModuleCommonScheduling () {
 
     it('reverts when trying to schedule a snapshot in the past', async function () {
       const SNAPSHOT_TIME = this.currentTime - time.duration.seconds(60)
-      await expect(
-        this.transferEngineMock
-          .connect(this.admin)
-          .scheduleSnapshot(SNAPSHOT_TIME)
-      )
-        .to.be.revertedWithCustomError(
-          this.transferEngineMock,
-          'CMTAT_SnapshotModule_SnapshotScheduledInThePast'
+      if(!this.dontCheckTimestamp) {
+        await expect(
+          this.transferEngineMock
+            .connect(this.admin)
+            .scheduleSnapshot(SNAPSHOT_TIME)
         )
-        .withArgs(
-          SNAPSHOT_TIME,
-          (await time.latest()) + time.duration.seconds(1)
+          .to.be.revertedWithCustomError(
+            this.transferEngineMock,
+            'CMTAT_SnapshotModule_SnapshotScheduledInThePast'
+          )
+          .withArgs(
+            SNAPSHOT_TIME,
+            (await time.latest()) + time.duration.seconds(1)
+          )
+      } else {
+        await expect(
+          this.transferEngineMock
+            .connect(this.admin)
+            .scheduleSnapshot(SNAPSHOT_TIME)
         )
+          .to.be.reverted
+      }
     })
 
     it('reverts when trying to schedule a snapshot with the same time twice', async function () {

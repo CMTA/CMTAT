@@ -29,7 +29,8 @@ describe('UpgradeableCMTAT - Proxy', function () {
       {
         initializer: 'initialize',
         constructorArgs: [this._.address],
-        from: this.deployerAddress.address
+        from: this.deployerAddress.address,
+        unsafeAllow: ['missing-initializer']
       }
     )
   })

@@ -157,7 +157,8 @@ async function deployCMTATERC1363Proxy (forwarder, admin, deployerAddress) {
     {
       initializer: 'initialize',
       constructorArgs: [forwarder],
-      from: deployerAddress
+      from: deployerAddress,
+      unsafeAllow: ['missing-initializer']
     }
   )
   return ETHERS_CMTAT_PROXY
@@ -180,7 +181,8 @@ async function deployCMTATAllowlistProxy (forwarder, admin, deployerAddress) {
     {
       initializer: 'initialize',
       constructorArgs: [forwarder],
-      from: deployerAddress
+      from: deployerAddress,
+      unsafeAllow: ['missing-initializer']
     }
   )
   return ETHERS_CMTAT_PROXY
@@ -197,7 +199,8 @@ async function deployCMTATLightProxy (admin, deployerAddress) {
     {
       initializer: 'initialize',
       constructorArgs: [],
-      from: deployerAddress
+      from: deployerAddress,
+      unsafeAllow: ['missing-initializer']
     }
   )
   return ETHERS_CMTAT_PROXY
@@ -219,7 +222,8 @@ async function deployCMTATERC7551Proxy (forwarder, admin, deployerAddress) {
     {
       initializer: 'initialize',
       constructorArgs: [forwarder],
-      from: deployerAddress
+      from: deployerAddress,
+      unsafeAllow: ['missing-initializer']
     }
   )
   return ETHERS_CMTAT_PROXY
@@ -241,7 +245,8 @@ async function deployCMTATProxy (forwarder, admin, deployerAddress) {
     {
       initializer: 'initialize',
       constructorArgs: [forwarder],
-      from: deployerAddress
+      from: deployerAddress,
+      unsafeAllow: ['missing-initializer']
     }
   )
   return ETHERS_CMTAT_PROXY
@@ -263,7 +268,8 @@ async function deployCMTATDebtProxy (_, admin, deployerAddress) {
     {
       initializer: 'initialize',
       constructorArgs: [],
-      from: deployerAddress
+      from: deployerAddress,
+      unsafeAllow: ['missing-initializer']
     }
   )
   return ETHERS_CMTAT_PROXY
@@ -285,7 +291,8 @@ async function deployCMTATUUPSProxy (_, admin, deployerAddress) {
     {
       initializer: 'initialize',
       constructorArgs: [_],
-      from: deployerAddress
+      from: deployerAddress,
+      unsafeAllow: ['missing-initializer', 'missing-initializer-call']
     }
   )
   return ETHERS_CMTAT_PROXY
@@ -318,7 +325,8 @@ async function deployCMTATProxyWithParameter (
     {
       initializer: 'initialize',
       constructorArgs: [forwarderIrrevocable],
-      from: deployerAddress
+      from: deployerAddress,
+      unsafeAllow: ['missing-initializer']
     }
   )
   // return ETHERS_CMTAT_PROXY.getAddress()
