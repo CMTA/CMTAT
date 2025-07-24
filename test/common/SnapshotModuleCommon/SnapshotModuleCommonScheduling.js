@@ -72,7 +72,7 @@ function SnapshotModuleCommonScheduling () {
 
     it('reverts when trying to schedule a snapshot in the past', async function () {
       const SNAPSHOT_TIME = this.currentTime - time.duration.seconds(60)
-      if(!this.dontCheckTimestamp) {
+      if (!this.dontCheckTimestamp) {
         await expect(
           this.transferEngineMock
             .connect(this.admin)
@@ -91,8 +91,7 @@ function SnapshotModuleCommonScheduling () {
           this.transferEngineMock
             .connect(this.admin)
             .scheduleSnapshot(SNAPSHOT_TIME)
-        )
-          .to.be.reverted
+        ).to.be.reverted
       }
     })
 

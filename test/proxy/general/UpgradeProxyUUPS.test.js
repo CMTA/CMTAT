@@ -59,7 +59,7 @@ describe('CMTAT with UUPS Proxy', function () {
         this.CMTAT_PROXY_TestFactory.connect(this.address1),
         {
           constructorArgs: [this._.address],
-          kind: 'uups', 
+          kind: 'uups',
           unsafeAllow: ['missing-initializer', 'missing-initializer-call']
         }
       )

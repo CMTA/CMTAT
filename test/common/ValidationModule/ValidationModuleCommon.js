@@ -62,9 +62,11 @@ function ValidationModuleCommon () {
     it('testCanReturnMessageValidTransfer', async function () {
       if (!this.erc1404) {
         // Act + Assert
-        expect(await this.cmtat.messageForTransferRestriction(REJECTED_CODE_BASE_TRANSFER_OK)).to.equal(
-          'NoRestriction'
-        )
+        expect(
+          await this.cmtat.messageForTransferRestriction(
+            REJECTED_CODE_BASE_TRANSFER_OK
+          )
+        ).to.equal('NoRestriction')
       }
     })
 
@@ -92,9 +94,11 @@ function ValidationModuleCommon () {
     it('testCanReturnMessageWithAmountTooHigh', async function () {
       if (!this.erc1404) {
         // Act + Assert
-        expect(await this.cmtat.messageForTransferRestriction(RULE_MOCK_AMOUNT_MAX_CODE)).to.equal(
-          'Amount too high'
-        )
+        expect(
+          await this.cmtat.messageForTransferRestriction(
+            RULE_MOCK_AMOUNT_MAX_CODE
+          )
+        ).to.equal('Amount too high')
       }
     })
 
@@ -404,9 +408,11 @@ function ValidationModuleCommon () {
     it('testCanReturnMessageWithMintAmountTooHigh', async function () {
       if (!this.erc1404) {
         // Act + Assert
-        expect(await this.cmtat.messageForTransferRestriction(RULE_MOCK_MINT_AMOUNT_MAX)).to.equal(
-          'Mint amount too high'
-        )
+        expect(
+          await this.cmtat.messageForTransferRestriction(
+            RULE_MOCK_MINT_AMOUNT_MAX
+          )
+        ).to.equal('Mint amount too high')
       }
     })
 

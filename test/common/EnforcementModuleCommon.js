@@ -1,5 +1,9 @@
-const { ENFORCER_ROLE, REJECTED_CODE_BASE_TRANSFER_REJECTED_FROM_FROZEN,
-REJECTED_CODE_BASE_TRANSFER_REJECTED_TO_FROZEN, REJECTED_CODE_BASE_TRANSFER_REJECTED_SPENDER_FROZEN } = require('../utils')
+const {
+  ENFORCER_ROLE,
+  REJECTED_CODE_BASE_TRANSFER_REJECTED_FROM_FROZEN,
+  REJECTED_CODE_BASE_TRANSFER_REJECTED_TO_FROZEN,
+  REJECTED_CODE_BASE_TRANSFER_REJECTED_SPENDER_FROZEN
+} = require('../utils')
 const { expect } = require('chai')
 
 const REASON_FREEZE_STRING = 'testFreeze'
@@ -259,9 +263,11 @@ function EnforcementModuleCommon () {
             AMOUNT_TO_TRANSFER
           )
         ).to.equal(REJECTED_CODE_BASE_TRANSFER_REJECTED_FROM_FROZEN)
-        expect(await this.cmtat.messageForTransferRestriction(REJECTED_CODE_BASE_TRANSFER_REJECTED_FROM_FROZEN)).to.equal(
-          'AddrFromIsFrozen'
-        )
+        expect(
+          await this.cmtat.messageForTransferRestriction(
+            REJECTED_CODE_BASE_TRANSFER_REJECTED_FROM_FROZEN
+          )
+        ).to.equal('AddrFromIsFrozen')
       }
       if (!this.generic) {
         await expect(
@@ -300,9 +306,11 @@ function EnforcementModuleCommon () {
             AMOUNT_TO_TRANSFER
           )
         ).to.equal(REJECTED_CODE_BASE_TRANSFER_REJECTED_TO_FROZEN)
-        expect(await this.cmtat.messageForTransferRestriction(REJECTED_CODE_BASE_TRANSFER_REJECTED_TO_FROZEN)).to.equal(
-          'AddrToIsFrozen'
-        )
+        expect(
+          await this.cmtat.messageForTransferRestriction(
+            REJECTED_CODE_BASE_TRANSFER_REJECTED_TO_FROZEN
+          )
+        ).to.equal('AddrToIsFrozen')
       }
 
       await expect(
@@ -353,9 +361,11 @@ function EnforcementModuleCommon () {
               AMOUNT_TO_TRANSFER
             )
           ).to.equal(REJECTED_CODE_BASE_TRANSFER_REJECTED_SPENDER_FROZEN)
-          expect(await this.cmtat.messageForTransferRestriction(REJECTED_CODE_BASE_TRANSFER_REJECTED_SPENDER_FROZEN)).to.equal(
-            'AddrSpenderIsFrozen'
-          )
+          expect(
+            await this.cmtat.messageForTransferRestriction(
+              REJECTED_CODE_BASE_TRANSFER_REJECTED_SPENDER_FROZEN
+            )
+          ).to.equal('AddrSpenderIsFrozen')
         }
 
         await expect(

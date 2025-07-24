@@ -1,6 +1,9 @@
-const { PAUSER_ROLE, DEFAULT_ADMIN_ROLE,
+const {
+  PAUSER_ROLE,
+  DEFAULT_ADMIN_ROLE,
   REJECTED_CODE_BASE_TRANSFER_REJECTED_PAUSED,
-  REJECTED_CODE_BASE_TRANSFER_REJECTED_DEACTIVATED} = require('../utils')
+  REJECTED_CODE_BASE_TRANSFER_REJECTED_DEACTIVATED
+} = require('../utils')
 const { expect } = require('chai')
 function PauseModuleCommon () {
   context('Pause', function () {
@@ -170,9 +173,11 @@ function PauseModuleCommon () {
             AMOUNT_TO_TRANSFER
           )
         ).to.equal(REJECTED_CODE_BASE_TRANSFER_REJECTED_PAUSED)
-        expect(await this.cmtat.messageForTransferRestriction(REJECTED_CODE_BASE_TRANSFER_REJECTED_PAUSED)).to.equal(
-          'EnforcedPause'
-        )
+        expect(
+          await this.cmtat.messageForTransferRestriction(
+            REJECTED_CODE_BASE_TRANSFER_REJECTED_PAUSED
+          )
+        ).to.equal('EnforcedPause')
       }
       if (!this.generic) {
         await expect(
@@ -263,9 +268,11 @@ function PauseModuleCommon () {
             AMOUNT_TO_TRANSFER
           )
         ).to.equal(REJECTED_CODE_BASE_TRANSFER_REJECTED_PAUSED)
-        expect(await this.cmtat.messageForTransferRestriction(REJECTED_CODE_BASE_TRANSFER_REJECTED_PAUSED)).to.equal(
-          'EnforcedPause'
-        )
+        expect(
+          await this.cmtat.messageForTransferRestriction(
+            REJECTED_CODE_BASE_TRANSFER_REJECTED_PAUSED
+          )
+        ).to.equal('EnforcedPause')
         await expect(
           this.cmtat
             .connect(this.address3)
@@ -283,8 +290,8 @@ function PauseModuleCommon () {
 
   context('DeactivateContract', function () {
     /**
-    * The admin is assigned the PAUSER role when the contract is deployed
-    */
+     * The admin is assigned the PAUSER role when the contract is deployed
+     */
     it('testCanDeactivatedByAdminIfContractIsPaused', async function () {
       const AMOUNT_TO_TRANSFER = 10n
       // Arrange
@@ -361,9 +368,11 @@ function PauseModuleCommon () {
             AMOUNT_TO_TRANSFER
           )
         ).to.equal(REJECTED_CODE_BASE_TRANSFER_REJECTED_DEACTIVATED)
-        expect(await this.cmtat.messageForTransferRestriction(REJECTED_CODE_BASE_TRANSFER_REJECTED_DEACTIVATED)).to.equal(
-          'ContractDeactivated'
-        )
+        expect(
+          await this.cmtat.messageForTransferRestriction(
+            REJECTED_CODE_BASE_TRANSFER_REJECTED_DEACTIVATED
+          )
+        ).to.equal('ContractDeactivated')
         await expect(
           this.cmtat
             .connect(this.address3)

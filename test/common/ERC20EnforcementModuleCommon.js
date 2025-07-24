@@ -559,10 +559,14 @@ function ERC20EnforcementModuleCommon () {
             this.address2,
             AMOUNT_TO_TRANSFER
           )
-        ).to.equal(REJECTED_CODE_BASE_TRANSFER_REJECTED_FROM_INSUFFICIENT_ACTIVE_BALANCE)
-        expect(await this.cmtat.messageForTransferRestriction(REJECTED_CODE_BASE_TRANSFER_REJECTED_FROM_INSUFFICIENT_ACTIVE_BALANCE)).to.equal(
-          'AddrFrom:insufficientActiveBalance'
+        ).to.equal(
+          REJECTED_CODE_BASE_TRANSFER_REJECTED_FROM_INSUFFICIENT_ACTIVE_BALANCE
         )
+        expect(
+          await this.cmtat.messageForTransferRestriction(
+            REJECTED_CODE_BASE_TRANSFER_REJECTED_FROM_INSUFFICIENT_ACTIVE_BALANCE
+          )
+        ).to.equal('AddrFrom:insufficientActiveBalance')
       }
 
       await expect(
@@ -659,7 +663,9 @@ function ERC20EnforcementModuleCommon () {
             this.address2,
             AMOUNT_TO_TRANSFER
           )
-        ).to.equal(REJECTED_CODE_BASE_TRANSFER_REJECTED_FROM_INSUFFICIENT_ACTIVE_BALANCE)
+        ).to.equal(
+          REJECTED_CODE_BASE_TRANSFER_REJECTED_FROM_INSUFFICIENT_ACTIVE_BALANCE
+        )
 
         expect(
           await this.cmtat.detectTransferRestrictionFrom(
@@ -668,10 +674,14 @@ function ERC20EnforcementModuleCommon () {
             this.address2,
             AMOUNT_TO_TRANSFER
           )
-        ).to.equal(REJECTED_CODE_BASE_TRANSFER_REJECTED_FROM_INSUFFICIENT_ACTIVE_BALANCE)
-        expect(await this.cmtat.messageForTransferRestriction(REJECTED_CODE_BASE_TRANSFER_REJECTED_FROM_INSUFFICIENT_ACTIVE_BALANCE)).to.equal(
-          'AddrFrom:insufficientActiveBalance'
+        ).to.equal(
+          REJECTED_CODE_BASE_TRANSFER_REJECTED_FROM_INSUFFICIENT_ACTIVE_BALANCE
         )
+        expect(
+          await this.cmtat.messageForTransferRestriction(
+            REJECTED_CODE_BASE_TRANSFER_REJECTED_FROM_INSUFFICIENT_ACTIVE_BALANCE
+          )
+        ).to.equal('AddrFrom:insufficientActiveBalance')
       }
 
       await expect(
@@ -721,17 +731,8 @@ function ERC20EnforcementModuleCommon () {
             this.address2,
             AMOUNT_TO_TRANSFER
           )
-        ).to.equal(REJECTED_CODE_BASE_TRANSFER_REJECTED_FROM_INSUFFICIENT_ACTIVE_BALANCE)
-        expect(
-          await this.cmtat.detectTransferRestrictionFrom(
-            this.address3,
-            this.address1,
-            this.address2,
-            AMOUNT_TO_TRANSFER
-          )
-        ).to.equal(REJECTED_CODE_BASE_TRANSFER_REJECTED_FROM_INSUFFICIENT_ACTIVE_BALANCE)
-        expect(await this.cmtat.messageForTransferRestriction(REJECTED_CODE_BASE_TRANSFER_REJECTED_FROM_INSUFFICIENT_ACTIVE_BALANCE)).to.equal(
-          'AddrFrom:insufficientActiveBalance'
+        ).to.equal(
+          REJECTED_CODE_BASE_TRANSFER_REJECTED_FROM_INSUFFICIENT_ACTIVE_BALANCE
         )
         expect(
           await this.cmtat.detectTransferRestrictionFrom(
@@ -740,7 +741,24 @@ function ERC20EnforcementModuleCommon () {
             this.address2,
             AMOUNT_TO_TRANSFER
           )
-        ).to.equal(REJECTED_CODE_BASE_TRANSFER_REJECTED_FROM_INSUFFICIENT_ACTIVE_BALANCE)
+        ).to.equal(
+          REJECTED_CODE_BASE_TRANSFER_REJECTED_FROM_INSUFFICIENT_ACTIVE_BALANCE
+        )
+        expect(
+          await this.cmtat.messageForTransferRestriction(
+            REJECTED_CODE_BASE_TRANSFER_REJECTED_FROM_INSUFFICIENT_ACTIVE_BALANCE
+          )
+        ).to.equal('AddrFrom:insufficientActiveBalance')
+        expect(
+          await this.cmtat.detectTransferRestrictionFrom(
+            this.address3,
+            this.address1,
+            this.address2,
+            AMOUNT_TO_TRANSFER
+          )
+        ).to.equal(
+          REJECTED_CODE_BASE_TRANSFER_REJECTED_FROM_INSUFFICIENT_ACTIVE_BALANCE
+        )
       }
 
       await expect(
