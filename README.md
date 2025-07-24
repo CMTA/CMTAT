@@ -32,14 +32,14 @@ CMTAT has been built with five main goals:
 
 4. Security by undergoing audits from trusted firms like [ADBK](https://abdk.consulting) and [Halborn](https://www.halborn.com), and by implementing a range of industry best practices.
    - Strong code coverage(~99.17%) with 2635 automated tests executed
-   - Run static analyzer ([Aderyn](https://github.com/Cyfrin/aderyn), [Slither](https://github.com/crytic/slither/tree/master)) before the audits
+   - Run static analyzer ([Aderyn](https://github.com/Cyfrin/aderyn), [Slither](https://github.com/crytic/slither/tree/master)) before and after the audits
    - RBAC Access Control to clearly separates the different roles and permissions
    
 5. Freedom of use through an open-source permissive license (MPL-2.0)
 
 
 
-By taking these five main goals, here a comparison with others known implementation to deploy financial instruments on-chain.
+By taking these five main goals, here a comparison with others known implementations to deploy financial instruments on-chain.
 
 |                                                     | CMTAT                                                        | ERC-3643<br />(Tokeny implementation)                        | ERC-1400<br />(UniversalToken)                               | TokenF                                                       | ERC-20 Smart Coin (Cast framework)                           |
 | --------------------------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
@@ -76,14 +76,14 @@ You may modify the token code by adding, removing, or modifying features. Howeve
 
 ##### Product use case (equities, stablecoins)
 
-CMTAT comes with several different deployment version to meet specific use case
+CMTAT comes with several different deployment versions to meet specific use cases.
 
 | Product                    | Deployment version | Note                                                         |
 | -------------------------- | ------------------ | ------------------------------------------------------------ |
 | Equities                   | CMTAT Standard     | All features, without those directly to Debt                 |
-| Equities in Germany        | CMTAT ERC-7551     | The standard version with a few supplementary functions to meet the standard [ERC-7551](https://ethereum-magicians.org/t/erc-7551-crypto-security-token-smart-contract-interface-ewpg/16416), tailord for the Germany and eWpg. |
+| Equities in Germany        | CMTAT ERC-7551     | The standard version with a few supplementary functions to meet the standard [ERC-7551](https://ethereum-magicians.org/t/erc-7551-crypto-security-token-smart-contract-interface-ewpg/16416), tailored for the Germany and eWpg. |
 | Debt/bond                  | CMTAT Debt<br />   | CMTAT Standard is also suitable but this version adds the possibility to put several on-chain information related to debt and bond product |
-| Stablecoin (e.g USDC/USDT) | CMTAT Light        | The core features (Address freeze, pause) without those rather required by equities and debt products (e.g. document management, snapshot, partial freeze of balances) |
+| Stablecoin (e.g USDC/USDT) | CMTAT Light        | The core features (address freeze, pause) without those rather required by equities and debt products (e.g. document management, snapshot, partial freeze of balances) |
 
 ##### Technical use case (whitelist, upgradeable/proxy)
 
@@ -91,7 +91,7 @@ CMTAT comes with several different deployment version to meet specific use case
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | Restrict transfer to inside a whitelist / Allowlist          | CMTAT Allowlist<br />Or all other deployment (except Light) version with a `RuleEngine` configured |
 | On-chain snapshot<br />(useful for on-chain dividend distribution) | All deployment version (except Light) with a `SnapshotEngine`configured |
-| Deployment through proxy (Upgradeable)<br />Deployment immutable (standalone / without proxy) | Each deployment version comes with a standalone (immutable) or upgradeable mode.<br />A specific deployment version exist for UUPS Proxy |
+| Deployment through proxy (Upgradeable)<br />Deployment immutable (standalone / without proxy) | Each deployment version comes with a standalone (immutable) or upgradeable mode.<br />A specific deployment version exists for UUPS Proxy |
 | MetaTx/Gasless with ERC-2771                                 | All deployment version, except Debt & Light version          |
 
 #### CMTAT for stablecoins
@@ -176,7 +176,7 @@ Here is a comparison between the features present in known tokenized market fund
 
 **Note**
 
-- *Fasanara Capital Ltd* has also tokenized a money market funds. Since they have worked with [Tokeny](https://tokeny.com) and uses therefore the ERC-3643 standard, a comparison with this standard is provided in others sections of this document. See also [Tokeny - How Tokeny Powers Fasanara’s Tokenized Money Market Funds](https://tokeny.com/customer-story-fasanaras-tokenized-mmf/)
+- *Fasanara Capital Ltd* has also tokenized a money market fund. Since they have worked with [Tokeny](https://tokeny.com) and use therefore the ERC-3643 standard, a comparison with this standard is provided in other sections of this document. See also [Tokeny - How Tokeny Powers Fasanara’s Tokenized Money Market Funds](https://tokeny.com/customer-story-fasanaras-tokenized-mmf/)
 - Upgradeability: a specific CMTAT deployment version allows to use UUPS proxy
 
 ### Comparison of CMTAT and other tokenization frameworks
@@ -255,12 +255,12 @@ The CMTAT was initially designed for the digitalization of company shares. For S
 
 - [21.co](https://www.21.co) uses CMTAT through their own [fork](https://github.com/amun/CMTAT) to create Wrapped Tokens on Ethereum.
 
-### Where CMTAT is mentionned ?
+### Where CMTAT is mentioned ?
 
 CMTAT is mentioned in several different reports. While these reports do not take into account the latest changes with the version v.3.0.0, it gives already a good indication of how CMTAT can be used. The points raised by these also allowed for numerous improvements to be made to the CMTAT.
 
 - [Forum - Asset Tokenization in Financial Markets: The Next Generation of Value Exchange (2025)](https://reports.weforum.org/docs/WEF_Asset_Tokenization_in_Financial_Markets_2025.pdf), page 38
-- [King's Buisness School/Rhys Bidder - What Is The Future Of Stablecoins, And How Do We Get There? (2025)](https://www.kcl.ac.uk/business/assets/PDF/qcgbf-working-papers/taking-the-next-step-v5.pdf), page 33
+- [King's Business School/Rhys Bidder - What Is The Future Of Stablecoins, And How Do We Get There? (2025)](https://www.kcl.ac.uk/business/assets/PDF/qcgbf-working-papers/taking-the-next-step-v5.pdf), page 33
 - [Nethermind - Tokenization Standards: The Missing Link for Institutional Adoption (2025)](https://www.nethermind.io/blog/tokenization-standards-the-missing-link-for-institutional-adoption): page 2, 16, 19, 33-36 & 39
 - [Project Guardian - Fixed Income Framework (2024)](https://www.mas.gov.sg/-/media/mas-media-library/development/fintech/guardian/guardian-fixed-income-framework.pdf): page 13, 39, 59 & 65
 - [ICMA contribution to MAS Guardian Fixed Income Framework (GFIF) publication (2024)](https://www.icmagroup.org/assets/Summary-of-third-party-proposals-for-integrating-ICMAs-Bond-Data-Taxonomy-in-token-frameworks-and-DLT-platforms-complementing-section-6-Data-Model-of-GFIF.pdf)
@@ -451,7 +451,7 @@ These following functions to reduce contract code size:
 - `batchForcedTransfer`to reduce contract code size
 - `batchFreezePartialTokens` and `batchUnfreezePartialTokens`
 
-All functions related to the interface `IAgentRole`because CMTAT uses a RBAC Access Control to offer more granularity in term of access control.
+All functions related to the interface `IAgentRole`because CMTAT uses a RBAC Access Control to offer more granularity in terms of access control.
 
 And finally `setCompliance`because CMTAT uses a different architecture for its `ruleEngine`.
 
@@ -635,7 +635,7 @@ interface IERC7802 is IERC165 {
 
 ## Architecture
 
-CMTAT architecture is divided in two main components: module and engines
+CMTAT architecture is divided in two main components: modules and engines
 
 The main schema describing the architecture can be found here: [architecture.pdf](./doc/schema/drawio/architecture.pdf) 
 
@@ -1666,7 +1666,7 @@ interface IERC3643Pause {
 
 The pause function does not affect burn and mint operations implemented in the contracts `ERC20MintModule` and `ERC20BurnModule`.
 
-By separating, burn/mint from standard transfer, the admin can re-adjust the supply while the standard transfers are paused. The alternative in this case to block mint and burn operations is to remove the MINTER and BURNER roles from the addresses concerned.
+By separating burn/mint from standard transfer, the admin can re-adjust the supply while the standard transfers are paused. The alternative in this case to block mint and burn operations is to remove the MINTER and BURNER roles from the addresses concerned.
 
 On the other hand, specific function for cross-chain bridge (`3_CMTATBaseERC20CrossChain.sol`) will revert if contract is paused because they are not intended to be used by the issuer to manage the supply.
 
@@ -1812,7 +1812,7 @@ Here the list of events emitted by functions, which modify the total supply.
 | BatchMint( address indexed minter, address[] accounts, uint256[] values |                               | -                         | BatchMint<br />(ERC20MintModule)                             |
 | Burn(address indexed account, uint256 value, bytes data);    | IERC7551Burn                  | ERC-7551 (draft standard) | burn<br />(ERC20BurnModule)                                  |
 | BatchBurn(address indexed burner, address[] accounts,  uint256[] values) |                               | -                         | BatchMint<br />(ERC20BurnModule)                             |
-| BurnFrom(address indexed burner, address indexed account, address indexed spender, uint256 value); | IBurnERC20                    | -                         | brunFrom<br /><br />burn(uint256 value)<br />(CMTATBaseERC20CrossChain) |
+| BurnFrom(address indexed burner, address indexed account, address indexed spender, uint256 value); | IBurnERC20                    | -                         | burnFrom(address account, uint256 value)<br /><br />burn(uint256 value)<br />(CMTATBaseERC20CrossChain) |
 | CrosschainMint(address indexed to, uint256 value, address indexed sender) | IERC7551                      | ERC-7551                  | crosschainMint<br />(CMTATBaseERC20CrossChain)               |
 | CrosschainBurn(address indexed from, uint256 value, address indexed sender) | IERC7551                      | ERC-7551                  | crosschainMint<br />(CMTATBaseERC20CrossChain)               |
 | Enforcement (address indexed enforcer, address indexed account, uint256 amount, bytes data)<br />(Enforcement )<br /> | IERC7551ERC20EnforcementEvent | ERC-7551                  | forcedTransfer<br />(ERC20EnforcementModule)<br />forcedBurn<br />(CMTATBaseCore) |
@@ -1960,6 +1960,8 @@ For more information, see the section dedicated to the `DocumentEngine`
 
 Contracts for deployment are available in the directory [contracts/deployment](./contracts/deployment)
 
+### Summary tab
+
 | CMTAT Model      | Description                                                  | Standalone/Proxy | Contract                                                     | Remark                                                       |
 | ---------------- | ------------------------------------------------------------ | ---------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | CMTAT Standard   | Deployment without proxy <br />(immutable)                   | Standalone       | [CMTATStandalone](./contracts/deployment/CMTATStandalone.sol) | Core & extension module without Debt, Allowlist, ERC-3643 and UUPS<br />Include also the option module `ERC2771`, as well as `ERC20CrossChain`support |
@@ -1969,7 +1971,7 @@ Contracts for deployment are available in the directory [contracts/deployment](.
 |                  | -                                                            | Upgradeable      | [CMTATUpgradeableERC1363](./contracts/deployment/ERC1363/CMTATUpgradeableERC1363.sol) |                                                              |
 | Light            | Only core modules                                            | Standalone       | [CMTATStandaloneLight](./contracts/deployment/light/CMTATStandaloneLight.sol) | -                                                            |
 |                  |                                                              | Upgradeable      | [CMTATUpgradeableLight](./contracts/deployment/light/CMTATUpgradeableLight.sol) |                                                              |
-| Debt             | Set Det information and CreditEvents (through DebtEngine)    | Standalone       | [CMTATStandaloneDebt](./contracts/deployment/debt/CMTATStandaloneDebt.sol) | Add the debt support.<br />Contrary to the standard version, it does not include the module `ERC2771Module` and the support of `ERC20CrossChain` |
+| Debt             | Set Debt information and Credit Events                       | Standalone       | [CMTATStandaloneDebt](./contracts/deployment/debt/CMTATStandaloneDebt.sol) | Add the debt support.<br />Contrary to the standard version, it does not include the module `ERC2771Module` and the support of `ERC20CrossChain` |
 |                  |                                                              | Upgradeable      | [CMTATUpgradeableDebt](./contracts/deployment/debt/CMTATUpgradeableDebt.sol) | -                                                            |
 | Allowlist        | Restrict transfer to an allowlist (whitelist)                | Standalone       | [CMTATStandaloneAllowlist](./contracts/deployment/allowlist/CMTATStandaloneAllowlist.sol) | Contrary to the standard version, it does not include `ERC-1404` support (ValidationModuleERC1404) & ERC20Crosschain |
 |                  |                                                              | Upgradeable      | [CMTATUpgradeableAllowlist](./contracts/deployment/allowlist/CMTATUpgradeableAllowlist.sol) | -                                                            |
@@ -2326,7 +2328,7 @@ See [AccessControlModule.sol](./contracts/modules/wrapper/security/AccessControl
 
 ### Audit
 
-The contracts have been audited by [ABDKConsulting](https://www.abdk.consulting/) (CMTAT v1.0.0 & CMTAT v2.30) and [Halborn](https://www.halborn.com), two globally recognised firm specialised in smart contracts security.
+The contracts have been audited by [ABDKConsulting](https://www.abdk.consulting/) (CMTAT v1.0.0 & CMTAT v2.30) and [Halborn](https://www.halborn.com) (CMTAT v3.0.0), two globally recognised firm specialised in smart contracts security.
 
 #### Out of scope
 
@@ -2359,11 +2361,11 @@ This audit has been made by [Halborn](https://www.halborn.com).
 
 Fixed version: [v3.0.0](https://github.com/CMTA/CMTAT/releases/tag/v3.0.0)
 
-The  third audit covered version [v3.0.0-rc5](https://github.com/CMTA/CMTAT/tree/v3.0.0-rc5).
+The third audit covered version [v3.0.0-rc5](https://github.com/CMTA/CMTAT/tree/v3.0.0-rc5).
 
 Version v3.0.0 contains the different fixes and improvements related to this audit.
 
-The report is available in [TO DO].
+The report is available in [CMTAT_Halborn_final.pdf](./doc/audits/Halborn-CMTATv3.0.0-2025/CMTAT_Halborn_final.pdf).
 
 ### Tools
 

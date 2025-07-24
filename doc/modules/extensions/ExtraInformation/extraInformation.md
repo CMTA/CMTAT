@@ -62,7 +62,7 @@ Represents the tokenization terms, including a name and an associated document r
 
 ### Events
 
-#### `Information`
+#### `Information(string)`
 
 ```solidity
 event Information(string newInformation)
@@ -74,7 +74,7 @@ Emitted when the information field is updated (typically containing free-form me
 | ---------------- | -------- | --------------------------------------- |
 | `newInformation` | `string` | The new metadata or description string. |
 
-#### `Term(...)`
+#### `Term(string,(string,bytes32,uint256))`
 
 ```solidity
 event Term(Terms newTerm)
@@ -88,7 +88,7 @@ Emitted when new tokenization terms are set.
 
 
 
-#### `TokenId(string, string)`
+#### `TokenId(string,string)`
 
 ```solidity
 event TokenId(string indexed newTokenIdIndexed, string newTokenId)
@@ -105,7 +105,7 @@ Emitted when a token ID is set or updated.
 
 ### Functions
 
-#### `tokenId`
+#### `tokenId()->string`
 
 ```solidity
 function tokenId() external view returns (string tokenId_)
@@ -127,7 +127,7 @@ Returns the current tokenization token ID.
 
 ------
 
-#### `terms`
+#### `terms()->(string,(string,bytes32,uint256))`
 
 ```solidity
 function terms() external view returns (Terms)
@@ -149,7 +149,7 @@ Returns the current tokenization terms.
 
 ------
 
-#### `information`
+#### `information()->string`
 
 ```solidity
 function information() external view returns (string information_)
@@ -171,7 +171,7 @@ Returns the general-purpose information string.
 
 ------
 
-#### `setTokenId`
+#### `setTokenId(string)`
 
 ```solidity
 function setTokenId(string tokenId_) external
@@ -195,7 +195,7 @@ Only authorized users are allowed to call this function.
 
 ------
 
-#### `setTerms`
+#### `setTerms((string,string,bytes32))`
 
 ```solidity
 function setTerms(IERC1643CMTAT.DocumentInfo terms_) external
@@ -219,7 +219,7 @@ Only authorized users are allowed to call this function.
 
 ------
 
-#### `setInformation`
+#### `setInformation(string)`
 
 ```solidity
 function setInformation(string information_) external

@@ -273,6 +273,8 @@ File path for `solc` is configured in `solc_setting.json`
 
 ### Aderyn
 
+See [Cyfrin/aderyn](https://github.com/Cyfrin/aderyn)
+
 ```bash
 aderyn . -x mocks
 ```
