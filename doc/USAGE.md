@@ -4,8 +4,6 @@ The instructions below have been tested on Ubuntu 22.04.5 LTS.
 
 [TOC]
 
-
-
 ## Main Dependencies
 
 The toolchain includes the following components, where the versions
@@ -279,8 +277,6 @@ See [Cyfrin/aderyn](https://github.com/Cyfrin/aderyn)
 aderyn . -x mocks
 ```
 
-
-
 ## Others NodeJS tools
 
 This part describe the list of libraries present in the file `package.json`.
@@ -290,11 +286,21 @@ This part describe the list of libraries present in the file `package.json`.
 
 - **[openzeppelin/hardhat-upgrades](openzeppelin/hardhat-upgrades)**
 
-This package adds functions to your Hardhat scripts so you can deploy and upgrade proxies for your contracts
+This package adds functions to your Hardhat scripts so you can deploy and upgrade proxies for your contracts.
 
 - [keccak256](https://www.npmjs.com/package/keccak256)
 
 A wrapper for the [`keccak`](https://www.npmjs.com/package/keccak) library to compute 256 bit keccak hash in JavaScript.
 
-Use by `openzeppelin-contracts-upgradeable/test/helpers/eip712`imported in `MetaTxModuleCommon.js 
+Use by `openzeppelin-contracts-upgradeable/test/helpers/eip712` imported in `MetaTxModuleCommon.js`
+
+## Deployment script
+
+A script example `deploy-cmtat-standalone.js` is available in the scripts directory.
+
+To run it locally with Hardhat:
+
+```bash
+npx hardhat run scripts/deploy-cmtat-standalone.js
+```
 
