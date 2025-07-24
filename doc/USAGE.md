@@ -296,11 +296,15 @@ Use by `openzeppelin-contracts-upgradeable/test/helpers/eip712` imported in `Met
 
 ## Deployment script
 
-A script example `deploy-cmtat-standalone.js` is available in the scripts directory.
+Two scripts example `deploy-cmtat-standalone.js` and `deploy-cmtat-standalone-light.js` are available in the Hardhat `scripts` directory.
 
 To run it locally with Hardhat:
 
 ```bash
 npx hardhat run scripts/deploy-cmtat-standalone.js
+```
+
+```bash
+npx hardhat run scripts/deploy-cmtat-standalone-light.js
 ```
 
