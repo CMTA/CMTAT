@@ -114,6 +114,6 @@ abstract contract CMTATBaseERC20CrossChain is CMTATBaseERC1404, IERC7802, IBurnF
      * Source: OpenZeppelin v5.4.0 - draft-ERC20Bridgeable.sol
      */
     function _checkTokenBridge(address caller) internal virtual {
-        _checkRole(CROSS_CHAIN_ROLE, caller); 
+        AccessControlUpgradeable._checkRole(CROSS_CHAIN_ROLE, caller); 
     }
 }

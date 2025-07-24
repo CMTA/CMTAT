@@ -3,7 +3,6 @@ pragma solidity ^0.8.0;
 
 /* ==== OpenZeppelin === */
 import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
-import {IERC165} from "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
 
 import "../modules/0_CMTATBaseGeneric.sol";
