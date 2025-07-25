@@ -18,7 +18,7 @@ Please follow <https://changelog.md/> conventions.
   
   - Update changelog
 
-## 3.0.0
+## 3.0.0-rc.6
 
 - Perform recommendations from the audit report (Halborn)
   - Main change: add a new ERC-1404 code if the contract is deactivated
