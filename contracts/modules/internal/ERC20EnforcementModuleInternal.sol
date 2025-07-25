@@ -13,7 +13,7 @@ import { IERC7551ERC20EnforcementTokenFrozenEvent, IERC7551ERC20EnforcementEvent
  * Contains specific ERC-20 enforcement actions
  */
 abstract contract ERC20EnforcementModuleInternal is ERC20Upgradeable,IERC7551ERC20EnforcementEvent,  IERC7551ERC20EnforcementTokenFrozenEvent {
-    // no argument to reduce conract code size
+    // no argument to reduce contract code size
     error CMTAT_ERC20EnforcementModule_ValueExceedsAvailableBalance();
     error CMTAT_ERC20EnforcementModule_ValueExceedsActiveBalance();
     error CMTAT_ERC20EnforcementModule_ValueExceedsFrozenBalance(); 
@@ -23,7 +23,7 @@ abstract contract ERC20EnforcementModuleInternal is ERC20Upgradeable,IERC7551ERC
 
     /* ==== ERC-7201 State Variables === */
     struct ERC20EnforcementModuleStorage {
-        mapping(address => uint256)  _frozenTokens;
+        mapping(address account => uint256 frozenTokens)  _frozenTokens;
     }
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
@@ -57,7 +57,7 @@ abstract contract ERC20EnforcementModuleInternal is ERC20Upgradeable,IERC7551ERC
             revert ERC20InsufficientBalance(_msgSender(), balance, value-balance);
         }
         ERC20EnforcementModuleStorage storage $ = _getEnforcementModuleStorage();
-        // Frozen token can not be < balance
+        // Frozen tokens can not be > balance
         uint256 activeBalance = balance - $._frozenTokens[from];
         if (value > activeBalance) {
             uint256 tokensToUnfreeze = value - activeBalance;
@@ -99,7 +99,7 @@ abstract contract ERC20EnforcementModuleInternal is ERC20Upgradeable,IERC7551ERC
     function _checkActiveBalance(address from, uint256 value) internal virtual view returns(bool){
         uint256 frozenTokensLocal = _getFrozenTokens(from);
         if(frozenTokensLocal > 0 ){
-            uint256 activeBalance = balanceOf(from) - frozenTokensLocal;
+            uint256 activeBalance = ERC20Upgradeable.balanceOf(from) - frozenTokensLocal;
             if(value > activeBalance) {
                    return false;
             }

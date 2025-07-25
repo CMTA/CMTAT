@@ -4,7 +4,6 @@ pragma solidity ^0.8.20;
 import {ERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 import {SnapshotModuleBase} from "./library/snapshot/SnapshotModuleBase.sol";
-import {ICMTATSnapshot} from "./library/snapshot/ICMTATSnapshot.sol";
 import {ISnapshotEngine} from "../interfaces/engine/ISnapshotEngine.sol";
 
 

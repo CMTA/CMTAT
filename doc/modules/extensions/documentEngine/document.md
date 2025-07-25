@@ -84,7 +84,7 @@ Sets a new external document engine contract.
 
 ------
 
-##### `documentEngine()`
+##### `documentEngine()-> address`
 
 ```solidity
 function documentEngine() external view returns (IERC1643)
@@ -127,7 +127,7 @@ A structure that stores metadata for a document.
 
 #### Functions
 
-##### `getDocument`
+##### `getDocument(string)->((string,bytes32,uint256))`
 
 ```public
 function getDocument(string name) external view returns (Document doc)
@@ -159,7 +159,7 @@ Retrieves a document by its name.
 
 ------
 
-##### `getAllDocuments`
+##### `getAllDocuments()-> string[]`
 
 ```solidity
 function getAllDocuments() external view returns (string[] names)

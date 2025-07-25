@@ -31,13 +31,13 @@ The interface and struct to represent Debt is available in `/contracts/interface
 
 This section describes the Ethereum API of Debt Module.
 
-See `IDebtModule`
+See `IDebtModule` and `ICMTAT`
 
 ### Functions
 
-#### `setDebtInstrument(...)`
+#### `setDebtInstrument((uint256,uint256,uint256,string,string,string,string,string,string,string,string,address))`
 
-```public
+```solidity
 function setDebtInstrument(ICMTATDebt.DebtInstrument debtInstrument_) public
 ```
 
@@ -55,7 +55,7 @@ Sets only the debt instrument data.
 
 ------
 
-#### `setDebt(...)`
+#### `setDebt((string,string,string,string),(uint256,uint256,uint256,string,string,string,string,string,string,string,string,address))`
 
 ```solidity
 function setDebt(ICMTATDebt.DebtInformation debt_) public
@@ -75,7 +75,7 @@ Sets the full debt information (including instrument and values).
 
 ------
 
-#### `setCreditEvents(...)`
+#### `setCreditEvents((bool,bool,string))`
 
 ```solidity
 function setCreditEvents(CreditEvents creditEvents_) public

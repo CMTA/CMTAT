@@ -4,8 +4,6 @@ The instructions below have been tested on Ubuntu 22.04.5 LTS.
 
 [TOC]
 
-
-
 ## Main Dependencies
 
 The toolchain includes the following components, where the versions
@@ -18,8 +16,8 @@ are the latest ones that we tested:
   - EVM version: Prague (Pectra upgrade)
 
 - Package.json
-  - OpenZeppelin Contracts (Node.js module): [v5.3.0](https://github.com/OpenZeppelin/openzeppelin-contracts/releases/tag/v5.3.0) 
-  - OpenZeppelin Contracts Upgradeable (Node.js module): [v5.3.0](https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/releases/tag/v5.3.0)
+  - OpenZeppelin Contracts (Node.js module): [v5.4.0](https://github.com/OpenZeppelin/openzeppelin-contracts/releases/tag/v5.4.0) 
+  - OpenZeppelin Contracts Upgradeable (Node.js module): [v5.4.0](https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/releases/tag/v5.4.0)
 
 
 ### Tools
@@ -273,11 +271,11 @@ File path for `solc` is configured in `solc_setting.json`
 
 ### Aderyn
 
+See [Cyfrin/aderyn](https://github.com/Cyfrin/aderyn)
+
 ```bash
 aderyn . -x mocks
 ```
-
-
 
 ## Others NodeJS tools
 
@@ -288,11 +286,25 @@ This part describe the list of libraries present in the file `package.json`.
 
 - **[openzeppelin/hardhat-upgrades](openzeppelin/hardhat-upgrades)**
 
-This package adds functions to your Hardhat scripts so you can deploy and upgrade proxies for your contracts
+This package adds functions to your Hardhat scripts so you can deploy and upgrade proxies for your contracts.
 
 - [keccak256](https://www.npmjs.com/package/keccak256)
 
 A wrapper for the [`keccak`](https://www.npmjs.com/package/keccak) library to compute 256 bit keccak hash in JavaScript.
 
-Use by `openzeppelin-contracts-upgradeable/test/helpers/eip712`imported in `MetaTxModuleCommon.js 
+Use by `openzeppelin-contracts-upgradeable/test/helpers/eip712` imported in `MetaTxModuleCommon.js`
+
+## Deployment script
+
+Two scripts example `deploy-cmtat-standalone.js` and `deploy-cmtat-standalone-light.js` are available in the Hardhat `scripts` directory.
+
+To run it locally with Hardhat:
+
+```bash
+npx hardhat run scripts/deploy-cmtat-standalone.js
+```
+
+```bash
+npx hardhat run scripts/deploy-cmtat-standalone-light.js
+```
 

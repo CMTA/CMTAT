@@ -16,12 +16,13 @@
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
 | **CMTATBaseERC20CrossChain** | Implementation | CMTATBaseERC1404, IERC7802, IBurnFromERC20 |||
-| └ | crosschainMint | Public ❗️ | 🛑  | onlyRole whenNotPaused |
-| └ | crosschainBurn | Public ❗️ | 🛑  | onlyRole whenNotPaused |
+| └ | crosschainMint | Public ❗️ | 🛑  | whenNotPaused onlyTokenBridge |
+| └ | crosschainBurn | Public ❗️ | 🛑  | whenNotPaused onlyTokenBridge |
 | └ | burnFrom | Public ❗️ | 🛑  | onlyRole whenNotPaused |
 | └ | burn | Public ❗️ | 🛑  | onlyRole whenNotPaused |
 | └ | supportsInterface | Public ❗️ |   |NO❗️ |
 | └ | _burnFrom | Internal 🔒 | 🛑  | |
+| └ | _checkTokenBridge | Internal 🔒 | 🛑  | |
 
 
 ### Legend

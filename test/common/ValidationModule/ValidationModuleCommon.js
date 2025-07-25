@@ -2,7 +2,10 @@ const { expect } = require('chai')
 const {
   RULE_MOCK_AMOUNT_MAX,
   RULE_MOCK_MINT_AMOUNT_MAX,
-  ZERO_ADDRESS
+  ZERO_ADDRESS,
+  REJECTED_CODE_BASE_TRANSFER_OK,
+  RULE_MOCK_AMOUNT_MAX_CODE,
+  RULE_MOCK_MINT_AMOUNT_MAX_CODE
 } = require('../../utils')
 
 function ValidationModuleCommon () {
@@ -48,7 +51,7 @@ function ValidationModuleCommon () {
             this.address2,
             11
           )
-        ).to.equal(0)
+        ).to.equal(REJECTED_CODE_BASE_TRANSFER_OK)
       }
 
       expect(
@@ -59,9 +62,11 @@ function ValidationModuleCommon () {
     it('testCanReturnMessageValidTransfer', async function () {
       if (!this.erc1404) {
         // Act + Assert
-        expect(await this.cmtat.messageForTransferRestriction(0)).to.equal(
-          'NoRestriction'
-        )
+        expect(
+          await this.cmtat.messageForTransferRestriction(
+            REJECTED_CODE_BASE_TRANSFER_OK
+          )
+        ).to.equal('NoRestriction')
       }
     })
 
@@ -74,7 +79,7 @@ function ValidationModuleCommon () {
             this.address2,
             RULE_MOCK_AMOUNT_MAX + 1
           )
-        ).to.equal(10n)
+        ).to.equal(RULE_MOCK_AMOUNT_MAX_CODE)
       }
 
       expect(
@@ -89,9 +94,11 @@ function ValidationModuleCommon () {
     it('testCanReturnMessageWithAmountTooHigh', async function () {
       if (!this.erc1404) {
         // Act + Assert
-        expect(await this.cmtat.messageForTransferRestriction(10)).to.equal(
-          'Amount too high'
-        )
+        expect(
+          await this.cmtat.messageForTransferRestriction(
+            RULE_MOCK_AMOUNT_MAX_CODE
+          )
+        ).to.equal('Amount too high')
       }
     })
 
@@ -165,7 +172,7 @@ function ValidationModuleCommon () {
             this.address2,
             AMOUNT_TO_TRANSFER
           )
-        ).to.equal(10n)
+        ).to.equal(RULE_MOCK_AMOUNT_MAX_CODE)
 
         expect(
           await this.cmtat.detectTransferRestrictionFrom(
@@ -174,7 +181,7 @@ function ValidationModuleCommon () {
             this.address2,
             AMOUNT_TO_TRANSFER
           )
-        ).to.equal(10n)
+        ).to.equal(RULE_MOCK_AMOUNT_MAX_CODE)
       }
 
       // Act
@@ -271,7 +278,7 @@ function ValidationModuleCommon () {
             this.address2,
             AMOUNT_TO_TRANSFER
           )
-        ).to.equal(10n)
+        ).to.equal(RULE_MOCK_AMOUNT_MAX_CODE)
 
         expect(
           await this.cmtat.detectTransferRestrictionFrom(
@@ -280,7 +287,7 @@ function ValidationModuleCommon () {
             this.address2,
             AMOUNT_TO_TRANSFER
           )
-        ).to.equal(10n)
+        ).to.equal(RULE_MOCK_AMOUNT_MAX_CODE)
       }
 
       // Act
@@ -386,7 +393,7 @@ function ValidationModuleCommon () {
             this.address2,
             RULE_MOCK_MINT_AMOUNT_MAX + 1
           )
-        ).to.equal(20n)
+        ).to.equal(RULE_MOCK_MINT_AMOUNT_MAX)
       }
 
       expect(
@@ -401,9 +408,11 @@ function ValidationModuleCommon () {
     it('testCanReturnMessageWithMintAmountTooHigh', async function () {
       if (!this.erc1404) {
         // Act + Assert
-        expect(await this.cmtat.messageForTransferRestriction(20)).to.equal(
-          'Mint amount too high'
-        )
+        expect(
+          await this.cmtat.messageForTransferRestriction(
+            RULE_MOCK_MINT_AMOUNT_MAX
+          )
+        ).to.equal('Mint amount too high')
       }
     })
 
@@ -469,7 +478,7 @@ function ValidationModuleCommon () {
             this.address2,
             AMOUNT_TO_TRANSFER
           )
-        ).to.equal(20n)
+        ).to.equal(RULE_MOCK_MINT_AMOUNT_MAX)
 
         expect(
           await this.cmtat.detectTransferRestrictionFrom(
@@ -478,7 +487,7 @@ function ValidationModuleCommon () {
             this.address2,
             AMOUNT_TO_TRANSFER
           )
-        ).to.equal(20n)
+        ).to.equal(RULE_MOCK_MINT_AMOUNT_MAX)
       }
 
       // Act

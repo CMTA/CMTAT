@@ -22,7 +22,7 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>15/15</span>
+        <span class='fraction'>17/17</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">94.44% </span>
@@ -32,12 +32,12 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>6/6</span>
+        <span class='fraction'>8/8</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>15/15</span>
+        <span class='fraction'>18/18</span>
       </div>
     </div>
   </div>
@@ -142,7 +142,26 @@
 97
 98
 99
-100</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -160,6 +179,16 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">104×</span>
+<span class="cline-any cline-yes">88×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -241,6 +270,15 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">56×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">104×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">//SPDX-License-Identifier: MPL-2.0
 &nbsp;
 pragma solidity ^0.8.20;
@@ -261,6 +299,16 @@ import {IBurnFromERC20} from "../interfaces/technical/IMintBurnToken.sol";
 abstract contract CMTATBaseERC20CrossChain is CMTATBaseERC1404, IERC7802, IBurnFromERC20 {
     bytes32 public constant BURNER_FROM_ROLE = keccak256("BURNER_FROM_ROLE");
     bytes32 public constant CROSS_CHAIN_ROLE = keccak256("CROSS_CHAIN_ROLE");
+&nbsp;
+    /// @dev Modifier to restrict access to the token bridge.
+    /// Source: OpenZeppelin v5.4.0 - draft-ERC20Bridgeable.sol
+    modifier onlyTokenBridge() {
+        // Token bridge should never be impersonated using a relayer/forwarder. Using msg.sender is preferable to
+        // _msgSender() for security reasons.
+        _checkTokenBridge(msg.sender);
+        _;
+    }
+&nbsp;
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
@@ -272,7 +320,7 @@ abstract contract CMTATBaseERC20CrossChain is CMTATBaseERC1404, IERC7802, IBurnF
     * @custom:access-control
     * - the caller must have the `CROSS_CHAIN_ROLE`.
     */
-    function crosschainMint(address to, uint256 value) public virtual override(IERC7802) onlyRole(CROSS_CHAIN_ROLE) whenNotPaused {
+    function crosschainMint(address to, uint256 value) public virtual override(IERC7802) whenNotPaused onlyTokenBridge {
          // Put before to avoid reentrancy-events (slither)
          emit CrosschainMint(to, value,_msgSender());
         _mintOverride(to, value);
@@ -285,7 +333,7 @@ abstract contract CMTATBaseERC20CrossChain is CMTATBaseERC1404, IERC7802, IBurnF
     * @custom:access-control
     * - the caller must have the `CROSS_CHAIN_ROLE`.
     */
-    function crosschainBurn(address from, uint256 value) public virtual override(IERC7802) onlyRole(CROSS_CHAIN_ROLE) whenNotPaused{
+    function crosschainBurn(address from, uint256 value) public virtual override(IERC7802) whenNotPaused onlyTokenBridge{
         address sender =  _msgSender();
         // Put before to avoid reentrancy-events (slither)
         emit CrosschainBurn(from, value, _msgSender());
@@ -340,13 +388,22 @@ abstract contract CMTATBaseERC20CrossChain is CMTATBaseERC1404, IERC7802, IBurnF
         // burn
         _burnOverride(account, value);
     }
+&nbsp;
+    /**
+     * @dev Checks if the caller is a trusted token bridge. MUST revert otherwise.
+     *
+     * Source: OpenZeppelin v5.4.0 - draft-ERC20Bridgeable.sol
+     */
+    function _checkTokenBridge(address caller) internal virtual {
+        AccessControlUpgradeable._checkRole(CROSS_CHAIN_ROLE, caller); 
+    }
 }</pre></td></tr>
 </table></pre>
 <div class='push'></div><!-- for sticky footer -->
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Fri Jun 27 2025 08:40:02 GMT+0200 (Central European Summer Time)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu Jul 24 2025 17:26:55 GMT+0200 (Central European Summer Time)
 </div>
 </div>
 <script src="../prettify.js"></script>

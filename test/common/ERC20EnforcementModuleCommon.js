@@ -1,7 +1,8 @@
 const {
   ERC20ENFORCER_ROLE,
   DEFAULT_ADMIN_ROLE,
-  ZERO_ADDRESS
+  ZERO_ADDRESS,
+  REJECTED_CODE_BASE_TRANSFER_REJECTED_FROM_INSUFFICIENT_ACTIVE_BALANCE
 } = require('../utils')
 const { expect } = require('chai')
 
@@ -558,10 +559,14 @@ function ERC20EnforcementModuleCommon () {
             this.address2,
             AMOUNT_TO_TRANSFER
           )
-        ).to.equal('5')
-        expect(await this.cmtat.messageForTransferRestriction(5)).to.equal(
-          'AddrFrom:insufficientActiveBalance'
+        ).to.equal(
+          REJECTED_CODE_BASE_TRANSFER_REJECTED_FROM_INSUFFICIENT_ACTIVE_BALANCE
         )
+        expect(
+          await this.cmtat.messageForTransferRestriction(
+            REJECTED_CODE_BASE_TRANSFER_REJECTED_FROM_INSUFFICIENT_ACTIVE_BALANCE
+          )
+        ).to.equal('AddrFrom:insufficientActiveBalance')
       }
 
       await expect(
@@ -658,7 +663,9 @@ function ERC20EnforcementModuleCommon () {
             this.address2,
             AMOUNT_TO_TRANSFER
           )
-        ).to.equal('5')
+        ).to.equal(
+          REJECTED_CODE_BASE_TRANSFER_REJECTED_FROM_INSUFFICIENT_ACTIVE_BALANCE
+        )
 
         expect(
           await this.cmtat.detectTransferRestrictionFrom(
@@ -667,10 +674,14 @@ function ERC20EnforcementModuleCommon () {
             this.address2,
             AMOUNT_TO_TRANSFER
           )
-        ).to.equal('5')
-        expect(await this.cmtat.messageForTransferRestriction(5)).to.equal(
-          'AddrFrom:insufficientActiveBalance'
+        ).to.equal(
+          REJECTED_CODE_BASE_TRANSFER_REJECTED_FROM_INSUFFICIENT_ACTIVE_BALANCE
         )
+        expect(
+          await this.cmtat.messageForTransferRestriction(
+            REJECTED_CODE_BASE_TRANSFER_REJECTED_FROM_INSUFFICIENT_ACTIVE_BALANCE
+          )
+        ).to.equal('AddrFrom:insufficientActiveBalance')
       }
 
       await expect(
@@ -720,17 +731,8 @@ function ERC20EnforcementModuleCommon () {
             this.address2,
             AMOUNT_TO_TRANSFER
           )
-        ).to.equal('5')
-        expect(
-          await this.cmtat.detectTransferRestrictionFrom(
-            this.address3,
-            this.address1,
-            this.address2,
-            AMOUNT_TO_TRANSFER
-          )
-        ).to.equal('5')
-        expect(await this.cmtat.messageForTransferRestriction(5)).to.equal(
-          'AddrFrom:insufficientActiveBalance'
+        ).to.equal(
+          REJECTED_CODE_BASE_TRANSFER_REJECTED_FROM_INSUFFICIENT_ACTIVE_BALANCE
         )
         expect(
           await this.cmtat.detectTransferRestrictionFrom(
@@ -739,7 +741,24 @@ function ERC20EnforcementModuleCommon () {
             this.address2,
             AMOUNT_TO_TRANSFER
           )
-        ).to.equal('5')
+        ).to.equal(
+          REJECTED_CODE_BASE_TRANSFER_REJECTED_FROM_INSUFFICIENT_ACTIVE_BALANCE
+        )
+        expect(
+          await this.cmtat.messageForTransferRestriction(
+            REJECTED_CODE_BASE_TRANSFER_REJECTED_FROM_INSUFFICIENT_ACTIVE_BALANCE
+          )
+        ).to.equal('AddrFrom:insufficientActiveBalance')
+        expect(
+          await this.cmtat.detectTransferRestrictionFrom(
+            this.address3,
+            this.address1,
+            this.address2,
+            AMOUNT_TO_TRANSFER
+          )
+        ).to.equal(
+          REJECTED_CODE_BASE_TRANSFER_REJECTED_FROM_INSUFFICIENT_ACTIVE_BALANCE
+        )
       }
 
       await expect(
@@ -751,40 +770,6 @@ function ERC20EnforcementModuleCommon () {
         'CMTAT_ERC20EnforcementModule_ValueExceedsActiveBalance'
       )
     })
-
-    /* it('testFreezeDoesNotEmitEventIfAddressAlreadyisFrozen', async function () {
-      // Arrange - Assert
-      expect(await this.cmtat.isFrozen(this.address1)).to.equal(false)
-      // Arrange
-      await this.cmtat.connect(this.admin).setAddressFrozen(this.address1, true, reasonFreeze)
-      // Arrange - Assert
-      expect(await this.cmtat.isFrozen(this.address1)).to.equal(true)
-      // Act
-      this.logs = await this.cmtat
-        .connect(this.admin)
-        .setAddressFrozen(this.address1, true, reasonFreeze)
-      // Assert
-      await expect(this.logs).to.not.emit(this.cmtat, 'AddressFrozen')
-      expect(await this.cmtat.isFrozen(this.address1)).to.equal(true)
-    })
-
-    it('testUnfreezeDoesNotEmitEventIfAddressAlreadyUnisFrozen', async function () {
-      // Arrange
-      await this.cmtat.connect(this.admin).setAddressFrozen(this.address1, true, reasonFreeze)
-      // Arrange - Assert
-      expect(await this.cmtat.isFrozen(this.address1)).to.equal(true)
-      await this.cmtat
-        .connect(this.admin)
-        .setAddressFrozen(this.address1, true, reasonFreeze)
-
-      // Act
-      this.logs = await this.cmtat
-        .connect(this.admin)
-        .setAddressFrozen(this.address1, true, reasonUnfreeze)
-      // Assert
-      await expect(this.logs).to.not.emit(this.cmtat, 'AddressFrozen')
-      expect(await this.cmtat.isFrozen(this.address1)).to.equal(false)
-    }) */
   })
 }
 module.exports = ERC20EnforcementModuleCommon

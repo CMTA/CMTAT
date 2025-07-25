@@ -20,8 +20,8 @@ abstract contract ValidationModule is
     //////////////////////////////////////////////////////////////*/
     /* ============ View functions ============ */
     /**
-    * @dev check if the contract is deativated or the address is frozen
-    * check revlevant for mint and burn operations
+    * @dev check if the contract is deactivated or the address is frozen
+    * check relevant for mint and burn operations
     */ 
     function _canMintBurnByModule(
         address target

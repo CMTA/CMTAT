@@ -32,14 +32,18 @@ abstract contract ValidationModuleERC1404 is
     string internal constant TEXT_TRANSFER_REJECTED_PAUSED =
         "EnforcedPause";
 
+    /* Contract deactivated */
+    string internal constant TEXT_TRANSFER_REJECTED_DEACTIVATED =
+        "ContractDeactivated";
+
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
     /**
-     * @notice returns the human readable explaination 
+     * @notice returns the human readable explanation 
      * corresponding to the error code returned by detectTransferRestriction
      * @param restrictionCode The error code returned by detectTransferRestriction
-     * @return message The human readable explaination corresponding to the error code returned by detectTransferRestriction
+     * @return message The human readable explanation corresponding to the error code returned by detectTransferRestriction
      * @dev see {ERC-1404}
      */
     function messageForTransferRestriction(
@@ -53,6 +57,11 @@ abstract contract ValidationModuleERC1404 is
             uint8(IERC1404Extend.REJECTED_CODE_BASE.TRANSFER_REJECTED_PAUSED)
         ) {
             return TEXT_TRANSFER_REJECTED_PAUSED;
+        } else if (
+            restrictionCode ==
+            uint8(IERC1404Extend.REJECTED_CODE_BASE.TRANSFER_REJECTED_DEACTIVATED)
+        ) {
+            return TEXT_TRANSFER_REJECTED_DEACTIVATED;
         } else if (
             restrictionCode ==
             uint8(IERC1404Extend.REJECTED_CODE_BASE.TRANSFER_REJECTED_FROM_FROZEN)
@@ -132,7 +141,9 @@ abstract contract ValidationModuleERC1404 is
         address to,
         uint256 /* value */
     ) internal virtual view  returns (uint8 code) {
-        if (paused()) {
+        if (deactivated()){
+            return uint8(IERC1404Extend.REJECTED_CODE_BASE.TRANSFER_REJECTED_DEACTIVATED);
+        } else if (paused()) {
             return uint8(IERC1404Extend.REJECTED_CODE_BASE.TRANSFER_REJECTED_PAUSED);
         } else if (isFrozen(from)) {
             return uint8(IERC1404Extend.REJECTED_CODE_BASE.TRANSFER_REJECTED_FROM_FROZEN);
