@@ -7,6 +7,9 @@ const {
 const { expect } = require('chai')
 function PauseModuleCommon () {
   context('Pause', function () {
+    /*//////////////////////////////////////////////////////////////
+                          ACCESS CONTROL
+    //////////////////////////////////////////////////////////////*/
     /**
      * The admin is assigned the PAUSER role when the contract is deployed
      */
@@ -130,6 +133,11 @@ function PauseModuleCommon () {
         )
         .withArgs(this.address1.address, PAUSER_ROLE)
     })
+
+    /*//////////////////////////////////////////////////////////////
+                          COMPLIANCE
+    //////////////////////////////////////////////////////////////*/
+
 
     // reverts if address1 transfers tokens to address2 when paused
     it('testCannotTransferTokenWhenPausedWithTransfer', async function () {

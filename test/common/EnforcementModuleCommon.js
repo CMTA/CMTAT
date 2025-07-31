@@ -141,6 +141,10 @@ function EnforcementModuleCommon () {
       await this.cmtat.connect(this.admin).mint(this.address1, 50)
     })
 
+    /*//////////////////////////////////////////////////////////////
+              ACCESS CONTROL
+    //////////////////////////////////////////////////////////////*/
+
     it('testAdminCanFreezeAddress', async function () {
       const bindTest = testFreeze.bind(this)
       await bindTest(this.admin)
@@ -154,21 +158,6 @@ function EnforcementModuleCommon () {
     it('testAdminCanBatchPartialFreezeAddress', async function () {
       const bindTest = testPartialFreezeBatch.bind(this)
       await bindTest(this.admin)
-    })
-
-    it('testReasonParameterCanBeEmptyString', async function () {
-      // Arrange - Assert
-      expect(await this.cmtat.isFrozen(this.address1)).to.equal(false)
-      // Act
-      this.logs = await this.cmtat
-        .connect(this.admin)
-        .setAddressFrozen(this.address1, true, REASON_EMPTY)
-      // Assert
-      expect(await this.cmtat.isFrozen(this.address1)).to.equal(true)
-      // emits a Freeze event
-      await expect(this.logs)
-        .to.emit(this.cmtat, 'AddressFrozen')
-        .withArgs(this.address1, true, this.admin, REASON_EMPTY_EVENT)
     })
 
     it('testEnforcerRoleCanFreezeAddress', async function () {
@@ -247,6 +236,10 @@ function EnforcementModuleCommon () {
       // Assert
       expect(await this.cmtat.isFrozen(this.address1)).to.equal(true)
     })
+
+    /*//////////////////////////////////////////////////////////////
+                 COMPLIANCE CHECK
+    //////////////////////////////////////////////////////////////*/
 
     it('testCannotTransferWhenFromIsFrozenWithTransfer', async function () {
       const AMOUNT_TO_TRANSFER = 10
@@ -380,6 +373,24 @@ function EnforcementModuleCommon () {
             AMOUNT_TO_TRANSFER
           )
       }
+    })
+
+    /*//////////////////////////////////////////////////////////////
+                           INPUT PARAMETERS
+    //////////////////////////////////////////////////////////////*/
+    it('testReasonParameterCanBeEmptyString', async function () {
+      // Arrange - Assert
+      expect(await this.cmtat.isFrozen(this.address1)).to.equal(false)
+      // Act
+      this.logs = await this.cmtat
+        .connect(this.admin)
+        .setAddressFrozen(this.address1, true, REASON_EMPTY)
+      // Assert
+      expect(await this.cmtat.isFrozen(this.address1)).to.equal(true)
+      // emits a Freeze event
+      await expect(this.logs)
+        .to.emit(this.cmtat, 'AddressFrozen')
+        .withArgs(this.address1, true, this.admin, REASON_EMPTY_EVENT)
     })
 
     it('testCannotBatchFrozenIfLengthMismatchTooManyAddresses', async function () {

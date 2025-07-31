@@ -29,10 +29,10 @@ module.exports = {
     '0x921df7a58eb4ea112afa962b8186161404ecda2e8fe97f8246026d02ad1a74b7',
   ZERO_ADDRESS: ethers.ZeroAddress,
   // ValidationModule with RuleEngine
-  RULE_MOCK_AMOUNT_MAX: '20',
-  RULE_MOCK_MINT_AMOUNT_MAX: '20',
+  RULE_MOCK_AMOUNT_MAX: 20n,
+  RULE_MOCK_MINT_AMOUNT_MAX: 25n,
   RULE_MOCK_AMOUNT_MAX_CODE: '13',
-  RULE_MOCK_MINT_AMOUNT_MAX_CODE: '20',
+  RULE_MOCK_MINT_RESTRICTION_CODE: '20',
   // Metatx test
   ERC2771ForwarderDomain: 'ERC2771ForwarderDomain',
   // ERC-404 code

@@ -122,6 +122,10 @@ function ERC20CrossChainModuleCommon () {
         .withArgs(this.address2.address, CROSS_CHAIN_ROLE)
     })
 
+    /*//////////////////////////////////////////////////////////////
+          COMPLIANCE
+    //////////////////////////////////////////////////////////////*/
+
     it('testCannotBeBurnIfContractIsDeactivated', async function () {
       await this.cmtat.connect(this.admin).pause()
       await this.cmtat.connect(this.admin).deactivateContract()
@@ -198,6 +202,10 @@ function ERC20CrossChainModuleCommon () {
       expect(await this.cmtat.totalSupply()).to.equal(INITIAL_SUPPLY)
     })
 
+    /*//////////////////////////////////////////////////////////////
+         ACCESS CONTROL
+    //////////////////////////////////////////////////////////////*/
+
     it('testCanBeBurntByBurnerRole', async function () {
       // Arrange
       await this.cmtat
@@ -206,19 +214,6 @@ function ERC20CrossChainModuleCommon () {
       // Act
       const bindTest = testBurn.bind(this)
       await bindTest(this.address1)
-    })
-
-    it('testCannotBeBurntIfBalanceExceeds', async function () {
-      await this.cmtat
-        .connect(this.admin)
-        .grantRole(BURNER_FROM_ROLE, this.address1)
-      // error AccessControlUnauthorizedAccount(address account, bytes32 neededRole);
-      const AMOUNT_TO_BURN = 200n
-      const ADDRESS1_BALANCE = await this.cmtat.balanceOf(this.address1)
-      // Act
-      await expect(this.cmtat.connect(this.address1).burn(AMOUNT_TO_BURN))
-        .to.be.revertedWithCustomError(this.cmtat, 'ERC20InsufficientBalance')
-        .withArgs(this.address1.address, ADDRESS1_BALANCE, AMOUNT_TO_BURN)
     })
 
     it('testCannotBeBurntWithoutBurnerRole', async function () {
@@ -237,6 +232,29 @@ function ERC20CrossChainModuleCommon () {
         )
         .withArgs(this.address2.address, BURNER_FROM_ROLE)
     })
+
+    /*//////////////////////////////////////////////////////////////
+          ERC-20 check
+    //////////////////////////////////////////////////////////////*/
+
+    it('testCannotBeBurntIfBalanceExceeds', async function () {
+      await this.cmtat
+        .connect(this.admin)
+        .grantRole(BURNER_FROM_ROLE, this.address1)
+      // error AccessControlUnauthorizedAccount(address account, bytes32 neededRole);
+      const AMOUNT_TO_BURN = 200n
+      const ADDRESS1_BALANCE = await this.cmtat.balanceOf(this.address1)
+      // Act
+      await expect(this.cmtat.connect(this.address1).burn(AMOUNT_TO_BURN))
+        .to.be.revertedWithCustomError(this.cmtat, 'ERC20InsufficientBalance')
+        .withArgs(this.address1.address, ADDRESS1_BALANCE, AMOUNT_TO_BURN)
+    })
+
+
+
+    /*//////////////////////////////////////////////////////////////
+          COMPLIANCE
+    //////////////////////////////////////////////////////////////*/
 
     it('testCannotBeMBurnIfContractIsDeactivated', async function () {
       // Arrange
@@ -284,6 +302,10 @@ function ERC20CrossChainModuleCommon () {
       expect(await this.cmtat.totalSupply()).to.equal(INITIAL_SUPPLY)
     })
 
+    /*//////////////////////////////////////////////////////////////
+         ACCESS CONTROL
+    //////////////////////////////////////////////////////////////*/
+
     it('canBeBurnFrom', async function () {
       // Arrange
       const AMOUNT_TO_BURN = 20n
@@ -306,15 +328,6 @@ function ERC20CrossChainModuleCommon () {
       expect(await this.cmtat.totalSupply()).to.equal(30n)
     })
 
-    it('TestCannotBeBurnWithoutAllowance', async function () {
-      const AMOUNT_TO_BURN = 20n
-      await expect(
-        this.cmtat.connect(this.admin).burnFrom(this.address1, AMOUNT_TO_BURN)
-      )
-        .to.be.revertedWithCustomError(this.cmtat, 'ERC20InsufficientAllowance')
-        .withArgs(this.admin.address, 0, AMOUNT_TO_BURN)
-    })
-
     it('testCannotBeBurntWithoutBurnerFromRole', async function () {
       await expect(
         this.cmtat.connect(this.address2).burnFrom(this.address1, 20n)
@@ -325,6 +338,24 @@ function ERC20CrossChainModuleCommon () {
         )
         .withArgs(this.address2.address, BURNER_FROM_ROLE)
     })
+
+    /*//////////////////////////////////////////////////////////////
+          ERC-20 check
+    //////////////////////////////////////////////////////////////*/
+
+    it('TestCannotBeBurnWithoutAllowance', async function () {
+      const AMOUNT_TO_BURN = 20n
+      await expect(
+        this.cmtat.connect(this.admin).burnFrom(this.address1, AMOUNT_TO_BURN)
+      )
+        .to.be.revertedWithCustomError(this.cmtat, 'ERC20InsufficientAllowance')
+        .withArgs(this.admin.address, 0, AMOUNT_TO_BURN)
+    })
+
+
+    /*//////////////////////////////////////////////////////////////
+          COMPLIANCE
+    //////////////////////////////////////////////////////////////*/
 
     it('testCannotBeBurnFromIfContractIsPaused', async function () {
       // Arrange
@@ -345,6 +376,19 @@ function ERC20CrossChainModuleCommon () {
       await expect(
         this.cmtat.connect(this.admin).burnFrom(this.address1, 20n)
       ).to.be.revertedWithCustomError(this.cmtat, 'EnforcedPause')
+    })
+
+    it('testCannotBeBurnFromIfAccountIsFrozen', async function () {
+      await this.cmtat.connect(this.address1).approve(this.admin, 50n)
+      await this.cmtat
+        .connect(this.admin)
+        .setAddressFrozen(this.address1, true)
+      // Act
+      await expect(
+        this.cmtat.connect(this.admin).burnFrom(this.address1, 20n)
+      )
+        .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
+        .withArgs(this.address1, ZERO_ADDRESS, VALUE1)
     })
   })
   context('CrossChainMinting', function () {
@@ -425,6 +469,11 @@ function ERC20CrossChainModuleCommon () {
         )
         .withArgs(this.address1.address, CROSS_CHAIN_ROLE)
     })
+
+
+    /*//////////////////////////////////////////////////////////////
+          COMPLIANCE
+    //////////////////////////////////////////////////////////////*/
 
     it('testCannotBeMintedIfContractIsPaused', async function () {
       await this.cmtat.connect(this.admin).pause()
