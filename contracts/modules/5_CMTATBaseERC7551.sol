@@ -23,9 +23,6 @@ abstract contract CMTATBaseERC7551 is CMTATBaseERC2771, ERC7551Module{
         return CMTATBaseERC1404.hasRole(role, account);
     }
 
-     /**
-     * 
-     */
     function supportsInterface(bytes4 interfaceId) public view virtual override(AccessControlUpgradeable, CMTATBaseERC20CrossChain) returns (bool) {
         return AccessControlUpgradeable.supportsInterface(interfaceId) || CMTATBaseERC20CrossChain.supportsInterface(interfaceId);
     }
