@@ -229,9 +229,9 @@ function AllowlistModuleCommon () {
         .withArgs(this.address1, true, this.admin, REASON_EMPTY_EVENT)
     })
 
-    /*//////////////////////////////////////////////////////////////
+    /* //////////////////////////////////////////////////////////////
                       ENABLE/DISABLE ALLOWLIST
-    //////////////////////////////////////////////////////////////*/
+    ////////////////////////////////////////////////////////////// */
 
     it('testEnforcerRoleCanAllowlistAddress', async function () {
       // Arrange
@@ -276,9 +276,9 @@ function AllowlistModuleCommon () {
       await bindTest(this.address2)
     })
 
-      /*//////////////////////////////////////////////////////////////
+    /* //////////////////////////////////////////////////////////////
                        ACCESS CONTROLER
-    //////////////////////////////////////////////////////////////*/
+    ////////////////////////////////////////////////////////////// */
 
     it('testCannotNonEnforcerAllowlistAddress', async function () {
       // Act
@@ -346,9 +346,9 @@ function AllowlistModuleCommon () {
       expect(await this.cmtat.isAllowlisted(this.address1)).to.equal(true)
     })
 
-    /*//////////////////////////////////////////////////////////////
+    /* //////////////////////////////////////////////////////////////
                   TRANSFER
-    //////////////////////////////////////////////////////////////*/
+    ////////////////////////////////////////////////////////////// */
 
     it('testCannotTransferWhenFromIsNotAllowlistWithTransfer', async function () {
       const AMOUNT_TO_TRANSFER = 10
@@ -373,11 +373,9 @@ function AllowlistModuleCommon () {
         )
     })
 
-
-
-      /*//////////////////////////////////////////////////////////////
+    /* //////////////////////////////////////////////////////////////
                     MINT
-    //////////////////////////////////////////////////////////////*/
+    ////////////////////////////////////////////////////////////// */
 
     it('testCannotMintToNoWhitelistAddress', async function () {
       const AMOUNT_TO_TRANSFER = 10
@@ -409,36 +407,40 @@ function AllowlistModuleCommon () {
       ).to.equal(false)
 
       await expect(
-        this.cmtat.connect(this.admin).batchMint(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS)
+        this.cmtat
+          .connect(this.admin)
+          .batchMint(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS)
       )
         .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
-        .withArgs(ZERO_ADDRESS, this.address3.address, TOKEN_SUPPLY_BY_HOLDERS[0])
+        .withArgs(
+          ZERO_ADDRESS,
+          this.address3.address,
+          TOKEN_SUPPLY_BY_HOLDERS[0]
+        )
     })
 
-
-    /*//////////////////////////////////////////////////////////////
+    /* //////////////////////////////////////////////////////////////
                       FORCED TRANSFER
-    //////////////////////////////////////////////////////////////*/
+    ////////////////////////////////////////////////////////////// */
 
     it('testCanForceTransferFromAddress1ToAddress2AsAdminWithoutUnfreezeTokens', async function () {
       const AMOUNT_TO_TRANSFER = 20
       const AMOUNT_TO_FREEZE = 5
 
       await this.cmtat
-      .connect(this.admin)
-      .setAddressAllowlist(this.address1, true, reasonFreeze)
-    this.cmtat.connect(this.admin).mint(this.address1,  AMOUNT_TO_FREEZE)
+        .connect(this.admin)
+        .setAddressAllowlist(this.address1, true, reasonFreeze)
+      this.cmtat.connect(this.admin).mint(this.address1, AMOUNT_TO_FREEZE)
       this.logs = await this.cmtat
         .connect(this.admin)
         .freezePartialTokens(this.address1, AMOUNT_TO_FREEZE)
 
       expect(await this.cmtat.getFrozenTokens(this.address1)).to.equal('5')
 
-
       // Remove from the allowlist because we test a force transfer
       await this.cmtat
-      .connect(this.admin)
-      .setAddressAllowlist(this.address1, false, reasonFreeze)
+        .connect(this.admin)
+        .setAddressAllowlist(this.address1, false, reasonFreeze)
       // Act
       this.logs = await this.cmtat
         .connect(this.admin)
@@ -456,62 +458,68 @@ function AllowlistModuleCommon () {
         .withArgs(this.address1, this.address2, AMOUNT_TO_TRANSFER)
     })
 
-    
-    /*//////////////////////////////////////////////////////////////
+    /* //////////////////////////////////////////////////////////////
                         BURN
-    //////////////////////////////////////////////////////////////*/
+    ////////////////////////////////////////////////////////////// */
     it('testCanBatchBurnIfWhitelistedAddress', async function () {
-      const TOKEN_BY_HOLDERS_TO_BURN = [10, 100, 1000] 
+      const TOKEN_BY_HOLDERS_TO_BURN = [10, 100, 1000]
       const TOKEN_HOLDER = [this.admin, this.address1, this.address2]
-      
+
       await this.cmtat
         .connect(this.admin)
         .setAddressAllowlist(this.address1, true, reasonFreeze)
-        await this.cmtat
+      await this.cmtat
         .connect(this.admin)
         .setAddressAllowlist(this.admin, true, reasonFreeze)
-        await this.cmtat
+      await this.cmtat
         .connect(this.admin)
         .setAddressAllowlist(this.address2, true, reasonFreeze)
-      
-      this.cmtat.connect(this.admin).batchMint(TOKEN_HOLDER,TOKEN_BY_HOLDERS_TO_BURN)
-      
+
+      this.cmtat
+        .connect(this.admin)
+        .batchMint(TOKEN_HOLDER, TOKEN_BY_HOLDERS_TO_BURN)
+
       // Act
-    this.cmtat
+      this.cmtat
         .connect(this.admin)
         .batchBurn(TOKEN_HOLDER, TOKEN_BY_HOLDERS_TO_BURN)
     })
     it('testCannotBatchBurnFromNoWhitelistedAddress', async function () {
-        const TOKEN_BY_HOLDERS_TO_BURN = [10, 100, 1000] 
-        const TOKEN_HOLDER = [this.admin, this.address1, this.address2]
-        await this.cmtat
-          .connect(this.admin)
-          .setAddressAllowlist(this.address1, true, reasonFreeze)
-          await this.cmtat
-          .connect(this.admin)
-          .setAddressAllowlist(this.admin, true, reasonFreeze)
+      const TOKEN_BY_HOLDERS_TO_BURN = [10, 100, 1000]
+      const TOKEN_HOLDER = [this.admin, this.address1, this.address2]
+      await this.cmtat
+        .connect(this.admin)
+        .setAddressAllowlist(this.address1, true, reasonFreeze)
+      await this.cmtat
+        .connect(this.admin)
+        .setAddressAllowlist(this.admin, true, reasonFreeze)
 
-          await this.cmtat
-          .connect(this.admin)
-          .setAddressAllowlist(this.address2, true, reasonFreeze)
-        
-        this.cmtat.connect(this.admin).batchMint(TOKEN_HOLDER, TOKEN_BY_HOLDERS_TO_BURN)
-        
-        // Remove from the allowlist
-        await this.cmtat
+      await this.cmtat
+        .connect(this.admin)
+        .setAddressAllowlist(this.address2, true, reasonFreeze)
+
+      this.cmtat
+        .connect(this.admin)
+        .batchMint(TOKEN_HOLDER, TOKEN_BY_HOLDERS_TO_BURN)
+
+      // Remove from the allowlist
+      await this.cmtat
         .connect(this.admin)
         .setAddressAllowlist(this.address1, false, reasonFreeze)
-        
-        // Act
-        await expect(
-          this.cmtat
+
+      // Act
+      await expect(
+        this.cmtat
           .connect(this.admin)
           .batchBurn(TOKEN_HOLDER, TOKEN_BY_HOLDERS_TO_BURN)
+      )
+        .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
+        .withArgs(
+          this.address1.address,
+          ZERO_ADDRESS,
+          TOKEN_BY_HOLDERS_TO_BURN[1]
         )
-          .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
-          .withArgs(this.address1.address, ZERO_ADDRESS, TOKEN_BY_HOLDERS_TO_BURN[1])
-      })
-  
+    })
 
     it('testCanBurnFromWhitelistedAddress', async function () {
       const AMOUNT_TO_TRANSFER = 10
@@ -534,9 +542,11 @@ function AllowlistModuleCommon () {
           AMOUNT_TO_TRANSFER
         )
       ).to.equal(true)
-      
+
       // Act
-      await this.cmtat.connect(this.admin).burn(this.address1, AMOUNT_TO_TRANSFER)
+      await this.cmtat
+        .connect(this.admin)
+        .burn(this.address1, AMOUNT_TO_TRANSFER)
     })
 
     it('testCannotBurnFromUnWhitelistedAddress', async function () {
@@ -565,7 +575,7 @@ function AllowlistModuleCommon () {
           AMOUNT_TO_TRANSFER
         )
       ).to.equal(false)
-      
+
       // Act
       await expect(
         this.cmtat.connect(this.admin).burn(this.address1, AMOUNT_TO_TRANSFER)
@@ -574,16 +584,12 @@ function AllowlistModuleCommon () {
         .withArgs(this.address1.address, ZERO_ADDRESS, AMOUNT_TO_TRANSFER)
     })
 
-    /*//////////////////////////////////////////////////////////////
+    /* //////////////////////////////////////////////////////////////
                           Batch transfer
-    //////////////////////////////////////////////////////////////*/
+    ////////////////////////////////////////////////////////////// */
 
     it('testCannotBeBatchTransferIfToIsNotWhitelisted', async function () {
-      const accounts = [
-        this.address1,
-        this.address3,
-        this.admin
-      ]
+      const accounts = [this.address1, this.address3, this.admin]
       const allowlist = [true, true, true]
       this.logs = await this.cmtat
         .connect(this.admin)
@@ -591,19 +597,24 @@ function AllowlistModuleCommon () {
       const TOKEN_HOLDER = [this.admin, this.address1, this.address2]
       const TOKEN_SUPPLY_BY_HOLDERS = [10n, 100n, 1000n]
       const TOKEN_HOLDER_ADMIN = [this.admin, this.admin, this.admin]
-     
-      await this.cmtat.connect(this.admin).batchMint(TOKEN_HOLDER_ADMIN, TOKEN_SUPPLY_BY_HOLDERS)
-      
+
+      await this.cmtat
+        .connect(this.admin)
+        .batchMint(TOKEN_HOLDER_ADMIN, TOKEN_SUPPLY_BY_HOLDERS)
+
       // Act
-      await expect(this.cmtat.connect(this.admin).batchTransfer(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS))
-      .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
-      .withArgs(this.admin, TOKEN_HOLDER[2], TOKEN_SUPPLY_BY_HOLDERS[2])
+      await expect(
+        this.cmtat
+          .connect(this.admin)
+          .batchTransfer(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS)
+      )
+        .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
+        .withArgs(this.admin, TOKEN_HOLDER[2], TOKEN_SUPPLY_BY_HOLDERS[2])
     })
 
-
-    /*//////////////////////////////////////////////////////////////
+    /* //////////////////////////////////////////////////////////////
                           TRANSFER FROM
-    //////////////////////////////////////////////////////////////*/
+    ////////////////////////////////////////////////////////////// */
     it('testCanTransferTokenWithTransferFrom', async function () {
       const AMOUNT_TO_TRANSFER = 10
       // Arrange
@@ -702,9 +713,9 @@ function AllowlistModuleCommon () {
         )
     })
 
-     /*//////////////////////////////////////////////////////////////
+    /* //////////////////////////////////////////////////////////////
                            INPUT PARAMETERS
-    //////////////////////////////////////////////////////////////*/
+    ////////////////////////////////////////////////////////////// */
 
     it('testCannotBatchAllowlistIfLengthMismatchTooManyAddresses', async function () {
       // There are too many addresses

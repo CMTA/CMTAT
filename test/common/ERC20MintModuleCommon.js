@@ -101,12 +101,12 @@ function ERC20MintModuleCommon () {
         .withArgs(sender, this.address2, VALUE2, REASON_EVENT)
     }
 
-    /*//////////////////////////////////////////////////////////////
+    /* //////////////////////////////////////////////////////////////
                         ACCESS CONTROL
-    //////////////////////////////////////////////////////////////*/
+    ////////////////////////////////////////////////////////////// */
 
     /**
-    * The admin is assigned the MINTER role when the contract is deployed
+     * The admin is assigned the MINTER role when the contract is deployed
      */
     it('testCanBeMintedByAdmin', async function () {
       const bindTest = testMint.bind(this)
@@ -150,9 +150,9 @@ function ERC20MintModuleCommon () {
         .withArgs(this.address1.address, MINTER_ROLE)
     })
 
-    /*//////////////////////////////////////////////////////////////
+    /* //////////////////////////////////////////////////////////////
                       COMPLIANCE
-    //////////////////////////////////////////////////////////////*/
+    ////////////////////////////////////////////////////////////// */
 
     it('testCanBeMintedEvenIfContractIsPaused', async function () {
       await this.cmtat.connect(this.admin).pause()
@@ -222,9 +222,9 @@ function ERC20MintModuleCommon () {
         .withArgs(sender, TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS)
     }
 
-    /*//////////////////////////////////////////////////////////////
+    /* //////////////////////////////////////////////////////////////
                         ACCESS CONTROL
-    //////////////////////////////////////////////////////////////*/
+    ////////////////////////////////////////////////////////////// */
 
     /**
      * The admin is assigned the MINTER role when the contract is deployed
@@ -258,9 +258,9 @@ function ERC20MintModuleCommon () {
         .withArgs(this.address1.address, MINTER_ROLE)
     })
 
-    /*//////////////////////////////////////////////////////////////
+    /* //////////////////////////////////////////////////////////////
                          INPUT PARAMETERS
-    //////////////////////////////////////////////////////////////*/
+    ////////////////////////////////////////////////////////////// */
 
     it('testCannotBatchMintIfLengthMismatchMissingAddresses', async function () {
       // Number of addresses is insufficient
@@ -308,10 +308,9 @@ function ERC20MintModuleCommon () {
       )
     })
 
-    /*//////////////////////////////////////////////////////////////
+    /* //////////////////////////////////////////////////////////////
                           COMPLIANCE
-    //////////////////////////////////////////////////////////////*/
-
+    ////////////////////////////////////////////////////////////// */
 
     it('testCanBeMintedBatchEvenIfContractIsPaused', async function () {
       await this.cmtat.connect(this.admin).pause()
@@ -326,7 +325,11 @@ function ERC20MintModuleCommon () {
       await this.cmtat.connect(this.admin).pause()
       await this.cmtat.connect(this.admin).deactivateContract()
       // Act
-      await expect(this.cmtat.connect(this.admin).batchMint(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS))
+      await expect(
+        this.cmtat
+          .connect(this.admin)
+          .batchMint(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS)
+      )
         .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
         .withArgs(ZERO_ADDRESS, this.admin, TOKEN_SUPPLY_BY_HOLDERS[0])
     })
@@ -337,12 +340,16 @@ function ERC20MintModuleCommon () {
       await this.cmtat
         .connect(this.admin)
         .setAddressFrozen(this.address1, true)
-        await expect(this.cmtat.connect(this.admin).batchMint(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS))
+      await expect(
+        this.cmtat
+          .connect(this.admin)
+          .batchMint(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS)
+      )
         .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
         .withArgs(ZERO_ADDRESS, this.address1, TOKEN_SUPPLY_BY_HOLDERS[0])
     })
   })
-  
+
   context('batchTransfer', function () {
     const TOKEN_AMOUNTS = [10n, 100n, 1000n]
 
@@ -402,9 +409,9 @@ function ERC20MintModuleCommon () {
         )
     })
 
-    /*//////////////////////////////////////////////////////////////
+    /* //////////////////////////////////////////////////////////////
                            INPUT PARAMETERS
-    //////////////////////////////////////////////////////////////*/
+    ////////////////////////////////////////////////////////////// */
 
     it('testCannotBatchTransferIfLengthMismatchMissingAddresses', async function () {
       // Number of addresses is insufficient
@@ -419,8 +426,6 @@ function ERC20MintModuleCommon () {
       )
     })
 
-
- 
     it('testCannotBatchTransferIfLengthMismatchTooManyAddresses', async function () {
       // There are too many addresses
       const TOKEN_ADDRESS_TOS_INVALID = [
@@ -448,21 +453,27 @@ function ERC20MintModuleCommon () {
       ).to.be.revertedWithCustomError(this.cmtat, 'CMTAT_MintModule_EmptyTos')
     })
 
-    /*//////////////////////////////////////////////////////////////
+    /* //////////////////////////////////////////////////////////////
                           COMPLIANCE
-    //////////////////////////////////////////////////////////////*/
+    ////////////////////////////////////////////////////////////// */
 
     it('testCannotBeBatchTransferIfContractIsPaused', async function () {
       const TOKEN_HOLDER = [this.admin, this.address1, this.address2]
       const TOKEN_SUPPLY_BY_HOLDERS = [10n, 100n, 1000n]
       const TOKEN_HOLDER_ADMIN = [this.admin, this.admin, this.admin]
-     
-      await this.cmtat.connect(this.admin).batchMint(TOKEN_HOLDER_ADMIN, TOKEN_SUPPLY_BY_HOLDERS)
+
+      await this.cmtat
+        .connect(this.admin)
+        .batchMint(TOKEN_HOLDER_ADMIN, TOKEN_SUPPLY_BY_HOLDERS)
       await this.cmtat.connect(this.admin).pause()
       // Act
-      await expect(this.cmtat.connect(this.admin).batchTransfer(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS))
-      .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
-      .withArgs(this.admin, TOKEN_HOLDER[0], TOKEN_SUPPLY_BY_HOLDERS[0])
+      await expect(
+        this.cmtat
+          .connect(this.admin)
+          .batchTransfer(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS)
+      )
+        .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
+        .withArgs(this.admin, TOKEN_HOLDER[0], TOKEN_SUPPLY_BY_HOLDERS[0])
     })
 
     it('testCannotBeBatchMTransferIfContractIsDeactivated', async function () {
@@ -470,12 +481,18 @@ function ERC20MintModuleCommon () {
       const TOKEN_SUPPLY_BY_HOLDERS = [10n, 100n, 1000n]
       const TOKEN_HOLDER_ADMIN = [this.admin, this.admin, this.admin]
 
-      await this.cmtat.connect(this.admin).batchMint(TOKEN_HOLDER_ADMIN, TOKEN_SUPPLY_BY_HOLDERS)
+      await this.cmtat
+        .connect(this.admin)
+        .batchMint(TOKEN_HOLDER_ADMIN, TOKEN_SUPPLY_BY_HOLDERS)
       // Arrange
       await this.cmtat.connect(this.admin).pause()
       await this.cmtat.connect(this.admin).deactivateContract()
       // Act
-      await expect(this.cmtat.connect(this.admin).batchTransfer(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS))
+      await expect(
+        this.cmtat
+          .connect(this.admin)
+          .batchTransfer(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS)
+      )
         .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
         .withArgs(this.admin, TOKEN_HOLDER[0], TOKEN_SUPPLY_BY_HOLDERS[0])
     })
@@ -484,13 +501,18 @@ function ERC20MintModuleCommon () {
       const TOKEN_HOLDER = [this.admin, this.address1, this.address2]
       const TOKEN_SUPPLY_BY_HOLDERS = [10n, 100n, 1000n]
       const TOKEN_HOLDER_ADMIN = [this.admin, this.admin, this.admin]
-      await this.cmtat.connect(this.admin).batchMint(TOKEN_HOLDER_ADMIN, TOKEN_SUPPLY_BY_HOLDERS)
+      await this.cmtat
+        .connect(this.admin)
+        .batchMint(TOKEN_HOLDER_ADMIN, TOKEN_SUPPLY_BY_HOLDERS)
       await this.cmtat
         .connect(this.admin)
         .setAddressFrozen(this.address1, true)
 
-
-      await expect(this.cmtat.connect(this.admin).batchTransfer(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS))
+      await expect(
+        this.cmtat
+          .connect(this.admin)
+          .batchTransfer(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS)
+      )
         .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
         .withArgs(this.admin, TOKEN_HOLDER[1], TOKEN_SUPPLY_BY_HOLDERS[1])
     })

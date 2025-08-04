@@ -62,9 +62,9 @@ function ERC20BurnModuleCommon () {
       expect(await this.cmtat.totalSupply()).to.equal(INITIAL_SUPPLY)
     })
 
-    /*//////////////////////////////////////////////////////////////
+    /* //////////////////////////////////////////////////////////////
                ACCESS CONTROL
-    //////////////////////////////////////////////////////////////*/
+    ////////////////////////////////////////////////////////////// */
 
     it('testCanBeBurntByAdmin', async function () {
       const bindTest = testBurn.bind(this)
@@ -120,8 +120,6 @@ function ERC20BurnModuleCommon () {
       await bindTest(this.address2)
     })
 
-  
-
     it('testCannotBeBurntWithoutBurnerRole', async function () {
       await expect(
         this.cmtat.connect(this.address2).burn(this.address1, 20n, REASON_EMPTY)
@@ -143,9 +141,9 @@ function ERC20BurnModuleCommon () {
         .withArgs(this.address2.address, BURNER_ROLE)
     })
 
-    /*//////////////////////////////////////////////////////////////
+    /* //////////////////////////////////////////////////////////////
                       ERC-20 check
-    //////////////////////////////////////////////////////////////*/
+    ////////////////////////////////////////////////////////////// */
 
     it('testCannotBeBurntIfBalanceExceeds', async function () {
       // error AccessControlUnauthorizedAccount(address account, bytes32 neededRole);
@@ -161,10 +159,9 @@ function ERC20BurnModuleCommon () {
         .withArgs(this.address1.address, ADDRESS1_BALANCE, AMOUNT_TO_BURN)
     })
 
-
-    /*//////////////////////////////////////////////////////////////
+    /* //////////////////////////////////////////////////////////////
                       COMPLIANCE
-    //////////////////////////////////////////////////////////////*/
+    ////////////////////////////////////////////////////////////// */
 
     it('testCannotBeBurnIfContractIsDeactivated', async function () {
       await this.cmtat.connect(this.admin).pause()
@@ -212,9 +209,9 @@ function ERC20BurnModuleCommon () {
       expect(await this.cmtat.totalSupply()).to.equal(INITIAL_SUPPLY)
     })
 
-    /*//////////////////////////////////////////////////////////////
+    /* //////////////////////////////////////////////////////////////
                ACCESS CONTROL
-    //////////////////////////////////////////////////////////////*/
+    ////////////////////////////////////////////////////////////// */
 
     it('testCanBurnAndMint', async function () {
       // Arrange
@@ -321,10 +318,9 @@ function ERC20BurnModuleCommon () {
         .withArgs(this.address2.address, BURNER_ROLE)
     })
 
-
-    /*//////////////////////////////////////////////////////////////
+    /* //////////////////////////////////////////////////////////////
              COMPLIANCE
-    //////////////////////////////////////////////////////////////*/
+    ////////////////////////////////////////////////////////////// */
 
     it('testCannotBeBurnAndMintIfContractIsDeactivated', async function () {
       // Arrange
@@ -451,9 +447,9 @@ function ERC20BurnModuleCommon () {
       expect(await this.cmtat.totalSupply()).to.equal(INITIAL_SUPPLY)
     })
 
-    /*//////////////////////////////////////////////////////////////
+    /* //////////////////////////////////////////////////////////////
              ACCESS CONTROL
-    //////////////////////////////////////////////////////////////*/
+    ////////////////////////////////////////////////////////////// */
 
     it('testCanBeBurntBatchByAdmin', async function () {
       const bindTest = testBatchBurn.bind(this)
@@ -503,9 +499,9 @@ function ERC20BurnModuleCommon () {
         .withArgs(this.address2.address, BURNER_ROLE)
     })
 
-    /*//////////////////////////////////////////////////////////////
+    /* //////////////////////////////////////////////////////////////
             ERC-20 check
-    //////////////////////////////////////////////////////////////*/
+    ////////////////////////////////////////////////////////////// */
 
     it('testCannotBeBurntBatchIfOneBalanceExceeds', async function () {
       const TOKEN_HOLDER = [this.admin, this.address1, this.address2]
@@ -525,9 +521,9 @@ function ERC20BurnModuleCommon () {
         )
     })
 
-    /*//////////////////////////////////////////////////////////////
+    /* //////////////////////////////////////////////////////////////
            INPUT PARAMETERS
-    //////////////////////////////////////////////////////////////*/
+    ////////////////////////////////////////////////////////////// */
 
     it('testCannotBatchBurnIfLengthMismatchMissingAddresses', async function () {
       // Number of addresses is insufficient
@@ -584,9 +580,9 @@ function ERC20BurnModuleCommon () {
       )
     })
 
-    /*//////////////////////////////////////////////////////////////
+    /* //////////////////////////////////////////////////////////////
           COMPLIANCE
-    //////////////////////////////////////////////////////////////*/
+    ////////////////////////////////////////////////////////////// */
 
     it('testCanBeBatchBurnEvenIfContractIsPaused', async function () {
       await this.cmtat.connect(this.admin).pause()
@@ -598,12 +594,18 @@ function ERC20BurnModuleCommon () {
       const TOKEN_HOLDER = [this.admin, this.address1, this.address2]
       const TOKEN_SUPPLY_BY_HOLDERS = [10n, 100n, 1000n]
 
-      this.cmtat.connect(this.admin).batchMint(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS)
+      this.cmtat
+        .connect(this.admin)
+        .batchMint(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS)
       // Arrange
       await this.cmtat.connect(this.admin).pause()
       await this.cmtat.connect(this.admin).deactivateContract()
       // Act
-      await expect(this.cmtat.connect(this.admin).batchBurn(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS, REASON))
+      await expect(
+        this.cmtat
+          .connect(this.admin)
+          .batchBurn(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS, REASON)
+      )
         .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
         .withArgs(TOKEN_HOLDER[0], ZERO_ADDRESS, TOKEN_SUPPLY_BY_HOLDERS[0])
     })
@@ -612,17 +614,23 @@ function ERC20BurnModuleCommon () {
       const TOKEN_HOLDER = [this.address1, this.admin, this.address2]
       const TOKEN_SUPPLY_BY_HOLDERS = [10n, 100n, 1000n]
 
-      this.cmtat.connect(this.admin).batchMint(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS)
-      
+      this.cmtat
+        .connect(this.admin)
+        .batchMint(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS)
+
       await this.cmtat
         .connect(this.admin)
         .setAddressFrozen(this.address1, true)
 
-        // Act
-        await expect(this.cmtat.connect(this.admin).batchBurn(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS, REASON))
+      // Act
+      await expect(
+        this.cmtat
+          .connect(this.admin)
+          .batchBurn(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS, REASON)
+      )
         .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
         .withArgs(TOKEN_HOLDER[0], ZERO_ADDRESS, TOKEN_SUPPLY_BY_HOLDERS[0])
-    }) 
+    })
   })
 }
 module.exports = ERC20BurnModuleCommon

@@ -204,12 +204,15 @@ function ValidationModuleCommon () {
       const TOKEN_SUPPLY_BY_HOLDERS = [1n, RULE_MOCK_AMOUNT_MAX + 1n, 2n]
       const TOKEN_HOLDER_ADMIN = [this.admin, this.admin, this.admin]
 
-      await this.cmtat.connect(this.admin).batchMint(TOKEN_HOLDER_ADMIN, TOKEN_SUPPLY_BY_HOLDERS)
-
+      await this.cmtat
+        .connect(this.admin)
+        .batchMint(TOKEN_HOLDER_ADMIN, TOKEN_SUPPLY_BY_HOLDERS)
 
       // Act
       await expect(
-        this.cmtat.connect(this.admin).batchTransfer(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS)
+        this.cmtat
+          .connect(this.admin)
+          .batchTransfer(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS)
       )
         .to.be.revertedWithCustomError(
           this.ruleEngineMock,
@@ -520,11 +523,17 @@ function ValidationModuleCommon () {
 
     it('testCannotBatchMintIfNotAllowedByRule', async function () {
       const TOKEN_HOLDER = [this.admin, this.address1, this.address2]
-      const TOKEN_SUPPLY_BY_HOLDERS = [10n, 15n, RULE_MOCK_MINT_AMOUNT_MAX + 1n]
+      const TOKEN_SUPPLY_BY_HOLDERS = [
+        10n,
+        15n,
+        RULE_MOCK_MINT_AMOUNT_MAX + 1n
+      ]
 
       // Act
       await expect(
-        this.cmtat.connect(this.admin).batchMint(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS)
+        this.cmtat
+          .connect(this.admin)
+          .batchMint(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS)
       )
         .to.be.revertedWithCustomError(
           this.ruleEngineMock,
@@ -532,7 +541,6 @@ function ValidationModuleCommon () {
         )
         .withArgs(ZERO_ADDRESS, TOKEN_HOLDER[2], TOKEN_SUPPLY_BY_HOLDERS[2])
     })
-
   })
 }
 module.exports = ValidationModuleCommon
