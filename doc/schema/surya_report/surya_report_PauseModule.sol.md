@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/wrapper/core/PauseModule.sol | [object Promise] |
+| ./modules/wrapper/core/PauseModule.sol | b4031025bbd3170e430c9a688d0bd1337b45dccc |
 
 
 ### Contracts Description Table

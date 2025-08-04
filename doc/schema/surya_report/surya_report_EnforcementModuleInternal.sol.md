@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/internal/EnforcementModuleInternal.sol | [object Promise] |
+| ./modules/internal/EnforcementModuleInternal.sol | 4dc6d9e77b17cf999036d8518562ff010bb4cd60 |
 
 
 ### Contracts Description Table

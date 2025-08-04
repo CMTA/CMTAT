@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./interfaces/technical/IERC20Allowance.sol | [object Promise] |
+| ./interfaces/technical/IERC20Allowance.sol | d82b6ed708bf2891f078ae3c3a1c05ed35975758 |
 
 
 ### Contracts Description Table

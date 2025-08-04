@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./libraries/Errors.sol | [object Promise] |
+| ./libraries/Errors.sol | 236442c3e91574f8a7a1b3d8d3835100ff26d72f |
 
 
 ### Contracts Description Table

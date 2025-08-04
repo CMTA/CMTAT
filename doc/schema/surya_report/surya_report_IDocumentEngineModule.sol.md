@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./interfaces/modules/IDocumentEngineModule.sol | [object Promise] |
+| ./interfaces/modules/IDocumentEngineModule.sol | 5b4cfcc654d9204a76290701ca3d017658c42691 |
 
 
 ### Contracts Description Table

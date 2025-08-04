@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./deployment/CMTATStandalone.sol | [object Promise] |
+| ./deployment/CMTATStandalone.sol | 54e927d93f939223db15f8d3e354cb0eeccc39c2 |
 
 
 ### Contracts Description Table

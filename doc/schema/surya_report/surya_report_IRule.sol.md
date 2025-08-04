@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./mocks/RuleEngine/interfaces/IRule.sol | [object Promise] |
+| ./mocks/RuleEngine/interfaces/IRule.sol | 1c65ddfdfa0031233b2c9477877ac3174185b20b |
 
 
 ### Contracts Description Table

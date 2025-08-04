@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/wrapper/extensions/ERC20EnforcementModule.sol | [object Promise] |
+| ./modules/wrapper/extensions/ERC20EnforcementModule.sol | d6964030e1eac89e05e4b96a75d82334ab18e4da |
 
 
 ### Contracts Description Table

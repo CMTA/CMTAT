@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./mocks/ERC1363ReceiverMock.sol | [object Promise] |
+| ./mocks/ERC1363ReceiverMock.sol | 8dff9e47540acb071d54410f8b5f9b8762ce929f |
 
 
 ### Contracts Description Table

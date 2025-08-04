@@ -86,7 +86,7 @@ event AddressFrozen(address indexed account, bool indexed isFrozen, address inde
  **Emitted by**:
 
 - `setAddressFrozen`
-- ``batchSetAddressFrozen`
+- `batchSetAddressFrozen`
 
 **Extension Notice**:
 This event extends the standard ERC-3643 specification by including the `data` field for enhanced traceability and context.
@@ -166,7 +166,7 @@ Only authorized users (`ENFORCEMENT_ROLE`) are allowed to call this function.
 #### `batchSetAddressFrozen(address[],bool[])`
 
 ```solidity
-function batchSetAddressFrozen(address[] calldata accounts, bool[] calldata freeze) external;
+function batchSetAddressFrozen(address[] calldata accounts, bool[] calldata freezes) external;
 ```
 ```solidity
 function batchSetAddressFrozen(address[] calldata accounts, bool[] calldata freezes) 
@@ -187,5 +187,4 @@ Enables bulk freezing or unfreezing in a single call.
 
 - `accounts.length` must match `freeze.length`. 
 - Only authorized users (`ENFORCEMENT_ROLE`) are allowed to call this function.
-
 

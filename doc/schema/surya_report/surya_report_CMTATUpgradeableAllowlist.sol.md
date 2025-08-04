@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./deployment/allowlist/CMTATUpgradeableAllowlist.sol | [object Promise] |
+| ./deployment/allowlist/CMTATUpgradeableAllowlist.sol | 329db406d80ece61a67d331990fa939ae7e53416 |
 
 
 ### Contracts Description Table

@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/wrapper/security/AccessControlModule.sol | [object Promise] |
+| ./modules/wrapper/security/AccessControlModule.sol | 001735362957300b5fc4b4aa237e6c1d87e5a66f |
 
 
 ### Contracts Description Table

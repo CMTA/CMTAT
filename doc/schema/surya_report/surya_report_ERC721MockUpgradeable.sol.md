@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./mocks/ERC721MockUpgradeable.sol | [object Promise] |
+| ./mocks/ERC721MockUpgradeable.sol | 14a94e73b55ddb0f48dbf7b216da63a289457d5a |
 
 
 ### Contracts Description Table

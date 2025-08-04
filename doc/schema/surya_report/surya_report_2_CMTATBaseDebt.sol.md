@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/2_CMTATBaseDebt.sol | [object Promise] |
+| ./modules/2_CMTATBaseDebt.sol | e5ede45bff3c61546bfe2b9200ca25e25c5a81e5 |
 
 
 ### Contracts Description Table

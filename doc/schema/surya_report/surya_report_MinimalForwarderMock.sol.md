@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./mocks/MinimalForwarderMock.sol | [object Promise] |
+| ./mocks/MinimalForwarderMock.sol | f4c000bf1144538f63ba92c99ff57b1e793f1fbf |
 
 
 ### Contracts Description Table

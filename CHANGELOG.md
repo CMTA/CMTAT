@@ -18,6 +18,14 @@ Please follow <https://changelog.md/> conventions.
   
   - Update changelog
 
+## 3.0.0-rc.7
+
+- Add missing compliance check (pause, address freeze and RuleEngine) for `batchTransfer` 
+  - Create a virtual function `_minterTransferOverride` in ERC20MintModule.
+  - This function is then overridden in `CMTATBaseCommon` to perform the required check
+- Add the same check for `batchMint/batchBurn`for CMTAT core (light) version
+- Add several tests to check these modification
+
 ## 3.0.0-rc.6
 
 - Perform recommendations from the audit report (Halborn)
