@@ -162,8 +162,6 @@ abstract contract CMTATBaseCommon is
         ERC20Upgradeable._update(from, to, amount);
     }
     
-        
-
     /**
     * @dev Check if the mint is valid
     */
@@ -179,4 +177,13 @@ abstract contract CMTATBaseCommon is
         _checkTransferred(address(0),  account, address(0), value);
         ERC20BurnModuleInternal._burnOverride(account, value);
     }
+
+    /**
+    * @dev Check if a minter transfer is valid
+    */
+    function _minterTransferOverride(address from, address to, uint256 value) internal virtual override(ERC20MintModuleInternal) {
+        _checkTransferred(address(0), from, to, value);
+        ERC20MintModuleInternal._minterTransferOverride(from, to, value);
+    }
+
 }

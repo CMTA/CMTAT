@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/wrapper/options/AllowlistModule.sol | [object Promise] |
+| ./modules/wrapper/options/AllowlistModule.sol | b77177dc4041d6d04497d5dc38cbc841e9546d9b |
 
 
 ### Contracts Description Table

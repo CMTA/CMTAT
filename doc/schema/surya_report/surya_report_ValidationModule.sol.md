@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/wrapper/controllers/ValidationModule.sol | [object Promise] |
+| ./modules/wrapper/controllers/ValidationModule.sol | 317f0e4359599732a1f3ac9f2ba591858bfb485a |
 
 
 ### Contracts Description Table

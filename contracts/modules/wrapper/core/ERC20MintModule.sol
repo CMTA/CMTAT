@@ -79,7 +79,7 @@ abstract contract ERC20MintModule is  ERC20MintModuleInternal, AccessControlUpgr
    function batchTransfer(
         address[] calldata tos,
         uint256[] calldata values
-    ) public override(IERC3643BatchTransfer) onlyRole(MINTER_ROLE) returns (bool success_) {
+    ) public virtual override(IERC3643BatchTransfer) onlyRole(MINTER_ROLE) returns (bool success_) {
         return _batchTransfer(tos, values);
     }
 

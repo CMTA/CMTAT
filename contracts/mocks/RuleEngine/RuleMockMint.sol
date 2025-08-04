@@ -27,7 +27,7 @@ contract RuleMockMint is IRule, CodeList {
         uint256 _amount
     ) public pure override returns (uint8) {
         if(_from == address(0)){
-            return  _amount < 20
+            return  _amount < 25
                 ? uint8(REJECTED_CODE_BASE.TRANSFER_OK)
                 : MINT_TOO_HIGH;
         }

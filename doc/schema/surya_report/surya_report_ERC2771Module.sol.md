@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/wrapper/options/ERC2771Module.sol | [object Promise] |
+| ./modules/wrapper/options/ERC2771Module.sol | 40c4cae7dfba5cf026dbeb125dc3c7015e928f09 |
 
 
 ### Contracts Description Table

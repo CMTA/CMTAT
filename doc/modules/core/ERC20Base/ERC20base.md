@@ -32,7 +32,7 @@ Base Module API for Ethereum blockchain extends the [ERC-20](https://github.com/
 
 
 
-#### `transferFrom(address,address,uint256)`
+### `transferFrom(address,address,uint256)`
 
 This function overrides the function `transferFrom`from OpenZeppelin
 
@@ -68,7 +68,7 @@ This event is not defined by ERC-20 and is needed to track allowance changes.
 
 ### IERC20Allowance
 
-### `Spend(address,address,uint256)`
+#### `Spend(address,address,uint256)`
 
 ```solidity
 event Spend(address indexed account, address indexed spender, uint256 value);
@@ -89,7 +89,7 @@ event Spend(address indexed account, address indexed spender, uint256 value);
 
 ### IERC20BatchBalance
 
-### `batchBalanceOf(address[])`
+#### `batchBalanceOf(address[])`
 
 ```solidity
 function batchBalanceOf(address[] calldata addresses) external view returns (uint256[] memory balances, uint256 totalSupply_);
@@ -116,7 +116,7 @@ function batchBalanceOf(address[] calldata addresses) external view returns (uin
 #### `setName(string)`
 
 ```solidity
-function setName(string calldata name) external;
+function setName(string calldata name_) external;
 ```
 
 Sets the name of the token.
@@ -132,7 +132,7 @@ Sets the name of the token.
 #### `setSymbol(string)`
 
 ```solidity
-function setSymbol(string calldata symbol) external;
+function setSymbol(string calldata symbol_) external;
 ```
 
 Sets the symbol of the token.

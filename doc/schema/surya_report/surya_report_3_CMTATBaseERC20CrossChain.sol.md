@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/3_CMTATBaseERC20CrossChain.sol | [object Promise] |
+| ./modules/3_CMTATBaseERC20CrossChain.sol | 06697e1548d38f4b5b5899dbe044418c0d194955 |
 
 
 ### Contracts Description Table

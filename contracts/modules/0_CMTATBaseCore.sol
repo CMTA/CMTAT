@@ -7,8 +7,8 @@ import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Ini
 import {ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
 /* ==== Wrapper === */
 // ERC20
-import {ERC20BurnModule} from "./wrapper/core/ERC20BurnModule.sol";
-import {ERC20MintModule} from "./wrapper/core/ERC20MintModule.sol";
+import {ERC20BurnModule, ERC20BurnModuleInternal} from "./wrapper/core/ERC20BurnModule.sol";
+import {ERC20MintModule, ERC20MintModuleInternal} from "./wrapper/core/ERC20MintModule.sol";
 import {ERC20BaseModule, ERC20Upgradeable} from "./wrapper/core/ERC20BaseModule.sol";
 
 // Other
@@ -218,19 +218,23 @@ abstract contract CMTATBaseCore is
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
 
-    /**
-    * @inheritdoc ERC20MintModule
-    */
-    function _mint(address account, uint256 value, bytes memory data) internal virtual override(ERC20MintModule) {
+
+    function _mintOverride(address account, uint256 value) internal virtual override(ERC20MintModuleInternal) {
         require(ValidationModule._canMintBurnByModule(account), Errors.CMTAT_InvalidTransfer(address(0), account, value) );
-        ERC20MintModule._mint(account, value, data);
+        ERC20MintModuleInternal._mintOverride(account, value);
+    }
+
+
+    function _burnOverride(address account, uint256 value) internal virtual override(ERC20BurnModuleInternal) {
+        require(ValidationModule._canMintBurnByModule(account), Errors.CMTAT_InvalidTransfer(account, address(0), value) );
+        ERC20BurnModuleInternal._burnOverride(account, value);
     }
 
     /**
-    * @inheritdoc ERC20BurnModule
+    * @dev Check if a minter transfer is valid
     */
-    function _burn(address account, uint256 value, bytes memory data) internal virtual override(ERC20BurnModule) {
-        require(ValidationModule._canMintBurnByModule(account), Errors.CMTAT_InvalidTransfer(account, address(0), value) );
-        ERC20BurnModule._burn(account, value, data);
+    function _minterTransferOverride(address from, address to, uint256 value) internal virtual override(ERC20MintModuleInternal) {
+        require(ValidationModuleCore.canTransfer(from, to, value), Errors.CMTAT_InvalidTransfer(from, to, value) );
+        ERC20MintModuleInternal._minterTransferOverride(from, to, value);
     }
 }

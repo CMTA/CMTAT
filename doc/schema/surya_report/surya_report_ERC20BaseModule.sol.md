@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/wrapper/core/ERC20BaseModule.sol | [object Promise] |
+| ./modules/wrapper/core/ERC20BaseModule.sol | f36cd3c8b4f2cc26e42dfdeb6eab481042f6274e |
 
 
 ### Contracts Description Table

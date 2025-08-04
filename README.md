@@ -249,7 +249,7 @@ The CMTAT was initially designed for the digitalization of company shares. For S
 
 #### Tokenized market funds
 
-- CMTAT was used by a bank to tokenize a fund on Ethereum. The use of CMTAT by this bank is not yet officially public.
+- In 2024, [UBS](https://www.ubs.com/global/en/investment-bank/tokenize.html) launched UBS USD Money Market Investment Fund Token (uMINT), a Money Market investment built on Ethereum distributed ledger technology. The tokenization arrangement for this fund utilizes CMTAT codebase to represent the fund smart contract, which forms part of the fund’s tokenized register of members. See [ubs.com - UBS Asset Management launches its first tokenized investment fund](https://www.ubs.com/global/en/media/display-page-ndp/en-20241101-first-tokenized-investment-fund.html [ubs.com])
 
 #### Other assets
 
@@ -635,9 +635,7 @@ interface IERC7802 is IERC165 {
 
 ## Architecture
 
-CMTAT architecture is divided in two main components: modules and engines
-
-The main schema describing the architecture can be found here: [architecture.pdf](./doc/schema/drawio/architecture.pdf) 
+CMTAT architecture is divided in two main components: modules and engines.
 
 ### Tree file structure
 
@@ -1131,7 +1129,7 @@ Generally, these modules are not required to be compliant with the CMTA specific
 
 ##### Options modules
 
-| Modules                                                      | Description                                            | File                                                         | CMTAT 1.0 | CMTAT 2.30                          | CMTAT 3.0.0              |           |                                                              |          |
+| Modules                                                      | Description                                            | File                                                         | CMTAT 1.0 | CMTAT 2.3.0                         | CMTAT 3.0.0              |           |                                                              |          |
 | ------------------------------------------------------------ | ------------------------------------------------------ | ------------------------------------------------------------ | --------- | ----------------------------------- | ------------------------ | --------- | ------------------------------------------------------------ | -------- |
 | Deployment version                                           |                                                        |                                                              |           |                                     | Standalone & Upgradeable | Allowlist | Debt                                                         | ERC7551  |
 | [DebtModule](doc/modules/options/debt/debt.md)               | Set Debt Info                                          | [DebtModule.sol](./contracts/modules/wrapper/options/DebtModule.sol) | &#x2612;  | &#x2611;                            | &#x2612;                 | &#x2612;  | &#x2611;  <br />(Don't include CreditEvents managed by DebtEngineModule) | &#x2612; |
@@ -1726,14 +1724,22 @@ This tab summarizes the different behavior of burn/mint functions if:
 - The target address is frozen (EnforcementModule)
 - The target address does not have enough active balance (ERC20EnforcementModule)
 - If a `ruleEngine` is configured (ValidationModuleInternal)
+- If the contract is in pause state
+- If the contract is deactivated
 
-|                                                              | burn      | batchBurn | burnFrom                 | mint      | batchMint | crosschain burn          | Crosschain mint          | forcedTransfer   |
-| ------------------------------------------------------------ | --------- | --------- | ------------------------ | --------- | --------- | ------------------------ | ------------------------ | ---------------- |
-| Module                                                       | ERC20Burn | ERC20Burn | CMTATBaseERC20CrossChain | ERC20Mint | ERC20Mint | CMTATBaseERC20CrossChain | CMTATBaseERC20CrossChain | ERC20Enforcement |
-| Module type                                                  | Core      | Core      | Options                  | Core      | Core      | Options                  | Options                  | Extensions       |
-| Allow operation on a frozen address                          | &#x2612;  | &#x2612;  | &#x2612;                 | &#x2612;  | &#x2612;  | &#x2612;                 | &#x2612;                 | &#x2611;         |
-| Unfreeze missing funds if active balance is not enough<br />(ERC20EnforcementModule) | &#x2612;  | &#x2612;  | &#x2612;                 | -         | -         | &#x2612;                 | -                        | &#x2611;         |
-| Call the RuleEngine                                          | &#x2611;  | &#x2611;  | &#x2611;                 | &#x2611;  | &#x2611;  | &#x2611;                 | &#x2611;                 | &#x2612;         |
+|                                                              | burn      | batchBurn | burnFrom                 | mint      | batchMint | batchTransfer | crosschain burn          | Crosschain mint          | forcedTransfer   |
+| ------------------------------------------------------------ | --------- | --------- | ------------------------ | --------- | --------- | ------------- | ------------------------ | ------------------------ | ---------------- |
+| Module                                                       | ERC20Burn | ERC20Burn | CMTATBaseERC20CrossChain | ERC20Mint | ERC20Mint | ERC20Mint     | CMTATBaseERC20CrossChain | CMTATBaseERC20CrossChain | ERC20Enforcement |
+| Module type                                                  | Core      | Core      | Options                  | Core      | Core      | Core          | Options                  | Options                  | Extensions       |
+| Allow operation on a frozen address                          | &#x2612;  | &#x2612;  | &#x2612;                 | &#x2612;  | &#x2612;  | &#x2612;      | &#x2612;                 | &#x2612;                 | &#x2611;         |
+| Unfreeze missing funds if active balance is not enough<br />(`ERC20EnforcementModule`) | &#x2612;  | &#x2612;  | &#x2612;                 | -         | -         | &#x2612;      | &#x2612;                 | -                        | &#x2611;         |
+| Call the `RuleEngine`                                        | &#x2611;  | &#x2611;  | &#x2611;                 | &#x2611;  | &#x2611;  | &#x2611;      | &#x2611;                 | &#x2611;                 | &#x2612;         |
+| Authorised if contract is in pause state                     | &#x2611;  | &#x2611;  | &#x2612;                 | &#x2611;  | &#x2611;  | &#x2612;      | &#x2612;                 | &#x2612;                 | &#x2611;         |
+| Authorised if the contract is deactivated                    | &#x2612;  | &#x2612;  | &#x2612;                 | &#x2612;  | &#x2612;  | &#x2612;      | &#x2612;                 | &#x2612;                 | &#x2611;         |
+
+**Note**
+
+Contrary to a `mint`operation, the function `batchTransfer`will perform the compliance check on the `from`address, which will be an address with the minter role. Another difference is the function will revert if the contract is in pause state.
 
 
 
@@ -1791,9 +1797,9 @@ interface IAllowlistModule {
 
 Here a schema describing the different check performed during:
 
-- transfer & transferFrom
-- burn / mint (supply management)
-- burn / mint for crosschain transfers
+- `transfer`, `transferFrom` and `batchTransfer`
+- `burn` / `mint` (supply management)
+- `burn` / `mint` for crosschain transfers
 
 ![transfer_restriction.drawio](./doc/schema/drawio/transfer_restriction.drawio.png)
 
@@ -2286,7 +2292,6 @@ Here a summary of the main documents
 | ----------------------------------- | ------------------------------------------------------------ |
 | Documentation of the modules API.   | [modules](./doc/modules)                                     |
 | How to use the project + toolchains | [USAGE.md](./doc/USAGE.md)                                   |
-| Project architecture                | [architecture.pdf](./doc/schema/drawio/architecture.pdf)     |
 | FAQ                                 | [FAQ.md](./doc/general/FAQ.md)                               |
 | Crosschain transfers                | [crosschain-bridge-support.md](./doc/general/crosschain-bridge-support.md) |
 
@@ -2366,6 +2371,8 @@ The third audit covered version [v3.0.0-rc5](https://github.com/CMTA/CMTAT/tree/
 Version v3.0.0 contains the different fixes and improvements related to this audit.
 
 The report is available in [CMTAT_Halborn_final.pdf](./doc/audits/Halborn-CMTATv3.0.0-2025/CMTAT_Halborn_final.pdf).
+
+> After the audit, we made another fix to perform compliance check with all batch functions. See [commits - 198d0194a0eef526b0a33cb625f6227da07608d4](https://github.com/CMTA/CMTAT/pull/313/commits/198d0194a0eef526b0a33cb625f6227da07608d4)
 
 ### Tools
 

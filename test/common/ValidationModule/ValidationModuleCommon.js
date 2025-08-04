@@ -5,7 +5,7 @@ const {
   ZERO_ADDRESS,
   REJECTED_CODE_BASE_TRANSFER_OK,
   RULE_MOCK_AMOUNT_MAX_CODE,
-  RULE_MOCK_MINT_AMOUNT_MAX_CODE
+  RULE_MOCK_MINT_RESTRICTION_CODE
 } = require('../../utils')
 
 function ValidationModuleCommon () {
@@ -77,7 +77,7 @@ function ValidationModuleCommon () {
           await this.cmtat.detectTransferRestriction(
             this.address1,
             this.address2,
-            RULE_MOCK_AMOUNT_MAX + 1
+            RULE_MOCK_AMOUNT_MAX + 1n
           )
         ).to.equal(RULE_MOCK_AMOUNT_MAX_CODE)
       }
@@ -86,7 +86,7 @@ function ValidationModuleCommon () {
         await this.cmtat.canTransfer(
           this.address1,
           this.address2,
-          RULE_MOCK_AMOUNT_MAX + 1
+          RULE_MOCK_AMOUNT_MAX + 1n
         )
       ).to.equal(false)
     })
@@ -109,7 +109,6 @@ function ValidationModuleCommon () {
       )
     })
 
-    // this.address1 may transfer tokens to this.address2
     it('testCanTransferAllowedByRule', async function () {
       const AMOUNT_TO_TRANSFER = 11n
       // Act
@@ -136,9 +135,8 @@ function ValidationModuleCommon () {
       )
     })
 
-    // reverts if this.address1 transfers more tokens than rule allows
     it('testCannotTransferIfNotAllowedByRule', async function () {
-      const AMOUNT_TO_TRANSFER = RULE_MOCK_AMOUNT_MAX + 1
+      const AMOUNT_TO_TRANSFER = RULE_MOCK_AMOUNT_MAX + 1n
       expect(
         await this.ruleEngineMock.canTransfer(
           this.address1,
@@ -200,6 +198,28 @@ function ValidationModuleCommon () {
           AMOUNT_TO_TRANSFER
         )
     })
+
+    it('testCannotBatchTransferIfNotAllowedByRule', async function () {
+      const TOKEN_HOLDER = [this.admin, this.address1, this.address2]
+      const TOKEN_SUPPLY_BY_HOLDERS = [1n, RULE_MOCK_AMOUNT_MAX + 1n, 2n]
+      const TOKEN_HOLDER_ADMIN = [this.admin, this.admin, this.admin]
+
+      await this.cmtat
+        .connect(this.admin)
+        .batchMint(TOKEN_HOLDER_ADMIN, TOKEN_SUPPLY_BY_HOLDERS)
+
+      // Act
+      await expect(
+        this.cmtat
+          .connect(this.admin)
+          .batchTransfer(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS)
+      )
+        .to.be.revertedWithCustomError(
+          this.ruleEngineMock,
+          'RuleEngine_InvalidTransfer'
+        )
+        .withArgs(this.admin, TOKEN_HOLDER[1], TOKEN_SUPPLY_BY_HOLDERS[1])
+    })
   })
   context('RuleEngineTransferFromTest', function () {
     beforeEach(async function () {
@@ -253,7 +273,7 @@ function ValidationModuleCommon () {
     })
 
     it('testCannotTransferFromIfNotAllowedByRuleEngine', async function () {
-      const AMOUNT_TO_TRANSFER = RULE_MOCK_AMOUNT_MAX + 1
+      const AMOUNT_TO_TRANSFER = RULE_MOCK_AMOUNT_MAX + 1n
       // Arrange - Assert
       expect(
         await this.cmtat.canTransfer(
@@ -391,16 +411,16 @@ function ValidationModuleCommon () {
           await this.cmtat.detectTransferRestriction(
             ZERO_ADDRESS,
             this.address2,
-            RULE_MOCK_MINT_AMOUNT_MAX + 1
+            RULE_MOCK_MINT_AMOUNT_MAX + 1n
           )
-        ).to.equal(RULE_MOCK_MINT_AMOUNT_MAX)
+        ).to.equal(RULE_MOCK_MINT_RESTRICTION_CODE)
       }
 
       expect(
         await this.cmtat.canTransfer(
           this.address1,
           this.address2,
-          RULE_MOCK_MINT_AMOUNT_MAX + 1
+          RULE_MOCK_MINT_AMOUNT_MAX + 1n
         )
       ).to.equal(false)
     })
@@ -410,7 +430,7 @@ function ValidationModuleCommon () {
         // Act + Assert
         expect(
           await this.cmtat.messageForTransferRestriction(
-            RULE_MOCK_MINT_AMOUNT_MAX
+            RULE_MOCK_MINT_RESTRICTION_CODE
           )
         ).to.equal('Mint amount too high')
       }
@@ -450,7 +470,7 @@ function ValidationModuleCommon () {
 
     // reverts if this.address1 transfers more tokens than rule allows
     it('testCannotMintIfNotAllowedByRule', async function () {
-      const AMOUNT_TO_TRANSFER = 21n
+      const AMOUNT_TO_TRANSFER = RULE_MOCK_MINT_AMOUNT_MAX + 1n
       // Act
       expect(
         await this.cmtat.canTransfer(ZERO_ADDRESS, this.address2, 19n)
@@ -478,7 +498,7 @@ function ValidationModuleCommon () {
             this.address2,
             AMOUNT_TO_TRANSFER
           )
-        ).to.equal(RULE_MOCK_MINT_AMOUNT_MAX)
+        ).to.equal(RULE_MOCK_MINT_RESTRICTION_CODE)
 
         expect(
           await this.cmtat.detectTransferRestrictionFrom(
@@ -487,7 +507,7 @@ function ValidationModuleCommon () {
             this.address2,
             AMOUNT_TO_TRANSFER
           )
-        ).to.equal(RULE_MOCK_MINT_AMOUNT_MAX)
+        ).to.equal(RULE_MOCK_MINT_RESTRICTION_CODE)
       }
 
       // Act
@@ -499,6 +519,27 @@ function ValidationModuleCommon () {
           'RuleEngine_InvalidTransfer'
         )
         .withArgs(ZERO_ADDRESS, this.address2.address, AMOUNT_TO_TRANSFER)
+    })
+
+    it('testCannotBatchMintIfNotAllowedByRule', async function () {
+      const TOKEN_HOLDER = [this.admin, this.address1, this.address2]
+      const TOKEN_SUPPLY_BY_HOLDERS = [
+        10n,
+        15n,
+        RULE_MOCK_MINT_AMOUNT_MAX + 1n
+      ]
+
+      // Act
+      await expect(
+        this.cmtat
+          .connect(this.admin)
+          .batchMint(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS)
+      )
+        .to.be.revertedWithCustomError(
+          this.ruleEngineMock,
+          'RuleEngine_InvalidTransfer'
+        )
+        .withArgs(ZERO_ADDRESS, TOKEN_HOLDER[2], TOKEN_SUPPLY_BY_HOLDERS[2])
     })
   })
 }

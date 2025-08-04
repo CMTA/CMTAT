@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./mocks/RuleEngine/RuleMockMint.sol | [object Promise] |
+| ./mocks/RuleEngine/RuleMockMint.sol | 40bc9c6befe6eb1ab4710f467b31d6e211fb3d55 |
 
 
 ### Contracts Description Table

@@ -45,13 +45,12 @@ abstract contract ERC20MintModuleInternal is ERC20Upgradeable {
         uint256[] calldata values
     ) internal virtual returns (bool success_) {
         require(tos.length > 0, CMTAT_MintModule_EmptyTos());
+        address sender = _msgSender();
         // We do not check that values is not empty since
         // this require will throw an error in this case.
         require(bool(tos.length == values.length), CMTAT_MintModule_TosValueslengthMismatch());
         for (uint256 i = 0; i < tos.length; ++i) {
-            // We call directly the internal OpenZeppelin function _transfer
-            // The reason is that the public function adds only the owner address recovery
-            ERC20Upgradeable._transfer(_msgSender(), tos[i], values[i]);
+            _minterTransferOverride(sender, tos[i], values[i]);
         }
         // not really useful
         // Here only to keep the same behaviour as transfer
@@ -64,4 +63,10 @@ abstract contract ERC20MintModuleInternal is ERC20Upgradeable {
     function _mintOverride(address account, uint256 value) internal virtual {
         ERC20Upgradeable._mint(account, value);
     }
+
+    function _minterTransferOverride(address from, address to,uint256 value) internal virtual{
+            // We call directly the internal OpenZeppelin function _transfer
+            // The reason is that the public function adds only the owner address recovery
+            ERC20Upgradeable._transfer(from, to, value);
+     }
 }

@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./mocks/library/snapshot/SnapshotErrors.sol | [object Promise] |
+| ./mocks/library/snapshot/SnapshotErrors.sol | 09481e30dbfb17bd805b09da945be04ae5af1ad7 |
 
 
 ### Contracts Description Table

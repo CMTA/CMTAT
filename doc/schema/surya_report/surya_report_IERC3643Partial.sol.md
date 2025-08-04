@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./interfaces/tokenization/IERC3643Partial.sol | [object Promise] |
+| ./interfaces/tokenization/IERC3643Partial.sol | f03dd16b818a1efd8eae191e34a61bbf336d5398 |
 
 
 ### Contracts Description Table

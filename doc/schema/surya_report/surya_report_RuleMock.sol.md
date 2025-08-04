@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./mocks/RuleEngine/RuleMock.sol | [object Promise] |
+| ./mocks/RuleEngine/RuleMock.sol | c8ac04f82d0ab874d4448ee49e2c079fb6b0b93f |
 
 
 ### Contracts Description Table

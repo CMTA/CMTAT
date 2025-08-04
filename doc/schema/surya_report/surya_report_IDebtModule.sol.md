@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./interfaces/modules/IDebtModule.sol | [object Promise] |
+| ./interfaces/modules/IDebtModule.sol | 44c6150505a435baea79fcaabc3a93b494506072 |
 
 
 ### Contracts Description Table
