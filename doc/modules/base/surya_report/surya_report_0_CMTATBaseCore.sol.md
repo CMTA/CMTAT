@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/0_CMTATBaseCore.sol | [object Promise] |
+| ./modules/0_CMTATBaseCore.sol | 4ca7f7b26c2c31c806b296b4113b52707292df72 |
 
 
 ### Contracts Description Table
@@ -28,8 +28,9 @@
 | └ | burnAndMint | Public ❗️ | 🛑  |NO❗️ |
 | └ | forcedBurn | Public ❗️ | 🛑  | onlyRole |
 | └ | hasRole | Public ❗️ |   |NO❗️ |
-| └ | _mint | Internal 🔒 | 🛑  | |
-| └ | _burn | Internal 🔒 | 🛑  | |
+| └ | _mintOverride | Internal 🔒 | 🛑  | |
+| └ | _burnOverride | Internal 🔒 | 🛑  | |
+| └ | _minterTransferOverride | Internal 🔒 | 🛑  | |
 
 
 ### Legend

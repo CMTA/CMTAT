@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/0_CMTATBaseCommon.sol | [object Promise] |
+| ./modules/0_CMTATBaseCommon.sol | 8f9784520587e0b3e91d67824fe820ec8a71c6d6 |
 
 
 ### Contracts Description Table
@@ -28,6 +28,7 @@
 | └ | _update | Internal 🔒 | 🛑  | |
 | └ | _mintOverride | Internal 🔒 | 🛑  | |
 | └ | _burnOverride | Internal 🔒 | 🛑  | |
+| └ | _minterTransferOverride | Internal 🔒 | 🛑  | |
 
 
 ### Legend
