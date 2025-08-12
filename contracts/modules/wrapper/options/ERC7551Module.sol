@@ -68,6 +68,13 @@ abstract contract ERC7551Module is ExtraInformationModule, IERC7551Document {
     function termsHash() public view virtual override(IERC7551Document) returns (bytes32 hash_){
         return terms().doc.documentHash;
     }
+    
+    /**
+    *  @inheritdoc ICMTATMandatory
+    */
+    function termsURI() public view override(ICMTATMandatory) returns (string memory) {
+        return terms().doc.uri;
+    }
 
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS

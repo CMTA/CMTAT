@@ -28,6 +28,20 @@ abstract contract EnforcementModule is
     //////////////////////////////////////////////////////////////*/
     /* ============ State restricted functions ============ */
     /**
+    * @inheritdoc ICMTATMandatory
+    */
+    function freeze(address account) public override(ICMTATMandatory) {
+        setAddressFrozen(account, true);
+    }
+
+    /**
+    * @inheritdoc ICMTATMandatory
+    */
+    function unfreeze(address account) public override(ICMTATMandatory){
+        setAddressFrozen(account, false);
+    }
+
+    /**
     * @inheritdoc IERC3643Enforcement
     * @custom:access-control
     * - the caller must have the `ENFORCER_ROLE`.
