@@ -70,9 +70,9 @@ abstract contract ERC7551Module is ExtraInformationModule, IERC7551Document {
     }
     
     /**
-    *  @inheritdoc ICMTATMandatory
+    *  As defined in ICMTATMandatory
     */
-    function termsURI() public view override(ICMTATMandatory) returns (string memory) {
+    function termsURI() public view returns (string memory) {
         return terms().doc.uri;
     }
 

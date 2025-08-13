@@ -14,36 +14,36 @@ interface ICMTATMandatory is IERC3643EnforcementEvent {
     /*
     * @notice returns tokenization terms
     */
-    function termsURL() external view returns (string memory);
+    function termsURI() external view returns (string memory);
 
     /**
      * Mints the amount of tokens to the target address.
      */
-    function mint(address target, uint256 amount) virtual external;
+    function mint(address target, uint256 amount) external;
 
     /**
      * Burns the amount of tokens from the target address.
      */
-    function burn(address target, uint256 amount) virtual external;
+    function burn(address target, uint256 amount) external;
 
     /**
      * Freeze the target address.
      * 
      * Must emit an AddressFrozen event for the address with isFrozen=true, if successful.
      */
-    function freeze(address target) virtual external;
+    function freeze(address target) external;
 
     /**
      * Freeze the target address.
      * 
      * Must emit an AddressFrozen event for the address with isFrozen=false, if successful.
      */
-    function unfreeze(address target) virtual external;
+    function unfreeze(address target) external;
 
     /**
      * Returns whether the target address is frozen.
      */
-    function isFrozen(address account) virtual external returns(bool);
+    function isFrozen(address account) external returns(bool);
 
 }
 
@@ -99,7 +99,7 @@ interface ICMTATDeactivate {
 * @notice Defines base properties and metadata structure for a tokenized asset.
 * @dev Includes token ID, terms (using IERC1643-compliant document), and a general information field.
 */
-interface ICMTATBase is ICMTATMandatory {
+interface ICMTATBase {
     /* ============ Struct ============ */
      /*
      * @dev A reference to (e.g. in the form of an Internet address) or a hash of the tokenization terms
