@@ -8,7 +8,7 @@ pragma solidity ^0.8.20;
 interface ISnapshotEngine {
    /**
     * @notice Records balance and total supply snapshots before any token transfer occurs.
-    * @dev This function should be called inside the {_beforeTokenTransfer} hook so that
+    * @dev This function should be called inside the {__update} hook so that
     * snapshots are updated prior to any state changes from {_mint}, {_burn}, or {_transfer}.
     * It ensures historical balances and total supply remain accurate for snapshot queries.
     *
