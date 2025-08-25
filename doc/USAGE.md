@@ -209,7 +209,7 @@ From the version v2.3.0, this command is not working and generates the following
 
 To generate documentation with surya, you can call the three bash scripts in doc/script
 
-| Task                 | Script                      | Command exemple                                              |
+| Task                 | Script                      | Command example                                              |
 | -------------------- | --------------------------- | ------------------------------------------------------------ |
 | Generate graph       | script_surya_graph.sh       | npx surya graph -i contracts/**/*.sol <br />npx surya graph contracts/modules/CMTAT_BASE.sol |
 | Generate inheritance | script_surya_inheritance.sh | npx surya inheritance contracts/modules/CMTAT_BASE.sol -i <br />npx surya inheritance contracts/modules/CMTAT_BASE.sol |

@@ -6,9 +6,18 @@ pragma solidity ^0.8.20;
 * @dev minimum interface to define a SnapshotEngine
 */
 interface ISnapshotEngine {
-    /**
-     * @dev Returns true if the operation is a success, and false otherwise.
-     */
+   /**
+    * @notice Records balance and total supply snapshots before any token transfer occurs.
+    * @dev This function should be called inside the {_update} hook so that
+    * snapshots are updated prior to any state changes from {_mint}, {_burn}, or {_transfer}.
+    * It ensures historical balances and total supply remain accurate for snapshot queries.
+    *
+    * @param from The address tokens are being transferred from (zero address if minting).
+    * @param to The address tokens are being transferred to (zero address if burning).
+    * @param balanceFrom The current balance of `from` before the transfer (used to update snapshot).
+    * @param balanceTo The current balance of `to` before the transfer (used to update snapshot).
+    * @param totalSupply The current total supply before the transfer (used to update snapshot).
+    */
     function operateOnTransfer(address from, address to, uint256 balanceFrom, uint256 balanceTo, uint256 totalSupply) external;
 }
 

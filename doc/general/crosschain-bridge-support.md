@@ -2,7 +2,7 @@
 
 > With which bridge can the CMTAT be used?
 
-We will analyze the following bridges: [CCIP](https://chain.link/cross-chain) by Chainlink, Optimism superchaibn, [LayerZero](https://layerzero.network) and [AxelarNetwork](https://www.axelar.network)
+We will analyze the following bridges: [CCIP](https://chain.link/cross-chain) by Chainlink, Optimism superchain, [LayerZero](https://layerzero.network) and [AxelarNetwork](https://www.axelar.network)
 
 Generally, in term of implementation, it depends of the model to handle cross-chain token transfer. There are three main models: Burn & Mint, Lock & Mint, Lock & Unlock
 
@@ -35,7 +35,7 @@ See [docs.chain.link/ccip/concepts/cross-chain-tokens#requirements-for-cross-cha
 Warning:
 
 If you put the contract in pause through the PauseModule, it will not affect the `mint` function from MintModule.
-In this case, the alternative solution is to revoke the MINT_ROLE from the concerned addresses to prevent any mint
+In this case, the alternative solution is to revoke the MINTER_ROLE from the concerned addresses to prevent any mint
 
 ## Optimism superchain ERC-20 (ERC-7802)
 
