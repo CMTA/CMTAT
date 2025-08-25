@@ -18,6 +18,10 @@ Please follow <https://changelog.md/> conventions.
   
   - Update changelog
 
+## 3.0.0
+
+- Improve comments and documentation
+
 ## 3.0.0-rc.7
 
 - Add missing compliance check (pause, address freeze and RuleEngine) for `batchTransfer` 
