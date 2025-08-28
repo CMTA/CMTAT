@@ -20,7 +20,33 @@ Please follow <https://changelog.md/> conventions.
 
 ## 3.0.0
 
-- Improve comments and documentation
+- Major release
+- Improved comments and documentation
+
+See changelogs of the rc versions for details.
+
+Main changes with the last audited release (v2.3.0):
+
+**Added**
+
+- Add support for several new ERC standard:
+  - Tokenization: [ERC-3643](https://eips.ethereum.org/EIPS/eip-3643) (without on-chain identity), [ERC-7551 (
+    equivalence)](https://ethereum-magicians.org/t/erc-7551-crypto-security-token-smart-contract-interface-ewpg/16416), [ERC-1363 (deployment version)](https://eips.ethereum.org/EIPS/eip-1363), [ERC-1643 (Document Management)](https://github.com/ethereum/EIPs/issues/1643),...
+  - Technicals: [ERC-7201 (proxy storage management)](https://eips.ethereum.org/EIPS/eip-7201), [ERC-7802 (cross-chain transfers)](https://eips.ethereum.org/EIPS/eip-7802), [ERC-1822 (UUPS / deployment version](https://eips.ethereum.org/EIPS/eip-1822)...
+- Add several functions to optimize contract call: ERC-3643 `batchMint`, ERC-3643 `batchBurn`, ERC-3643 `batchTransfer` (restricted)
+- Rename several functions, e.g:`burn`instead of `forceBurn`
+- Add ERC-3643 function `forcedTransfer`
+- Add several new engines: DebtEngine, SnapshotEngine and DocumentEngine
+- Add several new deployment version:
+  - CMTAT Proxy and standalone
+  - CMTAT for ERC-1363 (proxy and standalone)
+  - CMTAT for deployment with UUPS proxy
+  - CMTAT ERC-7551 for better compatibility with [ERC-7551](https://ethereum-magicians.org/t/erc-7551-crypto-security-token-smart-contract-interface-ewpg/16416)
+
+**Updated**
+
+- Update Solidity (0.8.30) & OpenZeppelin version (v.5.4.0)
+- Update several function names to be compatible with [ERC-3643](https://eips.ethereum.org/EIPS/eip-3643)
 
 ## 3.0.0-rc.7
 
@@ -170,17 +196,17 @@ Technical details:
 
 - Revert with custom error
 
-## 2.5.1 - 20241003
+## 2.5.1 - 2024-10-03
 
 - Beacon Factory: deploy an implementation inside the constructor if no implementation is provided
 - Run [myhtril](https://github.com/Consensys/mythril)
 
-## 2.5.0 - 20240910
+## 2.5.0 - 2024-09-10
 
 - Change Solidity version to 0.8.27 (latest)
 - Some slight improvements to the documentation
 
-## 2.5.0-rc.0 - 20240809
+## 2.5.0-rc.0 - 2024-08-09
 
 **Features**
 
@@ -198,14 +224,14 @@ Technical details:
   - use create2 with the library [Create2](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/Create2.sol) from OpenZeppelin:
 - Implement [ERC-7201](https://eips.ethereum.org/EIPS/eip-7201) to manage memory to reduce memory collision when upgrading a proxy to a new implementation. [Use erc-7201 for namespace #272](https://github.com/CMTA/CMTAT/issues/272)
 
-## 2.4.0 - 20240503
+## 2.4.0 - 2024-05-03
 
 The modifications between the version v2.3.0 and this version are not audited !!!
 
 - Improve tests & update the code
 - `ERC20SnapshotInternal` inherits from `ICMTATSnapshot`
 
-## 2.4.0-rc.1 - 20240319
+## 2.4.0-rc.1 - 2024-03-19
 
 The modifications between the version v2.3.0 and this version are not audited !!!
 
@@ -227,7 +253,7 @@ Create an internal function ` _validateTransferByModule` which performs check wi
 - Upgrade OpenZeppelin to the version [v5.0.2](https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/releases/tag/v5.0.2)
 - Upgrade Solidity to the version [0.8.22](https://soliditylang.org/blog/2023/10/25/solidity-0.8.22-release-announcement/) in the truffle and hardhat config files.
 
-## 2.4.0-rc.0 - 20240129
+## 2.4.0-rc.0 - 2024-01-29
 
 The modifications between the version v2.3.0 and this version are not audited !!!
 
@@ -275,7 +301,7 @@ This version contains breaking changes with the version v2.3.0.
 - Use calldata instead of memory [#224](https://github.com/CMTA/CMTAT/issues/224)
 - Upgrade OpenZeppelin to the version [v.5.0.0](https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/releases/tag/v5.0.0)
 
-## 2.3.1-rc.0 - 20230925
+## 2.3.1-rc.0 - 2023-09-25
 
 The modifications between the version v2.3.0 and this version are not audited !!!
 
@@ -330,13 +356,13 @@ Enforces a configurable delay between the two steps, with the ability to cancel 
 - Add a function `transferadminshipDirectly` ([#226](https://github.com/CMTA/CMTAT/pull/226))
 - Remove the module `OnlyDelegateCallModule` since it was used to protect the function `kill`, which has been removed in this version ([#221](https://github.com/CMTA/CMTAT/pull/221)).
 
-## 2.3.0 - 20230609
+## 2.3.0 - 2023-06-09
 
 - Add Truffle CI workflow (Contributor: [diego-G](https://github.com/diego-G) / [21.co](https://github.com/amun))
 - Add Truffle plugin [eth-gas-reporter](https://github.com/cgewecke/eth-gas-reporter)
 - Add security policy
 
-## 2.3.0-rc.0 - 20230515
+## 2.3.0-rc.0 - 2023-05-15
 
 > The release 2.3-rc.0 is a *release candidate* before performing an official release 2.3
 
@@ -401,7 +427,7 @@ CVF-16, CVF-17, CVF-19, CVF-22, CVF-25: related to events [(pull/158)](https://g
 
 CVF-21: remove the redundant part in the path ([pull/156](https://github.com/CMTA/CMTAT/pull/156))
 
-## 2.2 - 20230122
+## 2.2 - 2023-01-22
 
 This version is not audited
 
@@ -434,7 +460,7 @@ This version also includes improvements suggested by the audit report, addressin
 - CVF-28: call to the `Validation_init_unchained` function in `__CMTAT_init`
 - CVF-54: add the reason parameter in events `Freeze` and `Unfreeze`
 
-## 2.1 - 20221216
+## 2.1 - 2022-12-16
 
 This version is not audited
 
@@ -487,7 +513,7 @@ This version also includes improvements suggested by the audit report, addressin
 - CVF 52: move the mint functionality inside the MintModule ([commit](https://github.com/CMTA/CMTAT/commit/1a620f1f0ab29e2d2e1e3c6471c24c882d5c562d)).
 - CVF-61: second part, define the functions *BurnModule_init* & *BurnModule_init_unchained* ([commit](https://github.com/CMTA/CMTAT/commit/7a2735bec1d1dc1192f48303c8ce21f001747466)).
 
-## 2.0 - 20221104
+## 2.0 - 2022-11-04
 
 This version is not fully ready to be used with a proxy, see issues [58](https://github.com/CMTA/CMTAT/issues/58) and [66](https://github.com/CMTA/CMTAT/issues/66)
 
@@ -514,7 +540,7 @@ addressing the following findings:
 - CVF-66, CVF-69, CVF-70, CVF-72, which created two new interfaces:`IERC1404` and `IERC1404Wrapper` ([commit](https://github.com/CMTA/CMTAT/commit/62c946b654f05b581c7774eda41c67ca9b10e3bf)).
 
 
-## 1.0 - 20211005
+## 1.0 - 2021-10-05
 
 - Added CMTAT equity token core functionalities 
 - Added support for OpenGSN gasless transactions
@@ -522,6 +548,6 @@ addressing the following findings:
 - Added ABDK security audit report
 - Added initial API documentation
 
-## 0.1 - 20191120
+## 0.1 - 2019-11-20
 
 - Legacy CMTA20 contract

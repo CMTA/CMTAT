@@ -6,12 +6,11 @@ import {CMTATBaseCore} from "../../modules/0_CMTATBaseCore.sol";
 
 
 /**
-* @title CMTAT version for a proxy deployment (Transparent or Beacon proxy)
+* @title CMTAT version for a proxy light deployment (Transparent or Beacon proxy)
 */
 contract CMTATUpgradeableLight is CMTATBaseCore {
     /**
      * @notice Contract version for the deployment with a proxy
-     * @param forwarderIrrevocable address of the forwarder, required for the gasless support
      */
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor()  {
