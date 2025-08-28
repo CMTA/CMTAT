@@ -217,7 +217,7 @@ Here is a comparison between the features present in known tokenization framewor
 | [ERC-7802](https://eips.ethereum.org/EIPS/eip-7802) Cross-chain transfer |                           &#x2611;                           |                         **&#x2612;**                         | **&#x2612;**                                                 | **&#x2612;**                                                 |
 | ERC-20 custom errors ([ERC-6093](https://eips.ethereum.org/EIPS/eip-6093)) |             &#x2611;<br />(use OpenZeppelin v5)              |                         **&#x2612;**                         | **&#x2612;**<br />(use OpenZeppelin v4)                      | **&#x2612;**<br />(use OpenZeppelin v4)                      |
 | Upgradibility with [ERC-7201](https://eips.ethereum.org/EIPS/eip-7201) |                           &#x2611;                           |                         **&#x2612;**                         | **&#x2612;**                                                 | **&#x2612;**                                                 |
-|                    Snapshots/checkpoints                     |              &#x2611;<br />(external contract)               |                         **&#x2612;**                         | **&#x2612;**                                                 | **&#x2612;**                                                 |
+|                    Snapshots/checkpoints                     |   &#x2611;<br />(external contract or by extending CMTAT)    |                         **&#x2612;**                         | **&#x2612;**                                                 | **&#x2612;**                                                 |
 
 **Note**
 
@@ -1289,28 +1289,11 @@ The `RuleEngine` is an external contract used to apply transfer restrictions to 
 
 This contract is defined in the `ValidationModule`.
 
-An example of RuleEngine is also available on [GitHub](https://github.com/CMTA/RuleEngine).
-
-Here is the list of the different versions available for each CMTAT version.
-
-| CMTAT version           | RuleEngine                                                   |
-| ----------------------- | ------------------------------------------------------------ |
-| CMTAT v3.0.0            | [RuleEngine v3.0.0-rc0](https://github.com/CMTA/RuleEngine/releases/tag/v3.0.0-rc0)<br /> (unaudited) |
-| CMTAT 2.5.0 (unaudited) | RuleEngine >= [v2.0.3](https://github.com/CMTA/RuleEngine/releases/tag/v2.0.3) (unaudited) |
-| CMTAT 2.4.0 (unaudited) | RuleEngine >=v2.0.0<br />Last version: [v2.0.2](https://github.com/CMTA/RuleEngine/releases/tag/v2.0.2)(unaudited) |
-| CMTAT 2.3.0             | [RuleEngine v1.0.2](https://github.com/CMTA/RuleEngine/releases/tag/v1.0.2) |
-| CMTAT 2.0 (unaudited)   | [RuleEngine 1.0](https://github.com/CMTA/RuleEngine/releases/tag/1.0) (unaudited) |
-| CMTAT 1.0               | No ruleEngine available                                      |
-
-This contract acts as a controller and can call different contract rules to apply rules on each transfer.
-
-A possible rule is a whitelist rule where only the address inside the whitelist can perform a transfer
-
 ##### Requirement
 
 Since the version v3.0.0, the requirements to use a RuleEngine are the following:
 
-> The `RuleEngine` must import and implement the interface `IRuleEngine` which declares the ERC-3643 functions `transferred`(read-write) and `canTransfer`(ready-only) with several other functions related to [ERC1404](https://github.com/ethereum/eips/issues/1404), [ERC7551](https://ethereum-magicians.org/t/erc-7551-crypto-security-token-smart-contract-interface-ewpg/16416) and [ERC-3643](https://eips.ethereum.org/EIPS/eip-3643).
+> The `RuleEngine` must import and implement the interface `IRuleEngine` which declares the ERC-3643 functions `transferred`(read-write) and `canTransfer`(ready-only) with several other functions related to [ERC-1404](https://github.com/ethereum/eips/issues/1404), [ERC-7551](https://ethereum-magicians.org/t/erc-7551-crypto-security-token-smart-contract-interface-ewpg/16416) and [ERC-3643](https://eips.ethereum.org/EIPS/eip-3643).
 
 This interface can be found in [IRuleEngine.sol](./contracts/interfaces/engine/IRuleEngine.sol).
 
@@ -1541,7 +1524,7 @@ interface IERC1404Extend is IERC1404{
 }
 ```
 
-#### RuleEngine CMTA implementation
+##### RuleEngine CMTA implementation
 
 CMTA provides an implementation of a [RuleEngine](https://github.com/CMTA/RuleEngine) compatible with CMTAT. This RuleEngine is also compatible with ERC-3643 tokens.
 
@@ -1549,7 +1532,26 @@ In this implementation, the token holder calls the ERC-20 function `transfer` wh
 
 The different rules are not included in the RuleEngine interface and you are free to build a different RuleEngine.
 
+###### Schema
+
 ![RuleEngine.drawio](./doc/schema/drawio/RuleEngine.drawio.png)
+
+###### Version
+
+Here is the list of the different versions available for each CMTAT version.
+
+| CMTAT version           | RuleEngine                                                   |
+| ----------------------- | ------------------------------------------------------------ |
+| CMTAT v3.0.0            | [RuleEngine v3.0.0-rc0](https://github.com/CMTA/RuleEngine/releases/tag/v3.0.0-rc0)<br /> (unaudited) |
+| CMTAT 2.5.0 (unaudited) | RuleEngine >= [v2.0.3](https://github.com/CMTA/RuleEngine/releases/tag/v2.0.3) (unaudited) |
+| CMTAT 2.4.0 (unaudited) | RuleEngine >=v2.0.0<br />Last version: [v2.0.2](https://github.com/CMTA/RuleEngine/releases/tag/v2.0.2)(unaudited) |
+| CMTAT 2.3.0             | [RuleEngine v1.0.2](https://github.com/CMTA/RuleEngine/releases/tag/v1.0.2) |
+| CMTAT 2.0 (unaudited)   | [RuleEngine 1.0](https://github.com/CMTA/RuleEngine/releases/tag/1.0) (unaudited) |
+| CMTAT 1.0               | No ruleEngine available                                      |
+
+This contract acts as a controller and can call different contract rules to apply rules on each transfer.
+
+A possible rule is a whitelist rule where only the addresses inside the whitelist can perform a transfer
 
 #### SnapshotEngine
 
@@ -1565,22 +1567,39 @@ This Engine allows to perform snapshot on-chain.
 * @dev minimum interface to define a SnapshotEngine
 */
 interface ISnapshotEngine {
-    /**
-     * @dev Returns true if the operation is a success, and false otherwise.
-     */
+   /**
+    * @notice Records balance and total supply snapshots before any token transfer occurs.
+    * @dev This function should be called inside the {_update} hook so that
+    * snapshots are updated prior to any state changes from {_mint}, {_burn}, or {_transfer}.
+    * It ensures historical balances and total supply remain accurate for snapshot queries.
+    *
+    * @param from The address tokens are being transferred from (zero address if minting).
+    * @param to The address tokens are being transferred to (zero address if burning).
+    * @param balanceFrom The current balance of `from` before the transfer (used to update snapshot).
+    * @param balanceTo The current balance of `to` before the transfer (used to update snapshot).
+    * @param totalSupply The current total supply before the transfer (used to update snapshot).
+    */
     function operateOnTransfer(address from, address to, uint256 balanceFrom, uint256 balanceTo, uint256 totalSupply) external;
 }
 ```
 
+##### SnapshotEngine CMTA implementation
 
+CMTA provides an implementation of a [SnapshotEngine](https://github.com/CMTA/SnapshotEngine) compatible with CMTAT.
 
 | CMTAT                            | SnapshotEngine                                               |
 | -------------------------------- | ------------------------------------------------------------ |
-| CMTAT v3.0.0                     | [v0.2.0](https://github.com/CMTA/SnapshotEngine/releases/tag/v0.2.0)<br />(unaudited) |
+| CMTAT v3.0.0                     | [v0.3.0](https://github.com/CMTA/SnapshotEngine/releases/tag/v0.3.0)<br />(unaudited) |
 | CMTAT v2.3.0                     | SnapshotEngine v0.1.0 (unaudited)                            |
 | CMTAT v2.4.0, v2.5.0 (unaudited) | Include inside SnapshotModule (unaudited)                    |
 | CMTAT v2.3.0                     | Include inside SnapshotModule (unaudited)                    |
 | CMTAT v1.0.0                     | Include inside SnapshotModule, but not gas efficient (audited) |
+
+##### CMTAT Snapshot - Deployment version
+
+Instead of an external contract, it is also possible to extend CMTAT to include the logic to perform snapshots.
+
+The [SnapshotEngine](https://github.com/CMTA/SnapshotEngine) repository provides also a specific deployment version which extends CMTAT to include a part of the SnapshotEngine codebase to perform snapshot on-chain. 
 
 #### DebtEngine
 
@@ -2123,21 +2142,22 @@ Contracts for deployment are available in the directory [contracts/deployment](.
 
 ### Summary tab
 
-| CMTAT Model      | Description                                                  | Standalone/Proxy | Contract                                                     | Remark                                                       |
-| ---------------- | ------------------------------------------------------------ | ---------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| CMTAT Standard   | Deployment without proxy <br />(immutable)                   | Standalone       | [CMTATStandalone](./contracts/deployment/CMTATStandalone.sol) | Core & extension module without Debt, Allowlist, ERC-3643 and UUPS<br />Include also the option module `ERC2771`, as well as `ERC20CrossChain`support |
-|                  | Deployment with a standard proxy (Transparent or Beacon Proxy) | Upgradeable      | [CMTATUpgradeable](./contracts/deployment/CMTATUpgradeable.sol) | -                                                            |
-| Upgradeable UUPS | Deployment with a UUPS proxy                                 | Only upgradeable | [CMTATUpgradeableUUPS](./contracts/deployment/CMTATUpgradeableUUPS.sol) | Same as standard version, but adds also the UUPS proxy support |
-| ERC-1363         | Implements [ERC-1363](https://eips.ethereum.org/EIPS/eip-1363) | Standalone       | [CMTATStandaloneERC1363](./contracts/deployment/ERC1363/CMTATStandaloneERC1363.sol) | Same as standard version, but adds also the support of `ERC-1363` |
-|                  | -                                                            | Upgradeable      | [CMTATUpgradeableERC1363](./contracts/deployment/ERC1363/CMTATUpgradeableERC1363.sol) |                                                              |
-| Light            | Only core modules                                            | Standalone       | [CMTATStandaloneLight](./contracts/deployment/light/CMTATStandaloneLight.sol) | -                                                            |
-|                  |                                                              | Upgradeable      | [CMTATUpgradeableLight](./contracts/deployment/light/CMTATUpgradeableLight.sol) |                                                              |
-| Debt             | Set Debt information and Credit Events                       | Standalone       | [CMTATStandaloneDebt](./contracts/deployment/debt/CMTATStandaloneDebt.sol) | Add the debt support.<br />Contrary to the standard version, it does not include the module `ERC2771Module` and the support of `ERC20CrossChain` |
-|                  |                                                              | Upgradeable      | [CMTATUpgradeableDebt](./contracts/deployment/debt/CMTATUpgradeableDebt.sol) | -                                                            |
-| Allowlist        | Restrict transfer to an allowlist (whitelist)                | Standalone       | [CMTATStandaloneAllowlist](./contracts/deployment/allowlist/CMTATStandaloneAllowlist.sol) | Contrary to the standard version, it does not include the `RuleEng`ERC-1404` support (ValidationModuleERC1404) & ERC20Crosschain |
-|                  |                                                              | Upgradeable      | [CMTATUpgradeableAllowlist](./contracts/deployment/allowlist/CMTATUpgradeableAllowlist.sol) | -                                                            |
-| ERC7551          | Deployment specific for ERC-7551                             | Standalone       | [CMTATStandaloneERC7551](./contracts/deployment/ERC7551/CMTATStandaloneERC7551.sol) | Add  support of `ERC7551Module`                              |
-|                  |                                                              | Upgradeable      | [CMTATUpgradeableERC7551](./contracts/deployment/ERC7551/CMTATUpgradeableERC7551.sol) | -                                                            |
+| CMTAT Model          | Description                                                  | Standalone/Proxy | Contract                                                     | Note                                                         |
+| -------------------- | ------------------------------------------------------------ | ---------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| CMTAT Standard       | Deployment without proxy <br />(immutable)                   | Standalone       | [CMTATStandalone](./contracts/deployment/CMTATStandalone.sol) | Core & extension module without Debt, Allowlist, ERC-3643 and UUPS<br />Include also the option module `ERC2771`, as well as `ERC20CrossChain`support |
+|                      | Deployment with a standard proxy (Transparent or Beacon Proxy) | Upgradeable      | [CMTATUpgradeable](./contracts/deployment/CMTATUpgradeable.sol) | -                                                            |
+| Upgradeable UUPS     | Deployment with a UUPS proxy                                 | Only upgradeable | [CMTATUpgradeableUUPS](./contracts/deployment/CMTATUpgradeableUUPS.sol) | Same as standard version, but adds also the UUPS proxy support |
+| ERC-1363             | Implements [ERC-1363](https://eips.ethereum.org/EIPS/eip-1363) | Standalone       | [CMTATStandaloneERC1363](./contracts/deployment/ERC1363/CMTATStandaloneERC1363.sol) | Same as standard version, but adds also the support of `ERC-1363` |
+|                      | -                                                            | Upgradeable      | [CMTATUpgradeableERC1363](./contracts/deployment/ERC1363/CMTATUpgradeableERC1363.sol) |                                                              |
+| Light                | Only core modules                                            | Standalone       | [CMTATStandaloneLight](./contracts/deployment/light/CMTATStandaloneLight.sol) | -                                                            |
+|                      |                                                              | Upgradeable      | [CMTATUpgradeableLight](./contracts/deployment/light/CMTATUpgradeableLight.sol) |                                                              |
+| Debt                 | Set Debt information and Credit Events                       | Standalone       | [CMTATStandaloneDebt](./contracts/deployment/debt/CMTATStandaloneDebt.sol) | Add the debt support.<br />Contrary to the standard version, it does not include the module `ERC2771Module` and the support of `ERC20CrossChain` |
+|                      |                                                              | Upgradeable      | [CMTATUpgradeableDebt](./contracts/deployment/debt/CMTATUpgradeableDebt.sol) | -                                                            |
+| Allowlist            | Restrict transfer to an allowlist (whitelist)                | Standalone       | [CMTATStandaloneAllowlist](./contracts/deployment/allowlist/CMTATStandaloneAllowlist.sol) | Contrary to the standard version, it does not include the `RuleEng`ERC-1404` support (ValidationModuleERC1404) & ERC20Crosschain |
+|                      |                                                              | Upgradeable      | [CMTATUpgradeableAllowlist](./contracts/deployment/allowlist/CMTATUpgradeableAllowlist.sol) | -                                                            |
+| ERC7551              | Deployment specific for ERC-7551                             | Standalone       | [CMTATStandaloneERC7551](./contracts/deployment/ERC7551/CMTATStandaloneERC7551.sol) | Add  support of `ERC7551Module`                              |
+|                      |                                                              | Upgradeable      | [CMTATUpgradeableERC7551](./contracts/deployment/ERC7551/CMTATUpgradeableERC7551.sol) | -                                                            |
+| CMTAT with snapshots | Deployment version that performs time-based snapshots directly on-chain and without relying on the external contract `SnapshotEngine` | Upgradeable      | [CMTA - SnapshotEngine](https://github.com/CMTA/SnapshotEngine)<br />(external repository) |                                                              |
 
 ### Standard Standalone
 
@@ -2412,7 +2432,7 @@ These contracts have now their own GitHub project: [CMTAT Factory](https://githu
 
 | CMTAT version                     | CMTAT Factory                                                |
 | --------------------------------- | ------------------------------------------------------------ |
-| CMTAT v3.0.0                      | CMTAT Factory v0.1.0 (unaudited)                             |
+| CMTAT v3.0.0                      | CMTAT Factory [v0.2.0](https://github.com/CMTA/CMTATFactory/releases/tag/0.2.0) (unaudited) |
 | CMTAT v2.5.0 / v2.5.1 (unaudited) | Available within CMTAT <br />see contracts/deployment<br />(unaudited) |
 | CMTAT 2.3.0 (audited)             | Not available                                                |
 | CMTAT 1.0 (audited)               | Not available                                                |
@@ -2672,10 +2692,15 @@ npm run-script size
 
 ## Other implementations
 
+### Tezos
+
 Two versions are available for the blockchain [Tezos](https://tezos.com)
+
 - [CMTAT FA2](https://github.com/CMTA/CMTAT-Tezos-FA2) Official version written in SmartPy
 - [@ligo/cmtat](https://github.com/ligolang/CMTAT-Ligo/) Unofficial version written in Ligo
   - See also [Tokenization of securities on Tezos by Frank Hillard](https://medium.com/@frank.hillard_62931/tokenization-of-securities-on-tezos-2e3c3e90fc5a)
+
+### Aztec
 
 A specific version is available for [Aztec](https://aztec.network/)
 

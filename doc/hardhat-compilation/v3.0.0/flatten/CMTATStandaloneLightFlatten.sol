@@ -679,99 +679,6 @@ abstract contract AccessControlUpgradeable is Initializable, ContextUpgradeable,
 }
 
 
-// File @openzeppelin/contracts-upgradeable/metatx/ERC2771ContextUpgradeable.sol@v5.4.0
-
-// Original license: SPDX_License_Identifier: MIT
-// OpenZeppelin Contracts (last updated v5.4.0) (metatx/ERC2771Context.sol)
-
-pragma solidity ^0.8.20;
-
-
-/**
- * @dev Context variant with ERC-2771 support.
- *
- * WARNING: Avoid using this pattern in contracts that rely in a specific calldata length as they'll
- * be affected by any forwarder whose `msg.data` is suffixed with the `from` address according to the ERC-2771
- * specification adding the address size in bytes (20) to the calldata size. An example of an unexpected
- * behavior could be an unintended fallback (or another function) invocation while trying to invoke the `receive`
- * function only accessible if `msg.data.length == 0`.
- *
- * WARNING: The usage of `delegatecall` in this contract is dangerous and may result in context corruption.
- * Any forwarded request to this contract triggering a `delegatecall` to itself will result in an invalid {_msgSender}
- * recovery.
- */
-abstract contract ERC2771ContextUpgradeable is Initializable, ContextUpgradeable {
-    /// @custom:oz-upgrades-unsafe-allow state-variable-immutable
-    address private immutable _trustedForwarder;
-
-    /**
-     * @dev Initializes the contract with a trusted forwarder, which will be able to
-     * invoke functions on this contract on behalf of other accounts.
-     *
-     * NOTE: The trusted forwarder can be replaced by overriding {trustedForwarder}.
-     */
-    /// @custom:oz-upgrades-unsafe-allow constructor
-    constructor(address trustedForwarder_) {
-        _trustedForwarder = trustedForwarder_;
-    }
-
-    /**
-     * @dev Returns the address of the trusted forwarder.
-     */
-    function trustedForwarder() public view virtual returns (address) {
-        return _trustedForwarder;
-    }
-
-    /**
-     * @dev Indicates whether any particular address is the trusted forwarder.
-     */
-    function isTrustedForwarder(address forwarder) public view virtual returns (bool) {
-        return forwarder == trustedForwarder();
-    }
-
-    /**
-     * @dev Override for `msg.sender`. Defaults to the original `msg.sender` whenever
-     * a call is not performed by the trusted forwarder or the calldata length is less than
-     * 20 bytes (an address length).
-     */
-    function _msgSender() internal view virtual override returns (address) {
-        uint256 calldataLength = msg.data.length;
-        uint256 contextSuffixLength = _contextSuffixLength();
-        if (calldataLength >= contextSuffixLength && isTrustedForwarder(msg.sender)) {
-            unchecked {
-                return address(bytes20(msg.data[calldataLength - contextSuffixLength:]));
-            }
-        } else {
-            return super._msgSender();
-        }
-    }
-
-    /**
-     * @dev Override for `msg.data`. Defaults to the original `msg.data` whenever
-     * a call is not performed by the trusted forwarder or the calldata length is less than
-     * 20 bytes (an address length).
-     */
-    function _msgData() internal view virtual override returns (bytes calldata) {
-        uint256 calldataLength = msg.data.length;
-        uint256 contextSuffixLength = _contextSuffixLength();
-        if (calldataLength >= contextSuffixLength && isTrustedForwarder(msg.sender)) {
-            unchecked {
-                return msg.data[:calldataLength - contextSuffixLength];
-            }
-        } else {
-            return super._msgData();
-        }
-    }
-
-    /**
-     * @dev ERC-2771 specifies the context as being a single address (20 bytes).
-     */
-    function _contextSuffixLength() internal view virtual override returns (uint256) {
-        return 20;
-    }
-}
-
-
 // File @openzeppelin/contracts/interfaces/draft-IERC6093.sol@v5.4.0
 
 // Original license: SPDX_License_Identifier: MIT
@@ -1513,14 +1420,6 @@ abstract contract PausableUpgradeable is Initializable, ContextUpgradeable {
         emit Unpaused(_msgSender());
     }
 }
-
-
-// File @openzeppelin/contracts/interfaces/IERC165.sol@v5.4.0
-
-// Original license: SPDX_License_Identifier: MIT
-// OpenZeppelin Contracts (last updated v5.4.0) (interfaces/IERC165.sol)
-
-pragma solidity >=0.4.16;
 
 
 // File contracts/interfaces/tokenization/draft-IERC1643.sol
@@ -2448,6 +2347,21 @@ interface IBurnFromERC20 {
 }
 
 
+// File contracts/libraries/Errors.sol
+
+// Original license: SPDX_License_Identifier: MPL-2.0
+
+pragma solidity ^0.8.20;
+
+/*
+* @dev CMTAT custom errors
+*/
+library Errors {
+    // CMTAT Base
+    error CMTAT_InvalidTransfer(address from, address to, uint256 amount);
+}
+
+
 // File contracts/modules/wrapper/core/BaseModule.sol
 
 // Original license: SPDX_License_Identifier: MPL-2.0
@@ -2472,6 +2386,187 @@ abstract contract BaseModule is IERC3643Base {
     */
     function version() public view virtual override(IERC3643Base) returns (string memory version_) {
        return VERSION;
+    }
+}
+
+
+// File contracts/modules/internal/common/EnforcementModuleLibrary.sol
+
+// Original license: SPDX_License_Identifier: MPL-2.0
+
+pragma solidity ^0.8.20;
+
+/**
+ * @dev Enforcement module library
+ *
+ * Common functions and errors between AllowlistModuleInternal & EnforcementModuleInternal
+ */
+library EnforcementModuleLibrary
+{
+    error CMTAT_Enforcement_EmptyAccounts();
+    error CMTAT_Enforcement_AccountsValueslengthMismatch();
+
+    function _checkInput(address[] calldata accounts, bool[] calldata status) internal pure{
+        require(accounts.length > 0, CMTAT_Enforcement_EmptyAccounts());
+        // We do not check that values is not empty since
+        // this require will throw an error in this case.
+        require(bool(accounts.length == status.length), CMTAT_Enforcement_AccountsValueslengthMismatch());
+    }
+}
+
+
+// File contracts/modules/internal/EnforcementModuleInternal.sol
+
+// Original license: SPDX_License_Identifier: MPL-2.0
+
+pragma solidity ^0.8.20;
+
+/* ==== OpenZeppelin === */
+
+
+/* ==== Module === */
+
+/**
+ * @dev Enforcement module internal.
+ *
+ * Allows the issuer to set an allowlist
+ */
+abstract contract EnforcementModuleInternal is
+    Initializable,
+    ContextUpgradeable
+{
+    /* ============ ERC-7201 ============ */
+    // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.EnforcementModuleInternal")) - 1)) & ~bytes32(uint256(0xff))
+    bytes32 private constant EnforcementModuleInternalStorageLocation = 0x0c7bc8a17be064111d299d7669f49519cb26c58611b72d9f6ccc40a1e1184e00;
+
+    /* ==== ERC-7201 State Variables === */
+    struct EnforcementModuleInternalStorage {
+        mapping(address account => bool status)_list;
+    }
+
+    /*//////////////////////////////////////////////////////////////
+                            INTERNAL/PRIVATE FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
+    /* ============ View functions ============ */
+    function _addAddressToTheList(address account, bool status, bytes memory data) internal virtual{
+        EnforcementModuleInternalStorage storage $ = _getEnforcementModuleInternalStorage();
+        _addAddressToTheList($, account, status, data);
+    }
+
+    function _addAddressToTheList(EnforcementModuleInternalStorage storage $,address account, bool status, bytes memory /*data */) internal virtual{
+        $._list[account] = status;
+    }
+
+  function _addAddressesToTheList(address[] calldata accounts, bool[] calldata status, bytes memory data) internal virtual{
+        EnforcementModuleLibrary._checkInput(accounts, status);
+        EnforcementModuleInternalStorage storage $ = _getEnforcementModuleInternalStorage();
+        for (uint256 i = 0; i < accounts.length; ++i) {
+            _addAddressToTheList($, accounts[i], status[i], data);
+        }
+    }
+
+    /* ============ View functions ============ */
+    /**
+     * @dev Returns true if the account is frozen, and false otherwise.
+     */
+    function _addressIsListed(address account) internal view virtual returns (bool _isListed) {
+        EnforcementModuleInternalStorage storage $ = _getEnforcementModuleInternalStorage();
+        return $._list[account];
+    }
+
+    /* ============ ERC-7201 ============ */
+    function _getEnforcementModuleInternalStorage() internal pure returns (EnforcementModuleInternalStorage storage $) {
+        assembly {
+            $.slot := EnforcementModuleInternalStorageLocation
+        }
+    }
+}
+
+
+// File contracts/modules/wrapper/core/EnforcementModule.sol
+
+// Original license: SPDX_License_Identifier: MPL-2.0
+
+pragma solidity ^0.8.20;
+
+/* ==== OpenZeppelin === */
+
+/* ==== Module === */
+
+
+/*
+/**
+ * @title Enforcement module.
+ * @dev 
+ *
+ * Allows the issuer to freeze transfers from a given address
+ */
+abstract contract EnforcementModule is
+    EnforcementModuleInternal,
+    AccessControlUpgradeable,
+    IERC3643Enforcement,
+    IERC3643EnforcementEvent
+{
+    /* ============ State Variables ============ */
+    bytes32 public constant ENFORCER_ROLE = keccak256("ENFORCER_ROLE");
+
+    /*//////////////////////////////////////////////////////////////
+                            PUBLIC/EXTERNAL FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
+    /* ============ State restricted functions ============ */
+    /**
+    * @inheritdoc IERC3643Enforcement
+    * @custom:access-control
+    * - the caller must have the `ENFORCER_ROLE`.
+    */
+    function setAddressFrozen(address account, bool freeze) public virtual override(IERC3643Enforcement) onlyRole(ENFORCER_ROLE){
+         _addAddressToTheList(account, freeze, "");
+    }
+    
+    /**
+    * @notice Sets the frozen status of a specific account.
+    * @dev 
+    * Extend ERC-3643 functions `setAddressFrozen` with a supplementary `data` parameter
+    * - Freezing an account prevents it from transferring or receiving tokens depending on enforcement logic.
+    * - Emits an `AddressFrozen` event.
+    * @param account The address whose frozen status is being updated.
+    * @param freeze Set to `true` to freeze the account, or `false` to unfreeze it.
+    * @param data Optional metadata providing context or justification for the action (e.g. compliance reason).
+    * @custom:access-control
+    * - the caller must have the `ENFORCER_ROLE`.
+    */
+    function setAddressFrozen(
+        address account, bool freeze, bytes calldata data
+    ) public virtual onlyRole(ENFORCER_ROLE)  {
+         _addAddressToTheList(account, freeze, data);
+    }
+
+    /**
+    * @inheritdoc IERC3643Enforcement
+    * @custom:access-control
+    * - the caller must have the `ENFORCER_ROLE`.
+    */
+    function batchSetAddressFrozen(
+        address[] calldata accounts, bool[] calldata freezes
+    ) public virtual override(IERC3643Enforcement) onlyRole(ENFORCER_ROLE) {
+         _addAddressesToTheList(accounts, freezes, "");
+    }
+
+    /* ============ View functions ============ */
+    /**
+    * @inheritdoc IERC3643Enforcement
+    */
+    function isFrozen(address account) public override(IERC3643Enforcement) view virtual returns (bool isFrozen_) {
+       return _addressIsListed(account);
+       
+    }
+
+    /*//////////////////////////////////////////////////////////////
+                            INTERNAL/PRIVATE FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
+    function _addAddressToTheList(EnforcementModuleInternalStorage storage $,address account, bool freeze, bytes memory data) internal override(EnforcementModuleInternal){
+        EnforcementModuleInternal._addAddressToTheList($, account, freeze, data);
+        emit AddressFrozen(account, freeze, _msgSender(), data);
     }
 }
 
@@ -2987,397 +3082,6 @@ abstract contract ERC20MintModule is  ERC20MintModuleInternal, AccessControlUpgr
 }
 
 
-// File contracts/interfaces/modules/IDocumentEngineModule.sol
-
-// Original license: SPDX_License_Identifier: MPL-2.0
-
-pragma solidity ^0.8.20;
-
-/**
-* @title IDocumentEngineModule
-* @notice Interface for modules that delegate document management to an external document engine.
-* @dev This interface extends IERC1643 to support standard document handling.
-*/
-interface IDocumentEngineModule is IERC1643 {
-   /* ============ Events ============ */
-    /**
-    * @notice Emitted when a new document engine is set.
-    * @dev Indicates that the module now delegates document logic to a new external contract.
-    * @param newDocumentEngine The address of the newly assigned document engine.
-    */
-   event DocumentEngine(IERC1643 indexed newDocumentEngine);
-   /* ============ Error ============ */
-    /**
-    * @notice Thrown when attempting to set the same document engine as the current one.
-    */
-   error CMTAT_DocumentEngineModule_SameValue();
-   /* ============ Functions ============ */
-    /**
-    * @notice Sets a new document engine contract.
-    * @dev Only changes the engine if the new address is different from the current one.
-    * Throws {CMTAT_DocumentEngineModule_SameValue} if the same engine is provided.
-    * @param documentEngine_ The address of the new IERC1643-compliant document engine.
-    */
-   function setDocumentEngine(
-        IERC1643 documentEngine_
-    ) external;
-
-    /**
-     * @notice Returns the address of the current document engine.
-     * @return documentEngine_ The IERC1643 document engine currently in use.
-     */
-    function documentEngine() external view returns (IERC1643 documentEngine_);
-}
-
-
-// File contracts/modules/wrapper/extensions/DocumentEngineModule.sol
-
-// Original license: SPDX_License_Identifier: MPL-2.0
-
-pragma solidity ^0.8.20;
-
-/* ==== OpenZeppelin=== */
-
-/* ==== Engine === */
-
-
-/**
- * @title Document module (ERC1643)
- * @dev 
- *
- * Retrieve documents from a documentEngine
- */
-
-abstract contract DocumentEngineModule is IDocumentEngineModule, AccessControlUpgradeable {
-    /* ============ ERC-7201 ============ */
-    bytes32 public constant DOCUMENT_ROLE = keccak256("DOCUMENT_ROLE");
-    // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.DocumentEngineModule")) - 1)) & ~bytes32(uint256(0xff))
-    bytes32 private constant DocumentEngineModuleStorageLocation = 0xbd0905600c85d707dc53eba2e146c1c2527cd32ac3ff6b86846155151b3e2700;
-    /* ==== ERC-7201 State Variables === */
-    struct DocumentEngineModuleStorage {
-        IERC1643  _documentEngine;
-    }
-
-    /* ============  Initializer Function ============ */
-    /**
-     * @dev
-     *
-     * - set a DocumentEngine if address different from zero
-     *
-     */
-    function __DocumentEngineModule_init_unchained(IERC1643 documentEngine_)
-    internal virtual onlyInitializing {
-        if (address(documentEngine_) != address (0)) {
-            DocumentEngineModuleStorage storage $ = _getDocumentEngineModuleStorage();
-            _setDocumentEngine($, documentEngine_);
-        }
-    }
-
-    /*//////////////////////////////////////////////////////////////
-                            PUBLIC/EXTERNAL FUNCTIONS
-    //////////////////////////////////////////////////////////////*/
-    /**
-    * @inheritdoc IDocumentEngineModule
-    */
-    function documentEngine() public view virtual override(IDocumentEngineModule) returns (IERC1643 documentEngine_) {
-        DocumentEngineModuleStorage storage $ = _getDocumentEngineModuleStorage();
-        return $._documentEngine;
-    }
-
-    /**
-    * @inheritdoc IERC1643
-    */
-    function getDocument(string memory name) public view  virtual override(IERC1643) returns (Document memory document){
-        DocumentEngineModuleStorage storage $ = _getDocumentEngineModuleStorage();
-        if(address($._documentEngine) != address(0)){
-            return $._documentEngine.getDocument(name);
-        } else{
-            return Document("", 0x0, 0);
-        }
-    }
-
-    /**
-    * @inheritdoc IERC1643
-    */
-    function getAllDocuments() public view virtual override(IERC1643) returns (string[] memory documentNames_){
-        DocumentEngineModuleStorage storage $ = _getDocumentEngineModuleStorage();
-        if(address($._documentEngine) != address(0)){
-            documentNames_ =  $._documentEngine.getAllDocuments();
-        }
-    }
-
-    /* ============  Restricted Functions ============ */
-
-    /**
-    * @inheritdoc IDocumentEngineModule
-    */
-    function setDocumentEngine(
-        IERC1643 documentEngine_
-    ) public virtual override(IDocumentEngineModule) onlyRole(DOCUMENT_ROLE) {
-        DocumentEngineModuleStorage storage $ = _getDocumentEngineModuleStorage();
-        require($._documentEngine != documentEngine_, CMTAT_DocumentEngineModule_SameValue());
-        _setDocumentEngine($, documentEngine_);
-    }
-
-
-    /*//////////////////////////////////////////////////////////////
-                            INTERNAL/PRIVATE FUNCTIONS
-    //////////////////////////////////////////////////////////////*/
-    function _setDocumentEngine(
-        DocumentEngineModuleStorage storage $, IERC1643 documentEngine_
-    ) internal virtual {
-        $._documentEngine = documentEngine_;
-        emit DocumentEngine(documentEngine_);
-    }
-
-    /* ============ ERC-7201 ============ */
-    function _getDocumentEngineModuleStorage() private pure returns (DocumentEngineModuleStorage storage $) {
-        assembly {
-            $.slot := DocumentEngineModuleStorageLocation
-        }
-    } 
-}
-
-
-// File contracts/modules/internal/ERC20EnforcementModuleInternal.sol
-
-// Original license: SPDX_License_Identifier: MPL-2.0
-
-pragma solidity ^0.8.20;
-
-/* ==== OpenZeppelin === */
-
-/* ==== Tokenization === */
-
-/**
- * @title ERC20Enforcement module internal.
- * @dev 
- *
- * Contains specific ERC-20 enforcement actions
- */
-abstract contract ERC20EnforcementModuleInternal is ERC20Upgradeable,IERC7551ERC20EnforcementEvent,  IERC7551ERC20EnforcementTokenFrozenEvent {
-    // no argument to reduce contract code size
-    error CMTAT_ERC20EnforcementModule_ValueExceedsAvailableBalance();
-    error CMTAT_ERC20EnforcementModule_ValueExceedsActiveBalance();
-    error CMTAT_ERC20EnforcementModule_ValueExceedsFrozenBalance(); 
-    /* ============ ERC-7201 ============ */
-    // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.ERC20EnforcementModule")) - 1)) & ~bytes32(uint256(0xff))
-    bytes32 private constant ERC20EnforcementModuleStorageLocation = 0x9d8059a24cb596f1948a937c2c163cf14465c2a24abfd3cd009eec4ac4c39800;
-
-    /* ==== ERC-7201 State Variables === */
-    struct ERC20EnforcementModuleStorage {
-        mapping(address account => uint256 frozenTokens)  _frozenTokens;
-    }
-    /*//////////////////////////////////////////////////////////////
-                            INTERNAL/PRIVATE FUNCTIONS
-    //////////////////////////////////////////////////////////////*/
-     function _freezePartialTokens(address account, uint256 value, bytes memory data) internal virtual{
-       ERC20EnforcementModuleStorage storage $ = _getEnforcementModuleStorage();
-        // Retrieve current value
-        uint256 balance = ERC20Upgradeable.balanceOf(account);
-        uint256 frozenBalance = $._frozenTokens[account] + value;
-        // Check
-        require(balance >= frozenBalance, CMTAT_ERC20EnforcementModule_ValueExceedsAvailableBalance());
-        // Update frozenBalance
-        $._frozenTokens[account] = frozenBalance;
-        emit TokensFrozen(account, value, data);
-    }
-
-    function _unfreezePartialTokens(address account, uint256 value, bytes memory data) internal virtual{
-        ERC20EnforcementModuleStorage storage $ = _getEnforcementModuleStorage();
-        require($._frozenTokens[account] >= value, CMTAT_ERC20EnforcementModule_ValueExceedsFrozenBalance());
-        // Update frozenBalance
-        $._frozenTokens[account] = $._frozenTokens[account] - value;
-        emit TokensUnfrozen(account, value, data);
-    }
-
-    /**
-    * @dev unfreeze tokens during a forced transfer/burn
-    */
-    function _unfreezeTokens(address from, uint256 value, bytes memory data) internal virtual{
-        uint256 balance = ERC20Upgradeable.balanceOf(from);
-        if(value > balance){
-            revert ERC20InsufficientBalance(_msgSender(), balance, value-balance);
-        }
-        ERC20EnforcementModuleStorage storage $ = _getEnforcementModuleStorage();
-        // Frozen tokens can not be > balance
-        uint256 activeBalance = balance - $._frozenTokens[from];
-        if (value > activeBalance) {
-            uint256 tokensToUnfreeze = value - activeBalance;
-            $._frozenTokens[from] = $._frozenTokens[from] - tokensToUnfreeze;
-            emit TokensUnfrozen(from, tokensToUnfreeze, data);
-        }
-    }
-
-    function _forcedTransfer(address from, address to, uint256 value, bytes memory data) internal virtual {
-        _unfreezeTokens(from, value, data);
-        if(to == address(0)){
-            _burn(from, value);
-        } else{
-            // Spend allowance
-            // See https://ethereum-magicians.org/t/erc-3643-the-t-rex-token-standard/6844/11
-            uint256 currentAllowance = allowance(from, to);
-            if (currentAllowance > 0 && currentAllowance < type(uint256).max) {
-                if (currentAllowance < value) {
-                     unchecked {
-                        _approve(from, to, 0, false);
-                     }
-                } else{
-                    unchecked {
-                         _approve(from, to, currentAllowance - value, false);
-                    }
-                }
-              
-            }
-            _transfer(from, to, value);
-        }
-        emit Enforcement(_msgSender(), from, value, data);
-    }
-
-    /* ============ View functions ============ */
-    function _checkActiveBalanceAndRevert(address from, uint256 value) internal virtual view{
-        require(_checkActiveBalance(from, value),  CMTAT_ERC20EnforcementModule_ValueExceedsActiveBalance() );
-    }
-
-    function _checkActiveBalance(address from, uint256 value) internal virtual view returns(bool){
-        uint256 frozenTokensLocal = _getFrozenTokens(from);
-        if(frozenTokensLocal > 0 ){
-            uint256 activeBalance = ERC20Upgradeable.balanceOf(from) - frozenTokensLocal;
-            if(value > activeBalance) {
-                   return false;
-            }
-        } 
-        return true;
-    }
-
-    function _getFrozenTokens(address account) internal view virtual returns (uint256) {
-        ERC20EnforcementModuleStorage storage $ = _getEnforcementModuleStorage();
-        return $._frozenTokens[account];
-     }
-
-    function _getActiveBalanceOf(address account) internal view  returns (uint256){
-        ERC20EnforcementModuleStorage storage $ = _getEnforcementModuleStorage();
-        return ERC20Upgradeable.balanceOf(account) - $._frozenTokens[account];
-     }
-
-    /* ============ ERC-7201 ============ */
-    function _getEnforcementModuleStorage() private pure returns (ERC20EnforcementModuleStorage storage $) {
-        assembly {
-            $.slot := ERC20EnforcementModuleStorageLocation
-        }
-    }
-}
-
-
-// File contracts/modules/wrapper/extensions/ERC20EnforcementModule.sol
-
-// Original license: SPDX_License_Identifier: MPL-2.0
-
-pragma solidity ^0.8.20;
-
-/* ==== OpenZeppelin === */
-
-/* ==== Module === */
-
-/* ==== Tokenization === */
-
-
-/**
- * @title ERC20Enforcement module.
- * @dev 
- *
- * Contains all burn functions, inherits from ERC-20
- */
-abstract contract ERC20EnforcementModule is ERC20EnforcementModuleInternal, AccessControlUpgradeable , IERC7551ERC20Enforcement, IERC3643ERC20Enforcement{
-    /* ============ State Variables ============ */
-    bytes32 public constant ERC20ENFORCER_ROLE = keccak256("ERC20ENFORCER_ROLE");
-
-    /*//////////////////////////////////////////////////////////////
-                            PUBLIC/EXTERNAL FUNCTIONS
-    //////////////////////////////////////////////////////////////*/
-
-   /**
-    *
-    * @inheritdoc IERC7551ERC20Enforcement
-    */
-    function getFrozenTokens(address account) public override(IERC7551ERC20Enforcement, IERC3643ERC20Enforcement) view virtual returns (uint256) {
-        return _getFrozenTokens(account);
-     }
-
-   /**
-    *
-    * @inheritdoc IERC7551ERC20Enforcement
-    */
-    function getActiveBalanceOf(address account) public view override(IERC7551ERC20Enforcement) returns (uint256){
-        return _getActiveBalanceOf(account);
-     }
-
-    /* ============  ERC-20 Enforcement ============ */
-    /**
-    *
-    * @inheritdoc IERC7551ERC20Enforcement
-    * @custom:access-control
-    * - the caller must have the `DEFAULT_ADMIN_ROLE`.
-    */
-    function forcedTransfer(address from, address to, uint256 value, bytes calldata data) public virtual override(IERC7551ERC20Enforcement)  onlyRole(DEFAULT_ADMIN_ROLE) returns (bool) {
-       _forcedTransfer(from, to, value, data);
-       return true;
-    }
-
-    /**
-    *
-    * @inheritdoc IERC3643ERC20Enforcement
-    * @custom:access-control
-    * - the caller must have the `DEFAULT_ADMIN_ROLE`.
-    */
-    function forcedTransfer(address from, address to, uint256 value) public virtual override(IERC3643ERC20Enforcement) onlyRole(DEFAULT_ADMIN_ROLE) returns (bool)  {
-       _forcedTransfer(from, to, value, "");
-       return true;
-    }
-
-    /**
-    *
-    * @inheritdoc IERC3643ERC20Enforcement
-    * @custom:access-control
-    * - the caller must have the `ERC20ENFORCER_ROLE`.
-    */
-    function freezePartialTokens(address account, uint256 value) public virtual override(IERC3643ERC20Enforcement) onlyRole(ERC20ENFORCER_ROLE){
-        _freezePartialTokens(account, value, "");
-    }
-
-    /**
-    *
-    * @inheritdoc IERC3643ERC20Enforcement
-    * @custom:access-control
-    * - the caller must have the `ERC20ENFORCER_ROLE`.
-    */
-    function unfreezePartialTokens(address account, uint256 value) public virtual override(IERC3643ERC20Enforcement) onlyRole(ERC20ENFORCER_ROLE) {
-        _unfreezePartialTokens(account, value, "");
-    }
-
-    /**
-    *
-    * @inheritdoc IERC7551ERC20Enforcement
-    * @custom:access-control
-    * - the caller must have the `ERC20ENFORCER_ROLE`.
-    */
-    function freezePartialTokens(address account, uint256 value, bytes calldata data) public virtual override(IERC7551ERC20Enforcement) onlyRole(ERC20ENFORCER_ROLE){
-        _freezePartialTokens(account, value, data);
-    }
-
-    /**
-    *
-    * @inheritdoc IERC7551ERC20Enforcement
-    * @custom:access-control
-    * - the caller must have the `ERC20ENFORCER_ROLE`.
-    */
-    function unfreezePartialTokens(address account, uint256 value, bytes calldata data) public virtual override(IERC7551ERC20Enforcement) onlyRole(ERC20ENFORCER_ROLE) {
-        _unfreezePartialTokens(account, value, data);
-    }
-
-}
-
-
 // File contracts/interfaces/tokenization/ICMTAT.sol
 
 // Original license: SPDX_License_Identifier: MPL-2.0
@@ -3572,803 +3276,6 @@ interface ICMTATDebt {
      * @notice Returns debt information
      */
     function debt() external view returns(DebtInformation memory debtInformation_);
-}
-
-
-// File contracts/modules/wrapper/extensions/ExtraInformationModule.sol
-
-// Original license: SPDX_License_Identifier: MPL-2.0
-
-pragma solidity ^0.8.20;
-
-/* ==== Openzeppelin === */
-
-/* ==== Tokenization === */
-
-
-abstract contract ExtraInformationModule is AccessControlUpgradeable, ICMTATBase {
-     bytes32 public constant EXTRA_INFORMATION_ROLE = keccak256("EXTRA_INFORMATION_ROLE");
-    /* ============ ERC-7201 ============ */
-    // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.ExtraInformationModule")) - 1)) & ~bytes32(uint256(0xff))
-    bytes32 private constant ExtraInformationModuleStorageLocation = 0xd2d5d34c4a4dea00599692d3257c0aebc5e0359176118cd2364ab9b008c2d100;
-
-    /* ==== ERC-7201 State Variables === */
-    struct ExtraInformationModuleStorage {
-            string _tokenId;
-            Terms _terms;
-            string _information;
-    }
-    /* ============  Initializer Function ============ */
-    /**
-     * @dev Sets the values for {tokenId}, {terms_} and {information}.
-     *
-     */
-    function __ExtraInformationModule_init_unchained(
-        string memory tokenId_,
-        IERC1643CMTAT.DocumentInfo memory terms_,
-        string memory information_
-    ) internal virtual onlyInitializing {
-        ExtraInformationModuleStorage storage $ = _getExtraInformationModuleStorage();
-        // tokenId
-        _setTokenId($, tokenId_);
-        // Terms
-        _setTerms($, terms_);
-        // Information
-        _setInformation($, information_);
-    }
-
-    /*//////////////////////////////////////////////////////////////
-                            PUBLIC/EXTERNAL FUNCTIONS
-    //////////////////////////////////////////////////////////////*/
-
-    /* ============  Restricted Functions ============ */
-    
-    /** 
-    * @dev the tokenId will be changed even if the new value is the same as the current one
-    * @custom:access-control
-    * - the caller must have the `EXTRA_INFORMATION_ROLE`.
-    */
-    function setTokenId(
-        string calldata tokenId_
-    ) public virtual override(ICMTATBase)  onlyRole(EXTRA_INFORMATION_ROLE) {
-        ExtraInformationModuleStorage storage $ = _getExtraInformationModuleStorage();
-        _setTokenId($, tokenId_);
-    }
-
-    /** 
-    * @inheritdoc ICMTATBase
-    * @dev The terms will be changed even if the new value is the same as the current one
-    * @custom:access-control
-    * - the caller must have the `EXTRA_INFORMATION_ROLE`.
-    */
-    function setTerms(IERC1643CMTAT.DocumentInfo calldata terms_) public virtual override(ICMTATBase) onlyRole(EXTRA_INFORMATION_ROLE) {
-		_setTerms(terms_);
-    }
-
-    /** 
-    * @inheritdoc ICMTATBase
-    * @dev The information will be changed even if the new value is the same as the current one
-    * @custom:access-control
-    * - the caller must have the `EXTRA_INFORMATION_ROLE`.
-    */
-    
-    function setInformation(
-        string calldata information_
-    ) public virtual onlyRole(EXTRA_INFORMATION_ROLE) {
-        ExtraInformationModuleStorage storage $ = _getExtraInformationModuleStorage();
-        _setInformation($, information_);
-    }
-
-    /* ============ View functions ============ */
-    /**
-    * @inheritdoc ICMTATBase
-    */
-    function tokenId() public view  virtual override(ICMTATBase) returns (string memory tokenId_) {
-        ExtraInformationModuleStorage storage $ = _getExtraInformationModuleStorage();
-        return $._tokenId;
-    }
-
-    /**
-    * @inheritdoc ICMTATBase
-    */
-    function terms() public view virtual override(ICMTATBase)  returns (Terms memory terms_) {
-        ExtraInformationModuleStorage storage $ = _getExtraInformationModuleStorage();
-        return $._terms;
-    }
-    
-    /**
-    * @inheritdoc ICMTATBase
-    */
-    function information() public view virtual override(ICMTATBase) returns (string memory information_) {
-        ExtraInformationModuleStorage storage $ = _getExtraInformationModuleStorage();
-        return $._information;
-    }
-
-    /*//////////////////////////////////////////////////////////////
-                            INTERNAL/PRIVATE FUNCTIONS
-    //////////////////////////////////////////////////////////////*/
-    function _setTerms(IERC1643CMTAT.DocumentInfo memory terms_) internal{
-		ExtraInformationModuleStorage storage $ = _getExtraInformationModuleStorage();
-        _setTerms($, terms_);
-    }
-
-    function _setTokenId(
-        ExtraInformationModuleStorage storage $, string memory tokenId_
-    ) internal virtual  {
-        $._tokenId = tokenId_;
-        emit TokenId(tokenId_, tokenId_);
-    }
-
-    function _setTerms(ExtraInformationModuleStorage storage $, IERC1643CMTAT.DocumentInfo memory terms_) internal virtual {
-		// Terms/Document name
-        $._terms.name = terms_.name;
-        // Document
-        $._terms.doc.documentHash  = terms_.documentHash;
-        $._terms.doc.uri = terms_.uri;
-        $._terms.doc.lastModified = block.timestamp;
-		// Event
-        emit Term($._terms);
-    }
-
-    function _setInformation(ExtraInformationModuleStorage storage $, string memory information_) internal virtual {
-        $._information  = information_;
-        emit Information(information_);
-    }
-
-    /* ============ ERC-7201 ============ */
-    function _getExtraInformationModuleStorage() private pure returns (ExtraInformationModuleStorage storage $) {
-        assembly {
-            $.slot := ExtraInformationModuleStorageLocation
-        }
-    }
-}
-
-
-// File contracts/interfaces/modules/ISnapshotEngineModule.sol
-
-// Original license: SPDX_License_Identifier: MPL-2.0
-
-pragma solidity ^0.8.20;
-
-/* ==== Engine === */
-
-/**
- * @title ISnapshotEngineModule
- * @notice Minimal interface for integrating a snapshot engine module.
- * @dev Provides methods to set and retrieve a snapshot engine used for capturing and referencing token states.
- */
-interface ISnapshotEngineModule {
-    /* ============ Events ============ */
-    /**
-     * @notice Emitted when a new snapshot engine is set.
-     * @param newSnapshotEngine The address of the newly assigned snapshot engine contract.
-     */
-
-    event SnapshotEngine(ISnapshotEngine indexed newSnapshotEngine);
-    /* ============ Error ============ */
-    /**
-     * @dev Reverts if the new snapshot engine is the same as the current one.
-     */
-    error CMTAT_SnapshotModule_SameValue();
-    /* ============ Functions ============ */
-    /**
-     * @notice Sets the address of the snapshot engine contract.
-     * @dev The snapshot engine is responsible for recording historical balances and supply snapshots.
-     * Emits a {SnapshotEngine} event.
-     * Reverts with {CMTAT_SnapshotModule_SameValue} if the new engine is the same as the current one.
-     * @param snapshotEngine_ The new snapshot engine contract address to set.
-     */
-    function setSnapshotEngine(
-        ISnapshotEngine snapshotEngine_
-    ) external;
-    /**
-     * @notice Returns the currently set snapshot engine.
-     * @return The address of the active snapshot engine contract.
-     */
-    function  snapshotEngine() external view returns (ISnapshotEngine);
-}
-
-
-// File contracts/modules/wrapper/extensions/SnapshotEngineModule.sol
-
-// Original license: SPDX_License_Identifier: MPL-2.0
-
-pragma solidity ^0.8.20;
-
-/* ==== OpenZeppelin === */
-
-/* ==== Engine === */
-
-abstract contract SnapshotEngineModule is AccessControlUpgradeable, ISnapshotEngineModule {
-    /* ============ State Variables ============ */
-    bytes32 public constant SNAPSHOOTER_ROLE = keccak256("SNAPSHOOTER_ROLE");
-
-    /* ============ ERC-7201 ============ */
-    // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.SnapshotEngineModule")) - 1)) & ~bytes32(uint256(0xff))
-    bytes32 private constant SnapshotEngineModuleStorageLocation = 0x1387b97dfab601d3023cb57858a6be29329babb05c85597ddbe4926c1193a900;
-    /* ==== ERC-7201 State Variables === */
-    struct SnapshotEngineModuleStorage {
-        ISnapshotEngine _snapshotEngine;
-    }
-    /* ============  Initializer Function ============ */
-    /**
-     * @dev
-     *
-     * - The grant to the admin role is done by AccessControlDefaultAdminRules
-     * - The control of the zero address is done by AccessControlDefaultAdminRules
-     *
-     */
-    function __SnapshotEngineModule_init_unchained(ISnapshotEngine snapshotEngine_)
-    internal virtual onlyInitializing {
-        if (address(snapshotEngine_) != address (0)) {
-            SnapshotEngineModuleStorage storage $ = _getSnapshotEngineModuleStorage();
-            _setSnapshotEngine($, snapshotEngine_);
-        }
-    }
-
-
-    /*//////////////////////////////////////////////////////////////
-                            PUBLIC/EXTERNAL FUNCTIONS
-    //////////////////////////////////////////////////////////////*/
-
-    /* ============  State Restricted Functions ============ */
-    /**
-    * @inheritdoc ISnapshotEngineModule
-    * @custom:access-control
-    * - The caller must have the `SNAPSHOOTER_ROLE`.
-    */
-    function setSnapshotEngine(
-        ISnapshotEngine snapshotEngine_
-    ) public virtual override(ISnapshotEngineModule) onlyRole(SNAPSHOOTER_ROLE) {
-        SnapshotEngineModuleStorage storage $ = _getSnapshotEngineModuleStorage();
-        require($._snapshotEngine != snapshotEngine_, CMTAT_SnapshotModule_SameValue());
-        _setSnapshotEngine($, snapshotEngine_);
-    }
-
-    
-    /* ============ View functions ============ */
-
-    /**
-    * @inheritdoc ISnapshotEngineModule
-    */
-    function snapshotEngine() public view virtual override(ISnapshotEngineModule) returns (ISnapshotEngine) {
-        SnapshotEngineModuleStorage storage $ = _getSnapshotEngineModuleStorage();
-        return $._snapshotEngine;
-    }
-    /*//////////////////////////////////////////////////////////////
-                            INTERNAL/PRIVATE FUNCTIONS
-    //////////////////////////////////////////////////////////////*/
-    function _setSnapshotEngine(
-        SnapshotEngineModuleStorage storage $, ISnapshotEngine snapshotEngine_
-    ) internal virtual {
-        $._snapshotEngine = snapshotEngine_;
-        emit SnapshotEngine(snapshotEngine_);
-    }
-
-    /* ============ ERC-7201 ============ */
-    function _getSnapshotEngineModuleStorage() private pure returns (SnapshotEngineModuleStorage storage $) {
-        assembly {
-            $.slot := SnapshotEngineModuleStorageLocation
-        }
-    }
-}
-
-
-// File contracts/modules/wrapper/security/AccessControlModule.sol
-
-// Original license: SPDX_License_Identifier: MPL-2.0
-
-pragma solidity ^0.8.20;
-
-/* ==== OpenZeppelin === */
-
-abstract contract AccessControlModule is AccessControlUpgradeable {
-    error CMTAT_AccessControlModule_AddressZeroNotAllowed();
-
-    /* ============  Initializer Function ============ */
-    /**
-     * @dev
-     *
-     * - The grant to the admin role is done by AccessControlDefaultAdminRules
-     * - The control of the zero address is done by AccessControlDefaultAdminRules
-     *
-     */
-    function __AccessControlModule_init_unchained(address admin)
-    internal onlyInitializing {
-        if(admin == address(0)){
-            revert CMTAT_AccessControlModule_AddressZeroNotAllowed();
-        }
-        _grantRole(DEFAULT_ADMIN_ROLE, admin);
-    }
-
-
-    /*//////////////////////////////////////////////////////////////
-                            PUBLIC/EXTERNAL FUNCTIONS
-    //////////////////////////////////////////////////////////////*/
-    /** 
-     * @dev Returns `true` if `account` has been granted `role`.
-     */
-    function hasRole(
-        bytes32 role,
-        address account
-    ) public view virtual override(AccessControlUpgradeable) returns (bool) {
-        // The Default Admin has all roles
-        if (AccessControlUpgradeable.hasRole(DEFAULT_ADMIN_ROLE, account)) {
-            return true;
-        } else {
-            return AccessControlUpgradeable.hasRole(role, account);
-        }
-    }
-}
-
-
-// File contracts/modules/0_CMTATBaseCommon.sol
-
-// Original license: SPDX_License_Identifier: MPL-2.0
-
-pragma solidity ^0.8.20;
-
-/* ==== Wrapper === */
-// Security
-
-// Core
-
-
-
-// Extensions
-
-
-
-
-// options
-
- /* ==== Interface and other library === */
-
-
-
-abstract contract CMTATBaseCommon is
-    // Core
-    BaseModule,
-    ERC20MintModule,
-    ERC20BurnModule,
-    ERC20BaseModule,
-    // Extension
-    SnapshotEngineModule,
-    ERC20EnforcementModule,
-    DocumentEngineModule,
-    ExtraInformationModule,
-    AccessControlModule,
-    // Interfaces
-    IBurnMintERC20
-{  
-    /*//////////////////////////////////////////////////////////////
-                            PUBLIC/EXTERNAL FUNCTIONS
-    //////////////////////////////////////////////////////////////*/
-    function __CMTAT_commonModules_init_unchained(address admin, ICMTATConstructor.ERC20Attributes memory ERC20Attributes_, ICMTATConstructor.ExtraInformationAttributes memory ExtraInformationModuleAttributes_,
-     ISnapshotEngine snapshotEngine_,
-        IERC1643 documentEngine_ ) internal virtual onlyInitializing {
-        // AccessControlModule_init_unchained is called firstly due to inheritance
-        __AccessControlModule_init_unchained(admin);
-
-        // Core
-        __ERC20BaseModule_init_unchained(ERC20Attributes_.decimalsIrrevocable, ERC20Attributes_.name, ERC20Attributes_.symbol);
-        /* Extensions */
-        __ExtraInformationModule_init_unchained(ExtraInformationModuleAttributes_.tokenId, ExtraInformationModuleAttributes_.terms, ExtraInformationModuleAttributes_.information);
-        __SnapshotEngineModule_init_unchained(snapshotEngine_);
-        __DocumentEngineModule_init_unchained(documentEngine_);
-    }
-
-    /*//////////////////////////////////////////////////////////////
-                Override ERC20Upgradeable, ERC20BaseModule
-    //////////////////////////////////////////////////////////////*/
-
-    /* ============  View Functions ============ */
-
-    /**
-    * @inheritdoc ERC20BaseModule
-    */
-    function decimals()
-        public
-        view
-        virtual
-        override(ERC20Upgradeable, ERC20BaseModule)
-        returns (uint8)
-    {
-        return ERC20BaseModule.decimals();
-    }
-
-
-    /**
-    * @inheritdoc ERC20BaseModule
-    */
-    function name() public view virtual override(ERC20Upgradeable, ERC20BaseModule)  returns (string memory) {
-        return ERC20BaseModule.name();
-    }
-
-    /**
-    * @inheritdoc ERC20BaseModule
-    */
-    function symbol() public view virtual override(ERC20Upgradeable, ERC20BaseModule) returns (string memory) {
-        return ERC20BaseModule.symbol();
-    }
-
-
-    /* ============  State Functions ============ */
-    function transfer(address to, uint256 value) public virtual override(ERC20Upgradeable) returns (bool) {
-         address from = _msgSender();
-        _checkTransferred(address(0), from, to, value);
-        ERC20Upgradeable._transfer(from, to, value);
-        return true;
-    }
-    /*
-    * @inheritdoc ERC20BaseModule
-    */
-    function transferFrom(
-        address from,
-        address to,
-        uint256 value
-    )
-        public
-        virtual
-        override(ERC20Upgradeable, ERC20BaseModule)
-        returns (bool)
-    {
-        _checkTransferred(_msgSender(), from, to, value);
-        return ERC20BaseModule.transferFrom(from, to, value);
-    }
-
-
-    /*//////////////////////////////////////////////////////////////
-                Functions requiring several modules
-    //////////////////////////////////////////////////////////////*/
-
-    /**
-    * @inheritdoc IBurnMintERC20
-    * @dev 
-    * - The access control is managed by the functions burn (ERC20BurnModule) and mint (ERC20MintModule)
-    * - Input validation is also managed by the functions burn and mint
-    * - You can mint more tokens than burnt
-    */
-    function burnAndMint(address from, address to, uint256 amountToBurn, uint256 amountToMint, bytes calldata data) public virtual override(IBurnMintERC20) {
-        ERC20BurnModule.burn(from, amountToBurn, data);
-        ERC20MintModule.mint(to, amountToMint, data);
-    }
-
-
-    function hasRole(
-        bytes32 role,
-        address account
-    ) public view virtual override(AccessControlUpgradeable, AccessControlModule) returns (bool) {
-        return AccessControlModule.hasRole(role, account);
-    }
-
-    /*//////////////////////////////////////////////////////////////
-                            INTERNAL/PRIVATE FUNCTIONS
-    //////////////////////////////////////////////////////////////*/
-    function _checkTransferred(address /*spender*/, address from, address /* to */, uint256 value) internal virtual {
-        ERC20EnforcementModuleInternal._checkActiveBalanceAndRevert(from, value);
-    } 
-    /**
-     * @dev we don't check the transfer validity here
-     * 
-     *
-     */
-    function _update(
-        address from,
-        address to,
-        uint256 amount
-    ) internal virtual override(ERC20Upgradeable) {
-        // We check here the address of the snapshotEngine here because we don't want to read balance/totalSupply if there is no Snapshot Engine
-        ISnapshotEngine snapshotEngineLocal = snapshotEngine();
-        // Required to be performed before the update
-        if(address(snapshotEngineLocal) != address(0)){
-            snapshotEngineLocal.operateOnTransfer(from, to, balanceOf(from), balanceOf(to), totalSupply());
-        }
-        ERC20Upgradeable._update(from, to, amount);
-    }
-    
-    /**
-    * @dev Check if the mint is valid
-    */
-    function _mintOverride(address account, uint256 value) internal virtual override(ERC20MintModuleInternal) {
-        _checkTransferred(address(0), address(0), account, value);
-        ERC20MintModuleInternal._mintOverride(account, value);
-    }
-
-    /**
-    * @dev Check if the burn is valid
-    */
-    function _burnOverride(address account, uint256 value) internal virtual override(ERC20BurnModuleInternal) {
-        _checkTransferred(address(0),  account, address(0), value);
-        ERC20BurnModuleInternal._burnOverride(account, value);
-    }
-
-    /**
-    * @dev Check if a minter transfer is valid
-    */
-    function _minterTransferOverride(address from, address to, uint256 value) internal virtual override(ERC20MintModuleInternal) {
-        _checkTransferred(address(0), from, to, value);
-        ERC20MintModuleInternal._minterTransferOverride(from, to, value);
-    }
-
-}
-
-
-// File contracts/libraries/Errors.sol
-
-// Original license: SPDX_License_Identifier: MPL-2.0
-
-pragma solidity ^0.8.20;
-
-/*
-* @dev CMTAT custom errors
-*/
-library Errors {
-    // CMTAT Base
-    error CMTAT_InvalidTransfer(address from, address to, uint256 amount);
-}
-
-
-// File contracts/modules/internal/ValidationModuleRuleEngineInternal.sol
-
-// Original license: SPDX_License_Identifier: MPL-2.0
-
-pragma solidity ^0.8.20;
-
-/* ==== OpenZeppelin === */
-
-
-/* ==== Engine === */
-
-/*
- * @dev Set a ruleEngine for the ValidationModule
- *
- * Useful to restrict and validate transfers
- */
-abstract contract ValidationModuleRuleEngineInternal is
-    Initializable,
-    ContextUpgradeable
-{
-    /* ============ Events ============ */
-    /**
-    * @notice Emitted when a new RuleEngine contract is set.
-    * @param newRuleEngine The address of the RuleEngine that was configured.
-    */
-    event RuleEngine(IRuleEngine indexed newRuleEngine);
-    /* ============ ERC-7201 ============ */
-    // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.ValidationModuleRuleEngineInternal")) - 1)) & ~bytes32(uint256(0xff))
-    bytes32 private constant ValidationModuleRuleEngineStorageLocation = 0x77c8cc897d160e7bf5b10921804e357da17ae27460d4a6b5d9b27ffddf159d00;
-    /* ==== ERC-7201 State Variables === */
-    struct ValidationModuleRuleEngineStorage {
-        IRuleEngine _ruleEngine;
-    }
-
-    /* ============  Initializer Function ============ */
-    function __ValidationRuleEngine_init_unchained(
-        IRuleEngine ruleEngine_
-    ) internal onlyInitializing {
-        if (address(ruleEngine_) != address(0)) {
-            _setRuleEngine(ruleEngine_);
-        }
-    }
-
-
-    /*//////////////////////////////////////////////////////////////
-                            PUBLIC/EXTERNAL FUNCTIONS
-    //////////////////////////////////////////////////////////////*/
-    
-    /**
-    * @notice Returns the current RuleEngine contract used for validation.
-    * @return ruleEngine_ The address of the active RuleEngine.
-    */
-    function ruleEngine() public view returns(IRuleEngine){
-        ValidationModuleRuleEngineStorage storage $ = _getValidationModuleRuleEngineStorage();
-        return $._ruleEngine;
-    }
-
-    /*//////////////////////////////////////////////////////////////
-                            INTERNAL/PRIVATE FUNCTIONS
-    //////////////////////////////////////////////////////////////*/
-    /*
-    * @dev set a RuleEngine
-    * @param ruleEngine_ 
-    * The call will be reverted if the new value of ruleEngine is the same as the current one
-    */
-    function _setRuleEngine(
-        IRuleEngine ruleEngine_
-    )  internal virtual {
-        ValidationModuleRuleEngineStorage storage $ = _getValidationModuleRuleEngineStorage();
-        $._ruleEngine = ruleEngine_;
-        emit RuleEngine(ruleEngine_);
-    }
-
-    /* ============ ERC-7201 ============ */
-    function _getValidationModuleRuleEngineStorage() private pure returns (ValidationModuleRuleEngineStorage storage $) {
-        assembly {
-            $.slot := ValidationModuleRuleEngineStorageLocation
-        }
-    }
-}
-
-
-// File contracts/modules/internal/common/EnforcementModuleLibrary.sol
-
-// Original license: SPDX_License_Identifier: MPL-2.0
-
-pragma solidity ^0.8.20;
-
-/**
- * @dev Enforcement module library
- *
- * Common functions and errors between AllowlistModuleInternal & EnforcementModuleInternal
- */
-library EnforcementModuleLibrary
-{
-    error CMTAT_Enforcement_EmptyAccounts();
-    error CMTAT_Enforcement_AccountsValueslengthMismatch();
-
-    function _checkInput(address[] calldata accounts, bool[] calldata status) internal pure{
-        require(accounts.length > 0, CMTAT_Enforcement_EmptyAccounts());
-        // We do not check that values is not empty since
-        // this require will throw an error in this case.
-        require(bool(accounts.length == status.length), CMTAT_Enforcement_AccountsValueslengthMismatch());
-    }
-}
-
-
-// File contracts/modules/internal/EnforcementModuleInternal.sol
-
-// Original license: SPDX_License_Identifier: MPL-2.0
-
-pragma solidity ^0.8.20;
-
-/* ==== OpenZeppelin === */
-
-
-/* ==== Module === */
-
-/**
- * @dev Enforcement module internal.
- *
- * Allows the issuer to set an allowlist
- */
-abstract contract EnforcementModuleInternal is
-    Initializable,
-    ContextUpgradeable
-{
-    /* ============ ERC-7201 ============ */
-    // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.EnforcementModuleInternal")) - 1)) & ~bytes32(uint256(0xff))
-    bytes32 private constant EnforcementModuleInternalStorageLocation = 0x0c7bc8a17be064111d299d7669f49519cb26c58611b72d9f6ccc40a1e1184e00;
-
-    /* ==== ERC-7201 State Variables === */
-    struct EnforcementModuleInternalStorage {
-        mapping(address account => bool status)_list;
-    }
-
-    /*//////////////////////////////////////////////////////////////
-                            INTERNAL/PRIVATE FUNCTIONS
-    //////////////////////////////////////////////////////////////*/
-    /* ============ View functions ============ */
-    function _addAddressToTheList(address account, bool status, bytes memory data) internal virtual{
-        EnforcementModuleInternalStorage storage $ = _getEnforcementModuleInternalStorage();
-        _addAddressToTheList($, account, status, data);
-    }
-
-    function _addAddressToTheList(EnforcementModuleInternalStorage storage $,address account, bool status, bytes memory /*data */) internal virtual{
-        $._list[account] = status;
-    }
-
-  function _addAddressesToTheList(address[] calldata accounts, bool[] calldata status, bytes memory data) internal virtual{
-        EnforcementModuleLibrary._checkInput(accounts, status);
-        EnforcementModuleInternalStorage storage $ = _getEnforcementModuleInternalStorage();
-        for (uint256 i = 0; i < accounts.length; ++i) {
-            _addAddressToTheList($, accounts[i], status[i], data);
-        }
-    }
-
-    /* ============ View functions ============ */
-    /**
-     * @dev Returns true if the account is frozen, and false otherwise.
-     */
-    function _addressIsListed(address account) internal view virtual returns (bool _isListed) {
-        EnforcementModuleInternalStorage storage $ = _getEnforcementModuleInternalStorage();
-        return $._list[account];
-    }
-
-    /* ============ ERC-7201 ============ */
-    function _getEnforcementModuleInternalStorage() internal pure returns (EnforcementModuleInternalStorage storage $) {
-        assembly {
-            $.slot := EnforcementModuleInternalStorageLocation
-        }
-    }
-}
-
-
-// File contracts/modules/wrapper/core/EnforcementModule.sol
-
-// Original license: SPDX_License_Identifier: MPL-2.0
-
-pragma solidity ^0.8.20;
-
-/* ==== OpenZeppelin === */
-
-/* ==== Module === */
-
-
-/*
-/**
- * @title Enforcement module.
- * @dev 
- *
- * Allows the issuer to freeze transfers from a given address
- */
-abstract contract EnforcementModule is
-    EnforcementModuleInternal,
-    AccessControlUpgradeable,
-    IERC3643Enforcement,
-    IERC3643EnforcementEvent
-{
-    /* ============ State Variables ============ */
-    bytes32 public constant ENFORCER_ROLE = keccak256("ENFORCER_ROLE");
-
-    /*//////////////////////////////////////////////////////////////
-                            PUBLIC/EXTERNAL FUNCTIONS
-    //////////////////////////////////////////////////////////////*/
-    /* ============ State restricted functions ============ */
-    /**
-    * @inheritdoc IERC3643Enforcement
-    * @custom:access-control
-    * - the caller must have the `ENFORCER_ROLE`.
-    */
-    function setAddressFrozen(address account, bool freeze) public virtual override(IERC3643Enforcement) onlyRole(ENFORCER_ROLE){
-         _addAddressToTheList(account, freeze, "");
-    }
-    
-    /**
-    * @notice Sets the frozen status of a specific account.
-    * @dev 
-    * Extend ERC-3643 functions `setAddressFrozen` with a supplementary `data` parameter
-    * - Freezing an account prevents it from transferring or receiving tokens depending on enforcement logic.
-    * - Emits an `AddressFrozen` event.
-    * @param account The address whose frozen status is being updated.
-    * @param freeze Set to `true` to freeze the account, or `false` to unfreeze it.
-    * @param data Optional metadata providing context or justification for the action (e.g. compliance reason).
-    * @custom:access-control
-    * - the caller must have the `ENFORCER_ROLE`.
-    */
-    function setAddressFrozen(
-        address account, bool freeze, bytes calldata data
-    ) public virtual onlyRole(ENFORCER_ROLE)  {
-         _addAddressToTheList(account, freeze, data);
-    }
-
-    /**
-    * @inheritdoc IERC3643Enforcement
-    * @custom:access-control
-    * - the caller must have the `ENFORCER_ROLE`.
-    */
-    function batchSetAddressFrozen(
-        address[] calldata accounts, bool[] calldata freezes
-    ) public virtual override(IERC3643Enforcement) onlyRole(ENFORCER_ROLE) {
-         _addAddressesToTheList(accounts, freezes, "");
-    }
-
-    /* ============ View functions ============ */
-    /**
-    * @inheritdoc IERC3643Enforcement
-    */
-    function isFrozen(address account) public override(IERC3643Enforcement) view virtual returns (bool isFrozen_) {
-       return _addressIsListed(account);
-       
-    }
-
-    /*//////////////////////////////////////////////////////////////
-                            INTERNAL/PRIVATE FUNCTIONS
-    //////////////////////////////////////////////////////////////*/
-    function _addAddressToTheList(EnforcementModuleInternalStorage storage $,address account, bool freeze, bytes memory data) internal override(EnforcementModuleInternal){
-        EnforcementModuleInternal._addAddressToTheList($, account, freeze, data);
-        emit AddressFrozen(account, freeze, _msgSender(), data);
-    }
 }
 
 
@@ -4603,171 +3510,99 @@ abstract contract ValidationModuleCore is
 }
 
 
-// File contracts/modules/wrapper/extensions/ValidationModule/ValidationModuleRuleEngine.sol
+// File contracts/modules/wrapper/security/AccessControlModule.sol
 
 // Original license: SPDX_License_Identifier: MPL-2.0
 
 pragma solidity ^0.8.20;
 
+/* ==== OpenZeppelin === */
 
-/* ==== Engine === */
+abstract contract AccessControlModule is AccessControlUpgradeable {
+    error CMTAT_AccessControlModule_AddressZeroNotAllowed();
 
-/* ==== ValidationModule === */
-
-
-/**
- * @dev Validation module with RuleEngine
- *
- * Useful for to restrict and validate transfers
- */
-abstract contract ValidationModuleRuleEngine is
-    ValidationModuleCore,
-    ValidationModuleRuleEngineInternal
-{
+    /* ============  Initializer Function ============ */
     /**
-    * @notice Reverts if attempting to set the RuleEngine to its current value.
-    */
-    error CMTAT_ValidationModule_SameValue();
+     * @dev
+     *
+     * - The grant to the admin role is done by AccessControlDefaultAdminRules
+     * - The control of the zero address is done by AccessControlDefaultAdminRules
+     *
+     */
+    function __AccessControlModule_init_unchained(address admin)
+    internal onlyInitializing {
+        if(admin == address(0)){
+            revert CMTAT_AccessControlModule_AddressZeroNotAllowed();
+        }
+        _grantRole(DEFAULT_ADMIN_ROLE, admin);
+    }
+
 
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
-
-    /* ============ State functions ============ */
-    /**
-    * @notice Updates the RuleEngine used for validation/compliance transfer logic.
-    * @dev Reverts with `CMTAT_ValidationModule_SameValue` if the new RuleEngine is the same as the current one.
-    * Requirements:
-    * - Caller must have `DEFAULT_ADMIN_ROLE`.
-    * Emits a {RuleEngine} event.
-    * @param ruleEngine_ The new RuleEngine contract to set.
-    * @custom:access-control
-    * - The caller must have the `DEFAULT_ADMIN_ROLE`.
-    */
-    function setRuleEngine(
-        IRuleEngine ruleEngine_
-    ) public virtual onlyRole(DEFAULT_ADMIN_ROLE) {
-         require(ruleEngine_ != ruleEngine(), CMTAT_ValidationModule_SameValue());
-        _setRuleEngine(ruleEngine_);
-    }
-    /* ============ View functions ============ */
-    /**
-    * @inheritdoc ValidationModuleCore
-    * @dev call the ruleEngine if set
-    */
-    function canTransfer(
-        address from,
-        address to,
-        uint256 value
-    ) public view virtual override(ValidationModuleCore) returns (bool) {
-       return _canTransfer(from, to, value);
-    }
-
-    /**
-    * @inheritdoc ValidationModuleCore
-    * @dev call the ruleEngine if set
-    */
-    function canTransferFrom(
-        address spender,
-        address from,
-        address to,
-        uint256 value
-    ) public view virtual override(ValidationModuleCore) returns (bool) {
-        return _canTransferFrom(spender, from, to, value);
-    }
-
-    /*//////////////////////////////////////////////////////////////
-                            INTERNAL/PRIVATE FUNCTIONS
-    //////////////////////////////////////////////////////////////*/
-    /* ============ View functions ============ */
-    function _canTransfer(
-        address from,
-        address to,
-        uint256 value)
-    internal view virtual returns (bool) {
-       if (!ValidationModuleCore.canTransfer(from, to, value)) {
-            return false;
-        } else {
-            return _canTransferWithRuleEngine(from, to, value);
-        }
-    }
-
-    function _canTransferFrom(
-        address spender,
-        address from,
-        address to,
-        uint256 value
-    ) internal view virtual returns (bool) {
-        if (!ValidationModuleCore.canTransferFrom(spender, from, to, value)) {
-            return false;
-        } else {
-            return _canTransferFromWithRuleEngine(spender, from, to, value);
-        }
-    }
-
-    function _canTransferFromWithRuleEngine(
-        address spender,
-        address from,
-        address to,
-        uint256 value
-    ) internal view virtual returns (bool) {
-        IRuleEngine ruleEngine_ = ruleEngine();
-        if (address(ruleEngine_) != address(0)) {
-            return ruleEngine_.canTransferFrom(spender, from, to, value);
-        } else{
+    /** 
+     * @dev Returns `true` if `account` has been granted `role`.
+     */
+    function hasRole(
+        bytes32 role,
+        address account
+    ) public view virtual override(AccessControlUpgradeable) returns (bool) {
+        // The Default Admin has all roles
+        if (AccessControlUpgradeable.hasRole(DEFAULT_ADMIN_ROLE, account)) {
             return true;
-        }
-    }
-    function _canTransferWithRuleEngine(
-        address from,
-        address to,
-        uint256 value
-    ) internal view virtual returns (bool) {
-        IRuleEngine ruleEngine_ = ruleEngine();
-        if (address(ruleEngine_) != address(0)) {
-            return ruleEngine_.canTransfer(from, to, value);
-        } else{
-            return true;
-        }
-    }
-
-    /* ============ State functions ============ */
-    function _transferred(address spender, address from, address to, uint256 value) internal virtual returns (bool){
-        if(!_canTransferGenericByModule(spender, from, to)){
-            return false;
         } else {
-             IRuleEngine ruleEngine_ = ruleEngine();
-             if (address(ruleEngine_) != address(0)){
-                 if(spender != address(0)){
-                    ruleEngine_.transferred(spender, from, to, value);
-                  } else {
-                     ruleEngine_.transferred(from, to, value);
-                  }
-            }
+            return AccessControlUpgradeable.hasRole(role, account);
         }
-        return true;
     }
 }
 
 
-// File contracts/modules/1_CMTATBaseRuleEngine.sol
+// File contracts/modules/0_CMTATBaseCore.sol
 
 // Original license: SPDX_License_Identifier: MPL-2.0
 
 pragma solidity ^0.8.20;
 
+/* ==== OpenZeppelin === */
+
+
 /* ==== Wrapper === */
-// Extensions
-
-// Controllers
-
- /* ==== Interface and other library === */
+// ERC20
 
 
-abstract contract CMTATBaseRuleEngine is
-    CMTATBaseCommon,
-    ValidationModuleRuleEngine
-{
+
+// Other
+
+
+
+// Security
+
+/* ==== Interface and other library === */
+
+
+
+
+
+/**
+* @dev CMTAT with core modules
+*/
+abstract contract CMTATBaseCore is
+    // OpenZeppelin
+    Initializable,
+    ContextUpgradeable,
+    BaseModule,
+    // Core
+    ERC20MintModule,
+    ERC20BurnModule,
+    ValidationModuleCore,
+    ERC20BaseModule,
+    IForcedBurnERC20,
+    IBurnMintERC20,
+    IERC7551ERC20EnforcementEvent,
+    AccessControlModule
+{  
+    error CMTAT_BurnEnforcement_AddressIsNotFrozen(); 
     /*//////////////////////////////////////////////////////////////
                          INITIALIZER FUNCTION
     //////////////////////////////////////////////////////////////*/
@@ -4777,31 +3612,24 @@ abstract contract CMTATBaseRuleEngine is
      * The calls to this function will revert if the contract was deployed without a proxy
      * @param admin address of the admin of contract (Access Control)
      * @param ERC20Attributes_ ERC20 name, symbol and decimals
-     * @param extraInformationAttributes_ tokenId, terms, information
-     * @param engines_ external contract
      */
     function initialize(
         address admin,
-        ICMTATConstructor.ERC20Attributes memory ERC20Attributes_,
-        ICMTATConstructor.ExtraInformationAttributes memory extraInformationAttributes_,
-        ICMTATConstructor.Engine memory engines_ 
+        ICMTATConstructor.ERC20Attributes memory ERC20Attributes_
     ) public virtual initializer {
         __CMTAT_init(
             admin,
-            ERC20Attributes_,
-            extraInformationAttributes_,
-            engines_
+            ERC20Attributes_
         );
     }
+
 
     /**
      * @dev calls the different initialize functions from the different modules
      */
     function __CMTAT_init(
         address admin,
-        ICMTATConstructor.ERC20Attributes memory ERC20Attributes_,
-        ICMTATConstructor.ExtraInformationAttributes memory ExtraInformationAttributes_,
-        ICMTATConstructor.Engine memory engines_ 
+        ICMTATConstructor.ERC20Attributes memory ERC20Attributes_
     ) internal virtual onlyInitializing {
         /* OpenZeppelin library */
         // OZ init_unchained functions are called firstly due to inheritance
@@ -4812,620 +3640,190 @@ abstract contract CMTATBaseRuleEngine is
 
         // Openzeppelin
         __CMTAT_openzeppelin_init_unchained();
-        /* Internal Modules */
-       __CMTAT_internal_init_unchained(engines_);
 
         /* Wrapper modules */
-        __CMTAT_modules_init_unchained(admin, ERC20Attributes_, ExtraInformationAttributes_, engines_ );
+        __CMTAT_modules_init_unchained(admin, ERC20Attributes_);
     }
 
     /*
     * @dev OpenZeppelin
     */
     function __CMTAT_openzeppelin_init_unchained() internal virtual onlyInitializing {
-         // AuthorizationModule inherits from AccessControlUpgradeable
+         // AccessControlModule inherits from AccessControlUpgradeable
         __AccessControl_init_unchained();
         __Pausable_init_unchained();
     }
 
-    /*
-    * @dev CMTAT internal module
-    */
-    function __CMTAT_internal_init_unchained(ICMTATConstructor.Engine memory engines_) internal virtual onlyInitializing {
-        __ValidationRuleEngine_init_unchained(engines_.ruleEngine);  
-    }
 
     /*
     * @dev CMTAT wrapper modules
     */
-    function __CMTAT_modules_init_unchained(address admin, ICMTATConstructor.ERC20Attributes memory ERC20Attributes_, ICMTATConstructor.ExtraInformationAttributes memory extraInformationAttributes_, ICMTATConstructor.Engine memory engines_) internal virtual onlyInitializing {
-        __CMTAT_commonModules_init_unchained(admin,ERC20Attributes_, extraInformationAttributes_, engines_.snapshotEngine, engines_ .documentEngine);
+    function __CMTAT_modules_init_unchained(address admin, ICMTATConstructor.ERC20Attributes memory ERC20Attributes_ ) internal virtual onlyInitializing {
+        // AccessControlModule_init_unchained is called firstly due to inheritance
+        __AccessControlModule_init_unchained(admin);
+        __ERC20BaseModule_init_unchained(ERC20Attributes_.decimalsIrrevocable, ERC20Attributes_.name, ERC20Attributes_.symbol);
     }
+
 
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
+
+
+    /*//////////////////////////////////////////////////////////////
+                Override ERC20Upgradeable, ERC20BaseModule
+    //////////////////////////////////////////////////////////////*/
+
+    /* ============  View Functions ============ */
+
     /**
-    * @inheritdoc ValidationModuleRuleEngine
+    * @inheritdoc ERC20BaseModule
     */
-    function canTransfer(
+    function decimals()
+        public
+        view
+        virtual
+        override(ERC20Upgradeable, ERC20BaseModule)
+        returns (uint8)
+    {
+        return ERC20BaseModule.decimals();
+    }
+
+
+    /*
+    * @inheritdoc ERC20BaseModule
+    */
+    function name() public virtual override(ERC20Upgradeable, ERC20BaseModule) view returns (string memory) {
+        return ERC20BaseModule.name();
+    }
+
+    /*
+    * @inheritdoc ERC20BaseModule
+    */
+    function symbol() public virtual override(ERC20Upgradeable, ERC20BaseModule) view returns (string memory) {
+        return ERC20BaseModule.symbol();
+    }
+
+    /* ============  State Functions ============ */
+    /*
+    * @inheritdoc ERC20Upgradeable
+    */
+    function transfer(address to, uint256 value) public virtual override returns (bool) {
+        address from = _msgSender();
+        require(ValidationModuleCore.canTransfer(from, to, value), Errors.CMTAT_InvalidTransfer(from, to, value) );
+        ERC20Upgradeable._transfer(from, to, value);
+        return true;
+    }
+    /*
+    * @inheritdoc ERC20BaseModule
+    */
+    function transferFrom(
         address from,
         address to,
         uint256 value
-    ) public virtual override (ValidationModuleRuleEngine) view returns (bool) {
-        if(!ERC20EnforcementModuleInternal._checkActiveBalance(from, value)){
-            return false;
-        } else {
-            return ValidationModuleRuleEngine.canTransfer(from, to, value);
-        }
+    )
+        public
+        virtual
+        override(ERC20Upgradeable, ERC20BaseModule)
+        returns (bool)
+    {
+        require(ValidationModuleCore.canTransferFrom(_msgSender(),from, to, value), Errors.CMTAT_InvalidTransfer(from, to, value) );
+        return ERC20BaseModule.transferFrom(from, to, value);
+    }
+
+    /*//////////////////////////////////////////////////////////////
+                Functions requiring several modules
+    //////////////////////////////////////////////////////////////*/
+
+    /**
+    * @inheritdoc IBurnMintERC20
+    * @dev 
+    * - The access control is managed by the functions burn (ERC20BurnModule) and mint (ERC20MintModule)
+    * - Input validation is also managed by the functions burn and mint
+    * - You can mint more tokens than burnt
+    * @custom:access-control
+    * - See {burn} and {mint}
+    */
+    function burnAndMint(address from, address to, uint256 amountToBurn, uint256 amountToMint, bytes calldata data) public virtual override(IBurnMintERC20) {
+        ERC20BurnModule.burn(from, amountToBurn, data);
+        ERC20MintModule.mint(to, amountToMint, data);
     }
 
     /**
-    * @inheritdoc ValidationModuleRuleEngine
+    * @inheritdoc IForcedBurnERC20
+    * @custom:access-control
+    * - The caller must have the `DEFAULT_ADMIN_ROLE`.
     */
-   function canTransferFrom(
-        address spender,
-        address from,
-        address to,
-        uint256 value
-    ) public virtual override (ValidationModuleRuleEngine) view returns (bool) {
-        if(!ERC20EnforcementModuleInternal._checkActiveBalance(from, value)){
-            return false;
-        } else {
-            return ValidationModuleRuleEngine.canTransferFrom(spender, from, to, value);
-        }
+    function forcedBurn(
+        address account,
+        uint256 value,
+        bytes memory data
+    ) public virtual override(IForcedBurnERC20) onlyRole(DEFAULT_ADMIN_ROLE) {
+        require(EnforcementModule.isFrozen(account), CMTAT_BurnEnforcement_AddressIsNotFrozen());
+        // Skip ERC20BurnModule
+        ERC20Upgradeable._burn(account, value);
+        emit Enforcement(_msgSender(), account, value, data);
     }
 
     function hasRole(
         bytes32 role,
         address account
-    ) public view virtual override(AccessControlUpgradeable, CMTATBaseCommon) returns (bool) {
-        return CMTATBaseCommon.hasRole(role, account);
-    }
-
-    /*//////////////////////////////////////////////////////////////
-                            INTERNAL/PRIVATE FUNCTIONS
-    //////////////////////////////////////////////////////////////*/
-    function _checkTransferred(address spender, address from, address to, uint256 value) internal virtual override(CMTATBaseCommon) {
-        CMTATBaseCommon._checkTransferred(spender, from, to, value);
-        require(ValidationModuleRuleEngine._transferred(spender, from, to, value), Errors.CMTAT_InvalidTransfer(from, to, value));
-    } 
-}
-
-
-// File contracts/modules/wrapper/extensions/ValidationModule/ValidationModuleERC1404.sol
-
-// Original license: SPDX_License_Identifier: MPL-2.0
-
-pragma solidity ^0.8.20;
-
-
-/* ==== Tokenization === */
-
-
-/**
- * @dev Validation module (ERC-1404)
- *
- * Useful for to restrict and validate transfers
- */
-abstract contract ValidationModuleERC1404 is
-   ValidationModuleRuleEngine, IERC1404Extend
-{
-    /* ============ State Variables ============ */
-    string constant TEXT_TRANSFER_OK = "NoRestriction";
-    string constant TEXT_UNKNOWN_CODE = "UnknownCode";
-
-    /* EnforcementModule */
-    string internal constant TEXT_TRANSFER_REJECTED_FROM_FROZEN =
-        "AddrFromIsFrozen";
-
-    string internal constant TEXT_TRANSFER_REJECTED_TO_FROZEN =
-        "AddrToIsFrozen";
-
-    string internal constant TEXT_TRANSFER_REJECTED_SPENDER_FROZEN =
-        "AddrSpenderIsFrozen";
-
-    /* PauseModule */
-    string internal constant TEXT_TRANSFER_REJECTED_PAUSED =
-        "EnforcedPause";
-
-    /* Contract deactivated */
-    string internal constant TEXT_TRANSFER_REJECTED_DEACTIVATED =
-        "ContractDeactivated";
-
-    /*//////////////////////////////////////////////////////////////
-                            PUBLIC/EXTERNAL FUNCTIONS
-    //////////////////////////////////////////////////////////////*/
-    /**
-     * @notice returns the human readable explanation 
-     * corresponding to the error code returned by detectTransferRestriction
-     * @param restrictionCode The error code returned by detectTransferRestriction
-     * @return message The human readable explanation corresponding to the error code returned by detectTransferRestriction
-     * @dev see {ERC-1404}
-     */
-    function messageForTransferRestriction(
-        uint8 restrictionCode
-    ) public virtual view override(IERC1404) returns (string memory message) {
-          IRuleEngine ruleEngine_ = ruleEngine();
-        if (restrictionCode == uint8(IERC1404Extend.REJECTED_CODE_BASE.TRANSFER_OK)) {
-            return TEXT_TRANSFER_OK;
-        } else if (
-            restrictionCode ==
-            uint8(IERC1404Extend.REJECTED_CODE_BASE.TRANSFER_REJECTED_PAUSED)
-        ) {
-            return TEXT_TRANSFER_REJECTED_PAUSED;
-        } else if (
-            restrictionCode ==
-            uint8(IERC1404Extend.REJECTED_CODE_BASE.TRANSFER_REJECTED_DEACTIVATED)
-        ) {
-            return TEXT_TRANSFER_REJECTED_DEACTIVATED;
-        } else if (
-            restrictionCode ==
-            uint8(IERC1404Extend.REJECTED_CODE_BASE.TRANSFER_REJECTED_FROM_FROZEN)
-        ) {
-            return TEXT_TRANSFER_REJECTED_FROM_FROZEN;
-        } else if (
-            restrictionCode ==
-            uint8(IERC1404Extend.REJECTED_CODE_BASE.TRANSFER_REJECTED_TO_FROZEN)
-        ) {
-            return TEXT_TRANSFER_REJECTED_TO_FROZEN;
-        }  else if (
-            restrictionCode ==
-            uint8(IERC1404Extend.REJECTED_CODE_BASE.TRANSFER_REJECTED_SPENDER_FROZEN)
-        ) {
-            return TEXT_TRANSFER_REJECTED_SPENDER_FROZEN;
-        } else if (address(ruleEngine_) != address(0)) {
-            return ruleEngine_.messageForTransferRestriction(restrictionCode);
-        } else {
-            return TEXT_UNKNOWN_CODE;
-        }
-    }
-    
-    /**
-     * @notice check if value token can be transferred from `from` to `to`
-     * @param from address The address which you want to send tokens from
-     * @param to address The address which you want to transfer to
-     * @param value uint256 the amount of tokens to be transferred
-     * @return code of the rejection reason
-     * @dev see {ERC-1404}
-     */
-    function detectTransferRestriction(
-        address from,
-        address to,
-        uint256 value
-    ) public virtual view override(IERC1404) returns (uint8 code) {
-         IRuleEngine ruleEngine_ = ruleEngine();
-         uint8 codeReturn = _detectTransferRestriction(from, to, value);
-         if(codeReturn != uint8(IERC1404Extend.REJECTED_CODE_BASE.TRANSFER_OK) ){
-            return codeReturn;
-         } else if (address(ruleEngine_) != address(0)) {
-            return ruleEngine_.detectTransferRestriction(from, to, value);
-        } else{
-            return uint8(IERC1404Extend.REJECTED_CODE_BASE.TRANSFER_OK);
-        }
-    }
-
-    function detectTransferRestrictionFrom(
-        address spender,
-        address from,
-        address to,
-        uint256 value
-    ) public virtual view override(IERC1404Extend) returns (uint8 code) {
-        IRuleEngine ruleEngine_ = ruleEngine();
-        if (isFrozen(spender)) {
-            return uint8(IERC1404Extend.REJECTED_CODE_BASE.TRANSFER_REJECTED_SPENDER_FROZEN);
-        } else {
-            uint8 codeReturn = _detectTransferRestriction(from, to, value);
-            if (codeReturn != uint8(IERC1404Extend.REJECTED_CODE_BASE.TRANSFER_OK) ){
-                return codeReturn;
-            } else if (address(ruleEngine_) != address(0)) {
-                return ruleEngine_.detectTransferRestrictionFrom(spender, from, to, value);
-            } else { 
-                return uint8(IERC1404Extend.REJECTED_CODE_BASE.TRANSFER_OK);
-            }
-        } 
-    }
-
-     /*//////////////////////////////////////////////////////////////
-                            INTERNAL/PRIVATE FUNCTIONS
-    //////////////////////////////////////////////////////////////*/
-
-    /**
-    * @dev override this function to add further restriction
-    */
-    function _detectTransferRestriction(
-        address from,
-        address to,
-        uint256 /* value */
-    ) internal virtual view  returns (uint8 code) {
-        if (deactivated()){
-            return uint8(IERC1404Extend.REJECTED_CODE_BASE.TRANSFER_REJECTED_DEACTIVATED);
-        } else if (paused()) {
-            return uint8(IERC1404Extend.REJECTED_CODE_BASE.TRANSFER_REJECTED_PAUSED);
-        } else if (isFrozen(from)) {
-            return uint8(IERC1404Extend.REJECTED_CODE_BASE.TRANSFER_REJECTED_FROM_FROZEN);
-        } else if (isFrozen(to)) {
-            return uint8(IERC1404Extend.REJECTED_CODE_BASE.TRANSFER_REJECTED_TO_FROZEN);
-        } 
-        else {
-            return uint8(IERC1404Extend.REJECTED_CODE_BASE.TRANSFER_OK);
-        }
-    }
-}
-
-
-// File contracts/modules/2_CMTATBaseERC1404.sol
-
-// Original license: SPDX_License_Identifier: MPL-2.0
-
-pragma solidity ^0.8.20;
-
-
-/* ==== Wrapper === */
-// Use by detectTransferRestriction
-
-// Extensions
-
-// Controllers
-
-
-abstract contract CMTATBaseERC1404 is
-    CMTATBaseRuleEngine,
-    ValidationModuleERC1404
-{
-    /**
-    * @dev ERC20EnforcementModule error text
-    */
-    string internal constant TEXT_TRANSFER_REJECTED_FROM_INSUFFICIENT_ACTIVE_BALANCE =
-        "AddrFrom:insufficientActiveBalance";
-    /*//////////////////////////////////////////////////////////////
-                            PUBLIC/EXTERNAL FUNCTIONS
-    //////////////////////////////////////////////////////////////*/
-
-    /**
-    * @inheritdoc ValidationModuleERC1404
-    */
-    function messageForTransferRestriction(
-        uint8 restrictionCode
-    )  public view virtual override(ValidationModuleERC1404)  returns (string memory message) {
-        if(restrictionCode == uint8(IERC1404Extend.REJECTED_CODE_BASE.TRANSFER_REJECTED_FROM_INSUFFICIENT_ACTIVE_BALANCE)){
-            return TEXT_TRANSFER_REJECTED_FROM_INSUFFICIENT_ACTIVE_BALANCE;
-        } else {
-            return ValidationModuleERC1404.messageForTransferRestriction(restrictionCode);
-        }
-
-    }
-
-    /**
-    * @inheritdoc ValidationModuleRuleEngine
-    */
-    function canTransfer(
-        address from,
-        address to,
-        uint256 value
-    ) public virtual override (CMTATBaseRuleEngine, ValidationModuleRuleEngine) view returns (bool) {
-        return CMTATBaseRuleEngine.canTransfer(from, to, value);
-    }
-
-    /**
-    * @inheritdoc ValidationModuleRuleEngine
-    */
-    function canTransferFrom(
-        address spender,
-        address from,
-        address to,
-        uint256 value
-    ) public virtual override (CMTATBaseRuleEngine, ValidationModuleRuleEngine) view returns (bool) {
-        return CMTATBaseRuleEngine.canTransferFrom(spender, from, to, value);
-    }
-
-    function hasRole(
-        bytes32 role,
-        address account
-    ) public view virtual override(AccessControlUpgradeable, CMTATBaseRuleEngine) returns (bool) {
-        return CMTATBaseRuleEngine.hasRole(role, account);
-    }
-
-    /*//////////////////////////////////////////////////////////////
-                            INTERNAL/PRIVATE FUNCTIONS
-    //////////////////////////////////////////////////////////////*/
-    function _detectTransferRestriction(
-        address from,
-        address to,
-        uint256 value
-    ) internal virtual override( ValidationModuleERC1404) view  returns (uint8 code) {
-        uint256 frozenTokensLocal = ERC20EnforcementModule.getFrozenTokens(from);
-        if(frozenTokensLocal > 0 ){
-            uint256 activeBalance = ERC20Upgradeable.balanceOf(from) - frozenTokensLocal;
-            if(value > activeBalance) {
-                return uint8(IERC1404Extend.REJECTED_CODE_BASE.TRANSFER_REJECTED_FROM_INSUFFICIENT_ACTIVE_BALANCE);
-            }
-        } 
-        return ValidationModuleERC1404._detectTransferRestriction(from, to, value);
-    }
-}
-
-
-// File contracts/interfaces/technical/IERC7802.sol
-
-// Original license: SPDX_License_Identifier: MIT
-// From https://github.com/ethereum-optimism/optimism/blob/op-node/v1.13.2/packages/contracts-bedrock/interfaces/L2/IERC7802.sol
-pragma solidity ^0.8.20;
-
-/**
-* @title IERC7802
-* @notice Defines the interface for crosschain ERC20 transfers.
-*/
-interface IERC7802 is IERC165 {
-    /** 
-    * @notice Emitted when a crosschain transfer mints tokens.
-    * @param to       Address of the account tokens are being minted for.
-    * @param value   Amount of tokens minted.
-    * @param sender   Address of the account that finilized the crosschain transfer.
-    */
-    event CrosschainMint(address indexed to, uint256 value, address indexed sender);
-
-    /**
-    * @notice Emitted when a crosschain transfer burns tokens.
-    * @param from     Address of the account tokens are being burned from.
-    * @param value Amount of tokens burned.
-    * @param sender   Address of the account that initiated the crosschain transfer.
-    */
-    event CrosschainBurn(address indexed from, uint256 value, address indexed sender);
-
-    /** 
-    * @notice Mint tokens through a crosschain transfer.
-    * @param to     Address to mint tokens to.
-    * @param value Amount of tokens to mint.
-    */
-    function crosschainMint(address to, uint256 value) external;
-
-    /**
-    * @notice Burn tokens through a crosschain transfer.
-    * @param from  Address to burn tokens from.
-    * @param value Amount of tokens to burn.
-    */
-    function crosschainBurn(address from, uint256 value) external;
-}
-
-
-// File contracts/modules/3_CMTATBaseERC20CrossChain.sol
-
-// Original license: SPDX_License_Identifier: MPL-2.0
-
-pragma solidity ^0.8.20;
-/* ==== OpenZeppelin === */
-
-
-/* ==== Module === */
-
-/* ==== Interfaces === */
-
-
-/**
- * @title ERC20CrossChainModule (ERC-7802)
- * @dev 
- *
- * Contains all burn functions, inherits from ERC-20
- */
-abstract contract CMTATBaseERC20CrossChain is CMTATBaseERC1404, IERC7802, IBurnFromERC20 {
-    bytes32 public constant BURNER_FROM_ROLE = keccak256("BURNER_FROM_ROLE");
-    bytes32 public constant CROSS_CHAIN_ROLE = keccak256("CROSS_CHAIN_ROLE");
-
-    /// @dev Modifier to restrict access to the token bridge.
-    /// Source: OpenZeppelin v5.4.0 - draft-ERC20Bridgeable.sol
-    modifier onlyTokenBridge() {
-        // Token bridge should never be impersonated using a relayer/forwarder. Using msg.sender is preferable to
-        // _msgSender() for security reasons.
-        _checkTokenBridge(msg.sender);
-        _;
-    }
-
-    /*//////////////////////////////////////////////////////////////
-                            PUBLIC/EXTERNAL FUNCTIONS
-    //////////////////////////////////////////////////////////////*/
-
-    /**
-    * @inheritdoc IERC7802
-    * @dev
-    * Don't emit the same event as configured in the ERC20MintModule
-    * @custom:access-control
-    * - the caller must have the `CROSS_CHAIN_ROLE`.
-    */
-    function crosschainMint(address to, uint256 value) public virtual override(IERC7802) whenNotPaused onlyTokenBridge {
-         // Put before to avoid reentrancy-events (slither)
-         emit CrosschainMint(to, value,_msgSender());
-        _mintOverride(to, value);
-    }
-
-    /**
-    * @inheritdoc IERC7802
-    * @dev
-    * Don't emit the same event as configured in the ERC20BurnModule
-    * @custom:access-control
-    * - the caller must have the `CROSS_CHAIN_ROLE`.
-    */
-    function crosschainBurn(address from, uint256 value) public virtual override(IERC7802) whenNotPaused onlyTokenBridge{
-        address sender =  _msgSender();
-        // Put before to avoid reentrancy-events (slither)
-        emit CrosschainBurn(from, value, _msgSender());
-        _burnFrom(sender, from, value);  
-    }
-
-    /**
-     * @inheritdoc IBurnFromERC20
-     * @custom:access-control
-     * - the caller must have the `BURNER_FROM_ROLE`.
-     */
-    function burnFrom(address account, uint256 value)
-        public virtual override(IBurnFromERC20) 
-        onlyRole(BURNER_FROM_ROLE) whenNotPaused
-    {
-        address sender =  _msgSender();
-        _burnFrom(sender, account, value); 
-    }
-
-    /**
-    * @inheritdoc IBurnFromERC20
-    * @custom:access-control
-    * - the caller must have the `BURNER_FROM_ROLE`.
-    */
-    function burn(
-        uint256 value
-    ) public virtual onlyRole(BURNER_FROM_ROLE) whenNotPaused {
-        // Put before to avoid reentrancy-events (slither)
-        // Don't emit CrossChainBurn because this function burn is not part of the IERC7802 interface
-        // Don't emit Spend event because allowance is not used here
-        address sender = _msgSender();
-        emit BurnFrom(sender, sender, sender, value);
-        _burnOverride(sender, value);
-    }
-
-    /* ============ View functions ============ */
-    function supportsInterface(bytes4 _interfaceId) public view virtual override(AccessControlUpgradeable, IERC165) returns (bool) {
-        return _interfaceId == type(IERC7802).interfaceId || AccessControlUpgradeable.supportsInterface( _interfaceId);
+    ) public view virtual override(AccessControlUpgradeable, AccessControlModule) returns (bool) {
+        return AccessControlModule.hasRole(role, account);
     }
 
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
 
-    function _burnFrom(address sender, address account, uint256 value) internal virtual{
-        // Allowance check
-        ERC20Upgradeable._spendAllowance(account, sender, value );
-         // Specific event for the operation
-        // Put before to avoid reentrancy-events (slither)
-        emit Spend(account, sender, value);
-        emit BurnFrom(sender, account, sender, value);
-        // burn
-        _burnOverride(account, value);
+
+    function _mintOverride(address account, uint256 value) internal virtual override(ERC20MintModuleInternal) {
+        require(ValidationModule._canMintBurnByModule(account), Errors.CMTAT_InvalidTransfer(address(0), account, value) );
+        ERC20MintModuleInternal._mintOverride(account, value);
+    }
+
+
+    function _burnOverride(address account, uint256 value) internal virtual override(ERC20BurnModuleInternal) {
+        require(ValidationModule._canMintBurnByModule(account), Errors.CMTAT_InvalidTransfer(account, address(0), value) );
+        ERC20BurnModuleInternal._burnOverride(account, value);
     }
 
     /**
-     * @dev Checks if the caller is a trusted token bridge. MUST revert otherwise.
-     *
-     * Source: OpenZeppelin v5.4.0 - draft-ERC20Bridgeable.sol
-     */
-    function _checkTokenBridge(address caller) internal virtual {
-        AccessControlUpgradeable._checkRole(CROSS_CHAIN_ROLE, caller); 
+    * @dev Check if a minter transfer is valid
+    */
+    function _minterTransferOverride(address from, address to, uint256 value) internal virtual override(ERC20MintModuleInternal) {
+        require(ValidationModuleCore.canTransfer(from, to, value), Errors.CMTAT_InvalidTransfer(from, to, value) );
+        ERC20MintModuleInternal._minterTransferOverride(from, to, value);
     }
 }
 
 
-// File contracts/modules/wrapper/options/ERC2771Module.sol
+// File contracts/deployment/light/CMTATStandaloneLight.sol
 
 // Original license: SPDX_License_Identifier: MPL-2.0
 
 pragma solidity ^0.8.20;
-
-/* ==== OpenZeppelin === */
-
-/**
- * @title Meta transaction (gasless) module.
- * @dev 
- *
- * Useful for to provide UX where the user does not pay gas for token exchange
- * To follow OpenZeppelin, this contract does not implement the functions init & init_unchained.
- * ()
- */
-abstract contract ERC2771Module is ERC2771ContextUpgradeable {
-    /// @custom:oz-upgrades-unsafe-allow constructor
-    constructor(
-        address trustedForwarder
-    ) ERC2771ContextUpgradeable(trustedForwarder) {
-        // Nothing to do
-    }
-}
-
-
-// File contracts/modules/4_CMTATBaseERC2771.sol
-
-// Original license: SPDX_License_Identifier: MPL-2.0
-
-pragma solidity ^0.8.20;
-/* ==== OpenZeppelin === */
-
-/* ==== Module === */
-
-
-
-/**
-* @title Extend CMTAT Base with option modules
-*/
-abstract contract CMTATBaseERC2771 is CMTATBaseERC20CrossChain, ERC2771Module {
-    /*//////////////////////////////////////////////////////////////
-                            ERC2771 MODULE
-    //////////////////////////////////////////////////////////////*/
-       /**
-     * @dev This surcharge is not necessary if you do not use the 2771Module
-     */
-    function _msgSender()
-        internal virtual
-        view
-        override(ContextUpgradeable, ERC2771ContextUpgradeable)
-        returns (address sender)
-    {
-        return ERC2771ContextUpgradeable._msgSender();
-    }
-
-    /**
-     * @dev This surcharge is not necessary if you do not use the 2771Module
-     */
-    function _contextSuffixLength() internal virtual view 
-    override(ContextUpgradeable, ERC2771ContextUpgradeable)
-    returns (uint256) {
-         return ERC2771ContextUpgradeable._contextSuffixLength();
-    }
-
-    /**
-     * @dev This surcharge is not necessary if you do not use the 2771Module
-     */
-    function _msgData()
-        internal virtual
-        view
-        override(ContextUpgradeable, ERC2771ContextUpgradeable)
-        returns (bytes calldata)
-    {
-        return ERC2771ContextUpgradeable._msgData();
-    }
-}
-
-
-// File contracts/deployment/CMTATStandalone.sol
-
-// Original license: SPDX_License_Identifier: MPL-2.0
-
-pragma solidity ^0.8.20;
-
 
 
 /**
 * @title CMTAT version for a standalone deployment (without proxy)
 */
-contract CMTATStandalone is CMTATBaseERC2771 {
+contract CMTATStandaloneLight is CMTATBaseCore {
     /**
-     * @notice Contract version for standalone deployment
-     * @param forwarderIrrevocable address of the forwarder, required for the gasless support
+     * @notice Contract version for standalone light deployment
      * @param admin address of the admin of contract (Access Control)
      * @param ERC20Attributes_ ERC20 name, symbol and decimals
-     * @param extraInformationAttributes_ tokenId, terms, information
-     * @param engines_ external contract
      */
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor(
-        address forwarderIrrevocable,
         address admin,
-        ICMTATConstructor.ERC20Attributes memory ERC20Attributes_,
-        ICMTATConstructor.ExtraInformationAttributes memory extraInformationAttributes_,
-        ICMTATConstructor.Engine memory engines_ 
-    ) ERC2771Module(forwarderIrrevocable) {
+        ICMTATConstructor.ERC20Attributes memory ERC20Attributes_
+    ) {
         // Initialize the contract to avoid front-running
         // Warning : do not initialize the proxy
         initialize(
             admin,
-            ERC20Attributes_,
-            extraInformationAttributes_,
-            engines_
+            ERC20Attributes_
         );
     }
 }

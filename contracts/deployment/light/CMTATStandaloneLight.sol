@@ -10,11 +10,9 @@ import {ICMTATConstructor} from "../../interfaces/technical/ICMTATConstructor.so
 */
 contract CMTATStandaloneLight is CMTATBaseCore {
     /**
-     * @notice Contract version for standalone deployment
-     * @param forwarderIrrevocable address of the forwarder, required for the gasless support
+     * @notice Contract version for standalone light deployment
      * @param admin address of the admin of contract (Access Control)
      * @param ERC20Attributes_ ERC20 name, symbol and decimals
-     * @param baseModuleAttributes_ tokenId, terms, information
      */
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor(
