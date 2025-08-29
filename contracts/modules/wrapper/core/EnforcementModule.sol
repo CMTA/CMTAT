@@ -28,12 +28,26 @@ abstract contract EnforcementModule is
     //////////////////////////////////////////////////////////////*/
     /* ============ State restricted functions ============ */
     /**
+    * As defined in ICMTATMandatory
+    */
+    function freeze(address account) public {
+        setAddressFrozen(account, true);
+    }
+
+    /**
+    * As defined in ICMTATMandatory
+    */
+    function unfreeze(address account) public {
+        setAddressFrozen(account, false);
+    }
+
+    /**
     * @inheritdoc IERC3643Enforcement
     * @custom:access-control
     * - the caller must have the `ENFORCER_ROLE`.
     */
-    function setAddressFrozen(address account, bool freeze) public virtual override(IERC3643Enforcement) onlyRole(ENFORCER_ROLE){
-         _addAddressToTheList(account, freeze, "");
+    function setAddressFrozen(address account, bool frozen) public virtual override(IERC3643Enforcement) onlyRole(ENFORCER_ROLE){
+         _addAddressToTheList(account, frozen, "");
     }
     
     /**
@@ -43,15 +57,15 @@ abstract contract EnforcementModule is
     * - Freezing an account prevents it from transferring or receiving tokens depending on enforcement logic.
     * - Emits an `AddressFrozen` event.
     * @param account The address whose frozen status is being updated.
-    * @param freeze Set to `true` to freeze the account, or `false` to unfreeze it.
+    * @param frozen Set to `true` to freeze the account, or `false` to unfreeze it.
     * @param data Optional metadata providing context or justification for the action (e.g. compliance reason).
     * @custom:access-control
     * - the caller must have the `ENFORCER_ROLE`.
     */
     function setAddressFrozen(
-        address account, bool freeze, bytes calldata data
+        address account, bool frozen, bytes calldata data
     ) public virtual onlyRole(ENFORCER_ROLE)  {
-         _addAddressToTheList(account, freeze, data);
+         _addAddressToTheList(account, frozen, data);
     }
 
     /**
@@ -69,7 +83,7 @@ abstract contract EnforcementModule is
     /**
     * @inheritdoc IERC3643Enforcement
     */
-    function isFrozen(address account) public override(IERC3643Enforcement) view virtual returns (bool isFrozen_) {
+    function isFrozen(address account) public override(IERC3643Enforcement) view virtual returns (bool frozen) {
        return _addressIsListed(account);
        
     }
@@ -77,8 +91,8 @@ abstract contract EnforcementModule is
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
-    function _addAddressToTheList(EnforcementModuleInternalStorage storage $,address account, bool freeze, bytes memory data) internal override(EnforcementModuleInternal){
-        EnforcementModuleInternal._addAddressToTheList($, account, freeze, data);
-        emit AddressFrozen(account, freeze, _msgSender(), data);
+    function _addAddressToTheList(EnforcementModuleInternalStorage storage $,address account, bool frozen, bytes memory data) internal override(EnforcementModuleInternal){
+        EnforcementModuleInternal._addAddressToTheList($, account, frozen, data);
+        emit AddressFrozen(account, frozen, _msgSender(), data);
     }
 }

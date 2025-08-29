@@ -3,6 +3,49 @@
 pragma solidity ^0.8.20;
 
 import {IERC1643CMTAT, IERC1643} from "./draft-IERC1643CMTAT.sol";
+import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {IERC3643EnforcementEvent} from "../tokenization/IERC3643Partial.sol";
+
+/**
+ * Interface with the mandatory functions according to CMTAT Functional Specification
+ */
+interface ICMTATMandatory is IERC3643EnforcementEvent {
+
+    /*
+    * @notice returns tokenization terms
+    */
+    function termsURI() external view returns (string memory);
+
+    /**
+     * Mints the amount of tokens to the target address.
+     */
+    function mint(address target, uint256 amount) external;
+
+    /**
+     * Burns the amount of tokens from the target address.
+     */
+    function burn(address target, uint256 amount) external;
+
+    /**
+     * Freeze the target address.
+     * 
+     * Must emit an AddressFrozen event for the address with isFrozen=true, if successful.
+     */
+    function freeze(address target) external;
+
+    /**
+     * Freeze the target address.
+     * 
+     * Must emit an AddressFrozen event for the address with isFrozen=false, if successful.
+     */
+    function unfreeze(address target) external;
+
+    /**
+     * Returns whether the target address is frozen.
+     */
+    function isFrozen(address account) external returns(bool);
+
+}
 
 /**
 * The issuer must be able to “deactivate” the smart contract, to prevent execution of transactions on
