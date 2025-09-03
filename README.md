@@ -12,10 +12,6 @@ The CMTA token (CMTAT) is a security token framework that includes various compl
 
 This repository provides CMTA's reference Solidity implementation of CMTAT, suitable for EVM chains such as Ethereum.
 
-[TOC]
-
-
-
 ### History
 
 The CMTA token (CMTAT) is a security token framework that includes various compliance features such as conditional transfer, account freeze, and token pause. CMTAT was initially optimized for the Swiss law framework, however, these numerous features and extensions make it suitable for other jurisdictions too. 
