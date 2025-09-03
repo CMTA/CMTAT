@@ -2,7 +2,9 @@
 
 # CMTA Token 
 
-> To use the CMTAT, we recommend the latest audited version, from the [Releases](https://github.com/CMTA/CMTAT/releases) page. Currently, it is the version [v3.0.0](https://github.com/CMTA/CMTAT/releases/tag/v3.0.0)
+> To use the CMTAT, we recommend the latest audited version, from the [Releases](https://github.com/CMTA/CMTAT/releases) page. Currently, it is the version [v3.0.0](https://github.com/CMTA/CMTAT/releases/tag/v3.0.0).
+>
+> A pdf file of this readme is available here:  [CMTATSpecificationV3.0.0.pdf](./CMTATSpecificationV3.0.0.pdf) 
 
 ## Introduction
 
@@ -15,7 +17,7 @@ This repository provides CMTA's reference Solidity implementation of CMTAT, suit
 The CMTA token (CMTAT) is a security token framework that includes various compliance features such as conditional transfer, account freeze, and token pause. CMTAT was initially optimized for the Swiss law framework, however, these numerous features and extensions make it suitable for other jurisdictions too. 
 
 The CMTAT is an open standard from the [Capital Markets and Technology Association](https://www.cmta.ch/) (CMTA), which gathers organizations from the financial, legal and technology sectors.
-The CMTAT was first developed by a working group of CMTA's [members](https://che01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fcmta.ch%2Fmembers&data=05|02|ryan.sauge@taurushq.com|74eed7d98767466e3a6008ddc527bf99|2aef1e0a410e4ef9b0aad8a3be429e91|0|0|638883497151712901|Unknown|TWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D|0|||&sdata=HFKVQ%2Fel0BQrlGfqbVIWPv1VoSxjyZ7faOCaBcqv%2FhM%3D&reserved=0) and its development is now overseen by the [Technical Committee of CMTA's Advisory Board](https://che01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fcmta.ch%2Fadvisory-board&data=05|02|ryan.sauge@taurushq.com|74eed7d98767466e3a6008ddc527bf99|2aef1e0a410e4ef9b0aad8a3be429e91|0|0|638883497151731812|Unknown|TWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D|0|||&sdata=iz7mXlzgn8NRXIt7A%2Bo2MdAmktsTBq8iQlmyLxhqLYs%3D&reserved=0). 
+The CMTAT was first developed by a working group of CMTA's [members](https://cmta.ch/members) and its development is now overseen by the [Technical Committee of CMTA's Advisory Board](https://cmta.ch/advisory-board). 
 
 ### Goal
 
@@ -52,7 +54,7 @@ By taking these five main goals, here a comparison with others known implementat
 | 4<br />(Security)                                   | &#x2611;                                                     | &#x2611;                                                     | &#x2612;                                                     | &#x2612;                                                     | &#x2612;                                                     |
 |                                                     | - 1.0 and 2.3.0: audited by [ABDK](https://abdk.consulting)<br />3.0.0 audited by [Halborn](https://www.halborn.com)<br />- RBAC Access Control | -  Past version audited by [Hacken](https://hacken.io).<br />- Lack of granularity in term of Access Control (only two roles: Agent and Owner) | No official public audit for the last commits,<br />last audit was done in 2020 | No official audit available                                  | No official audit available                                  |
 | 5<br />(Open-source and permissive license)         | &#x2611;                                                     | Partial                                                      | &#x2611;                                                     | &#x2611;                                                     | &#x2611;                                                     |
-|                                                     | MPL-2.0<br />(permissive)                                    | - ERC-3643 core: GPL 3.0 (copyleft)<br />- Compliance module: CC-BY-NC-4.0(forbid commercial use) | Apache 2.0<br/>(permissive)                                  | MIT<br/>(permissive)                                         | [Apache-2.0 license](https://github.com/castframework/smartcoin/tree/main#Apache-2.0-1-ov-file)<br />(permissive) |
+|                                                     | MPL-2.0<br />(weak copyleft)                                 | - ERC-3643 core: GPL 3.0 (strong copyleft)<br />- Compliance module: CC-BY-NC-4.0(forbid commercial use) | Apache 2.0<br/>(permissive)                                  | MIT<br/>(permissive)                                         | [Apache-2.0 license](https://github.com/castframework/smartcoin/tree/main#Apache-2.0-1-ov-file)<br />(permissive) |
 
 
 
@@ -81,7 +83,7 @@ CMTAT comes with several different deployment versions to meet specific use case
 | Equities                   | CMTAT Standard     | All features, without those directly to Debt                 |
 | Equities in Germany        | CMTAT ERC-7551     | The standard version with a few supplementary functions to meet the standard [ERC-7551](https://ethereum-magicians.org/t/erc-7551-crypto-security-token-smart-contract-interface-ewpg/16416), tailored for the Germany and eWpg. |
 | Debt/bond                  | CMTAT Debt<br />   | CMTAT Standard is also suitable but this version adds the possibility to put several on-chain information related to debt and bond product |
-| Stablecoin (e.g USDC/USDT) | CMTAT Light        | The core features (address freeze, pause) without those rather required by equities and debt products (e.g. document management, snapshot, partial freeze of balances) |
+| Stablecoin (e.g USDC/USDT) | CMTAT Light        | The core features (i.e., minting, burning,address freeze / blacklisting, pause) without additional functions required by equities and debt instruments (e.g., document management, snapshot, partial freeze of balances). |
 
 ##### Technical use case (whitelist, upgradeable/proxy)
 
@@ -203,7 +205,7 @@ Here is a comparison between the features present in known tokenization framewor
 |                  Contract version on-chain                   |                           &#x2611;                           |                           &#x2611;                           | &#x2611;                                                     | &#x2611;<br />([GitHub](https://github.com/castframework/smartcoin/blob/dd8bf5e1ba24d2379b102db74bfc8326fb649b65/contracts/smartCoin/SmartCoin.sol#L228)) |
 |        Deployable on Layer2 and other EVM blockchains        |                &#x2611;<br />(require PUSH0)                 | Partial<br />Requires [ERC-1820](https://eips.ethereum.org/EIPS/eip-1820) Registry contract | &#x2611;<br />(require PUSH0)                                | &#x2611;                                                     |
 |                          **Other**                           |                                                              |                                                              |                                                              |                                                              |
-|                           License                            |                     MPL 2.0 (permissive)                     |                   Apache 2.0 (permissive)                    | GPL 3.0 (copyleft)                                           | Apache 2.0 (permissive)                                      |
+|                           License                            |                   MPL 2.0 (weak copyleft)                    |                   Apache 2.0 (permissive)                    | GPL 3.0 (strong copyleft)                                    | Apache 2.0 (permissive)                                      |
 |                  Third-party security audit                  | &#x2611;<br />([ABDK](https://abdk.consulting) & [Halborn](https://www.halborn.com)) |                         **&#x2612;**                         | &#x2611;<br />[Hacken](https://hacken.io))                   | **&#x2612;**                                                 |
 |                  **CMTAT unique features**                   |                                                              |                                                              |                                                              |                                                              |
 |                    *Regulatory features*                     |                                                              |                                                              |                                                              |                                                              |
@@ -236,12 +238,13 @@ The CMTAT was initially designed for the digitalization of company shares. For S
 
 #### Digitalization of debt securities
 
-- [Project Guardian - UBS (2024)](https://www.linkedin.com/posts/cmta-ch_shareubs-activity-7137735139438002177-oDUL?utm_source=share&utm_medium=member_desktop): CMTAT was used to issue a digital bond by UBS, as part of the first live repo transaction with a natively-issued digital bond on a public blockchain as part of the Monetary Authority of Singapore’s (MAS) Project Guardian.
+- [Project Guardian - UBS (2024)](https://www.linkedin.com/posts/cmta-ch_shareubs-activity-7137735139438002177-oDUL): CMTAT was used to issue a digital bond by UBS, as part of the first live repo transaction with a natively-issued digital bond on a public blockchain as part of the Monetary Authority of Singapore’s (MAS) Project Guardian.
 - The Obligate platform [Enote Protocol](https://docs.obligate.com/obligate/enote-protocol) enables BulletBond issuances using smart contracts, deployed on Polygon PoS. For this purpose, they use a fork of CMTAT with the `SnapshotModule`(replaced in CMTAT v3.0.0 by the SnapshotEngine) and the DebtModule.
 - [SCCF (2023)](https://www.taurushq.com/blog/sccf-and-horizon-capital-leverage-taurus-technology-to-execute-landmark-tokenized-trade-finance-debt-transaction/): trade finance firm SCCF issued short term tokenized notes to refinance a loan to a commodity trading firm active in biofuels through [Taurus SA](https://www.taurushq.com).
 
 #### Digitalization of structured products
 
+- In early 2024, [UBS](https://www.ubs.com/global/en/investment-bank/tokenize.html) executed a pilot transaction with OSL, a licensed professional investor in Hong Kong, to issue a tokenized warrant on Ethereum using the CMTAT smart contract framework. The tokenization arrangement for this warrant utilizes the CMTAT codebase to represent the warrant smart contract, which forms part of the tokenized register of holders. See [ubs.com - UBS expands its digital asset capabilities by launching Hong Kong’s first-ever tokenized warrant on the Ethereum network [ubs.com]](https://www.ubs.com/global/en/media/display-page-ndp/en-20240207-tokenized-warrant.html).
 - [Credit Suisse, Pictet and Vontobel (2022)](https://cmta.ch/news-articles/trading-and-settlement-in-digital-securities) issued tokenized investment products that were traded on [BX Swiss](https://www.bxswiss.com/news/20221213-BX-Swiss-legt-das-technische-Fundament-fuer-die-Zukunft-des-regulierten-Handels-mit-tokenisierten-Wertpapieren) as part of a proof-of-concept leveraging the CMTAT.
 
 #### Tokenized market funds
@@ -266,7 +269,7 @@ CMTAT is mentioned in several different reports. While these reports do not take
 
 #### Security and contribution
 
-The design and security of the CMTAT was supported by [ABDK](https://abdk.consulting) (CMTAT v1.0 and v2.3.0) and [Halborn](https://www.halborn.com) (CMTAT v3.0.0) , two leading audit companies in smart contract security.
+The design and security of the CMTAT was supported by [ABDK](https://abdk.consulting) (CMTAT v1.0 and v2.3.0) and [Halborn](https://www.halborn.com) (CMTAT v3.0.0), two leading audit companies in smart contract security.
 
 - The preferred way to receive comments is through the GitHub issue tracker.  
 - Private comments and questions can be sent to the CMTA secretariat at <a href="mailto:admin@cmta.ch">admin@cmta.ch</a>. 
@@ -448,7 +451,7 @@ These following functions to reduce contract code size:
 
 All functions related to the interface `IAgentRole`because CMTAT uses a RBAC Access Control to offer more granularity in terms of access control.
 
-And finally `setCompliance`because CMTAT uses a different architecture for its `ruleEngine`.
+And finally `setCompliance` because CMTAT uses a different architecture for its `ruleEngine`.
 
 ##### Pause
 
@@ -512,7 +515,7 @@ The interface is supposed to work on top of additional standards that cover the 
 
 ##### CMTAT modification
 
-Since ERC-7551 is not yet an official standard, we decided to use the same name and signature as ERC-3643. Typically, we define a function `burn`instead of `destroyTokens`.
+Since ERC-7551 is not yet an official standard, we decided to use the same name and signature as ERC-3643. Typically, we define a function `burn` instead of `destroyTokens`.
 
 Many discussions were carried out in 2024 and 2025 with the partners and authors of the ERC-7551 standard to ensure that these modifications correspond to their initial purpose. We hope that these changes will be reflected in the standard if it becomes final.
 
@@ -632,7 +635,15 @@ interface IERC7802 is IERC165 {
 
 CMTAT architecture is divided in two main components: modules and engines.
 
-### Tree file structure
+### Overview
+
+#### Schema
+
+Here is an overview on how CMT
+
+![architecture-architecture-overview.drawio](./doc/schema/drawio/architecture-architecture-overview.drawio.png)
+
+#### Tree file structure
 
 Here is the GitHub file structure for CMTAT repository.
 
@@ -1549,7 +1560,20 @@ Here is the list of the different versions available for each CMTAT version.
 
 This contract acts as a controller and can call different contract rules to apply rules on each transfer.
 
-A possible rule is a whitelist rule where only the addresses inside the whitelist can perform a transfer
+###### Rules
+
+Rules have their own dedicated repository: [github.com/CMTA/Rules](https://github.com/CMTA/Rules) and it is planned to make them also directly compatible with CMTAT without the need of the RuleEngine contract.
+
+Here are the list of rules in development:
+
+| Rule                         | Type [ready-only / read-write] | Security Audit plannedin the roadmap | Description                                                  |
+| ---------------------------- | ------------------------------ | ------------------------------------ | ------------------------------------------------------------ |
+| RuleWhitelist                | Ready-only                     | ☑                                    | This rule can be used to restrict transfers from/to only addresses inside a whitelist. |
+| RuleWhitelistWrapper         | Ready-only                     | ☑                                    | This rule can be used to restrict transfers from/to only addresses inside a group of whitelist rules managed by different operators. |
+| RuleBlacklist                | Ready-only                     | ☑                                    | This rule can be used to forbid transfer from/to addresses in the blacklist |
+| RuleSanctionList             | Ready-only                     | ☑                                    | The purpose of this contract is to use the oracle contract from Chainalysis to forbid transfer from/to an address included in a sanctions designation (US, EU, or UN). |
+| RuleConditionalTransferLight | Ready-Write                    | In development                       | This rule requires that transfers have to be approved before being executed by the token |
+| RuleConditionalTransfer      | Ready-Write                    | ☒ (experimental rule)                | Same principle as the light version (see above) but we more options such as a time limit for approving a request as well as for carrying out the transfer |
 
 #### SnapshotEngine
 
@@ -1899,19 +1923,19 @@ This tab summarizes the different behavior of burn/mint functions if:
 - If the contract is in pause state
 - If the contract is deactivated
 
-|                                                              | burn      | batchBurn | burnFrom                 | mint      | batchMint | batchTransfer | crosschain burn          | Crosschain mint          | forcedTransfer   |
-| ------------------------------------------------------------ | --------- | --------- | ------------------------ | --------- | --------- | ------------- | ------------------------ | ------------------------ | ---------------- |
-| Module                                                       | ERC20Burn | ERC20Burn | CMTATBaseERC20CrossChain | ERC20Mint | ERC20Mint | ERC20Mint     | CMTATBaseERC20CrossChain | CMTATBaseERC20CrossChain | ERC20Enforcement |
-| Module type                                                  | Core      | Core      | Options                  | Core      | Core      | Core          | Options                  | Options                  | Extensions       |
-| Allow operation on a frozen address                          | &#x2612;  | &#x2612;  | &#x2612;                 | &#x2612;  | &#x2612;  | &#x2612;      | &#x2612;                 | &#x2612;                 | &#x2611;         |
-| Unfreeze missing funds if active balance is not enough<br />(`ERC20EnforcementModule`) | &#x2612;  | &#x2612;  | &#x2612;                 | -         | -         | &#x2612;      | &#x2612;                 | -                        | &#x2611;         |
-| Call the `RuleEngine`                                        | &#x2611;  | &#x2611;  | &#x2611;                 | &#x2611;  | &#x2611;  | &#x2611;      | &#x2611;                 | &#x2611;                 | &#x2612;         |
-| Authorised if contract is in pause state                     | &#x2611;  | &#x2611;  | &#x2612;                 | &#x2611;  | &#x2611;  | &#x2612;      | &#x2612;                 | &#x2612;                 | &#x2611;         |
-| Authorised if the contract is deactivated                    | &#x2612;  | &#x2612;  | &#x2612;                 | &#x2612;  | &#x2612;  | &#x2612;      | &#x2612;                 | &#x2612;                 | &#x2611;         |
+|                                                              | burn      | batchBurn | burnFrom                 | burnAndMint          | mint      | batchMint | batchTransfer | crosschain burn          | Crosschain mint          | forcedTransfer   |
+| ------------------------------------------------------------ | --------- | --------- | ------------------------ | -------------------- | --------- | --------- | ------------- | ------------------------ | ------------------------ | ---------------- |
+| Module                                                       | ERC20Burn | ERC20Burn | CMTATBaseERC20CrossChain | CMTATBaseCommon      | ERC20Mint | ERC20Mint | ERC20Mint     | CMTATBaseERC20CrossChain | CMTATBaseERC20CrossChain | ERC20Enforcement |
+| Module type                                                  | Core      | Core      | Options                  | Base module          | Core      | Core      | Core          | Options                  | Options                  | Extensions       |
+| Allow operation on a frozen address                          | &#x2612;  | &#x2612;  | &#x2612;                 | Same as burn  & mint | &#x2612;  | &#x2612;  | &#x2612;      | &#x2612;                 | &#x2612;                 | &#x2611;         |
+| Unfreeze missing funds if active balance is not enough<br />(`ERC20EnforcementModule`) | &#x2612;  | &#x2612;  | &#x2612;                 | Same as burn  & mint | -         | -         | &#x2612;      | &#x2612;                 | -                        | &#x2611;         |
+| Call the `RuleEngine`                                        | &#x2611;  | &#x2611;  | &#x2611;                 | Same as burn  & mint | &#x2611;  | &#x2611;  | &#x2611;      | &#x2611;                 | &#x2611;                 | &#x2612;         |
+| Authorised if contract is in pause state                     | &#x2611;  | &#x2611;  | &#x2612;                 | Same as burn  & mint | &#x2611;  | &#x2611;  | &#x2612;      | &#x2612;                 | &#x2612;                 | &#x2611;         |
+| Authorised if the contract is deactivated                    | &#x2612;  | &#x2612;  | &#x2612;                 | Same as burn  & mint | &#x2612;  | &#x2612;  | &#x2612;      | &#x2612;                 | &#x2612;                 | &#x2611;         |
 
 **Note**
 
-Contrary to a `mint`operation, the function `batchTransfer`will perform the compliance check on the `from`address, which will be an address with the minter role. Another difference is the function will revert if the contract is in pause state.
+Contrary to a `mint`operation, the function `batchTransfer` will perform the compliance check on the `from`address, which will be an address with the minter role. Another difference is the function will revert if the contract is in pause state.
 
 
 
@@ -2147,7 +2171,7 @@ Contracts for deployment are available in the directory [contracts/deployment](.
 | Upgradeable UUPS     | Deployment with a UUPS proxy                                 | Only upgradeable | [CMTATUpgradeableUUPS](./contracts/deployment/CMTATUpgradeableUUPS.sol) | Same as standard version, but adds also the UUPS proxy support |
 | ERC-1363             | Implements [ERC-1363](https://eips.ethereum.org/EIPS/eip-1363) | Standalone       | [CMTATStandaloneERC1363](./contracts/deployment/ERC1363/CMTATStandaloneERC1363.sol) | Same as standard version, but adds also the support of `ERC-1363` |
 |                      | -                                                            | Upgradeable      | [CMTATUpgradeableERC1363](./contracts/deployment/ERC1363/CMTATUpgradeableERC1363.sol) |                                                              |
-| Light                | Only core modules                                            | Standalone       | [CMTATStandaloneLight](./contracts/deployment/light/CMTATStandaloneLight.sol) | -                                                            |
+| Light                | Only core modules                                            | Standalone       | [CMTATStandaloneLight](./contracts/deployment/light/CMTATStandaloneLight.sol) | The core features (i.e., minting, burning,address freeze / blacklisting, pause) without additional functions required by equities and debt instruments (e.g., document management, snapshot, partial freeze of balances). |
 |                      |                                                              | Upgradeable      | [CMTATUpgradeableLight](./contracts/deployment/light/CMTATUpgradeableLight.sol) |                                                              |
 | Debt                 | Set Debt information and Credit Events                       | Standalone       | [CMTATStandaloneDebt](./contracts/deployment/debt/CMTATStandaloneDebt.sol) | Add the debt support.<br />Contrary to the standard version, it does not include the module `ERC2771Module` and the support of `ERC20CrossChain` |
 |                      |                                                              | Upgradeable      | [CMTATUpgradeableDebt](./contracts/deployment/debt/CMTATUpgradeableDebt.sol) | -                                                            |
@@ -2241,6 +2265,8 @@ More information on this standard here: [erc1363.org](https://erc1363.org), [Rar
 The light version only includes core modules.
 
 It also includes a function `forceBurn`to allow the admin to burn a token from a frozen address. This function is not required for deployment versions which include the extension module `ERC20EnforcementModule` because this module contains a function `forcedTransfer`which can be used instead.
+
+If the address is not frozen, it is also possible to perform a burn-and-mint atomically through the function `burnAndMint` like the deployment standard versions
 
 - CMTAT Upgradeable Light
 
@@ -2430,7 +2456,7 @@ These contracts have now their own GitHub project: [CMTAT Factory](https://githu
 
 | CMTAT version                     | CMTAT Factory                                                |
 | --------------------------------- | ------------------------------------------------------------ |
-| CMTAT v3.0.0                      | CMTAT Factory [v0.2.0](https://github.com/CMTA/CMTATFactory/releases/tag/0.2.0) (unaudited) |
+| CMTAT v3.0.0                      | CMTAT Factory [v0.2.0](https://github.com/CMTA/CMTATFactory/releases/tag/v0.2.0) (unaudited) |
 | CMTAT v2.5.0 / v2.5.1 (unaudited) | Available within CMTAT <br />see contracts/deployment<br />(unaudited) |
 | CMTAT 2.3.0 (audited)             | Not available                                                |
 | CMTAT 1.0 (audited)               | Not available                                                |
@@ -2543,9 +2569,9 @@ The third audit covered version [v3.0.0-rc5](https://github.com/CMTA/CMTAT/tree/
 
 Version v3.0.0 contains the different fixes and improvements related to this audit.
 
-The report is available in [CMTAT_Halborn_final.pdf](./doc/audits/Halborn-CMTATv3.0.0-2025/CMTAT_Halborn_final.pdf).
+The report is available in [Taurus_CMTAT_Smart_Contract_Security_Assessment_Report_Halborn.pdf](./doc/audits/Halborn-CMTATv3.0.0-2025/Taurus_CMTAT_Smart_Contract_Security_Assessment_Report_Halborn.pdf).
 
-> After the audit, we made another fix to perform compliance check with all batch functions. See [commits - 198d0194a0eef526b0a33cb625f6227da07608d4](https://github.com/CMTA/CMTAT/pull/313/commits/198d0194a0eef526b0a33cb625f6227da07608d4)
+> After the 1st audit phase, we made another fix to perform compliance check with all batch functions. See [commits - 198d0194a0eef526b0a33cb625f6227da07608d4](https://github.com/CMTA/CMTAT/pull/313/commits/198d0194a0eef526b0a33cb625f6227da07608d4). This fix was also reviewed by Halborn.
 
 ### Tools
 
@@ -2593,6 +2619,8 @@ For the deployment version for UUPS proxies, unfortunately there is no segregati
 
 ## Usage
 
+More details are available in the file [USAGE.md](./doc/USAGE.md)
+
 ### Solidity style guideline
 
 CMTAT follows the solidity style guideline present here: [docs.soliditylang.org/en/latest/style-guide.html](https://docs.soliditylang.org/en/latest/style-guide.html)
@@ -2631,13 +2659,9 @@ Within a grouping, place the `view` and `pure` functions last
 
 ### Configuration & toolchain
 
-> More details are available in the file [USAGE.md](./doc/USAGE.md)
-
 #### Details
 
 The project is built with [Hardhat](https://hardhat.org) and uses [OpenZeppelin](https://www.openzeppelin.com/solidity-contracts)
-
-More information in [USAGE.md](doc/USAGE.md)
 
 - hardhat.config.js
   - Solidity [v0.8.30](https://docs.soliditylang.org/en/v0.8.30/)
