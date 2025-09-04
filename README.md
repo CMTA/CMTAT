@@ -35,7 +35,7 @@ CMTAT has been built with five main goals:
    - Run static analyzer ([Aderyn](https://github.com/Cyfrin/aderyn), [Slither](https://github.com/crytic/slither/tree/master)) before and after the audits
    - RBAC Access Control to clearly separates the different roles and permissions
    
-5. Freedom of use through an open-source copyleft license ([MPL-2.0](https://www.mozilla.org/en-US/MPL/2.0/FAQ/))
+5. Freedom of use through an open-source weak copyleft license ([MPL-2.0](https://www.mozilla.org/en-US/MPL/2.0/FAQ/))
 
 
 
