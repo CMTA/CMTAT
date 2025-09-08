@@ -18,10 +18,17 @@ import {IERC7551Mint} from "../../../interfaces/tokenization/draft-IERC7551.sol"
  *
  * Contains all mint functions, inherits from ERC-20
  */
-abstract contract ERC20MintModule is  ERC20MintModuleInternal, AccessControlUpgradeable, IERC3643Mint, IERC3643BatchTransfer, IERC7551Mint, IMintBatchERC20Event {
+abstract contract ERC20MintModule is  ERC20MintModuleInternal, IERC3643Mint, IERC3643BatchTransfer, IERC7551Mint, IMintBatchERC20Event {
 
     /* ============ State Variables ============ */
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
+
+
+    /// @dev Modifier to restrict access to the burner functions
+    modifier onlyMinter() {
+        _authorizeMint();
+        _;
+    }
 
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
@@ -34,7 +41,7 @@ abstract contract ERC20MintModule is  ERC20MintModuleInternal, AccessControlUpgr
      * @custom:access-control
      * - the caller must have the `MINTER_ROLE`.
      */
-    function mint(address account, uint256 value, bytes calldata data) public virtual override(IERC7551Mint) onlyRole(MINTER_ROLE) {
+    function mint(address account, uint256 value, bytes calldata data) public virtual override(IERC7551Mint) onlyMinter {
         _mint(account, value, data);
     }
 
@@ -50,7 +57,7 @@ abstract contract ERC20MintModule is  ERC20MintModuleInternal, AccessControlUpgr
      * @custom:access-control
      * - the caller must have the `MINTER_ROLE`.
      */
-    function mint(address account, uint256 value) public virtual override(IERC3643Mint) onlyRole(MINTER_ROLE) {
+    function mint(address account, uint256 value) public virtual override(IERC3643Mint) onlyMinter {
        _mint(account, value, "");
     }
 
@@ -66,7 +73,7 @@ abstract contract ERC20MintModule is  ERC20MintModuleInternal, AccessControlUpgr
     function batchMint(
         address[] calldata accounts,
         uint256[] calldata values
-    ) public virtual override(IERC3643Mint) onlyRole(MINTER_ROLE) {
+    ) public virtual override(IERC3643Mint) onlyMinter{
        _batchMint(accounts, values);
         emit BatchMint(_msgSender(), accounts, values);
     }
@@ -79,7 +86,7 @@ abstract contract ERC20MintModule is  ERC20MintModuleInternal, AccessControlUpgr
    function batchTransfer(
         address[] calldata tos,
         uint256[] calldata values
-    ) public virtual override(IERC3643BatchTransfer) onlyRole(MINTER_ROLE) returns (bool success_) {
+    ) public virtual override(IERC3643BatchTransfer) onlyMinter returns (bool success_) {
         return _batchTransfer(tos, values);
     }
 
@@ -89,6 +96,7 @@ abstract contract ERC20MintModule is  ERC20MintModuleInternal, AccessControlUpgr
     function _mint(address account, uint256 value, bytes memory data) internal virtual {
         _mintOverride(account, value);
         emit Mint(_msgSender(), account, value, data);
-      }
+    }
 
+    function _authorizeMint() internal virtual;
 }

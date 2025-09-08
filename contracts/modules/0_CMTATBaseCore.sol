@@ -237,4 +237,14 @@ abstract contract CMTATBaseCore is
         require(ValidationModuleCore.canTransfer(from, to, value), Errors.CMTAT_InvalidTransfer(from, to, value) );
         ERC20MintModuleInternal._minterTransferOverride(from, to, value);
     }
+
+    function _authorizeMint() internal virtual override onlyRole(MINTER_ROLE){
+
+    }
+
+    function _authorizeBurn() internal virtual override onlyRole(BURNER_ROLE){
+
+    }
+
+    
 }

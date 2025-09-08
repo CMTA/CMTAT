@@ -17,9 +17,16 @@ import {IERC7551Burn} from "../../../interfaces/tokenization/draft-IERC7551.sol"
  *
  * Contains all burn functions, inherits from ERC-20
  */
-abstract contract ERC20BurnModule is  ERC20BurnModuleInternal, AccessControlUpgradeable, IBurnBatchERC20, IERC3643Burn, IERC7551Burn {
+abstract contract ERC20BurnModule is  ERC20BurnModuleInternal, IBurnBatchERC20, IERC3643Burn, IERC7551Burn {
     /* ============ State Variables ============ */
     bytes32 public constant BURNER_ROLE = keccak256("BURNER_ROLE");
+
+
+    /// @dev Modifier to restrict access to the burner functions
+    modifier onlybBurner() {
+        _authorizeBurn();
+        _;
+    }
 
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
@@ -35,7 +42,7 @@ abstract contract ERC20BurnModule is  ERC20BurnModuleInternal, AccessControlUpgr
         address account,
         uint256 value,
         bytes calldata data
-    ) public virtual override(IERC7551Burn) onlyRole(BURNER_ROLE) {
+    ) public virtual override(IERC7551Burn) onlybBurner{
         _burn(account, value, data);
     }
 
@@ -47,7 +54,7 @@ abstract contract ERC20BurnModule is  ERC20BurnModuleInternal, AccessControlUpgr
     function burn(
         address account,
         uint256 value
-    ) public virtual override(IERC3643Burn) onlyRole(BURNER_ROLE) {
+    ) public virtual override(IERC3643Burn) onlybBurner  {
        _burn(account, value,"");
     }
 
@@ -61,7 +68,7 @@ abstract contract ERC20BurnModule is  ERC20BurnModuleInternal, AccessControlUpgr
         address[] calldata accounts,
         uint256[] calldata values,
         bytes memory data
-    ) public virtual override(IBurnBatchERC20) onlyRole(BURNER_ROLE) {
+    ) public virtual override(IBurnBatchERC20) onlybBurner  {
         _batchBurn(accounts, values);
         emit BatchBurn(_msgSender(),accounts, values, data );
     }
@@ -75,7 +82,7 @@ abstract contract ERC20BurnModule is  ERC20BurnModuleInternal, AccessControlUpgr
     function batchBurn(
         address[] calldata accounts,
         uint256[] calldata values
-    ) public virtual override (IERC3643Burn) onlyRole(BURNER_ROLE) {
+    ) public virtual override (IERC3643Burn) onlybBurner {
         _batchBurn(accounts, values);
         emit BatchBurn(_msgSender(),accounts, values, "" );
     }
@@ -92,4 +99,6 @@ abstract contract ERC20BurnModule is  ERC20BurnModuleInternal, AccessControlUpgr
         _burnOverride(account, value);
         emit Burn(_msgSender(), account, value, data);
     }
+
+    function _authorizeBurn() internal virtual;
 }
