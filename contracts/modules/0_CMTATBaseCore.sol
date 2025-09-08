@@ -13,11 +13,12 @@ import {ERC20BaseModule, ERC20Upgradeable} from "./wrapper/core/ERC20BaseModule.
 
 // Other
 import {BaseModule} from "./wrapper/core/BaseModule.sol";
+import {PauseModule}  from "./wrapper/core/PauseModule.sol";
 import {EnforcementModule} from "./wrapper/core/EnforcementModule.sol";
 import {ValidationModule, ValidationModuleCore} from "./wrapper/core/ValidationModuleCore.sol";
 
 // Security
-import {AccessControlModule, AccessControlUpgradeable} from "./wrapper/security/AccessControlModule.sol";
+import {AccessControlModule} from "./wrapper/security/AccessControlModule.sol";
 
 /* ==== Interface and other library === */
 import {ICMTATConstructor} from "../interfaces/technical/ICMTATConstructor.sol";
@@ -207,13 +208,6 @@ abstract contract CMTATBaseCore is
         emit Enforcement(_msgSender(), account, value, data);
     }
 
-    function hasRole(
-        bytes32 role,
-        address account
-    ) public view virtual override(AccessControlUpgradeable, AccessControlModule) returns (bool) {
-        return AccessControlModule.hasRole(role, account);
-    }
-
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
@@ -238,13 +232,19 @@ abstract contract CMTATBaseCore is
         ERC20MintModuleInternal._minterTransferOverride(from, to, value);
     }
 
-    function _authorizeMint() internal virtual override onlyRole(MINTER_ROLE){
+    /* ==== State Functions ==== */
 
-    }
+    function _authorizeMint() internal virtual override(ERC20MintModule) onlyRole(MINTER_ROLE){}
 
-    function _authorizeBurn() internal virtual override onlyRole(BURNER_ROLE){
+    function _authorizeBurn() internal virtual override(ERC20BurnModule) onlyRole(BURNER_ROLE){}
 
-    }
+    function _authorizePause() internal virtual override(PauseModule) onlyRole(PAUSER_ROLE){}
+    function _authorizeDeactivate() internal virtual override(PauseModule) onlyRole(DEFAULT_ADMIN_ROLE){}
+
+
+    function _authorizeFreeze() internal virtual override(EnforcementModule) onlyRole(ENFORCER_ROLE){}
+
+    function _authorizeERC20AttributeManagement() internal virtual override(ERC20BaseModule) onlyRole(DEFAULT_ADMIN_ROLE){}
 
     
 }

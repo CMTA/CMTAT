@@ -2,7 +2,6 @@
 
 pragma solidity ^0.8.20;
 /* ==== OpenZeppelin === */
-import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 import {IERC165} from "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165Upgradeable.sol";
 /* ==== Module === */
 import {ERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
@@ -17,7 +16,7 @@ import {ERC20MintModule, ERC20MintModuleInternal} from "../core/ERC20MintModule.
  *
  * Contains all burn functions, inherits from ERC-20
  */
-abstract contract ERC20CrossChain is ERC20MintModule,  ERC20BurnModule, IERC7802, IBurnFromERC20 {
+abstract contract ERC20CrossChain is ERC20MintModule, ERC20BurnModule, IERC7802, IBurnFromERC20 {
     bytes32 public constant BURNER_FROM_ROLE = keccak256("BURNER_FROM_ROLE");
     bytes32 public constant CROSS_CHAIN_ROLE = keccak256("CROSS_CHAIN_ROLE");
 

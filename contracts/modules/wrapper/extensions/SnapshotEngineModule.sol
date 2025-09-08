@@ -3,11 +3,11 @@
 pragma solidity ^0.8.20;
 
 /* ==== OpenZeppelin === */
-import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
+import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 /* ==== Engine === */
 import {ISnapshotEngine, ISnapshotEngineModule} from "../../../interfaces/modules/ISnapshotEngineModule.sol";
 
-abstract contract SnapshotEngineModule is AccessControlUpgradeable, ISnapshotEngineModule {
+abstract contract SnapshotEngineModule is Initializable, ISnapshotEngineModule {
     /* ============ State Variables ============ */
     bytes32 public constant SNAPSHOOTER_ROLE = keccak256("SNAPSHOOTER_ROLE");
 
@@ -17,6 +17,11 @@ abstract contract SnapshotEngineModule is AccessControlUpgradeable, ISnapshotEng
     /* ==== ERC-7201 State Variables === */
     struct SnapshotEngineModuleStorage {
         ISnapshotEngine _snapshotEngine;
+    }
+
+    modifier onlySnapshooter() {
+        _authorizeSnapshots();
+        _;
     }
     /* ============  Initializer Function ============ */
     /**
@@ -47,7 +52,7 @@ abstract contract SnapshotEngineModule is AccessControlUpgradeable, ISnapshotEng
     */
     function setSnapshotEngine(
         ISnapshotEngine snapshotEngine_
-    ) public virtual override(ISnapshotEngineModule) onlyRole(SNAPSHOOTER_ROLE) {
+    ) public virtual override(ISnapshotEngineModule) onlySnapshooter  {
         SnapshotEngineModuleStorage storage $ = _getSnapshotEngineModuleStorage();
         require($._snapshotEngine != snapshotEngine_, CMTAT_SnapshotModule_SameValue());
         _setSnapshotEngine($, snapshotEngine_);
@@ -66,6 +71,7 @@ abstract contract SnapshotEngineModule is AccessControlUpgradeable, ISnapshotEng
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
+    function _authorizeSnapshots() internal virtual;
     function _setSnapshotEngine(
         SnapshotEngineModuleStorage storage $, ISnapshotEngine snapshotEngine_
     ) internal virtual {
@@ -79,4 +85,6 @@ abstract contract SnapshotEngineModule is AccessControlUpgradeable, ISnapshotEng
             $.slot := SnapshotEngineModuleStorageLocation
         }
     }
+
+
 }

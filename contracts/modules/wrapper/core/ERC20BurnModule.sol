@@ -2,8 +2,6 @@
 
 pragma solidity ^0.8.20;
 
-/* ==== OpenZeppelin === */
-import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 /* ==== Module === */
 import {ERC20BurnModuleInternal} from "../../internal/ERC20BurnModuleInternal.sol";
 /* ==== Technical === */
@@ -17,7 +15,7 @@ import {IERC7551Burn} from "../../../interfaces/tokenization/draft-IERC7551.sol"
  *
  * Contains all burn functions, inherits from ERC-20
  */
-abstract contract ERC20BurnModule is  ERC20BurnModuleInternal, IBurnBatchERC20, IERC3643Burn, IERC7551Burn {
+abstract contract ERC20BurnModule is ERC20BurnModuleInternal, IBurnBatchERC20, IERC3643Burn, IERC7551Burn {
     /* ============ State Variables ============ */
     bytes32 public constant BURNER_ROLE = keccak256("BURNER_ROLE");
 

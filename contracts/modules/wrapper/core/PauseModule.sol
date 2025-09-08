@@ -4,7 +4,6 @@ pragma solidity ^0.8.20;
 
 /* ==== OpenZeppelin === */
 import {PausableUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/PausableUpgradeable.sol";
-import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 /* ==== Tokenization === */
 import {IERC3643Pause} from "../../../interfaces/tokenization/IERC3643Partial.sol";
 import {IERC7551Pause} from "../../../interfaces/tokenization/draft-IERC7551.sol";
@@ -22,7 +21,7 @@ import {ICMTATDeactivate} from "../../../interfaces/tokenization/ICMTAT.sol";
  * period, or having an emergency switch for freezing all token transfers in the
  * event of a large bug.
  */
-abstract contract PauseModule is PausableUpgradeable, AccessControlUpgradeable, IERC3643Pause, IERC7551Pause, ICMTATDeactivate {
+abstract contract PauseModule is PausableUpgradeable, IERC3643Pause, IERC7551Pause, ICMTATDeactivate {
     error CMTAT_PauseModule_ContractIsDeactivated();
     /* ============ State Variables ============ */
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
@@ -35,6 +34,17 @@ abstract contract PauseModule is PausableUpgradeable, AccessControlUpgradeable, 
         bool _isDeactivated;
     }
 
+    /// @dev Modifier to restrict access to the burner functions
+    modifier onlyPauser() {
+        _authorizePause();
+        _;
+    }
+
+    modifier onlyDeactivater() {
+        _authorizeDeactivate();
+        _;
+    }
+
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
@@ -44,7 +54,7 @@ abstract contract PauseModule is PausableUpgradeable, AccessControlUpgradeable, 
      * @custom:access-control
      * - the caller must have the `PAUSER_ROLE`.
      */
-    function pause() public virtual override(IERC3643Pause, IERC7551Pause) onlyRole(PAUSER_ROLE) {
+    function pause() public virtual override(IERC3643Pause, IERC7551Pause) onlyPauser{
         PausableUpgradeable._pause();
     }
 
@@ -53,7 +63,7 @@ abstract contract PauseModule is PausableUpgradeable, AccessControlUpgradeable, 
      * @custom:access-control
      * - the caller must have the `PAUSER_ROLE`.
      */
-    function unpause() public virtual override(IERC3643Pause, IERC7551Pause) onlyRole(PAUSER_ROLE) {
+    function unpause() public virtual override(IERC3643Pause, IERC7551Pause) onlyPauser{
         PauseModuleStorage storage $ = _getPauseModuleStorage();
         require(!$._isDeactivated, CMTAT_PauseModule_ContractIsDeactivated());
         PausableUpgradeable._unpause();
@@ -68,7 +78,7 @@ abstract contract PauseModule is PausableUpgradeable, AccessControlUpgradeable, 
     */
     function deactivateContract()
         public virtual override(ICMTATDeactivate)
-        onlyRole(DEFAULT_ADMIN_ROLE)
+        onlyDeactivater
     {
         // Contract must be in pause state
         PausableUpgradeable._requirePaused();
@@ -81,7 +91,7 @@ abstract contract PauseModule is PausableUpgradeable, AccessControlUpgradeable, 
     /**
     * @inheritdoc IERC3643Pause
     */
-    function paused() public virtual view override(IERC3643Pause, IERC7551Pause, PausableUpgradeable)  returns (bool){
+    function paused() public virtual view override(IERC3643Pause, IERC7551Pause, PausableUpgradeable) returns (bool){
         return PausableUpgradeable.paused();
    }
 
@@ -96,7 +106,8 @@ abstract contract PauseModule is PausableUpgradeable, AccessControlUpgradeable, 
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
-
+    function _authorizePause() internal virtual;
+    function _authorizeDeactivate() internal virtual;
 
     /* ============ ERC-7201 ============ */
     function _getPauseModuleStorage() private pure returns (PauseModuleStorage storage $) {

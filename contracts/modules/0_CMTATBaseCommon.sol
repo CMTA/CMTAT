@@ -4,7 +4,7 @@ pragma solidity ^0.8.20;
 
 /* ==== Wrapper === */
 // Security
-import {AccessControlModule, AccessControlUpgradeable} from "./wrapper/security/AccessControlModule.sol";
+import {AccessControlModule} from "./wrapper/security/AccessControlModule.sol";
 // Core
 import {BaseModule} from "./wrapper/core/BaseModule.sol";
 import {ERC20BurnModule, ERC20BurnModuleInternal} from "./wrapper/core/ERC20BurnModule.sol";
@@ -129,14 +129,6 @@ abstract contract CMTATBaseCommon is
         ERC20MintModule.mint(to, amountToMint, data);
     }
 
-
-    function hasRole(
-        bytes32 role,
-        address account
-    ) public view virtual override(AccessControlUpgradeable, AccessControlModule) returns (bool) {
-        return AccessControlModule.hasRole(role, account);
-    }
-
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
@@ -186,12 +178,18 @@ abstract contract CMTATBaseCommon is
         ERC20MintModuleInternal._minterTransferOverride(from, to, value);
     }
 
-    function _authorizeMint() internal virtual override onlyRole(MINTER_ROLE){
+    function _authorizeERC20AttributeManagement() internal virtual override(ERC20BaseModule) onlyRole(DEFAULT_ADMIN_ROLE){}
 
-    }
+    function _authorizeMint() internal virtual override(ERC20MintModule) onlyRole(MINTER_ROLE){}
 
-    function _authorizeBurn() internal virtual override onlyRole(BURNER_ROLE){
+    function _authorizeBurn() internal virtual override(ERC20BurnModule) onlyRole(BURNER_ROLE){}
 
-    }
+    function  _authorizeDocumentManagement() internal virtual override(DocumentEngineModule) onlyRole(DOCUMENT_ROLE){}
 
+    function  _authorizeExtraInfoManagement() internal virtual override(ExtraInformationModule) onlyRole(EXTRA_INFORMATION_ROLE){}
+
+    function _authorizeERC20Enforcer() internal virtual override(ERC20EnforcementModule) onlyRole(ERC20ENFORCER_ROLE){}
+    function _authorizeForcedTransfer() internal virtual override(ERC20EnforcementModule) onlyRole(DEFAULT_ADMIN_ROLE){}
+
+    function _authorizeSnapshots() internal virtual override(SnapshotEngineModule) onlyRole(SNAPSHOOTER_ROLE){}
 }

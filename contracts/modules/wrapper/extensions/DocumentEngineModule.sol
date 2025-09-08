@@ -3,8 +3,7 @@
 pragma solidity ^0.8.20;
 
 /* ==== OpenZeppelin=== */
-import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
-
+import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 /* ==== Engine === */
 import {IERC1643, IDocumentEngine} from "../../../interfaces/engine/IDocumentEngine.sol";
 import {IDocumentEngineModule} from "../../../interfaces/modules/IDocumentEngineModule.sol";
@@ -16,7 +15,7 @@ import {IDocumentEngineModule} from "../../../interfaces/modules/IDocumentEngine
  * Retrieve documents from a documentEngine
  */
 
-abstract contract DocumentEngineModule is IDocumentEngineModule, AccessControlUpgradeable {
+abstract contract DocumentEngineModule is Initializable, IDocumentEngineModule {
     /* ============ ERC-7201 ============ */
     bytes32 public constant DOCUMENT_ROLE = keccak256("DOCUMENT_ROLE");
     // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.DocumentEngineModule")) - 1)) & ~bytes32(uint256(0xff))
@@ -24,6 +23,11 @@ abstract contract DocumentEngineModule is IDocumentEngineModule, AccessControlUp
     /* ==== ERC-7201 State Variables === */
     struct DocumentEngineModuleStorage {
         IERC1643  _documentEngine;
+    }
+
+    modifier onlyDocumentManager() {
+        _authorizeDocumentManagement();
+        _;
     }
 
     /* ============  Initializer Function ============ */
@@ -81,7 +85,7 @@ abstract contract DocumentEngineModule is IDocumentEngineModule, AccessControlUp
     */
     function setDocumentEngine(
         IERC1643 documentEngine_
-    ) public virtual override(IDocumentEngineModule) onlyRole(DOCUMENT_ROLE) {
+    ) public virtual override(IDocumentEngineModule) onlyDocumentManager {
         DocumentEngineModuleStorage storage $ = _getDocumentEngineModuleStorage();
         require($._documentEngine != documentEngine_, CMTAT_DocumentEngineModule_SameValue());
         _setDocumentEngine($, documentEngine_);
@@ -91,6 +95,8 @@ abstract contract DocumentEngineModule is IDocumentEngineModule, AccessControlUp
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
+    function  _authorizeDocumentManagement() internal virtual;
+   
     function _setDocumentEngine(
         DocumentEngineModuleStorage storage $, IERC1643 documentEngine_
     ) internal virtual {

@@ -2,8 +2,6 @@
 
 pragma solidity ^0.8.20;
 
-/* ==== OpenZeppelin === */
-import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 /* ==== Module === */
 import {ERC20MintModuleInternal} from "../../internal/ERC20MintModuleInternal.sol";
 /* ==== Technical === */

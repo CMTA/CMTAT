@@ -41,7 +41,7 @@ abstract contract ERC7551Module is ExtraInformationModule, IERC7551Document {
     */
     function setMetaData(
         string calldata metadata_
-    ) public virtual override(IERC7551Document) onlyRole(EXTRA_INFORMATION_ROLE) {
+    ) public virtual override(IERC7551Document) onlyExtraInfoManager {
         ERC7551ModuleStorage storage $ = _getERC7551ModuleStorage();
         _setMetaData($,  metadata_);
     }
@@ -51,7 +51,7 @@ abstract contract ERC7551Module is ExtraInformationModule, IERC7551Document {
     * @custom:access-control
     * - the caller must have the `EXTRA_INFORMATION_ROLE`.
     */
-    function setTerms(bytes32 hash, string calldata uri) public virtual override(IERC7551Document) onlyRole(EXTRA_INFORMATION_ROLE) {
+    function setTerms(bytes32 hash, string calldata uri) public virtual override(IERC7551Document) onlyExtraInfoManager {
         IERC1643CMTAT.DocumentInfo memory terms_ = IERC1643CMTAT.DocumentInfo("", uri, hash);
         _setTerms(terms_);
     }

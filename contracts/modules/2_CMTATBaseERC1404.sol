@@ -2,7 +2,6 @@
 
 pragma solidity ^0.8.20;
 
-import {CMTATBaseCommon,AccessControlUpgradeable} from "./0_CMTATBaseCommon.sol";
 import {CMTATBaseRuleEngine} from "./1_CMTATBaseRuleEngine.sol";
 /* ==== Wrapper === */
 // Use by detectTransferRestriction
@@ -61,13 +60,6 @@ abstract contract CMTATBaseERC1404 is
         uint256 value
     ) public virtual override (CMTATBaseRuleEngine, ValidationModuleRuleEngine) view returns (bool) {
         return CMTATBaseRuleEngine.canTransferFrom(spender, from, to, value);
-    }
-
-    function hasRole(
-        bytes32 role,
-        address account
-    ) public view virtual override(AccessControlUpgradeable, CMTATBaseRuleEngine) returns (bool) {
-        return CMTATBaseRuleEngine.hasRole(role, account);
     }
 
     /*//////////////////////////////////////////////////////////////

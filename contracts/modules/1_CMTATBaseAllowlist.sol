@@ -7,12 +7,16 @@ import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Ini
 import {ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
 /* ==== Wrapper === */
 // Base
-import {CMTATBaseCommon, AccessControlUpgradeable} from "./0_CMTATBaseCommon.sol";
+import {CMTATBaseCommon} from "./0_CMTATBaseCommon.sol";
+// Core
+import {PauseModule}  from "./wrapper/core/PauseModule.sol";
+import {EnforcementModule} from "./wrapper/core/EnforcementModule.sol";
 // Extensions
 import {ERC20EnforcementModule, ERC20EnforcementModuleInternal} from "./wrapper/extensions/ERC20EnforcementModule.sol";
 import {DocumentEngineModule, IERC1643} from "./wrapper/extensions/DocumentEngineModule.sol";
 // options
 import {ERC2771Module, ERC2771ContextUpgradeable} from "./wrapper/options/ERC2771Module.sol";
+import {AllowlistModule} from "./wrapper/options/AllowlistModule.sol";
 // controller
 import {ValidationModuleAllowlist} from "./wrapper/controllers/ValidationModuleAllowlist.sol";
 import {ValidationModule, ValidationModuleCore} from "./wrapper/core/ValidationModuleCore.sol";
@@ -155,16 +159,17 @@ abstract contract CMTATBaseAllowlist is
         }  
     }
 
-    function hasRole(
-        bytes32 role,
-        address account
-    ) public view virtual override(AccessControlUpgradeable, CMTATBaseCommon) returns (bool) {
-        return CMTATBaseCommon.hasRole(role, account);
-    }
-
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
+    function _authorizePause() internal virtual override(PauseModule) onlyRole(PAUSER_ROLE){}
+    function _authorizeDeactivate() internal virtual override(PauseModule) onlyRole(DEFAULT_ADMIN_ROLE){}
+
+    function _authorizeFreeze() internal virtual override(EnforcementModule) onlyRole(ENFORCER_ROLE){}
+
+    function _authorizeAllowlistManagement() internal virtual override(AllowlistModule) onlyRole(ALLOWLIST_ROLE) {}
+
+
     /**
     * @inheritdoc ValidationModuleAllowlist
     */

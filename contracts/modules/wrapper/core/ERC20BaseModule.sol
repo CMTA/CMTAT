@@ -4,7 +4,6 @@ pragma solidity ^0.8.20;
 
 /* ==== OpenZeppelin === */
 import {ERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
-import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 /* ==== Technical === */
 import {IERC20Allowance} from "../../../interfaces/technical/IERC20Allowance.sol";
 import {IERC20BatchBalance} from "../../../interfaces/engine/ISnapshotEngine.sol";
@@ -19,7 +18,7 @@ import {IERC3643ERC20Base} from "../../../interfaces/tokenization/IERC3643Partia
  * Inherits from ERC-20
  * 
  */
-abstract contract ERC20BaseModule is ERC20Upgradeable, AccessControlUpgradeable, IERC20Allowance, IERC3643ERC20Base, IERC20BatchBalance{
+abstract contract ERC20BaseModule is ERC20Upgradeable, IERC20Allowance, IERC3643ERC20Base, IERC20BatchBalance{
     event Name(string indexed newNameIndexed, string newName);
     event Symbol(string indexed newSymbolIndexed, string newSymbol);
 
@@ -32,6 +31,11 @@ abstract contract ERC20BaseModule is ERC20Upgradeable, AccessControlUpgradeable,
         // We don't use ERC20Upgradeable name and private because we can not modify them
         string _name;
         string _symbol;
+    }
+
+     modifier onlyERC20AttributeManager() {
+        _authorizeERC20AttributeManagement();
+        _;
     }
 
     /* ============  Initializer Function ============ */
@@ -114,7 +118,7 @@ abstract contract ERC20BaseModule is ERC20Upgradeable, AccessControlUpgradeable,
      *  @inheritdoc IERC3643ERC20Base
      *  @dev 
      */
-    function setName(string calldata name_) public virtual override(IERC3643ERC20Base) onlyRole(DEFAULT_ADMIN_ROLE) {
+    function setName(string calldata name_) public virtual override(IERC3643ERC20Base) onlyERC20AttributeManager {
         ERC20BaseModuleStorage storage $ = _getERC20BaseModuleStorage();
         $._name = name_;
         emit Name(name_, name_);
@@ -123,7 +127,7 @@ abstract contract ERC20BaseModule is ERC20Upgradeable, AccessControlUpgradeable,
     /**
      * @inheritdoc IERC3643ERC20Base
      */
-    function setSymbol(string calldata symbol_) public virtual override(IERC3643ERC20Base) onlyRole(DEFAULT_ADMIN_ROLE) {
+    function setSymbol(string calldata symbol_) public virtual override(IERC3643ERC20Base) onlyERC20AttributeManager {
         ERC20BaseModuleStorage storage $ = _getERC20BaseModuleStorage();
         $._symbol = symbol_;
         emit Symbol(symbol_, symbol_);
@@ -143,7 +147,7 @@ abstract contract ERC20BaseModule is ERC20Upgradeable, AccessControlUpgradeable,
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
-
+    function _authorizeERC20AttributeManagement() internal virtual;
 
     /* ============ ERC-7201 ============ */
     function _getERC20BaseModuleStorage() private pure returns (ERC20BaseModuleStorage storage $) {

@@ -33,7 +33,7 @@ abstract contract DebtEngineModule is DebtModule {
     */
     function setDebtEngine(
         IDebtEngine debtEngine_
-    ) public virtual onlyRole(DEBT_ROLE) {
+    ) public virtual onlyDebtManager {
         DebtModuleStorage storage $ = _getDebtModuleStorage();
         require($._debtEngine != debtEngine_, CMTAT_DebtEngineModule_SameValue());
         _setDebtEngine($, debtEngine_);

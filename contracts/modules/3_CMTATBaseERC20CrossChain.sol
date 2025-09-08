@@ -98,13 +98,11 @@ abstract contract CMTATBaseERC20CrossChain is ERC20CrossChain,CMTATBaseERC1404  
     }
 
     
-    function _checkTokenBridge(address caller) internal virtual override {
+    function _checkTokenBridge(address caller) internal virtual override whenNotPaused {
         AccessControlUpgradeable._checkRole(CROSS_CHAIN_ROLE, caller); 
     }
 
-    function _authorizeBurnFrom() internal virtual override onlyRole(BURNER_FROM_ROLE){
-
-    }
+    function _authorizeBurnFrom() internal virtual override onlyRole(BURNER_FROM_ROLE) whenNotPaused{}
 
     function _authorizeMint(CMTATBaseCommon, ERC20MintModule) internal virtual {
         CMTATBaseCommon._authorizeMint();

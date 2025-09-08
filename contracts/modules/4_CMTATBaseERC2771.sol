@@ -11,6 +11,7 @@ import {ERC2771Module, ERC2771ContextUpgradeable} from "./wrapper/options/ERC277
 * @title Extend CMTAT Base with option modules
 */
 abstract contract CMTATBaseERC2771 is CMTATBaseERC20CrossChain, ERC2771Module {
+    
     /*//////////////////////////////////////////////////////////////
                             ERC2771 MODULE
     //////////////////////////////////////////////////////////////*/

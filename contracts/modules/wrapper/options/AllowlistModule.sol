@@ -2,8 +2,6 @@
 
 pragma solidity ^0.8.20;
 
-/* ==== OpenZeppelin === */
-import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 /* ==== Module === */
 import {IAllowlistModule} from "../../../interfaces/modules/IAllowlistModule.sol";
 import {AllowlistModuleInternal} from "../../internal/AllowlistModuleInternal.sol";
@@ -17,13 +15,16 @@ import {AllowlistModuleInternal} from "../../internal/AllowlistModuleInternal.so
  */
 abstract contract AllowlistModule is
     AllowlistModuleInternal,
-    AccessControlUpgradeable,
     IAllowlistModule
 {
     /* ============ State Variables ============ */
     bytes32 public constant ALLOWLIST_ROLE = keccak256("ALLOWLIST_ROLE");
    
-    
+    modifier onlyAllowlistManager {
+        _authorizeAllowlistManagement();
+        _;
+    }
+
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
@@ -31,7 +32,7 @@ abstract contract AllowlistModule is
     /** 
     * @inheritdoc IAllowlistModule
     */
-    function setAddressAllowlist(address account, bool status) public virtual  onlyRole(ALLOWLIST_ROLE){
+    function setAddressAllowlist(address account, bool status) public virtual onlyAllowlistManager{
          _addToAllowlist(account, status, "");
     }
 
@@ -41,7 +42,7 @@ abstract contract AllowlistModule is
     */
     function setAddressAllowlist(
         address account, bool status, bytes calldata data
-    ) public virtual onlyRole(ALLOWLIST_ROLE)  {
+    ) public virtual onlyAllowlistManager {
          _addToAllowlist(account, status, data);
     }
 
@@ -51,7 +52,7 @@ abstract contract AllowlistModule is
     */
     function batchSetAddressAllowlist(
         address[] calldata accounts, bool[] calldata status
-    ) public virtual onlyRole(ALLOWLIST_ROLE) {
+    ) public virtual onlyAllowlistManager {
          _addToAllowlist(accounts, status, "");
     }
 
@@ -61,7 +62,7 @@ abstract contract AllowlistModule is
     */
     function enableAllowlist(
         bool status
-    ) public virtual onlyRole(ALLOWLIST_ROLE) {
+    ) public virtual onlyAllowlistManager {
         _enableAllowlist(status);
         emit AllowlistEnableStatus(_msgSender(), status);
     }
@@ -85,6 +86,7 @@ abstract contract AllowlistModule is
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
+    function _authorizeAllowlistManagement() internal virtual {}
     function _addToAllowlist(AllowlistModuleInternalStorage storage $,address account, bool status, bytes memory data) internal override(AllowlistModuleInternal){
         AllowlistModuleInternal._addToAllowlist($, account, status, data);
         emit AddressAddedToAllowlist(account, status, _msgSender(), data);

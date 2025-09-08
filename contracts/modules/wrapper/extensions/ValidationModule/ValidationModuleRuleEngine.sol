@@ -22,6 +22,11 @@ abstract contract ValidationModuleRuleEngine is
     */
     error CMTAT_ValidationModule_SameValue();
 
+     modifier onlyRuleEngineManager() {
+        _authorizeRuleEngineManagement();
+        _;
+    }
+
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
@@ -39,7 +44,7 @@ abstract contract ValidationModuleRuleEngine is
     */
     function setRuleEngine(
         IRuleEngine ruleEngine_
-    ) public virtual onlyRole(DEFAULT_ADMIN_ROLE) {
+    ) public virtual onlyRuleEngineManager {
          require(ruleEngine_ != ruleEngine(), CMTAT_ValidationModule_SameValue());
         _setRuleEngine(ruleEngine_);
     }
@@ -72,6 +77,7 @@ abstract contract ValidationModuleRuleEngine is
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
+    function _authorizeRuleEngineManagement() internal virtual;
     /* ============ View functions ============ */
     function _canTransfer(
         address from,
