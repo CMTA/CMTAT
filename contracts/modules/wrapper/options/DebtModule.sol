@@ -97,6 +97,7 @@ abstract contract DebtModule is IDebtModule {
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
+    /* ==== Access Control ==== */
     function _authorizeDebtManagement() internal virtual;
     /* ============ ERC-7201 ============ */
     function _getDebtModuleStorage() internal pure returns (DebtModuleStorage storage $) {

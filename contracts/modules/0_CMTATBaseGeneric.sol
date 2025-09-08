@@ -81,11 +81,10 @@ abstract contract CMTATBaseGeneric is
     }
 
     /*//////////////////////////////////////////////////////////////
-                            PUBLIC/EXTERNAL FUNCTIONS
+                            INTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
 
-
-
+    /* ==== Access Control ==== */
     function  _authorizeDocumentManagement() internal virtual override(DocumentEngineModule) onlyRole(DOCUMENT_ROLE){}
     function  _authorizeExtraInfoManagement() internal virtual override(ExtraInformationModule) onlyRole(EXTRA_INFORMATION_ROLE){}
 }

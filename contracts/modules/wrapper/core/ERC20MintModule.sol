@@ -95,6 +95,6 @@ abstract contract ERC20MintModule is  ERC20MintModuleInternal, IERC3643Mint, IER
         _mintOverride(account, value);
         emit Mint(_msgSender(), account, value, data);
     }
-
+    /* ============ Access Control ============ */
     function _authorizeMint() internal virtual;
 }

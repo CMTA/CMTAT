@@ -162,6 +162,8 @@ abstract contract CMTATBaseAllowlist is
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
+
+    /* ==== Access Control ==== */
     function _authorizePause() internal virtual override(PauseModule) onlyRole(PAUSER_ROLE){}
     function _authorizeDeactivate() internal virtual override(PauseModule) onlyRole(DEFAULT_ADMIN_ROLE){}
 
@@ -169,7 +171,7 @@ abstract contract CMTATBaseAllowlist is
 
     function _authorizeAllowlistManagement() internal virtual override(AllowlistModule) onlyRole(ALLOWLIST_ROLE) {}
 
-
+    /* ==== Transfer/mint/burn restriction ==== */
     /**
     * @inheritdoc ValidationModuleAllowlist
     */

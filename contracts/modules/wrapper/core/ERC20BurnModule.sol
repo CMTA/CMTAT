@@ -98,5 +98,6 @@ abstract contract ERC20BurnModule is ERC20BurnModuleInternal, IBurnBatchERC20, I
         emit Burn(_msgSender(), account, value, data);
     }
 
+    /* ============ Access Control ============ */
     function _authorizeBurn() internal virtual;
 }

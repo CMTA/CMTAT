@@ -15,7 +15,7 @@ abstract contract CMTATBaseERC7551 is CMTATBaseERC2771, ERC7551Module{
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
-    /* ============ View functions ============ */
+    /* ==== Access Control ==== */
     function  _authorizeExtraInfoManagement() internal virtual override(CMTATBaseCommon, ExtraInformationModule){
         CMTATBaseCommon._authorizeExtraInfoManagement();
     }

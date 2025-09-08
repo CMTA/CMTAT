@@ -114,6 +114,7 @@ abstract contract ERC20CrossChain is ERC20MintModule, ERC20BurnModule, IERC7802,
         _burnOverride(account, value);
     }
 
+    /* ==== Access Control ==== */
     /**
      * @dev Checks if the caller is a trusted token bridge. MUST revert otherwise.
      *
@@ -124,7 +125,6 @@ abstract contract ERC20CrossChain is ERC20MintModule, ERC20BurnModule, IERC7802,
     }*/
 
     function _checkTokenBridge(address caller) internal virtual;
-
 
     function _authorizeBurnFrom() internal virtual;
 }

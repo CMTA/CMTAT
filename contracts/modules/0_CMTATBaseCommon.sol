@@ -178,6 +178,8 @@ abstract contract CMTATBaseCommon is
         ERC20MintModuleInternal._minterTransferOverride(from, to, value);
     }
 
+    /* ==== Access Control Functions ==== */
+
     function _authorizeERC20AttributeManagement() internal virtual override(ERC20BaseModule) onlyRole(DEFAULT_ADMIN_ROLE){}
 
     function _authorizeMint() internal virtual override(ERC20MintModule) onlyRole(MINTER_ROLE){}

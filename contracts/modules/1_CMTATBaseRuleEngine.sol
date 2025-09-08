@@ -130,6 +130,8 @@ abstract contract CMTATBaseRuleEngine is
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
+    /* ==== Access Control ==== */
+    Functions
     function _authorizePause() internal virtual override(PauseModule) onlyRole(PAUSER_ROLE){}
     function _authorizeDeactivate() internal virtual override(PauseModule) onlyRole(DEFAULT_ADMIN_ROLE){}
 
@@ -137,7 +139,7 @@ abstract contract CMTATBaseRuleEngine is
 
     function _authorizeRuleEngineManagement() internal virtual override(ValidationModuleRuleEngine) onlyRole(DEFAULT_ADMIN_ROLE){}
 
-
+    /* ==== Transfer/mint/burn restriction ==== */
     function _checkTransferred(address spender, address from, address to, uint256 value) internal virtual override(CMTATBaseCommon) {
         CMTATBaseCommon._checkTransferred(spender, from, to, value);
         require(ValidationModuleRuleEngine._transferred(spender, from, to, value), Errors.CMTAT_InvalidTransfer(from, to, value));

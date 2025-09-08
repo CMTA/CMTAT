@@ -113,7 +113,6 @@ abstract contract ExtraInformationModule is Initializable, ICMTATBase {
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
-    function  _authorizeExtraInfoManagement() internal virtual{}
     function _setTerms(IERC1643CMTAT.DocumentInfo memory terms_) internal{
 		ExtraInformationModuleStorage storage $ = _getExtraInformationModuleStorage();
         _setTerms($, terms_);
@@ -141,6 +140,9 @@ abstract contract ExtraInformationModule is Initializable, ICMTATBase {
         $._information  = information_;
         emit Information(information_);
     }
+
+    /* ============ Access Control ============ */
+    function  _authorizeExtraInfoManagement() internal virtual{}
 
     /* ============ ERC-7201 ============ */
     function _getExtraInformationModuleStorage() private pure returns (ExtraInformationModuleStorage storage $) {

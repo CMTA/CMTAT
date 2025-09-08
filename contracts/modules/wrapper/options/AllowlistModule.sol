@@ -86,9 +86,11 @@ abstract contract AllowlistModule is
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
-    function _authorizeAllowlistManagement() internal virtual {}
     function _addToAllowlist(AllowlistModuleInternalStorage storage $,address account, bool status, bytes memory data) internal override(AllowlistModuleInternal){
         AllowlistModuleInternal._addToAllowlist($, account, status, data);
         emit AddressAddedToAllowlist(account, status, _msgSender(), data);
     } 
+
+    /* ==== Access Control ==== */
+    function _authorizeAllowlistManagement() internal virtual {}
 }

@@ -71,7 +71,7 @@ abstract contract SnapshotEngineModule is Initializable, ISnapshotEngineModule {
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
-    function _authorizeSnapshots() internal virtual;
+
     function _setSnapshotEngine(
         SnapshotEngineModuleStorage storage $, ISnapshotEngine snapshotEngine_
     ) internal virtual {
@@ -79,6 +79,8 @@ abstract contract SnapshotEngineModule is Initializable, ISnapshotEngineModule {
         emit SnapshotEngine(snapshotEngine_);
     }
 
+    /* ============ Access Control ============ */
+    function _authorizeSnapshots() internal virtual;
     /* ============ ERC-7201 ============ */
     function _getSnapshotEngineModuleStorage() private pure returns (SnapshotEngineModuleStorage storage $) {
         assembly {

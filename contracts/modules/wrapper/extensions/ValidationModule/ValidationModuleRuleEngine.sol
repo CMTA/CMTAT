@@ -77,7 +77,6 @@ abstract contract ValidationModuleRuleEngine is
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
-    function _authorizeRuleEngineManagement() internal virtual;
     /* ============ View functions ============ */
     function _canTransfer(
         address from,
@@ -129,6 +128,9 @@ abstract contract ValidationModuleRuleEngine is
             return true;
         }
     }
+
+    /* ============ Access Control ============ */
+    function _authorizeRuleEngineManagement() internal virtual;
 
     /* ============ State functions ============ */
     function _transferred(address spender, address from, address to, uint256 value) internal virtual returns (bool){

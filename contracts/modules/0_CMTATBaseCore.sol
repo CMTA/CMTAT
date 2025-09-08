@@ -232,7 +232,7 @@ abstract contract CMTATBaseCore is
         ERC20MintModuleInternal._minterTransferOverride(from, to, value);
     }
 
-    /* ==== State Functions ==== */
+    /* ==== Access Control ==== */
 
     function _authorizeMint() internal virtual override(ERC20MintModule) onlyRole(MINTER_ROLE){}
 
@@ -240,7 +240,6 @@ abstract contract CMTATBaseCore is
 
     function _authorizePause() internal virtual override(PauseModule) onlyRole(PAUSER_ROLE){}
     function _authorizeDeactivate() internal virtual override(PauseModule) onlyRole(DEFAULT_ADMIN_ROLE){}
-
 
     function _authorizeFreeze() internal virtual override(EnforcementModule) onlyRole(ENFORCER_ROLE){}
 

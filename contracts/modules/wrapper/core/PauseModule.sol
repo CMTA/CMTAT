@@ -106,6 +106,7 @@ abstract contract PauseModule is PausableUpgradeable, IERC3643Pause, IERC7551Pau
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
+    /* ============ Access Control ============ */
     function _authorizePause() internal virtual;
     function _authorizeDeactivate() internal virtual;
 

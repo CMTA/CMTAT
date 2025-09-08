@@ -95,14 +95,15 @@ abstract contract DocumentEngineModule is Initializable, IDocumentEngineModule {
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
-    function  _authorizeDocumentManagement() internal virtual;
-   
     function _setDocumentEngine(
         DocumentEngineModuleStorage storage $, IERC1643 documentEngine_
     ) internal virtual {
         $._documentEngine = documentEngine_;
         emit DocumentEngine(documentEngine_);
     }
+
+    /* ============ Access Control ============ */
+    function  _authorizeDocumentManagement() internal virtual;
 
     /* ============ ERC-7201 ============ */
     function _getDocumentEngineModuleStorage() private pure returns (DocumentEngineModuleStorage storage $) {

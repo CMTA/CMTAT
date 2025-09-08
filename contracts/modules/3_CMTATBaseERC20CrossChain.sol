@@ -97,11 +97,13 @@ abstract contract CMTATBaseERC20CrossChain is ERC20CrossChain,CMTATBaseERC1404  
         return  ERC20CrossChain.supportsInterface(_interfaceId)|| AccessControlUpgradeable.supportsInterface( _interfaceId);
     }
 
-    
+    /*//////////////////////////////////////////////////////////////
+                            INTERNAL/PRIVATE FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
+    /* ==== Access Control ==== */
     function _checkTokenBridge(address caller) internal virtual override whenNotPaused {
         AccessControlUpgradeable._checkRole(CROSS_CHAIN_ROLE, caller); 
     }
-
     function _authorizeBurnFrom() internal virtual override onlyRole(BURNER_FROM_ROLE) whenNotPaused{}
 
     function _authorizeMint(CMTATBaseCommon, ERC20MintModule) internal virtual {
@@ -111,7 +113,7 @@ abstract contract CMTATBaseERC20CrossChain is ERC20CrossChain,CMTATBaseERC1404  
     function _authorizeBurn() internal virtual override(CMTATBaseCommon, ERC20BurnModule) onlyRole(BURNER_ROLE){
         CMTATBaseCommon._authorizeBurn();
     }
-
+    /* ==== ERC-20 OpenZeppelin ==== */
     function _update(
         address from,
         address to,

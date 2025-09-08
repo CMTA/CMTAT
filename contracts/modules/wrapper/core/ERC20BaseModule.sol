@@ -147,6 +147,7 @@ abstract contract ERC20BaseModule is ERC20Upgradeable, IERC20Allowance, IERC3643
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
+    /* ============ Access Control ============ */
     function _authorizeERC20AttributeManagement() internal virtual;
 
     /* ============ ERC-7201 ============ */

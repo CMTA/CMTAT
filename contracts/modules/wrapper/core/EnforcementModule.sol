@@ -87,5 +87,6 @@ abstract contract EnforcementModule is
         emit AddressFrozen(account, freeze, _msgSender(), data);
     }
 
+    /* ============ Access Control ============ */
     function _authorizeFreeze() internal virtual;
 }
