@@ -14,6 +14,7 @@ const PauseModuleCommon = require('../../common/PauseModuleCommon')
 // options
 const ERC20CrossChainModuleCommon = require('../../common/ERC20CrossChainModuleCommon')
 const ERC7551ModuleCommon = require('../../common/ERC7551ModuleCommon')
+const CCIPModuleCommon = require('../../common/CCIPModuleCommon')
 // Extensions
 const ERC20EnforcementModuleCommon = require('../../common/ERC20EnforcementModuleCommon')
 const DocumentModuleCommon = require('../../common/DocumentModule/DocumentModuleCommon')
@@ -48,6 +49,7 @@ describe('CMTAT ERC7551 - Standalone', function () {
   // options
   ERC20CrossChainModuleCommon()
   ERC7551ModuleCommon()
+  CCIPModuleCommon()
   // Extensions
   ERC20EnforcementModuleCommon()
   DocumentModuleCommon()

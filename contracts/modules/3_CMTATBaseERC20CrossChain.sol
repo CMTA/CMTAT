@@ -9,17 +9,19 @@ import {CMTATBaseERC1404, ERC20Upgradeable} from "./2_CMTATBaseERC1404.sol";
 import {CMTATBaseCommon} from "./0_CMTATBaseCommon.sol";
 import {ERC20BurnModule, ERC20BurnModuleInternal} from "./wrapper/core/ERC20BurnModule.sol";
 import {ERC20MintModule, ERC20MintModuleInternal} from "./wrapper/core/ERC20MintModule.sol";
+import {ERC20CrossChain} from "./wrapper/options/ERC20CrossChain.sol";
+import {CCIPModule} from "./wrapper/options/CCIPModule.sol";
 /* ==== Interfaces === */
 import {IERC7802} from "../interfaces/technical/IERC7802.sol";
 import {IBurnFromERC20} from "../interfaces/technical/IMintBurnToken.sol";
-import {ERC20CrossChain} from "./wrapper/options/ERC20CrossChain.sol";
+
 /**
  * @title ERC20CrossChainModule (ERC-7802)
  * @dev 
  *
  * Contains all burn functions, inherits from ERC-20
  */
-abstract contract CMTATBaseERC20CrossChain is ERC20CrossChain,CMTATBaseERC1404  {
+abstract contract CMTATBaseERC20CrossChain is ERC20CrossChain, CCIPModule, CMTATBaseERC1404  {
      /* ============  State Functions ============ */
     function transfer(address to, uint256 value) public virtual override(ERC20Upgradeable, CMTATBaseCommon) returns (bool) {
          return CMTATBaseCommon.transfer(to, value);
@@ -101,6 +103,7 @@ abstract contract CMTATBaseERC20CrossChain is ERC20CrossChain,CMTATBaseERC1404  
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
     /* ==== Access Control ==== */
+    function _authorizeCCIPSetAdmin() internal virtual override onlyRole(DEFAULT_ADMIN_ROLE) {}
     function _checkTokenBridge(address caller) internal virtual override whenNotPaused {
         AccessControlUpgradeable._checkRole(CROSS_CHAIN_ROLE, caller); 
     }

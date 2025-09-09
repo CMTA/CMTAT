@@ -1,18 +1,20 @@
-const BaseModuleCommon = require('../../common/BaseModuleCommon')
+const CMTATIntegrationCommon = require('../../common/CMTATIntegrationCommon')
 const {
-  deployCMTATStandalone,
+  deployCMTATProxy,
   fixture,
   loadFixture
 } = require('../../deploymentUtils')
-describe('Standard - BaseModule', function () {
+const VALUE1 = 20n
+describe('Proxy - ERC20BurnModule', function () {
   beforeEach(async function () {
     Object.assign(this, await loadFixture(fixture))
-    this.cmtat = await deployCMTATStandalone(
+    this.cmtat = await deployCMTATProxy(
       this._.address,
       this.admin.address,
       this.deployerAddress.address
     )
   })
+  CMTATIntegrationCommon()
 
-  BaseModuleCommon()
+  
 })

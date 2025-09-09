@@ -607,15 +607,13 @@ function setMetaData(string calldata metaData_) external;
 
 This standard introduces a minimal and extendable interface, `IERC7802`, for tokens to enable standardized crosschain communication.
 
-CMTAT implements this standard in the base module `CMTATBaseERC20CrossChain`
-
-- Initially, this interface was implemented as an option module, but this generates inheritance conflict with other CMTAT base module related to ERC20Burn & ERC20 mint modules.
+CMTAT implements this standard in the option module `ERC20CrossChain`
 
 This standard is notably used by Optimism to provide cross-chain bridge between Optimism chain, see [docs.optimism.io/interop/superchain-erc20](https://docs.optimism.io/interop/superchain-erc20)
 
-More information here: [Cross-Chain bridge support](./doc/general/crosschain-bridge-support.md)
+More information available in the cross chain section.
 
-Deployment version: since it is an extension module, it is not currently used in the deployment version `debt`, `light` & `allowlist`.
+Deployment version: since it is an option module, it is not currently used in the deployment version `debt`, `light` & `allowlist`.
 
 ```solidity
 interface IERC7802 is IERC165 {
@@ -2174,6 +2172,80 @@ interface ICMTATBase {
 Additional documents can be added through the `DocumentEngine`
 
 For more information, see the section dedicated to the `DocumentEngine`
+
+### Cross-chain transfers (ERC-7802, CCT)
+
+#### Chainlink CCIP - CCT
+
+CMTAT implements the required function of the Cross-Chain token standard (CCT) which means:
+
+- CMTAT CCIP admin can enable the token in CCIP, without the need of requesting assistance to Chainlink
+- Chainlink CCIP pool can perform the relevant mint and burn operation
+
+CMTAT does not implement the `owner` or `getCCIPAdmin()`function required by CCIP to register CCIP token permissibleness.
+
+See [docs.chain.link/ccip/concepts/cross-chain-tokens#requirements-for-cross-chain-tokens](https://docs.chain.link/ccip/concepts/cross-chain-tokens#requirements-for-cross-chain-tokens)
+
+##### [Registration functions](https://docs.chain.link/ccip/concepts/cross-chain-token/evm/tokens#registration-functions)
+
+CMTAT implements the following function `getCCIPAdmin()` to return the address authorized to register the token in CCIP.
+
+The second function available, `owner` is not implemented by CMTAT but this could be done easily. Note that `getCCIPAdmin`is the recommended function to use in the CCIP documentation.
+
+##### [Transfer functions](https://docs.chain.link/ccip/concepts/cross-chain-token/evm/tokens#transfer-functions)
+
+Here the list of functions required to be compatible with CCIP
+
+|                          |                                           | Implemented  | Pool<br />[BurnMint Requirements](https://docs.chain.link/ccip/concepts/cross-chain-token/evm/tokens#burnmint-requirements) | Pool<br />https://docs.chain.link/ccip/concepts/cross-chain-token/evm/tokens#lockrelease-requirements | Module<br />if implemented         | Role             |
+| ------------------------ | ----------------------------------------- | ------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ---------------------------------- | ---------------- |
+| Register CCIP token      |                                           |              |                                                              |                                                              |                                    |                  |
+|                          | owner                                     | No           | -                                                            | -                                                            | -                                  |                  |
+|                          | getCCIPAdmin                              | yes          | -                                                            | -                                                            | CCIPModule                         | -                |
+| Burn & Mint Requirements |                                           |              |                                                              |                                                              |                                    |                  |
+|                          | mint(address account, uint256 amount)     | Yes          | yes                                                          | No                                                           | MintModule<br />(Core module)      | MINTER_ROLE      |
+|                          | burn(uint256 amount)                      | yes          | yes                                                          | No                                                           | CMTATBaseERC20CrossChain           | BURNER_FROM_ROLE |
+|                          | decimals()                                | yes (ERC-20) | yes                                                          | yes                                                          | ERC20BaseModule<br />(Core module) |                  |
+|                          | balanceOf(address account)                | yes (ERC-20) | yes                                                          | yes                                                          | OpenZeppelin inheritance           |                  |
+|                          | burnFrom(address account, uint256 amount) | Yes          | yes                                                          | No                                                           | CMTATBaseERC20CrossChain           | BURNER_FROM_ROLE |
+
+Note:
+
+-  The admin must grant the required permissions to mint/burn to the CCIP token pool.
+
+- If you put the contract in pause through the PauseModule, it will not affect the `mint` function from MintModule.
+  In this case, the alternative solution is to revoke the MINTER_ROLE from the concerned addresses to prevent any mint
+
+
+
+#### Optimism superchain ERC-20 (ERC-7802)
+
+> CMTAT implements ERC-7802 in the option module `ERC20CrossChain`
+
+The  [`SuperchainTokenBridge`](https://github.com/ethereum-optimism/optimism/blob/develop/packages/contracts-bedrock/src/L2/SuperchainTokenBridge.sol) uses [ERC-7802](https://eips.ethereum.org/EIPS/eip-7802) to enable asset interoperability within the Superchain.
+
+- Asset interoperability allows tokens to move securely across the Superchain by burning tokens on the source chain and minting an equivalent amount on the destination chain. 
+- Instead of wrapping assets, this mechanism effectively "teleports" tokens between chains in the Superchain. .
+
+Reference: [docs.optimism.io/interop/superchain-erc20](https://docs.optimism.io/interop/superchain-erc20)
+
+##### Initiating message (source chain)
+
+>  Example of use
+
+1. The user (or a contract) calls [`SuperchainTokenBridge.sendERC20`](https://github.com/ethereum-optimism/optimism/blob/develop/packages/contracts-bedrock/src/L2/SuperchainTokenBridge.sol#L52-L78).
+2. The token bridge calls the function [`CMTAT.crosschainBurn`](https://github.com/ethereum-optimism/optimism/blob/develop/packages/contracts-bedrock/src/L2/SuperchainERC20.sol#L37-L46) to burn those tokens on the source chain.
+3. The source token bridge calls [`SuperchainTokenBridge.relayERC20`](https://github.com/ethereum-optimism/optimism/blob/develop/packages/contracts-bedrock/src/L2/SuperchainTokenBridge.sol#L80-L97) on the destination token bridge. This call is relayed using [`L2ToL2CrossDomainMessenger`](https://docs.optimism.io/interop/message-passing). The call is *initiated* here, by emitting an initiating message. It will be executed later, after the destination chain receives an executing message to [`L2ToL2CrossDomainMessenger`](https://docs.optimism.io/interop/message-passing).
+
+##### Executing message (destination chain)
+
+1. The autorelayer (or the user, or any offchain entity) sends an executing message to [`L2ToL2CrossDomainMessenger`](https://docs.optimism.io/interop/message-passing) to relay the message.
+2. The destination token bridge calls [`CMTAT.crosschainMint`](https://github.com/ethereum-optimism/optimism/blob/develop/packages/contracts-bedrock/src/L2/SuperchainERC20.sol#L26-L35) to mint tokens for the user/contract that called `SuperchainTokenBridge.sendERC20` originally.
+
+#### Requirement
+
+- You must  allow the `SuperchainTokenBridge`to call `crosschainMint` and `crosschainBurn`. No additional permissioning or role setup is required. 
+
+- Deploy the `CMTAT` at the same address on every chain in the Superchain where you want your token to be available. If you do not deploy the contract to a specific destination chain, users will be unable to successfully move their tokens to that chain
 
 ## Deployment model 
 

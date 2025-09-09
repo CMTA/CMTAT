@@ -1,6 +1,4 @@
 const { expect } = require('chai')
-const { DEFAULT_ADMIN_ROLE } = require('../utils')
-const { TERMS } = require('../deploymentUtils')
 
 function BaseModuleCommon () {
   context('Token structure', function () {

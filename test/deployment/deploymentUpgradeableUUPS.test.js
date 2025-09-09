@@ -17,6 +17,7 @@ const DocumentModuleCommon = require('../common/DocumentModule/DocumentModuleCom
 const ExtraInfoModuleCommon = require('../common/ExtraInfoModuleCommon')
 // options
 const ERC20CrossChainModuleCommon = require('../common/ERC20CrossChainModuleCommon')
+const CCIPModuleCommon = require('../common/CCIPModuleCommon')
 // Snapshot
 const SnapshotModuleCommonRescheduling = require('../common/SnapshotModuleCommon/SnapshotModuleCommonRescheduling')
 const SnapshotModuleCommonScheduling = require('../common/SnapshotModuleCommon/SnapshotModuleCommonScheduling')
@@ -53,6 +54,7 @@ describe('CMTAT Core - Upgradeable', function () {
 
   // options
   ERC20CrossChainModuleCommon()
+  CCIPModuleCommon()
 
   // options
   ERC20CrossChainModuleCommon()

@@ -131,7 +131,6 @@ abstract contract CMTATBaseRuleEngine is
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
     /* ==== Access Control ==== */
-    Functions
     function _authorizePause() internal virtual override(PauseModule) onlyRole(PAUSER_ROLE){}
     function _authorizeDeactivate() internal virtual override(PauseModule) onlyRole(DEFAULT_ADMIN_ROLE){}
 

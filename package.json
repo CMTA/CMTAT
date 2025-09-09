@@ -21,6 +21,7 @@
     "docgen": "npx hardhat docgen",
     "uml-mocks": "npx sol2uml class -c contracts/mocks/RuleEngine",
     "size": "npx hardhat size-contracts",
+    "test:integration": "npx hardhat test test/standard/modules/CMTATIntegration.test.js test/proxy/modules/CMTATIntegration.test.js",
     "test:erc20Burn": "npx hardhat test test/standard/modules/ERC20BurnModule.test.js test/proxy/modules/ERC20BurnModule.test.js",
     "test:erc20Mint": "npx hardhat test test/standard/modules/ERC20MintModule.test.js test/proxy/modules/ERC20MintModule.test.js",
     "test:erc20Base": "npx hardhat test test/standard/modules/ERC20BaseModule.test.js test/proxy/modules/ERC20BaseModule.test.js",

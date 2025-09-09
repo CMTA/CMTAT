@@ -1,18 +1,19 @@
-const BaseModuleCommon = require('../../common/BaseModuleCommon')
+const CCIPModuleCommon = require('../../common/CCIPModuleCommon')
 const {
-  deployCMTATStandalone,
+  deployCMTATProxy,
   fixture,
   loadFixture
 } = require('../../deploymentUtils')
-describe('Standard - BaseModule', function () {
+
+describe('Proxy - CCIPModule', function () {
   beforeEach(async function () {
     Object.assign(this, await loadFixture(fixture))
-    this.cmtat = await deployCMTATStandalone(
+    this.cmtat = await deployCMTATProxy(
       this._.address,
       this.admin.address,
       this.deployerAddress.address
     )
   })
 
-  BaseModuleCommon()
+  CCIPModuleCommon()
 })
