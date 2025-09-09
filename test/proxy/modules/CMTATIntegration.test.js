@@ -15,6 +15,4 @@ describe('Proxy - ERC20BurnModule', function () {
     )
   })
   CMTATIntegrationCommon()
-
-  
 })
