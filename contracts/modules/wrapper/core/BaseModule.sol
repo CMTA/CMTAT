@@ -10,7 +10,7 @@ abstract contract BaseModule is IERC3643Base {
     * @dev 
     * Get the current version of the smart contract
     */
-    string private constant VERSION = "3.0.0";
+    string private constant VERSION = "3.1.0";
     /* ============ Events ============ */
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
