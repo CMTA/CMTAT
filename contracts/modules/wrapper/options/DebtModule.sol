@@ -13,7 +13,6 @@ import {IDebtModule} from "../../../interfaces/modules/IDebtModule.sol";
  * Set Debt and Credit Events info
  */
 abstract contract DebtModule is IDebtModule {
-   
     /* ============ State Variables ============ */
     bytes32 public constant DEBT_ROLE = keccak256("DEBT_ROLE");
     /* ============ ERC-7201 ============ */
@@ -28,6 +27,7 @@ abstract contract DebtModule is IDebtModule {
         IDebtEngine _debtEngine;
     }
 
+    /* ============ Modifier ============ */
     modifier onlyDebtManager {
         _authorizeDebtManagement();
         _;

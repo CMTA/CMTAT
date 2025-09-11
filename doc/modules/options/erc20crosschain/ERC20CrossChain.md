@@ -1,22 +1,22 @@
-# CMTAT Base Core
+# ERc20CrossChain
 
-This document defines the CMTAT Base Core Module for the CMTA Token specification.
+This document defines the ERC20CrossChain module for the CMTA Token specification.
 
 [TOC]
 
 ## Schema
 
-![CMTATBaseERC20CrossChain](../schema/uml/CMTATBaseERC20CrossChainUML.png)
+![ERC20CrossChain](../../schema/uml/ERC20CrossChainUML.png)
 
 ### Inheritance
 
-![surya_inheritance_CMTATBaseERC20CrossChain.sol](../schema/surya_inheritance/surya_inheritance_3_CMTATBaseERC20CrossChain.sol.png)
+![surya_inheritance_ERC20CrossChain.sol](../../schema/surya_inheritance/surya_inheritance_3_ERC20CrossChain.sol.png)
 
 
 
 ### Graph
 
-![surya_graph_CMTATBaseCoreModule.sol](../schema/surya_graph/surya_graph_3_CMTATBaseERC20CrossChain.sol.png)
+![surya_graph_CoreModule.sol](../../schema/surya_graph/surya_graph_3_ERC20CrossChain.sol.png)
 
 ## API for Ethereum
 

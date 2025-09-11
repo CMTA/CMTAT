@@ -22,7 +22,8 @@ abstract contract ValidationModuleRuleEngine is
     */
     error CMTAT_ValidationModule_SameValue();
 
-     modifier onlyRuleEngineManager() {
+    /* ============ Modifier ============ */
+    modifier onlyRuleEngineManager() {
         _authorizeRuleEngineManagement();
         _;
     }

@@ -98,7 +98,7 @@ interface IERC3643BatchTransfer {
  * @title IERC3643Base
  * @notice Interface to retrieve version
  */
-interface IERC3643Base {
+interface IERC3643Version {
      /**
      * @notice Returns the current version of the token contract.
      * @dev This value is useful to know which smart contract version has been used

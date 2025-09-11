@@ -11,7 +11,7 @@ import {ValidationModule} from "./wrapper/controllers/ValidationModule.sol";
 // Security
 import {AccessControlModule, AccessControlUpgradeable} from "./wrapper/security/AccessControlModule.sol";
 // Core
-import {BaseModule} from "./wrapper/core/BaseModule.sol";
+import {VersionModule} from "./wrapper/core/VersionModule.sol";
 // Extensions
 import {ExtraInformationModule} from "./wrapper/extensions/ExtraInformationModule.sol";
 import {DocumentEngineModule, IERC1643} from "./wrapper/extensions/DocumentEngineModule.sol";
@@ -28,7 +28,7 @@ abstract contract CMTATBaseGeneric is
     // Enforcement & PauseModule
     ValidationModule,
     // Core
-    BaseModule,
+    VersionModule,
     // Extension
     DocumentEngineModule,
     ExtraInformationModule,

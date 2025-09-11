@@ -1,11 +1,11 @@
-const BaseModuleCommon = require('../../common/BaseModuleCommon')
+const VersionModuleCommon = require('../../common/VersionModuleCommon')
 const {
   deployCMTATProxy,
   fixture,
   loadFixture
 } = require('../../deploymentUtils')
 
-describe('Proxy - BaseModule', function () {
+describe('Proxy - VersionModule', function () {
   beforeEach(async function () {
     Object.assign(this, await loadFixture(fixture))
     this.cmtat = await deployCMTATProxy(
@@ -15,5 +15,5 @@ describe('Proxy - BaseModule', function () {
     )
   })
 
-  BaseModuleCommon()
+  VersionModuleCommon()
 })

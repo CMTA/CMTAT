@@ -17,9 +17,11 @@ import {ERC20MintModule, ERC20MintModuleInternal} from "../core/ERC20MintModule.
  * Contains all burn functions, inherits from ERC-20
  */
 abstract contract ERC20CrossChain is ERC20MintModule, ERC20BurnModule, IERC7802, IBurnFromERC20 {
+    /* ============ State Variables ============ */
     bytes32 public constant BURNER_FROM_ROLE = keccak256("BURNER_FROM_ROLE");
     bytes32 public constant CROSS_CHAIN_ROLE = keccak256("CROSS_CHAIN_ROLE");
 
+    /* ============ Modifier ============ */
     /// @dev Modifier to restrict access to the token bridge.
     /// Source: OpenZeppelin v5.4.0 - draft-ERC20Bridgeable.sol
     modifier onlyTokenBridge() {
@@ -30,7 +32,7 @@ abstract contract ERC20CrossChain is ERC20MintModule, ERC20BurnModule, IERC7802,
     }
 
     /// @dev Modifier to restrict access to the burner functions
-    modifier onlyBurnFrom() {
+    modifier onlyBurnerFrom() {
         _authorizeBurnFrom();
         _;
     }
@@ -72,7 +74,7 @@ abstract contract ERC20CrossChain is ERC20MintModule, ERC20BurnModule, IERC7802,
      * - the caller must have the `BURNER_FROM_ROLE`.
      */
     function burnFrom(address account, uint256 value)
-        public virtual override(IBurnFromERC20) onlyBurnFrom
+        public virtual override(IBurnFromERC20) onlyBurnerFrom
     {
         address sender =  _msgSender();
         _burnFrom(sender, account, value); 
@@ -85,7 +87,7 @@ abstract contract ERC20CrossChain is ERC20MintModule, ERC20BurnModule, IERC7802,
     */
     function burn(
         uint256 value
-    ) public virtual onlyBurnFrom{
+    ) public virtual onlyBurnerFrom{
         // Put before to avoid reentrancy-events (slither)
         // Don't emit CrossChainBurn because this function burn is not part of the IERC7802 interface
         // Don't emit Spend event because allowance is not used here
@@ -120,10 +122,6 @@ abstract contract ERC20CrossChain is ERC20MintModule, ERC20BurnModule, IERC7802,
      *
      * Source: OpenZeppelin v5.4.0 - draft-ERC20Bridgeable.sol
      */
-    /*function _checkTokenBridge(address caller) internal virtual {
-        AccessControlUpgradeable._checkRole(CROSS_CHAIN_ROLE, caller); 
-    }*/
-
     function _checkTokenBridge(address caller) internal virtual;
 
     function _authorizeBurnFrom() internal virtual;

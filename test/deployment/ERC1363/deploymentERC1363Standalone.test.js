@@ -6,7 +6,7 @@ const {
 } = require('../../deploymentUtils')
 // Core
 const ERC20BaseModuleCommon = require('../../common/ERC20BaseModuleCommon')
-const BaseModuleCommon = require('../../common/BaseModuleCommon')
+const VersionModuleCommon = require('../../common/VersionModuleCommon')
 const ERC20MintModuleCommon = require('../../common/ERC20MintModuleCommon')
 const ERC20BurnModuleCommon = require('../../common/ERC20BurnModuleCommon')
 const EnforcementModuleCommon = require('../../common/EnforcementModuleCommon')
@@ -77,7 +77,7 @@ describe('CMTAT ERC1363 - Standalone', function () {
       .withArgs(this.address1.address)
   })
   // Core
-  BaseModuleCommon()
+  VersionModuleCommon()
   PauseModuleCommon()
   ERC20BaseModuleCommon()
   ERC20BurnModuleCommon()

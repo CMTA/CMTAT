@@ -22,6 +22,7 @@ abstract contract ERC20MintModule is  ERC20MintModuleInternal, IERC3643Mint, IER
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
 
 
+    /* ============ Modifier ============ */
     /// @dev Modifier to restrict access to the burner functions
     modifier onlyMinter() {
         _authorizeMint();

@@ -13,14 +13,21 @@ import {DebtModule} from "./DebtModule.sol";
  * Retrieve debt and creditEvents information from a debtEngine
  */
 abstract contract DebtEngineModule is DebtModule {
-    error CMTAT_DebtEngineModule_SameValue();
-
+    /* ============ Events ============ */
     /**
     * @notice Emitted when a new DebtEngine is set.
     * @dev Indicates that the contract will delegate debt logic to a new external engine.
     * @param newDebtEngine The address of the new debt engine contract.
     */
     event DebtEngine(IDebtEngine indexed newDebtEngine);
+
+    /* ============ Error ============ */
+    error CMTAT_DebtEngineModule_SameValue();
+
+
+    /*//////////////////////////////////////////////////////////////
+                            PUBLIC/EXTERNAL FUNCTIONS
+    //////////////////////////////////////////////////////////////*/  
 
     /* ============  State Restricted Functions ============ */
     /**

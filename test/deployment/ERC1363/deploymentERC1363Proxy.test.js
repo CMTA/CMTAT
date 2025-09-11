@@ -5,7 +5,7 @@ const {
   loadFixture
 } = require('../../deploymentUtils')
 // Core
-const BaseModuleCommon = require('../../common/BaseModuleCommon')
+const VersionModuleCommon = require('../../common/VersionModuleCommon')
 const PauseModuleCommon = require('../../common/PauseModuleCommon')
 const ERC20BaseModuleCommon = require('../../common/ERC20BaseModuleCommon')
 const ERC20MintModuleCommon = require('../../common/ERC20MintModuleCommon')
@@ -83,7 +83,7 @@ describe('CMTAT - ERC1363 Proxy Deployment', function () {
       .withArgs(this.address1.address)
   })
   // Core
-  BaseModuleCommon()
+  VersionModuleCommon()
   ERC20BaseModuleCommon()
   ERC20BurnModuleCommon()
   ERC20MintModuleCommon()

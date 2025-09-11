@@ -34,6 +34,7 @@ abstract contract PauseModule is PausableUpgradeable, IERC3643Pause, IERC7551Pau
         bool _isDeactivated;
     }
 
+    /* ============ Modifier ============ */
     /// @dev Modifier to restrict access to the burner functions
     modifier onlyPauser() {
         _authorizePause();

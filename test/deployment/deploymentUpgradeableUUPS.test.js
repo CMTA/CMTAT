@@ -9,7 +9,7 @@ const ERC20BaseModuleCommon = require('../common/ERC20BaseModuleCommon')
 const ERC20MintModuleCommon = require('../common/ERC20MintModuleCommon')
 const ERC20BurnModuleCommon = require('../common/ERC20BurnModuleCommon')
 const EnforcementModuleCommon = require('../common/EnforcementModuleCommon')
-const BaseModuleCommon = require('../common/BaseModuleCommon')
+const VersionModuleCommon = require('../common/VersionModuleCommon')
 const PauseModuleCommon = require('../common/PauseModuleCommon')
 // Extensions
 const ERC20EnforcementModuleCommon = require('../common/ERC20EnforcementModuleCommon')
@@ -40,7 +40,7 @@ describe('CMTAT Core - Upgradeable', function () {
     this.erc1404 = true
   })
   // Core
-  BaseModuleCommon()
+  VersionModuleCommon()
   PauseModuleCommon()
   ERC20BaseModuleCommon()
   ERC20BurnModuleCommon()

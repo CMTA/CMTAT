@@ -19,6 +19,7 @@ import {IERC3643ERC20Base} from "../../../interfaces/tokenization/IERC3643Partia
  * 
  */
 abstract contract ERC20BaseModule is ERC20Upgradeable, IERC20Allowance, IERC3643ERC20Base, IERC20BatchBalance{
+    /* ============ Events ============ */
     event Name(string indexed newNameIndexed, string newName);
     event Symbol(string indexed newSymbolIndexed, string newSymbol);
 
@@ -33,7 +34,8 @@ abstract contract ERC20BaseModule is ERC20Upgradeable, IERC20Allowance, IERC3643
         string _symbol;
     }
 
-     modifier onlyERC20AttributeManager() {
+    /* ============ Modifier ============ */
+    modifier onlyERC20AttributeManager() {
         _authorizeERC20AttributeManagement();
         _;
     }

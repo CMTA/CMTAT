@@ -12,7 +12,7 @@ import {ERC20MintModule, ERC20MintModuleInternal} from "./wrapper/core/ERC20Mint
 import {ERC20BaseModule, ERC20Upgradeable} from "./wrapper/core/ERC20BaseModule.sol";
 
 // Other
-import {BaseModule} from "./wrapper/core/BaseModule.sol";
+import {VersionModule} from "./wrapper/core/VersionModule.sol";
 import {PauseModule}  from "./wrapper/core/PauseModule.sol";
 import {EnforcementModule} from "./wrapper/core/EnforcementModule.sol";
 import {ValidationModule, ValidationModuleCore} from "./wrapper/core/ValidationModuleCore.sol";
@@ -34,7 +34,7 @@ abstract contract CMTATBaseCore is
     // OpenZeppelin
     Initializable,
     ContextUpgradeable,
-    BaseModule,
+    VersionModule,
     // Core
     ERC20MintModule,
     ERC20BurnModule,
@@ -44,7 +44,8 @@ abstract contract CMTATBaseCore is
     IBurnMintERC20,
     IERC7551ERC20EnforcementEvent,
     AccessControlModule
-{  
+{ 
+    /* ============ Error ============ */ 
     error CMTAT_BurnEnforcement_AddressIsNotFrozen(); 
     /*//////////////////////////////////////////////////////////////
                          INITIALIZER FUNCTION

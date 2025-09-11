@@ -19,7 +19,7 @@ abstract contract ERC20EnforcementModule is ERC20EnforcementModuleInternal, IERC
     /* ============ State Variables ============ */
     bytes32 public constant ERC20ENFORCER_ROLE = keccak256("ERC20ENFORCER_ROLE");
 
-
+    /* ============ Modifier ============ */
     /// @dev Modifier to restrict access to specific enforcer functions
     modifier onlyERC20Enforcer() {
         // Token bridge should never be impersonated using a relayer/forwarder. Using msg.sender is preferable to

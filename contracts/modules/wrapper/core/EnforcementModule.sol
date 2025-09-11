@@ -21,6 +21,7 @@ abstract contract EnforcementModule is
     bytes32 public constant ENFORCER_ROLE = keccak256("ENFORCER_ROLE");
 
 
+    /* ============ Modifier ============ */
     /// @dev Modifier to restrict access to the burner functions
     modifier onlyEnforcer() {
         _authorizeFreeze();

@@ -19,6 +19,7 @@ abstract contract SnapshotEngineModule is Initializable, ISnapshotEngineModule {
         ISnapshotEngine _snapshotEngine;
     }
 
+    /* ============ Modifier ============ */
     modifier onlySnapshooter() {
         _authorizeSnapshots();
         _;

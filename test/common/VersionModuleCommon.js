@@ -1,6 +1,6 @@
 const { expect } = require('chai')
 
-function BaseModuleCommon () {
+function VersionModuleCommon () {
   context('Token structure', function () {
     it('testHasTheDefinedVersion', async function () {
       // Act + Assert
@@ -8,4 +8,4 @@ function BaseModuleCommon () {
     })
   })
 }
-module.exports = BaseModuleCommon
+module.exports = VersionModuleCommon

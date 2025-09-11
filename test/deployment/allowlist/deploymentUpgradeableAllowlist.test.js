@@ -9,7 +9,7 @@ const ERC20BaseModuleCommon = require('../../common/ERC20BaseModuleCommon')
 const ERC20MintModuleCommon = require('../../common/ERC20MintModuleCommon')
 const ERC20BurnModuleCommon = require('../../common/ERC20BurnModuleCommon')
 const EnforcementModuleCommon = require('../../common/EnforcementModuleCommon')
-const BaseModuleCommon = require('../../common/BaseModuleCommon')
+const VersionModuleCommon = require('../../common/VersionModuleCommon')
 const PauseModuleCommon = require('../../common/PauseModuleCommon')
 const ValidationModuleCommonCore = require('../../common/ValidationModule/ValidationModuleCommonCore')
 const ExtraInfoModuleCommon = require('../../common/ExtraInfoModuleCommon')
@@ -33,7 +33,7 @@ describe('CMTAT Allowlist - Upgradeable', function () {
     this.dontCheckTimestamp = true
   })
   // Core
-  BaseModuleCommon()
+  VersionModuleCommon()
   PauseModuleCommon()
   ERC20BaseModuleCommon()
   ERC20BurnModuleCommon()

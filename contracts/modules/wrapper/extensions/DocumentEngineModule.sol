@@ -25,6 +25,7 @@ abstract contract DocumentEngineModule is Initializable, IDocumentEngineModule {
         IERC1643  _documentEngine;
     }
 
+    /* ============ Modifier ============ */
     modifier onlyDocumentManager() {
         _authorizeDocumentManagement();
         _;

@@ -13,7 +13,6 @@ abstract contract ERC7551Module is ExtraInformationModule, IERC7551Document {
     * @notice Emitted when the metadata string is updated.
     * @param newMetaData The new metadata value (e.g. a URL or reference hash).
     */
-
     event MetaData(
         string newMetaData
     );

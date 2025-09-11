@@ -1,22 +1,64 @@
 # CHANGELOG
 
-Please follow <https://changelog.md/> conventions.
+Please follow [https://changelog.md conventions and the other conventions below
+
+## Semantic Version 2.0.0
+
+Given a version number MAJOR.MINOR.PATCH, increment the:
+
+1. MAJOR version when the new version makes:
+   -  Incompatible proxy **storage** change internally or through the upgrade of an external library (OpenZeppelin)
+   - A significant change in external APIs (public/external functions) or in the internal architecture
+2. MINOR version when the new version adds functionality in a backward compatible manner
+3. PATCH version when the new version makes backward compatible bug fixes
+
+See [https://semver.org](https://semver.org)
+
+## Type of changes
+
+- `Added` for new features.
+- `Changed` for changes in existing functionality.
+- `Deprecated` for soon-to-be removed features.
+- `Removed` for now removed features.
+- `Fixed` for any bug fixes.
+- `Security` in case of vulnerabilities.
+
+Reference: [keepachangelog.com/en/1.1.0/](https://keepachangelog.com/en/1.1.0/)
 
 ## Checklist
 
 > Before a new release, perform the following tasks
 
-- Code: Update the version name in the base core module, variable VERSION
+- Code: Update the version name in the `Version` core module, variable VERSION
 - Run linter
 
 > npm run-script lint:all:prettier
 
 - Documentation
   - Perform a code coverage and update the files in the corresponding directory [./doc/general/test/coverage](./doc/general/test/coverage)
-  - Perform an audit with several audit tools (Mythril and Slither), update the report in the corresponding directory  [./doc/audits/tools](./doc/audits/tools)
+  - Perform an audit with several audit tools (Aderyn and Slither), update the report in the corresponding directory  [./doc/audits/tools](./doc/audits/tools)
   - Update surya doc by running the 3 scripts in [./doc/script](./doc/script)
   
   - Update changelog
+
+## 3.1.0
+
+**Added**
+
+- New module `CCIPModule` with two functions `getCCIPAdmin`and`setCCIPAdmin` 
+  - Reason: it is allow a CCIP admin to enable the CMTAT token in Chainlink CCIP, without the need of requesting assistance to [Chainlink](https://chain.link).
+
+**Changed**
+
+- Rename `BaseModule `into `VersionModule`
+
+  - Reason: This module contains only the CMTAT version. This avoid also the confusion with CMTAT Base modules
+
+- Access control: in wrapper modules, all access control is made through internal functions.
+
+  - Reason: These functions must be implemented in CMTAT base module
+
+  
 
 ## 3.0.0
 
@@ -43,7 +85,7 @@ Main changes with the last audited release (v2.3.0):
   - CMTAT for deployment with UUPS proxy
   - CMTAT ERC-7551 for better compatibility with [ERC-7551](https://ethereum-magicians.org/t/erc-7551-crypto-security-token-smart-contract-interface-ewpg/16416)
 
-**Updated**
+**Changed**
 
 - Update Solidity (0.8.30) & OpenZeppelin version (v.5.4.0)
 - Update several function names to be compatible with [ERC-3643](https://eips.ethereum.org/EIPS/eip-3643)

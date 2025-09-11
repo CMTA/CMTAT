@@ -1,8 +1,8 @@
-## Cross-chain bridge support
+# Cross-chain bridge support
 
 > With which bridge can the CMTAT be used?
 
-We will analyze the following bridges: [CCIP](https://chain.link/cross-chain) by Chainlink, Optimism superchain, [LayerZero](https://layerzero.network) and [AxelarNetwork](https://www.axelar.network)
+We will analyze the following bridges: [LayerZero](https://layerzero.network) and [AxelarNetwork](https://www.axelar.network)
 
 Generally, in term of implementation, it depends of the model to handle cross-chain token transfer. There are three main models: Burn & Mint, Lock & Mint, Lock & Unlock
 
@@ -12,9 +12,9 @@ Generally, in term of implementation, it depends of the model to handle cross-ch
 
 [TOC]
 
+## Chainlink CCIP and ERC-7802 (Optmism)
 
-
-3. 
+See in the README the corresponding section
 
 ## Axelar
 
@@ -24,7 +24,7 @@ If you own an ERC-20 token on a single chain and want a wrapped, bridgeable vers
 
 You can register your existing token directly via the contract or use the [ITS Portal](https://docs.axelar.dev/dev/send-tokens/interchain-tokens/no-code/) no-code solution. Take a look at the diagram below to understand the process of registering an existing token as a Canonical Interchain Token.
 
-[https://docs.axelar.dev/dev/send-tokens/interchain-tokens/register-existing-token/](https://docs.axelar.dev/dev/send-tokens/interchain-tokens/register-existing-token/)
+[docs.axelar.dev/dev/send-tokens/interchain-tokens/register-existing-token/](https://docs.axelar.dev/dev/send-tokens/interchain-tokens/register-existing-token/)
 
 ## LayerZero
 
@@ -33,13 +33,13 @@ There are two possibilities to use LayerZero with a CMTAT:
 - Extend CMTAT with OFT
 - Deploy an OFT Adapter to act as an intermediary lockbox for the token.
 
-#### OFT
+### OFT
 
 The first one is to add a module inside CMTAT to include the Omnichain Fungible Token (OFT) Standard; see  [github.com/LayerZero-Labs - OFT.sol](https://github.com/LayerZero-Labs/LayerZero-v2/blob/main/packages/layerzero-v2/evm/oapp/contracts/oft/OFT.sol)
 
 The Omnichain Fungible Token (OFT) Standard allows **fungible tokens** to be transferred across multiple blockchains without asset wrapping, middlechains, or liquidity pools.
 
-##### Modifying CMTAT
+### Modifying CMTAT
 
 This standard work by burning tokens on the source chain whenever an omnichain transfer is initiated, sending a message via the protocol and delivering a function call to the destination contract to mint the same number of tokens burned, creating a **unified supply** across both networks.
 
@@ -67,11 +67,11 @@ The alternative is to inherit from [OFTCore](https://github.com/LayerZero-Labs/L
 
 See [OFT standard](https://docs.layerzero.network/v2/home/token-standards/oft-standard)
 
-#### OFT Adapter
+### OFT Adapter
 
 **OFT Adapter** works as an intermediary contract that handles sending and receiving deployed fungible tokens. For example, when transferring an ERC20 from the source chain (Chain A), the token will lock in the OFT Adapter, triggering a new token to mint on the destination chain (Chain B) via the peer OFT.
 
 [OFT Adapter](https://docs.layerzero.network/v2/home/token-standards/oft-standard)
 
-See [https://docs.layerzero.network/v2/home/token-standards/oft-standard#oft-adapter]( https://docs.layerzero.network/v2/home/token-standards/oft-standard#oft-adapter)
+See [docs.layerzero.network/v2/home/token-standards/oft-standard#oft-adapter]( https://docs.layerzero.network/v2/home/token-standards/oft-standard#oft-adapter)
 

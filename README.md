@@ -4,7 +4,7 @@
 
 > To use the CMTAT, we recommend the latest audited version, from the [Releases](https://github.com/CMTA/CMTAT/releases) page. Currently, it is the version [v3.0.0](https://github.com/CMTA/CMTAT/releases/tag/v3.0.0).
 >
-> A pdf file of this readme is available here:  [CMTATSpecificationV3.0.0.pdf](./CMTATSpecificationV3.0.0.pdf) 
+> A pdf file of the v3.0.0 README is available here:  [CMTATSpecificationV3.0.0.pdf](./CMTATSpecificationV3.0.0.pdf) 
 
 ## Introduction
 
@@ -402,8 +402,8 @@ function setSymbol(string calldata symbol) external
 // ERC20MintModule
 function batchTransfer(address[] calldata tos,uint256[] calldata values) external returns (bool)
 
-// IERC3643Base
-// BaseModule
+// IERC3643Version
+// VersionModule
 function version() external view returns (string memory)
 
 // IERC3643Enforcement 
@@ -459,13 +459,20 @@ All functions related to the interface `IAgentRole`because CMTAT uses a RBAC Acc
 
 And finally `setCompliance` because CMTAT uses a different architecture for its `ruleEngine`.
 
+##### Version
+
+Module: VersionModule
+
+| **ERC-3643**                                               | **CMTAT 3.0.0** | Deployment version |
+| :--------------------------------------------------------- | :-------------- | ------------------ |
+| `version() external view returns (string memory version_)` | Same            | All                |
+
 ##### Pause
 
 Module: PauseModule
 
 | **ERC-3643**                             | **CMTAT 3.0.0**                   | Deployment version |
 | :--------------------------------------- | :-------------------------------- | ------------------ |
-| Deployment version                       |                                   |                    |
 | `pause() external`                       | Same                              | All                |
 | `unpause() external`                     | Same                              | All                |
 | `paused() external view returns (bool);` | Same                              | All                |
@@ -474,10 +481,10 @@ Module: PauseModule
 
 ##### ERC20Base
 
-| **ERC-3643**                                  | **CMTAT 3.0**                       | Deployment version |
-| :-------------------------------------------- | :---------------------------------- | ------------------ |
-| `setName(string calldata _name) external;`    | `setName(string calldata name_)`    | All                |
-| `setSymbol(string calldata _symbol) external` | `setSymbol(string calldata symbol_) | All                |
+| **ERC-3643**                                  | **CMTAT 3.0**                        | Deployment version |
+| :-------------------------------------------- | :----------------------------------- | ------------------ |
+| `setName(string calldata _name) external;`    | `setName(string calldata name_)`     | All                |
+| `setSymbol(string calldata _symbol) external` | `setSymbol(string calldata symbol_)` | All                |
 
 ##### Supply Management (burn/mint)
 
@@ -485,7 +492,7 @@ Module: PauseModule
 | :----------------------------------------------------------- | :-------------------- | :----------------------------------------------------------- | ------------------ |
 | `  batchMint(address[] calldata _toList, uint256[] calldata _amounts) external;` | ERC20MintModule       | `mint(address account, uint256 value)`                       | All                |
 | `  batchMint(address[] calldata _toList, uint256[] calldata _amounts) external;` | ERC20MintModule       | `batchMint(address[] calldata accounts,uint256[] calldata values) ` | All                |
-| `function batchTransfer(address[] calldata _toList, uint256[] calldata _amounts) external;` | ERC20MintModule       | `batchTransfer(address[] calldata tos,uint256[] calldata values)` | All                |
+| `batchTransfer(address[] calldata _toList, uint256[] calldata _amounts) external;` | ERC20MintModule       | `batchTransfer(address[] calldata tos,uint256[] calldata values)` | All                |
 | `burn(address _userAddress, uint256 _amount) external`       | ERC20BurnModule       | `function burn(address account,uint256 value)`               | All                |
 | `batchBurn(address[] calldata _userAddresses, uint256[] calldata _amounts) external` | ERC20BurnModule       | `batchBurn(address[] calldata accounts,uint256[] calldata values)` | All                |
 
@@ -749,7 +756,7 @@ Here is the GitHub file structure for CMTAT repository.
         │   ├── ValidationModuleAllowlist.sol
         │   └── ValidationModule.sol
         ├── core
-        │   ├── BaseModule.sol
+        │   ├── VersionModule.sol
         │   ├── EnforcementModule.sol
         │   ├── ERC20BaseModule.sol
         │   ├── ERC20BurnModule.sol
@@ -823,7 +830,7 @@ Here is the GitHub file structure for CMTAT repository.
 │   ├── core
 │   │   ├── Base
 │   │   │   ├── base.md
-│   │   │   └── surya_report_BaseModule.sol.md
+│   │   │   └── surya_report_VersionModule.sol.md
 │   │   ├── Enforcement
 │   │   │   ├── enforcement.md
 │   │   │   ├── surya_report_EnforcementModuleInternal.sol.md
@@ -1115,7 +1122,7 @@ Generally, these modules are required to be compliant with the CMTA specificatio
 
 | Modules                                                      | Description                    | File                                                         | CMTAT 1.0 | CMTAT 2.30                                                   | CMTAT 3.0.0                                                  |
 | ------------------------------------------------------------ | ------------------------------ | ------------------------------------------------------------ | --------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| [BaseModule](./doc/modules/core/Base/base.md)                | Contract version               | [BaseModule.sol](./contracts/modules/wrapper/core/BaseModule.sol) | &#x2611;  | &#x2611;<br />(Add two fields: flag and information)         | &#x2611;<br />Remove field flag (not used)<br />Keep only the field VERSION and move the rest (tokenId, information,..) to an extension module `ExtraInformation` |
+| [VersionModule](./doc/modules/core/Version/version.md)       | Contract version               | [VersionModule.sol](./contracts/modules/wrapper/core/VersionModule.sol) | &#x2611;  | &#x2611;<br />(Add two fields: flag and information)         | &#x2611;<br />Remove field flag (not used)<br />Keep only the field VERSION and move the rest (tokenId, information,..) to an extension module `ExtraInformation`<br />CMTAT 3.0.1: update name baseModule -> VersionModule |
 | [ERC20 Burn](./doc/modules/core/ERC20Burn/ERC20Burn.md)<br />(Prev. BurnModule) | Burn functions                 | [ERC20BurnModule.sol](./contracts/modules/wrapper/core/ERC20BurnModule.sol) | &#x2611;  | &#x2611;<br />Replace fn `burnFrom` by fn `forcedBurn`       | Add fn `burnBatch`<br />Rename `forceBurn` in `burn`<br />`burnFrom` is moved to the option module `ERC20CrossChain` |
 | [Enforcement](./doc/modules/core/Enforcement/enforcement.md) | Freeze/unfreeze address        | [EnforcementModule.sol](./contracts/modules/wrapper/core/EnforcementModule.sol) | &#x2611;  | &#x2611;                                                     | &#x2611;                                                     |
 | [ERC20Base](./doc/modules/core/ERC20Base/ERC20base.md)       | decimals, set name & symbol    | [ERC20BaseModule.sol](./contracts/modules/wrapper/core/ERC20BaseModule.sol) | &#x2611;  | &#x2611;<br />Remove fn `forceTransfer`<br />(replaced by `burn`and `mint`)<br /> | Add fn `balanceInfo` (useful to distribute dividends)<br />Add  fn `forcedTransfer`<br />Add fn `setName`and `setSymbol`<br />Remove custom fn `approve`(keep only ERC-20 approve) |
@@ -1199,9 +1206,8 @@ Here is the list of roles and their 32 bytes identifier.
 | **Option Modules**     |                                                           |                                                              |
 | ALLOWLIST_ROLE         | AllowlistModule                                           | 0x26a560d834a19637eccba4611bbc09fb32970bb627da0a70f14f83fdc9822cbc |
 | DEBT_ROLE              | DebtModule<br />(also used by DebtEngineModule)           | 0xc6f3350ab30f55ce45863160fc345c1663d4633fe7cacfd3b9bbb6420a9147f8 |
-| **Base Modules**       |                                                           |                                                              |
-| CROSS_CHAIN_ROLE       | CMTATBaseERC20CrossChainModule                            | 0x620d362b92b6ef580d4e86c5675d679fe08d31dff47b72f281959a4eecdd036a |
-| BURNER_FROM_ROLE       | CMTATBaseERC20CrossChainModule                            | 0x5bfe08abba057c54e6a28bce27ce8c53eb21d7a94376a70d475b5dee60b6c4e2 |
+| CROSS_CHAIN_ROLE       | ERC20CrossChainModule                                     | 0x620d362b92b6ef580d4e86c5675d679fe08d31dff47b72f281959a4eecdd036a |
+| BURNER_FROM_ROLE       | ERC20CrossChainModule                                     | 0x5bfe08abba057c54e6a28bce27ce8c53eb21d7a94376a70d475b5dee60b6c4e2 |
 
 
 
@@ -1213,7 +1219,7 @@ For function signatures,  struct arguments are represented with their correspond
 |                                               | Function signature<br />                                     | Visibility [public/external] | Input variables (Function arguments)                         | Output variables<br />(return value) | Role Required                                                |
 | --------------------------------------------- | ------------------------------------------------------------ | ---------------------------- | ------------------------------------------------------------ | ------------------------------------ | ------------------------------------------------------------ |
 | **Core Modules**                              |                                                              |                              |                                                              |                                      |                                                              |
-| BaseModule                                    |                                                              |                              |                                                              |                                      |                                                              |
+| ERC20BaseModule                               |                                                              |                              |                                                              |                                      |                                                              |
 |                                               | `setName(string name_)`                                      | public                       | `string name_`                                               | -                                    | DEFAULT_ADMIN_ROLE                                           |
 |                                               | `setSymbol(string symbol_)`                                  | public                       | `string  symbol_`                                            | -                                    | DEFAULT_ADMIN_ROLE                                           |
 | ERC20BurnModule                               |                                                              |                              |                                                              |                                      |                                                              |
@@ -1263,13 +1269,13 @@ For function signatures,  struct arguments are represented with their correspond
 | ERC7551Module                                 |                                                              |                              |                                                              |                                      |                                                              |
 |                                               | `setMetaData(string metadata_)`                              | public                       | `string metadata_`                                           | -                                    | EXTRA_INFORMATION_ROLE                                       |
 |                                               | `setTerms(bytes32 hash, string uri)`                         | public                       | `bytes32 hash, string uri`                                   | -                                    | EXTRA_INFORMATION_ROLE                                       |
+| ERC20CrossChain                               |                                                              |                              |                                                              |                                      |                                                              |
+|                                               | `crosschainMint(address to, uint256 value)`                  | public                       |                                                              |                                      |                                                              |
+|                                               | `crosschainBurn(address from, uint256 value)`                | public                       |                                                              |                                      |                                                              |
+|                                               | `burnFrom(address account, uint256 value)`                   | public                       |                                                              |                                      |                                                              |
 | **Base contract**                             |                                                              |                              |                                                              |                                      |                                                              |
 | BaseCommon                                    |                                                              |                              |                                                              |                                      |                                                              |
 |                                               | `burnAndMint(address from, address to, uint256 amountToBurn, uint256 amountToMint, bytes data)` | public                       | `address from, address to, uint256 amountToBurn, uint256 amountToMint, bytes data` | -                                    | Same role requirement as `burn`and `mint`, so BURNER_ROLE and MINTER_ROLE |
-| CMTATBaseERC20CrossChain                      |                                                              |                              |                                                              |                                      |                                                              |
-|                                               | `crosschainMint(address to, uint256 value)`                  | public                       | `address to, uint256 value`                                  | -                                    | CROSS_CHAIN_ROLE                                             |
-|                                               | `crosschainBurn(address from, uint256 value)`                | public                       | `address from, uint256 value`                                | -                                    | CROSS_CHAIN_ROLE                                             |
-|                                               | `burnFrom(address account, uint256 value)`                   | public                       | `address account, uint256 value`                             | -                                    | BURNER_FROM_ROLE                                             |
 | CMTATBaseCore<br />(only CMTAT light version) |                                                              |                              |                                                              |                                      |                                                              |
 |                                               | `burnAndMint(address from, address to, uint256 amountToBurn, uint256 amountToMint, bytes data)` | public                       | `address from, address to, uint256 amountToBurn, uint256 amountToMint, bytes data` | -                                    | Same role requirement as `burn`and `mint`, so BURNER_ROLE and MINTER_ROLE |
 |                                               | `forcedBurn(address account, uint256 value, bytes data)`     | public                       | `address account, uint256 value, bytes data`                 | -                                    | DEFAULT_ADMIN_ROLE                                           |
@@ -1588,7 +1594,7 @@ Here are the list of rules in development:
 | RuleBlacklist                | Ready-only                     | ☑                                    | This rule can be used to forbid transfer from/to addresses in the blacklist |
 | RuleSanctionList             | Ready-only                     | ☑                                    | The purpose of this contract is to use the oracle contract from Chainalysis to forbid transfer from/to an address included in a sanctions designation (US, EU, or UN). |
 | RuleConditionalTransferLight | Ready-Write                    | In development                       | This rule requires that transfers have to be approved before being executed by the token |
-| RuleConditionalTransfer      | Ready-Write                    | ☒ (experimental rule)                | Same principle as the light version (see above) but we more options such as a time limit for approving a request as well as for carrying out the transfer |
+| RuleConditionalTransfer      | Ready-Write                    | ☒<br /> (experimental rule)          | Same principle as the light version (see above) but we more options such as a time limit for approving a request as well as for carrying out the transfer |
 
 #### SnapshotEngine
 
@@ -2022,17 +2028,17 @@ Here a schema describing the different check performed during:
 
 Here the list of events emitted by functions, which modify the total supply.
 
-| Name                                                         | Defined                       | Standard                  | Concerned functions                                          |
-| ------------------------------------------------------------ | ----------------------------- | ------------------------- | ------------------------------------------------------------ |
-| Transfer(address indexed from, address indexed to, uint256 value); | IERC20<br />(OpenZeppelin)    | ERC-20                    | All functions which impact the supply because a burn/mint is a transfer |
-| Mint(address indexed account, uint256 value, bytes data);    | IERC7551Mint                  | ERC-7551 (draft standard) | mint <br />(ERC20MintModule)<br />                           |
-| BatchMint( address indexed minter, address[] accounts, uint256[] values |                               | -                         | BatchMint<br />(ERC20MintModule)                             |
-| Burn(address indexed account, uint256 value, bytes data);    | IERC7551Burn                  | ERC-7551 (draft standard) | burn<br />(ERC20BurnModule)                                  |
-| BatchBurn(address indexed burner, address[] accounts,  uint256[] values) |                               | -                         | BatchMint<br />(ERC20BurnModule)                             |
-| BurnFrom(address indexed burner, address indexed account, address indexed spender, uint256 value); | IBurnERC20                    | -                         | burnFrom(address account, uint256 value)<br /><br />burn(uint256 value)<br />(CMTATBaseERC20CrossChain) |
-| CrosschainMint(address indexed to, uint256 value, address indexed sender) | IERC7551                      | ERC-7551                  | crosschainMint<br />(CMTATBaseERC20CrossChain)               |
-| CrosschainBurn(address indexed from, uint256 value, address indexed sender) | IERC7551                      | ERC-7551                  | crosschainMint<br />(CMTATBaseERC20CrossChain)               |
-| Enforcement (address indexed enforcer, address indexed account, uint256 amount, bytes data)<br />(Enforcement )<br /> | IERC7551ERC20EnforcementEvent | ERC-7551                  | forcedTransfer<br />(ERC20EnforcementModule)<br />forcedBurn<br />(CMTATBaseCore) |
+| Name                                                         | Defined                       | Standard              | Concerned functions                                          |
+| ------------------------------------------------------------ | ----------------------------- | --------------------- | ------------------------------------------------------------ |
+| `Transfer(address indexed from, address indexed to, uint256 value)` | IERC20<br />(OpenZeppelin)    | ERC-20                | All functions which impact the supply because a burn/mint is a transfer |
+| `Mint(address indexed account, uint256 value, bytes data)`   | IERC7551Mint                  | ERC-7551<br />(draft) | `mint` <br />(ERC20MintModule)<br />                         |
+| `BatchMint( address indexed minter, address[] accounts, uint256[] values` |                               | -                     | `batchMint`<br />(ERC20MintModule)                           |
+| `Burn(address indexed account, uint256 value, bytes data)`   | IERC7551Burn                  | ERC-7551<br/>(draft)  | `burn`<br />(ERC20BurnModule)                                |
+| `BatchBurn(address indexed burner, address[] accounts,  uint256[] values)` |                               | -                     | `batchMint`<br />(ERC20BurnModule)                           |
+| `BurnFrom(address indexed burner, address indexed account, address indexed spender, uint256 value)` | IBurnERC20                    | -                     | `burnFrom(address account, uint256 value)`<br /><br />`burn(uint256 value)`<br />(ERC20CrossChain) |
+| `CrosschainMint(address indexed to, uint256 value, address indexed sender)` | IERC7551                      | ERC-7802              | `crosschainMint`<br />(ERC20CrossChain)                      |
+| `CrosschainBurn(address indexed from, uint256 value, address indexed sender)` | IERC7551                      | ERC-7802              | `crosschainMint`<br />(ERC20CrossChain)                      |
+| `Enforcement (address indexed enforcer, address indexed account, uint256 amount, bytes data)`<br />(Enforcement )<br /> | IERC7551ERC20EnforcementEvent | ERC-7551 (draft)      | `forcedTransfer`<br />(ERC20EnforcementModule)<br />`forcedBurn`<br />(CMTATBaseCore) |
 
 
 
@@ -2173,47 +2179,45 @@ Additional documents can be added through the `DocumentEngine`
 
 For more information, see the section dedicated to the `DocumentEngine`
 
-### Cross-chain transfers (ERC-7802, CCT)
+### Cross-chain transfers (ERC-7802, CCIP-CCT)
 
 #### Chainlink CCIP - CCT
 
-CMTAT implements the required function of the Cross-Chain token standard (CCT) which means:
+CMTAT implements the required function of the [Cross-Chain Token Standard](https://docs.chain.link/ccip/concepts/cross-chain-token) (CCT) which means:
 
-- CMTAT CCIP admin can enable the token in CCIP, without the need of requesting assistance to Chainlink
-- Chainlink CCIP pool can perform the relevant mint and burn operation
+- CMTAT CCIP admin can enable the token in CCIP, without the need of requesting assistance to [Chainlink](https://chain.link).
+- Chainlink CCIP pool can perform the relevant mint and burn operations on CMTAT tokens.
 
-CMTAT does not implement the `owner` or `getCCIPAdmin()`function required by CCIP to register CCIP token permissibleness.
-
-See [docs.chain.link/ccip/concepts/cross-chain-tokens#requirements-for-cross-chain-tokens](https://docs.chain.link/ccip/concepts/cross-chain-tokens#requirements-for-cross-chain-tokens)
+See also [docs.chain.link - Cross Chain Token (EVM)](https://docs.chain.link/ccip/concepts/cross-chain-token/evm/tokens#overview)
 
 ##### [Registration functions](https://docs.chain.link/ccip/concepts/cross-chain-token/evm/tokens#registration-functions)
 
 CMTAT implements the following function `getCCIPAdmin()` to return the address authorized to register the token in CCIP.
 
-The second function available, `owner` is not implemented by CMTAT but this could be done easily. Note that `getCCIPAdmin`is the recommended function to use in the CCIP documentation.
+The alternative function proposed by CCIP, `owner`, is not implemented by CMTAT but this could be done easily. Note that `getCCIPAdmin`is the recommended function to use in the CCIP documentation.
 
 ##### [Transfer functions](https://docs.chain.link/ccip/concepts/cross-chain-token/evm/tokens#transfer-functions)
 
-Here the list of functions required to be compatible with CCIP
+Here the list of functions required to implement CCT and by compatible with CCIP.
 
-|                          |                                           | Implemented  | Pool<br />[BurnMint Requirements](https://docs.chain.link/ccip/concepts/cross-chain-token/evm/tokens#burnmint-requirements) | Pool<br />https://docs.chain.link/ccip/concepts/cross-chain-token/evm/tokens#lockrelease-requirements | Module<br />if implemented         | Role             |
-| ------------------------ | ----------------------------------------- | ------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ---------------------------------- | ---------------- |
-| Register CCIP token      |                                           |              |                                                              |                                                              |                                    |                  |
-|                          | owner                                     | No           | -                                                            | -                                                            | -                                  |                  |
-|                          | getCCIPAdmin                              | yes          | -                                                            | -                                                            | CCIPModule                         | -                |
-| Burn & Mint Requirements |                                           |              |                                                              |                                                              |                                    |                  |
-|                          | mint(address account, uint256 amount)     | Yes          | yes                                                          | No                                                           | MintModule<br />(Core module)      | MINTER_ROLE      |
-|                          | burn(uint256 amount)                      | yes          | yes                                                          | No                                                           | CMTATBaseERC20CrossChain           | BURNER_FROM_ROLE |
-|                          | decimals()                                | yes (ERC-20) | yes                                                          | yes                                                          | ERC20BaseModule<br />(Core module) |                  |
-|                          | balanceOf(address account)                | yes (ERC-20) | yes                                                          | yes                                                          | OpenZeppelin inheritance           |                  |
-|                          | burnFrom(address account, uint256 amount) | Yes          | yes                                                          | No                                                           | CMTATBaseERC20CrossChain           | BURNER_FROM_ROLE |
+|                          |                                           | Implemented | CCIP Pool<br />[BurnMint Requirements](https://docs.chain.link/ccip/concepts/cross-chain-token/evm/tokens#burnmint-requirements) | CCIP Pool<br />[Lock-Release requirements](https://docs.chain.link/ccip/concepts/cross-chain-token/evm/tokens#lockrelease-requirements) | Pausable | CMTAT Module<br />                 | Role             |
+| ------------------------ | ----------------------------------------- | ----------- | ------------------------------------------------------------ | ------------------------------------------------------------ | -------- | ---------------------------------- | ---------------- |
+| Register CCIP token      |                                           |             |                                                              |                                                              |          |                                    |                  |
+|                          | owner                                     | &#x2612;    | -                                                            | -                                                            |          | -                                  |                  |
+|                          | getCCIPAdmin                              | &#x2611;    | -                                                            | -                                                            |          | CCIPModule                         | -                |
+| Burn & Mint Requirements |                                           |             |                                                              |                                                              |          |                                    |                  |
+|                          | mint(address account, uint256 amount)     | &#x2611;    | &#x2611;                                                     | &#x2612;                                                     | &#x2612; | MintModule<br />(Core module)      | MINTER_ROLE      |
+|                          | burn(uint256 amount)                      | &#x2611;    | &#x2611;                                                     | &#x2612;                                                     | &#x2612; | ERC20CrossChain                    | BURNER_FROM_ROLE |
+|                          | ERC-20<br />decimals()                    | &#x2611;    | &#x2611;                                                     | &#x2611;                                                     | -        | ERC20BaseModule<br />(Core module) |                  |
+|                          | ERC-20<br />balanceOf(address account)    | &#x2611;    | &#x2611;                                                     | &#x2611;                                                     | -        | OpenZeppelin inheritance           |                  |
+|                          | burnFrom(address account, uint256 amount) | &#x2611;    | &#x2611;                                                     | &#x2612;                                                     | &#x2611; | ERC20CrossChain                    | BURNER_FROM_ROLE |
 
 Note:
 
 -  The admin must grant the required permissions to mint/burn to the CCIP token pool.
 
-- If you put the contract in pause through the PauseModule, it will not affect the `mint` function from MintModule.
-  In this case, the alternative solution is to revoke the MINTER_ROLE from the concerned addresses to prevent any mint
+- If you put the contract in pause through the PauseModule, it will not affect the `mint` and `burn` functions from MintModule and BurnModule.
+  In this case, the alternative solution is to revoke the MINTER_ROLE and BURNER_ROLE from the concerned addresses to prevent any mint and burn.
 
 
 
@@ -2241,11 +2245,13 @@ Reference: [docs.optimism.io/interop/superchain-erc20](https://docs.optimism.io/
 1. The autorelayer (or the user, or any offchain entity) sends an executing message to [`L2ToL2CrossDomainMessenger`](https://docs.optimism.io/interop/message-passing) to relay the message.
 2. The destination token bridge calls [`CMTAT.crosschainMint`](https://github.com/ethereum-optimism/optimism/blob/develop/packages/contracts-bedrock/src/L2/SuperchainERC20.sol#L26-L35) to mint tokens for the user/contract that called `SuperchainTokenBridge.sendERC20` originally.
 
-#### Requirement
+##### Requirement
 
-- You must  allow the `SuperchainTokenBridge`to call `crosschainMint` and `crosschainBurn`. No additional permissioning or role setup is required. 
+- You must allow the `SuperchainTokenBridge` to call `crosschainMint` and `crosschainBurn`. No additional permission or role setup is required. 
 
 - Deploy the `CMTAT` at the same address on every chain in the Superchain where you want your token to be available. If you do not deploy the contract to a specific destination chain, users will be unable to successfully move their tokens to that chain
+
+
 
 ## Deployment model 
 
@@ -2305,13 +2311,36 @@ See the OpenZeppelin [Upgrades plugins](https://docs.openzeppelin.com/upgrades-p
 
 ##### Storage
 
-CMTAT also implements the standard [ERC-7201](https://eips.ethereum.org/EIPS/eip-7201) to manage the storage location. See [this article](https://www.rareskills.io/post/erc-7201) by RareSkills for more information
+CMTAT also implements the standard [ERC-7201](https://eips.ethereum.org/EIPS/eip-7201) to manage the storage location. See [this article](https://www.rareskills.io/post/erc-7201) by RareSkills for more information.
+
+| Modules                        | Variable                                  | bytes32 Value                                                |
+| ------------------------------ | ----------------------------------------- | ------------------------------------------------------------ |
+| **Internal**                   |                                           |                                                              |
+| AllowlistModuleInternal        | AllowlistModuleInternalStorageLocation    | 0x53076eaf2d1e2f915f2e0487c9f92cca686c37fd47bf11f95f0da313b2809800 |
+| EnforcementModuleInternal      | EnforcementModuleInternalStorageLocatio   | 0x0c7bc8a17be064111d299d7669f49519cb26c58611b72d9f6ccc40a1e1184e00 |
+| ERC20EnforcementModuleInternal | ERC20EnforcementModuleStorageLocation     | 0x9d8059a24cb596f1948a937c2c163cf14465c2a24abfd3cd009eec4ac4c39800 |
+|                                | ValidationModuleRuleEngineStorageLocation | 0x77c8cc897d160e7bf5b10921804e357da17ae27460d4a6b5d9b27ffddf159d00 |
+| **Core**                       |                                           |                                                              |
+| ERC20BaseModule                | ERC20BaseModuleStorageLocation            | 0x9bd8d607565c0370ae5f91651ca67fd26d4438022bf72037316600e29e6a3a00 |
+| PauseModule                    |                                           | 0xab1527b6135145d8da1edcbd6b7b270624e17f2b41c74a8c746ff388ad454700 |
+| **Extension**                  |                                           |                                                              |
+| DocumentEngineModule           | DocumentEngineModuleStorageLocation       | 0xbd0905600c85d707dc53eba2e146c1c2527cd32ac3ff6b86846155151b3e2700 |
+| ExtraInformationModule         | ExtraInformationModuleStorageLocation     | 0xd2d5d34c4a4dea00599692d3257c0aebc5e0359176118cd2364ab9b008c2d100 |
+| SnapshotEngineModule           | SnapshotEngineModuleStorageLocation       | 0x1387b97dfab601d3023cb57858a6be29329babb05c85597ddbe4926c1193a900 |
+| **Options**                    |                                           |                                                              |
+| CCIPModule                     | CCIPModuleStorageLocation                 | 0x364fbfd89c0eee55bbc8dd10b1a9bf3e04fba9f3ee606f4c79a82f9941ad7a00 |
+| DebtModule                     | DebtModuleStorageLocation                 | 0xf8a315cc5f2213f6481729acd86e55db7ccc930120ccf9fb78b53dcce75f7c00 |
+| ERC7551Module                  | ERC7551ModuleStorageLocation              | 0x2727314c926b592b6f70e7d6d2e4677ebcac070f293306927f71fe77858eec00 |
+
+
 
 ##### Initialize functions
 
-For wrapper modules, we have removed the public function `{ContractName}_init`to reduce the size of the contracts since inside the public initializer function to initialize your proxy, you have to call the different functions `__{ContractName}_init_unchained`.
+Inside the public initializer function to initialize your proxy, you have to call the different functions `__{ContractName}_init_unchained`.
 
 Do not forget to call the functions `init_unchained` from the parent initializer if you create your own contract from the different modules.
+
+For wrapper modules, we have removed the public function `{ContractName}_init` when they are not useful to reduce the size of the contracts.
 
 As indicated in the [OpenZeppelin documentation](https://docs.openzeppelin.com/contracts/5.x/upgradeable#multiple-inheritance): 
 
@@ -2477,11 +2506,16 @@ interface ICMTATCreditEvents {
 
 Here are the different fields and functions to read and store the related debt information and Credit Events.
 
-|                 | Module                            | Read/get function | Write/set functions                      | Require DebtEngine              | Internal field                      |
-| --------------- | --------------------------------- | ----------------- | ---------------------------------------- | ------------------------------- | ----------------------------------- |
-| Debt Identifier | DebtModule/<br />DebtEngineModule | debt()            | setDebt(...)                             | &#x2612;<br />(but can be used) | `_debt`                             |
-| Debt Instrument | DebtModule<br />DebtEngineModule  | debt()            | setDebt(...)<br />setDebtInstrument(...) | &#x2612;<br />(but can be used) | `_debt`                             |
-| Credit Events   | DebtEngineModule                  | creditEvents()    | -<br />(require `DebtEngine`)            | &#x2611;                        | -<br />(stores by the `DebtEngine`) |
+|                 | Module                           | Function                                 | Type<br />[Read/Write] | Override by DebtEngine | Internal field  |
+| --------------- | -------------------------------- | ---------------------------------------- | ---------------------- | ---------------------- | --------------- |
+| Debt Identifier |                                  |                                          |                        |                        |                 |
+|                 | DebtModule<br />DebtEngineModule | debt()                                   | Read                   | &#x2611;               | `_debt`         |
+|                 | DebtModule                       | setDebt(...)                             | Write                  | &#x2612;               | `_debt`         |
+| Debt Instrument |                                  |                                          |                        |                        |                 |
+|                 | DebtModule<br />DebtEngineModule | debt()                                   | Read                   | &#x2611;               | `_debt`         |
+|                 | DebtModule                       | setDebt(...)<br />setDebtInstrument(...) | Write                  | &#x2612;               | `_debt`         |
+| Credit Events   | DebtEngineModule                 | creditEvents()                           | Read                   | &#x2611;               | `_creditEvents` |
+|                 | DebtModule                       | setCreditEvents(...)                     | Write                  | &#x2612;               | `_creditEvents` |
 
 #### Schema
 
@@ -2621,7 +2655,17 @@ See [AccessControlModule.sol](./contracts/modules/wrapper/security/AccessControl
 
 ### Audit
 
-The contracts have been audited by [ABDKConsulting](https://www.abdk.consulting/) (CMTAT v1.0.0 & CMTAT v2.30) and [Halborn](https://www.halborn.com) (CMTAT v3.0.0), two globally recognised firm specialised in smart contracts security.
+CMTAT is regularly audited by globally recognised firm specialised in smart contracts security.
+
+Only the version audited should be used in production.
+
+| Version                                                      | Security Audit Firm                            |
+| ------------------------------------------------------------ | ---------------------------------------------- |
+| [CMTAT v3.0.0](https://github.com/CMTA/CMTAT/releases/tag/v3.0.0) | [Halborn](https://www.halborn.com)             |
+| CMTAT v2.3.0                                                 | [ABDKConsulting](https://www.abdk.consulting/) |
+| CMTAT v1.0.0                                                 | [ABDKConsulting](https://www.abdk.consulting/) |
+
+
 
 #### Out of scope
 
@@ -2745,6 +2789,19 @@ Within a grouping, place the `view` and `pure` functions last
 4. Override
 5. Custom modifiers
 ```
+
+Inside each contract, library or interface, use the following order:
+
+```
+1. Type declarations
+2. State variables
+3. Events
+4. Errors
+5. Modifiers
+6. Functions
+```
+
+
 
 ### Configuration & toolchain
 

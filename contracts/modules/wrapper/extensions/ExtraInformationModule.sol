@@ -20,6 +20,7 @@ abstract contract ExtraInformationModule is Initializable, ICMTATBase {
             string _information;
     }
 
+    /* ============ Modifier ============ */
     modifier onlyExtraInfoManager() {
         _authorizeExtraInfoManagement();
         _;

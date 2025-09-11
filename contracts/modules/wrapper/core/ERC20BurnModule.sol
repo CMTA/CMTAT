@@ -20,8 +20,9 @@ abstract contract ERC20BurnModule is ERC20BurnModuleInternal, IBurnBatchERC20, I
     bytes32 public constant BURNER_ROLE = keccak256("BURNER_ROLE");
 
 
+    /* ============ Modifier ============ */
     /// @dev Modifier to restrict access to the burner functions
-    modifier onlybBurner() {
+    modifier onlyBurner() {
         _authorizeBurn();
         _;
     }
@@ -40,7 +41,7 @@ abstract contract ERC20BurnModule is ERC20BurnModuleInternal, IBurnBatchERC20, I
         address account,
         uint256 value,
         bytes calldata data
-    ) public virtual override(IERC7551Burn) onlybBurner{
+    ) public virtual override(IERC7551Burn) onlyBurner{
         _burn(account, value, data);
     }
 
@@ -52,7 +53,7 @@ abstract contract ERC20BurnModule is ERC20BurnModuleInternal, IBurnBatchERC20, I
     function burn(
         address account,
         uint256 value
-    ) public virtual override(IERC3643Burn) onlybBurner  {
+    ) public virtual override(IERC3643Burn) onlyBurner  {
        _burn(account, value,"");
     }
 
@@ -66,7 +67,7 @@ abstract contract ERC20BurnModule is ERC20BurnModuleInternal, IBurnBatchERC20, I
         address[] calldata accounts,
         uint256[] calldata values,
         bytes memory data
-    ) public virtual override(IBurnBatchERC20) onlybBurner  {
+    ) public virtual override(IBurnBatchERC20) onlyBurner  {
         _batchBurn(accounts, values);
         emit BatchBurn(_msgSender(),accounts, values, data );
     }
@@ -80,7 +81,7 @@ abstract contract ERC20BurnModule is ERC20BurnModuleInternal, IBurnBatchERC20, I
     function batchBurn(
         address[] calldata accounts,
         uint256[] calldata values
-    ) public virtual override (IERC3643Burn) onlybBurner {
+    ) public virtual override (IERC3643Burn) onlyBurner {
         _batchBurn(accounts, values);
         emit BatchBurn(_msgSender(),accounts, values, "" );
     }

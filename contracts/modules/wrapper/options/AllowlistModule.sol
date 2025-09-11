@@ -20,6 +20,7 @@ abstract contract AllowlistModule is
     /* ============ State Variables ============ */
     bytes32 public constant ALLOWLIST_ROLE = keccak256("ALLOWLIST_ROLE");
    
+    /* ============ Modifier ============ */
     modifier onlyAllowlistManager {
         _authorizeAllowlistManagement();
         _;

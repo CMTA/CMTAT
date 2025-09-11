@@ -7,14 +7,14 @@ import {ERC2771ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/met
 
 import {IGetCCIPAdmin} from "../../../interfaces/technical/IGetCCIPAdmin.sol";
 /**
- * @title Meta transaction (gasless) module.
+ * @title Chainlink CCIP specific functions
  * @dev 
  *
- * Useful for to provide UX where the user does not pay gas for token exchange
- * To follow OpenZeppelin, this contract does not implement the functions init & init_unchained.
- * ()
+ * Implement CCIP specific functions to make CMTAT compatible with Chainlink CCIP (CCT standard)
+ * 
  */
 abstract contract CCIPModule is IGetCCIPAdmin {
+    /* ============ Error ============ */
     error CMTAT_CCIPModule_SameValue();
     // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.CCIPModule")) - 1)) & ~bytes32(uint256(0xff))
     bytes32 private constant CCIPModuleStorageLocation = 0x364fbfd89c0eee55bbc8dd10b1a9bf3e04fba9f3ee606f4c79a82f9941ad7a00;
@@ -23,18 +23,20 @@ abstract contract CCIPModule is IGetCCIPAdmin {
     struct CCIPModuleStorage {
         /** 
         * @dev the CCIPAdmin can be used to register with the CCIP token admin registry, but has no other special powers,
-        * and can only be transferred by the owner.
+        * and can only be transferred by calling setCCIPAdmin.
         */
         address  s_ccipAdmin;
     }
 
-    /// @dev Modifier to restrict access to the burner functions
+    /* ============ Modifier ============ */
+    /// @dev Modifier to restrict access to the function setCCIPAdmin
     modifier onlyCCIPSetAdmin() {
         _authorizeCCIPSetAdmin();
         _;
     }
 
-  /**@notice Transfers the CCIPAdmin role to a new address
+  /**
+  * @notice Transfers the CCIPAdmin role to a new address
   * @dev only the owner can call this function, NOT the current ccipAdmin, and 1-step ownership transfer is used.
   * @param newAdmin The address to transfer the CCIPAdmin role to. Setting to address(0) is a valid way to revoke
   * the role

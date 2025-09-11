@@ -6,7 +6,7 @@ pragma solidity ^0.8.20;
 // Security
 import {AccessControlModule} from "./wrapper/security/AccessControlModule.sol";
 // Core
-import {BaseModule} from "./wrapper/core/BaseModule.sol";
+import {VersionModule} from "./wrapper/core/VersionModule.sol";
 import {ERC20BurnModule, ERC20BurnModuleInternal} from "./wrapper/core/ERC20BurnModule.sol";
 import {ERC20MintModule, ERC20MintModuleInternal} from "./wrapper/core/ERC20MintModule.sol";
 // Extensions
@@ -23,7 +23,7 @@ import {IBurnMintERC20} from "../interfaces/technical/IMintBurnToken.sol";
 
 abstract contract CMTATBaseCommon is
     // Core
-    BaseModule,
+    VersionModule,
     ERC20MintModule,
     ERC20BurnModule,
     ERC20BaseModule,
