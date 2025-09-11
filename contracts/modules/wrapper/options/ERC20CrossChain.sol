@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.20;
 /* ==== OpenZeppelin === */
-import {IERC165} from "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165Upgradeable.sol";
+import {ERC165Upgradeable, IERC165} from "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165Upgradeable.sol";
 /* ==== Module === */
 import {ERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 /* ==== Interfaces === */
@@ -16,7 +16,7 @@ import {ERC20MintModule, ERC20MintModuleInternal} from "../core/ERC20MintModule.
  *
  * Contains all burn functions, inherits from ERC-20
  */
-abstract contract ERC20CrossChain is ERC20MintModule, ERC20BurnModule, IERC7802, IBurnFromERC20 {
+abstract contract ERC20CrossChain is ERC20MintModule, ERC20BurnModule, ERC165Upgradeable, IERC7802, IBurnFromERC20 {
     /* ============ State Variables ============ */
     bytes32 public constant BURNER_FROM_ROLE = keccak256("BURNER_FROM_ROLE");
     bytes32 public constant CROSS_CHAIN_ROLE = keccak256("CROSS_CHAIN_ROLE");
@@ -97,8 +97,8 @@ abstract contract ERC20CrossChain is ERC20MintModule, ERC20BurnModule, IERC7802,
     }
 
     /* ============ View functions ============ */
-    function supportsInterface(bytes4 _interfaceId) public view virtual override(IERC165) returns (bool) {
-        return _interfaceId == type(IERC7802).interfaceId;
+    function supportsInterface(bytes4 _interfaceId) public view virtual override(ERC165Upgradeable, IERC165) returns (bool) {
+        return _interfaceId == type(IERC7802).interfaceId || ERC165Upgradeable.supportsInterface(_interfaceId);
     }
 
     /*//////////////////////////////////////////////////////////////
