@@ -2,9 +2,6 @@
 
 pragma solidity ^0.8.20;
 
-/* ==== OpenZeppelin === */
-import {ERC2771ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/metatx/ERC2771ContextUpgradeable.sol";
-
 import {IGetCCIPAdmin} from "../../../interfaces/technical/IGetCCIPAdmin.sol";
 /**
  * @title Chainlink CCIP specific functions
@@ -41,7 +38,7 @@ abstract contract CCIPModule is IGetCCIPAdmin {
   * @param newAdmin The address to transfer the CCIPAdmin role to. Setting to address(0) is a valid way to revoke
   * the role
   */ 
-  function setCCIPAdmin(address newAdmin) public onlyCCIPSetAdmin{
+  function setCCIPAdmin(address newAdmin) public virtual onlyCCIPSetAdmin{
     CCIPModuleStorage storage $ = _getCCIPModuleStorage();
     address currentAdmin = $.s_ccipAdmin;
     require(newAdmin != currentAdmin, CMTAT_CCIPModule_SameValue());
@@ -54,7 +51,7 @@ abstract contract CCIPModule is IGetCCIPAdmin {
   /**
   * Returns the current CCIPAdmin
   */
-  function getCCIPAdmin() external view returns (address) {
+  function getCCIPAdmin() public view virtual returns (address) {
     CCIPModuleStorage storage $ = _getCCIPModuleStorage();
     return $.s_ccipAdmin;
   }

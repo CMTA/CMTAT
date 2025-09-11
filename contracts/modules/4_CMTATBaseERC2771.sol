@@ -5,7 +5,6 @@ pragma solidity ^0.8.20;
 import {ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
 /* ==== Module === */
 import {CMTATBaseERC20CrossChain} from "./3_CMTATBaseERC20CrossChain.sol";
-import {CMTATBaseERC1404} from "./2_CMTATBaseERC1404.sol";
 import {ERC2771Module, ERC2771ContextUpgradeable} from "./wrapper/options/ERC2771Module.sol";
 /**
 * @title Extend CMTAT Base with option modules

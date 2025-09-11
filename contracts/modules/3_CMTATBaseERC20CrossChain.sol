@@ -3,7 +3,6 @@
 pragma solidity ^0.8.20;
 /* ==== OpenZeppelin === */
 import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
-import {IERC165} from "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165Upgradeable.sol";
 /* ==== Module === */
 import {CMTATBaseERC1404, ERC20Upgradeable} from "./2_CMTATBaseERC1404.sol";
 import {CMTATBaseCommon} from "./0_CMTATBaseCommon.sol";
@@ -11,9 +10,6 @@ import {ERC20BurnModule, ERC20BurnModuleInternal} from "./wrapper/core/ERC20Burn
 import {ERC20MintModule, ERC20MintModuleInternal} from "./wrapper/core/ERC20MintModule.sol";
 import {ERC20CrossChain} from "./wrapper/options/ERC20CrossChain.sol";
 import {CCIPModule} from "./wrapper/options/CCIPModule.sol";
-/* ==== Interfaces === */
-import {IERC7802} from "../interfaces/technical/IERC7802.sol";
-import {IBurnFromERC20} from "../interfaces/technical/IMintBurnToken.sol";
 
 /**
  * @title ERC20CrossChainModule (ERC-7802)
