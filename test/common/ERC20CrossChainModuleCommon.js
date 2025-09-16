@@ -88,7 +88,11 @@ function ERC20CrossChainModuleCommon () {
       const IERC721Interface = '0x80ac58cd'
       const IERC165Id = '0x01ffc9a7'
       const crossChainInterface = '0x33331994'
+      const IERC5679 = '0xd0017968'
       expect(await this.cmtat.supportsInterface(crossChainInterface)).to.equal(
+        true
+      )
+      expect(await this.cmtat.supportsInterface(IERC5679)).to.equal(
         true
       )
       expect(await this.cmtat.supportsInterface(IERC165Id)).to.equal(

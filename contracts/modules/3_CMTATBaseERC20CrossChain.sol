@@ -91,8 +91,8 @@ abstract contract CMTATBaseERC20CrossChain is ERC20CrossChain, CCIPModule, CMTAT
 
 
     /* ============ View functions ============ */
-    function supportsInterface(bytes4 _interfaceId) public view virtual override(AccessControlUpgradeable, ERC20CrossChain) returns (bool) {
-        return  ERC20CrossChain.supportsInterface(_interfaceId)|| AccessControlUpgradeable.supportsInterface( _interfaceId);
+    function supportsInterface(bytes4 _interfaceId) public view virtual override(CMTATBaseCommon, ERC20CrossChain) returns (bool) {
+        return  ERC20CrossChain.supportsInterface(_interfaceId)|| CMTATBaseCommon.supportsInterface( _interfaceId);
     }
 
     /*//////////////////////////////////////////////////////////////

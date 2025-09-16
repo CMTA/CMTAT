@@ -49,11 +49,13 @@ describe('CMTAT - ERC1363 Proxy Deployment', function () {
     //  type(IAccessControl).interfaceId
     const IERC165Interface = '0x01ffc9a7'
     const IERC721Interface = '0x80ac58cd'
+    const IERC5679 = '0xd0017968'
     // Assert
     expect(await this.cmtat.supportsInterface(erc1363Interface)).to.equal(true)
     expect(await this.cmtat.supportsInterface(IERC165Interface)).to.equal(true)
-    expect(await this.cmtat.supportsInterface(IERC721Interface)).to.equal(
-      false
+    expect(await this.cmtat.supportsInterface(IERC165Interface)).to.equal(true)
+    expect(await this.cmtat.supportsInterface(IERC5679)).to.equal(
+      true
     )
   })
   it('testCanSendTokenToReceiverContract', async function () {

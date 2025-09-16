@@ -8,7 +8,7 @@ import {ERC20BurnModuleInternal} from "../../internal/ERC20BurnModuleInternal.so
 import {IBurnBatchERC20} from "../../../interfaces/technical/IMintBurnToken.sol";
 /* ==== Tokenization === */
 import {IERC3643Burn} from "../../../interfaces/tokenization/IERC3643Partial.sol";
-import {IERC7551Burn} from "../../../interfaces/tokenization/draft-IERC7551.sol";
+import {IERC7551Burn, IERC5679Burn} from "../../../interfaces/tokenization/draft-IERC7551.sol";
 /**
  * @title ERC20Burn module.
  * @dev 
@@ -41,7 +41,7 @@ abstract contract ERC20BurnModule is ERC20BurnModuleInternal, IBurnBatchERC20, I
         address account,
         uint256 value,
         bytes calldata data
-    ) public virtual override(IERC7551Burn) onlyBurner{
+    ) public virtual override(IERC5679Burn) onlyBurner{
         _burn(account, value, data);
     }
 

@@ -4,7 +4,7 @@ pragma solidity ^0.8.20;
 
 /* ==== Wrapper === */
 // Security
-import {AccessControlModule} from "./wrapper/security/AccessControlModule.sol";
+import {AccessControlUpgradeable, AccessControlModule} from "./wrapper/security/AccessControlModule.sol";
 // Core
 import {VersionModule} from "./wrapper/core/VersionModule.sol";
 import {ERC20BurnModule, ERC20BurnModuleInternal} from "./wrapper/core/ERC20BurnModule.sol";
@@ -20,6 +20,7 @@ import {ERC20BaseModule, ERC20Upgradeable} from "./wrapper/core/ERC20BaseModule.
 import {ICMTATConstructor} from "../interfaces/technical/ICMTATConstructor.sol";
 import {ISnapshotEngine} from "../interfaces/engine/ISnapshotEngine.sol";
 import {IBurnMintERC20} from "../interfaces/technical/IMintBurnToken.sol";
+import {IERC5679} from "../interfaces/technical/IERC5679.sol";
 
 abstract contract CMTATBaseCommon is
     // Core
@@ -34,7 +35,8 @@ abstract contract CMTATBaseCommon is
     ExtraInformationModule,
     AccessControlModule,
     // Interfaces
-    IBurnMintERC20
+    IBurnMintERC20,
+    IERC5679
 {  
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
@@ -87,6 +89,12 @@ abstract contract CMTATBaseCommon is
         return ERC20BaseModule.symbol();
     }
 
+    /**
+     * @inheritdoc AccessControlUpgradeable
+     */
+    function supportsInterface(bytes4 interfaceId) public view virtual override(AccessControlUpgradeable) returns (bool) {
+        return interfaceId == type(IERC5679).interfaceId || AccessControlUpgradeable.supportsInterface(interfaceId);
+    }
 
     /* ============  State Functions ============ */
     function transfer(address to, uint256 value) public virtual override(ERC20Upgradeable) returns (bool) {

@@ -18,13 +18,14 @@ import {EnforcementModule} from "./wrapper/core/EnforcementModule.sol";
 import {ValidationModule, ValidationModuleCore} from "./wrapper/core/ValidationModuleCore.sol";
 
 // Security
-import {AccessControlModule} from "./wrapper/security/AccessControlModule.sol";
+import {AccessControlModule, AccessControlUpgradeable} from "./wrapper/security/AccessControlModule.sol";
 
 /* ==== Interface and other library === */
 import {ICMTATConstructor} from "../interfaces/technical/ICMTATConstructor.sol";
 import {IForcedBurnERC20} from "../interfaces/technical/IMintBurnToken.sol";
 import {IBurnMintERC20} from "../interfaces/technical/IMintBurnToken.sol";
 import {IERC7551ERC20EnforcementEvent} from "../interfaces/tokenization/draft-IERC7551.sol";
+import {IERC5679} from "../interfaces/technical/IERC5679.sol";
 import {Errors} from "../libraries/Errors.sol";
 
 /**
@@ -40,10 +41,12 @@ abstract contract CMTATBaseCore is
     ERC20BurnModule,
     ValidationModuleCore,
     ERC20BaseModule,
+    AccessControlModule,
     IForcedBurnERC20,
     IBurnMintERC20,
     IERC7551ERC20EnforcementEvent,
-    AccessControlModule
+    IERC5679
+    
 { 
     /* ============ Error ============ */ 
     error CMTAT_BurnEnforcement_AddressIsNotFrozen(); 
@@ -146,6 +149,13 @@ abstract contract CMTATBaseCore is
     */
     function symbol() public virtual override(ERC20Upgradeable, ERC20BaseModule) view returns (string memory) {
         return ERC20BaseModule.symbol();
+    }
+
+    /**
+     * @inheritdoc AccessControlUpgradeable
+     */
+    function supportsInterface(bytes4 interfaceId) public view virtual override(AccessControlUpgradeable) returns (bool) {
+        return interfaceId == type(IERC5679).interfaceId || AccessControlUpgradeable.supportsInterface(interfaceId);
     }
 
     /* ============  State Functions ============ */
