@@ -16,7 +16,7 @@ abstract contract ExtraInformationModule is Initializable, ICMTATBase {
     /* ==== ERC-7201 State Variables === */
     struct ExtraInformationModuleStorage {
             string _tokenId;
-            Terms _terms;
+            CMTATTerms _terms;
             string _information;
     }
 
@@ -98,7 +98,7 @@ abstract contract ExtraInformationModule is Initializable, ICMTATBase {
     /**
     * @inheritdoc ICMTATBase
     */
-    function terms() public view virtual override(ICMTATBase)  returns (Terms memory terms_) {
+    function terms() public view virtual override(ICMTATBase)  returns (CMTATTerms memory terms_) {
         ExtraInformationModuleStorage storage $ = _getExtraInformationModuleStorage();
         return $._terms;
     }
@@ -134,7 +134,7 @@ abstract contract ExtraInformationModule is Initializable, ICMTATBase {
         $._terms.doc.uri = terms_.uri;
         $._terms.doc.lastModified = block.timestamp;
 		// Event
-        emit Term($._terms);
+        emit Terms($._terms);
     }
 
     function _setInformation(ExtraInformationModuleStorage storage $, string memory information_) internal virtual {

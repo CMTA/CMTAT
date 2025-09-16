@@ -27,13 +27,18 @@ function ERC7551ModuleCommon () {
       // Act
       this.logs = await this.cmtat
         .connect(this.admin)
-        .setTerms(ethers.Typed.bytes32(NEW_TERMS[2]), NEW_TERMS[1])
+        .setTerms(ethers.Typed.bytes32(NEW_TERMS[2]), ethers.Typed.string(NEW_TERMS[1]))
       // Assert
 
       await checkTerms(this, NEW_TERMS)
 
       const hash = await this.cmtat.termsHash()
       expect(hash).to.equal(NEW_TERMS[2])
+
+      
+      await expect(this.logs)
+      .to.emit(this.cmtat, 'Terms(bytes32,string)')
+      .withArgs(NEW_TERMS[2],NEW_TERMS[1])
     })
     it('testCannotNonAdminUpdateTerms', async function () {
       // Arrange - Assert

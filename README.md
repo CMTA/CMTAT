@@ -521,46 +521,15 @@ Note: `canTransfer` is defined for the compliance contract in ERC-3643.
 
 ####  ERC-7551 (eWPG)
 
-> [ERC specification](https://ethereum-magicians.org/t/erc-7551-crypto-security-token-smart-contract-interface-ewpg/16416)
+> [ERC specification](https://ethereum-magicians.org/t/erc-7551-crypto-security-token-smart-contract-interface-ewpg-reworked/25477)
 >
 > Status: draft
 
-This section presents a correspondence table between [ERC-7551](https://ethereum-magicians.org/t/erc-7551-crypto-security-token-smart-contract-interface-ewpg/16416) and their equivalent functions inside CMTAT.
+ERC-7551 ([eWpG](https://www.gesetze-im-internet.de/ewpg/)) is a proposal by the German Federal Association of Crypto Registrars for a smart contract interface tailored to *crypto securities* in Germany (eWpG). It aims to provide a flexible, minimal foundational layer so that tokens can meet legal/compliance requirements in a modular way.
 
-The ERC-7551 is currently a draft ERC proposed by the Federal Association of Electronic Registrars from Germany to tokenize assets in compliance with [eWPG](https://www.gesetze-im-internet.de/ewpg/). 
+The implemented interface is available in [IERC7551](./contracts/interfaces/tokenization/draft-IERC7551.sol).
 
-The interface is supposed to work on top of additional standards that cover the actual storage of ownership of shares of a security in the form of a token (e.g. ERC-20 or ERC-1155).
-
-##### CMTAT modification
-
-Since ERC-7551 is not yet an official standard, we decided to use the same name and signature as ERC-3643. Typically, we define a function `burn` instead of `destroyTokens`.
-
-Many discussions were carried out in 2024 and 2025 with the partners and authors of the ERC-7551 standard to ensure that these modifications correspond to their initial purpose. We hope that these changes will be reflected in the standard if it becomes final.
-
-The implemented interface is available in [IERC7551](./contracts/interfaces/tokenization/draft-IERC7551.sol)
-
-| **N°** | **Functionalities**                                          | **ERC-7551 Functions**                    | **CMTAT v3.0.0**         | Implementations details                                      | Modules                                                      |
-| :----- | :----------------------------------------------------------- | :---------------------------------------- | :----------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| 1      | Freeze and unfreeze a specific amount of tokens              | `freezeTokens`<br />`unfreezeTokens`      | &#x2611;                 | Implement ERC-3643 function`freezePartialTokens`and `unfreezePartialTokens`(with and without a `data`parameter)<br />& ERC-3643 function `setAddressFrozen`<br />(with and without a `data`parameter) | EnforcementModule (core)<br />ERC20EnforcementModule (extensions) |
-| 2      | Pausing transfers The operator can pause and unpause transfers | `pauseTransfers`                          | &#x2611;                 | Implement ERC-3643 functions `pause/unpause`<br />& `deactivateContract` | PauseModule (core)                                           |
-| 3      | Link to off-chain document<br />Add the hash of a document   | `setPaperContractHash`                    | Equivalent functionality | The hash is put in the field` Terms`<br />Terms is represented as a Document (name, uri, hash, last on-chain modification date) based on [ERC-1643](https://github.com/ethereum/eips/issues/1643). |                                                              |
-|        |                                                              |                                           | Function                 | `setTerms(bytes32 hash, string calldata uri)`                | ERC7751Module<br />(options)                                 |
-|        |                                                              |                                           | Function                 | `setTerms(IERC1643CMTAT.DocumentInfo calldata terms_)`       | ExtraInformationModule (extensions)                          |
-| 4      | Metadata JSON file                                           | `setMetaDataJSON`                         | &#x2611;                 | Function <br />`setMetaData(string calldata metadata_)`      | ERC7751Module<br />(options)                                 |
-| 5      | Forced transfers<br />Transfer `amount` tokens to `to` without requiring the consent of `from` | `forceTransferFrom`                       | &#x2611;                 | Two functions are available: with and without the `data`parameter |                                                              |
-|        |                                                              |                                           | Functions                | `forcedTransfer(address from, address to, uint256 value, bytes calldata data) ` | ERC20EnforcementModule<br />(extensions)                     |
-|        |                                                              |                                           |                          | ERC-3643 function `forcedTransfer(address from, address to, uint256 value)` | ERC20EnforcementModule<br />(extensions)                     |
-| 6      | Token supply management<br />Reduce the balance of `tokenHolder` by `amount` without increasing the amount of tokens of any other holder | `destroyTokens`                           | &#x2611;                 | Two functions are available: with and without the `data`parameter, as well as a batch version |                                                              |
-|        |                                                              |                                           | Functions                | `burn(address account,uint256 value,bytes calldata data)`    | BurnModule (core)                                            |
-|        |                                                              |                                           |                          | ERC-3643 function `burn(address account,uint256 value)`      | BurnModule (core)                                            |
-|        |                                                              |                                           |                          | `batchBurn(address[] calldata accounts,uint256[] calldata values,bytes memory data)` | BurnModule (core)                                            |
-|        |                                                              |                                           |                          | ERC-3643 function `batchBurn(address[] calldata accounts,uint256[] calldata values)` | BurnModule (core)                                            |
-| 7      | Token supply management<br />Increase the balance of `to` by `amount` without decreasing the amount of tokens from any other holder. | `issue`                                   | &#x2611;                 | Two functions are available: with and without the `data`parameter, as well as a batch version (without `data`) |                                                              |
-|        |                                                              |                                           | Functions                | `mint(address account, uint256 value, bytes calldata data)`  | MintModule (core)                                            |
-|        |                                                              |                                           |                          | ERC-3643 functions <br />`mint(address account, uint256 value)`and `batchMint(address[] calldata accounts,uint256[] calldata values)` | MintModule (core)                                            |
-| 8      | Transfer compliance<br />Check if a transfer is valid        | `canTransfer() `and a `canTransferFrom()` | &#x2611;                 | Implement<br/>ERC-3643 function `canTransfer`<br/>as well as a specific function `canTransferFrom` |                                                              |
-|        |                                                              |                                           | Functions                | ERC-3643 function `canTransfer(address from,address to,uint256 value)` | ValidationModuleCore                                         |
-|        |                                                              |                                           |                          | `canTransferFrom(address spender,address from,address to,uint256 value) ` | ValidationModuleCore                                         |
+Only the specific deployment version dedicated (CMTATERC7551) implements the full interface.
 
 #####  Fulls functions
 
@@ -604,6 +573,8 @@ function canTransfer(address from, address to, uint256 value) external view retu
 
 // IERC7551Document
 // IERC7551Module
+event Terms(bytes32 hash_, string uri_);
+event MetaData(string newMetaData);
 function termsHash() external view returns (bytes32);
 function setTerms(bytes32 _hash, string calldata _uri) external;
 function metaData() external view returns (string memory);

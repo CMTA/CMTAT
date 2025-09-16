@@ -45,23 +45,23 @@ Reference: [keepachangelog.com/en/1.1.0/](https://keepachangelog.com/en/1.1.0/)
 
 **Added**
 
-- New module `CCIPModule` with two functions `getCCIPAdmin`and`setCCIPAdmin` 
-  - Reason: it is allow a CCIP admin to enable the CMTAT token in Chainlink CCIP, without the need of requesting assistance to [Chainlink](https://chain.link).
+- New module `CCIPModule` with two functions `getCCIPAdmin` and `setCCIPAdmin` 
+  - Reason: it allows the CCIP admin to enable the CMTAT token in Chainlink CCIP, without the need of requesting assistance to [Chainlink](https://chain.link).
 - Add explicit support of [ERC-5679](https://eips.ethereum.org/EIPS/eip-5679) for minting and burning
-  - Reason: this ERC was already supported in v3.0.0 but not through an interface and ERC-165 identifier
-  - Details: `IERC7551Burn` and `IERC7551Mint` will inherits from respectively the burn and mint part of ERC-5679
+  - Reason: this ERC was already supported in v3.0.0 but not through a dedicated interface and ERC-165 identifier.
+  - Details: `IERC7551Burn` and `IERC7551Mint` will inherits from respectively the burn and mint part of ERC-5679.
+- In `ERC7551Module`, the function `setTerms` emits the `Terms` event to follow the draft ERC [ERC-7551](https://ethereum-magicians.org/t/erc-7551-crypto-security-token-smart-contract-interface-ewpg-reworked/25477).
 
 **Changed**
 
 - Rename `BaseModule` into `VersionModule`
 
-  - Reason: This module contains only the CMTAT version. This avoid also the confusion with CMTAT Base modules
+  - Reason: This module contains only the CMTAT version. This avoid also the confusion with CMTAT Base modules.
 
 - Access control: in wrapper modules, all access control is made through internal functions. These functions must be now implemented in CMTAT base module
 
-  - Reason: this allows to use a different access control (e.g. [ownership](https://docs.openzeppelin.com/contracts/5.x/) or [Access Manager](https://docs.openzeppelin.com/contracts/5.x/api/access#AccessManager) ) by implementing a new CMTAT Base module without the need of modifying wrapper modules.
+  - Reason: this allows to use a different access control (e.g. [ownership](https://docs.openzeppelin.com/contracts/5.x/) or [Access Manager](https://docs.openzeppelin.com/contracts/5.x/api/access#AccessManager)) by implementing a new CMTAT Base module without the need of modifying wrapper modules.
 
-  
 
 ## 3.0.0
 

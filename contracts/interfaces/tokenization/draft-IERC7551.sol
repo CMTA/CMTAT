@@ -162,6 +162,17 @@ interface IERC7551Compliance is IERC3643ComplianceRead {
 
 interface IERC7551Document {
     /**
+    * @notice Emitted when the terms are updated.
+    * @param hash_ The new hash value
+    * @param uri_ The new string uri
+    */
+    event Terms(bytes32 hash_, string uri_);
+    /**
+    * @notice Emitted when the metadata string is updated.
+    * @param newMetaData The new metadata value (e.g. a URL or reference hash).
+    */
+    event MetaData(string newMetaData);
+    /**
      * @notice Returns the hash of the "Terms" document.
      * @return hash_ The `bytes32` hash of the terms document.
      */
@@ -169,10 +180,10 @@ interface IERC7551Document {
 
     /**
      * @notice Sets the terms hash and URI.
-     * @param _hash The new hash of the document.
-     * @param _uri The corresponding URI.
+     * @param hash_ The new hash of the document.
+     * @param uri_ The corresponding URI.
      */
-    function setTerms(bytes32 _hash, string calldata _uri) external;
+    function setTerms(bytes32 hash_, string calldata uri_) external;
 
     /**
     * @notice Returns the metadata string (e.g. URL).
