@@ -92,12 +92,8 @@ function ERC20CrossChainModuleCommon () {
       expect(await this.cmtat.supportsInterface(crossChainInterface)).to.equal(
         true
       )
-      expect(await this.cmtat.supportsInterface(IERC5679)).to.equal(
-        true
-      )
-      expect(await this.cmtat.supportsInterface(IERC165Id)).to.equal(
-        true
-      )
+      expect(await this.cmtat.supportsInterface(IERC5679)).to.equal(true)
+      expect(await this.cmtat.supportsInterface(IERC165Id)).to.equal(true)
       expect(await this.cmtat.supportsInterface(IERC721Interface)).to.equal(
         false
       )
