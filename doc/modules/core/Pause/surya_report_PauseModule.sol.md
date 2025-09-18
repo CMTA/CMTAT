@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/wrapper/core/PauseModule.sol | [object Promise] |
+| ./modules/wrapper/core/PauseModule.sol | 1af52c2f0a418e75c9db436249ee77f334bf4ed3 |
 
 
 ### Contracts Description Table
@@ -15,12 +15,14 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **PauseModule** | Implementation | PausableUpgradeable, AccessControlUpgradeable, IERC3643Pause, IERC7551Pause, ICMTATDeactivate |||
-| └ | pause | Public ❗️ | 🛑  | onlyRole |
-| └ | unpause | Public ❗️ | 🛑  | onlyRole |
-| └ | deactivateContract | Public ❗️ | 🛑  | onlyRole |
+| **PauseModule** | Implementation | PausableUpgradeable, IERC3643Pause, IERC7551Pause, ICMTATDeactivate |||
+| └ | pause | Public ❗️ | 🛑  | onlyPauseManager |
+| └ | unpause | Public ❗️ | 🛑  | onlyPauseManager |
+| └ | deactivateContract | Public ❗️ | 🛑  | onlyDeactivateContractManager |
 | └ | paused | Public ❗️ |   |NO❗️ |
 | └ | deactivated | Public ❗️ |   |NO❗️ |
+| └ | _authorizePause | Internal 🔒 | 🛑  | |
+| └ | _authorizeDeactivate | Internal 🔒 | 🛑  | |
 | └ | _getPauseModuleStorage | Private 🔐 |   | |
 
 

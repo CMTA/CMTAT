@@ -1,13 +1,13 @@
-//SPDX-License-Identifier: MPL-2.0
+// SPDX-License-Identifier: MPL-2.0
 
 pragma solidity ^0.8.20;
 
 /* ==== Openzeppelin === */
-import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
+import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 /* ==== Tokenization === */
 import {IERC1643CMTAT, IERC1643} from "../../../interfaces/tokenization/draft-IERC1643CMTAT.sol";
 import {ICMTATBase} from "../../../interfaces/tokenization/ICMTAT.sol";
-abstract contract ExtraInformationModule is AccessControlUpgradeable, ICMTATBase {
+abstract contract ExtraInformationModule is Initializable, ICMTATBase {
      bytes32 public constant EXTRA_INFORMATION_ROLE = keccak256("EXTRA_INFORMATION_ROLE");
     /* ============ ERC-7201 ============ */
     // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.ExtraInformationModule")) - 1)) & ~bytes32(uint256(0xff))
@@ -16,8 +16,14 @@ abstract contract ExtraInformationModule is AccessControlUpgradeable, ICMTATBase
     /* ==== ERC-7201 State Variables === */
     struct ExtraInformationModuleStorage {
             string _tokenId;
-            Terms _terms;
+            CMTATTerms _terms;
             string _information;
+    }
+
+    /* ============ Modifier ============ */
+    modifier onlyExtraInfoManager() {
+        _authorizeExtraInfoManagement();
+        _;
     }
     /* ============  Initializer Function ============ */
     /**
@@ -51,7 +57,7 @@ abstract contract ExtraInformationModule is AccessControlUpgradeable, ICMTATBase
     */
     function setTokenId(
         string calldata tokenId_
-    ) public virtual override(ICMTATBase)  onlyRole(EXTRA_INFORMATION_ROLE) {
+    ) public virtual override(ICMTATBase) onlyExtraInfoManager {
         ExtraInformationModuleStorage storage $ = _getExtraInformationModuleStorage();
         _setTokenId($, tokenId_);
     }
@@ -62,7 +68,7 @@ abstract contract ExtraInformationModule is AccessControlUpgradeable, ICMTATBase
     * @custom:access-control
     * - the caller must have the `EXTRA_INFORMATION_ROLE`.
     */
-    function setTerms(IERC1643CMTAT.DocumentInfo calldata terms_) public virtual override(ICMTATBase) onlyRole(EXTRA_INFORMATION_ROLE) {
+    function setTerms(IERC1643CMTAT.DocumentInfo calldata terms_) public virtual override(ICMTATBase) onlyExtraInfoManager{
 		_setTerms(terms_);
     }
 
@@ -75,7 +81,7 @@ abstract contract ExtraInformationModule is AccessControlUpgradeable, ICMTATBase
     
     function setInformation(
         string calldata information_
-    ) public virtual onlyRole(EXTRA_INFORMATION_ROLE) {
+    ) public virtual onlyExtraInfoManager {
         ExtraInformationModuleStorage storage $ = _getExtraInformationModuleStorage();
         _setInformation($, information_);
     }
@@ -92,7 +98,7 @@ abstract contract ExtraInformationModule is AccessControlUpgradeable, ICMTATBase
     /**
     * @inheritdoc ICMTATBase
     */
-    function terms() public view virtual override(ICMTATBase)  returns (Terms memory terms_) {
+    function terms() public view virtual override(ICMTATBase)  returns (CMTATTerms memory terms_) {
         ExtraInformationModuleStorage storage $ = _getExtraInformationModuleStorage();
         return $._terms;
     }
@@ -128,13 +134,16 @@ abstract contract ExtraInformationModule is AccessControlUpgradeable, ICMTATBase
         $._terms.doc.uri = terms_.uri;
         $._terms.doc.lastModified = block.timestamp;
 		// Event
-        emit Term($._terms);
+        emit Terms($._terms);
     }
 
     function _setInformation(ExtraInformationModuleStorage storage $, string memory information_) internal virtual {
         $._information  = information_;
         emit Information(information_);
     }
+
+    /* ============ Access Control ============ */
+    function  _authorizeExtraInfoManagement() internal virtual;
 
     /* ============ ERC-7201 ============ */
     function _getExtraInformationModuleStorage() private pure returns (ExtraInformationModuleStorage storage $) {

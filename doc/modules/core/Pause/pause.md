@@ -152,7 +152,7 @@ function pause() external;
 ```solidity
 function pause() 
 public virtual override(IERC3643Pause, IERC7551Pause) 
-onlyRole(PAUSER_ROLE)
+onlyPauseManager
 ```
 
 | Description                                                  |
@@ -178,7 +178,7 @@ function unpause() external;
 ```solidity
 function unpause() 
 public virtual override(IERC3643Pause, IERC7551Pause) 
-onlyRole(PAUSER_ROLE)
+onlyPauseManager
 ```
 
 

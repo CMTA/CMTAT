@@ -1,10 +1,11 @@
-//SPDX-License-Identifier: MPL-2.0
+// SPDX-License-Identifier: MPL-2.0
 
 pragma solidity ^0.8.20;
 
 /* ==== OpenZeppelin === */
 import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import {ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
+import { IERC165 } from "@openzeppelin/contracts/interfaces/IERC165.sol";
 /* ==== Wrapper === */
 // ERC20
 import {ERC20BurnModule, ERC20BurnModuleInternal} from "./wrapper/core/ERC20BurnModule.sol";
@@ -12,7 +13,8 @@ import {ERC20MintModule, ERC20MintModuleInternal} from "./wrapper/core/ERC20Mint
 import {ERC20BaseModule, ERC20Upgradeable} from "./wrapper/core/ERC20BaseModule.sol";
 
 // Other
-import {BaseModule} from "./wrapper/core/BaseModule.sol";
+import {VersionModule} from "./wrapper/core/VersionModule.sol";
+import {PauseModule}  from "./wrapper/core/PauseModule.sol";
 import {EnforcementModule} from "./wrapper/core/EnforcementModule.sol";
 import {ValidationModule, ValidationModuleCore} from "./wrapper/core/ValidationModuleCore.sol";
 
@@ -24,6 +26,7 @@ import {ICMTATConstructor} from "../interfaces/technical/ICMTATConstructor.sol";
 import {IForcedBurnERC20} from "../interfaces/technical/IMintBurnToken.sol";
 import {IBurnMintERC20} from "../interfaces/technical/IMintBurnToken.sol";
 import {IERC7551ERC20EnforcementEvent} from "../interfaces/tokenization/draft-IERC7551.sol";
+import {IERC5679} from "../interfaces/technical/IERC5679.sol";
 import {Errors} from "../libraries/Errors.sol";
 
 /**
@@ -33,18 +36,26 @@ abstract contract CMTATBaseCore is
     // OpenZeppelin
     Initializable,
     ContextUpgradeable,
-    BaseModule,
+    VersionModule,
     // Core
     ERC20MintModule,
     ERC20BurnModule,
     ValidationModuleCore,
     ERC20BaseModule,
+    AccessControlModule,
     IForcedBurnERC20,
     IBurnMintERC20,
     IERC7551ERC20EnforcementEvent,
-    AccessControlModule
-{  
+    IERC5679
+    
+{ 
+    /* ============ Error ============ */ 
     error CMTAT_BurnEnforcement_AddressIsNotFrozen(); 
+    /* ============ Modifier ============ */
+    modifier onlyERC20ForcedBurnManager() {
+        _authorizeForcedBurn();
+        _;
+    }
     /*//////////////////////////////////////////////////////////////
                          INITIALIZER FUNCTION
     //////////////////////////////////////////////////////////////*/
@@ -146,6 +157,16 @@ abstract contract CMTATBaseCore is
         return ERC20BaseModule.symbol();
     }
 
+    /**
+     * @inheritdoc AccessControlUpgradeable
+     * @dev 
+     * We can not use type(IERC5679).interfaceId instead of 0xd0017968
+     * because IERC5679 inherits from two interfaces (IERC5679Burn and Mint)
+     */
+    function supportsInterface(bytes4 interfaceId) public view virtual override(AccessControlUpgradeable, IERC165) returns (bool) {
+        return interfaceId == 0xd0017968 || AccessControlUpgradeable.supportsInterface(interfaceId);
+    }
+
     /* ============  State Functions ============ */
     /*
     * @inheritdoc ERC20Upgradeable
@@ -200,18 +221,11 @@ abstract contract CMTATBaseCore is
         address account,
         uint256 value,
         bytes memory data
-    ) public virtual override(IForcedBurnERC20) onlyRole(DEFAULT_ADMIN_ROLE) {
+    ) public virtual override(IForcedBurnERC20) onlyERC20ForcedBurnManager {
         require(EnforcementModule.isFrozen(account), CMTAT_BurnEnforcement_AddressIsNotFrozen());
         // Skip ERC20BurnModule
         ERC20Upgradeable._burn(account, value);
         emit Enforcement(_msgSender(), account, value, data);
-    }
-
-    function hasRole(
-        bytes32 role,
-        address account
-    ) public view virtual override(AccessControlUpgradeable, AccessControlModule) returns (bool) {
-        return AccessControlModule.hasRole(role, account);
     }
 
     /*//////////////////////////////////////////////////////////////
@@ -237,4 +251,18 @@ abstract contract CMTATBaseCore is
         require(ValidationModuleCore.canTransfer(from, to, value), Errors.CMTAT_InvalidTransfer(from, to, value) );
         ERC20MintModuleInternal._minterTransferOverride(from, to, value);
     }
+
+    /* ==== Access Control ==== */
+    function _authorizeForcedBurn() internal virtual onlyRole(DEFAULT_ADMIN_ROLE){}
+
+    function _authorizeMint() internal virtual override(ERC20MintModule) onlyRole(MINTER_ROLE){}
+
+    function _authorizeBurn() internal virtual override(ERC20BurnModule) onlyRole(BURNER_ROLE){}
+
+    function _authorizePause() internal virtual override(PauseModule) onlyRole(PAUSER_ROLE){}
+    function _authorizeDeactivate() internal virtual override(PauseModule) onlyRole(DEFAULT_ADMIN_ROLE){}
+
+    function _authorizeFreeze() internal virtual override(EnforcementModule) onlyRole(ENFORCER_ROLE){}
+
+    function _authorizeERC20AttributeManagement() internal virtual override(ERC20BaseModule) onlyRole(DEFAULT_ADMIN_ROLE){}
 }

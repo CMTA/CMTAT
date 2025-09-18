@@ -1,119 +1,113 @@
-//SPDX-License-Identifier: MPL-2.0
+// SPDX-License-Identifier: MPL-2.0
 
 pragma solidity ^0.8.20;
 /* ==== OpenZeppelin === */
 import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
-import {IERC165} from "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165Upgradeable.sol";
 /* ==== Module === */
 import {CMTATBaseERC1404, ERC20Upgradeable} from "./2_CMTATBaseERC1404.sol";
-/* ==== Interfaces === */
-import {IERC7802} from "../interfaces/technical/IERC7802.sol";
-import {IBurnFromERC20} from "../interfaces/technical/IMintBurnToken.sol";
+import {CMTATBaseCommon} from "./0_CMTATBaseCommon.sol";
+import {ERC20BurnModule, ERC20BurnModuleInternal} from "./wrapper/core/ERC20BurnModule.sol";
+import {ERC20MintModule, ERC20MintModuleInternal} from "./wrapper/core/ERC20MintModule.sol";
+import {ERC20CrossChainModule} from "./wrapper/options/ERC20CrossChainModule.sol";
+import {CCIPModule} from "./wrapper/options/CCIPModule.sol";
+
 /**
- * @title ERC20CrossChainModule (ERC-7802)
- * @dev 
- *
- * Contains all burn functions, inherits from ERC-20
+ * @title Add support of ERC20CrossChainModule
  */
-abstract contract CMTATBaseERC20CrossChain is CMTATBaseERC1404, IERC7802, IBurnFromERC20 {
-    bytes32 public constant BURNER_FROM_ROLE = keccak256("BURNER_FROM_ROLE");
-    bytes32 public constant CROSS_CHAIN_ROLE = keccak256("CROSS_CHAIN_ROLE");
-
-    /// @dev Modifier to restrict access to the token bridge.
-    /// Source: OpenZeppelin v5.4.0 - draft-ERC20Bridgeable.sol
-    modifier onlyTokenBridge() {
-        // Token bridge should never be impersonated using a relayer/forwarder. Using msg.sender is preferable to
-        // _msgSender() for security reasons.
-        _checkTokenBridge(msg.sender);
-        _;
+abstract contract CMTATBaseERC20CrossChain is ERC20CrossChainModule, CCIPModule, CMTATBaseERC1404  {
+     /* ============  State Functions ============ */
+    function transfer(address to, uint256 value) public virtual override(ERC20Upgradeable, CMTATBaseCommon) returns (bool) {
+         return CMTATBaseCommon.transfer(to, value);
     }
-
-    /*//////////////////////////////////////////////////////////////
-                            PUBLIC/EXTERNAL FUNCTIONS
-    //////////////////////////////////////////////////////////////*/
-
-    /**
-    * @inheritdoc IERC7802
-    * @dev
-    * Don't emit the same event as configured in the ERC20MintModule
-    * @custom:access-control
-    * - the caller must have the `CROSS_CHAIN_ROLE`.
+    /*
+    * @inheritdoc ERC20BaseModule
     */
-    function crosschainMint(address to, uint256 value) public virtual override(IERC7802) whenNotPaused onlyTokenBridge {
-         // Put before to avoid reentrancy-events (slither)
-         emit CrosschainMint(to, value,_msgSender());
-        _mintOverride(to, value);
-    }
-
-    /**
-    * @inheritdoc IERC7802
-    * @dev
-    * Don't emit the same event as configured in the ERC20BurnModule
-    * @custom:access-control
-    * - the caller must have the `CROSS_CHAIN_ROLE`.
-    */
-    function crosschainBurn(address from, uint256 value) public virtual override(IERC7802) whenNotPaused onlyTokenBridge{
-        address sender =  _msgSender();
-        // Put before to avoid reentrancy-events (slither)
-        emit CrosschainBurn(from, value, _msgSender());
-        _burnFrom(sender, from, value);  
-    }
-
-    /**
-     * @inheritdoc IBurnFromERC20
-     * @custom:access-control
-     * - the caller must have the `BURNER_FROM_ROLE`.
-     */
-    function burnFrom(address account, uint256 value)
-        public virtual override(IBurnFromERC20) 
-        onlyRole(BURNER_FROM_ROLE) whenNotPaused
-    {
-        address sender =  _msgSender();
-        _burnFrom(sender, account, value); 
-    }
-
-    /**
-    * @inheritdoc IBurnFromERC20
-    * @custom:access-control
-    * - the caller must have the `BURNER_FROM_ROLE`.
-    */
-    function burn(
+    function transferFrom(
+        address from,
+        address to,
         uint256 value
-    ) public virtual onlyRole(BURNER_FROM_ROLE) whenNotPaused {
-        // Put before to avoid reentrancy-events (slither)
-        // Don't emit CrossChainBurn because this function burn is not part of the IERC7802 interface
-        // Don't emit Spend event because allowance is not used here
-        address sender = _msgSender();
-        emit BurnFrom(sender, sender, sender, value);
-        _burnOverride(sender, value);
+    )
+        public
+        virtual
+        override(ERC20Upgradeable, CMTATBaseCommon)
+        returns (bool)
+    {
+        return CMTATBaseCommon.transferFrom(from, to, value);
     }
+    /**
+    * @dev Check if the mint is valid
+    */
+    function _mintOverride(address account, uint256 value) internal virtual override(CMTATBaseCommon, ERC20MintModuleInternal) {
+        _checkTransferred(address(0), address(0), account, value);
+        ERC20MintModuleInternal._mintOverride(account, value);
+    }
+
+    /**
+    * @dev Check if the burn is valid
+    */
+    function _burnOverride(address account, uint256 value) internal virtual override(CMTATBaseCommon, ERC20BurnModuleInternal) {
+        _checkTransferred(address(0),  account, address(0), value);
+        ERC20BurnModuleInternal._burnOverride(account, value);
+    }
+
+    /**
+    * @dev Check if a minter transfer is valid
+    */
+    function _minterTransferOverride(address from, address to, uint256 value) internal virtual override(CMTATBaseCommon, ERC20MintModuleInternal) {
+        _checkTransferred(address(0), from, to, value);
+        ERC20MintModuleInternal._minterTransferOverride(from, to, value);
+    }
+
+    /**
+    * @inheritdoc CMTATBaseCommon
+    */
+    function decimals()
+        public
+        view
+        virtual
+        override(ERC20Upgradeable, CMTATBaseCommon)
+        returns (uint8)
+    {
+        return CMTATBaseCommon.decimals();
+    }
+
+
+    /**
+    * @inheritdoc CMTATBaseCommon
+    */
+    function name() public view virtual override(ERC20Upgradeable, CMTATBaseCommon)  returns (string memory) {
+        return CMTATBaseCommon.name();
+    }
+
+    /**
+    * @inheritdoc CMTATBaseCommon
+    */
+    function symbol() public view virtual override(ERC20Upgradeable, CMTATBaseCommon) returns (string memory) {
+        return CMTATBaseCommon.symbol();
+    }
+
 
     /* ============ View functions ============ */
-    function supportsInterface(bytes4 _interfaceId) public view virtual override(AccessControlUpgradeable, IERC165) returns (bool) {
-        return _interfaceId == type(IERC7802).interfaceId || AccessControlUpgradeable.supportsInterface( _interfaceId);
+    function supportsInterface(bytes4 _interfaceId) public view virtual override(CMTATBaseCommon, ERC20CrossChainModule) returns (bool) {
+        return  ERC20CrossChainModule.supportsInterface(_interfaceId)|| CMTATBaseCommon.supportsInterface( _interfaceId);
     }
 
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
-
-    function _burnFrom(address sender, address account, uint256 value) internal virtual{
-        // Allowance check
-        ERC20Upgradeable._spendAllowance(account, sender, value );
-         // Specific event for the operation
-        // Put before to avoid reentrancy-events (slither)
-        emit Spend(account, sender, value);
-        emit BurnFrom(sender, account, sender, value);
-        // burn
-        _burnOverride(account, value);
-    }
-
-    /**
-     * @dev Checks if the caller is a trusted token bridge. MUST revert otherwise.
-     *
-     * Source: OpenZeppelin v5.4.0 - draft-ERC20Bridgeable.sol
-     */
-    function _checkTokenBridge(address caller) internal virtual {
+    /* ==== Access Control ==== */
+    function _authorizeCCIPSetAdmin() internal virtual override(CCIPModule) onlyRole(DEFAULT_ADMIN_ROLE) {}
+    function _checkTokenBridge(address caller) internal virtual override(ERC20CrossChainModule) whenNotPaused {
         AccessControlUpgradeable._checkRole(CROSS_CHAIN_ROLE, caller); 
+    }
+    function _authorizeBurnFrom() internal virtual override(ERC20CrossChainModule) onlyRole(BURNER_FROM_ROLE) whenNotPaused{}
+
+    /* ==== ERC-20 OpenZeppelin ==== */
+    function _update(
+        address from,
+        address to,
+        uint256 amount
+    ) internal virtual override(ERC20Upgradeable, CMTATBaseCommon) {
+       return CMTATBaseCommon._update(from, to, amount);
     }
 }

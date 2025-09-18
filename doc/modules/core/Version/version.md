@@ -1,14 +1,12 @@
-# Base Module
+# Version Module
 
-This document defines Base Module for the CMTA Token specification.
+This document defines the Version Module for the CMTA Token specification.
 
 [TOC]
 
 ## Rationale
 
-> The Base Module set the basic properties common to the different CMTAT tokens.
->
-> Currently it only stores the contract version with the ERC-3643 function to retrieve it (`version`)
+> The Version Module stores the contract version with the ERC-3643 function to retrieve it (`version`)
 >
 
 ## Schema
@@ -17,11 +15,11 @@ This document defines Base Module for the CMTA Token specification.
 
 ### Inheritance
 
-![surya_inheritance_BaseModule.sol](../../../schema/surya_inheritance/surya_inheritance_BaseModule.sol.png)
+![surya_inheritance_BaseModule.sol](../../../schema/surya_inheritance/surya_inheritance_VersionModule.sol.png)
 
 ### Graph
 
-![surya_graph_BaseModule.sol](../../../schema/surya_graph/surya_graph_BaseModule.sol.png)
+![surya_graph_BaseModule.sol](../../../schema/surya_graph/surya_graph_VersionModule.sol.png)
 
 
 
@@ -29,7 +27,7 @@ This document defines Base Module for the CMTA Token specification.
 
 ### Functions
 
-#### IERC3643Base
+#### IERC3643Version
 
 ##### `version()`
 

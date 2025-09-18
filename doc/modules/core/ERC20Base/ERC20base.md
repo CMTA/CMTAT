@@ -119,6 +119,12 @@ function batchBalanceOf(address[] calldata addresses) external view returns (uin
 function setName(string calldata name_) external;
 ```
 
+```solidity
+function setName(string calldata name_) 
+public virtual override(IERC3643ERC20Base) 
+onlyERC20AttributeManager
+```
+
 Sets the name of the token.
 
 | Name   | Type   | Description                          |
@@ -133,6 +139,12 @@ Sets the name of the token.
 
 ```solidity
 function setSymbol(string calldata symbol_) external;
+```
+
+```solidity
+function setSymbol(string calldata symbol_) 
+public virtual override(IERC3643ERC20Base) 
+onlyERC20AttributeManager
 ```
 
 Sets the symbol of the token.

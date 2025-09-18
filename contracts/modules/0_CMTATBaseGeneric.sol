@@ -1,4 +1,4 @@
-//SPDX-License-Identifier: MPL-2.0
+// SPDX-License-Identifier: MPL-2.0
 
 pragma solidity ^0.8.20;
 
@@ -11,7 +11,7 @@ import {ValidationModule} from "./wrapper/controllers/ValidationModule.sol";
 // Security
 import {AccessControlModule, AccessControlUpgradeable} from "./wrapper/security/AccessControlModule.sol";
 // Core
-import {BaseModule} from "./wrapper/core/BaseModule.sol";
+import {VersionModule} from "./wrapper/core/VersionModule.sol";
 // Extensions
 import {ExtraInformationModule} from "./wrapper/extensions/ExtraInformationModule.sol";
 import {DocumentEngineModule, IERC1643} from "./wrapper/extensions/DocumentEngineModule.sol";
@@ -28,7 +28,7 @@ abstract contract CMTATBaseGeneric is
     // Enforcement & PauseModule
     ValidationModule,
     // Core
-    BaseModule,
+    VersionModule,
     // Extension
     DocumentEngineModule,
     ExtraInformationModule,
@@ -81,13 +81,10 @@ abstract contract CMTATBaseGeneric is
     }
 
     /*//////////////////////////////////////////////////////////////
-                            PUBLIC/EXTERNAL FUNCTIONS
+                            INTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
 
-    function hasRole(
-        bytes32 role,
-        address account
-    ) public view virtual override(AccessControlUpgradeable, AccessControlModule) returns (bool) {
-        return AccessControlModule.hasRole(role, account);
-    }
+    /* ==== Access Control ==== */
+    function  _authorizeDocumentManagement() internal virtual override(DocumentEngineModule) onlyRole(DOCUMENT_ROLE){}
+    function  _authorizeExtraInfoManagement() internal virtual override(ExtraInformationModule) onlyRole(EXTRA_INFORMATION_ROLE){}
 }

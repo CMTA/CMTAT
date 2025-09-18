@@ -4,13 +4,15 @@
 
 > To use the CMTAT, we recommend the latest audited version, from the [Releases](https://github.com/CMTA/CMTAT/releases) page. Currently, it is the version [v3.0.0](https://github.com/CMTA/CMTAT/releases/tag/v3.0.0).
 >
-> A pdf file of this readme is available here:  [CMTATSpecificationV3.0.0.pdf](./CMTATSpecificationV3.0.0.pdf) 
+> A pdf file of the v3.0.0 README is available here:  [CMTATSpecificationV3.0.0.pdf](./CMTATSpecificationV3.0.0.pdf) 
 
 ## Introduction
 
 The CMTA token (CMTAT) is a security token framework that includes various compliance features such as conditional transfer, account freeze, and token pause, as well as several technical features such as [ERC-7802](https://eips.ethereum.org/EIPS/eip-7802) for cross-chain transfer and [ERC-7201](https://eips.ethereum.org/EIPS/eip-7201) for upgradeadibility.
 
 This repository provides CMTA's reference Solidity implementation of CMTAT, suitable for EVM chains such as Ethereum.
+
+[TOC]
 
 ### History
 
@@ -105,14 +107,14 @@ Here is a comparison between the features present in major custodian stablecoin 
 | Company behind                 |                                                              | [Monerium](https://monerium.com)                             | [Circle](https://www.circle.com)                             | [Tether](https://tether.to/en/)                              | [CMTA](https://cmta.ch/) | [CMTA](https://cmta.ch/)                                     |
 | **Standard**                   |                                                              |                                                              |                                                              |                                                              |                          |                                                              |
 |                                | [ERC-20](https://eips.ethereum.org/EIPS/eip-20)              | &#x2611;                                                     | &#x2611;                                                     | &#x2611;                                                     | Same as standard version | &#x2611;                                                     |
-|                                | [ERC-2612 Permit](https://eips.ethereum.org/EIPS/eip-2612)   | &#x2611; ([GitHub)](https://github.com/monerium/smart-contracts/blob/ec59a3677a17a06610d7e4788211c19da561241b/src/Token.sol#L152) | &#x2611;                                                     | &#x2612;                                                     | Same as standard version | &#x2612;                                                     |
+|                                | [ERC-2612 Permit](https://eips.ethereum.org/EIPS/eip-2612)   | &#x2611;<br /> ([GitHub)](https://github.com/monerium/smart-contracts/blob/ec59a3677a17a06610d7e4788211c19da561241b/src/Token.sol#L152) | &#x2611;                                                     | &#x2612;                                                     | Same as standard version | &#x2612;                                                     |
 |                                | [ERC-3009](https://eips.ethereum.org/EIPS/eip-3009)<br />(Transfer With Authorization) | &#x2612;                                                     | &#x2611;                                                     | &#x2612;                                                     | Same as standard version | &#x2612;                                                     |
 |                                | [ERC-2771](https://eips.ethereum.org/EIPS/eip-2771) (MetaTX) | &#x2612;                                                     | &#x2612;                                                     | &#x2612;                                                     | &#x2612;                 | &#x2611;<br />(ERC2771Module / CMTATBaseERC2771)             |
 | ERC-20 extends functionalities |                                                              |                                                              |                                                              |                                                              |                          |                                                              |
 |                                | Mint/issue                                                   | &#x2612; <br />(see mint with allowance)                     | &#x2612;<br />(see mint with allowance)                      | &#x2611;                                                     | Same as standard version | &#x2611;                                                     |
-|                                | Mint with dedicated allowance ("mintFrom")                   | &#x2611; ([Github](https://github.com/monerium/smart-contracts/blob/ec59a3677a17a06610d7e4788211c19da561241b/src/MintAllowanceUpgradeable.sol#L3)) | &#x2611;                                                     | &#x2612;                                                     | Same as standard version | &#x2612;                                                     |
+|                                | Mint with dedicated allowance ("mintFrom")                   | &#x2611;<br /> ([Github](https://github.com/monerium/smart-contracts/blob/ec59a3677a17a06610d7e4788211c19da561241b/src/MintAllowanceUpgradeable.sol#L3)) | &#x2611;                                                     | &#x2612;                                                     | Same as standard version | &#x2612;                                                     |
 |                                | Batch Mint version                                           | &#x2612;                                                     | &#x2612;                                                     | &#x2612;                                                     | Same as standard version | &#x2611;                                                     |
-|                                | burn / redeem                                                | &#x2611; ([Github](https://github.com/monerium/smart-contracts/blob/ec59a3677a17a06610d7e4788211c19da561241b/src/Token.sol#L74)) | &#x2611;                                                     | &#x2611; <br />(`redeem`/ `destroyBlackFunds`                | Same as standard version | &#x2611;                                                     |
+|                                | burn / redeem                                                | &#x2611; <br />([Github](https://github.com/monerium/smart-contracts/blob/ec59a3677a17a06610d7e4788211c19da561241b/src/Token.sol#L74)) | &#x2611;                                                     | &#x2611; <br />(`redeem`/ `destroyBlackFunds`                | Same as standard version | &#x2611;                                                     |
 |                                | Set name after deployment                                    | &#x2612;                                                     | &#x2612;                                                     | &#x2612;                                                     | Same as standard version | &#x2611;<br />(ERC20BaseModule)                              |
 |                                | Set symbol after deployment                                  | &#x2612;                                                     | &#x2612;                                                     | &#x2612;                                                     | Same as standard version | &#x2611;<br />(ERC20BaseModule)                              |
 | Regulatory                     |                                                              |                                                              |                                                              |                                                              |                          |                                                              |
@@ -160,9 +162,9 @@ Here is a comparison between the features present in known tokenized market fund
 |                                                              | Restriction on `transferFrom`                                | &#x2612;                                                     | &#x2611;<br />(through `disableERC20ThirdPartyTransfer` & `enableERC20ThirdPartyTransfer`) | &#x2612;                                                     | Partial<br />(transfer revert if spender is frozen) | Same as standard version |
 |                                                              |                                                              | **Spiko**                                                    | **Franklin Templeton <br />(FOBXX / Benji)**                 | **Blackrock<br />(BUILD)**                                   | **CMTAT 3.0.0 Standard**                            | **CMTAT 3.00 ERC-1363**  |
 | Access Control                                               |                                                              |                                                              |                                                              |                                                              |                                                     |                          |
-|                                                              | [Ownership](https://docs.openzeppelin.com/contracts/5.x/api/access#Ownable) | &#x2611;<br />[(Github](https://github.com/spiko-tech/contracts/blob/9ef58f31bc8dc9cb562dfcbae6091866b3da5121/contracts/token/Token.sol#L23)) | &#x2612;<br />(only `ModuleRegistry` is ownable)             | &#x2611;                                                     | &#x2612;                                            | Same as standard version |
+|                                                              | [Ownership](https://docs.openzeppelin.com/contracts/5.x/api/access#Ownable) | &#x2611;<br />[(Github](https://github.com/spiko-tech/contracts/blob/9ef58f31bc8dc9cb562dfcbae6091866b3da5121/contracts/token/Token.sol#L23)) | &#x2612;<br />(only `ModuleRegistry` is ownable)             | &#x2611;                                                     | &#x2612;<br />(easily adaptable to support this)    | Same as standard version |
 |                                                              | [RBAC Access control](https://docs.openzeppelin.com/contracts/5.x/api/access#AccessControl) | &#x2611;<br />[GitHub](https://github.com/spiko-tech/contracts/blob/9ef58f31bc8dc9cb562dfcbae6091866b3da5121/contracts/permissions/PermissionManager.sol) | &#x2611;                                                     | &#x2611;<br />(several roles: Exchange, Issuer, transfer agent and master) | &#x2611;                                            | Same as standard version |
-|                                                              | [Access Control Manager](https://docs.openzeppelin.com/contracts/5.x/api/access#AccessManaged) | &#x2611;<br />([GitHub](https://github.com/spiko-tech/contracts/blob/9ef58f31bc8dc9cb562dfcbae6091866b3da5121/contracts/permissions/PermissionManager.sol#L14C5-L14C15)) | &#x2612;                                                     | &#x2612;                                                     | &#x2612;                                            | Same as standard version |
+|                                                              | [Access Control Manager](https://docs.openzeppelin.com/contracts/5.x/api/access#AccessManaged) | &#x2611;<br />([GitHub](https://github.com/spiko-tech/contracts/blob/9ef58f31bc8dc9cb562dfcbae6091866b3da5121/contracts/permissions/PermissionManager.sol#L14C5-L14C15)) | &#x2612;                                                     | &#x2612;                                                     | &#x2612;<br />(Could be extended to support it)     | Same as standard version |
 | Upgradeability                                               |                                                              |                                                              |                                                              |                                                              |                                                     |                          |
 |                                                              | Upgradable (transparent/Beacon)                              | &#x2611;                                                     | &#x2611;<br />                                               | &#x2611;                                                     | &#x2611;                                            | Same as standard version |
 |                                                              | Upgradeable UUPS<br />                                       | &#x2611;<br />([GitHub](https://github.com/spiko-tech/contracts/blob/9ef58f31bc8dc9cb562dfcbae6091866b3da5121/contracts/token/Token.sol#L29)) | &#x2611;<br />                                               | &#x2612;                                                     | &#x2612;<br />(Could be extended to support it)     | Same as standard version |
@@ -183,7 +185,7 @@ Here is a comparison between the features present in known tokenization framewor
 
 |                            Label                             |                     CMTAT Solidity code                      |                         **E**RC-1400                         | ERC-3643                                                     | Cast Framework                                               |
 | :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: | ------------------------------------------------------------ | ------------------------------------------------------------ |
-|               Version/implementation compared                | [CMTAT v3.0.0](https://github.com/CMTA/CMTAT/releases/tag/v3.0.0) | [UniversalToken (Consensys)](https://github.com/Consensys/UniversalToken/tree/54320c6f7a8ee1fd7fcb19073e9c122e1e8f96f9) | [Tokeny's T-Rex](https://github.com/TokenySolutions/T-REX)<br /><br />[3fcf44d](https://github.com/TokenySolutions/T-REX/tree/3fcf44d4fc102fb891aaad27ee58e8936d885542) <br />(06/02/2025) | Smart Coin (ERC-20 version)<br />[dd8bf5e](https://github.com/castframework/smartcoin/tree/dd8bf5e1ba24d2379b102db74bfc8326fb649b65) |
+|               Version/implementation compared                | [CMTAT v3.1.0](https://github.com/CMTA/CMTAT/releases/tag/v3.1.0) | [UniversalToken (Consensys)](https://github.com/Consensys/UniversalToken/tree/54320c6f7a8ee1fd7fcb19073e9c122e1e8f96f9) | [Tokeny's T-Rex](https://github.com/TokenySolutions/T-REX)<br /><br />[3fcf44d](https://github.com/TokenySolutions/T-REX/tree/3fcf44d4fc102fb891aaad27ee58e8936d885542) <br />(06/02/2025) | Smart Coin (ERC-20 version)<br />[dd8bf5e](https://github.com/castframework/smartcoin/tree/dd8bf5e1ba24d2379b102db74bfc8326fb649b65) |
 |                 Company / Association behind                 |                   [CMTA](https://cmta.ch/)                   |              [Consensys](https://consensys.io/)              | [Tokeny](https://tokeny.com/), [ERC3643 Association](https://www.erc3643.org/) | [SOCIÉTÉ GÉNÉRALE  FORGE](https://www.sgforge.com)           |
 |                                                              |                                                              |                                                              |                                                              |                                                              |
 |                            ERC-20                            |                           &#x2611;                           |                           &#x2611;                           | &#x2611;                                                     | &#x2611;                                                     |
@@ -199,6 +201,7 @@ Here is a comparison between the features present in known tokenization framewor
 |                    **Technical features**                    |                                                              |                                                              |                                                              |                                                              |
 |                 Configurable ERC-20 decimals                 |                           &#x2611;                           | **&#x2612;**<br />Set at 18<br />([Github](https://github.com/Consensys/UniversalToken/blob/master/contracts/ERC1400.sol#L680)) | &#x2611;                                                     | **&#x2612;**<br />(18 by default)                            |
 |                  Role-based access control                   |                           &#x2611;                           |                           &#x2611;                           | Partial <br />(only one role Agent)                          | &#x2611;                                                     |
+| Adaptable access control<br />(code can be easily adapted to other type of access control) |                           &#x2611;                           |                         **&#x2612;**                         | **&#x2612;**                                                 | Partial                                                      |
 |                  Mint & burn to any address                  |                           &#x2611;                           |                           &#x2611;                           | &#x2611;                                                     | &#x2611;                                                     |
 |                   Forced transfer function                   |                           &#x2611;                           |                           &#x2611;                           | &#x2611;                                                     | Partial<br />Only force burn is available<br />([GitHub](https://github.com/castframework/smartcoin/blob/dd8bf5e1ba24d2379b102db74bfc8326fb649b65/contracts/smartCoin/SmartCoin.sol#L97)) |
 |               Partially fungible token support               |                         **&#x2612;**                         |                           &#x2611;                           | **&#x2612;**                                                 | **&#x2612;**                                                 |
@@ -216,12 +219,15 @@ Here is a comparison between the features present in known tokenization framewor
 |                 Customizable modular design                  |                           &#x2611;                           |                         **&#x2612;**                         | **&#x2612;**                                                 | **&#x2612;**                                                 |
 | [ERC-7802](https://eips.ethereum.org/EIPS/eip-7802) Cross-chain transfer |                           &#x2611;                           |                         **&#x2612;**                         | **&#x2612;**                                                 | **&#x2612;**                                                 |
 | ERC-20 custom errors ([ERC-6093](https://eips.ethereum.org/EIPS/eip-6093)) |             &#x2611;<br />(use OpenZeppelin v5)              |                         **&#x2612;**                         | **&#x2612;**<br />(use OpenZeppelin v4)                      | **&#x2612;**<br />(use OpenZeppelin v4)                      |
+| [ERC-5679: Token minting and Burning](https://eips.ethereum.org/EIPS/eip-5679) |                           &#x2611;                           |                         **&#x2612;**                         | **&#x2612;**                                                 | **&#x2612;**                                                 |
 | Upgradibility with [ERC-7201](https://eips.ethereum.org/EIPS/eip-7201) |                           &#x2611;                           |                         **&#x2612;**                         | **&#x2612;**                                                 | **&#x2612;**                                                 |
 |                    Snapshots/checkpoints                     |   &#x2611;<br />(external contract or by extending CMTAT)    |                         **&#x2612;**                         | **&#x2612;**                                                 | **&#x2612;**                                                 |
+| [Chainlink CCT](https://docs.chain.link/ccip/concepts/cross-chain-token) support |                           &#x2611;                           |         **&#x2612;**<br />(Lack burn/burnFrom/mint)          | Partial<br />(Lack burn/burnFrom)                            | **&#x2612;**<br />(Lack owner/getCCIPAdmin/burnFrom)         |
 
 **Note**
 
-At the time of our analysis (July 2025), the next version of T-REX/ERC-3643 had not yet been merged into the main branch and officially released. However, we assumed that it would be merged soon and that it would also be audited.
+- At the time of our analysis (July 2025), the next version of T-REX/ERC-3643 had not yet been merged into the main branch and officially released. However, we assumed that it would be merged soon and that it would also be audited.
+- Access control: CMTAT Access control is easily adaptable because it is implemented in high level contracts (base modules) instead of low level modules (wrapper).
 
 ### Who uses CMTAT and for what?
 
@@ -234,7 +240,7 @@ More details are available here: [cmta.ch/faqs](https://cmta.ch/faqs#what-cases-
 The CMTAT was initially designed for the digitalization of company shares. For SMEs, digitalization provides an opportunity to access new financing and investment models by selling digital shares through online exchanges. Some companies that have digitalized shares using the CMTAT include:
 
 - [Daura](https://thetokenizer.io/2022/12/13/daura-counts-on-smart-contract-standard-cmtat-for-the-tokenization-of-swiss-shares/) uses the CMTAT through their own fork to digitalize the shares of companies using its [platform](https://www.daura.ch), deployed on [zkSync](https://zksync.io/).
-- [Taurus SA](https://www.taurushq.com) (partial list): [Magic Tomato SA (2022)](https://www.taurushq.com/blog/magictomato-1st-foodtech-to-tokenise-its-shares-and-raise-equity/)  - an online grocery platform opened its governance and capital to its community, by issuing digital non-voting shares (bons de participation), [Qoqa Brew (2022)](https://www.taurushq.com/blog/qoqa-brew-brasserie-du-futur-tokenisation-et-financement-by-taurus/) - an online retailer opened the capital of its on-site brewery Q-Brew to its community by issuing digital non-voting shares, [Cité Gestion SA (2023)](https://cmta.ch/news-articles/cite-gestion-becomes-cmta-certified-issuer-of-tokenized-shares) - a Swiss bank and wealth manager, issued digitalized shares in 2022, using the CMTAT, [CODE41 (2023)](https://www.taurushq.com/blog/code41-tokenises-its-shares-for-a-capital-increase-amongst-its-community-through-taurus-technology/) - a Swiss watchmaking company tokenized its shares  for a capital increase using CMTAT
+- [Taurus SA](https://www.taurushq.com) (partial list): [Magic Tomato SA (2022)](https://www.taurushq.com/blog/magictomato-1st-foodtech-to-tokenise-its-shares-and-raise-equity/)  - an online grocery platform opened its governance and capital to its community, by issuing digital non-voting shares (bons de participation), [Qoqa Brew (2022)](https://www.taurushq.com/blog/qoqa-brew-brasserie-du-futur-tokenisation-et-financement-by-taurus/) - an online retailer opened the capital of its on-site brewery Q-Brew to its community by issuing digital non-voting shares, [Cité Gestion SA (2023)](https://cmta.ch/news-articles/cite-gestion-becomes-cmta-certified-issuer-of-tokenized-shares) - a Swiss bank and wealth manager, issued digitalized shares in 2022, using the CMTAT, [CODE41 (2023)](https://www.taurushq.com/blog/code41-tokenises-its-shares-for-a-capital-increase-amongst-its-community-through-taurus-technology/) - a Swiss watchmaking company tokenized its shares  for a capital increase using CMTAT.
 
 #### Digitalization of debt securities
 
@@ -250,6 +256,11 @@ The CMTAT was initially designed for the digitalization of company shares. For S
 #### Tokenized market funds
 
 - In 2024, [UBS](https://www.ubs.com/global/en/investment-bank/tokenize.html) launched UBS USD Money Market Investment Fund Token (uMINT), a Money Market investment built on Ethereum distributed ledger technology. The tokenization arrangement for this fund utilizes CMTAT codebase to represent the fund smart contract, which forms part of the fund’s tokenized register of members. See [ubs.com - UBS Asset Management launches its first tokenized investment fund [ubs.com]](https://www.ubs.com/global/en/media/display-page-ndp/en-20241101-first-tokenized-investment-fund.html)
+
+#### Tokenization platform
+
+- Fireblocks integrates CMTAT into their [tokenization platform](https://www.fireblocks.com/platforms/tokenization/). See also [Fireblocks - Fireblocks joins CMTA to define the standards for tokenization in traditional capital markets](https://www.fireblocks.com/blog/fireblocks-joins-cmta-to-define-the-standards-for-tokenization-in-traditional-capital-markets/)
+- Taurus SA integrates CMTAT (Solidity and [Tezos version](https://www.taurushq.com/blog/taurus-supports-tokenisation-of-equity-on-the-tezos-blockchain/)) into their tokenization platform called [Taurus-CAPITAL](https://www.taurushq.com/capital/)
 
 #### Other assets
 
@@ -340,24 +351,25 @@ Here the list of ERC used by CMTAT v3.0.0
 
 Here the list of ERC supported between different version:
 
-|                                                              | Associated contracts/modules               | ERC status               | CMTAT 1.0 | CMTAT 2.30 | CMTAT 3.0.0                                                  |           |          |          |                            |          |
-| ------------------------------------------------------------ | ------------------------------------------ | ------------------------ | --------- | ---------- | ------------------------------------------------------------ | --------- | -------- | -------- | -------------------------- | -------- |
-| Deployment version                                           |                                            |                          |           |            | (Standalone & Proxy)                                         | Light     | UUPS     | ERC1363  | Allowlist<br />(whitelist) | Debt     |
-| **Fungible tokens**                                          |                                            |                          |           |            |                                                              |           |          |          |                            |          |
-| [ERC-20](https://eips.ethereum.org/EIPS/eip-20)              | ERC20BaseModule                            | Standard Track (final)   | &#x2611;  | &#x2611;   | &#x2611;                                                     | &#x2611;  | &#x2611; | &#x2611; | &#x2611;                   | &#x2611; |
-| [ERC-1363](https://eips.ethereum.org/EIPS/eip-1363)          | CMTATBaseERC1363                           | Standard Track (final)   | &#x2612;  | &#x2612;   | &#x2612;                                                     | &#x2612;  | &#x2612; | &#x2611; | &#x2612;                   | &#x2612; |
-| **Tokenization**                                             |                                            |                          |           |            |                                                              |           |          |          |                            |          |
-| [ERC-1404](https://github.com/ethereum/eips/issues/1404)<br />(Simple Restricted Token Standard) | ValidationModuleERC1404<br />(Exensions)   | Draft                    | &#x2611;  | &#x2611;   | &#x2611;                                                     | &#x2612;  | &#x2611; | &#x2611; | &#x2612;                   | &#x2612; |
-| [ERC-1643](https://github.com/ethereum/eips/issues/1643) (Document Management Standard) <br />(Standard from [ERC-1400](https://github.com/ethereum/EIPs/issues/1411))<br />(Slightly improved) | DocumentModule<br />(Exensions)            | Draft                    | &#x2612;  | &#x2612;   | &#x2611;<br />(through DocumentEngine with small improvement) | &#x2612;  | &#x2611; | &#x2611; | &#x2611;                   | &#x2611; |
-| [ERC-3643](https://eips.ethereum.org/EIPS/eip-3643)<br /><br />(Without on-chain identity) | Core + ERC20EnforcementModule (extensions) | Standard Track (final)   | &#x2612;  | &#x2612;   | &#x2611;                                                     | &#x2612;  | &#x2611; | &#x2611; | &#x2611;                   | &#x2611; |
-| [ERC-7551](https://ethereum-magicians.org/t/erc-7551-crypto-security-token-smart-contract-interface-ewpg/16416)<br />(Slightly improved) | Core + ERC20EnforcementModule (extensions) | Draft                    | &#x2612;  | &#x2612;   | &#x2611;                                                     | Partially | &#x2611; | &#x2611; | &#x2611;                   | &#x2611; |
-| **Proxy support related**                                    |                                            |                          |           |            |                                                              |           |          |          |                            |          |
-| Deployment with a UUPS proxy ([ERC-1822](https://eips.ethereum.org/EIPS/eip-1822)) | -                                          | Stagnant<br />(but used) | &#x2612;  | &#x2612;   | &#x2612;                                                     | &#x2612;  | &#x2611; | &#x2612; | &#x2612;                   | &#x2612; |
-| [ERC-7201](https://eips.ethereum.org/EIPS/eip-7201)<br/>(Storage namespaces for proxy contract) | All                                        | Standard Track (final)   | &#x2612;  | &#x2612;   | &#x2611;                                                     | &#x2611;  | &#x2611; | &#x2611; | &#x2611;                   | &#x2611; |
-| **Technical**                                                |                                            |                          |           |            |                                                              |           |          |          |                            |          |
-| [ERC-2771](https://eips.ethereum.org/EIPS/eip-2771) (Meta Tx / gasless) | ERC2771Module <br />(options)              | Standard Track (final)   | &#x2611;  | &#x2611;   | &#x2611;                                                     | &#x2612;  | &#x2611; | &#x2611; | &#x2611;                   | &#x2612; |
-| [ERC-6093](https://eips.ethereum.org/EIPS/eip-6093) (Custom errors for ERC-20 tokens) | -                                          | Standard Track (final)   | &#x2612;  | &#x2612;   | &#x2611;                                                     | &#x2611;  | &#x2611; | &#x2611; | &#x2611;                   | &#x2611; |
-| [ERC-7802](https://eips.ethereum.org/EIPS/eip-7802) (cross-chain token/transfers) | ERC20CrossChainModule<br />(options)       | Draft                    | &#x2612;  | &#x2612;   | &#x2611;                                                     | &#x2612;  | &#x2611; | &#x2611; | &#x2612;                   | &#x2612; |
+|                                                              | Associated contracts/modules               | ERC status               | CMTAT 1.0 | CMTAT 2.30 | CMTAT 3.0.0                                                  | CMTAT 3.1.0                                                  |           |          |          |                            |          |
+| ------------------------------------------------------------ | ------------------------------------------ | ------------------------ | --------- | ---------- | ------------------------------------------------------------ | ------------------------------------------------------------ | --------- | -------- | -------- | -------------------------- | -------- |
+| Deployment version                                           |                                            |                          |           |            | (Standalone & Proxy)                                         |                                                              | Light     | UUPS     | ERC1363  | Allowlist<br />(whitelist) | Debt     |
+| **Fungible tokens**                                          |                                            |                          |           |            |                                                              |                                                              |           |          |          |                            |          |
+| [ERC-20](https://eips.ethereum.org/EIPS/eip-20)              | ERC20BaseModule                            | Standard Track (final)   | &#x2611;  | &#x2611;   | &#x2611;                                                     | &#x2611;                                                     | &#x2611;  | &#x2611; | &#x2611; | &#x2611;                   | &#x2611; |
+| [ERC-1363](https://eips.ethereum.org/EIPS/eip-1363)          | CMTATBaseERC1363                           | Standard Track (final)   | &#x2612;  | &#x2612;   | &#x2612;                                                     | &#x2612;                                                     | &#x2612;  | &#x2612; | &#x2611; | &#x2612;                   | &#x2612; |
+| **Tokenization**                                             |                                            |                          |           |            |                                                              |                                                              |           |          |          |                            |          |
+| [ERC-1404](https://github.com/ethereum/eips/issues/1404)<br />(Simple Restricted Token Standard) | ValidationModuleERC1404<br />(Exensions)   | Draft                    | &#x2611;  | &#x2611;   | &#x2611;                                                     | &#x2611;                                                     | &#x2612;  | &#x2611; | &#x2611; | &#x2612;                   | &#x2612; |
+| [ERC-1643](https://github.com/ethereum/eips/issues/1643) (Document Management Standard) <br />(Standard from [ERC-1400](https://github.com/ethereum/EIPs/issues/1411))<br />(Slightly improved) | DocumentModule<br />(Exensions)            | Draft                    | &#x2612;  | &#x2612;   | &#x2611;<br />(through DocumentEngine with small improvement) | &#x2611;<br />(through DocumentEngine with small improvement) | &#x2612;  | &#x2611; | &#x2611; | &#x2611;                   | &#x2611; |
+| [ERC-3643](https://eips.ethereum.org/EIPS/eip-3643)<br /><br />(Without on-chain identity) | Core + ERC20EnforcementModule (extensions) | Standard Track (final)   | &#x2612;  | &#x2612;   | &#x2611;                                                     | &#x2611;                                                     | &#x2612;  | &#x2611; | &#x2611; | &#x2611;                   | &#x2611; |
+| [ERC-7551](https://ethereum-magicians.org/t/erc-7551-crypto-security-token-smart-contract-interface-ewpg-reworked/25477) | Core + ERC20EnforcementModule (extensions) | Draft                    | &#x2612;  | &#x2612;   | &#x2611;                                                     | &#x2611;                                                     | Partially | &#x2611; | &#x2611; | &#x2611;                   | &#x2611; |
+| **Proxy support related**                                    |                                            |                          |           |            |                                                              |                                                              |           |          |          |                            |          |
+| Deployment with a UUPS proxy ([ERC-1822](https://eips.ethereum.org/EIPS/eip-1822)) | -                                          | Stagnant<br />(but used) | &#x2612;  | &#x2612;   | &#x2612;                                                     | &#x2612;                                                     | &#x2612;  | &#x2611; | &#x2612; | &#x2612;                   | &#x2612; |
+| [ERC-7201](https://eips.ethereum.org/EIPS/eip-7201)<br/>(Storage namespaces for proxy contract) | All                                        | Standard Track (final)   | &#x2612;  | &#x2612;   | &#x2611;                                                     | &#x2611;                                                     | &#x2611;  | &#x2611; | &#x2611; | &#x2611;                   | &#x2611; |
+| **Technical**                                                |                                            |                          |           |            |                                                              |                                                              |           |          |          |                            |          |
+| [ERC-2771](https://eips.ethereum.org/EIPS/eip-2771) (Meta Tx / gasless) | ERC2771Module <br />(options)              | Standard Track (final)   | &#x2611;  | &#x2611;   | &#x2611;                                                     | &#x2611;                                                     | &#x2612;  | &#x2611; | &#x2611; | &#x2611;                   | &#x2612; |
+| [ERC-6093](https://eips.ethereum.org/EIPS/eip-6093) (Custom errors for ERC-20 tokens) | -                                          | Standard Track (final)   | &#x2612;  | &#x2612;   | &#x2611;                                                     | &#x2611;                                                     | &#x2611;  | &#x2611; | &#x2611; | &#x2611;                   | &#x2611; |
+| [ERC-7802](https://eips.ethereum.org/EIPS/eip-7802) (cross-chain token/transfers) | ERC20CrossChainModule<br />(options)       | Draft                    | &#x2612;  | &#x2612;   | &#x2611;                                                     | &#x2611;                                                     | &#x2612;  | &#x2611; | &#x2611; | &#x2612;                   | &#x2612; |
+| [ERC-5679](https://eips.ethereum.org/EIPS/eip-5679) (Token minting and burning with data) | ERC20MintModule<br />ERC20BurnModule       | Standard Track (final)   | &#x2612;  | &#x2612;   | Partial<br />(without ERC-165 support)                       | &#x2611;                                                     | &#x2611;  | &#x2611; | &#x2611; | &#x2611;                   | &#x2611; |
 
 ### Details
 
@@ -396,8 +408,8 @@ function setSymbol(string calldata symbol) external
 // ERC20MintModule
 function batchTransfer(address[] calldata tos,uint256[] calldata values) external returns (bool)
 
-// IERC3643Base
-// BaseModule
+// IERC3643Version
+// VersionModule
 function version() external view returns (string memory)
 
 // IERC3643Enforcement 
@@ -453,13 +465,20 @@ All functions related to the interface `IAgentRole`because CMTAT uses a RBAC Acc
 
 And finally `setCompliance` because CMTAT uses a different architecture for its `ruleEngine`.
 
+##### Version
+
+Module: VersionModule
+
+| **ERC-3643**                                               | **CMTAT 3.0.0** | Deployment version |
+| :--------------------------------------------------------- | :-------------- | ------------------ |
+| `version() external view returns (string memory version_)` | Same            | All                |
+
 ##### Pause
 
 Module: PauseModule
 
 | **ERC-3643**                             | **CMTAT 3.0.0**                   | Deployment version |
 | :--------------------------------------- | :-------------------------------- | ------------------ |
-| Deployment version                       |                                   |                    |
 | `pause() external`                       | Same                              | All                |
 | `unpause() external`                     | Same                              | All                |
 | `paused() external view returns (bool);` | Same                              | All                |
@@ -468,10 +487,10 @@ Module: PauseModule
 
 ##### ERC20Base
 
-| **ERC-3643**                                  | **CMTAT 3.0**                       | Deployment version |
-| :-------------------------------------------- | :---------------------------------- | ------------------ |
-| `setName(string calldata _name) external;`    | `setName(string calldata name_)`    | All                |
-| `setSymbol(string calldata _symbol) external` | `setSymbol(string calldata symbol_) | All                |
+| **ERC-3643**                                  | **CMTAT 3.0**                        | Deployment version |
+| :-------------------------------------------- | :----------------------------------- | ------------------ |
+| `setName(string calldata _name) external;`    | `setName(string calldata name_)`     | All                |
+| `setSymbol(string calldata _symbol) external` | `setSymbol(string calldata symbol_)` | All                |
 
 ##### Supply Management (burn/mint)
 
@@ -479,7 +498,7 @@ Module: PauseModule
 | :----------------------------------------------------------- | :-------------------- | :----------------------------------------------------------- | ------------------ |
 | `  batchMint(address[] calldata _toList, uint256[] calldata _amounts) external;` | ERC20MintModule       | `mint(address account, uint256 value)`                       | All                |
 | `  batchMint(address[] calldata _toList, uint256[] calldata _amounts) external;` | ERC20MintModule       | `batchMint(address[] calldata accounts,uint256[] calldata values) ` | All                |
-| `function batchTransfer(address[] calldata _toList, uint256[] calldata _amounts) external;` | ERC20MintModule       | `batchTransfer(address[] calldata tos,uint256[] calldata values)` | All                |
+| `batchTransfer(address[] calldata _toList, uint256[] calldata _amounts) external;` | ERC20MintModule       | `batchTransfer(address[] calldata tos,uint256[] calldata values)` | All                |
 | `burn(address _userAddress, uint256 _amount) external`       | ERC20BurnModule       | `function burn(address account,uint256 value)`               | All                |
 | `batchBurn(address[] calldata _userAddresses, uint256[] calldata _amounts) external` | ERC20BurnModule       | `batchBurn(address[] calldata accounts,uint256[] calldata values)` | All                |
 
@@ -503,46 +522,15 @@ Note: `canTransfer` is defined for the compliance contract in ERC-3643.
 
 ####  ERC-7551 (eWPG)
 
-> [ERC specification](https://ethereum-magicians.org/t/erc-7551-crypto-security-token-smart-contract-interface-ewpg/16416)
+> [ERC specification](https://ethereum-magicians.org/t/erc-7551-crypto-security-token-smart-contract-interface-ewpg-reworked/25477)
 >
 > Status: draft
 
-This section presents a correspondence table between [ERC-7551](https://ethereum-magicians.org/t/erc-7551-crypto-security-token-smart-contract-interface-ewpg/16416) and their equivalent functions inside CMTAT.
+ERC-7551 ([eWpG](https://www.gesetze-im-internet.de/ewpg/)) is a proposal by the German Federal Association of Crypto Registrars for a smart contract interface tailored to *crypto securities* in Germany (eWpG). It aims to provide a flexible, minimal foundational layer so that tokens can meet legal/compliance requirements while leaving the door open on how to restrict the use of the token (on-chain id like ERC-3643). 
 
-The ERC-7551 is currently a draft ERC proposed by the Federal Association of Electronic Registrars from Germany to tokenize assets in compliance with [eWPG](https://www.gesetze-im-internet.de/ewpg/). 
+The implemented interface is available in [IERC7551](./contracts/interfaces/tokenization/draft-IERC7551.sol).
 
-The interface is supposed to work on top of additional standards that cover the actual storage of ownership of shares of a security in the form of a token (e.g. ERC-20 or ERC-1155).
-
-##### CMTAT modification
-
-Since ERC-7551 is not yet an official standard, we decided to use the same name and signature as ERC-3643. Typically, we define a function `burn` instead of `destroyTokens`.
-
-Many discussions were carried out in 2024 and 2025 with the partners and authors of the ERC-7551 standard to ensure that these modifications correspond to their initial purpose. We hope that these changes will be reflected in the standard if it becomes final.
-
-The implemented interface is available in [IERC7551](./contracts/interfaces/tokenization/draft-IERC7551.sol)
-
-| **N°** | **Functionalities**                                          | **ERC-7551 Functions**                    | **CMTAT v3.0.0**         | Implementations details                                      | Modules                                                      |
-| :----- | :----------------------------------------------------------- | :---------------------------------------- | :----------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| 1      | Freeze and unfreeze a specific amount of tokens              | `freezeTokens`<br />`unfreezeTokens`      | &#x2611;                 | Implement ERC-3643 function`freezePartialTokens`and `unfreezePartialTokens`(with and without a `data`parameter)<br />& ERC-3643 function `setAddressFrozen`<br />(with and without a `data`parameter) | EnforcementModule (core)<br />ERC20EnforcementModule (extensions) |
-| 2      | Pausing transfers The operator can pause and unpause transfers | `pauseTransfers`                          | &#x2611;                 | Implement ERC-3643 functions `pause/unpause`<br />& `deactivateContract` | PauseModule (core)                                           |
-| 3      | Link to off-chain document<br />Add the hash of a document   | `setPaperContractHash`                    | Equivalent functionality | The hash is put in the field` Terms`<br />Terms is represented as a Document (name, uri, hash, last on-chain modification date) based on [ERC-1643](https://github.com/ethereum/eips/issues/1643). |                                                              |
-|        |                                                              |                                           | Function                 | `setTerms(bytes32 hash, string calldata uri)`                | ERC7751Module<br />(options)                                 |
-|        |                                                              |                                           | Function                 | `setTerms(IERC1643CMTAT.DocumentInfo calldata terms_)`       | ExtraInformationModule (extensions)                          |
-| 4      | Metadata JSON file                                           | `setMetaDataJSON`                         | &#x2611;                 | Function <br />`setMetaData(string calldata metadata_)`      | ERC7751Module<br />(options)                                 |
-| 5      | Forced transfers<br />Transfer `amount` tokens to `to` without requiring the consent of `from` | `forceTransferFrom`                       | &#x2611;                 | Two functions are available: with and without the `data`parameter |                                                              |
-|        |                                                              |                                           | Functions                | `forcedTransfer(address from, address to, uint256 value, bytes calldata data) ` | ERC20EnforcementModule<br />(extensions)                     |
-|        |                                                              |                                           |                          | ERC-3643 function `forcedTransfer(address from, address to, uint256 value)` | ERC20EnforcementModule<br />(extensions)                     |
-| 6      | Token supply management<br />Reduce the balance of `tokenHolder` by `amount` without increasing the amount of tokens of any other holder | `destroyTokens`                           | &#x2611;                 | Two functions are available: with and without the `data`parameter, as well as a batch version |                                                              |
-|        |                                                              |                                           | Functions                | `burn(address account,uint256 value,bytes calldata data)`    | BurnModule (core)                                            |
-|        |                                                              |                                           |                          | ERC-3643 function `burn(address account,uint256 value)`      | BurnModule (core)                                            |
-|        |                                                              |                                           |                          | `batchBurn(address[] calldata accounts,uint256[] calldata values,bytes memory data)` | BurnModule (core)                                            |
-|        |                                                              |                                           |                          | ERC-3643 function `batchBurn(address[] calldata accounts,uint256[] calldata values)` | BurnModule (core)                                            |
-| 7      | Token supply management<br />Increase the balance of `to` by `amount` without decreasing the amount of tokens from any other holder. | `issue`                                   | &#x2611;                 | Two functions are available: with and without the `data`parameter, as well as a batch version (without `data`) |                                                              |
-|        |                                                              |                                           | Functions                | `mint(address account, uint256 value, bytes calldata data)`  | MintModule (core)                                            |
-|        |                                                              |                                           |                          | ERC-3643 functions <br />`mint(address account, uint256 value)`and `batchMint(address[] calldata accounts,uint256[] calldata values)` | MintModule (core)                                            |
-| 8      | Transfer compliance<br />Check if a transfer is valid        | `canTransfer() `and a `canTransferFrom()` | &#x2611;                 | Implement<br/>ERC-3643 function `canTransfer`<br/>as well as a specific function `canTransferFrom` |                                                              |
-|        |                                                              |                                           | Functions                | ERC-3643 function `canTransfer(address from,address to,uint256 value)` | ValidationModuleCore                                         |
-|        |                                                              |                                           |                          | `canTransferFrom(address spender,address from,address to,uint256 value) ` | ValidationModuleCore                                         |
+Only the specific deployment version dedicated (CMTATERC7551) implements the full interface.
 
 #####  Fulls functions
 
@@ -586,6 +574,8 @@ function canTransfer(address from, address to, uint256 value) external view retu
 
 // IERC7551Document
 // IERC7551Module
+event Terms(bytes32 hash_, string uri_);
+event MetaData(string newMetaData);
 function termsHash() external view returns (bytes32);
 function setTerms(bytes32 _hash, string calldata _uri) external;
 function metaData() external view returns (string memory);
@@ -601,15 +591,13 @@ function setMetaData(string calldata metaData_) external;
 
 This standard introduces a minimal and extendable interface, `IERC7802`, for tokens to enable standardized crosschain communication.
 
-CMTAT implements this standard in the base module `CMTATBaseERC20CrossChain`
-
-- Initially, this interface was implemented as an option module, but this generates inheritance conflict with other CMTAT base module related to ERC20Burn & ERC20 mint modules.
+CMTAT implements this standard in the option module `ERC20CrossChain`
 
 This standard is notably used by Optimism to provide cross-chain bridge between Optimism chain, see [docs.optimism.io/interop/superchain-erc20](https://docs.optimism.io/interop/superchain-erc20)
 
-More information here: [Cross-Chain bridge support](./doc/general/crosschain-bridge-support.md)
+More information available in the cross chain section.
 
-Deployment version: since it is an extension module, it is not currently used in the deployment version `debt`, `light` & `allowlist`.
+Deployment version: since it is an option module, it is not currently used in the deployment version `debt`, `light` & `allowlist`.
 
 ```solidity
 interface IERC7802 is IERC165 {
@@ -639,7 +627,7 @@ CMTAT architecture is divided in two main components: modules and engines.
 
 #### Schema
 
-Here is an overview on how CMT
+Here is an overview on how CMTAT is build:
 
 ![architecture-architecture-overview.drawio](./doc/schema/drawio/architecture-architecture-overview.drawio.png)
 
@@ -683,7 +671,9 @@ Here is the GitHub file structure for CMTAT repository.
 │   ├── technical
 │   │   ├── ICMTATConstructor.sol
 │   │   ├── IERC20Allowance.sol
+│   │   ├── IERC5679.sol
 │   │   ├── IERC7802.sol
+│   │   ├── IGetCCIPAdmin.sol
 │   │   └── IMintBurnToken.sol
 │   └── tokenization
 │       ├── draft-IERC1404.sol
@@ -745,13 +735,13 @@ Here is the GitHub file structure for CMTAT repository.
         │   ├── ValidationModuleAllowlist.sol
         │   └── ValidationModule.sol
         ├── core
-        │   ├── BaseModule.sol
         │   ├── EnforcementModule.sol
         │   ├── ERC20BaseModule.sol
         │   ├── ERC20BurnModule.sol
         │   ├── ERC20MintModule.sol
         │   ├── PauseModule.sol
-        │   └── ValidationModuleCore.sol
+        │   ├── ValidationModuleCore.sol
+        │   └── VersionModule.sol
         ├── extensions
         │   ├── DocumentEngineModule.sol
         │   ├── ERC20EnforcementModule.sol
@@ -762,14 +752,16 @@ Here is the GitHub file structure for CMTAT repository.
         │       └── ValidationModuleRuleEngine.sol
         ├── options
         │   ├── AllowlistModule.sol
+        │   ├── CCIPModule.sol
         │   ├── DebtEngineModule.sol
         │   ├── DebtModule.sol
+        │   ├── ERC20CrossChain.sol
         │   ├── ERC2771Module.sol
         │   └── ERC7551Module.sol
         └── security
             └── AccessControlModule.sol
 
-29 directories, 89 files
+29 directories, 93 files
 ```
 
 - Docs
@@ -819,7 +811,7 @@ Here is the GitHub file structure for CMTAT repository.
 │   ├── core
 │   │   ├── Base
 │   │   │   ├── base.md
-│   │   │   └── surya_report_BaseModule.sol.md
+│   │   │   └── surya_report_VersionModule.sol.md
 │   │   ├── Enforcement
 │   │   │   ├── enforcement.md
 │   │   │   ├── surya_report_EnforcementModuleInternal.sol.md
@@ -984,7 +976,7 @@ CMTAT Base Core adds several functions:
 
 
 
-#### Level 3 (Add cross-chain modules)
+#### Level 3 (cross-chain transfer)
 
 ![surya_inheritance_CMTATBase.sol](./doc/schema/surya_inheritance/surya_inheritance_3_CMTATBaseERC20CrossChain.sol.png)
 
@@ -1055,7 +1047,7 @@ For simplicity, the module names and function locations are those of version 3.0
 
 ##### Controllers
 
-| Modules                            | Type        | Description                                                  | File                                                         | CMTAT 1.0 | CMTAT 2.30 | CMTAT 3.0.0                                           |            |                 |             |
+| Modules                            | Type        | Description                                                  | File                                                         | CMTAT 1.0 | CMTAT 2.30 | CMTAT >= 3.0.0                                        |            |                 |             |
 | ---------------------------------- | ----------- | ------------------------------------------------------------ | ------------------------------------------------------------ | --------- | ---------- | ----------------------------------------------------- | ---------- | --------------- | ----------- |
 | Deployment version                 |             |                                                              |                                                              |           |            | Standalone, Upgradeable, UUPS, Debt, ERC1363, ERC7551 | CMTAT Debt | CMTAT Allowlist | CMTAT Light |
 | ValidationModule                   | Controllers | Check transfer validity by calling the Pause and Enforcement modules | [ValidationModule.sol](./contracts/modules/wrapper/controllers/ValidationModule.sol) | &#x2611;  | &#x2611;   | &#x2611;                                              | &#x2611;   | &#x2611;        | &#x2611;    |
@@ -1109,10 +1101,10 @@ For simplicity, the module names and function locations are those of version 3.0
 
 Generally, these modules are required to be compliant with the CMTA specification.
 
-| Modules                                                      | Description                    | File                                                         | CMTAT 1.0 | CMTAT 2.30                                                   | CMTAT 3.0.0                                                  |
+| Modules                                                      | Description                    | File                                                         | CMTAT 1.0 | CMTAT 2.30                                                   | CMTAT >= 3.0.0                                               |
 | ------------------------------------------------------------ | ------------------------------ | ------------------------------------------------------------ | --------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| [BaseModule](./doc/modules/core/Base/base.md)                | Contract version               | [BaseModule.sol](./contracts/modules/wrapper/core/BaseModule.sol) | &#x2611;  | &#x2611;<br />(Add two fields: flag and information)         | &#x2611;<br />Remove field flag (not used)<br />Keep only the field VERSION and move the rest (tokenId, information,..) to an extension module `ExtraInformation` |
-| [ERC20 Burn](./doc/modules/core/ERC20Burn/ERC20Burn.md)<br />(Prev. BurnModule) | Burn functions                 | [ERC20BurnModule.sol](./contracts/modules/wrapper/core/ERC20BurnModule.sol) | &#x2611;  | &#x2611;<br />Replace fn `burnFrom` by fn `forcedBurn`       | Add fn `burnBatch`<br />Rename `forceBurn` in `burn`<br />`burnFrom` is moved to the option module `ERC20CrossChain` |
+| [VersionModule](./doc/modules/core/Version/version.md)       | Contract version               | [VersionModule.sol](./contracts/modules/wrapper/core/VersionModule.sol) | &#x2611;  | &#x2611;<br />(Add two fields: flag and information)         | &#x2611;<br />Remove field flag (not used)<br />Keep only the field VERSION and move the rest (tokenId, information,..) to an extension module `ExtraInformation`<br />CMTAT 3.0.1: update name baseModule -> VersionModule |
+| [ERC20 Burn](./doc/modules/core/ERC20Burn/ERC20Burn.md)<br />(Prev. BurnModule) | Burn functions                 | [ERC20BurnModule.sol](./contracts/modules/wrapper/core/ERC20BurnModule.sol) | &#x2611;  | &#x2611;<br />Replace fn `burnFrom` by fn `forcedBurn`       | Add fn `burnBatch`<br />Rename `forceBurn` in `burn`<br />`burnFrom` is moved to the option module `ERC20CrossChain`(v3.1.0) |
 | [Enforcement](./doc/modules/core/Enforcement/enforcement.md) | Freeze/unfreeze address        | [EnforcementModule.sol](./contracts/modules/wrapper/core/EnforcementModule.sol) | &#x2611;  | &#x2611;                                                     | &#x2611;                                                     |
 | [ERC20Base](./doc/modules/core/ERC20Base/ERC20base.md)       | decimals, set name & symbol    | [ERC20BaseModule.sol](./contracts/modules/wrapper/core/ERC20BaseModule.sol) | &#x2611;  | &#x2611;<br />Remove fn `forceTransfer`<br />(replaced by `burn`and `mint`)<br /> | Add fn `balanceInfo` (useful to distribute dividends)<br />Add  fn `forcedTransfer`<br />Add fn `setName`and `setSymbol`<br />Remove custom fn `approve`(keep only ERC-20 approve) |
 | [ERC20 Mint](./doc/modules/core/ERC20Mint/ERC20Mint.md)      | Mint functions + BatchTransfer | [ERC20MintModule.sol](./contracts/modules/wrapper/core/ERC20MintModule.sol) | &#x2611;  | &#x2611;                                                     | Add fn `mintBatch`<br />Add fn `transferBatch` <br />        |
@@ -1126,7 +1118,7 @@ Generally, these modules are required to be compliant with the CMTA specificatio
 
 Generally, these modules are not required to be compliant with the CMTA specification.
 
-| Modules                                                      | Description                                                  | File                                                         | CMTAT 1.0            | CMTAT 2.30                                               | CMTAT 3.0.0                                         |
+| Modules                                                      | Description                                                  | File                                                         | CMTAT 1.0            | CMTAT 2.30                                               | CMTAT >= 3.0.0                                      |
 | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | -------------------- | -------------------------------------------------------- | --------------------------------------------------- |
 | [ExtraInformation](./doc/modules/extensions/ExtraInformation/extraInformation.md) | Set extra information (tokenId, terms, metadata)             | [ExtraInformationModule.sol](./contracts/modules/wrapper/extensions/ExtraInformationModule.sol) | &#x2611;(BaseModule) | &#x2611;(BaseModule)                                     | &#x2611;<br />                                      |
 | [SnapshotEngineModule](./doc/modules/extensions/snapshotEngine/Snapshot.md)<br />(Prev. SnapshotModule) | Set snapshotEngine                                           | [SnapshotEngineModule.sol](./contracts/modules/wrapper/extensions/SnapshotEngineModule.sol) | &#x2611;             | Partial<br />(Not included by default because unaudited) | &#x2611; <br />(require an external SnapshotEngine) |
@@ -1135,32 +1127,45 @@ Generally, these modules are not required to be compliant with the CMTA specific
 
 ##### Options modules
 
-| Modules                                                      | Description                                            | File                                                         | CMTAT 1.0 | CMTAT 2.3.0                         | CMTAT 3.0.0              |           |                                                              |          |
-| ------------------------------------------------------------ | ------------------------------------------------------ | ------------------------------------------------------------ | --------- | ----------------------------------- | ------------------------ | --------- | ------------------------------------------------------------ | -------- |
-| Deployment version                                           |                                                        |                                                              |           |                                     | Standalone & Upgradeable | Allowlist | Debt                                                         | ERC7551  |
-| [DebtModule](doc/modules/options/debt/debt.md)               | Set Debt Info                                          | [DebtModule.sol](./contracts/modules/wrapper/options/DebtModule.sol) | &#x2612;  | &#x2611;                            | &#x2612;                 | &#x2612;  | &#x2611;  <br />(Don't include CreditEvents managed by DebtEngineModule) | &#x2612; |
-| [DebtEngineModule](doc/modules/options/debtEngine/debtEngine.md) | Add a DebtEngine module (requires to set CreditEvents) | [DebtEngineModule.sol](./contracts/modules/wrapper/options/DebtEngineModule.sol) | &#x2612;  | &#x2612;                            | &#x2612;<br />           | &#x2612;  | &#x2611;                                                     | &#x2612; |
-| [ERC2771Module](doc/modules/options/erc2771/erc2771.md)      | ERC-2771 support                                       | [ERC2771Module.sol](./contracts/modules/wrapper/options/ERC2771Module.sol) | &#x2611;  | &#x2611;<br />(forwarder immutable) | &#x2611;                 | &#x2611;  | &#x2612;                                                     | &#x2611; |
-| [Allowlist](doc/modules/options/allowlist/allowlist.md)      | Add integrated allowlist support                       | [AllowlistModule.sol](./contracts/modules/wrapper/options/AllowlistModule.sol) | &#x2612;  | &#x2612;                            | &#x2612;                 | &#x2611;  | &#x2612;                                                     | &#x2612; |
-| [ERC7551Module](doc/modules/options/debt/erc7551.md)         | Add specific ERC-7551 functions                        | [ERC7551Module.sol](./contracts/modules/wrapper/options/ERC7551Module.sol) | &#x2612;  | &#x2612;                            | &#x2612;                 | &#x2612;  | &#x2612;                                                     | &#x2611; |
+| Modules                                                      | Description                                                | File                                                         | CMTAT 1.0 | CMTAT 2.3.0                         | CMTAT >= 3.0.0           |           |                                                              |          |
+| ------------------------------------------------------------ | ---------------------------------------------------------- | ------------------------------------------------------------ | --------- | ----------------------------------- | ------------------------ | --------- | ------------------------------------------------------------ | -------- |
+| Deployment version                                           |                                                            |                                                              |           |                                     | Standalone & Upgradeable | Allowlist | Debt                                                         | ERC7551  |
+| [DebtModule](doc/modules/options/debt/debt.md)               | Set Debt Info                                              | [DebtModule.sol](./contracts/modules/wrapper/options/DebtModule.sol) | &#x2612;  | &#x2611;                            | &#x2612;                 | &#x2612;  | &#x2611;  <br />(Don't include CreditEvents managed by DebtEngineModule) | &#x2612; |
+| [DebtEngineModule](doc/modules/options/debtEngine/debtEngine.md) | Add a DebtEngine module (requires to set CreditEvents)     | [DebtEngineModule.sol](./contracts/modules/wrapper/options/DebtEngineModule.sol) | &#x2612;  | &#x2612;                            | &#x2612;<br />           | &#x2612;  | &#x2611;                                                     | &#x2612; |
+| [ERC2771Module](doc/modules/options/erc2771/erc2771.md)      | ERC-2771 support                                           | [ERC2771Module.sol](./contracts/modules/wrapper/options/ERC2771Module.sol) | &#x2611;  | &#x2611;<br />(forwarder immutable) | &#x2611;                 | &#x2611;  | &#x2612;                                                     | &#x2611; |
+| [Allowlist](doc/modules/options/allowlist/allowlist.md)      | Add integrated allowlist support                           | [AllowlistModule.sol](./contracts/modules/wrapper/options/AllowlistModule.sol) | &#x2612;  | &#x2612;                            | &#x2612;                 | &#x2611;  | &#x2612;                                                     | &#x2612; |
+| [ERC7551Module](doc/modules/options/debt/erc7551.md)         | Add specific ERC-7551 functions                            | [ERC7551Module.sol](./contracts/modules/wrapper/options/ERC7551Module.sol) | &#x2612;  | &#x2612;                            | &#x2612;                 | &#x2612;  | &#x2612;                                                     | &#x2611; |
+| [ERC20CrossChainModule](doc/modules/options/erc20crosschain/ERC20CrossChain.md) | Add cross-chain functionalities (ERC-7802, burn, burnFrom) | [ERC20CrossChainModule.sol](./contracts/modules/wrapper/options/ERC20CrossChainModule.sol) | &#x2612;  | &#x2612;                            | &#x2611;<br />(v3.1.0)   | &#x2612;  | &#x2612;                                                     | &#x2611; |
+| [CCIPModule](doc/modules/options/ccip/ccip.md)               | Add CCIP specific function                                 | [CCIPModule.sol](./contracts/modules/wrapper/options/CCIPModule.sol) | &#x2612;  | &#x2612;                            | &#x2611;<br />(v3.1.0)   | &#x2612;  | &#x2612;                                                     | &#x2611; |
 
 
 
 ##### Security
 
-|                                                       | Description    | File                                                         | CMTAT 1.0 | CMTAT 2.30                                         | CMTAT 3.0.0 |
-| ----------------------------------------------------- | -------------- | ------------------------------------------------------------ | --------- | -------------------------------------------------- | ----------- |
-| [AccessControlModule](doc/modules/security/access.md) | Access Control | [AccessControlModule.sol](./contracts/modules/wrapper/security/AccessControlModule.sol) | &#x2611;  | &#x2611;<br />(Admin has all the roles by default) | &#x2611;    |
+|                                                       | Description    | File                                                         | CMTAT 1.0 | CMTAT 2.30                                         | CMTAT >= 3.0.0 |
+| ----------------------------------------------------- | -------------- | ------------------------------------------------------------ | --------- | -------------------------------------------------- | -------------- |
+| [AccessControlModule](doc/modules/security/access.md) | Access Control | [AccessControlModule.sol](./contracts/modules/wrapper/security/AccessControlModule.sol) | &#x2611;  | &#x2611;<br />(Admin has all the roles by default) | &#x2611;       |
 
 
 
 ### Access Control (RBAC)
 
-CMTAT uses a RBAC access control by using the contract `AccessControl`from OpenZeppelin.
+CMTAT access control is also modular and flexible. 
 
-Each module defines the roles useful to restrict its functions.
+**Wrapper modules**
 
-The `AccessControlModule`which is used by all base and deployment contracts override the OpenZeppelin function `hasRole`to give by default all the roles to the `admin`.
+Firstly, wrapper modules will separately:
+
+-  define the roles useful to restrict its own functions
+-  define virtual functions `authorize<specific role name>` which require to be overridden in CMTAT base module to add access control check.
+
+To allow flexibility and customization, wrapper modules do not implement themselves the access control. Access control is defined in CMTAT base modules. Therefore,  it is possible to create a new base module to use a different access control.
+
+**CMTAT base module**
+
+Current CMTAT base module use the standard RBAC access control by using the contract `AccessControl`from OpenZeppelin.
+
+The `AccessControlModule`which is used by the different CMTAT base module and deployment contracts override the OpenZeppelin function `hasRole`to give by default all the roles to the `admin`.
 
 See also [docs.openzeppelin.com - AccessControl](https://docs.openzeppelin.com/contracts/5.x/api/access#AccessControl)
 
@@ -1184,9 +1189,8 @@ Here is the list of roles and their 32 bytes identifier.
 | **Option Modules**     |                                                           |                                                              |
 | ALLOWLIST_ROLE         | AllowlistModule                                           | 0x26a560d834a19637eccba4611bbc09fb32970bb627da0a70f14f83fdc9822cbc |
 | DEBT_ROLE              | DebtModule<br />(also used by DebtEngineModule)           | 0xc6f3350ab30f55ce45863160fc345c1663d4633fe7cacfd3b9bbb6420a9147f8 |
-| **Base Modules**       |                                                           |                                                              |
-| CROSS_CHAIN_ROLE       | CMTATBaseERC20CrossChainModule                            | 0x620d362b92b6ef580d4e86c5675d679fe08d31dff47b72f281959a4eecdd036a |
-| BURNER_FROM_ROLE       | CMTATBaseERC20CrossChainModule                            | 0x5bfe08abba057c54e6a28bce27ce8c53eb21d7a94376a70d475b5dee60b6c4e2 |
+| CROSS_CHAIN_ROLE       | ERC20CrossChainModule                                     | 0x620d362b92b6ef580d4e86c5675d679fe08d31dff47b72f281959a4eecdd036a |
+| BURNER_FROM_ROLE       | ERC20CrossChainModule                                     | 0x5bfe08abba057c54e6a28bce27ce8c53eb21d7a94376a70d475b5dee60b6c4e2 |
 
 
 
@@ -1198,7 +1202,7 @@ For function signatures,  struct arguments are represented with their correspond
 |                                               | Function signature<br />                                     | Visibility [public/external] | Input variables (Function arguments)                         | Output variables<br />(return value) | Role Required                                                |
 | --------------------------------------------- | ------------------------------------------------------------ | ---------------------------- | ------------------------------------------------------------ | ------------------------------------ | ------------------------------------------------------------ |
 | **Core Modules**                              |                                                              |                              |                                                              |                                      |                                                              |
-| BaseModule                                    |                                                              |                              |                                                              |                                      |                                                              |
+| ERC20BaseModule                               |                                                              |                              |                                                              |                                      |                                                              |
 |                                               | `setName(string name_)`                                      | public                       | `string name_`                                               | -                                    | DEFAULT_ADMIN_ROLE                                           |
 |                                               | `setSymbol(string symbol_)`                                  | public                       | `string  symbol_`                                            | -                                    | DEFAULT_ADMIN_ROLE                                           |
 | ERC20BurnModule                               |                                                              |                              |                                                              |                                      |                                                              |
@@ -1248,13 +1252,14 @@ For function signatures,  struct arguments are represented with their correspond
 | ERC7551Module                                 |                                                              |                              |                                                              |                                      |                                                              |
 |                                               | `setMetaData(string metadata_)`                              | public                       | `string metadata_`                                           | -                                    | EXTRA_INFORMATION_ROLE                                       |
 |                                               | `setTerms(bytes32 hash, string uri)`                         | public                       | `bytes32 hash, string uri`                                   | -                                    | EXTRA_INFORMATION_ROLE                                       |
+| ERC20CrossChain                               |                                                              |                              |                                                              |                                      |                                                              |
+|                                               | `crosschainMint(address to, uint256 value)`                  | public                       |                                                              |                                      |                                                              |
+|                                               | `crosschainBurn(address from, uint256 value)`                | public                       |                                                              |                                      |                                                              |
+|                                               | `burnFrom(address account, uint256 value)`                   | public                       |                                                              |                                      |                                                              |
+| CCIPModule                                    | `DEFAULT_ADMIN_ROLE`                                         |                              |                                                              |                                      |                                                              |
 | **Base contract**                             |                                                              |                              |                                                              |                                      |                                                              |
 | BaseCommon                                    |                                                              |                              |                                                              |                                      |                                                              |
 |                                               | `burnAndMint(address from, address to, uint256 amountToBurn, uint256 amountToMint, bytes data)` | public                       | `address from, address to, uint256 amountToBurn, uint256 amountToMint, bytes data` | -                                    | Same role requirement as `burn`and `mint`, so BURNER_ROLE and MINTER_ROLE |
-| CMTATBaseERC20CrossChain                      |                                                              |                              |                                                              |                                      |                                                              |
-|                                               | `crosschainMint(address to, uint256 value)`                  | public                       | `address to, uint256 value`                                  | -                                    | CROSS_CHAIN_ROLE                                             |
-|                                               | `crosschainBurn(address from, uint256 value)`                | public                       | `address from, uint256 value`                                | -                                    | CROSS_CHAIN_ROLE                                             |
-|                                               | `burnFrom(address account, uint256 value)`                   | public                       | `address account, uint256 value`                             | -                                    | BURNER_FROM_ROLE                                             |
 | CMTATBaseCore<br />(only CMTAT light version) |                                                              |                              |                                                              |                                      |                                                              |
 |                                               | `burnAndMint(address from, address to, uint256 amountToBurn, uint256 amountToMint, bytes data)` | public                       | `address from, address to, uint256 amountToBurn, uint256 amountToMint, bytes data` | -                                    | Same role requirement as `burn`and `mint`, so BURNER_ROLE and MINTER_ROLE |
 |                                               | `forcedBurn(address account, uint256 value, bytes data)`     | public                       | `address account, uint256 value, bytes data`                 | -                                    | DEFAULT_ADMIN_ROLE                                           |
@@ -1573,7 +1578,7 @@ Here are the list of rules in development:
 | RuleBlacklist                | Ready-only                     | ☑                                    | This rule can be used to forbid transfer from/to addresses in the blacklist |
 | RuleSanctionList             | Ready-only                     | ☑                                    | The purpose of this contract is to use the oracle contract from Chainalysis to forbid transfer from/to an address included in a sanctions designation (US, EU, or UN). |
 | RuleConditionalTransferLight | Ready-Write                    | In development                       | This rule requires that transfers have to be approved before being executed by the token |
-| RuleConditionalTransfer      | Ready-Write                    | ☒ (experimental rule)                | Same principle as the light version (see above) but we more options such as a time limit for approving a request as well as for carrying out the transfer |
+| RuleConditionalTransfer      | Ready-Write                    | ☒<br /> (experimental rule)          | Same principle as the light version (see above) but we more options such as a time limit for approving a request as well as for carrying out the transfer |
 
 #### SnapshotEngine
 
@@ -2007,17 +2012,17 @@ Here a schema describing the different check performed during:
 
 Here the list of events emitted by functions, which modify the total supply.
 
-| Name                                                         | Defined                       | Standard                  | Concerned functions                                          |
-| ------------------------------------------------------------ | ----------------------------- | ------------------------- | ------------------------------------------------------------ |
-| Transfer(address indexed from, address indexed to, uint256 value); | IERC20<br />(OpenZeppelin)    | ERC-20                    | All functions which impact the supply because a burn/mint is a transfer |
-| Mint(address indexed account, uint256 value, bytes data);    | IERC7551Mint                  | ERC-7551 (draft standard) | mint <br />(ERC20MintModule)<br />                           |
-| BatchMint( address indexed minter, address[] accounts, uint256[] values |                               | -                         | BatchMint<br />(ERC20MintModule)                             |
-| Burn(address indexed account, uint256 value, bytes data);    | IERC7551Burn                  | ERC-7551 (draft standard) | burn<br />(ERC20BurnModule)                                  |
-| BatchBurn(address indexed burner, address[] accounts,  uint256[] values) |                               | -                         | BatchMint<br />(ERC20BurnModule)                             |
-| BurnFrom(address indexed burner, address indexed account, address indexed spender, uint256 value); | IBurnERC20                    | -                         | burnFrom(address account, uint256 value)<br /><br />burn(uint256 value)<br />(CMTATBaseERC20CrossChain) |
-| CrosschainMint(address indexed to, uint256 value, address indexed sender) | IERC7551                      | ERC-7551                  | crosschainMint<br />(CMTATBaseERC20CrossChain)               |
-| CrosschainBurn(address indexed from, uint256 value, address indexed sender) | IERC7551                      | ERC-7551                  | crosschainMint<br />(CMTATBaseERC20CrossChain)               |
-| Enforcement (address indexed enforcer, address indexed account, uint256 amount, bytes data)<br />(Enforcement )<br /> | IERC7551ERC20EnforcementEvent | ERC-7551                  | forcedTransfer<br />(ERC20EnforcementModule)<br />forcedBurn<br />(CMTATBaseCore) |
+| Name                                                         | Defined                       | Standard              | Concerned functions                                          |
+| ------------------------------------------------------------ | ----------------------------- | --------------------- | ------------------------------------------------------------ |
+| `Transfer(address indexed from, address indexed to, uint256 value)` | IERC20<br />(OpenZeppelin)    | ERC-20                | All functions which impact the supply because a burn/mint is a transfer |
+| `Mint(address indexed account, uint256 value, bytes data)`   | IERC7551Mint                  | ERC-7551<br />(draft) | `mint` <br />(ERC20MintModule)<br />                         |
+| `BatchMint( address indexed minter, address[] accounts, uint256[] values` |                               | -                     | `batchMint`<br />(ERC20MintModule)                           |
+| `Burn(address indexed account, uint256 value, bytes data)`   | IERC7551Burn                  | ERC-7551<br/>(draft)  | `burn`<br />(ERC20BurnModule)                                |
+| `BatchBurn(address indexed burner, address[] accounts,  uint256[] values)` |                               | -                     | `batchMint`<br />(ERC20BurnModule)                           |
+| `BurnFrom(address indexed burner, address indexed account, address indexed spender, uint256 value)` | IBurnERC20                    | -                     | `burnFrom(address account, uint256 value)`<br /><br />`burn(uint256 value)`<br />(ERC20CrossChain) |
+| `CrosschainMint(address indexed to, uint256 value, address indexed sender)` | IERC7551                      | ERC-7802              | `crosschainMint`<br />(ERC20CrossChain)                      |
+| `CrosschainBurn(address indexed from, uint256 value, address indexed sender)` | IERC7551                      | ERC-7802              | `crosschainMint`<br />(ERC20CrossChain)                      |
+| `Enforcement (address indexed enforcer, address indexed account, uint256 amount, bytes data)`<br />(Enforcement )<br /> | IERC7551ERC20EnforcementEvent | ERC-7551 (draft)      | `forcedTransfer`<br />(ERC20EnforcementModule)<br />`forcedBurn`<br />(CMTATBaseCore) |
 
 
 
@@ -2094,7 +2099,7 @@ interface IERC7551Mint {
 
 #### Cross-chain (ERC20Crosschain)
 
-Option module
+This part is implemented in the option module `ERC20CrossChain`
 
 ##### BurnFrom
 
@@ -2158,6 +2163,99 @@ Additional documents can be added through the `DocumentEngine`
 
 For more information, see the section dedicated to the `DocumentEngine`
 
+### Cross-chain transfers (ERC-7802, CCIP-CCT)
+
+#### Chainlink CCIP - CCT
+
+CMTAT implements the required function of the [Cross-Chain Token Standard](https://docs.chain.link/ccip/concepts/cross-chain-token) (CCT) which means:
+
+- CMTAT CCIP admin can enable the token in CCIP, without the need of requesting assistance to [Chainlink](https://chain.link).
+- Chainlink CCIP pool can perform the relevant mint and burn operations on CMTAT tokens.
+
+See also [docs.chain.link - Cross Chain Token (EVM)](https://docs.chain.link/ccip/concepts/cross-chain-token/evm/tokens#overview)
+
+##### [Registration functions](https://docs.chain.link/ccip/concepts/cross-chain-token/evm/tokens#registration-functions)
+
+CMTAT implements the following function `getCCIPAdmin()` to return the address authorized to register the token in CCIP.
+
+The alternative function proposed by CCIP, `owner`, is not implemented by CMTAT but this could be done easily. Note that `getCCIPAdmin`is the recommended function to use in the CCIP documentation.
+
+##### [Transfer functions](https://docs.chain.link/ccip/concepts/cross-chain-token/evm/tokens#transfer-functions)
+
+Here the list of functions required to implement CCT and by compatible with CCIP.
+
+|                          |                                           | Implemented | CCIP Pool<br />[BurnMint Requirements](https://docs.chain.link/ccip/concepts/cross-chain-token/evm/tokens#burnmint-requirements) | CCIP Pool<br />[Lock-Release requirements](https://docs.chain.link/ccip/concepts/cross-chain-token/evm/tokens#lockrelease-requirements) | Pausable | CMTAT Module<br />                 | Role             |
+| ------------------------ | ----------------------------------------- | ----------- | ------------------------------------------------------------ | ------------------------------------------------------------ | -------- | ---------------------------------- | ---------------- |
+| Register CCIP token      |                                           |             |                                                              |                                                              |          |                                    |                  |
+|                          | owner                                     | &#x2612;    | -                                                            | -                                                            |          | -                                  |                  |
+|                          | getCCIPAdmin                              | &#x2611;    | -                                                            | -                                                            |          | CCIPModule                         | -                |
+| Burn & Mint Requirements |                                           |             |                                                              |                                                              |          |                                    |                  |
+|                          | mint(address account, uint256 amount)     | &#x2611;    | &#x2611;                                                     | &#x2612;                                                     | &#x2612; | MintModule<br />(Core module)      | MINTER_ROLE      |
+|                          | burn(uint256 amount)                      | &#x2611;    | &#x2611;                                                     | &#x2612;                                                     | &#x2612; | ERC20CrossChain                    | BURNER_FROM_ROLE |
+|                          | ERC-20<br />decimals()                    | &#x2611;    | &#x2611;                                                     | &#x2611;                                                     | -        | ERC20BaseModule<br />(Core module) |                  |
+|                          | ERC-20<br />balanceOf(address account)    | &#x2611;    | &#x2611;                                                     | &#x2611;                                                     | -        | OpenZeppelin inheritance           |                  |
+|                          | burnFrom(address account, uint256 amount) | &#x2611;    | &#x2611;                                                     | &#x2612;                                                     | &#x2611; | ERC20CrossChain                    | BURNER_FROM_ROLE |
+
+Note:
+
+-  The admin must grant the required permissions to mint/burn to the CCIP token pool.
+
+- If you put the contract in pause through the PauseModule, it will not affect the `mint` and `burn` functions from MintModule and BurnModule.
+  In this case, the alternative solution is to revoke the MINTER_ROLE and BURNER_ROLE from the concerned addresses to prevent any mint and burn.
+
+##### CMTAT implementation
+
+Here the list of functions implemented and their respective module.
+
+```solidity
+// ERC20BaseModule
+function decimals() public view virtual override(ERC20Upgradeable) returns (uint8)
+// OpenZeppelin ERC20Upgrdeable
+function balanceOf(address account) public view virtual returns (uint256)
+// CCIPModule
+function setCCIPAdmin(address newAdmin) public virtual onlyCCIPSetAdmin
+function getCCIPAdmin() public view virtual returns (address)
+// MintModule
+function mint(address account, uint256 value) public virtual override(IERC5679Mint) onlyMinter
+// ERC20CrossChain
+function burnFrom(address account, uint256 value) public virtual override(IBurnFromERC20) onlyBurnerFrom
+function burn(uint256 value) public virtual onlyBurnerFrom
+```
+
+
+
+#### Optimism superchain ERC-20 (ERC-7802)
+
+> CMTAT implements ERC-7802 in the option module `ERC20CrossChain`
+
+The  [`SuperchainTokenBridge`](https://github.com/ethereum-optimism/optimism/blob/develop/packages/contracts-bedrock/src/L2/SuperchainTokenBridge.sol) uses [ERC-7802](https://eips.ethereum.org/EIPS/eip-7802) to enable asset interoperability within the Superchain.
+
+- Asset interoperability allows tokens to move securely across the Superchain by burning tokens on the source chain and minting an equivalent amount on the destination chain. 
+- Instead of wrapping assets, this mechanism effectively "teleports" tokens between chains in the Superchain. .
+
+Reference: [docs.optimism.io/interop/superchain-erc20](https://docs.optimism.io/interop/superchain-erc20)
+
+##### Initiating message (source chain)
+
+>  Example of use
+
+1. The user (or a contract) calls [`SuperchainTokenBridge.sendERC20`](https://github.com/ethereum-optimism/optimism/blob/develop/packages/contracts-bedrock/src/L2/SuperchainTokenBridge.sol#L52-L78).
+2. The token bridge calls the function [`CMTAT.crosschainBurn`](https://github.com/ethereum-optimism/optimism/blob/develop/packages/contracts-bedrock/src/L2/SuperchainERC20.sol#L37-L46) to burn those tokens on the source chain.
+3. The source token bridge calls [`SuperchainTokenBridge.relayERC20`](https://github.com/ethereum-optimism/optimism/blob/develop/packages/contracts-bedrock/src/L2/SuperchainTokenBridge.sol#L80-L97) on the destination token bridge. This call is relayed using [`L2ToL2CrossDomainMessenger`](https://docs.optimism.io/interop/message-passing). The call is *initiated* here, by emitting an initiating message. It will be executed later, after the destination chain receives an executing message to [`L2ToL2CrossDomainMessenger`](https://docs.optimism.io/interop/message-passing).
+
+##### Executing message (destination chain)
+
+1. The autorelayer (or the user, or any offchain entity) sends an executing message to [`L2ToL2CrossDomainMessenger`](https://docs.optimism.io/interop/message-passing) to relay the message.
+2. The destination token bridge calls [`CMTAT.crosschainMint`](https://github.com/ethereum-optimism/optimism/blob/develop/packages/contracts-bedrock/src/L2/SuperchainERC20.sol#L26-L35) to mint tokens for the user/contract that called `SuperchainTokenBridge.sendERC20` originally.
+
+##### Requirement
+
+- You must allow the `SuperchainTokenBridge` to call `crosschainMint` and `crosschainBurn`. No additional permission or role setup is required. 
+
+- Deploy the `CMTAT` at the same address on every chain in the Superchain where you want your token to be available. If you do not deploy the contract to a specific destination chain, users will be unable to successfully move their tokens to that chain
+
+
+
 ## Deployment model 
 
 Contracts for deployment are available in the directory [contracts/deployment](./contracts/deployment)
@@ -2216,13 +2314,36 @@ See the OpenZeppelin [Upgrades plugins](https://docs.openzeppelin.com/upgrades-p
 
 ##### Storage
 
-CMTAT also implements the standard [ERC-7201](https://eips.ethereum.org/EIPS/eip-7201) to manage the storage location. See [this article](https://www.rareskills.io/post/erc-7201) by RareSkills for more information
+CMTAT also implements the standard [ERC-7201](https://eips.ethereum.org/EIPS/eip-7201) to manage the storage location. See [this article](https://www.rareskills.io/post/erc-7201) by RareSkills for more information.
+
+| Modules                        | Variable                                  | bytes32 Value                                                |
+| ------------------------------ | ----------------------------------------- | ------------------------------------------------------------ |
+| **Internal**                   |                                           |                                                              |
+| AllowlistModuleInternal        | AllowlistModuleInternalStorageLocation    | 0x53076eaf2d1e2f915f2e0487c9f92cca686c37fd47bf11f95f0da313b2809800 |
+| EnforcementModuleInternal      | EnforcementModuleInternalStorageLocatio   | 0x0c7bc8a17be064111d299d7669f49519cb26c58611b72d9f6ccc40a1e1184e00 |
+| ERC20EnforcementModuleInternal | ERC20EnforcementModuleStorageLocation     | 0x9d8059a24cb596f1948a937c2c163cf14465c2a24abfd3cd009eec4ac4c39800 |
+|                                | ValidationModuleRuleEngineStorageLocation | 0x77c8cc897d160e7bf5b10921804e357da17ae27460d4a6b5d9b27ffddf159d00 |
+| **Core**                       |                                           |                                                              |
+| ERC20BaseModule                | ERC20BaseModuleStorageLocation            | 0x9bd8d607565c0370ae5f91651ca67fd26d4438022bf72037316600e29e6a3a00 |
+| PauseModule                    |                                           | 0xab1527b6135145d8da1edcbd6b7b270624e17f2b41c74a8c746ff388ad454700 |
+| **Extension**                  |                                           |                                                              |
+| DocumentEngineModule           | DocumentEngineModuleStorageLocation       | 0xbd0905600c85d707dc53eba2e146c1c2527cd32ac3ff6b86846155151b3e2700 |
+| ExtraInformationModule         | ExtraInformationModuleStorageLocation     | 0xd2d5d34c4a4dea00599692d3257c0aebc5e0359176118cd2364ab9b008c2d100 |
+| SnapshotEngineModule           | SnapshotEngineModuleStorageLocation       | 0x1387b97dfab601d3023cb57858a6be29329babb05c85597ddbe4926c1193a900 |
+| **Options**                    |                                           |                                                              |
+| CCIPModule                     | CCIPModuleStorageLocation                 | 0x364fbfd89c0eee55bbc8dd10b1a9bf3e04fba9f3ee606f4c79a82f9941ad7a00 |
+| DebtModule                     | DebtModuleStorageLocation                 | 0xf8a315cc5f2213f6481729acd86e55db7ccc930120ccf9fb78b53dcce75f7c00 |
+| ERC7551Module                  | ERC7551ModuleStorageLocation              | 0x2727314c926b592b6f70e7d6d2e4677ebcac070f293306927f71fe77858eec00 |
+
+
 
 ##### Initialize functions
 
-For wrapper modules, we have removed the public function `{ContractName}_init`to reduce the size of the contracts since inside the public initializer function to initialize your proxy, you have to call the different functions `__{ContractName}_init_unchained`.
+Inside the public initializer function to initialize your proxy, you have to call the different functions `__{ContractName}_init_unchained`.
 
 Do not forget to call the functions `init_unchained` from the parent initializer if you create your own contract from the different modules.
+
+For wrapper modules, we have removed the public function `{ContractName}_init` when they are not useful to reduce the size of the contracts.
 
 As indicated in the [OpenZeppelin documentation](https://docs.openzeppelin.com/contracts/5.x/upgradeable#multiple-inheritance): 
 
@@ -2388,11 +2509,16 @@ interface ICMTATCreditEvents {
 
 Here are the different fields and functions to read and store the related debt information and Credit Events.
 
-|                 | Module                            | Read/get function | Write/set functions                      | Require DebtEngine              | Internal field                      |
-| --------------- | --------------------------------- | ----------------- | ---------------------------------------- | ------------------------------- | ----------------------------------- |
-| Debt Identifier | DebtModule/<br />DebtEngineModule | debt()            | setDebt(...)                             | &#x2612;<br />(but can be used) | `_debt`                             |
-| Debt Instrument | DebtModule<br />DebtEngineModule  | debt()            | setDebt(...)<br />setDebtInstrument(...) | &#x2612;<br />(but can be used) | `_debt`                             |
-| Credit Events   | DebtEngineModule                  | creditEvents()    | -<br />(require `DebtEngine`)            | &#x2611;                        | -<br />(stores by the `DebtEngine`) |
+|                 | Module                           | Function                                 | Type<br />[Read/Write] | Override by DebtEngine | Internal field  |
+| --------------- | -------------------------------- | ---------------------------------------- | ---------------------- | ---------------------- | --------------- |
+| Debt Identifier |                                  |                                          |                        |                        |                 |
+|                 | DebtModule<br />DebtEngineModule | debt()                                   | Read                   | &#x2611;               | `_debt`         |
+|                 | DebtModule                       | setDebt(...)                             | Write                  | &#x2612;               | `_debt`         |
+| Debt Instrument |                                  |                                          |                        |                        |                 |
+|                 | DebtModule<br />DebtEngineModule | debt()                                   | Read                   | &#x2611;               | `_debt`         |
+|                 | DebtModule                       | setDebt(...)<br />setDebtInstrument(...) | Write                  | &#x2612;               | `_debt`         |
+| Credit Events   | DebtEngineModule                 | creditEvents()                           | Read                   | &#x2611;               | `_creditEvents` |
+|                 | DebtModule                       | setCreditEvents(...)                     | Write                  | &#x2612;               | `_creditEvents` |
 
 #### Schema
 
@@ -2532,7 +2658,17 @@ See [AccessControlModule.sol](./contracts/modules/wrapper/security/AccessControl
 
 ### Audit
 
-The contracts have been audited by [ABDKConsulting](https://www.abdk.consulting/) (CMTAT v1.0.0 & CMTAT v2.30) and [Halborn](https://www.halborn.com) (CMTAT v3.0.0), two globally recognised firm specialised in smart contracts security.
+CMTAT is regularly audited by globally recognised firm specialised in smart contracts security.
+
+Only the version audited should be used in production.
+
+| Version                                                      | Security Audit Firm                            |
+| ------------------------------------------------------------ | ---------------------------------------------- |
+| [CMTAT v3.0.0](https://github.com/CMTA/CMTAT/releases/tag/v3.0.0) | [Halborn](https://www.halborn.com)             |
+| CMTAT v2.3.0                                                 | [ABDKConsulting](https://www.abdk.consulting/) |
+| CMTAT v1.0.0                                                 | [ABDKConsulting](https://www.abdk.consulting/) |
+
+
 
 #### Out of scope
 
@@ -2581,6 +2717,7 @@ The report is available in [Taurus_CMTAT_Smart_Contract_Security_Assessment_Repo
 
 | Version | File                                                         |
 | ------- | ------------------------------------------------------------ |
+| v3.1.0  | [v3.1.0-aderyn-report.md](./doc/audits/tools/aderyn/v3.1.0-aderyn-report.md) |
 | v3.0.0  | [v3.0.0-aderyn-report.md](./doc/audits/tools/aderyn/v3.0.0-aderyn-report.md) |
 
 #### Slither
@@ -2589,6 +2726,7 @@ You will find the report produced by [Slither](https://github.com/crytic/slither
 
 | Version | File                                                         |
 | ------- | ------------------------------------------------------------ |
+| v3.1.0  | [v3.1.0-slither-report.md](./doc/audits/tools/slither/v3.1.0-slither-report.md) |
 | v3.0.0  | [v3.0.0-slither-report.md](./doc/audits/tools/slither/v3.0.0-slither-report.md) |
 | v2.5.0  | [v2.5.0-slither-report.md](./doc/audits/tools/slither/v2.5.0-slither-report.md) |
 | v2.3.0  | [v2.3.0-slither-report.md](./doc/audits/tools/slither/v2.3.0-slither-report.md) |
@@ -2656,6 +2794,19 @@ Within a grouping, place the `view` and `pure` functions last
 4. Override
 5. Custom modifiers
 ```
+
+Inside each contract, library or interface, use the following order:
+
+```
+1. Type declarations
+2. State variables
+3. Events
+4. Errors
+5. Modifiers
+6. Functions
+```
+
+
 
 ### Configuration & toolchain
 

@@ -6,13 +6,14 @@ const {
 } = require('../../deploymentUtils')
 // Core
 const ERC20BaseModuleCommon = require('../../common/ERC20BaseModuleCommon')
-const BaseModuleCommon = require('../../common/BaseModuleCommon')
+const VersionModuleCommon = require('../../common/VersionModuleCommon')
 const ERC20MintModuleCommon = require('../../common/ERC20MintModuleCommon')
 const ERC20BurnModuleCommon = require('../../common/ERC20BurnModuleCommon')
 const EnforcementModuleCommon = require('../../common/EnforcementModuleCommon')
 const PauseModuleCommon = require('../../common/PauseModuleCommon')
 // options
 const ERC20CrossChainModuleCommon = require('../../common/ERC20CrossChainModuleCommon')
+const CCIPModuleCommon = require('../../common/CCIPModuleCommon')
 // Extensions
 const ERC20EnforcementModuleCommon = require('../../common/ERC20EnforcementModuleCommon')
 const DocumentModuleCommon = require('../../common/DocumentModule/DocumentModuleCommon')
@@ -76,7 +77,7 @@ describe('CMTAT ERC1363 - Standalone', function () {
       .withArgs(this.address1.address)
   })
   // Core
-  BaseModuleCommon()
+  VersionModuleCommon()
   PauseModuleCommon()
   ERC20BaseModuleCommon()
   ERC20BurnModuleCommon()
@@ -85,7 +86,7 @@ describe('CMTAT ERC1363 - Standalone', function () {
 
   // options
   ERC20CrossChainModuleCommon()
-
+  CCIPModuleCommon()
   // Extensions
   ERC20EnforcementModuleCommon()
   DocumentModuleCommon()

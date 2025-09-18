@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./deployment/CMTATUpgradeableUUPS.sol | a69da69219283da526c133a90af1c3c62dafdd2f |
+| ./deployment/CMTATUpgradeableUUPS.sol | aa87d4b3d5ec0649e09c8dfbad79df37b7085113 |
 
 
 ### Contracts Description Table

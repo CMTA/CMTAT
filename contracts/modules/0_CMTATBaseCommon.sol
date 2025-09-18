@@ -1,12 +1,14 @@
-//SPDX-License-Identifier: MPL-2.0
+// SPDX-License-Identifier: MPL-2.0
 
 pragma solidity ^0.8.20;
 
+/* ==== OpenZeppelin === */
+import { IERC165 } from "@openzeppelin/contracts/interfaces/IERC165.sol";
 /* ==== Wrapper === */
 // Security
-import {AccessControlModule, AccessControlUpgradeable} from "./wrapper/security/AccessControlModule.sol";
+import {AccessControlUpgradeable, AccessControlModule} from "./wrapper/security/AccessControlModule.sol";
 // Core
-import {BaseModule} from "./wrapper/core/BaseModule.sol";
+import {VersionModule} from "./wrapper/core/VersionModule.sol";
 import {ERC20BurnModule, ERC20BurnModuleInternal} from "./wrapper/core/ERC20BurnModule.sol";
 import {ERC20MintModule, ERC20MintModuleInternal} from "./wrapper/core/ERC20MintModule.sol";
 // Extensions
@@ -20,10 +22,11 @@ import {ERC20BaseModule, ERC20Upgradeable} from "./wrapper/core/ERC20BaseModule.
 import {ICMTATConstructor} from "../interfaces/technical/ICMTATConstructor.sol";
 import {ISnapshotEngine} from "../interfaces/engine/ISnapshotEngine.sol";
 import {IBurnMintERC20} from "../interfaces/technical/IMintBurnToken.sol";
+import {IERC5679} from "../interfaces/technical/IERC5679.sol";
 
 abstract contract CMTATBaseCommon is
     // Core
-    BaseModule,
+    VersionModule,
     ERC20MintModule,
     ERC20BurnModule,
     ERC20BaseModule,
@@ -34,7 +37,8 @@ abstract contract CMTATBaseCommon is
     ExtraInformationModule,
     AccessControlModule,
     // Interfaces
-    IBurnMintERC20
+    IBurnMintERC20,
+    IERC5679
 {  
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
@@ -87,6 +91,15 @@ abstract contract CMTATBaseCommon is
         return ERC20BaseModule.symbol();
     }
 
+    /**
+     * @inheritdoc AccessControlUpgradeable
+     * @dev 
+     * We can not use type(IERC5679).interfaceId instead of 0xd0017968
+     * because IERC5679 inherits from two interfaces (IERC5679Burn and Mint)
+     */
+    function supportsInterface(bytes4 interfaceId) public view virtual override(AccessControlUpgradeable, IERC165) returns (bool) {
+        return interfaceId == 0xd0017968 || AccessControlUpgradeable.supportsInterface(interfaceId);
+    }
 
     /* ============  State Functions ============ */
     function transfer(address to, uint256 value) public virtual override(ERC20Upgradeable) returns (bool) {
@@ -127,14 +140,6 @@ abstract contract CMTATBaseCommon is
     function burnAndMint(address from, address to, uint256 amountToBurn, uint256 amountToMint, bytes calldata data) public virtual override(IBurnMintERC20) {
         ERC20BurnModule.burn(from, amountToBurn, data);
         ERC20MintModule.mint(to, amountToMint, data);
-    }
-
-
-    function hasRole(
-        bytes32 role,
-        address account
-    ) public view virtual override(AccessControlUpgradeable, AccessControlModule) returns (bool) {
-        return AccessControlModule.hasRole(role, account);
     }
 
     /*//////////////////////////////////////////////////////////////
@@ -186,4 +191,20 @@ abstract contract CMTATBaseCommon is
         ERC20MintModuleInternal._minterTransferOverride(from, to, value);
     }
 
+    /* ==== Access Control Functions ==== */
+
+    function _authorizeERC20AttributeManagement() internal virtual override(ERC20BaseModule) onlyRole(DEFAULT_ADMIN_ROLE){}
+
+    function _authorizeMint() internal virtual override(ERC20MintModule) onlyRole(MINTER_ROLE){}
+
+    function _authorizeBurn() internal virtual override(ERC20BurnModule) onlyRole(BURNER_ROLE){}
+
+    function  _authorizeDocumentManagement() internal virtual override(DocumentEngineModule) onlyRole(DOCUMENT_ROLE){}
+
+    function  _authorizeExtraInfoManagement() internal virtual override(ExtraInformationModule) onlyRole(EXTRA_INFORMATION_ROLE){}
+
+    function _authorizeERC20Enforcer() internal virtual override(ERC20EnforcementModule) onlyRole(ERC20ENFORCER_ROLE){}
+    function _authorizeForcedTransfer() internal virtual override(ERC20EnforcementModule) onlyRole(DEFAULT_ADMIN_ROLE){}
+
+    function _authorizeSnapshots() internal virtual override(SnapshotEngineModule) onlyRole(SNAPSHOOTER_ROLE){}
 }

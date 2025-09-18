@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/wrapper/core/BaseModule.sol | d86a85c25e44ab6255bc2a066d27a0efb4f5a6bc |
+| ./modules/wrapper/options/CCIPModule.sol | dff8ee247784b7f20c0f4adc8b8ce34b2bc52041 |
 
 
 ### Contracts Description Table
@@ -15,8 +15,11 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **BaseModule** | Implementation | IERC3643Base |||
-| └ | version | Public ❗️ |   |NO❗️ |
+| **CCIPModule** | Implementation | IGetCCIPAdmin |||
+| └ | setCCIPAdmin | Public ❗️ | 🛑  | onlyCCIPSetAdmin |
+| └ | getCCIPAdmin | Public ❗️ |   |NO❗️ |
+| └ | _authorizeCCIPSetAdmin | Internal 🔒 | 🛑  | |
+| └ | _getCCIPModuleStorage | Internal 🔒 |   | |
 
 
 ### Legend

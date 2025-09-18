@@ -22,7 +22,7 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>8/8</span>
+        <span class='fraction'>9/9</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
@@ -32,12 +32,12 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>6/6</span>
+        <span class='fraction'>7/7</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>14/14</span>
+        <span class='fraction'>16/16</span>
       </div>
     </div>
   </div>
@@ -146,7 +146,11 @@
 101
 102
 103
-104</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+104
+105
+106
+107
+108</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -177,6 +181,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">24×</span>
+<span class="cline-any cline-yes">16×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -238,6 +244,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">6×</span>
 <span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -249,12 +257,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">//SPDX-License-Identifier: MPL-2.0
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// SPDX-License-Identifier: MPL-2.0
 &nbsp;
 pragma solidity ^0.8.20;
-&nbsp;
-/* ==== OpenZeppelin === */
-import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 &nbsp;
 /* ==== Engine === */
 import {IDebtEngine, ICMTATDebt, ICMTATCreditEvents} from "../../../interfaces/engine/IDebtEngine.sol";
@@ -266,8 +271,7 @@ import {IDebtModule} from "../../../interfaces/modules/IDebtModule.sol";
  *
  * Set Debt and Credit Events info
  */
-abstract contract DebtModule is AccessControlUpgradeable, IDebtModule {
-   
+abstract contract DebtModule is IDebtModule {
     /* ============ State Variables ============ */
     bytes32 public constant DEBT_ROLE = keccak256("DEBT_ROLE");
     /* ============ ERC-7201 ============ */
@@ -282,6 +286,12 @@ abstract contract DebtModule is AccessControlUpgradeable, IDebtModule {
         IDebtEngine _debtEngine;
     }
 &nbsp;
+    /* ============ Modifier ============ */
+    modifier onlyDebtManager {
+        _authorizeDebtManagement();
+        _;
+    }
+&nbsp;
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/  
@@ -294,7 +304,7 @@ abstract contract DebtModule is AccessControlUpgradeable, IDebtModule {
     */
     function setCreditEvents(
        CreditEvents calldata creditEvents_
-    ) public onlyRole(DEBT_ROLE) {
+    ) public onlyDebtManager {
         DebtModuleStorage storage $ = _getDebtModuleStorage();
         $._creditEvents = creditEvents_;
         emit CreditEventsLogEvent();
@@ -307,7 +317,7 @@ abstract contract DebtModule is AccessControlUpgradeable, IDebtModule {
     */
     function setDebt(
           ICMTATDebt.DebtInformation calldata debt_
-    ) public virtual override(IDebtModule) onlyRole(DEBT_ROLE) {
+    ) public virtual override(IDebtModule) onlyDebtManager {
         DebtModuleStorage storage $ = _getDebtModuleStorage();
         $._debt = debt_;
         emit DebtLogEvent();
@@ -320,7 +330,7 @@ abstract contract DebtModule is AccessControlUpgradeable, IDebtModule {
     */
     function setDebtInstrument(
           ICMTATDebt.DebtInstrument calldata debtInstrument_
-    ) public virtual override(IDebtModule) onlyRole(DEBT_ROLE) {
+    ) public virtual override(IDebtModule) onlyDebtManager {
         DebtModuleStorage storage $ = _getDebtModuleStorage();
         $._debt.debtInstrument = debtInstrument_;
         emit DebtInstrumentLogEvent();
@@ -346,6 +356,8 @@ abstract contract DebtModule is AccessControlUpgradeable, IDebtModule {
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
+    /* ==== Access Control ==== */
+    function _authorizeDebtManagement() internal virtual;
     /* ============ ERC-7201 ============ */
     function _getDebtModuleStorage() internal pure returns (DebtModuleStorage storage $) {
         assembly {
@@ -358,7 +370,7 @@ abstract contract DebtModule is AccessControlUpgradeable, IDebtModule {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu Jul 31 2025 17:18:35 GMT+0200 (Central European Summer Time)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Sep 17 2025 15:32:35 GMT+0200 (Central European Summer Time)
 </div>
 </div>
 <script src="../../../prettify.js"></script>

@@ -5,7 +5,7 @@ const {
   loadFixture
 } = require('../../deploymentUtils')
 // Core
-const BaseModuleCommon = require('../../common/BaseModuleCommon')
+const VersionModuleCommon = require('../../common/VersionModuleCommon')
 const PauseModuleCommon = require('../../common/PauseModuleCommon')
 const ERC20BaseModuleCommon = require('../../common/ERC20BaseModuleCommon')
 const ERC20MintModuleCommon = require('../../common/ERC20MintModuleCommon')
@@ -17,6 +17,7 @@ const DocumentModuleCommon = require('../../common/DocumentModule/DocumentModule
 const ExtraInfoModuleCommon = require('../../common/ExtraInfoModuleCommon')
 // options
 const ERC20CrossChainModuleCommon = require('../../common/ERC20CrossChainModuleCommon')
+const CCIPModuleCommon = require('../../common/CCIPModuleCommon')
 // Snapshot
 const SnapshotModuleCommonRescheduling = require('../../common/SnapshotModuleCommon/SnapshotModuleCommonRescheduling')
 const SnapshotModuleCommonScheduling = require('../../common/SnapshotModuleCommon/SnapshotModuleCommonScheduling')
@@ -48,12 +49,14 @@ describe('CMTAT - ERC1363 Proxy Deployment', function () {
     //  type(IAccessControl).interfaceId
     const IERC165Interface = '0x01ffc9a7'
     const IERC721Interface = '0x80ac58cd'
+    const IERC5679 = '0xd0017968'
     // Assert
     expect(await this.cmtat.supportsInterface(erc1363Interface)).to.equal(true)
     expect(await this.cmtat.supportsInterface(IERC165Interface)).to.equal(true)
     expect(await this.cmtat.supportsInterface(IERC721Interface)).to.equal(
       false
     )
+    expect(await this.cmtat.supportsInterface(IERC5679)).to.equal(true)
   })
   it('testCanSendTokenToReceiverContract', async function () {
     // Arrange
@@ -82,7 +85,7 @@ describe('CMTAT - ERC1363 Proxy Deployment', function () {
       .withArgs(this.address1.address)
   })
   // Core
-  BaseModuleCommon()
+  VersionModuleCommon()
   ERC20BaseModuleCommon()
   ERC20BurnModuleCommon()
   ERC20MintModuleCommon()
@@ -96,6 +99,7 @@ describe('CMTAT - ERC1363 Proxy Deployment', function () {
 
   // options
   ERC20CrossChainModuleCommon()
+  CCIPModuleCommon()
 
   // Snapshot
   SnapshotModuleMultiplePlannedTest()

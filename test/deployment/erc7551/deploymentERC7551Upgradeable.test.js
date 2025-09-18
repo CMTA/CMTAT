@@ -5,7 +5,7 @@ const {
   loadFixture
 } = require('../../deploymentUtils')
 // Core
-const BaseModuleCommon = require('../../common/BaseModuleCommon')
+const VersionModuleCommon = require('../../common/VersionModuleCommon')
 const PauseModuleCommon = require('../../common/PauseModuleCommon')
 const ERC20BaseModuleCommon = require('../../common/ERC20BaseModuleCommon')
 const ERC20MintModuleCommon = require('../../common/ERC20MintModuleCommon')
@@ -18,6 +18,7 @@ const ExtraInfoModuleCommon = require('../../common/ExtraInfoModuleCommon')
 // options
 const ERC20CrossChainModuleCommon = require('../../common/ERC20CrossChainModuleCommon')
 const ERC7551ModuleCommon = require('../../common/ERC7551ModuleCommon')
+const CCIPModuleCommon = require('../../common/CCIPModuleCommon')
 // Snapshot
 const SnapshotModuleCommonRescheduling = require('../../common/SnapshotModuleCommon/SnapshotModuleCommonRescheduling')
 const SnapshotModuleCommonScheduling = require('../../common/SnapshotModuleCommon/SnapshotModuleCommonScheduling')
@@ -40,7 +41,7 @@ describe('CMTAT - ERC-7551 Proxy Deployment', function () {
     // this.dontCheckTimestamp = true
   })
   // Core
-  BaseModuleCommon()
+  VersionModuleCommon()
   ERC20BaseModuleCommon()
   ERC20BurnModuleCommon()
   ERC20MintModuleCommon()
@@ -55,6 +56,7 @@ describe('CMTAT - ERC-7551 Proxy Deployment', function () {
   // options
   ERC20CrossChainModuleCommon()
   ERC7551ModuleCommon()
+  CCIPModuleCommon()
 
   // Snapshot
   SnapshotModuleMultiplePlannedTest()

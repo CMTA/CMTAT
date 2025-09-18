@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/wrapper/core/EnforcementModule.sol | [object Promise] |
+| ./modules/wrapper/core/EnforcementModule.sol | ffea175fbf940073568bf4414dceefcd5bdefed8 |
 
 
 ### Contracts Description Table
@@ -15,12 +15,13 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **EnforcementModule** | Implementation | EnforcementModuleInternal, AccessControlUpgradeable, IERC3643Enforcement, IERC3643EnforcementEvent |||
-| └ | setAddressFrozen | Public ❗️ | 🛑  | onlyRole |
-| └ | setAddressFrozen | Public ❗️ | 🛑  | onlyRole |
-| └ | batchSetAddressFrozen | Public ❗️ | 🛑  | onlyRole |
+| **EnforcementModule** | Implementation | EnforcementModuleInternal, IERC3643Enforcement, IERC3643EnforcementEvent |||
+| └ | setAddressFrozen | Public ❗️ | 🛑  | onlyEnforcer |
+| └ | setAddressFrozen | Public ❗️ | 🛑  | onlyEnforcer |
+| └ | batchSetAddressFrozen | Public ❗️ | 🛑  | onlyEnforcer |
 | └ | isFrozen | Public ❗️ |   |NO❗️ |
 | └ | _addAddressToTheList | Internal 🔒 | 🛑  | |
+| └ | _authorizeFreeze | Internal 🔒 | 🛑  | |
 
 
 ### Legend

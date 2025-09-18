@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/wrapper/core/BaseModule.sol | [object Promise] |
+| ./interfaces/technical/IGetCCIPAdmin.sol | 66fff87525b2444cca537bd1c141ae63110d9835 |
 
 
 ### Contracts Description Table
@@ -15,8 +15,8 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **BaseModule** | Implementation | IERC3643Base |||
-| └ | version | Public ❗️ |   |NO❗️ |
+| **IGetCCIPAdmin** | Interface |  |||
+| └ | getCCIPAdmin | External ❗️ |   |NO❗️ |
 
 
 ### Legend

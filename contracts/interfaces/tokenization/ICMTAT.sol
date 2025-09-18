@@ -61,7 +61,7 @@ interface ICMTATBase {
      /*
      * @dev A reference to (e.g. in the form of an Internet address) or a hash of the tokenization terms
      */ 
-     struct Terms {
+     struct CMTATTerms {
  	    string name;
  	    IERC1643.Document doc;
     }
@@ -77,7 +77,7 @@ interface ICMTATBase {
      * @notice Emitted when new tokenization terms are set.
      * @param newTerm The new Terms structure containing name and document reference.
      */
-    event Term(Terms newTerm);
+    event Terms(CMTATTerms newTerm);
 
     /**
      * @notice Emitted when the token ID is set or updated.
@@ -95,7 +95,7 @@ interface ICMTATBase {
     /*
     * @notice returns tokenization terms
     */
-    function terms() external view returns (Terms memory terms_);
+    function terms() external view returns (CMTATTerms memory terms_);
 
     /*
     * @notice returns information field

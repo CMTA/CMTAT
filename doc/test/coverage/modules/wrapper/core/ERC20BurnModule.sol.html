@@ -22,7 +22,7 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>8/8</span>
+        <span class='fraction'>9/9</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">75% </span>
@@ -32,12 +32,12 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>5/5</span>
+        <span class='fraction'>6/6</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>8/8</span>
+        <span class='fraction'>10/10</span>
       </div>
     </div>
   </div>
@@ -138,7 +138,16 @@
 93
 94
 95
-96</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -159,6 +168,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">438×</span>
+<span class="cline-any cline-yes">382×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -188,7 +203,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">58×</span>
+<span class="cline-any cline-yes">60×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -216,8 +231,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">45×</span>
 <span class="cline-any cline-yes">43×</span>
-<span class="cline-any cline-yes">42×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -229,32 +244,41 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">223×</span>
-<span class="cline-any cline-yes">166×</span>
+<span class="cline-any cline-yes">225×</span>
+<span class="cline-any cline-yes">167×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">//SPDX-License-Identifier: MPL-2.0
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// SPDX-License-Identifier: MPL-2.0
 &nbsp;
 pragma solidity ^0.8.20;
 &nbsp;
-/* ==== OpenZeppelin === */
-import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 /* ==== Module === */
 import {ERC20BurnModuleInternal} from "../../internal/ERC20BurnModuleInternal.sol";
 /* ==== Technical === */
 import {IBurnBatchERC20} from "../../../interfaces/technical/IMintBurnToken.sol";
 /* ==== Tokenization === */
 import {IERC3643Burn} from "../../../interfaces/tokenization/IERC3643Partial.sol";
-import {IERC7551Burn} from "../../../interfaces/tokenization/draft-IERC7551.sol";
+import {IERC7551Burn, IERC5679Burn} from "../../../interfaces/tokenization/draft-IERC7551.sol";
 /**
  * @title ERC20Burn module.
  * @dev 
  *
  * Contains all burn functions, inherits from ERC-20
  */
-abstract contract ERC20BurnModule is  ERC20BurnModuleInternal, AccessControlUpgradeable, IBurnBatchERC20, IERC3643Burn, IERC7551Burn {
+abstract contract ERC20BurnModule is ERC20BurnModuleInternal, IBurnBatchERC20, IERC3643Burn, IERC7551Burn {
     /* ============ State Variables ============ */
     bytes32 public constant BURNER_ROLE = keccak256("BURNER_ROLE");
+&nbsp;
+&nbsp;
+    /* ============ Modifier ============ */
+    /// @dev Modifier to restrict access to the burner functions
+    modifier onlyBurner() {
+        _authorizeBurn();
+        _;
+    }
 &nbsp;
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
@@ -270,7 +294,7 @@ abstract contract ERC20BurnModule is  ERC20BurnModuleInternal, AccessControlUpgr
         address account,
         uint256 value,
         bytes calldata data
-    ) public virtual override(IERC7551Burn) onlyRole(BURNER_ROLE) {
+    ) public virtual override(IERC5679Burn) onlyBurner{
         _burn(account, value, data);
     }
 &nbsp;
@@ -282,7 +306,7 @@ abstract contract ERC20BurnModule is  ERC20BurnModuleInternal, AccessControlUpgr
     function burn(
         address account,
         uint256 value
-    ) public virtual override(IERC3643Burn) <span class="missing-if-branch" title="else path not taken" >E</span>onlyRole(BURNER_ROLE) {
+    ) public virtual override(IERC3643Burn) <span class="missing-if-branch" title="else path not taken" >E</span>onlyBurner  {
        _burn(account, value,"");
     }
 &nbsp;
@@ -296,7 +320,7 @@ abstract contract ERC20BurnModule is  ERC20BurnModuleInternal, AccessControlUpgr
         address[] calldata accounts,
         uint256[] calldata values,
         bytes memory data
-    ) public virtual override(IBurnBatchERC20) onlyRole(BURNER_ROLE) {
+    ) public virtual override(IBurnBatchERC20) onlyBurner  {
         _batchBurn(accounts, values);
         emit BatchBurn(_msgSender(),accounts, values, data );
     }
@@ -310,7 +334,7 @@ abstract contract ERC20BurnModule is  ERC20BurnModuleInternal, AccessControlUpgr
     function batchBurn(
         address[] calldata accounts,
         uint256[] calldata values
-    ) public virtual override (IERC3643Burn) <span class="missing-if-branch" title="else path not taken" >E</span>onlyRole(BURNER_ROLE) {
+    ) public virtual override (IERC3643Burn) <span class="missing-if-branch" title="else path not taken" >E</span>onlyBurner {
         _batchBurn(accounts, values);
         emit BatchBurn(_msgSender(),accounts, values, "" );
     }
@@ -327,6 +351,9 @@ abstract contract ERC20BurnModule is  ERC20BurnModuleInternal, AccessControlUpgr
         _burnOverride(account, value);
         emit Burn(_msgSender(), account, value, data);
     }
+&nbsp;
+    /* ============ Access Control ============ */
+    function _authorizeBurn() internal virtual;
 }
 &nbsp;</pre></td></tr>
 </table></pre>
@@ -334,7 +361,7 @@ abstract contract ERC20BurnModule is  ERC20BurnModuleInternal, AccessControlUpgr
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu Jul 31 2025 17:18:35 GMT+0200 (Central European Summer Time)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Sep 17 2025 15:32:35 GMT+0200 (Central European Summer Time)
 </div>
 </div>
 <script src="../../../prettify.js"></script>

@@ -10,7 +10,7 @@ const { ZERO_ADDRESS } = require('../utils')
 // Core
 const PauseModuleCommon = require('../common/PauseModuleCommon')
 const EnforcementModuleCommon = require('../common/EnforcementModuleCommon')
-const BaseModuleCommon = require('../common/BaseModuleCommon')
+const VersionModuleCommon = require('../common/VersionModuleCommon')
 // Extensions
 const DocumentModuleCommon = require('../common/DocumentModule/DocumentModuleCommon')
 const ExtraInfoModuleCommon = require('../common/ExtraInfoModuleCommon')
@@ -121,7 +121,7 @@ describe('ERC721MockUpgradeable', function () {
   })
   // Core
   EnforcementModuleCommon()
-  BaseModuleCommon()
+  VersionModuleCommon()
   PauseModuleCommon()
   // Extensions
   DocumentModuleCommon()

@@ -22,7 +22,7 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>9/9</span>
+        <span class='fraction'>10/10</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">62.5% </span>
@@ -32,12 +32,12 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>5/5</span>
+        <span class='fraction'>6/6</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>11/11</span>
+        <span class='fraction'>13/13</span>
       </div>
     </div>
   </div>
@@ -125,7 +125,18 @@
 80
 81
 82
-83</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -148,6 +159,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">364×</span>
+<span class="cline-any cline-yes">364×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -155,7 +168,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2484×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2552×</span>
 <span class="cline-any cline-yes">138×</span>
 <span class="cline-any cline-yes">138×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -175,9 +192,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">363×</span>
-<span class="cline-any cline-yes">363×</span>
-<span class="cline-any cline-yes">363×</span>
+<span class="cline-any cline-yes">364×</span>
+<span class="cline-any cline-yes">364×</span>
+<span class="cline-any cline-yes">364×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -187,8 +204,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4109×</span>
-<span class="cline-any cline-yes">4109×</span>
+<span class="cline-any cline-yes">4182×</span>
+<span class="cline-any cline-yes">4182×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -196,27 +213,32 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">501×</span>
-<span class="cline-any cline-yes">501×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">502×</span>
+<span class="cline-any cline-yes">502×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4610×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4684×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">//SPDX-License-Identifier: MPL-2.0
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// SPDX-License-Identifier: MPL-2.0
 &nbsp;
 pragma solidity ^0.8.20;
 &nbsp;
 /* ==== OpenZeppelin === */
-import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
+import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 /* ==== Engine === */
 import {ISnapshotEngine, ISnapshotEngineModule} from "../../../interfaces/modules/ISnapshotEngineModule.sol";
 &nbsp;
-abstract contract SnapshotEngineModule is AccessControlUpgradeable, ISnapshotEngineModule {
+abstract contract SnapshotEngineModule is Initializable, ISnapshotEngineModule {
     /* ============ State Variables ============ */
     bytes32 public constant SNAPSHOOTER_ROLE = keccak256("SNAPSHOOTER_ROLE");
 &nbsp;
@@ -226,6 +248,12 @@ abstract contract SnapshotEngineModule is AccessControlUpgradeable, ISnapshotEng
     /* ==== ERC-7201 State Variables === */
     struct SnapshotEngineModuleStorage {
         ISnapshotEngine _snapshotEngine;
+    }
+&nbsp;
+    /* ============ Modifier ============ */
+    modifier onlySnapshooter() {
+        _authorizeSnapshots();
+        _;
     }
     /* ============  Initializer Function ============ */
     /**
@@ -256,7 +284,7 @@ abstract contract SnapshotEngineModule is AccessControlUpgradeable, ISnapshotEng
     */
     function setSnapshotEngine(
         ISnapshotEngine snapshotEngine_
-    ) public virtual override(ISnapshotEngineModule) <span class="missing-if-branch" title="else path not taken" >E</span>onlyRole(SNAPSHOOTER_ROLE) {
+    ) public virtual override(ISnapshotEngineModule) <span class="missing-if-branch" title="else path not taken" >E</span>onlySnapshooter  {
         SnapshotEngineModuleStorage storage $ = _getSnapshotEngineModuleStorage();
         <span class="missing-if-branch" title="else path not taken" >E</span>require($._snapshotEngine != snapshotEngine_, CMTAT_SnapshotModule_SameValue());
         _setSnapshotEngine($, snapshotEngine_);
@@ -275,6 +303,7 @@ abstract contract SnapshotEngineModule is AccessControlUpgradeable, ISnapshotEng
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
+&nbsp;
     function _setSnapshotEngine(
         SnapshotEngineModuleStorage storage $, ISnapshotEngine snapshotEngine_
     ) internal virtual {
@@ -282,12 +311,16 @@ abstract contract SnapshotEngineModule is AccessControlUpgradeable, ISnapshotEng
         emit SnapshotEngine(snapshotEngine_);
     }
 &nbsp;
+    /* ============ Access Control ============ */
+    function _authorizeSnapshots() internal virtual;
     /* ============ ERC-7201 ============ */
     function _getSnapshotEngineModuleStorage() private pure returns (SnapshotEngineModuleStorage storage $) {
         assembly {
             $.slot := SnapshotEngineModuleStorageLocation
         }
     }
+&nbsp;
+&nbsp;
 }
 &nbsp;</pre></td></tr>
 </table></pre>
@@ -295,7 +328,7 @@ abstract contract SnapshotEngineModule is AccessControlUpgradeable, ISnapshotEng
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu Jul 31 2025 17:18:35 GMT+0200 (Central European Summer Time)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Sep 17 2025 15:32:35 GMT+0200 (Central European Summer Time)
 </div>
 </div>
 <script src="../../../prettify.js"></script>

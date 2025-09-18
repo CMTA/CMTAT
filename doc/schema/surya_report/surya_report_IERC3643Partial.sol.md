@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./interfaces/tokenization/IERC3643Partial.sol | f03dd16b818a1efd8eae191e34a61bbf336d5398 |
+| ./interfaces/tokenization/IERC3643Partial.sol | cad222219188b48144152564db91169439a0b1cc |
 
 
 ### Contracts Description Table
@@ -27,7 +27,7 @@
 | **IERC3643BatchTransfer** | Interface |  |||
 | └ | batchTransfer | External ❗️ | 🛑  |NO❗️ |
 ||||||
-| **IERC3643Base** | Interface |  |||
+| **IERC3643Version** | Interface |  |||
 | └ | version | External ❗️ |   |NO❗️ |
 ||||||
 | **IERC3643EnforcementEvent** | Interface |  |||
