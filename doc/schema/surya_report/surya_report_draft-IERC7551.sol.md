@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./interfaces/tokenization/draft-IERC7551.sol | b227d270d5ac363a15036acbc50135e7646b5b2e |
+| ./interfaces/tokenization/draft-IERC7551.sol | 34c49f0fdd82cbe581fd098e6d674406623d3f8d |
 
 
 ### Contracts Description Table
@@ -15,11 +15,9 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **IERC7551Mint** | Interface |  |||
-| └ | mint | External ❗️ | 🛑  |NO❗️ |
+| **IERC7551Mint** | Interface | IERC5679Mint |||
 ||||||
-| **IERC7551Burn** | Interface |  |||
-| └ | burn | External ❗️ | 🛑  |NO❗️ |
+| **IERC7551Burn** | Interface | IERC5679Burn |||
 ||||||
 | **IERC7551Pause** | Interface |  |||
 | └ | paused | External ❗️ |   |NO❗️ |

@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/5_CMTATBaseERC7551.sol | [object Promise] |
+| ./modules/5_CMTATBaseERC7551.sol | 6fb7d71399fbf4f0135697c09f928ee646074e05 |
 
 
 ### Contracts Description Table
@@ -16,11 +16,7 @@
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
 | **CMTATBaseERC7551** | Implementation | CMTATBaseERC2771, ERC7551Module |||
-| └ | hasRole | Public ❗️ |   |NO❗️ |
-| └ | supportsInterface | Public ❗️ |   |NO❗️ |
-| └ | _msgSender | Internal 🔒 |   | |
-| └ | _contextSuffixLength | Internal 🔒 |   | |
-| └ | _msgData | Internal 🔒 |   | |
+| └ | _authorizeExtraInfoManagement | Internal 🔒 | 🛑  | |
 
 
 ### Legend

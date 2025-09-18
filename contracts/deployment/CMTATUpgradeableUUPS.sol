@@ -1,4 +1,4 @@
-//SPDX-License-Identifier: MPL-2.0
+// SPDX-License-Identifier: MPL-2.0
 
 pragma solidity ^0.8.20;
 import {UUPSUpgradeable} from "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
@@ -37,7 +37,7 @@ contract CMTATUpgradeableUUPS is CMTATBaseERC2771, UUPSUpgradeable  {
      * @param extraInformationAttributes_ tokenId, terms, information
      * @param engines_ external contract
      */
-    function initialize(  address admin,
+    function initialize(address admin,
         ICMTATConstructor.ERC20Attributes memory ERC20Attributes_,
         ICMTATConstructor.ExtraInformationAttributes memory extraInformationAttributes_,
         ICMTATConstructor.Engine memory engines_ ) public override initializer {
@@ -51,5 +51,5 @@ contract CMTATUpgradeableUUPS is CMTATBaseERC2771, UUPSUpgradeable  {
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
-    function _authorizeUpgrade(address) internal override onlyRole(PROXY_UPGRADE_ROLE) {}
+    function _authorizeUpgrade(address newImplementation) internal virtual override(UUPSUpgradeable) onlyRole(PROXY_UPGRADE_ROLE) {}
 }

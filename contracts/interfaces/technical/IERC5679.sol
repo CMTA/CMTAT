@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: MPL-2.0
 pragma solidity ^0.8.20;
 
 import { IERC165 } from "@openzeppelin/contracts/interfaces/IERC165.sol";
@@ -38,7 +38,7 @@ interface IERC5679Burn {
 }
 
 // The EIP-165 identifier of this interface is 0xd0017968
-interface IERC5679 is IERC5679Mint, IERC5679Burn{} 
+interface IERC5679 is IERC5679Mint, IERC5679Burn, IERC165{} 
 
 
 

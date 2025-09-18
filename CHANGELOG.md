@@ -43,6 +43,8 @@ Reference: [keepachangelog.com/en/1.1.0/](https://keepachangelog.com/en/1.1.0/)
 
 ## 3.1.0
 
+This version is not audited
+
 **Added**
 
 - New module `CCIPModule` with two functions `getCCIPAdmin` and `setCCIPAdmin` 
@@ -50,7 +52,10 @@ Reference: [keepachangelog.com/en/1.1.0/](https://keepachangelog.com/en/1.1.0/)
 - Add explicit support of [ERC-5679](https://eips.ethereum.org/EIPS/eip-5679) for minting and burning
   - Reason: this ERC was already supported in v3.0.0 but not through a dedicated interface and ERC-165 identifier.
   - Details: `IERC7551Burn` and `IERC7551Mint` will inherits from respectively the burn and mint part of ERC-5679.
-- In `ERC7551Module`, the function `setTerms` emits the `Terms` event to follow the draft ERC [ERC-7551](https://ethereum-magicians.org/t/erc-7551-crypto-security-token-smart-contract-interface-ewpg-reworked/25477).
+- In `ERC7551Module`, the function `setTerms` emits the `Terms` event
+  - Reason: meet the specification of the draft ERC [ERC-7551](https://ethereum-magicians.org/t/erc-7551-crypto-security-token-smart-contract-interface-ewpg-reworked/25477).
+- Create specific module `ERC20CrossChain` for cross-chain transfers (ERC-7802 and other burn/mint related function), code previously put in `CMTATBaseCrossChain`.
+
 
 **Changed**
 
@@ -61,11 +66,18 @@ Reference: [keepachangelog.com/en/1.1.0/](https://keepachangelog.com/en/1.1.0/)
 - Access control: in wrapper modules, all access control is made through internal functions. These functions must be now implemented in CMTAT base module
 
   - Reason: this allows to use a different access control (e.g. [ownership](https://docs.openzeppelin.com/contracts/5.x/) or [Access Manager](https://docs.openzeppelin.com/contracts/5.x/api/access#AccessManager)) by implementing a new CMTAT Base module without the need of modifying wrapper modules.
+- Move cross-chain functionalities (ERC-7802) from `CMTATBaseCrossChain` to a new module `ERC20CrossChain`.
+
+**Documentation** (README)
+
+- Reference the new draft version of [ERC-7551](https://ethereum-magicians.org/t/erc-7551-crypto-security-token-smart-contract-interface-ewpg-reworked/25477)
+- Reference [ERC-5679](https://eips.ethereum.org/EIPS/eip-5679) as supported ERC by CMTAT
+- Add section to explain cross-chain bridge support ([Chainlink CCIP](https://docs.chain.link/ccip/concepts/cross-chain-token/evm) and [ERC-7802](https://eips.ethereum.org/EIPS/eip-7802) mainly)
 
 
-## 3.0.0
+## 3.0.0 - 2025-08-28
 
-- Major release
+- Major release audited by [Halborn](https://www.halborn.com)
 - Improved comments and documentation
 
 See changelogs of the rc versions for details.
@@ -93,7 +105,7 @@ Main changes with the last audited release (v2.3.0):
 - Update Solidity (0.8.30) & OpenZeppelin version (v.5.4.0)
 - Update several function names to be compatible with [ERC-3643](https://eips.ethereum.org/EIPS/eip-3643)
 
-## 3.0.0-rc.7
+## 3.0.0-rc.7 - 2025-08-04
 
 - Add missing compliance check (pause, address freeze and RuleEngine) for `batchTransfer` 
   - Create a virtual function `_minterTransferOverride` in ERC20MintModule.
@@ -101,25 +113,25 @@ Main changes with the last audited release (v2.3.0):
 - Add the same check for `batchMint/batchBurn`for CMTAT core (light) version
 - Add several tests to check these modification
 
-## 3.0.0-rc.6
+## 3.0.0-rc.6 - 2025-07-31
 
 - Perform recommendations from the audit report (Halborn)
   - Main change: add a new ERC-1404 code if the contract is deactivated
 
-## 3.0.0-rc.5
+## 3.0.0-rc.5 - 2025-06-27
 
 - Add & improve Solidity Natspec comment
   - Few improvement as a result (e.g rename return variables)
 - Improve & update documentation
 
-## 3.0.0-rc.4
+## 3.0.0-rc.4 - 2025-06-24
 
 - Fix typo for IERC3643IComplianceContract
   -- IERC3743IComplianceContract -> IERC3643IComplianceContract
 - CMTATBaseERC20CrossChain:
   Put events before internal functions calls `mintOverride`and `burnOverride`(avoid reentrancy-event)
 
-## 3.0.0-rc.3
+## 3.0.0-rc.3 - 2025-06-24
 
 - ERC-7551
   - Create specific option module ERC-7551
@@ -137,7 +149,7 @@ Main changes with the last audited release (v2.3.0):
     - Implement function `detectTransferRestrictionFrom`in ValidationModuleERC1404
 - Upgrade solidity version in Hardhat config file from 0.8.28 to 0.8.30
 
-## 3.0.0-rc.2
+## 3.0.0-rc.2 - 2025-06-04
 
 - Deployment version
   - Add CMTAT Allowlist (Whitelist) version
@@ -149,12 +161,12 @@ Main changes with the last audited release (v2.3.0):
 - Add a parameter `burner`and `minter`in the events Mint & Burn (ERC20MintModule / ERC20BurnModule)
 - Improve documentation & tests
 
-## 3.0.0-rc.1
+## 3.0.0-rc.1 - 2025-05-15
 
 - Move `MetaTx` module to the option folder
 - Improve documentation
 
-## 3.0.0-rc.0
+## 3.0.0-rc.0 - 2025-05-13
 
 The main goal of this version since the last version 2.3.0 is:
 

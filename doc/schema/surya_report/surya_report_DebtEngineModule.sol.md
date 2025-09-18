@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/wrapper/options/DebtEngineModule.sol | 697a3f9726ea0e83225a5f213abf47b0ea16b753 |
+| ./modules/wrapper/options/DebtEngineModule.sol | 72f42ab1a1c2cb14d8073aa0b126aabb6c8989da |
 
 
 ### Contracts Description Table
@@ -16,7 +16,7 @@
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
 | **DebtEngineModule** | Implementation | DebtModule |||
-| └ | setDebtEngine | Public ❗️ | 🛑  | onlyRole |
+| └ | setDebtEngine | Public ❗️ | 🛑  | onlyDebtManager |
 | └ | creditEvents | Public ❗️ |   |NO❗️ |
 | └ | debt | Public ❗️ |   |NO❗️ |
 | └ | debtEngine | Public ❗️ |   |NO❗️ |

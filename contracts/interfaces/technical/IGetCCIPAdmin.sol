@@ -1,10 +1,12 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.20;
 
 interface IGetCCIPAdmin {
   event CCIPAdminTransferred(address indexed previousAdmin, address indexed newAdmin);
   
-  /// @notice Returns the admin of the token.
-  /// @dev This method is named to never conflict with existing methods.
+  /**
+  * @notice Returns the admin of the token.
+  * @dev This method is named to never conflict with existing methods.
+  */
   function getCCIPAdmin() external view returns (address);
 }

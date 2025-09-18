@@ -48,10 +48,17 @@ This module defines an interface for managing **token freezing** and **forced tr
 
 #### Functions
 
-##### `getFrozenTokens(address)`
+##### `getFrozenTokens(address) -> (uint256)`
 
 ```solidity
 function getFrozenTokens(address account) external view returns (uint256 frozenBalance_)
+```
+
+```solidity
+function getFrozenTokens(address account) 
+public override(IERC7551ERC20Enforcement, IERC3643ERC20Enforcement) 
+view virtual 
+returns (uint256)
 ```
 
 Returns the number of tokens that are currently frozen (i.e., non-transferable) for a given account.
@@ -78,6 +85,12 @@ Returns the number of tokens that are currently frozen (i.e., non-transferable) 
 
 ```solidity
 function freezePartialTokens(address account, uint256 value) external
+```
+
+```solidity
+function freezePartialTokens(address account, uint256 value) 
+public virtual override(IERC3643ERC20Enforcement) 
+onlyERC20Enforcer
 ```
 
 Freezes a specific amount of tokens for a given address, making them non-transferable.
@@ -108,7 +121,7 @@ function unfreezePartialTokens(address account, uint256 value) external
 ```solidity
 function unfreezePartialTokens(address account, uint256 value) 
 public virtual override(IERC3643ERC20Enforcement) 
-onlyRole(ERC20ENFORCER_ROLE)
+onlyERC20Enforcer
 ```
 
 Unfreezes a specific amount of tokens for a given address, making them transferable again.
@@ -139,8 +152,8 @@ function forcedTransfer(address from, address to, uint256 value) external return
 ```solidity
 function forcedTransfer(address from, address to, uint256 value) 
 public virtual override(IERC3643ERC20Enforcement) 
-onlyRole(DEFAULT_ADMIN_ROLE) 
-returns (bool success_) 
+onlyForcedTransferManager 
+returns (bool)
 ```
 
 Triggers a forced token transfer from one account to another, even if the source account has insufficient free (unfrozen) tokens. 
@@ -203,7 +216,13 @@ If needed, frozen tokens are automatically unfrozen to fulfill the transfer.
 ##### `getActiveBalanceOf(address)`
 
 ```solidity
-function getActiveBalanceOf(address account) public view returns (uint256)
+function getActiveBalanceOf(address account) external view returns (uint256)
+```
+
+```solidity
+function getActiveBalanceOf(address account) 
+public view override(IERC7551ERC20Enforcement) 
+returns (uint256 activeBalance_)
 ```
 
 Returns the number of tokens that are currently **active (i.e., not frozen)** for the specified account. These tokens are available for standard ERC-20 transfers.
@@ -255,7 +274,13 @@ Returns the number of tokens that are **currently frozen** and cannot be transfe
 ##### `freezePartialTokens(address,uint256,bytes)`
 
 ```solidity
-function freezePartialTokens(address account, uint256 amount, bytes memory data) public
+function freezePartialTokens(address account, uint256 amount, bytes memory data) external
+```
+
+```solidity
+function freezePartialTokens(address account, uint256 value, bytes calldata data) 
+public virtual override(IERC7551ERC20Enforcement) 
+onlyERC20Enforcer
 ```
 
 Freezes a portion of the tokens held by a specific address.
@@ -277,7 +302,13 @@ Freezes a portion of the tokens held by a specific address.
 ##### `unfreezePartialTokens(address,uint256,bytes)`
 
 ```solidity
-function unfreezePartialTokens(address account, uint256 amount, bytes memory data) public
+function unfreezePartialTokens(address account, uint256 amount, bytes memory data) external
+```
+
+```solidity
+function unfreezePartialTokens(address account, uint256 value, bytes calldata data) 
+public virtual override(IERC7551ERC20Enforcement) 
+onlyERC20Enforcer
 ```
 
 Unfreezes a portion of the tokens previously frozen for a specific account.
@@ -299,7 +330,14 @@ Unfreezes a portion of the tokens previously frozen for a specific account.
 ##### `forcedTransfer(address,address,uint256,bytes)`
 
 ```solidity
-function forcedTransfer(address account, address to, uint256 value, bytes calldata data) public returns (bool)
+function forcedTransfer(address account, address to, uint256 value, bytes calldata data) external returns (bool)
+```
+
+```solidity
+function forcedTransfer(address from, address to, uint256 value, bytes calldata data) 
+public virtual override(IERC7551ERC20Enforcement)  
+onlyForcedTransferManager 
+returns (bool) 
 ```
 
 Performs a transfer of tokens from one account to another without requiring approval or allowance from the sender.

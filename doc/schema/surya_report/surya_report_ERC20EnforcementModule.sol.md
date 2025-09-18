@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/wrapper/extensions/ERC20EnforcementModule.sol | d6964030e1eac89e05e4b96a75d82334ab18e4da |
+| ./modules/wrapper/extensions/ERC20EnforcementModule.sol | d2c2a65c0bf028606c7f3474ecfef067e07b4aca |
 
 
 ### Contracts Description Table
@@ -15,15 +15,17 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **ERC20EnforcementModule** | Implementation | ERC20EnforcementModuleInternal, AccessControlUpgradeable, IERC7551ERC20Enforcement, IERC3643ERC20Enforcement |||
+| **ERC20EnforcementModule** | Implementation | ERC20EnforcementModuleInternal, IERC7551ERC20Enforcement, IERC3643ERC20Enforcement |||
 | └ | getFrozenTokens | Public ❗️ |   |NO❗️ |
 | └ | getActiveBalanceOf | Public ❗️ |   |NO❗️ |
-| └ | forcedTransfer | Public ❗️ | 🛑  | onlyRole |
-| └ | forcedTransfer | Public ❗️ | 🛑  | onlyRole |
-| └ | freezePartialTokens | Public ❗️ | 🛑  | onlyRole |
-| └ | unfreezePartialTokens | Public ❗️ | 🛑  | onlyRole |
-| └ | freezePartialTokens | Public ❗️ | 🛑  | onlyRole |
-| └ | unfreezePartialTokens | Public ❗️ | 🛑  | onlyRole |
+| └ | forcedTransfer | Public ❗️ | 🛑  | onlyForcedTransferManager |
+| └ | forcedTransfer | Public ❗️ | 🛑  | onlyForcedTransferManager |
+| └ | freezePartialTokens | Public ❗️ | 🛑  | onlyERC20Enforcer |
+| └ | unfreezePartialTokens | Public ❗️ | 🛑  | onlyERC20Enforcer |
+| └ | freezePartialTokens | Public ❗️ | 🛑  | onlyERC20Enforcer |
+| └ | unfreezePartialTokens | Public ❗️ | 🛑  | onlyERC20Enforcer |
+| └ | _authorizeERC20Enforcer | Internal 🔒 | 🛑  | |
+| └ | _authorizeForcedTransfer | Internal 🔒 | 🛑  | |
 
 
 ### Legend

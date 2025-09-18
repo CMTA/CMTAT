@@ -1,4 +1,4 @@
-//SPDX-License-Identifier: MPL-2.0
+// SPDX-License-Identifier: MPL-2.0
 
 pragma solidity ^0.8.20;
 
@@ -26,7 +26,7 @@ abstract contract ERC20EnforcementModule is ERC20EnforcementModuleInternal, IERC
         _;
     }
 
-    modifier onlyForcedTransferOperator() {
+    modifier onlyForcedTransferManager() {
         // Token bridge should never be impersonated using a relayer/forwarder. Using msg.sender is preferable to
         // _msgSender() for security reasons.
         _authorizeForcedTransfer();
@@ -41,7 +41,7 @@ abstract contract ERC20EnforcementModule is ERC20EnforcementModuleInternal, IERC
     *
     * @inheritdoc IERC7551ERC20Enforcement
     */
-    function getFrozenTokens(address account) public override(IERC7551ERC20Enforcement, IERC3643ERC20Enforcement) view virtual returns (uint256) {
+    function getFrozenTokens(address account) public override(IERC7551ERC20Enforcement, IERC3643ERC20Enforcement) view virtual returns (uint256 frozenBalance_) {
         return _getFrozenTokens(account);
      }
 
@@ -49,7 +49,7 @@ abstract contract ERC20EnforcementModule is ERC20EnforcementModuleInternal, IERC
     *
     * @inheritdoc IERC7551ERC20Enforcement
     */
-    function getActiveBalanceOf(address account) public view override(IERC7551ERC20Enforcement) returns (uint256){
+    function getActiveBalanceOf(address account) public view override(IERC7551ERC20Enforcement) returns (uint256 activeBalance_){
         return _getActiveBalanceOf(account);
      }
 
@@ -61,7 +61,7 @@ abstract contract ERC20EnforcementModule is ERC20EnforcementModuleInternal, IERC
     * - the caller must have the `DEFAULT_ADMIN_ROLE`.
     */
     function forcedTransfer(address from, address to, uint256 value, bytes calldata data) 
-    public virtual override(IERC7551ERC20Enforcement)  onlyForcedTransferOperator returns (bool) {
+    public virtual override(IERC7551ERC20Enforcement)  onlyForcedTransferManager returns (bool) {
        _forcedTransfer(from, to, value, data);
        return true;
     }
@@ -73,7 +73,7 @@ abstract contract ERC20EnforcementModule is ERC20EnforcementModuleInternal, IERC
     * - the caller must have the `DEFAULT_ADMIN_ROLE`.
     */
     function forcedTransfer(address from, address to, uint256 value) 
-    public virtual override(IERC3643ERC20Enforcement) onlyForcedTransferOperator returns (bool)  {
+    public virtual override(IERC3643ERC20Enforcement) onlyForcedTransferManager returns (bool)  {
        _forcedTransfer(from, to, value, "");
        return true;
     }

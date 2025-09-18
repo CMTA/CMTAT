@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/wrapper/core/ERC20MintModule.sol | c7c1cce6f3ff19f7db2844d01e4f271e8f414a4d |
+| ./modules/wrapper/core/ERC20MintModule.sol | e3290fff19ef1b4b1ea4169f84c401624392deac |
 
 
 ### Contracts Description Table
@@ -15,12 +15,13 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **ERC20MintModule** | Implementation | ERC20MintModuleInternal, AccessControlUpgradeable, IERC3643Mint, IERC3643BatchTransfer, IERC7551Mint, IMintBatchERC20Event |||
-| └ | mint | Public ❗️ | 🛑  | onlyRole |
-| └ | mint | Public ❗️ | 🛑  | onlyRole |
-| └ | batchMint | Public ❗️ | 🛑  | onlyRole |
-| └ | batchTransfer | Public ❗️ | 🛑  | onlyRole |
+| **ERC20MintModule** | Implementation | ERC20MintModuleInternal, IERC3643Mint, IERC3643BatchTransfer, IERC7551Mint, IMintBatchERC20Event |||
+| └ | mint | Public ❗️ | 🛑  | onlyMinter |
+| └ | mint | Public ❗️ | 🛑  | onlyMinter |
+| └ | batchMint | Public ❗️ | 🛑  | onlyMinter |
+| └ | batchTransfer | Public ❗️ | 🛑  | onlyMinter |
 | └ | _mint | Internal 🔒 | 🛑  | |
+| └ | _authorizeMint | Internal 🔒 | 🛑  | |
 
 
 ### Legend

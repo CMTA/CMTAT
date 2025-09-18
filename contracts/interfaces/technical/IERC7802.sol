@@ -5,7 +5,7 @@ pragma solidity ^0.8.20;
 import "@openzeppelin/contracts/utils/introspection/IERC165.sol";
 
 interface IERC7802 is IERC165 {
-     /** 
+    /** 
     * @notice Mint tokens through a crosschain transfer.
     * @param to     Address to mint tokens to.
     * @param value Amount of tokens to mint.

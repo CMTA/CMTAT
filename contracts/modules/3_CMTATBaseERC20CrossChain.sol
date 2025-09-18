@@ -1,4 +1,4 @@
-//SPDX-License-Identifier: MPL-2.0
+// SPDX-License-Identifier: MPL-2.0
 
 pragma solidity ^0.8.20;
 /* ==== OpenZeppelin === */
@@ -8,16 +8,13 @@ import {CMTATBaseERC1404, ERC20Upgradeable} from "./2_CMTATBaseERC1404.sol";
 import {CMTATBaseCommon} from "./0_CMTATBaseCommon.sol";
 import {ERC20BurnModule, ERC20BurnModuleInternal} from "./wrapper/core/ERC20BurnModule.sol";
 import {ERC20MintModule, ERC20MintModuleInternal} from "./wrapper/core/ERC20MintModule.sol";
-import {ERC20CrossChain} from "./wrapper/options/ERC20CrossChain.sol";
+import {ERC20CrossChainModule} from "./wrapper/options/ERC20CrossChainModule.sol";
 import {CCIPModule} from "./wrapper/options/CCIPModule.sol";
 
 /**
- * @title ERC20CrossChainModule (ERC-7802)
- * @dev 
- *
- * Contains all burn functions, inherits from ERC-20
+ * @title Add support of ERC20CrossChainModule
  */
-abstract contract CMTATBaseERC20CrossChain is ERC20CrossChain, CCIPModule, CMTATBaseERC1404  {
+abstract contract CMTATBaseERC20CrossChain is ERC20CrossChainModule, CCIPModule, CMTATBaseERC1404  {
      /* ============  State Functions ============ */
     function transfer(address to, uint256 value) public virtual override(ERC20Upgradeable, CMTATBaseCommon) returns (bool) {
          return CMTATBaseCommon.transfer(to, value);
@@ -91,27 +88,20 @@ abstract contract CMTATBaseERC20CrossChain is ERC20CrossChain, CCIPModule, CMTAT
 
 
     /* ============ View functions ============ */
-    function supportsInterface(bytes4 _interfaceId) public view virtual override(CMTATBaseCommon, ERC20CrossChain) returns (bool) {
-        return  ERC20CrossChain.supportsInterface(_interfaceId)|| CMTATBaseCommon.supportsInterface( _interfaceId);
+    function supportsInterface(bytes4 _interfaceId) public view virtual override(CMTATBaseCommon, ERC20CrossChainModule) returns (bool) {
+        return  ERC20CrossChainModule.supportsInterface(_interfaceId)|| CMTATBaseCommon.supportsInterface( _interfaceId);
     }
 
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
     /* ==== Access Control ==== */
-    function _authorizeCCIPSetAdmin() internal virtual override onlyRole(DEFAULT_ADMIN_ROLE) {}
-    function _checkTokenBridge(address caller) internal virtual override whenNotPaused {
+    function _authorizeCCIPSetAdmin() internal virtual override(CCIPModule) onlyRole(DEFAULT_ADMIN_ROLE) {}
+    function _checkTokenBridge(address caller) internal virtual override(ERC20CrossChainModule) whenNotPaused {
         AccessControlUpgradeable._checkRole(CROSS_CHAIN_ROLE, caller); 
     }
-    function _authorizeBurnFrom() internal virtual override onlyRole(BURNER_FROM_ROLE) whenNotPaused{}
+    function _authorizeBurnFrom() internal virtual override(ERC20CrossChainModule) onlyRole(BURNER_FROM_ROLE) whenNotPaused{}
 
-    function _authorizeMint(CMTATBaseCommon, ERC20MintModule) internal virtual {
-        CMTATBaseCommon._authorizeMint();
-    }
-
-    function _authorizeBurn() internal virtual override(CMTATBaseCommon, ERC20BurnModule) onlyRole(BURNER_ROLE){
-        CMTATBaseCommon._authorizeBurn();
-    }
     /* ==== ERC-20 OpenZeppelin ==== */
     function _update(
         address from,
@@ -120,5 +110,4 @@ abstract contract CMTATBaseERC20CrossChain is ERC20CrossChain, CCIPModule, CMTAT
     ) internal virtual override(ERC20Upgradeable, CMTATBaseCommon) {
        return CMTATBaseCommon._update(from, to, amount);
     }
-    
 }

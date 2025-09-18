@@ -53,7 +53,7 @@ describe('CMTAT - ERC1363 Proxy Deployment', function () {
     // Assert
     expect(await this.cmtat.supportsInterface(erc1363Interface)).to.equal(true)
     expect(await this.cmtat.supportsInterface(IERC165Interface)).to.equal(true)
-    expect(await this.cmtat.supportsInterface(IERC165Interface)).to.equal(true)
+    expect(await this.cmtat.supportsInterface(IERC721Interface)).to.equal(false)
     expect(await this.cmtat.supportsInterface(IERC5679)).to.equal(
       true
     )

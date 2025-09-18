@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/1_CMTATBaseRuleEngine.sol | fb572fc593b02978a9383f212ff59ae2acb1b572 |
+| ./modules/1_CMTATBaseRuleEngine.sol | a8f439a039694270eba59e58d219a64f094a02ca |
 
 
 ### Contracts Description Table
@@ -23,7 +23,10 @@
 | └ | __CMTAT_modules_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |
 | └ | canTransfer | Public ❗️ |   |NO❗️ |
 | └ | canTransferFrom | Public ❗️ |   |NO❗️ |
-| └ | hasRole | Public ❗️ |   |NO❗️ |
+| └ | _authorizePause | Internal 🔒 | 🛑  | onlyRole |
+| └ | _authorizeDeactivate | Internal 🔒 | 🛑  | onlyRole |
+| └ | _authorizeFreeze | Internal 🔒 | 🛑  | onlyRole |
+| └ | _authorizeRuleEngineManagement | Internal 🔒 | 🛑  | onlyRole |
 | └ | _checkTransferred | Internal 🔒 | 🛑  | |
 
 

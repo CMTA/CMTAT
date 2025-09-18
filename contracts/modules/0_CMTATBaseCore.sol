@@ -1,10 +1,11 @@
-//SPDX-License-Identifier: MPL-2.0
+// SPDX-License-Identifier: MPL-2.0
 
 pragma solidity ^0.8.20;
 
 /* ==== OpenZeppelin === */
 import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import {ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
+import { IERC165 } from "@openzeppelin/contracts/interfaces/IERC165.sol";
 /* ==== Wrapper === */
 // ERC20
 import {ERC20BurnModule, ERC20BurnModuleInternal} from "./wrapper/core/ERC20BurnModule.sol";
@@ -50,6 +51,11 @@ abstract contract CMTATBaseCore is
 { 
     /* ============ Error ============ */ 
     error CMTAT_BurnEnforcement_AddressIsNotFrozen(); 
+    /* ============ Modifier ============ */
+    modifier onlyERC20ForcedBurnManager() {
+        _authorizeForcedBurn();
+        _;
+    }
     /*//////////////////////////////////////////////////////////////
                          INITIALIZER FUNCTION
     //////////////////////////////////////////////////////////////*/
@@ -153,9 +159,12 @@ abstract contract CMTATBaseCore is
 
     /**
      * @inheritdoc AccessControlUpgradeable
+     * @dev 
+     * We can not use type(IERC5679).interfaceId instead of 0xd0017968
+     * because IERC5679 inherits from two interfaces (IERC5679Burn and Mint)
      */
-    function supportsInterface(bytes4 interfaceId) public view virtual override(AccessControlUpgradeable) returns (bool) {
-        return interfaceId == type(IERC5679).interfaceId || AccessControlUpgradeable.supportsInterface(interfaceId);
+    function supportsInterface(bytes4 interfaceId) public view virtual override(AccessControlUpgradeable, IERC165) returns (bool) {
+        return interfaceId == 0xd0017968 || AccessControlUpgradeable.supportsInterface(interfaceId);
     }
 
     /* ============  State Functions ============ */
@@ -212,7 +221,7 @@ abstract contract CMTATBaseCore is
         address account,
         uint256 value,
         bytes memory data
-    ) public virtual override(IForcedBurnERC20) onlyRole(DEFAULT_ADMIN_ROLE) {
+    ) public virtual override(IForcedBurnERC20) onlyERC20ForcedBurnManager {
         require(EnforcementModule.isFrozen(account), CMTAT_BurnEnforcement_AddressIsNotFrozen());
         // Skip ERC20BurnModule
         ERC20Upgradeable._burn(account, value);
@@ -244,6 +253,7 @@ abstract contract CMTATBaseCore is
     }
 
     /* ==== Access Control ==== */
+    function _authorizeForcedBurn() internal virtual onlyRole(DEFAULT_ADMIN_ROLE){}
 
     function _authorizeMint() internal virtual override(ERC20MintModule) onlyRole(MINTER_ROLE){}
 
@@ -255,6 +265,4 @@ abstract contract CMTATBaseCore is
     function _authorizeFreeze() internal virtual override(EnforcementModule) onlyRole(ENFORCER_ROLE){}
 
     function _authorizeERC20AttributeManagement() internal virtual override(ERC20BaseModule) onlyRole(DEFAULT_ADMIN_ROLE){}
-
-    
 }

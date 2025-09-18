@@ -1,4 +1,4 @@
-//SPDX-License-Identifier: MPL-2.0
+// SPDX-License-Identifier: MPL-2.0
 
 pragma solidity ^0.8.20;
 
@@ -93,5 +93,5 @@ abstract contract AllowlistModule is
     } 
 
     /* ==== Access Control ==== */
-    function _authorizeAllowlistManagement() internal virtual {}
+    function _authorizeAllowlistManagement() internal virtual;
 }

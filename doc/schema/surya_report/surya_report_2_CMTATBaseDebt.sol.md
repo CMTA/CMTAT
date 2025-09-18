@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/2_CMTATBaseDebt.sol | e5ede45bff3c61546bfe2b9200ca25e25c5a81e5 |
+| ./modules/2_CMTATBaseDebt.sol | e426d5e5e529f32ab738f8f40eb3365b1c359b65 |
 
 
 ### Contracts Description Table
@@ -16,7 +16,7 @@
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
 | **CMTATBaseDebt** | Implementation | CMTATBaseRuleEngine, DebtEngineModule |||
-| └ | hasRole | Public ❗️ |   |NO❗️ |
+| └ | _authorizeDebtManagement | Internal 🔒 | 🛑  | onlyRole |
 
 
 ### Legend

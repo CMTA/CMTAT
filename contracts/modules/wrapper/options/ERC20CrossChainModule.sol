@@ -1,4 +1,4 @@
-//SPDX-License-Identifier: MPL-2.0
+// SPDX-License-Identifier: MPL-2.0
 
 pragma solidity ^0.8.20;
 /* ==== OpenZeppelin === */
@@ -14,9 +14,9 @@ import {ERC20MintModule, ERC20MintModuleInternal} from "../core/ERC20MintModule.
  * @title ERC20CrossChainModule (ERC-7802)
  * @dev 
  *
- * Contains all burn functions, inherits from ERC-20
+ * Contains all mint and burn functions, inherits from ERC-20
  */
-abstract contract ERC20CrossChain is ERC20MintModule, ERC20BurnModule, ERC165Upgradeable, IERC7802, IBurnFromERC20 {
+abstract contract ERC20CrossChainModule is ERC20MintModule, ERC20BurnModule, ERC165Upgradeable, IERC7802, IBurnFromERC20 {
     /* ============ State Variables ============ */
     bytes32 public constant BURNER_FROM_ROLE = keccak256("BURNER_FROM_ROLE");
     bytes32 public constant CROSS_CHAIN_ROLE = keccak256("CROSS_CHAIN_ROLE");

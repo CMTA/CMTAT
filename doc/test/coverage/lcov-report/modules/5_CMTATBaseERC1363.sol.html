@@ -186,8 +186,7 @@
 141
 142
 143
-144
-145</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+144</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -208,9 +207,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">394×</span>
-<span class="cline-any cline-yes">394×</span>
+<span class="cline-any cline-yes">400×</span>
+<span class="cline-any cline-yes">400×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -247,7 +245,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-yes">15×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -307,7 +305,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2063×</span>
+<span class="cline-any cline-yes">2077×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -316,7 +314,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2063×</span>
+<span class="cline-any cline-yes">2077×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -331,7 +329,7 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">//SPDX-License-Identifier: MPL-2.0
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// SPDX-License-Identifier: MPL-2.0
 &nbsp;
 pragma solidity ^0.8.20;
 /* ==== OpenZeppelin === */
@@ -339,7 +337,6 @@ import {ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/Cont
 import {ERC1363Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/ERC1363Upgradeable.sol";
 import {ERC20Upgradeable, IERC20} from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 /* ==== Module === */
-import {CMTATBaseERC1404, CMTATBaseCommon} from "./2_CMTATBaseERC1404.sol";
 import {CMTATBaseRuleEngine} from "./1_CMTATBaseRuleEngine.sol";
 import {CMTATBaseERC2771, CMTATBaseERC20CrossChain} from "../modules/4_CMTATBaseERC2771.sol";
 /**
@@ -364,14 +361,14 @@ abstract contract CMTATBaseERC1363 is ERC1363Upgradeable,CMTATBaseERC2771{
     /* ============ State functions ============ */
 &nbsp;
     /**
-    * @inheritdoc CMTATBaseCommon
+    * @inheritdoc CMTATBaseERC20CrossChain
     */
-    function transfer(address to, uint256 value) public virtual override(ERC20Upgradeable, CMTATBaseCommon, IERC20) returns (bool) {
-        return CMTATBaseCommon.transfer(to, value);
+    function transfer(address to, uint256 value) public virtual override(ERC20Upgradeable, CMTATBaseERC20CrossChain, IERC20) returns (bool) {
+        return CMTATBaseERC20CrossChain.transfer(to, value);
     }
 &nbsp;
     /**
-    * @inheritdoc CMTATBaseCommon
+    * @inheritdoc CMTATBaseERC20CrossChain
     */
     function transferFrom(
         address sender,
@@ -380,10 +377,10 @@ abstract contract CMTATBaseERC1363 is ERC1363Upgradeable,CMTATBaseERC2771{
     )
         public
         virtual
-        override(ERC20Upgradeable, CMTATBaseCommon, IERC20)
+        override(ERC20Upgradeable, CMTATBaseERC20CrossChain, IERC20)
         returns (bool)
     {
-        return CMTATBaseCommon.transferFrom(sender, recipient, amount);
+        return CMTATBaseERC20CrossChain.transferFrom(sender, recipient, amount);
     }
 &nbsp;
     /* ============ View functions ============ */
@@ -396,31 +393,31 @@ abstract contract CMTATBaseERC1363 is ERC1363Upgradeable,CMTATBaseERC2771{
 &nbsp;
 &nbsp;
     /**
-    * @inheritdoc CMTATBaseCommon
+    * @inheritdoc CMTATBaseERC20CrossChain
     */
     function decimals()
         public
         view
         virtual
-        override(ERC20Upgradeable, CMTATBaseCommon)
+        override(ERC20Upgradeable, CMTATBaseERC20CrossChain)
         returns (uint8)
     {
-        return CMTATBaseCommon.decimals();
+        return CMTATBaseERC20CrossChain.decimals();
     }
 &nbsp;
 &nbsp;
     /**
-    * @inheritdoc CMTATBaseCommon
+    * @inheritdoc CMTATBaseERC20CrossChain
     */
-    function name() public virtual override(ERC20Upgradeable, CMTATBaseCommon) view returns (string memory) {
-        return CMTATBaseCommon.name();
+    function name() public virtual override(ERC20Upgradeable, CMTATBaseERC20CrossChain) view returns (string memory) {
+        return CMTATBaseERC20CrossChain.name();
     }
 &nbsp;
     /**
-    * @inheritdoc CMTATBaseCommon
+    * @inheritdoc CMTATBaseERC20CrossChain
     */
-    function symbol() public virtual override(ERC20Upgradeable, CMTATBaseCommon) view returns (string memory) {
-        return CMTATBaseCommon.symbol();
+    function symbol() public virtual override(ERC20Upgradeable, CMTATBaseERC20CrossChain) view returns (string memory) {
+        return CMTATBaseERC20CrossChain.symbol();
     }
 &nbsp;
 &nbsp;
@@ -429,14 +426,14 @@ abstract contract CMTATBaseERC1363 is ERC1363Upgradeable,CMTATBaseERC2771{
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
     /**
-    * @inheritdoc CMTATBaseCommon
+    * @inheritdoc CMTATBaseERC20CrossChain
     */
     function _update(
         address from,
         address to,
         uint256 amount
-    ) internal override(ERC20Upgradeable, CMTATBaseCommon) {
-        CMTATBaseCommon._update(from, to, amount);
+    ) internal override(ERC20Upgradeable, CMTATBaseERC20CrossChain) {
+        CMTATBaseERC20CrossChain._update(from, to, amount);
     }
 &nbsp;
     /*//////////////////////////////////////////////////////////////
@@ -481,7 +478,7 @@ abstract contract CMTATBaseERC1363 is ERC1363Upgradeable,CMTATBaseERC2771{
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu Jul 31 2025 17:18:35 GMT+0200 (Central European Summer Time)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Sep 17 2025 15:32:35 GMT+0200 (Central European Summer Time)
 </div>
 </div>
 <script src="../prettify.js"></script>

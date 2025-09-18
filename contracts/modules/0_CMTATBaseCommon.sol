@@ -1,7 +1,9 @@
-//SPDX-License-Identifier: MPL-2.0
+// SPDX-License-Identifier: MPL-2.0
 
 pragma solidity ^0.8.20;
 
+/* ==== OpenZeppelin === */
+import { IERC165 } from "@openzeppelin/contracts/interfaces/IERC165.sol";
 /* ==== Wrapper === */
 // Security
 import {AccessControlUpgradeable, AccessControlModule} from "./wrapper/security/AccessControlModule.sol";
@@ -95,7 +97,7 @@ abstract contract CMTATBaseCommon is
      * We can not use type(IERC5679).interfaceId instead of 0xd0017968
      * because IERC5679 inherits from two interfaces (IERC5679Burn and Mint)
      */
-    function supportsInterface(bytes4 interfaceId) public view virtual override(AccessControlUpgradeable) returns (bool) {
+    function supportsInterface(bytes4 interfaceId) public view virtual override(AccessControlUpgradeable, IERC165) returns (bool) {
         return interfaceId == 0xd0017968 || AccessControlUpgradeable.supportsInterface(interfaceId);
     }
 

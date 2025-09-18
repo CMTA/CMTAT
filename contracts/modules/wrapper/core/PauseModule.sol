@@ -1,4 +1,4 @@
-//SPDX-License-Identifier: MPL-2.0
+// SPDX-License-Identifier: MPL-2.0
 
 pragma solidity ^0.8.20;
 
@@ -36,12 +36,12 @@ abstract contract PauseModule is PausableUpgradeable, IERC3643Pause, IERC7551Pau
 
     /* ============ Modifier ============ */
     /// @dev Modifier to restrict access to the burner functions
-    modifier onlyPauser() {
+    modifier onlyPauseManager() {
         _authorizePause();
         _;
     }
 
-    modifier onlyDeactivater() {
+    modifier onlyDeactivateContractManager() {
         _authorizeDeactivate();
         _;
     }
@@ -55,7 +55,7 @@ abstract contract PauseModule is PausableUpgradeable, IERC3643Pause, IERC7551Pau
      * @custom:access-control
      * - the caller must have the `PAUSER_ROLE`.
      */
-    function pause() public virtual override(IERC3643Pause, IERC7551Pause) onlyPauser{
+    function pause() public virtual override(IERC3643Pause, IERC7551Pause) onlyPauseManager{
         PausableUpgradeable._pause();
     }
 
@@ -64,7 +64,7 @@ abstract contract PauseModule is PausableUpgradeable, IERC3643Pause, IERC7551Pau
      * @custom:access-control
      * - the caller must have the `PAUSER_ROLE`.
      */
-    function unpause() public virtual override(IERC3643Pause, IERC7551Pause) onlyPauser{
+    function unpause() public virtual override(IERC3643Pause, IERC7551Pause) onlyPauseManager{
         PauseModuleStorage storage $ = _getPauseModuleStorage();
         require(!$._isDeactivated, CMTAT_PauseModule_ContractIsDeactivated());
         PausableUpgradeable._unpause();
@@ -79,7 +79,7 @@ abstract contract PauseModule is PausableUpgradeable, IERC3643Pause, IERC7551Pau
     */
     function deactivateContract()
         public virtual override(ICMTATDeactivate)
-        onlyDeactivater
+        onlyDeactivateContractManager
     {
         // Contract must be in pause state
         PausableUpgradeable._requirePaused();

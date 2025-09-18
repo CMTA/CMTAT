@@ -6,17 +6,17 @@ This document defines the ERC20CrossChain module for the CMTA Token specificatio
 
 ## Schema
 
-![ERC20CrossChain](../../schema/uml/ERC20CrossChainUML.png)
+![ERC20CrossChain](../../../schema/uml/ERC20CrossChainUML.png)
 
 ### Inheritance
 
-![surya_inheritance_ERC20CrossChain.sol](../../schema/surya_inheritance/surya_inheritance_3_ERC20CrossChain.sol.png)
+![surya_inheritance_ERC20CrossChain.sol](../../../schema/surya_inheritance/surya_inheritance_ERC20CrossChainModule.sol.png)
 
 
 
 ### Graph
 
-![surya_graph_CoreModule.sol](../../schema/surya_graph/surya_graph_3_ERC20CrossChain.sol.png)
+![surya_graph_CoreModule.sol](../../../schema/surya_graph/surya_graph_ERC20CrossChainModule.sol.png)
 
 ## API for Ethereum
 

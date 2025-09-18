@@ -66,7 +66,7 @@ function setDocumentEngine(IERC1643 documentEngine_) external
 ```solidity
 function setDocumentEngine(IERC1643 documentEngine_) 
 public virtual override(IDocumentEngineModule) 
-onlyRole(DOCUMENT_ROLE)
+onlyDocumentManager
 ```
 
 Sets a new external document engine contract.

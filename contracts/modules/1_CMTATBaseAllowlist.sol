@@ -1,4 +1,4 @@
-//SPDX-License-Identifier: MPL-2.0
+// SPDX-License-Identifier: MPL-2.0
 
 pragma solidity ^0.8.20;
 
@@ -98,12 +98,6 @@ abstract contract CMTATBaseAllowlist is
         // We don'use name and symbol set by the OpenZeppelin module
         //__ERC20_init_unchained(ERC20Attributes_.name, ERC20Attributes_.symbol);
     }
-
-
-
-    /*
-    * @dev CMTAT internal module
-    */
 
     /*
     * @dev CMTAT wrapper modules
