@@ -54,7 +54,7 @@ abstract contract AllowlistModuleInternal is
     }
 
     /**
-     * @dev Returns true if the account is frozen, and false otherwise.
+     * @dev enable or disable the allowlist depending of `status` parameter
      */
     function _enableAllowlist(bool status) internal virtual {
         AllowlistModuleInternalStorage storage $ = _getAllowlistModuleInternalStorage();
@@ -63,7 +63,7 @@ abstract contract AllowlistModuleInternal is
 
     /* ============ View functions ============ */
     /**
-     * @dev Returns true if the account is frozen, and false otherwise.
+     * @dev Returns true if the account is listed, and false otherwise.
      */
     function _isAllowlisted(address account) internal view virtual returns (bool) {
         AllowlistModuleInternalStorage storage $ = _getAllowlistModuleInternalStorage();
