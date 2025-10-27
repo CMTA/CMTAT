@@ -1175,7 +1175,11 @@ As with any token contract, access to the admin key must be adequately restricte
 
 Likewise, access to the proxy contract must be restricted and segregated from the token contract.
 
+##### UUPS Proxy
+
 For the deployment version for **UUPS proxies**, unfortunately there is no segregation between contract rights (admin) and the proxy. A possible improvement would be to add an owner who would only have the rights to update the proxy.
+
+Any compromise to the DEFAULT_ADMIN_ROLE account may allow a hacker to take advantage of this authority and change the implementation contract which is pointed by proxy and therefore execute potential malicious functionality in the implementation contract.
 
 #### Role list
 
