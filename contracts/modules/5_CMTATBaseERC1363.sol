@@ -8,6 +8,9 @@ import {ERC20Upgradeable, IERC20} from "@openzeppelin/contracts-upgradeable/toke
 /* ==== Module === */
 import {CMTATBaseRuleEngine} from "./1_CMTATBaseRuleEngine.sol";
 import {CMTATBaseERC2771, CMTATBaseERC20CrossChain} from "../modules/4_CMTATBaseERC2771.sol";
+
+/* ==== Interface and other library === */
+import {ICMTATConstructor} from "../interfaces/technical/ICMTATConstructor.sol";
 /**
 * @title CMTAT Base for ERC-1363
 */
@@ -18,9 +21,9 @@ abstract contract CMTATBaseERC1363 is ERC1363Upgradeable,CMTATBaseERC2771{
     /**
     * @dev initializer function
     */
-    function __CMTAT_openzeppelin_init_unchained() internal virtual override onlyInitializing {
+    function __CMTAT_openzeppelin_init_unchained(ICMTATConstructor.ERC20Attributes memory ERC20Attributes_) internal virtual override onlyInitializing {
+        CMTATBaseRuleEngine.__CMTAT_openzeppelin_init_unchained(ERC20Attributes_);
         __ERC1363_init_unchained();
-        CMTATBaseRuleEngine.__CMTAT_openzeppelin_init_unchained();
     }
     
     /*//////////////////////////////////////////////////////////////

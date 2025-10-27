@@ -82,7 +82,7 @@ abstract contract CMTATBaseAllowlist is
         __ERC165_init_unchained();
 
         // Openzeppelin
-        __CMTAT_openzeppelin_init_unchained();
+        __CMTAT_openzeppelin_init_unchained(ERC20Attributes_);
 
         /* Wrapper modules */
         __CMTAT_modules_init_unchained(admin, ERC20Attributes_, extraInformationAttributes_, snapshotEngine_, documentEngine_ );
@@ -91,12 +91,12 @@ abstract contract CMTATBaseAllowlist is
     /*
     * @dev OpenZeppelin
     */
-    function __CMTAT_openzeppelin_init_unchained() internal virtual onlyInitializing {
+    function __CMTAT_openzeppelin_init_unchained(ICMTATConstructor.ERC20Attributes memory ERC20Attributes_) internal virtual onlyInitializing {
          // AuthorizationModule inherits from AccessControlUpgradeable
         __AccessControl_init_unchained();
         __Pausable_init_unchained();
-        // We don'use name and symbol set by the OpenZeppelin module
-        //__ERC20_init_unchained(ERC20Attributes_.name, ERC20Attributes_.symbol);
+        // Note that the Openzeppelin functions name() and symbol() are overriden in ERC20BaseModule
+        __ERC20_init_unchained(ERC20Attributes_.name, ERC20Attributes_.symbol);
     }
 
     /*
