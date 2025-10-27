@@ -27,7 +27,6 @@ contract CMTATStandaloneERC7551 is CMTATBaseERC7551 {
         ICMTATConstructor.Engine memory engines_ 
     ) ERC2771Module(forwarderIrrevocable) {
         // Initialize the contract to avoid front-running
-        // Warning : do not initialize the proxy
         initialize(
             admin,
             ERC20Attributes_,

@@ -41,7 +41,7 @@ contract CMTATUpgradeableUUPS is CMTATBaseERC2771, UUPSUpgradeable  {
         ICMTATConstructor.ERC20Attributes memory ERC20Attributes_,
         ICMTATConstructor.ExtraInformationAttributes memory extraInformationAttributes_,
         ICMTATConstructor.Engine memory engines_ ) public override initializer {
-        CMTATBaseRuleEngine.initialize( admin,
+        CMTATBaseRuleEngine._initialize( admin,
             ERC20Attributes_,
             extraInformationAttributes_,
             engines_);

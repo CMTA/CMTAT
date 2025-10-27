@@ -29,7 +29,6 @@ contract CMTATStandaloneAllowlist is CMTATBaseAllowlist {
         
     ) ERC2771Module(forwarderIrrevocable){
         // Initialize the contract to avoid front-running
-        // Warning : do not initialize the proxy
         initialize(
             admin,
             ERC20Attributes_,

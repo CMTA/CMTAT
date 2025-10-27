@@ -26,9 +26,8 @@ abstract contract ERC20EnforcementModule is ERC20EnforcementModuleInternal, IERC
         _;
     }
 
+    /// @dev Modifier to restrict access to forced transfer functions
     modifier onlyForcedTransferManager() {
-        // Token bridge should never be impersonated using a relayer/forwarder. Using msg.sender is preferable to
-        // _msgSender() for security reasons.
         _authorizeForcedTransfer();
         _;
     }

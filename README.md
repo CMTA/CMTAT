@@ -102,8 +102,8 @@ Here is a comparison between the features present in major custodian stablecoin 
 
 |                                |                                                              | **Monerium**                                                 | **USDC**                                                     | **USDT**                                                     | **CMTAT 3.0.0 Light**    | CMTAT 3.0.0 Standard                                         |
 | :----------------------------- | :----------------------------------------------------------- | :----------------------------------------------------------- | :----------------------------------------------------------- | :----------------------------------------------------------- | :----------------------- | ------------------------------------------------------------ |
-| Source                         |                                                              | [ec59a36](https://github.com/monerium/smart-contracts/commit/ec59a3677a17a06610d7e4788211c19da561241b) | [Ehteum USDC implementation contract](https://etherscan.io/address/0x43506849d7c04f9138d1a2050bbf3a0c054402dd#code) | [Ethereum USDT address](https://etherscan.io/address/0xdac17f958d2ee523a2206206994597c13d831ec7) |                          |                                                              |
-| Currency                       |                                                              | $, euros, live Sterling,  Icelandic króna                    | $                                                            | $                                                            | -                        | -                                                            |
+| Source                         |                                                              | [ec59a36](https://github.com/monerium/smart-contracts/commit/ec59a3677a17a06610d7e4788211c19da561241b) | [Ethereum USDC implementation contract](https://etherscan.io/address/0x43506849d7c04f9138d1a2050bbf3a0c054402dd#code) | [Ethereum USDT address](https://etherscan.io/address/0xdac17f958d2ee523a2206206994597c13d831ec7) |                          |                                                              |
+| Currency                       |                                                              | $, euros, pound sterling,  Icelandic króna                   | $                                                            | $                                                            | -                        | -                                                            |
 | Company behind                 |                                                              | [Monerium](https://monerium.com)                             | [Circle](https://www.circle.com)                             | [Tether](https://tether.to/en/)                              | [CMTA](https://cmta.ch/) | [CMTA](https://cmta.ch/)                                     |
 | **Standard**                   |                                                              |                                                              |                                                              |                                                              |                          |                                                              |
 |                                | [ERC-20](https://eips.ethereum.org/EIPS/eip-20)              | &#x2611;                                                     | &#x2611;                                                     | &#x2611;                                                     | Same as standard version | &#x2611;                                                     |
@@ -1168,6 +1168,14 @@ Current CMTAT base module use the standard RBAC access control by using the cont
 The `AccessControlModule`which is used by the different CMTAT base module and deployment contracts override the OpenZeppelin function `hasRole`to give by default all the roles to the `admin`.
 
 See also [docs.openzeppelin.com - AccessControl](https://docs.openzeppelin.com/contracts/5.x/api/access#AccessControl)
+
+#### Key management
+
+As with any token contract, access to the admin key must be adequately restricted.
+
+Likewise, access to the proxy contract must be restricted and segregated from the token contract.
+
+For the deployment version for **UUPS proxies**, unfortunately there is no segregation between contract rights (admin) and the proxy. A possible improvement would be to add an owner who would only have the rights to update the proxy.
 
 #### Role list
 
@@ -2745,15 +2753,6 @@ You will find the report produced by [Slither](https://github.com/crytic/slither
 A code coverage is available in [index.html](doc/test/coverage/index.html).
 
 ![coverage](./doc/general/coverage.png)
-
-
-### Notes
-
-As with any token contract, access to the admin key must be adequately restricted.
-
-Likewise, access to the proxy contract must be restricted and segregated from the token contract.
-
-For the deployment version for UUPS proxies, unfortunately there is no segregation between contract rights (admin) and the proxy. A possible improvement would be to add an owner who would only have the rights to update the proxy.
 
 ## Usage
 

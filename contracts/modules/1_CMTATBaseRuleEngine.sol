@@ -30,6 +30,9 @@ abstract contract CMTATBaseRuleEngine is
      * @param ERC20Attributes_ ERC20 name, symbol and decimals
      * @param extraInformationAttributes_ tokenId, terms, information
      * @param engines_ external contract
+     * @dev
+     * If you override the public function initialize,
+     * call inside directly the internal function, not the public one which is protected by the initializer modifier
      */
     function initialize(
         address admin,
@@ -37,6 +40,23 @@ abstract contract CMTATBaseRuleEngine is
         ICMTATConstructor.ExtraInformationAttributes memory extraInformationAttributes_,
         ICMTATConstructor.Engine memory engines_ 
     ) public virtual initializer {
+        _initialize(
+            admin,
+            ERC20Attributes_,
+            extraInformationAttributes_,
+            engines_
+        );
+    }
+
+    /**
+    * @dev don't call the initializer modifer
+    */
+    function _initialize(
+        address admin,
+        ICMTATConstructor.ERC20Attributes memory ERC20Attributes_,
+        ICMTATConstructor.ExtraInformationAttributes memory extraInformationAttributes_,
+        ICMTATConstructor.Engine memory engines_ 
+    ) internal virtual onlyInitializing{
         __CMTAT_init(
             admin,
             ERC20Attributes_,

@@ -54,8 +54,8 @@ abstract contract ERC20EnforcementModuleInternal is ERC20Upgradeable,IERC7551ERC
     function _unfreezeTokens(address from, uint256 value, bytes memory data) internal virtual{
         uint256 balance = ERC20Upgradeable.balanceOf(from);
         if(value > balance){
-            revert ERC20InsufficientBalance(_msgSender(), balance, value-balance);
-        }
+           revert CMTAT_ERC20EnforcementModule_ValueExceedsAvailableBalance();
+        } 
         ERC20EnforcementModuleStorage storage $ = _getEnforcementModuleStorage();
         // Frozen tokens can not be > balance
         uint256 activeBalance = balance - $._frozenTokens[from];
