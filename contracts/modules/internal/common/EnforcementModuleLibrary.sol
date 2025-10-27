@@ -16,6 +16,6 @@ library EnforcementModuleLibrary
         require(accounts.length > 0, CMTAT_Enforcement_EmptyAccounts());
         // We do not check that values is not empty since
         // this require will throw an error in this case.
-        require(bool(accounts.length == status.length), CMTAT_Enforcement_AccountsValueslengthMismatch());
+        require(accounts.length == status.length, CMTAT_Enforcement_AccountsValueslengthMismatch());
     }
 }

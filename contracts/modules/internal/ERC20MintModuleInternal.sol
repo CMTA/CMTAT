@@ -34,7 +34,7 @@ abstract contract ERC20MintModuleInternal is ERC20Upgradeable {
         require(accounts.length > 0, CMTAT_MintModule_EmptyAccounts());
         // We do not check that values is not empty since
         // this require will throw an error in this case.
-        require(bool(accounts.length == values.length), CMTAT_MintModule_AccountsValueslengthMismatch());
+        require(accounts.length == values.length, CMTAT_MintModule_AccountsValueslengthMismatch());
         for (uint256 i = 0; i < accounts.length; ++i ) {
             _mintOverride(accounts[i], values[i]);
         }
@@ -48,7 +48,7 @@ abstract contract ERC20MintModuleInternal is ERC20Upgradeable {
         address sender = _msgSender();
         // We do not check that values is not empty since
         // this require will throw an error in this case.
-        require(bool(tos.length == values.length), CMTAT_MintModule_TosValueslengthMismatch());
+        require(tos.length == values.length, CMTAT_MintModule_TosValueslengthMismatch());
         for (uint256 i = 0; i < tos.length; ++i) {
             _minterTransferOverride(sender, tos[i], values[i]);
         }
