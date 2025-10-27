@@ -160,11 +160,21 @@ abstract contract CMTATBaseCommon is
     ) internal virtual override(ERC20Upgradeable) {
         // We check here the address of the snapshotEngine here because we don't want to read balance/totalSupply if there is no Snapshot Engine
         ISnapshotEngine snapshotEngineLocal = snapshotEngine();
-        // Required to be performed before the update
+      
         if(address(snapshotEngineLocal) != address(0)){
-            snapshotEngineLocal.operateOnTransfer(from, to, balanceOf(from), balanceOf(to), totalSupply());
+          uint256 fromBalanceBefore = balanceOf(from);
+          uint256 toBalanceBefore = balanceOf(to);
+          uint256 totalSupplyBefore = totalSupply();
+        
+          // We perorm the update here (CEI pattern)
+          ERC20Upgradeable._update(from, to, amount);
+
+          // Required to use the balance before the update
+          snapshotEngineLocal.operateOnTransfer(from, to, fromBalanceBefore, toBalanceBefore, totalSupplyBefore);
+        } else {
+            // Update without snapshot call
+            ERC20Upgradeable._update(from, to, amount);
         }
-        ERC20Upgradeable._update(from, to, amount);
     }
     
     /**
