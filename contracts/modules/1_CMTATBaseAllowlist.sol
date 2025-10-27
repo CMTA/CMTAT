@@ -175,20 +175,17 @@ abstract contract CMTATBaseAllowlist is
         return ValidationModuleAllowlist._canMintBurnByModule(target);
     }
 
-    /**
-    * @inheritdoc ValidationModuleAllowlist
-    */
-   function _canTransferGenericByModule(
+    function _canTransferStandardByModule(
         address spender,
         address from,
         address to
-    ) internal view virtual override(ValidationModuleAllowlist, ValidationModule) returns (bool) {
-        return ValidationModuleAllowlist._canTransferGenericByModule(spender, from, to);
+    ) internal view virtual override(ValidationModule, ValidationModuleAllowlist) returns (bool) {
+        return ValidationModuleAllowlist._canTransferStandardByModule(spender, from, to);
     }
 
-    function _checkTransferred(address spender, address from, address to, uint256 value) internal virtual override {
+    function _checkTransferred(address spender, address from, address to, uint256 value) internal virtual override(CMTATBaseCommon) {
         CMTATBaseCommon._checkTransferred(spender, from, to, value);
-        if (!ValidationModuleAllowlist._canTransferGenericByModule(spender, from, to)) {
+        if (!ValidationModule._canTransferGenericByModule(spender, from, to)) {
             revert Errors.CMTAT_InvalidTransfer(from, to, value);
         }
     } 

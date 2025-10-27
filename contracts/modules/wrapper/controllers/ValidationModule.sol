@@ -20,8 +20,30 @@ abstract contract ValidationModule is
     //////////////////////////////////////////////////////////////*/
     /* ============ View functions ============ */
     /**
+    * @dev 
+    * Entrypoint to check mint/burn/standard transfer
+    */
+    function _canTransferGenericByModule(
+        address spender,
+        address from,
+        address to
+    ) internal view virtual returns (bool) {
+        // Mint
+        if(from == address(0)){
+            return _canMintBurnByModule(to);
+        } // burn
+        else if(to == address(0)){
+            return _canMintBurnByModule(from);
+        } // Standard transfer
+        else {
+            return _canTransferStandardByModule(spender, from, to);
+        }
+    }
+
+    /**
     * @dev check if the contract is deactivated or the address is frozen
     * check relevant for mint and burn operations
+    * Use forcedTransfer (or forcedBurn) to burn tokens from a frozen address
     */ 
     function _canMintBurnByModule(
         address target
@@ -37,20 +59,14 @@ abstract contract ValidationModule is
 
     /**
     * @dev calls Pause and Enforcement module
+    * check relevant for standard transfer
     */
-    function _canTransferGenericByModule(
+    function _canTransferStandardByModule(
         address spender,
         address from,
         address to
     ) internal view virtual returns (bool) {
-        // Mint
-        if(from == address(0)){
-            return _canMintBurnByModule(to);
-        } // burn
-        else if(to == address(0)){
-            return _canMintBurnByModule(from);
-        } // Normal transfer
-        else if (EnforcementModule.isFrozen(spender) 
+        if (EnforcementModule.isFrozen(spender) 
         || EnforcementModule.isFrozen(from) 
         || EnforcementModule.isFrozen(to) 
         || PauseModule.paused())  {
