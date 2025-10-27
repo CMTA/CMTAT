@@ -1169,6 +1169,14 @@ The `AccessControlModule`which is used by the different CMTAT base module and de
 
 See also [docs.openzeppelin.com - AccessControl](https://docs.openzeppelin.com/contracts/5.x/api/access#AccessControl)
 
+#### Key management
+
+As with any token contract, access to the admin key must be adequately restricted.
+
+Likewise, access to the proxy contract must be restricted and segregated from the token contract.
+
+For the deployment version for **UUPS proxies**, unfortunately there is no segregation between contract rights (admin) and the proxy. A possible improvement would be to add an owner who would only have the rights to update the proxy.
+
 #### Role list
 
 Here is the list of roles and their 32 bytes identifier.
@@ -2745,15 +2753,6 @@ You will find the report produced by [Slither](https://github.com/crytic/slither
 A code coverage is available in [index.html](doc/test/coverage/index.html).
 
 ![coverage](./doc/general/coverage.png)
-
-
-### Notes
-
-As with any token contract, access to the admin key must be adequately restricted.
-
-Likewise, access to the proxy contract must be restricted and segregated from the token contract.
-
-For the deployment version for UUPS proxies, unfortunately there is no segregation between contract rights (admin) and the proxy. A possible improvement would be to add an owner who would only have the rights to update the proxy.
 
 ## Usage
 
