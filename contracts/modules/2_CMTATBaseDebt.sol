@@ -2,8 +2,7 @@
 
 pragma solidity ^0.8.20;
 /* ==== Module === */
-import {IDebtEngine, DebtEngineModule, ICMTATDebt} from "./wrapper/options/DebtEngineModule.sol";
-import {DebtEngineModule, DebtModule, ICMTATDebt} from "./wrapper/options/DebtEngineModule.sol";
+import {DebtModule, DebtEngineModule} from "./wrapper/options/DebtEngineModule.sol";
 import {CMTATBaseRuleEngine} from "./1_CMTATBaseRuleEngine.sol";
 /**
 * @title Extend CMTAT Base with option modules
