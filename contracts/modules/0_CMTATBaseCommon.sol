@@ -203,18 +203,51 @@ abstract contract CMTATBaseCommon is
 
     /* ==== Access Control Functions ==== */
 
+    /** 
+    * @custom:access-control
+    * - the caller must have the `DEFAULT_ADMIN_ROLE`.
+    */
     function _authorizeERC20AttributeManagement() internal virtual override(ERC20BaseModule) onlyRole(DEFAULT_ADMIN_ROLE){}
 
+    /** 
+    * @custom:access-control
+    * - the caller must have the `MINTER_ROLE`.
+    */
     function _authorizeMint() internal virtual override(ERC20MintModule) onlyRole(MINTER_ROLE){}
 
+    /** 
+    * @custom:access-control
+    * - The caller must have the `BURNER_ROLE`.
+    */
     function _authorizeBurn() internal virtual override(ERC20BurnModule) onlyRole(BURNER_ROLE){}
 
+    /** 
+    * @custom:access-control
+    * - the caller must have the `DOCUMENT_ROLE`.
+    */
     function  _authorizeDocumentManagement() internal virtual override(DocumentEngineModule) onlyRole(DOCUMENT_ROLE){}
 
+    /** 
+    * @custom:access-control
+    * - the caller must have the `EXTRA_INFORMATION_ROLE`.
+    */
     function  _authorizeExtraInfoManagement() internal virtual override(ExtraInformationModule) onlyRole(EXTRA_INFORMATION_ROLE){}
 
+    /** 
+    * @custom:access-control
+    * - the caller must have the `ERC20ENFORCER_ROLE`.
+    */
     function _authorizeERC20Enforcer() internal virtual override(ERC20EnforcementModule) onlyRole(ERC20ENFORCER_ROLE){}
+
+    /** 
+    * @custom:access-control
+    * - the caller must have the `DEFAULT_ADMIN_ROLE`.
+    */
     function _authorizeForcedTransfer() internal virtual override(ERC20EnforcementModule) onlyRole(DEFAULT_ADMIN_ROLE){}
 
+    /** 
+    * @custom:access-control
+    * - the caller must have the `SNAPSHOOTER_ROLE`.
+    */
     function _authorizeSnapshots() internal virtual override(SnapshotEngineModule) onlyRole(SNAPSHOOTER_ROLE){}
 }

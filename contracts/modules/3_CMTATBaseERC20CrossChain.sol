@@ -96,10 +96,31 @@ abstract contract CMTATBaseERC20CrossChain is ERC20CrossChainModule, CCIPModule,
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
     /* ==== Access Control ==== */
+
+    /** 
+    * @custom:access-control
+    * - the caller must have the `DEFAULT_ADMIN_ROLE`.
+    */
     function _authorizeCCIPSetAdmin() internal virtual override(CCIPModule) onlyRole(DEFAULT_ADMIN_ROLE) {}
+
+    /** 
+    * @dev 
+    * A cross-chain bridge could call the OpenZeppelin function `renounceRole` to lose their privileges (CROSS_CHAIN_ROLE)
+    * While it is not intended,this has no other effect than depriving the bridge of burn/mint tokens
+    * An attacker could use this to disrupt minting/burning if they can get the bridge to execute calls. 
+    * However, in this case, the bridge should still be considered compromised and not used again.
+    * @custom:access-control
+    * - the caller must have the `CROSS_CHAIN_ROLE`.
+    */
     function _checkTokenBridge(address caller) internal virtual override(ERC20CrossChainModule) whenNotPaused {
         AccessControlUpgradeable._checkRole(CROSS_CHAIN_ROLE, caller); 
     }
+
+    /** 
+    * @custom:access-control
+    * - the caller must have the `BURNER_FROM_ROLE`.
+    * - We don't allow token holder to burn their own tokens if they don't have this role.
+    */
     function _authorizeBurnFrom() internal virtual override(ERC20CrossChainModule) onlyRole(BURNER_FROM_ROLE) whenNotPaused{}
 
     /* ==== ERC-20 OpenZeppelin ==== */

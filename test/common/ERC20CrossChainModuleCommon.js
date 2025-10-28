@@ -328,6 +328,10 @@ function ERC20CrossChainModuleCommon () {
         .withArgs(this.address2, this.address1, this.address2, AMOUNT_TO_BURN)
       expect(await this.cmtat.balanceOf(this.address1)).to.equal(30n)
       expect(await this.cmtat.totalSupply()).to.equal(30n)
+        // emits a Spend event
+            await expect(this.logs)
+            .to.emit(this.cmtat, 'Spend')
+            .withArgs(this.address1, this.address2, AMOUNT_TO_BURN)
     })
 
     it('testCannotBeBurntWithoutBurnerFromRole', async function () {

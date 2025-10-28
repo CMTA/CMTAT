@@ -57,7 +57,7 @@ interface IForcedBurnERC20 {
  * @notice Standard interface for token burning operations.
  */
 interface IBurnBatchERC20 {
-   /* ============ Events ============ */
+    /** ============ Events ============ */
     /**
      * @notice Emitted when tokens are burned in a batch operation.
      * @param burner The address that initiated the batch burn.
@@ -96,7 +96,7 @@ interface IBurnBatchERC20 {
  * @notice Standard interface for token burning operations with allowance.
  */
 interface IBurnFromERC20 {
-   /* ============ Events ============ */
+   /** ============ Events ============ */
     /**
      * @notice Emitted when a spender burns tokens on behalf of an account, reducing the spender's allowance.
      * @param burner The address that initiated the burn.
@@ -106,7 +106,7 @@ interface IBurnFromERC20 {
      */
     event BurnFrom(address indexed burner, address indexed account, address indexed spender, uint256 value);
 
-    /* ============ Functions ============ */
+    /** ============ Functions ============ */
    /**
      * @notice Burns a specified amount of tokens from a given account, deducting from the caller's allowance.
      * @param account The address whose tokens will be burned.
@@ -123,7 +123,7 @@ interface IBurnFromERC20 {
     /**
     * @notice Burns a specified amount of tokens from the caller's own balance.
     * @param value The number of tokens to burn.
-    * @dev This function is typically restricted to token holders or authorized roles.
+    * @dev This function is restricted to authorized roles.
     */
     function burn(uint256 value) external;
 }

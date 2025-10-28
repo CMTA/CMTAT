@@ -2035,6 +2035,7 @@ Here the list of events emitted by functions, which modify the total supply.
 | `CrosschainMint(address indexed to, uint256 value, address indexed sender)` | IERC7551                      | ERC-7802              | `crosschainMint`<br />(ERC20CrossChain)                      |
 | `CrosschainBurn(address indexed from, uint256 value, address indexed sender)` | IERC7551                      | ERC-7802              | `crosschainMint`<br />(ERC20CrossChain)                      |
 | `Enforcement (address indexed enforcer, address indexed account, uint256 amount, bytes data)`<br />(Enforcement )<br /> | IERC7551ERC20EnforcementEvent | ERC-7551 (draft)      | `forcedTransfer`<br />(ERC20EnforcementModule)<br />`forcedBurn`<br />(CMTATBaseCore) |
+| `Spend(address indexed account, address indexed spender, uint256 value)` | IERC20Allowance               | -                     | `transferFrom`<br />(ERC20BaseModule)<br />`transferFrom`don't change the supply<br />`burnFrom(address account, uint256 value)` |
 
 
 
@@ -2113,12 +2114,31 @@ interface IERC7551Mint {
 
 This part is implemented in the option module `ERC20CrossChain`
 
-##### BurnFrom
+##### BurnFrom / burn
 
 ```solidity
+/**
+ * @notice Standard interface for token burning operations with allowance.
+ */
 interface IBurnFromERC20 {
-  event BurnFrom(address indexed account, address indexed spender, uint256 value);
-  function burnFrom(address indexed burner, address indexed account, uint256 value) external;
+   /** ============ Events ============ **/
+    /**
+     * @notice Emitted when a spender burns tokens on behalf of an account, reducing the spender's allowance.
+    */
+    event BurnFrom(address indexed burner, address indexed account, address indexed spender, uint256 value);
+
+    /** ============ Functions ============ **/
+   /**
+     * @notice Burns a specified amount of tokens from a given account, deducting from the caller's allowance.
+	 */
+  function burnFrom(address account, uint256 value) external;
+
+    /**
+    * @notice Burns a specified amount of tokens from the caller's own balance.
+    * @param value The number of tokens to burn.
+    * @dev This function is restricted to authorized roles.
+    */
+    function burn(uint256 value) external;
 }
 ```
 
@@ -2196,17 +2216,17 @@ The alternative function proposed by CCIP, `owner`, is not implemented by CMTAT 
 
 Here the list of functions required to implement CCT and by compatible with CCIP.
 
-|                          |                                           | Implemented | CCIP Pool<br />[BurnMint Requirements](https://docs.chain.link/ccip/concepts/cross-chain-token/evm/tokens#burnmint-requirements) | CCIP Pool<br />[Lock-Release requirements](https://docs.chain.link/ccip/concepts/cross-chain-token/evm/tokens#lockrelease-requirements) | Pausable | CMTAT Module<br />                 | Role             |
-| ------------------------ | ----------------------------------------- | ----------- | ------------------------------------------------------------ | ------------------------------------------------------------ | -------- | ---------------------------------- | ---------------- |
-| Register CCIP token      |                                           |             |                                                              |                                                              |          |                                    |                  |
-|                          | owner                                     | &#x2612;    | -                                                            | -                                                            |          | -                                  |                  |
-|                          | getCCIPAdmin                              | &#x2611;    | -                                                            | -                                                            |          | CCIPModule                         | -                |
-| Burn & Mint Requirements |                                           |             |                                                              |                                                              |          |                                    |                  |
-|                          | mint(address account, uint256 amount)     | &#x2611;    | &#x2611;                                                     | &#x2612;                                                     | &#x2612; | MintModule<br />(Core module)      | MINTER_ROLE      |
-|                          | burn(uint256 amount)                      | &#x2611;    | &#x2611;                                                     | &#x2612;                                                     | &#x2612; | ERC20CrossChain                    | BURNER_FROM_ROLE |
-|                          | ERC-20<br />decimals()                    | &#x2611;    | &#x2611;                                                     | &#x2611;                                                     | -        | ERC20BaseModule<br />(Core module) |                  |
-|                          | ERC-20<br />balanceOf(address account)    | &#x2611;    | &#x2611;                                                     | &#x2611;                                                     | -        | OpenZeppelin inheritance           |                  |
-|                          | burnFrom(address account, uint256 amount) | &#x2611;    | &#x2611;                                                     | &#x2612;                                                     | &#x2611; | ERC20CrossChain                    | BURNER_FROM_ROLE |
+|                          |                                             | Implemented | CCIP Pool<br />[BurnMint Requirements](https://docs.chain.link/ccip/concepts/cross-chain-token/evm/tokens#burnmint-requirements) | CCIP Pool<br />[Lock-Release requirements](https://docs.chain.link/ccip/concepts/cross-chain-token/evm/tokens#lockrelease-requirements) | Pausable | CMTAT Module<br />                 | Role             |
+| ------------------------ | ------------------------------------------- | ----------- | ------------------------------------------------------------ | ------------------------------------------------------------ | -------- | ---------------------------------- | ---------------- |
+| Register CCIP token      |                                             |             |                                                              |                                                              |          |                                    |                  |
+|                          | `owner()`                                   | &#x2612;    | -                                                            | -                                                            |          | -                                  |                  |
+|                          | `getCCIPAdmin()`                            | &#x2611;    | -                                                            | -                                                            |          | CCIPModule                         | -                |
+| Burn & Mint Requirements |                                             |             |                                                              |                                                              |          |                                    |                  |
+|                          | `mint(address account, uint256 amount)`     | &#x2611;    | &#x2611;                                                     | &#x2612;                                                     | &#x2612; | MintModule<br />(Core module)      | MINTER_ROLE      |
+|                          | `burn(uint256 amount)`                      | &#x2611;    | &#x2611;                                                     | &#x2612;                                                     | &#x2612; | ERC20CrossChain                    | BURNER_FROM_ROLE |
+|                          | ERC-20<br />`decimals()`                    | &#x2611;    | &#x2611;                                                     | &#x2611;                                                     | -        | ERC20BaseModule<br />(Core module) |                  |
+|                          | ERC-20<br />`balanceOf(address account)`    | &#x2611;    | &#x2611;                                                     | &#x2611;                                                     | -        | OpenZeppelin inheritance           |                  |
+|                          | `burnFrom(address account, uint256 amount)` | &#x2611;    | &#x2611;                                                     | &#x2612;                                                     | &#x2611; | ERC20CrossChain                    | BURNER_FROM_ROLE |
 
 Note:
 

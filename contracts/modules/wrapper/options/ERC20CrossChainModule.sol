@@ -8,6 +8,7 @@ import {ERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/
 /* ==== Interfaces === */
 import {IERC7802} from "../../../interfaces/technical/IERC7802.sol";
 import {IBurnFromERC20} from "../../../interfaces/technical/IMintBurnToken.sol";
+import {IERC20Allowance} from "../../../interfaces/technical/IERC20Allowance.sol";
 import {ERC20BurnModule, ERC20BurnModuleInternal} from "../core/ERC20BurnModule.sol";
 import {ERC20MintModule, ERC20MintModuleInternal} from "../core/ERC20MintModule.sol";
 /**
@@ -46,12 +47,11 @@ abstract contract ERC20CrossChainModule is ERC20MintModule, ERC20BurnModule, ERC
     * @dev
     * Don't emit the same event as configured in the ERC20MintModule
     * @custom:access-control
-    * - the caller must have the `CROSS_CHAIN_ROLE`.
+    * Protected by the modifier onlyTokenBridge.
     */
-    function crosschainMint(address to, uint256 value) public virtual override(IERC7802)  onlyTokenBridge {
-         // Put before to avoid reentrancy-events (slither)
-         emit CrosschainMint(to, value,_msgSender());
+    function crosschainMint(address to, uint256 value) public virtual override(IERC7802) onlyTokenBridge {
         _mintOverride(to, value);
+        emit CrosschainMint(to, value,_msgSender());
     }
 
     /**
@@ -59,19 +59,17 @@ abstract contract ERC20CrossChainModule is ERC20MintModule, ERC20BurnModule, ERC
     * @dev
     * Don't emit the same event as configured in the ERC20BurnModule
     * @custom:access-control
-    * - the caller must have the `CROSS_CHAIN_ROLE`.
+    * - Protected by the modifier onlyTokenBridge.
     */
-    function crosschainBurn(address from, uint256 value) public virtual override(IERC7802)  onlyTokenBridge{
-        address sender =  _msgSender();
-        // Put before to avoid reentrancy-events (slither)
+    function crosschainBurn(address from, uint256 value) public virtual override(IERC7802) onlyTokenBridge{
+        _burnOverride(from, value);
         emit CrosschainBurn(from, value, _msgSender());
-        _burnFrom(sender, from, value);  
     }
 
     /**
      * @inheritdoc IBurnFromERC20
      * @custom:access-control
-     * - the caller must have the `BURNER_FROM_ROLE`.
+     * - Protected by the modifier onlyBurnerFrom.
      */
     function burnFrom(address account, uint256 value)
         public virtual override(IBurnFromERC20) onlyBurnerFrom
@@ -83,17 +81,17 @@ abstract contract ERC20CrossChainModule is ERC20MintModule, ERC20BurnModule, ERC
     /**
     * @inheritdoc IBurnFromERC20
     * @custom:access-control
-    * - the caller must have the `BURNER_FROM_ROLE`.
+    * - Protected by the modifier onlyBurnerFrom
     */
     function burn(
         uint256 value
-    ) public virtual onlyBurnerFrom{
-        // Put before to avoid reentrancy-events (slither)
+    ) public virtual override(IBurnFromERC20) onlyBurnerFrom{
         // Don't emit CrossChainBurn because this function burn is not part of the IERC7802 interface
         // Don't emit Spend event because allowance is not used here
         address sender = _msgSender();
-        emit BurnFrom(sender, sender, sender, value);
         _burnOverride(sender, value);
+        // Burn from itself
+        emit BurnFrom(sender, sender, sender, value);
     }
 
     /* ============ View functions ============ */
@@ -106,14 +104,14 @@ abstract contract ERC20CrossChainModule is ERC20MintModule, ERC20BurnModule, ERC
     //////////////////////////////////////////////////////////////*/
 
     function _burnFrom(address sender, address account, uint256 value) internal virtual{
-        // Allowance check
+        // Allowance check and spend
         ERC20Upgradeable._spendAllowance(account, sender, value );
-         // Specific event for the operation
-        // Put before to avoid reentrancy-events (slither)
-        //emit Spend(account, sender, value);
-        emit BurnFrom(sender, account, sender, value);
+        // Specific event for the spend operation, same as transferFrom (ERC20BaseModule)
+        emit IERC20Allowance.Spend(account, sender, value);
         // burn
         _burnOverride(account, value);
+        // Specific event to burnFrom and self-burn (burn)
+        emit BurnFrom(sender, account, sender, value);
     }
 
     /* ==== Access Control ==== */
