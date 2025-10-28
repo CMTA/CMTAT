@@ -4,6 +4,10 @@ const { SNAPSHOOTER_ROLE, ZERO_ADDRESS } = require('../../utils.js')
 function SnapshotModuleSetSnapshotEngineCommon () {
   context('SnapshotEngineSetTest', function () {
     it('testCanBeSetByAdmin', async function () {
+      this.transferEngineMock = await ethers.deployContract(
+        'SnapshotEngineMock',
+        [ZERO_ADDRESS, this.admin]
+      )
       // Act
       this.logs = await this.cmtat
         .connect(this.admin)
@@ -16,11 +20,12 @@ function SnapshotModuleSetSnapshotEngineCommon () {
     })
 
     it('testCannotBeSetByAdminWithTheSameValue', async function () {
+      let snapshotEngineCurrent = await this.cmtat.snapshotEngine()
       // Act
       await expect(
         this.cmtat
           .connect(this.admin)
-          .setSnapshotEngine(await this.cmtat.snapshotEngine())
+          .setSnapshotEngine(snapshotEngineCurrent)
       ).to.be.revertedWithCustomError(
         this.cmtat,
         'CMTAT_SnapshotModule_SameValue'

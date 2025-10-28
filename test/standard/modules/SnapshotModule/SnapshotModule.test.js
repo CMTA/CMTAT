@@ -33,5 +33,5 @@ describe('Standard - SnapshotModule', function () {
   SnapshotModuleCommonUnschedule()
   SnapshotModuleCommonGetNextSnapshot()
   // Set snapshot Engine
-  SnapshotModuleSetSnapshotEngineCommon
+  SnapshotModuleSetSnapshotEngineCommon()
 })
