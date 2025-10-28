@@ -58,6 +58,7 @@ abstract contract ERC20CrossChainModule is ERC20MintModule, ERC20BurnModule, ERC
     * @inheritdoc IERC7802
     * @dev
     * Don't emit the same event as configured in the ERC20BurnModule
+    * Don't require allowance to follow Optimism Superchain ERC20 and OpenZeppelin implementation
     * @custom:access-control
     * - Protected by the modifier onlyTokenBridge.
     */
