@@ -522,7 +522,7 @@ Note: `canTransfer` is defined for the compliance contract in ERC-3643.
 
 ####  ERC-7551 (eWPG)
 
-> [ERC specification](https://ethereum-magicians.org/t/erc-7551-crypto-security-token-smart-contract-interface-ewpg-reworked/25477)
+> [ERC specification](https://github.com/ethereum/ERCs/blob/60a282eb3c867af2dbed8eff12e7549b548cf1bf/ERCS/erc-7551.md) / [Ethereum magician](https://ethereum-magicians.org/t/erc-7551-crypto-security-token-smart-contract-interface-ewpg-reworked/25477)
 >
 > Status: draft
 
@@ -531,6 +531,12 @@ ERC-7551 ([eWpG](https://www.gesetze-im-internet.de/ewpg/)) is a proposal by the
 The implemented interface is available in [IERC7551](./contracts/interfaces/tokenization/draft-IERC7551.sol).
 
 Only the specific deployment version dedicated (CMTATERC7551) implements the full interface.
+
+##### Link to off-chain document
+
+Contrary to the ERC-7551 specification, CMTAT does not enforce a non-zero value for the `termsHash`.  
+
+`unpause`will not revert if `termsHash == 0x0`.
 
 #####  Fulls functions
 
