@@ -21,6 +21,9 @@ abstract contract AccessControlModule is AccessControlUpgradeable {
         if(admin == address(0)){
             revert CMTAT_AccessControlModule_AddressZeroNotAllowed();
         }
+        // we don't check the return value
+        // _grantRole attempts to grant `role` to `account` and returns a boolean indicating if `role` was granted.
+        // return false only if the admin has already the role
         _grantRole(DEFAULT_ADMIN_ROLE, admin);
     }
 

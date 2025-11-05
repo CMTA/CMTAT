@@ -45,6 +45,14 @@ Reference: [keepachangelog.com/en/1.1.0/](https://keepachangelog.com/en/1.1.0/)
 
 This version is not audited
 
+**Fixed**
+
+- [Misleading NatSpec Comments](https://github.com/CMTA/CMTAT/issues/330)
+- [Incorrect error parameters in _unfreezeTokens](https://github.com/CMTA/CMTAT/issues/329)
+- [CMTATUpgradeableUUPS contract may be not initializable](https://github.com/CMTA/CMTAT/issues/327)
+- [CMTATBaseAllowlist - Redundant State Checks](https://github.com/CMTA/CMTAT/issues/332)
+- [Snpashot update - CEI pattern](https://github.com/CMTA/CMTAT/issues/326)
+
 **Added**
 
 - New module `CCIPModule` with two functions `getCCIPAdmin` and `setCCIPAdmin` 
@@ -62,11 +70,14 @@ This version is not audited
 - Rename `BaseModule` into `VersionModule`
 
   - Reason: This module contains only the CMTAT version. This avoid also the confusion with CMTAT Base modules.
-
 - Access control: in wrapper modules, all access control is made through internal functions. These functions must be now implemented in CMTAT base module
 
   - Reason: this allows to use a different access control (e.g. [ownership](https://docs.openzeppelin.com/contracts/5.x/) or [Access Manager](https://docs.openzeppelin.com/contracts/5.x/api/access#AccessManager)) by implementing a new CMTAT Base module without the need of modifying wrapper modules.
-- Move cross-chain functionalities (ERC-7802) from `CMTATBaseCrossChain` to a new module `ERC20CrossChain`.
+- Cross-Chain
+  - Move cross-chain functionalities (ERC-7802) from `CMTATBaseCrossChain` to a new module `ERC20CrossChain`.
+  - The allowance is no longer required to burn tokens to follow Optimism Superchain ERC20 and OpenZeppelin implementation
+    See [ERC20BridgeableUpgradeable.so](https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/blob/e725abddf1e01cf05ace496e950fc8e243cc7cab/contracts/token/ERC20/extensions/draft-ERC20BridgeableUpgradeable.sol) & [SuperchainERC20.sol](https://github.com/ethereum-optimism/optimism/blob/develop/packages/contracts-bedrock/src/L2/SuperchainERC20.sol#L43). See issue [328#issuecomment-3455923837](https://github.com/CMTA/CMTAT/issues/328#issuecomment-3455923837)
+
 
 **Documentation** (README)
 
