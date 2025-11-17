@@ -217,11 +217,12 @@ Here is a comparison between the features present in known tokenization framewor
 |                         *Technical*                          |                                                              |                                                              |                                                              |                                                              |
 | MetaTx ("Gasless") support ([ERC-2771](https://eips.ethereum.org/EIPS/eip-2771)) |                           &#x2611;                           |                         **&#x2612;**                         | **&#x2612;**                                                 | **&#x2612;**                                                 |
 |                 Customizable modular design                  |                           &#x2611;                           |                         **&#x2612;**                         | **&#x2612;**                                                 | **&#x2612;**                                                 |
-| [ERC-7802](https://eips.ethereum.org/EIPS/eip-7802) Cross-chain transfer |                           &#x2611;                           |                         **&#x2612;**                         | **&#x2612;**                                                 | **&#x2612;**                                                 |
 | ERC-20 custom errors ([ERC-6093](https://eips.ethereum.org/EIPS/eip-6093)) |             &#x2611;<br />(use OpenZeppelin v5)              |                         **&#x2612;**                         | **&#x2612;**<br />(use OpenZeppelin v4)                      | **&#x2612;**<br />(use OpenZeppelin v4)                      |
 | [ERC-5679: Token minting and Burning](https://eips.ethereum.org/EIPS/eip-5679) |                           &#x2611;                           |                         **&#x2612;**                         | **&#x2612;**                                                 | **&#x2612;**                                                 |
 | Upgradibility with [ERC-7201](https://eips.ethereum.org/EIPS/eip-7201) |                           &#x2611;                           |                         **&#x2612;**                         | **&#x2612;**                                                 | **&#x2612;**                                                 |
 |                    Snapshots/checkpoints                     |   &#x2611;<br />(external contract or by extending CMTAT)    |                         **&#x2612;**                         | **&#x2612;**                                                 | **&#x2612;**                                                 |
+|                    **Cross-chain bridge**                    |                                                              |                                                              |                                                              |                                                              |
+| [ERC-7802](https://eips.ethereum.org/EIPS/eip-7802) Cross-chain transfer |                           &#x2611;                           |                         **&#x2612;**                         | **&#x2612;**                                                 | **&#x2612;**                                                 |
 | [Chainlink CCT](https://docs.chain.link/ccip/concepts/cross-chain-token) support |                           &#x2611;                           |         **&#x2612;**<br />(Lack burn/burnFrom/mint)          | Partial<br />(Lack burn/burnFrom)                            | **&#x2612;**<br />(Lack owner/getCCIPAdmin/burnFrom)         |
 
 **Note**
@@ -1209,6 +1210,7 @@ Here is the list of roles and their 32 bytes identifier.
 | DEBT_ROLE              | DebtModule<br />(also used by DebtEngineModule)           | 0xc6f3350ab30f55ce45863160fc345c1663d4633fe7cacfd3b9bbb6420a9147f8 |
 | CROSS_CHAIN_ROLE       | ERC20CrossChainModule                                     | 0x620d362b92b6ef580d4e86c5675d679fe08d31dff47b72f281959a4eecdd036a |
 | BURNER_FROM_ROLE       | ERC20CrossChainModule                                     | 0x5bfe08abba057c54e6a28bce27ce8c53eb21d7a94376a70d475b5dee60b6c4e2 |
+| BURNER_SELF_ROLE       | ERC20CrossChainModule                                     | 0x13d9f3ea33477b975af6cd01437366c28412d5bd9b872fa0fc25bd3a160683af |
 
 
 
@@ -1216,6 +1218,10 @@ Here is the list of roles and their 32 bytes identifier.
 
 Here a summary tab for each restricted functions defined in a module
 For function signatures,  struct arguments are represented with their corresponding native type.
+
+Roles are defined in their specific modules but enforced in CMTAT Base module.
+
+Thus, you are free to use a module, for example `PauseModule` and apply a different access control to restrict the function.
 
 |                                               | Function signature<br />                                     | Visibility [public/external] | Input variables (Function arguments)                         | Output variables<br />(return value) | Role Required                                                |
 | --------------------------------------------- | ------------------------------------------------------------ | ---------------------------- | ------------------------------------------------------------ | ------------------------------------ | ------------------------------------------------------------ |
@@ -1266,7 +1272,7 @@ For function signatures,  struct arguments are represented with their correspond
 |                                               | `setDebtEngine(address debtEngine_)`                         | public                       | `IDebtEngine debtEngine_`                                    | -                                    | DEBT_ROLE                                                    |
 | DebtModule                                    |                                                              |                              |                                                              |                                      |                                                              |
 |                                               | `setCreditEvents( (bool,bool,string) creditEvents_)`         | public                       | `CreditEvents creditEvents_`                                 | -                                    | DEBT_ROLE                                                    |
-|                                               | `setDebt(   (string,string,string,string),(uint256,uint256,uint256,string,string,string,string,string,string,string,string,address) debt_)` | public                       | `ICMTATDebt.DebtInformation debt_`                           | -                                    | DEBT_ROLE                                                    |
+|                                               | `setDebt((string,string,string,string),(uint256,uint256,uint256,string,string,string,string,string,string,string,string,address) debt_)` | public                       | `ICMTATDebt.DebtInformation debt_`                           | -                                    | DEBT_ROLE                                                    |
 | ERC7551Module                                 |                                                              |                              |                                                              |                                      |                                                              |
 |                                               | `setMetaData(string metadata_)`                              | public                       | `string metadata_`                                           | -                                    | EXTRA_INFORMATION_ROLE                                       |
 |                                               | `setTerms(bytes32 hash, string uri)`                         | public                       | `bytes32 hash, string uri`                                   | -                                    | EXTRA_INFORMATION_ROLE                                       |
@@ -1281,6 +1287,10 @@ For function signatures,  struct arguments are represented with their correspond
 | CMTATBaseCore<br />(only CMTAT light version) |                                                              |                              |                                                              |                                      |                                                              |
 |                                               | `burnAndMint(address from, address to, uint256 amountToBurn, uint256 amountToMint, bytes data)` | public                       | `address from, address to, uint256 amountToBurn, uint256 amountToMint, bytes data` | -                                    | Same role requirement as `burn`and `mint`, so BURNER_ROLE and MINTER_ROLE |
 |                                               | `forcedBurn(address account, uint256 value, bytes data)`     | public                       | `address account, uint256 value, bytes data`                 | -                                    | DEFAULT_ADMIN_ROLE                                           |
+
+
+
+
 
 #### Schema
 
@@ -2079,6 +2089,8 @@ interface IERC7551Burn {
 }
 ```
 
+
+
 #### Mint (ERC20MintModule)
 
 Core module
@@ -2151,6 +2163,32 @@ interface IBurnFromERC20 {
 ##### ERC-7802
 
 See the dedicated section (at the beginning of this document)
+
+#### Access control
+
+in the different `CMTATBase`modules, the  function responsible to manage the access control are overridden to forbid `self burn`.
+
+It means that a token holder can not burn its own tokens.
+
+Example (ERC20CrossChainModule):
+
+```solidity
+function _authorizeBurnFrom() internal virtual override(ERC20CrossChainModule) onlyRole(BURNER_FROM_ROLE) whenNotPaused{}
+```
+
+**Reason**
+
+It's deliberate that only the issuer (and not the tokenholder) can cancel a token, and that this corresponds to a legal requirement in several countries.
+
+Indeed, once issued, a security can only be cancelled by its issuer, not by its holder. Since the token serves as a vehicle for the security, the same must apply to the token itself. An investor wishing to "get rid of" a token must transfer it to the issuer, who can then cancel it when the law allows.
+
+**Alternative**
+
+You can still allow `self burn`by creating a new function or by overriden the corresponding functions
+
+
+
+
 
 ### Manage on-chain document
 

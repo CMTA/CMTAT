@@ -20,6 +20,7 @@ import {ERC20MintModule, ERC20MintModuleInternal} from "../core/ERC20MintModule.
 abstract contract ERC20CrossChainModule is ERC20MintModule, ERC20BurnModule, ERC165Upgradeable, IERC7802, IBurnFromERC20 {
     /* ============ State Variables ============ */
     bytes32 public constant BURNER_FROM_ROLE = keccak256("BURNER_FROM_ROLE");
+    bytes32 public constant BURNER_SELF_ROLE = keccak256("BURNER_SELF_ROLE");
     bytes32 public constant CROSS_CHAIN_ROLE = keccak256("CROSS_CHAIN_ROLE");
 
     /* ============ Modifier ============ */
@@ -32,9 +33,15 @@ abstract contract ERC20CrossChainModule is ERC20MintModule, ERC20BurnModule, ERC
         _;
     }
 
-    /// @dev Modifier to restrict access to the burner functions
+        /// @dev Modifier to restrict access to the burner functions
     modifier onlyBurnerFrom() {
         _authorizeBurnFrom();
+        _;
+    }
+
+    /// @dev Modifier to restrict access to the burner functions
+    modifier onlySelfBurn() {
+        _authorizeSelfBurn();
         _;
     }
 
@@ -86,14 +93,14 @@ abstract contract ERC20CrossChainModule is ERC20MintModule, ERC20BurnModule, ERC
     */
     function burn(
         uint256 value
-    ) public virtual override(IBurnFromERC20) onlyBurnerFrom{
-        // Don't emit CrossChainBurn because this function burn is not part of the IERC7802 interface
+    ) public virtual override(IBurnFromERC20) onlySelfBurn{
         // Don't emit Spend event because allowance is not used here
         address sender = _msgSender();
-        _burnOverride(sender, value);
-        // Burn from itself
-        emit BurnFrom(sender, sender, sender, value);
+        // burn from itself
+        _burn(sender, sender, value);
     }
+
+
 
     /* ============ View functions ============ */
     function supportsInterface(bytes4 _interfaceId) public view virtual override(ERC165Upgradeable, IERC165) returns (bool) {
@@ -103,15 +110,21 @@ abstract contract ERC20CrossChainModule is ERC20MintModule, ERC20BurnModule, ERC
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
-
     function _burnFrom(address sender, address account, uint256 value) internal virtual{
         // Allowance check and spend
         ERC20Upgradeable._spendAllowance(account, sender, value );
         // Specific event for the spend operation, same as transferFrom (ERC20BaseModule)
         emit IERC20Allowance.Spend(account, sender, value);
+        _burn(sender, account, value);
+    }
+
+    function _burn(
+       address sender, address account, uint256 value
+    ) internal virtual{
         // burn
         _burnOverride(account, value);
         // Specific event to burnFrom and self-burn (burn)
+        // Don't emit CrossChainBurn because this function burn is not part of the IERC7802 interface
         emit BurnFrom(sender, account, sender, value);
     }
 
@@ -124,4 +137,6 @@ abstract contract ERC20CrossChainModule is ERC20MintModule, ERC20BurnModule, ERC
     function _checkTokenBridge(address caller) internal virtual;
 
     function _authorizeBurnFrom() internal virtual;
+
+    function _authorizeSelfBurn() internal virtual;
 }

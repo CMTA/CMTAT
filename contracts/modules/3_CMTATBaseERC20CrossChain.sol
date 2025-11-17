@@ -123,6 +123,13 @@ abstract contract CMTATBaseERC20CrossChain is ERC20CrossChainModule, CCIPModule,
     */
     function _authorizeBurnFrom() internal virtual override(ERC20CrossChainModule) onlyRole(BURNER_FROM_ROLE) whenNotPaused{}
 
+    /** 
+    * @custom:access-control
+    * - the caller must have the `BURNER_FROM_ROLE`.
+    * - We don't allow token holder to burn their own tokens if they don't have this role.
+    */
+    function _authorizeSelfBurn() internal virtual override(ERC20CrossChainModule) onlyRole(BURNER_SELF_ROLE) whenNotPaused{}
+
     /* ==== ERC-20 OpenZeppelin ==== */
     function _update(
         address from,

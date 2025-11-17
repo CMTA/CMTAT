@@ -1,7 +1,7 @@
 const {
   CROSS_CHAIN_ROLE,
   BURNER_FROM_ROLE,
-  MINTER_ROLE,
+  BURNER_SELF_ROLE,
   ZERO_ADDRESS
 } = require('../utils')
 const { expect } = require('chai')
@@ -214,7 +214,7 @@ function ERC20CrossChainModuleCommon () {
       // Arrange
       await this.cmtat
         .connect(this.admin)
-        .grantRole(BURNER_FROM_ROLE, this.address1)
+        .grantRole(BURNER_SELF_ROLE, this.address1)
       // Act
       const bindTest = testBurn.bind(this)
       await bindTest(this.address1)
@@ -226,7 +226,7 @@ function ERC20CrossChainModuleCommon () {
           this.cmtat,
           'AccessControlUnauthorizedAccount'
         )
-        .withArgs(this.address2.address, BURNER_FROM_ROLE)
+        .withArgs(this.address2.address, BURNER_SELF_ROLE)
 
       // Without reason
       await expect(this.cmtat.connect(this.address2).burn(20n))
@@ -234,7 +234,7 @@ function ERC20CrossChainModuleCommon () {
           this.cmtat,
           'AccessControlUnauthorizedAccount'
         )
-        .withArgs(this.address2.address, BURNER_FROM_ROLE)
+        .withArgs(this.address2.address, BURNER_SELF_ROLE)
     })
 
     /* //////////////////////////////////////////////////////////////
@@ -244,7 +244,7 @@ function ERC20CrossChainModuleCommon () {
     it('testCannotBeBurntIfBalanceExceeds', async function () {
       await this.cmtat
         .connect(this.admin)
-        .grantRole(BURNER_FROM_ROLE, this.address1)
+        .grantRole(BURNER_SELF_ROLE, this.address1)
       // error AccessControlUnauthorizedAccount(address account, bytes32 neededRole);
       const AMOUNT_TO_BURN = 200n
       const ADDRESS1_BALANCE = await this.cmtat.balanceOf(this.address1)
@@ -271,7 +271,7 @@ function ERC20CrossChainModuleCommon () {
     it('testCanBeBurnEvenIfContractIsPaused', async function () {
       await this.cmtat
         .connect(this.admin)
-        .grantRole(BURNER_FROM_ROLE, this.address1)
+        .grantRole(BURNER_SELF_ROLE, this.address1)
       await this.cmtat.connect(this.admin).pause()
       await expect(
         this.cmtat.connect(this.admin).burn(VALUE_TYPED)
@@ -285,7 +285,7 @@ function ERC20CrossChainModuleCommon () {
         .setAddressFrozen(this.address1, true)
       await this.cmtat
         .connect(this.admin)
-        .grantRole(BURNER_FROM_ROLE, this.address1)
+        .grantRole(BURNER_SELF_ROLE, this.address1)
       // Act
       const VALUE = 20
       const VALUE_TYPED = ethers.Typed.uint256(20)
