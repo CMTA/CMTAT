@@ -2184,11 +2184,7 @@ Indeed, once issued, a security can only be cancelled by its issuer, not by its 
 
 **Alternative**
 
-You can still allow `self burn`by creating a new function or by overriden the corresponding functions
-
-
-
-
+You can still allow `self burn`by creating a new function or by overriden the corresponding functions.
 
 ### Manage on-chain document
 
@@ -2258,7 +2254,7 @@ The alternative function proposed by CCIP, `owner`, is not implemented by CMTAT 
 
 ##### [Transfer functions](https://docs.chain.link/ccip/concepts/cross-chain-token/evm/tokens#transfer-functions)
 
-Here the list of functions required to implement CCT and by compatible with CCIP.
+Here is the list of functions required to implement CCT and be compatible with CCIP.
 
 |                          |                                             | Implemented | CCIP Pool<br />[BurnMint Requirements](https://docs.chain.link/ccip/concepts/cross-chain-token/evm/tokens#burnmint-requirements) | CCIP Pool<br />[Lock-Release requirements](https://docs.chain.link/ccip/concepts/cross-chain-token/evm/tokens#lockrelease-requirements) | Pausable | CMTAT Module<br />                 | Role             |
 | ------------------------ | ------------------------------------------- | ----------- | ------------------------------------------------------------ | ------------------------------------------------------------ | -------- | ---------------------------------- | ---------------- |
@@ -2275,13 +2271,11 @@ Here the list of functions required to implement CCT and by compatible with CCIP
 Note:
 
 -  The admin must grant the required permissions to mint/burn to the CCIP token pool.
-
-- If you put the contract in pause through the PauseModule, it will not affect the `mint` and `burn` functions from MintModule and BurnModule.
-  In this case, the alternative solution is to revoke the MINTER_ROLE and BURNER_ROLE from the concerned addresses to prevent any mint and burn.
+-  Pausing the contract through the PauseModule will not affect the mint and burn functions of the MintModule and BurnModule. The alternative solution in this case is to revoke the MINTER_ROLE and BURNER_ROLE from the relevant addresses to prevent minting and burning.
 
 ##### CMTAT implementation
 
-Here the list of functions implemented and their respective module.
+Here is the list of implemented functions and their respective module.
 
 ```solidity
 // ERC20BaseModule
@@ -2306,8 +2300,8 @@ function burn(uint256 value) public virtual onlyBurnerFrom
 
 The  [`SuperchainTokenBridge`](https://github.com/ethereum-optimism/optimism/blob/develop/packages/contracts-bedrock/src/L2/SuperchainTokenBridge.sol) uses [ERC-7802](https://eips.ethereum.org/EIPS/eip-7802) to enable asset interoperability within the Superchain.
 
-- Asset interoperability allows tokens to move securely across the Superchain by burning tokens on the source chain and minting an equivalent amount on the destination chain. 
-- Instead of wrapping assets, this mechanism effectively "teleports" tokens between chains in the Superchain. .
+- Asset interoperability allows tokens to move across the Superchain by burning tokens on the source chain and minting an equivalent amount on the destination chain. 
+- Instead of wrapping assets, this mechanism effectively "teleports" tokens between chains in the Superchain.
 
 Reference: [docs.optimism.io/interop/superchain-erc20](https://docs.optimism.io/interop/superchain-erc20)
 
