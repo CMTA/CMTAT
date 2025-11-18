@@ -3,7 +3,7 @@
 pragma solidity ^0.8.20;
 
 import {ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
-import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import {Initializable} from "@openzeppelin/contracts/proxy/utils/Initializable.sol";
 import {EnforcementModuleLibrary} from "./common/EnforcementModuleLibrary.sol";
 /**
  * @dev Allowlist module internal.

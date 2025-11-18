@@ -3,7 +3,7 @@
 pragma solidity ^0.8.20;
 
 /* ==== OpenZeppelin === */
-import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import {Initializable} from "@openzeppelin/contracts/proxy/utils/Initializable.sol";
 /* ==== Engine === */
 import {ISnapshotEngine, ISnapshotEngineModule} from "../../../interfaces/modules/ISnapshotEngineModule.sol";
 
