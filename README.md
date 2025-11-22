@@ -2183,7 +2183,7 @@ interface IBurnFromERC20 {
 
 See the dedicated section (at the beginning of this document)
 
-#### Access control
+##### Access control
 
 in the different `CMTATBase`modules, the  function responsible to manage the access control are overridden to forbid `self burn`.
 
@@ -2959,6 +2959,64 @@ A specific version is available for [Aztec](https://aztec.network/)
 
 - [Aztec Private CMTAT](https://github.com/taurushq-io/private-CMTAT-aztec)
   - See also [Taurus - Addressing the Privacy and Compliance Challenge in Public Blockchain Token Transactions](https://www.taurushq.com/blog/enhancing-token-transaction-privacy-on-public-blockchains-while-ensuring-compliance/) 
+
+### Summary tab
+
+If you create a version for another blockchains, feel free to use this summary tab to build a correspondence table between CMTAT framework, CMTAT Solidity version and your implementation.
+
+| **CMTAT framework mandatory functionalities** | **CMTAT Solidity corresponding features**                    |
+| --------------------------------------------- | ------------------------------------------------------------ |
+| Know total supply                             | ERC20 `totalSupply`                                          |
+| Know balance                                  | ERC20 `balanceOf`                                            |
+| Transfer tokens                               | ERC20 `transfer`                                             |
+| Create tokens (mint)                          | `Mint/batchMint`                                             |
+| Cancel tokens (force burn)                    | `burn/batchBurn`                                             |
+| Pause tokens                                  | Pause <br />(*Nb. With CMTAT Solidity it is still possible to burn and mint while transfers are paused.)* |
+| Unpause tokens                                | `unpause`                                                    |
+| Deactivate contract                           | `deactivateContract`                                         |
+| Freeze                                        | `setAddressFrozen` (previously `freeze`)                     |
+| Unfreeze                                      | `setAddressFrozen` (previously `unfreeze`)                   |
+| Name attribute                                | ERC20 `name` attribute                                       |
+| Ticker symbol attribute                       | ERC20 `symbol` attribute                                     |
+| Token ID attribute                            | `tokenId`                                                    |
+| Reference to legally required documentation   | `terms` (document name, hash and uri with at least the uri)  |
+
+#### CMTAT extended 
+
+Optional CMTAT features
+
+| CMTAT Functionalities      | **CMTAT Solidity corresponding features**      | CMTAT Light | CMTAT Debt | CMTAT Standard |
+| -------------------------- | ---------------------------------------------- | ----------- | ---------- | -------------- |
+| on-chain snapshot          | `snapshotModule & snapshotEngine`              | ☒           | &#x2611;   | &#x2611;       |
+| forced Transfer            | `forcedTransfer`                               | ☒           | &#x2611;   | &#x2611;       |
+| forced burn                | `forcedBurn`                                   | &#x2611;    | ☒          | ☒              |
+| freeze partial token       | `freezePartialTokens`/ `unfreezePartialTokens` | &#x2611;    | &#x2611;   | &#x2611;       |
+| Whitelisting               | CMTAT Allowlist / CMTAT with rule whitelist    | ☒           | &#x2611;   | &#x2611;       |
+| RuleEngine / transfer hook | CMTAT with RuleEngine                          | ☒           | &#x2611;   | &#x2611;       |
+| Upgradibility              | CMTAT Upgradeable version                      | &#x2611;    | &#x2611;   | &#x2611;       |
+| Feepayer/gasless           | CMTAT with ERC-2771 module                     | ☒           | ☒          | &#x2611;       |
+
+**ForcedBurn/forcedTransfer:** 
+
+In the standard burn function, it is not possible to burn token from a frozen wallet.  CMTAT offers a dedicated function `forcedTransfer`which allows to force a transfer or a burn. If the `forcedTransfer` function is not available, the alternative is to implement only the function`forcedBurn`. This is what is done for the CMTAT light version which does not include `forcedTransfer`. You can also decide to implement both. In this case, we suggest that only `forcedBurn`can burn tokens and not `forcedTransfer`.
+
+#### Implementation details
+
+| Functionalities                                | **CMTAT Solidity** | Note                                                         |
+| ---------------------------------------------- | ------------------ | ------------------------------------------------------------ |
+| Mint while pause                               | &#x2611;           | -                                                            |
+| Burn while pause                               | &#x2611;           | -                                                            |
+| Self Burn                                      | ☒                  | Token holder can not burn their own tokens.<br />Only authorised addresses are allowed to burn tokens. |
+| Standard burn on a frozen address              | ☒                  | Required to use `forcedTransfer`or `forcedBurn`              |
+| Burn tokens with the function `forcedTransfer` | &#x2611;           | See note above                                               |
+
+**Self burn**
+
+It's deliberate that only the issuer (and not the tokenholder) can burn a token, and that this corresponds to a legal requirement in several countries.
+
+Indeed, once issued, a security can only be cancelled by its issuer, not by its holder. Since the token serves as a vehicle for the security, the same must apply to the token itself. An investor wishing to "get rid of" a token must transfer it to the issuer, who can then cancel it when the law allows.
+
+However, feel free to add it in your CMTAT version if this makes sense for your from a legal or business perspective.
 
 ## Intellectual property
 
