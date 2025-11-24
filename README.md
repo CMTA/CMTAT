@@ -2964,6 +2964,10 @@ A specific version is available for [Aztec](https://aztec.network/)
 
 If you create a version for another blockchains, feel free to use this summary tab to build a correspondence table between CMTAT framework, CMTAT Solidity version and your implementation.
 
+#### CMTAT framework
+
+In the below table, the CMTAT framework required features are mapped to Solidity features.
+
 | **CMTAT framework mandatory functionalities** | **CMTAT Solidity corresponding features**                    |
 | --------------------------------------------- | ------------------------------------------------------------ |
 | Know total supply                             | ERC20 `totalSupply`                                          |
@@ -2983,22 +2987,25 @@ If you create a version for another blockchains, feel free to use this summary t
 
 #### CMTAT extended 
 
-Optional CMTAT features
+In the below table, the CMTAT framework extendedfeatures are mapped to Solidity features.
 
-| CMTAT Functionalities      | **CMTAT Solidity corresponding features**      | CMTAT Light | CMTAT Debt | CMTAT Standard |
-| -------------------------- | ---------------------------------------------- | ----------- | ---------- | -------------- |
-| on-chain snapshot          | `snapshotModule & snapshotEngine`              | ☒           | &#x2611;   | &#x2611;       |
-| forced Transfer            | `forcedTransfer`                               | ☒           | &#x2611;   | &#x2611;       |
-| forced burn                | `forcedBurn`                                   | &#x2611;    | ☒          | ☒              |
-| freeze partial token       | `freezePartialTokens`/ `unfreezePartialTokens` | &#x2611;    | &#x2611;   | &#x2611;       |
-| Whitelisting               | CMTAT Allowlist / CMTAT with rule whitelist    | ☒           | &#x2611;   | &#x2611;       |
-| RuleEngine / transfer hook | CMTAT with RuleEngine                          | ☒           | &#x2611;   | &#x2611;       |
-| Upgradibility              | CMTAT Upgradeable version                      | &#x2611;    | &#x2611;   | &#x2611;       |
-| Feepayer/gasless           | CMTAT with ERC-2771 module                     | ☒           | ☒          | &#x2611;       |
+| CMTAT Functionalities                | **CMTAT Solidity corresponding features**      | CMTAT Light | CMTAT Debt | CMTAT Standard |
+| ------------------------------------ | ---------------------------------------------- | ----------- | ---------- | -------------- |
+| On-chain snapshot                    | `snapshotModule & snapshotEngine`              | ☒           | &#x2611;   | &#x2611;       |
+| Forced Transfer                      | `forcedTransfer`                               | ☒           | &#x2611;   | &#x2611;       |
+| Forced burn                          | `forcedBurn`                                   | &#x2611;    | ☒          | ☒              |
+| Freeze partial token                 | `freezePartialTokens`/ `unfreezePartialTokens` | &#x2611;    | &#x2611;   | &#x2611;       |
+| Integrated whitelisting/allowlisting | CMTAT Allowlist                                | &#x2611;    | ☒          | ☒              |
+| External Whitelisting/allowlisting   | CMTAT with rule whitelist                      | ☒           | &#x2611;   | &#x2611;       |
+| RuleEngine / transfer hook           | CMTAT with RuleEngine                          | ☒           | &#x2611;   | &#x2611;       |
+| Upgradibility                        | CMTAT Upgradeable version                      | &#x2611;    | &#x2611;   | &#x2611;       |
+| Feepayer/gasless                     | CMTAT with ERC-2771 module                     | ☒           | ☒          | &#x2611;       |
 
 **ForcedBurn/forcedTransfer:** 
 
-In the standard burn function, it is not possible to burn token from a frozen wallet.  CMTAT offers a dedicated function `forcedTransfer`which allows to force a transfer or a burn. If the `forcedTransfer` function is not available, the alternative is to implement only the function`forcedBurn`. This is what is done for the CMTAT light version which does not include `forcedTransfer`. You can also decide to implement both. In this case, we suggest that only `forcedBurn`can burn tokens and not `forcedTransfer`.
+In the standard burn function, it is not possible to burn token from a frozen wallet.  CMTAT offers a dedicated function `forcedTransfer`which allows to force a transfer or a burn. If the `forcedTransfer` function is not available, the alternative is to implement only the function`forcedBurn`. 
+
+This is what is done for the CMTAT light version which does not include `forcedTransfer`. You can also decide to implement both. In this case, we suggest that only `forcedBurn`can burn tokens and not `forcedTransfer`.
 
 #### Implementation details
 
