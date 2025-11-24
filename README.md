@@ -3011,10 +3011,10 @@ This is what is done for the CMTAT light version which does not include `forcedT
 
 | Functionalities                                | **CMTAT Solidity** | Note                                                         |
 | ---------------------------------------------- | ------------------ | ------------------------------------------------------------ |
-| Mint while pause                               | &#x2611;           | -                                                            |
-| Burn while pause                               | &#x2611;           | -                                                            |
+| Mint while pause                               | &#x2611;           | Dedicated crosschain mint (e.g. `crosschainMint`) cannot be performed while the contract is in the pause state. |
+| Burn while pause                               | &#x2611;           | Dedicated crosschain burn (e.g.`crosschainBurn`) cannot be performed while the contract is in the pause state. |
 | Self Burn                                      | ☒                  | Token holder can not burn their own tokens.<br />Only authorised addresses are allowed to burn tokens. |
-| Standard burn on a frozen address              | ☒                  | Required to use `forcedTransfer`or `forcedBurn`              |
+| Standard burn on a frozen address              | ☒                  | Required to use `forcedTransfer` or `forcedBurn`             |
 | Burn tokens with the function `forcedTransfer` | &#x2611;           | See note above                                               |
 
 **Self burn**
