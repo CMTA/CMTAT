@@ -181,10 +181,6 @@ Generate UML for smart contracts
 
 Code coverage for Solidity smart-contracts
 
-**[solidity-docgen](https://github.com/OpenZeppelin/solidity-docgen)**
-
-Program that extracts documentation for a Solidity project.
-
 **[Surya](https://github.com/ConsenSys/surya)**
 
 Utility tool for smart contract systems.
@@ -287,12 +283,6 @@ This part describe the list of libraries present in the file `package.json`.
 - **[openzeppelin/hardhat-upgrades](openzeppelin/hardhat-upgrades)**
 
 This package adds functions to your Hardhat scripts so you can deploy and upgrade proxies for your contracts.
-
-- [keccak256](https://www.npmjs.com/package/keccak256)
-
-A wrapper for the [`keccak`](https://www.npmjs.com/package/keccak) library to compute 256 bit keccak hash in JavaScript.
-
-Use by `openzeppelin-contracts-upgradeable/test/helpers/eip712` imported in `MetaTxModuleCommon.js`
 
 ## Deployment script
 
