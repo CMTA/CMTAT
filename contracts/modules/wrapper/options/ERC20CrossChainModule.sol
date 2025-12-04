@@ -100,8 +100,6 @@ abstract contract ERC20CrossChainModule is ERC20MintModule, ERC20BurnModule, ERC
         _burn(sender, sender, value);
     }
 
-
-
     /* ============ View functions ============ */
     function supportsInterface(bytes4 _interfaceId) public view virtual override(ERC165Upgradeable, IERC165) returns (bool) {
         return _interfaceId == type(IERC7802).interfaceId || ERC165Upgradeable.supportsInterface(_interfaceId);
@@ -114,6 +112,7 @@ abstract contract ERC20CrossChainModule is ERC20MintModule, ERC20BurnModule, ERC
         // Allowance check and spend
         ERC20Upgradeable._spendAllowance(account, sender, value );
         // Specific event for the spend operation, same as transferFrom (ERC20BaseModule)
+        // Importing the event through inheritance will result in the following error: "Linearization of inheritance graph impossible"
         emit IERC20Allowance.Spend(account, sender, value);
         _burn(sender, account, value);
     }

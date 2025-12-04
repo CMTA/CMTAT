@@ -60,6 +60,7 @@ abstract contract ValidationModule is
     /**
     * @dev calls Pause and Enforcement module
     * check relevant for standard transfer
+    * We don't check deactivated() because the contract must be in the pause state to be deactivated
     */
     function _canTransferStandardByModule(
         address spender,

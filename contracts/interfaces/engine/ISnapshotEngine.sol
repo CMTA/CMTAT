@@ -11,6 +11,8 @@ interface ISnapshotEngine {
     * @dev This function should be called inside the {_update} hook so that
     * snapshots are updated prior to any state changes from {_mint}, {_burn}, or {_transfer}.
     * It ensures historical balances and total supply remain accurate for snapshot queries.
+    * To avoid re-entrancy risk, you can store the different values (balance, totalSupply) in a local variable and
+    * perform the call to the snapshotEngine after the {_update} hook by using the local variable
     *
     * @param from The address tokens are being transferred from (zero address if minting).
     * @param to The address tokens are being transferred to (zero address if burning).

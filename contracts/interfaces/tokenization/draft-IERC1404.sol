@@ -16,6 +16,9 @@ interface IERC1404 {
      * Some examples of this might include:
      * - checking if the token recipient is whitelisted, 
      * - checking if a sender's tokens are frozen in a lock-up period, etc.
+     * @param from The address sending tokens.
+     * @param to The address receiving tokens.
+     * @param value amount of tokens to transfer
      * @return uint8 restricted code, 0 means the transfer is authorized
      *
      */

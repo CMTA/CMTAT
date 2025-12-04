@@ -10,12 +10,16 @@ abstract contract AccessControlModule is AccessControlUpgradeable {
 
     /* ============  Initializer Function ============ */
     /**
-     * @dev
-     *
-     * - The grant to the admin role is done by AccessControlDefaultAdminRules
-     * - The control of the zero address is done by AccessControlDefaultAdminRules
-     *
-     */
+    * @notice Internal initializer that sets the provided address as the default admin.
+    * @dev
+    *  - MUST be called only during initialization (`onlyInitializing`).
+    *  - Reverts if `admin` is the zero address.
+    *  - Grants `DEFAULT_ADMIN_ROLE` to `admin`.  
+    *    The return value of `_grantRole` is intentionally ignored, as it returns `false`
+    *    only when the role was already assigned.
+    *
+    * @param admin The address that will receive the `DEFAULT_ADMIN_ROLE`.
+    */
     function __AccessControlModule_init_unchained(address admin)
     internal onlyInitializing {
         if(admin == address(0)){
@@ -26,7 +30,6 @@ abstract contract AccessControlModule is AccessControlUpgradeable {
         // return false only if the admin has already the role
         _grantRole(DEFAULT_ADMIN_ROLE, admin);
     }
-
 
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS

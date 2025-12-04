@@ -3,9 +3,7 @@
 pragma solidity ^0.8.20;
 import {UUPSUpgradeable} from "@openzeppelin/contracts/proxy/utils/UUPSUpgradeable.sol";
 import {CMTATBaseERC2771} from "../modules/4_CMTATBaseERC2771.sol";
-import {CMTATBaseRuleEngine} from "../modules/1_CMTATBaseRuleEngine.sol";
 import {ERC2771Module} from "../modules/wrapper/options/ERC2771Module.sol";
-import {ICMTATConstructor} from "../interfaces/technical/ICMTATConstructor.sol";
 
 /**
 * @title CMTAT version for a proxy deployment with UUPS proxy

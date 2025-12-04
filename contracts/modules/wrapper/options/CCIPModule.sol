@@ -56,10 +56,14 @@ abstract contract CCIPModule is IGetCCIPAdmin {
     return $.s_ccipAdmin;
   }
 
-function _authorizeCCIPSetAdmin() internal virtual;
+  /*//////////////////////////////////////////////////////////////
+                            INTERNAL/PRIVATE FUNCTIONS
+  //////////////////////////////////////////////////////////////*/
+  /* ==== Access Control ==== */
+  function _authorizeCCIPSetAdmin() internal virtual;
 
-/* ============ ERC-7201 ============ */
-    function _getCCIPModuleStorage() internal pure returns (CCIPModuleStorage storage $) {
+  /* ============ ERC-7201 ============ */
+  function _getCCIPModuleStorage() internal pure returns (CCIPModuleStorage storage $) {
         assembly {
             $.slot := CCIPModuleStorageLocation
         }

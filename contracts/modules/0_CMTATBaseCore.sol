@@ -232,7 +232,7 @@ abstract contract CMTATBaseCore is
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
 
-
+    /* ==== Mint and Burn Operations ==== */
     function _mintOverride(address account, uint256 value) internal virtual override(ERC20MintModuleInternal) {
         require(ValidationModule._canMintBurnByModule(account), Errors.CMTAT_InvalidTransfer(address(0), account, value) );
         ERC20MintModuleInternal._mintOverride(account, value);

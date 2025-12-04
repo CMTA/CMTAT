@@ -4,7 +4,7 @@ pragma solidity ^0.8.20;
 /* ==== OpenZeppelin === */
 import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 /* ==== Module === */
-import {CMTATBaseERC1404, ERC20Upgradeable} from "./2_CMTATBaseERC1404.sol";
+import {CMTATBaseERC1404, CMTATBaseRuleEngine, ERC20Upgradeable} from "./2_CMTATBaseERC1404.sol";
 import {CMTATBaseCommon} from "./0_CMTATBaseCommon.sol";
 import {ERC20BurnModule, ERC20BurnModuleInternal} from "./wrapper/core/ERC20BurnModule.sol";
 import {ERC20MintModule, ERC20MintModuleInternal} from "./wrapper/core/ERC20MintModule.sol";
@@ -34,30 +34,9 @@ abstract contract CMTATBaseERC20CrossChain is ERC20CrossChainModule, CCIPModule,
     {
         return CMTATBaseCommon.transferFrom(from, to, value);
     }
-    /**
-    * @dev Check if the mint is valid
-    */
-    function _mintOverride(address account, uint256 value) internal virtual override(CMTATBaseCommon, ERC20MintModuleInternal) {
-        _checkTransferred(address(0), address(0), account, value);
-        ERC20MintModuleInternal._mintOverride(account, value);
-    }
 
-    /**
-    * @dev Check if the burn is valid
-    */
-    function _burnOverride(address account, uint256 value) internal virtual override(CMTATBaseCommon, ERC20BurnModuleInternal) {
-        _checkTransferred(address(0),  account, address(0), value);
-        ERC20BurnModuleInternal._burnOverride(account, value);
-    }
-
-    /**
-    * @dev Check if a minter transfer is valid
-    */
-    function _minterTransferOverride(address from, address to, uint256 value) internal virtual override(CMTATBaseCommon, ERC20MintModuleInternal) {
-        _checkTransferred(address(0), from, to, value);
-        ERC20MintModuleInternal._minterTransferOverride(from, to, value);
-    }
-
+    /* ============ View functions ============ */
+  
     /**
     * @inheritdoc CMTATBaseCommon
     */
@@ -86,8 +65,6 @@ abstract contract CMTATBaseERC20CrossChain is ERC20CrossChainModule, CCIPModule,
         return CMTATBaseCommon.symbol();
     }
 
-
-    /* ============ View functions ============ */
     function supportsInterface(bytes4 _interfaceId) public view virtual override(CMTATBaseCommon, ERC20CrossChainModule) returns (bool) {
         return  ERC20CrossChainModule.supportsInterface(_interfaceId)|| CMTATBaseCommon.supportsInterface( _interfaceId);
     }
@@ -95,6 +72,31 @@ abstract contract CMTATBaseERC20CrossChain is ERC20CrossChainModule, CCIPModule,
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
+    /* ==== Mint and Burn Operations ==== */
+    /**
+    * @dev Check if the mint is valid
+    */
+    function _mintOverride(address account, uint256 value) internal virtual override(CMTATBaseCommon, ERC20MintModuleInternal) {
+        CMTATBaseRuleEngine._checkTransferred(address(0), address(0), account, value);
+        CMTATBaseCommon._mintOverride(account, value);
+    }
+
+    /**
+    * @dev Check if the burn is valid
+    */
+    function _burnOverride(address account, uint256 value) internal virtual override(CMTATBaseCommon, ERC20BurnModuleInternal) {
+        CMTATBaseRuleEngine._checkTransferred(address(0),  account, address(0), value);
+        CMTATBaseCommon._burnOverride(account, value);
+    }
+
+    /**
+    * @dev Check if a minter transfer is valid
+    */
+    function _minterTransferOverride(address from, address to, uint256 value) internal virtual override(CMTATBaseCommon, ERC20MintModuleInternal) {
+        CMTATBaseRuleEngine._checkTransferred(address(0), from, to, value);
+        CMTATBaseCommon._minterTransferOverride(from, to, value);
+    }
+
     /* ==== Access Control ==== */
 
     /** 

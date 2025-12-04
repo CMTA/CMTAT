@@ -166,7 +166,7 @@ abstract contract CMTATBaseCommon is
           uint256 toBalanceBefore = balanceOf(to);
           uint256 totalSupplyBefore = totalSupply();
         
-          // We perorm the update here (CEI pattern)
+          // We perform the update here (CEI pattern)
           ERC20Upgradeable._update(from, to, amount);
 
           // Required to use the balance before the update
@@ -176,9 +176,13 @@ abstract contract CMTATBaseCommon is
             ERC20Upgradeable._update(from, to, amount);
         }
     }
+
+    /* ==== Mint and Burn Operations ==== */
     
     /**
-    * @dev Check if the mint is valid
+    * @dev 
+    * Mint path
+    * Check if the mint is valid
     */
     function _mintOverride(address account, uint256 value) internal virtual override(ERC20MintModuleInternal) {
         _checkTransferred(address(0), address(0), account, value);
@@ -186,7 +190,9 @@ abstract contract CMTATBaseCommon is
     }
 
     /**
-    * @dev Check if the burn is valid
+    * @dev 
+    * Burn path
+    * Check if the burn is valid
     */
     function _burnOverride(address account, uint256 value) internal virtual override(ERC20BurnModuleInternal) {
         _checkTransferred(address(0),  account, address(0), value);
@@ -194,7 +200,9 @@ abstract contract CMTATBaseCommon is
     }
 
     /**
-    * @dev Check if a minter transfer is valid
+    * @dev 
+    * Minter-initiated transfer path
+    * Check if a minter transfer is valid
     */
     function _minterTransferOverride(address from, address to, uint256 value) internal virtual override(ERC20MintModuleInternal) {
         _checkTransferred(address(0), from, to, value);
