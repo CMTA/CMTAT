@@ -4,7 +4,7 @@
 
 > To use the CMTAT, we recommend the latest audited version, from the [Releases](https://github.com/CMTA/CMTAT/releases) page. Currently, it is the version [v3.0.0](https://github.com/CMTA/CMTAT/releases/tag/v3.0.0).
 >
-> A pdf file of the v3.0.0 README is available here:  [CMTATSpecificationV3.0.0.pdf](./CMTATSpecificationV3.0.0.pdf) 
+> A pdf file of the v3.0.0 README is available here:  [CMTATSpecificationV3.0.0.pdf](./doc/specification/CMTATSpecificationV3.0.0.pdf) 
 
 ## Introduction
 
@@ -2967,15 +2967,19 @@ npm run-script size
 
 ### Aztec (Noir)
 
-A specific version is available for [Aztec](https://aztec.network/): [Aztec Private CMTAT](https://github.com/taurushq-io/private-CMTAT-aztec) made by [Taurus SA](https://www.taurushq.com) in collaboration with CMTA
+A specific version is available for [Aztec](https://aztec.network/): [Aztec Private CMTAT](https://github.com/taurushq-io/private-CMTAT-aztec) made by [Taurus](https://www.taurushq.com) in collaboration with CMTA
 
 - This version is not official in the sense that it was not approved formally by the CMTA
 
 - See also [Taurus - Addressing the Privacy and Compliance Challenge in Public Blockchain Token Transactions](https://www.taurushq.com/blog/enhancing-token-transaction-privacy-on-public-blockchains-while-ensuring-compliance/) 
 
+### Solana
+
+Specification to deploy CMTAT compliant token on Solana are available in the repository [CMTAT_Solana](https://github.com/CMTA/CMTAT_Solana) made by [Taurus](https://www.taurushq.com) as an internal CMTA project in collaboration with Solana Foundation.
+
 ### Starknet (Cairo)
 
-A version for [Starknet](https://www.starknet.io) written in Cairo is currently under development by [Sereel](https://www.sereel.com) in collaboration with CMTA: [0xsereel/cairo-cmtat](https://github.com/0xsereel/cairo-cmtat)
+A version for [Starknet](https://www.starknet.io/) written in Cairo is currently under development by [Sereel](https://www.sereel.com/) in collaboration with CMTA: [0xsereel/cairo-cmtat](https://github.com/0xsereel/cairo-cmtat)
 
 ### Tezos
 
@@ -2984,10 +2988,6 @@ Two versions are available for the blockchain [Tezos](https://tezos.com)
 - [CMTAT FA2](https://github.com/CMTA/CMTAT-Tezos-FA2): Official version written in SmartPy made by [AirGap](https://airgap.it) in collaboration with CMTA.
 - [@ligo/cmtat](https://github.com/ligolang/CMTAT-Ligo/): Unofficial version written in Ligo made by Frank Hillard.
   - See also [Tokenization of securities on Tezos by Frank Hillard](https://medium.com/@frank.hillard_62931/tokenization-of-securities-on-tezos-2e3c3e90fc5a)
-
-### Solana
-
-Specification to deploy CMTAT compliant token on Solana are available in the repository [CMTAT_Solana](https://github.com/CMTA/CMTAT_Solana) made by [Taurus SA](https://www.taurushq.com) as an internal CMTA project in collaboration with Solana Foundation.
 
 ### Summary tab
 
