@@ -29,7 +29,7 @@ CMTAT has been built with five main goals:
 
 2. Easy to modify and adapt for specific use-case (customization) through its modular architecture
 3. Interoperability with the Ethereum ecosystem by implementing recognized standards: 
-   - Tokenization: [ERC-20](https://eips.ethereum.org/EIPS/eip-20), [ERC-3643](https://eips.ethereum.org/EIPS/eip-3643) (without on-chain identity), [ERC-1404](https://github.com/ethereum/EIPs/issues/1404), [ERC-7551](https://ethereum-magicians.org/t/erc-7551-crypto-security-token-smart-contract-interface-ewpg/16416), [ERC-1363](https://eips.ethereum.org/EIPS/eip-1363),...
+   - Tokenization: [ERC-20](https://eips.ethereum.org/EIPS/eip-20), [ERC-3643](https://eips.ethereum.org/EIPS/eip-3643) (without on-chain identity), [ERC-1404](https://github.com/ethereum/EIPs/issues/1404), [ERC-7551](https://ethereum-magicians.org/t/erc-7551-crypto-security-token-smart-contract-interface-ewpg-reworked/25477), [ERC-1363](https://eips.ethereum.org/EIPS/eip-1363),...
    - Technicals: [ERC-2771](https://eips.ethereum.org/EIPS/eip-2771) (MetaTx/Gasless), [ERC-7201](https://eips.ethereum.org/EIPS/eip-7201), [ERC-7802](https://eips.ethereum.org/EIPS/eip-7802)...
 
 4. Security by undergoing audits from trusted firms like [ADBK](https://abdk.consulting) and [Halborn](https://www.halborn.com), and by implementing a range of industry best practices.
@@ -60,6 +60,59 @@ By taking these five main goals, here a comparison with others known implementat
 
 
 
+### Who uses CMTAT and for what?
+
+CMTAT is suitable for the digitalization of various financial assets. Below is a selection of public case studies 
+
+More details are available here: [cmta.ch/faqs](https://cmta.ch/faqs#what-cases-has-cmtat-already-been-used-in)
+
+#### Digitalization of equity securities
+
+The CMTAT was initially designed for the digitalization of company shares. For SMEs, digitalization provides an opportunity to access new financing and investment models by selling digital shares through online exchanges. Some companies that have digitalized shares using the CMTAT include:
+
+- [Daura](https://thetokenizer.io/2022/12/13/daura-counts-on-smart-contract-standard-cmtat-for-the-tokenization-of-swiss-shares/) uses the CMTAT through their own fork to digitalize the shares of companies using its [platform](https://www.daura.ch), deployed on [zkSync](https://zksync.io/).
+- [Taurus SA](https://www.taurushq.com) (partial list): [Magic Tomato SA (2022)](https://www.taurushq.com/blog/magictomato-1st-foodtech-to-tokenise-its-shares-and-raise-equity/)  - an online grocery platform opened its governance and capital to its community, by issuing digital non-voting shares (bons de participation), [Qoqa Brew (2022)](https://www.taurushq.com/blog/qoqa-brew-brasserie-du-futur-tokenisation-et-financement-by-taurus/) - an online retailer opened the capital of its on-site brewery Q-Brew to its community by issuing digital non-voting shares, [Cité Gestion SA (2023)](https://cmta.ch/news-articles/cite-gestion-becomes-cmta-certified-issuer-of-tokenized-shares) - a Swiss bank and wealth manager, issued digitalized shares in 2022, using the CMTAT, [CODE41 (2023)](https://www.taurushq.com/blog/code41-tokenises-its-shares-for-a-capital-increase-amongst-its-community-through-taurus-technology/) - a Swiss watchmaking company tokenized its shares  for a capital increase using CMTAT.
+
+#### Digitalization of debt securities
+
+- [Project Guardian - UBS (2024)](https://www.linkedin.com/posts/cmta-ch_shareubs-activity-7137735139438002177-oDUL): CMTAT was used to issue a digital bond by UBS, as part of the first live repo transaction with a natively-issued digital bond on a public blockchain as part of the Monetary Authority of Singapore’s (MAS) Project Guardian.
+- The Obligate platform [Enote Protocol](https://docs.obligate.com/obligate/enote-protocol) enables BulletBond issuances using smart contracts, deployed on Polygon PoS. For this purpose, they use a fork of CMTAT with the `SnapshotModule`(replaced in CMTAT v3.0.0 by the SnapshotEngine) and the DebtModule.
+- [SCCF (2023)](https://www.taurushq.com/blog/sccf-and-horizon-capital-leverage-taurus-technology-to-execute-landmark-tokenized-trade-finance-debt-transaction/): trade finance firm SCCF issued short term tokenized notes to refinance a loan to a commodity trading firm active in biofuels through [Taurus SA](https://www.taurushq.com). See also [SCCF and Taurus Announce Successful Tokenization of End-to-End Trade Finance Transaction on TDX Marketplace (2024)](https://www.taurushq.com/blog/sccf-and-taurus-announce-successful-tokenization-of-end-to-end-trade-finance-transaction-on-tdx-marketplace/)
+
+#### Digitalization of structured products
+
+- In early 2024, [UBS](https://www.ubs.com/global/en/investment-bank/tokenize.html) executed a pilot transaction with OSL, a licensed professional investor in Hong Kong, to issue a tokenized warrant on Ethereum using the CMTAT smart contract framework. The tokenization arrangement for this warrant utilizes the CMTAT codebase to represent the warrant smart contract, which forms part of the tokenized register of holders. See [ubs.com - UBS expands its digital asset capabilities by launching Hong Kong’s first-ever tokenized warrant on the Ethereum network [ubs.com]](https://www.ubs.com/global/en/media/display-page-ndp/en-20240207-tokenized-warrant.html).
+- [Credit Suisse, Pictet and Vontobel (2022)](https://cmta.ch/news-articles/trading-and-settlement-in-digital-securities) issued tokenized investment products that were traded on [BX Swiss](https://www.bxswiss.com/news/20221213-BX-Swiss-legt-das-technische-Fundament-fuer-die-Zukunft-des-regulierten-Handels-mit-tokenisierten-Wertpapieren) as part of a proof-of-concept leveraging the CMTAT.
+
+#### Digitalization of piece of art
+
+- [Syz Group](https://www.syzgroup.com/en) has digitalized two piece of Art by using CMTAT in 2023 and 2024. See [Syz Art Tokenisation](https://www.syzgroup.com/en/tokenization-syzart)
+
+#### Tokenized market funds
+
+- In 2024, [UBS](https://www.ubs.com/global/en/investment-bank/tokenize.html) launched UBS USD Money Market Investment Fund Token (uMINT), a Money Market investment built on Ethereum distributed ledger technology. The tokenization arrangement for this fund utilizes CMTAT codebase to represent the fund smart contract, which forms part of the fund’s tokenized register of members. See [ubs.com - UBS Asset Management launches its first tokenized investment fund [ubs.com]](https://www.ubs.com/global/en/media/display-page-ndp/en-20241101-first-tokenized-investment-fund.html)
+
+#### Tokenization platform
+
+- Fireblocks integrates CMTAT into their [tokenization platform](https://www.fireblocks.com/platforms/tokenization/). See also [Fireblocks - Fireblocks joins CMTA to define the standards for tokenization in traditional capital markets](https://www.fireblocks.com/blog/fireblocks-joins-cmta-to-define-the-standards-for-tokenization-in-traditional-capital-markets/)
+- Taurus SA integrates CMTAT (Solidity and [Tezos version](https://www.taurushq.com/blog/taurus-supports-tokenisation-of-equity-on-the-tezos-blockchain/)) into their tokenization platform called [Taurus-CAPITAL](https://www.taurushq.com/capital/)
+
+#### Wrapped Tokens
+
+- 21.co (the parent company of 21Shares acquired by FalconX) used CMTAT through their own [fork](https://github.com/amun/CMTAT) to create Wrapped Tokens on Ethereum. See for example Wrapped Bitcoin(21BTC) on [Etherscan](https://etherscan.io/token/0x3f67093dffd4f0af4f2918703c92b60acb7ad78b) and [their announcement](https://www.globenewswire.com/news-release/2024/09/03/2939399/0/en/21-co-Expands-its-Wrapped-Tokens-Lineup-with-the-Launch-of-Wrapped-Bitcoin-21BTC-on-Ethereum.html)
+
+### Where CMTAT is mentioned?
+
+CMTAT is mentioned in several different reports. While these reports do not take into account the latest changes with the version v.3.0.0, it gives already a good indication of how CMTAT can be used. The points raised by these also allowed for numerous improvements to be made to the CMTAT.
+
+- [Forum - Asset Tokenization in Financial Markets: The Next Generation of Value Exchange (2025)](https://reports.weforum.org/docs/WEF_Asset_Tokenization_in_Financial_Markets_2025.pdf), page 38
+- [King's Business School/Rhys Bidder - What Is The Future Of Stablecoins, And How Do We Get There? (2025)](https://www.kcl.ac.uk/business/assets/PDF/qcgbf-working-papers/taking-the-next-step-v5.pdf), page 33
+- [Nethermind - Tokenization Standards: The Missing Link for Institutional Adoption (2025)](https://www.nethermind.io/blog/tokenization-standards-the-missing-link-for-institutional-adoption): page 2, 16, 19, 33-36 & 39
+- [Project Guardian - Fixed Income Framework (2024)](https://www.mas.gov.sg/-/media/mas-media-library/development/fintech/guardian/guardian-fixed-income-framework.pdf): page 13, 39, 59 & 65
+- [ICMA contribution to MAS Guardian Fixed Income Framework (GFIF) publication (2024)](https://www.icmagroup.org/assets/Summary-of-third-party-proposals-for-integrating-ICMAs-Bond-Data-Taxonomy-in-token-frameworks-and-DLT-platforms-complementing-section-6-Data-Model-of-GFIF.pdf)
+
+
+
 ### Use case
 
 #### Financial instruments
@@ -83,7 +136,7 @@ CMTAT comes with several different deployment versions to meet specific use case
 | Product                    | Deployment version | Note                                                         |
 | -------------------------- | ------------------ | ------------------------------------------------------------ |
 | Equities                   | CMTAT Standard     | All features, without those directly to Debt                 |
-| Equities in Germany        | CMTAT ERC-7551     | The standard version with a few supplementary functions to meet the standard [ERC-7551](https://ethereum-magicians.org/t/erc-7551-crypto-security-token-smart-contract-interface-ewpg/16416), tailored for the Germany and eWpg. |
+| Equities in Germany        | CMTAT ERC-7551     | The standard version with a few supplementary functions to meet the standard [ERC-7551](https://ethereum-magicians.org/t/erc-7551-crypto-security-token-smart-contract-interface-ewpg-reworked/25477), tailored for the Germany and eWpg. |
 | Debt/bond                  | CMTAT Debt<br />   | CMTAT Standard is also suitable but this version adds the possibility to put several on-chain information related to debt and bond product |
 | Stablecoin (e.g USDC/USDT) | CMTAT Light        | The core features (i.e., minting, burning,address freeze / blacklisting, pause) without additional functions required by equities and debt instruments (e.g., document management, snapshot, partial freeze of balances). |
 
@@ -229,53 +282,6 @@ Here is a comparison between the features present in known tokenization framewor
 
 - At the time of our analysis (July 2025), the next version of T-REX/ERC-3643 had not yet been merged into the main branch and officially released. However, we assumed that it would be merged soon and that it would also be audited.
 - Access control: CMTAT Access control is easily adaptable because it is implemented in high level contracts (base modules) instead of low level modules (wrapper).
-
-### Who uses CMTAT and for what?
-
-CMTAT is suitable for the digitalization of various financial assets. Below is a selection of public case studies 
-
-More details are available here: [cmta.ch/faqs](https://cmta.ch/faqs#what-cases-has-cmtat-already-been-used-in)
-
-#### Digitalization of equity securities
-
-The CMTAT was initially designed for the digitalization of company shares. For SMEs, digitalization provides an opportunity to access new financing and investment models by selling digital shares through online exchanges. Some companies that have digitalized shares using the CMTAT include:
-
-- [Daura](https://thetokenizer.io/2022/12/13/daura-counts-on-smart-contract-standard-cmtat-for-the-tokenization-of-swiss-shares/) uses the CMTAT through their own fork to digitalize the shares of companies using its [platform](https://www.daura.ch), deployed on [zkSync](https://zksync.io/).
-- [Taurus SA](https://www.taurushq.com) (partial list): [Magic Tomato SA (2022)](https://www.taurushq.com/blog/magictomato-1st-foodtech-to-tokenise-its-shares-and-raise-equity/)  - an online grocery platform opened its governance and capital to its community, by issuing digital non-voting shares (bons de participation), [Qoqa Brew (2022)](https://www.taurushq.com/blog/qoqa-brew-brasserie-du-futur-tokenisation-et-financement-by-taurus/) - an online retailer opened the capital of its on-site brewery Q-Brew to its community by issuing digital non-voting shares, [Cité Gestion SA (2023)](https://cmta.ch/news-articles/cite-gestion-becomes-cmta-certified-issuer-of-tokenized-shares) - a Swiss bank and wealth manager, issued digitalized shares in 2022, using the CMTAT, [CODE41 (2023)](https://www.taurushq.com/blog/code41-tokenises-its-shares-for-a-capital-increase-amongst-its-community-through-taurus-technology/) - a Swiss watchmaking company tokenized its shares  for a capital increase using CMTAT.
-
-#### Digitalization of debt securities
-
-- [Project Guardian - UBS (2024)](https://www.linkedin.com/posts/cmta-ch_shareubs-activity-7137735139438002177-oDUL): CMTAT was used to issue a digital bond by UBS, as part of the first live repo transaction with a natively-issued digital bond on a public blockchain as part of the Monetary Authority of Singapore’s (MAS) Project Guardian.
-- The Obligate platform [Enote Protocol](https://docs.obligate.com/obligate/enote-protocol) enables BulletBond issuances using smart contracts, deployed on Polygon PoS. For this purpose, they use a fork of CMTAT with the `SnapshotModule`(replaced in CMTAT v3.0.0 by the SnapshotEngine) and the DebtModule.
-- [SCCF (2023)](https://www.taurushq.com/blog/sccf-and-horizon-capital-leverage-taurus-technology-to-execute-landmark-tokenized-trade-finance-debt-transaction/): trade finance firm SCCF issued short term tokenized notes to refinance a loan to a commodity trading firm active in biofuels through [Taurus SA](https://www.taurushq.com).
-
-#### Digitalization of structured products
-
-- In early 2024, [UBS](https://www.ubs.com/global/en/investment-bank/tokenize.html) executed a pilot transaction with OSL, a licensed professional investor in Hong Kong, to issue a tokenized warrant on Ethereum using the CMTAT smart contract framework. The tokenization arrangement for this warrant utilizes the CMTAT codebase to represent the warrant smart contract, which forms part of the tokenized register of holders. See [ubs.com - UBS expands its digital asset capabilities by launching Hong Kong’s first-ever tokenized warrant on the Ethereum network [ubs.com]](https://www.ubs.com/global/en/media/display-page-ndp/en-20240207-tokenized-warrant.html).
-- [Credit Suisse, Pictet and Vontobel (2022)](https://cmta.ch/news-articles/trading-and-settlement-in-digital-securities) issued tokenized investment products that were traded on [BX Swiss](https://www.bxswiss.com/news/20221213-BX-Swiss-legt-das-technische-Fundament-fuer-die-Zukunft-des-regulierten-Handels-mit-tokenisierten-Wertpapieren) as part of a proof-of-concept leveraging the CMTAT.
-
-#### Tokenized market funds
-
-- In 2024, [UBS](https://www.ubs.com/global/en/investment-bank/tokenize.html) launched UBS USD Money Market Investment Fund Token (uMINT), a Money Market investment built on Ethereum distributed ledger technology. The tokenization arrangement for this fund utilizes CMTAT codebase to represent the fund smart contract, which forms part of the fund’s tokenized register of members. See [ubs.com - UBS Asset Management launches its first tokenized investment fund [ubs.com]](https://www.ubs.com/global/en/media/display-page-ndp/en-20241101-first-tokenized-investment-fund.html)
-
-#### Tokenization platform
-
-- Fireblocks integrates CMTAT into their [tokenization platform](https://www.fireblocks.com/platforms/tokenization/). See also [Fireblocks - Fireblocks joins CMTA to define the standards for tokenization in traditional capital markets](https://www.fireblocks.com/blog/fireblocks-joins-cmta-to-define-the-standards-for-tokenization-in-traditional-capital-markets/)
-- Taurus SA integrates CMTAT (Solidity and [Tezos version](https://www.taurushq.com/blog/taurus-supports-tokenisation-of-equity-on-the-tezos-blockchain/)) into their tokenization platform called [Taurus-CAPITAL](https://www.taurushq.com/capital/)
-
-#### Other assets
-
-- [21.co](https://www.21.co) uses CMTAT through their own [fork](https://github.com/amun/CMTAT) to create Wrapped Tokens on Ethereum.
-
-### Where CMTAT is mentioned ?
-
-CMTAT is mentioned in several different reports. While these reports do not take into account the latest changes with the version v.3.0.0, it gives already a good indication of how CMTAT can be used. The points raised by these also allowed for numerous improvements to be made to the CMTAT.
-
-- [Forum - Asset Tokenization in Financial Markets: The Next Generation of Value Exchange (2025)](https://reports.weforum.org/docs/WEF_Asset_Tokenization_in_Financial_Markets_2025.pdf), page 38
-- [King's Business School/Rhys Bidder - What Is The Future Of Stablecoins, And How Do We Get There? (2025)](https://www.kcl.ac.uk/business/assets/PDF/qcgbf-working-papers/taking-the-next-step-v5.pdf), page 33
-- [Nethermind - Tokenization Standards: The Missing Link for Institutional Adoption (2025)](https://www.nethermind.io/blog/tokenization-standards-the-missing-link-for-institutional-adoption): page 2, 16, 19, 33-36 & 39
-- [Project Guardian - Fixed Income Framework (2024)](https://www.mas.gov.sg/-/media/mas-media-library/development/fintech/guardian/guardian-fixed-income-framework.pdf): page 13, 39, 59 & 65
-- [ICMA contribution to MAS Guardian Fixed Income Framework (GFIF) publication (2024)](https://www.icmagroup.org/assets/Summary-of-third-party-proposals-for-integrating-ICMAs-Bond-Data-Taxonomy-in-token-frameworks-and-DLT-platforms-complementing-section-6-Data-Model-of-GFIF.pdf)
 
 ### Technical
 
@@ -547,16 +553,16 @@ The following table compares the functionalities and details how the relevant fu
 | :--------------------------- | :----------------------------------------------------------- | :----------------------------------------------------------- | :---------------------------------------------------- | -------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | 1                            | Freeze and unfreeze a specific amount of tokens              | `freezePartialTokens(address account, uint256 amount, bytes calldata data)`<br />`unfreezePartialTokens(address account, uint256 amount, bytes calldata data)` | &#x2611;                                              | &#x2611;             | -                                                            | EnforcementModule (core)<br />ERC20EnforcementModule (extensions) |
 | 2                            | Pausing transfers The operator can pause and unpause transfers | `pause()/unpause()`                                          | &#x2611;                                              | &#x2611;             | -                                                            | PauseModule (core)                                           |
-| 3                            | Link to off-chain document<br />Add the hash of a document   | `setTerms(bytes32 _hash, string calldata _uri)`              | &#x2612;                                              | &#x2611;             | The hash is put in the field` Terms`<br />Terms is represented as a Document (name, uri, hash, last on-chain modification date) based on [ERC-1643](https://github.com/ethereum/eips/issues/1643). | ERC7751Module<br />(options)                                 |
+| 3                            | Link to off-chain document<br />Add the hash of a document   | `setTerms(bytes32 _hash, string calldata _uri)`              | &#x2612;                                              | &#x2611;             | The hash is put in the field ` Terms`<br />Terms is represented as a Document (name, uri, hash, last on-chain modification date) based on [ERC-1643](https://github.com/ethereum/eips/issues/1643). | ERC7751Module<br />(options)                                 |
 |                              | Equivalent functionality                                     |                                                              | &#x2611;                                              | &#x2611;             | `setTerms(IERC1643CMTAT.DocumentInfo calldata terms_)`       | ExtraInformationModule (extensions)                          |
 | 4                            | Metadata JSON file                                           | `setMetaData(string calldata _metadata) `                    | &#x2612;<br />(can be put in the field `information`) | &#x2611;             | -                                                            | ERC7751Module<br />(options)                                 |
 | 5                            | Forced transfers<br />Transfer `amount` tokens to `to` without requiring the consent of `from` | `forcedTransfer(address account, address to, uint256 value, bytes calldata data) ` | &#x2611;                                              | &#x2611;             | -                                                            | ERC20EnforcementModule                                       |
-| 6                            | Token supply management<br />Reduce the balance of `tokenHolder` by `amount` without increasing the amount of tokens of any other holder | `burn(address tokenHolder, uint256 amount, bytes calldata data) ` | &#x2611;                                              | &#x2611;             |                                                              | BurnModule (core)                                            |
+| 6                            | Token supply management<br />Reduce the balance of `tokenHolder` by `amount` without increasing the amount of tokens of any other holder | `burn(address tokenHolder, uint256 amount, bytes calldata data) ` | &#x2611;                                              | &#x2611;             | -                                                            | BurnModule (core)                                            |
 | 7                            | Token supply management<br />Increase the balance of `to` by `amount` without decreasing the amount of tokens from any other holder. | `mint(address to, uint256 amount, bytes calldata data)`      | &#x2611;                                              | &#x2611;             | -                                                            | MintModule (core)                                            |
 | **View/read-only functions** |                                                              |                                                              |                                                       |                      |                                                              |                                                              |
-| 8                            | Transfer compliance<br />Check if a transfer is valid        | `canTransfer(address from, address to, uint256 value) ` `canTransferFrom()` | &#x2611;                                              | &#x2611;             |                                                              | ValidationModuleCore                                         |
-| 9                            | Transfer compliance<br />Check if a transfer with a spender is valid | `canTransferFrom(address spender, address from, address to, uint256 value) ` | &#x2611;                                              | &#x2611;             |                                                              | ValidationModuleCore                                         |
-| 10                           | Active/Frozen <br/>Balance                                   | `getActiveBalanceOf(address tokenHolder)`<br />`getFrozenTokens(address tokenHolder)` | &#x2611;                                              | &#x2611;             |                                                              | ERC20EnforcementModule                                       |
+| 8                            | Transfer compliance<br />Check if a transfer is valid        | `canTransfer(address from, address to, uint256 value) ` `canTransferFrom()` | &#x2611;                                              | &#x2611;             | -                                                            | ValidationModuleCore                                         |
+| 9                            | Transfer compliance<br />Check if a transfer with a spender is valid | `canTransferFrom(address spender, address from, address to, uint256 value) ` | &#x2611;                                              | &#x2611;             | -                                                            | ValidationModuleCore                                         |
+| 10                           | Active/Frozen <br/>Balance                                   | `getActiveBalanceOf(address tokenHolder)`<br />`getFrozenTokens(address tokenHolder)` | &#x2611;                                              | &#x2611;             | -                                                            | ERC20EnforcementModule                                       |
 
 #####  Fulls functions
 
@@ -1296,10 +1302,11 @@ Thus, you are free to use a module, for example `PauseModule` and apply a differ
 |                                               | `setMetaData(string metadata_)`                              | public                       | `string metadata_`                                           | -                                    | EXTRA_INFORMATION_ROLE                                       |
 |                                               | `setTerms(bytes32 hash, string uri)`                         | public                       | `bytes32 hash, string uri`                                   | -                                    | EXTRA_INFORMATION_ROLE                                       |
 | ERC20CrossChain                               |                                                              |                              |                                                              |                                      |                                                              |
-|                                               | `crosschainMint(address to, uint256 value)`                  | public                       |                                                              |                                      |                                                              |
-|                                               | `crosschainBurn(address from, uint256 value)`                | public                       |                                                              |                                      |                                                              |
-|                                               | `burnFrom(address account, uint256 value)`                   | public                       |                                                              |                                      |                                                              |
-| CCIPModule                                    | `DEFAULT_ADMIN_ROLE`                                         |                              |                                                              |                                      |                                                              |
+|                                               | `crosschainMint(address to, uint256 value)`                  | public                       | `address to, uint256 value`                                  | -                                    | CROSS_CHAIN_ROLE                                             |
+|                                               | `crosschainBurn(address from, uint256 value)`                | public                       | `address from, uint256 value`                                | -                                    | CROSS_CHAIN_ROLE                                             |
+|                                               | `burnFrom(address account, uint256 value)`                   | public                       | `burnFrom(address account, uint256 value)`                   | -                                    | BURNER_FROM_ROLE                                             |
+|                                               | `burn(uint256 value)`                                        | public                       | `burn(uint256 value)`                                        | -                                    | BURNER_SELF_ROLE                                             |
+| CCIPModule                                    |                                                              |                              |                                                              |                                      |                                                              |
 | **Base contract**                             |                                                              |                              |                                                              |                                      |                                                              |
 | BaseCommon                                    |                                                              |                              |                                                              |                                      |                                                              |
 |                                               | `burnAndMint(address from, address to, uint256 amountToBurn, uint256 amountToMint, bytes data)` | public                       | `address from, address to, uint256 amountToBurn, uint256 amountToMint, bytes data` | -                                    | Same role requirement as `burn`and `mint`, so BURNER_ROLE and MINTER_ROLE |
@@ -1614,18 +1621,18 @@ This contract acts as a controller and can call different contract rules to appl
 
 ###### Rules
 
-Rules have their own dedicated repository: [github.com/CMTA/Rules](https://github.com/CMTA/Rules) and it is planned to make them also directly compatible with CMTAT without the need of the RuleEngine contract.
+Rules have their own dedicated repository: [github.com/CMTA/Rules](https://github.com/CMTA/Rules) and they can be used through a RuleEngine or directly with CMTAT.
 
 Here are the list of rules in development:
 
-| Rule                         | Type [ready-only / read-write] | Security Audit plannedin the roadmap | Description                                                  |
-| ---------------------------- | ------------------------------ | ------------------------------------ | ------------------------------------------------------------ |
-| RuleWhitelist                | Ready-only                     | ☑                                    | This rule can be used to restrict transfers from/to only addresses inside a whitelist. |
-| RuleWhitelistWrapper         | Ready-only                     | ☑                                    | This rule can be used to restrict transfers from/to only addresses inside a group of whitelist rules managed by different operators. |
-| RuleBlacklist                | Ready-only                     | ☑                                    | This rule can be used to forbid transfer from/to addresses in the blacklist |
-| RuleSanctionList             | Ready-only                     | ☑                                    | The purpose of this contract is to use the oracle contract from Chainalysis to forbid transfer from/to an address included in a sanctions designation (US, EU, or UN). |
-| RuleConditionalTransferLight | Ready-Write                    | In development                       | This rule requires that transfers have to be approved before being executed by the token |
-| RuleConditionalTransfer      | Ready-Write                    | ☒<br /> (experimental rule)          | Same principle as the light version (see above) but we more options such as a time limit for approving a request as well as for carrying out the transfer |
+| Rule                         | Type <br />[ready-only / read-write] | Security Audit planned in the roadmap | Description                                                  |
+| ---------------------------- | ------------------------------------ | ------------------------------------- | ------------------------------------------------------------ |
+| RuleWhitelist                | Ready-only                           | ☑                                     | This rule can be used to restrict transfers from/to only addresses inside a whitelist. |
+| RuleWhitelistWrapper         | Ready-only                           | ☑                                     | This rule can be used to restrict transfers from/to only addresses inside a group of whitelist rules managed by different operators. |
+| RuleBlacklist                | Ready-only                           | ☑                                     | This rule can be used to forbid transfer from/to addresses in the blacklist |
+| RuleSanctionList             | Ready-only                           | ☑                                     | The purpose of this contract is to use the oracle contract from Chainalysis to forbid transfer from/to an address included in a sanctions designation (US, EU, or UN). |
+| RuleConditionalTransferLight | Ready-Write                          | In development                        | This rule requires that transfers have to be approved before being executed by the token |
+| RuleConditionalTransfer      | Ready-Write                          | ☒<br /> (experimental rule)           | Same principle as the light version (see above) but we more options such as a time limit for approving a request as well as for carrying out the transfer |
 
 #### SnapshotEngine
 
@@ -2275,20 +2282,22 @@ The alternative function proposed by CCIP, `owner`, is not implemented by CMTAT 
 
 Here is the list of functions required to implement CCT and be compatible with CCIP.
 
-|                          |                                             | Implemented | CCIP Pool<br />[BurnMint Requirements](https://docs.chain.link/ccip/concepts/cross-chain-token/evm/tokens#burnmint-requirements) | CCIP Pool<br />[Lock-Release requirements](https://docs.chain.link/ccip/concepts/cross-chain-token/evm/tokens#lockrelease-requirements) | Pausable | CMTAT Module<br />                 | Role             |
-| ------------------------ | ------------------------------------------- | ----------- | ------------------------------------------------------------ | ------------------------------------------------------------ | -------- | ---------------------------------- | ---------------- |
-| Register CCIP token      |                                             |             |                                                              |                                                              |          |                                    |                  |
-|                          | `owner()`                                   | &#x2612;    | -                                                            | -                                                            |          | -                                  |                  |
-|                          | `getCCIPAdmin()`                            | &#x2611;    | -                                                            | -                                                            |          | CCIPModule                         | -                |
-| Burn & Mint Requirements |                                             |             |                                                              |                                                              |          |                                    |                  |
-|                          | `mint(address account, uint256 amount)`     | &#x2611;    | &#x2611;                                                     | &#x2612;                                                     | &#x2612; | MintModule<br />(Core module)      | MINTER_ROLE      |
-|                          | `burn(uint256 amount)`                      | &#x2611;    | &#x2611;                                                     | &#x2612;                                                     | &#x2612; | ERC20CrossChain                    | BURNER_FROM_ROLE |
-|                          | ERC-20<br />`decimals()`                    | &#x2611;    | &#x2611;                                                     | &#x2611;                                                     | -        | ERC20BaseModule<br />(Core module) |                  |
-|                          | ERC-20<br />`balanceOf(address account)`    | &#x2611;    | &#x2611;                                                     | &#x2611;                                                     | -        | OpenZeppelin inheritance           |                  |
-|                          | `burnFrom(address account, uint256 amount)` | &#x2611;    | &#x2611;                                                     | &#x2612;                                                     | &#x2611; | ERC20CrossChain                    | BURNER_FROM_ROLE |
+|                            |                                             | Implemented | CCIP Pool<br />[BurnMint Requirements](https://docs.chain.link/ccip/concepts/cross-chain-token/evm/tokens#burnmint-requirements) | CCIP Pool<br />[Lock-Release requirements](https://docs.chain.link/ccip/concepts/cross-chain-token/evm/tokens#lockrelease-requirements) | Pausable | CMTAT Module<br />                 | Role             |
+| -------------------------- | ------------------------------------------- | ----------- | ------------------------------------------------------------ | ------------------------------------------------------------ | -------- | ---------------------------------- | ---------------- |
+| Register CCIP token        |                                             |             |                                                              |                                                              |          |                                    |                  |
+|                            | `owner()`                                   | &#x2612;    | -                                                            | -                                                            |          | -                                  |                  |
+|                            | `getCCIPAdmin()`                            | &#x2611;    | -                                                            | -                                                            |          | CCIPModule                         | -                |
+| Burn and Mint Requirements |                                             |             |                                                              |                                                              |          |                                    |                  |
+|                            | `mint(address account, uint256 amount)`     | &#x2611;    | &#x2611;                                                     | &#x2612;                                                     | &#x2612; | MintModule<br />(Core module)      | MINTER_ROLE      |
+|                            | `burn(uint256 amount)`                      | &#x2611;    | &#x2611;                                                     | &#x2612;                                                     | &#x2612; | ERC20CrossChain                    | BURNER_FROM_ROLE |
+|                            | ERC-20<br />`decimals()`                    | &#x2611;    | &#x2611;                                                     | &#x2611;                                                     | -        | ERC20BaseModule<br />(Core module) |                  |
+|                            | ERC-20<br />`balanceOf(address account)`    | &#x2611;    | &#x2611;                                                     | &#x2611;                                                     | -        | OpenZeppelin inheritance           |                  |
+|                            | `burnFrom(address account, uint256 amount)` | &#x2611;    | &#x2611;                                                     | &#x2612;                                                     | &#x2611; | ERC20CrossChain                    | BURNER_FROM_ROLE |
 
 Note:
 
+-  `Lock and Mint` and `Burn and Unlock` models are also compatible with CMTAT through the implementation of `Burn and Mint`requirements.
+-  `Lock and Unlock`model does not need specific requirement from the token contract.
 -  The admin must grant the required permissions to mint/burn to the CCIP token pool.
 -  Pausing the contract through the PauseModule will not affect the mint and burn functions of the MintModule and BurnModule. The alternative solution in this case is to revoke the MINTER_ROLE and BURNER_ROLE from the relevant addresses to prevent minting and burning.
 
@@ -2945,20 +2954,29 @@ npm run-script size
 
 ## Other implementations
 
+### Aztec (Noir)
+
+A specific version is available for [Aztec](https://aztec.network/): [Aztec Private CMTAT](https://github.com/taurushq-io/private-CMTAT-aztec) made by [Taurus SA](https://www.taurushq.com) in collaboration with CMTA
+
+- This version is not official in the sense that it was not approved formally by the CMTA
+
+- See also [Taurus - Addressing the Privacy and Compliance Challenge in Public Blockchain Token Transactions](https://www.taurushq.com/blog/enhancing-token-transaction-privacy-on-public-blockchains-while-ensuring-compliance/) 
+
+### Starknet (Cairo)
+
+A version for [Starknet](https://www.starknet.io) written in Cairo is currently under development by [Sereel](https://www.sereel.com) in collaboration with CMTA: [0xsereel/cairo-cmtat](https://github.com/0xsereel/cairo-cmtat)
+
 ### Tezos
 
 Two versions are available for the blockchain [Tezos](https://tezos.com)
 
-- [CMTAT FA2](https://github.com/CMTA/CMTAT-Tezos-FA2) Official version written in SmartPy
-- [@ligo/cmtat](https://github.com/ligolang/CMTAT-Ligo/) Unofficial version written in Ligo
+- [CMTAT FA2](https://github.com/CMTA/CMTAT-Tezos-FA2): Official version written in SmartPy made by [AirGap](https://airgap.it) in collaboration with CMTA.
+- [@ligo/cmtat](https://github.com/ligolang/CMTAT-Ligo/): Unofficial version written in Ligo made by Frank Hillard.
   - See also [Tokenization of securities on Tezos by Frank Hillard](https://medium.com/@frank.hillard_62931/tokenization-of-securities-on-tezos-2e3c3e90fc5a)
 
-### Aztec
+### Solana
 
-A specific version is available for [Aztec](https://aztec.network/)
-
-- [Aztec Private CMTAT](https://github.com/taurushq-io/private-CMTAT-aztec)
-  - See also [Taurus - Addressing the Privacy and Compliance Challenge in Public Blockchain Token Transactions](https://www.taurushq.com/blog/enhancing-token-transaction-privacy-on-public-blockchains-while-ensuring-compliance/) 
+Specification to deploy CMTAT compliant token on Solana are available in the repository [CMTAT_Solana](https://github.com/CMTA/CMTAT_Solana) made by [Taurus SA](https://www.taurushq.com) as an internal CMTA project in collaboration with Solana Foundation.
 
 ### Summary tab
 
@@ -2974,7 +2992,7 @@ In the below table, the CMTAT framework required features are mapped to Solidity
 | Know balance                                  | ERC20 `balanceOf`                                            |
 | Transfer tokens                               | ERC20 `transfer`                                             |
 | Create tokens (mint)                          | `Mint/batchMint`                                             |
-| Cancel tokens (force burn)                    | `burn/batchBurn`                                             |
+| Cancel tokens (force burn)                    | `burn/batchBurn`<br />*(Nb. we recommend to have a dedicated function to burn tokens without the token holder consent or from a frozen address*) |
 | Pause tokens                                  | Pause <br />(*Nb. With CMTAT Solidity it is still possible to burn and mint while transfers are paused.)* |
 | Unpause tokens                                | `unpause`                                                    |
 | Deactivate contract                           | `deactivateContract`                                         |
@@ -2985,27 +3003,38 @@ In the below table, the CMTAT framework required features are mapped to Solidity
 | Token ID attribute                            | `tokenId`                                                    |
 | Reference to legally required documentation   | `terms` (document name, hash and uri with at least the uri)  |
 
+**Freeze** 
+
+To be compatible with [ERC-3643](https://eips.ethereum.org/EIPS/eip-3643), the freeze functionality is implemented with only one function: `setAddressFrozen` which takes the target address and the frozen status (true/false).
+
+However, for non-EVM blockchains, it could make clearer and makes more sense to separate the freeze and unfreeze (or `thaw`) functionality with two separates and distinct functions, such as: 
+
+```
+freeze(address targetAddress)
+unfreeze(address targetAddress)
+```
+
 #### CMTAT extended 
 
 In the below table, the CMTAT framework extendedfeatures are mapped to Solidity features.
 
-| CMTAT Functionalities                | **CMTAT Solidity corresponding features**      | CMTAT Light | CMTAT Debt | CMTAT Standard |
-| ------------------------------------ | ---------------------------------------------- | ----------- | ---------- | -------------- |
-| On-chain snapshot                    | `snapshotModule & snapshotEngine`              | ☒           | &#x2611;   | &#x2611;       |
-| Forced Transfer                      | `forcedTransfer`                               | ☒           | &#x2611;   | &#x2611;       |
-| Forced burn                          | `forcedBurn`                                   | &#x2611;    | ☒          | ☒              |
-| Freeze partial token                 | `freezePartialTokens`/ `unfreezePartialTokens` | &#x2611;    | &#x2611;   | &#x2611;       |
-| Integrated whitelisting/allowlisting | CMTAT Allowlist                                | &#x2611;    | ☒          | ☒              |
-| External Whitelisting/allowlisting   | CMTAT with rule whitelist                      | ☒           | &#x2611;   | &#x2611;       |
-| RuleEngine / transfer hook           | CMTAT with RuleEngine                          | ☒           | &#x2611;   | &#x2611;       |
-| Upgradibility                        | CMTAT Upgradeable version                      | &#x2611;    | &#x2611;   | &#x2611;       |
-| Feepayer/gasless                     | CMTAT with ERC-2771 module                     | ☒           | ☒          | &#x2611;       |
+| CMTAT Functionalities                | **CMTAT Solidity corresponding features**      | CMTAT Allowlist | CMTAT Light | CMTAT Debt | CMTAT Standard |
+| ------------------------------------ | ---------------------------------------------- | --------------- | ----------- | ---------- | -------------- |
+| On-chain snapshot                    | `snapshotModule & snapshotEngine`              | &#x2611;        | ☒           | &#x2611;   | &#x2611;       |
+| Forced Transfer                      | `forcedTransfer`                               | &#x2611;        | ☒           | &#x2611;   | &#x2611;       |
+| Forced burn                          | `forcedBurn`                                   | ☒               | &#x2611;    | ☒          | ☒              |
+| Freeze partial token                 | `freezePartialTokens`/ `unfreezePartialTokens` | &#x2611;        | ☒           | &#x2611;   | &#x2611;       |
+| Integrated whitelisting/allowlisting | CMTAT Allowlist                                | &#x2611;        | ☒           | ☒          | ☒              |
+| External Whitelisting/allowlisting   | CMTAT with rule whitelist                      | ☒               | ☒           | &#x2611;   | &#x2611;       |
+| RuleEngine / transfer hook           | CMTAT with RuleEngine                          | ☒               | ☒           | &#x2611;   | &#x2611;       |
+| Upgradibility                        | CMTAT Upgradeable version                      | &#x2611;        | &#x2611;    | &#x2611;   | &#x2611;       |
+| Feepayer/gasless                     | CMTAT with ERC-2771 module                     | &#x2611;        | ☒           | ☒          | &#x2611;       |
 
 **ForcedBurn/forcedTransfer:** 
 
-In the standard burn function, it is not possible to burn token from a frozen wallet.  CMTAT offers a dedicated function `forcedTransfer`which allows to force a transfer or a burn. If the `forcedTransfer` function is not available, the alternative is to implement only the function`forcedBurn`. 
+In the standard burn function, it is not possible to burn token from a frozen wallet.  CMTAT offers a dedicated function `forcedTransfer`which allows to force a transfer or a burn. If the `forcedTransfer` function is not available, the alternative is to implement only the function `forcedBurn`. 
 
-This is what is done for the CMTAT light version which does not include `forcedTransfer`. You can also decide to implement both. In this case, we suggest that only `forcedBurn`can burn tokens and not `forcedTransfer`.
+This is what is done for the CMTAT light version which does not include `forcedTransfer`. You can also decide to implement both. In this case, we suggest that only `forcedBurn`can burn tokens and not `forcedTransfer`. With the CMTAT Solidity version, when `forcedTransfer` is available, we do not implement `forcedBurn` to reduce smart contract code size, but this limitation is not necessary present with other blockchains.
 
 #### Implementation details
 
