@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/1_CMTATBaseRuleEngine.sol | a8f439a039694270eba59e58d219a64f094a02ca |
+| ./modules/1_CMTATBaseRuleEngine.sol | 4f21dff6eb92c3f99fd172b10bd52a0326093a8f |
 
 
 ### Contracts Description Table
@@ -17,6 +17,7 @@
 ||||||
 | **CMTATBaseRuleEngine** | Implementation | CMTATBaseCommon, ValidationModuleRuleEngine |||
 | └ | initialize | Public ❗️ | 🛑  | initializer |
+| └ | _initialize | Internal 🔒 | 🛑  | onlyInitializing |
 | └ | __CMTAT_init | Internal 🔒 | 🛑  | onlyInitializing |
 | └ | __CMTAT_openzeppelin_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |
 | └ | __CMTAT_internal_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |

@@ -187,7 +187,7 @@ Burns tokens from the caller’s own balance.
 
 - The contract must not be paused 
   - error: `EnforcedPause()`
-- Only authorized users (`BURNER_FROM_ROLE`) are allowed to call this function.
+- Only authorized users (`BURNER_SELF_ROLE`) are allowed to call this function.
 
 **Emits:**
 

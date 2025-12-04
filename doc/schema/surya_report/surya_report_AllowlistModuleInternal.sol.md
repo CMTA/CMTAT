@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/internal/AllowlistModuleInternal.sol | 9999379022e6ae3bd421da597e6709d1aac07d73 |
+| ./modules/internal/AllowlistModuleInternal.sol | cd940f4b7a1ea7442a0413603a1eb5db8bd0822f |
 
 
 ### Contracts Description Table

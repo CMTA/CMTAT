@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/wrapper/controllers/ValidationModule.sol | 317f0e4359599732a1f3ac9f2ba591858bfb485a |
+| ./modules/wrapper/controllers/ValidationModule.sol | cb204b5a174e5c88820aecf796430e6bc545644e |
 
 
 ### Contracts Description Table
@@ -16,8 +16,9 @@
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
 | **ValidationModule** | Implementation | PauseModule, EnforcementModule |||
-| └ | _canMintBurnByModule | Internal 🔒 |   | |
 | └ | _canTransferGenericByModule | Internal 🔒 |   | |
+| └ | _canMintBurnByModule | Internal 🔒 |   | |
+| └ | _canTransferStandardByModule | Internal 🔒 |   | |
 
 
 ### Legend

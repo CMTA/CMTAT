@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./interfaces/technical/IMintBurnToken.sol | 2a15724123c3c441406d18a3b1510ed8a4efa231 |
+| ./interfaces/technical/IMintBurnToken.sol | 275f59950da49e6b6373e104650d25e7969c650a |
 
 
 ### Contracts Description Table
