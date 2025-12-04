@@ -29,7 +29,7 @@ const SnapshotModuleZeroPlannedSnapshotTest = require('../common/SnapshotModuleC
 const SnapshotModuleSetSnapshotEngineCommon = require('../common/SnapshotModuleCommon/SnapshotModuleSetSnapshotEngineCommon')
 
 const VALUE = 20n
-describe('CMTAT Core - Upgradeable', function () {
+describe('CMTAT UUPS', function () {
   beforeEach(async function () {
     Object.assign(this, await loadFixture(fixture))
     this.cmtat = await deployCMTATUUPSProxy(

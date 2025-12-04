@@ -22,22 +22,22 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>3/3</span>
+        <span class='fraction'>1/1</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">75% </span>
+        <span class="strong">100% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>3/4</span>
+        <span class='fraction'>2/2</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>3/3</span>
+        <span class='fraction'>2/2</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>3/3</span>
+        <span class='fraction'>1/1</span>
       </div>
     </div>
   </div>
@@ -76,31 +76,7 @@
 31
 32
 33
-34
-35
-36
-37
-38
-39
-40
-41
-42
-43
-44
-45
-46
-47
-48
-49
-50
-51
-52
-53
-54
-55
-56</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+34</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -133,34 +109,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">471×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">471×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// SPDX-License-Identifier: MPL-2.0
 &nbsp;
 pragma solidity ^0.8.20;
-import {UUPSUpgradeable} from "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
+import {UUPSUpgradeable} from "@openzeppelin/contracts/proxy/utils/UUPSUpgradeable.sol";
 import {CMTATBaseERC2771} from "../modules/4_CMTATBaseERC2771.sol";
-import {CMTATBaseRuleEngine} from "../modules/1_CMTATBaseRuleEngine.sol";
 import {ERC2771Module} from "../modules/wrapper/options/ERC2771Module.sol";
-import {ICMTATConstructor} from "../interfaces/technical/ICMTATConstructor.sol";
 &nbsp;
 /**
 * @title CMTAT version for a proxy deployment with UUPS proxy
@@ -182,26 +136,6 @@ contract CMTATUpgradeableUUPS is CMTATBaseERC2771, UUPSUpgradeable  {
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
-    
-    /**
-     * @notice
-     * initialize the proxy contract
-     * The calls to this function will revert if the contract was deployed without a proxy
-     * @param admin address of the admin of contract (Access Control)
-     * @param ERC20Attributes_ ERC20 name, symbol and decimals
-     * @param extraInformationAttributes_ tokenId, terms, information
-     * @param engines_ external contract
-     */
-    function initialize(address admin,
-        ICMTATConstructor.ERC20Attributes memory ERC20Attributes_,
-        ICMTATConstructor.ExtraInformationAttributes memory extraInformationAttributes_,
-        ICMTATConstructor.Engine memory engines_ ) public override <span class="missing-if-branch" title="else path not taken" >E</span>initializer {
-        CMTATBaseRuleEngine._initialize( admin,
-            ERC20Attributes_,
-            extraInformationAttributes_,
-            engines_);
-        __UUPSUpgradeable_init_unchained();
-    }
 &nbsp;
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
@@ -214,7 +148,7 @@ contract CMTATUpgradeableUUPS is CMTATBaseERC2771, UUPSUpgradeable  {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Mon Nov 17 2025 15:22:19 GMT+0100 (Central European Standard Time)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu Dec 04 2025 15:38:48 GMT+0100 (Central European Standard Time)
 </div>
 </div>
 <script src="../prettify.js"></script>

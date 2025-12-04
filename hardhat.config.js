@@ -2,7 +2,6 @@
 require('@openzeppelin/hardhat-upgrades')
 require('solidity-coverage')
 require("hardhat-gas-reporter");
-require('solidity-docgen')
 require("hardhat-contract-sizer");
 require("@nomicfoundation/hardhat-chai-matchers")
 module.exports = {

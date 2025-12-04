@@ -2813,14 +2813,16 @@ The report is available in [Taurus_CMTAT_Smart_Contract_Security_Assessment_Repo
 
 #### [Aderyn](https://github.com/Cyfrin/aderyn)
 
+Here are the reports produced by Aderyn:
+
 | Version | File                                                         |
 | ------- | ------------------------------------------------------------ |
 | v3.1.0  | [v3.1.0-aderyn-report.md](./doc/audits/tools/aderyn/v3.1.0-aderyn-report.md) |
 | v3.0.0  | [v3.0.0-aderyn-report.md](./doc/audits/tools/aderyn/v3.0.0-aderyn-report.md) |
 
-#### Slither
+#### [Slither](https://github.com/crytic/slither)
 
-You will find the report produced by [Slither](https://github.com/crytic/slither) in 
+Here are the reports produced by [Slither](https://github.com/crytic/slither):
 
 | Version | File                                                         |
 | ------- | ------------------------------------------------------------ |
@@ -2831,10 +2833,19 @@ You will find the report produced by [Slither](https://github.com/crytic/slither
 
 #### [Mythril](https://github.com/Consensys/mythril)
 
+Here are the reports produced by Mythril
+
 | Version | File                                                         |
 | ------- | ------------------------------------------------------------ |
 | v3.0.0  | Mythril currently generates a fatal error, impossible to run the tool |
 | v2.5.0  | [mythril-report-standalone.md](./doc/audits/tools/mythril/v2.5.0/myth_standalone_report.md)<br />[mythril-report-proxy.md](./doc/audits/tools/mythril/v2.5.0/myth_proxy_report.md)<br /> |
+
+Here are the reports produced by [Nethermind Audit Agent](https://auditagent.nethermind.io):
+
+| Version    | File                                                         |
+| ---------- | ------------------------------------------------------------ |
+| v3.1.0     | [nethermind-audit-agent/v3.1.0](./doc/audits/tools/nethermind-audit-agent/v3.1.0) |
+| v3.0.0-rc5 | [nethermind-audit-agent/v3.0.0-rc5](./doc/audits/tools/nethermind-audit-agent/v3.0.0-rc5) |
 
 
 

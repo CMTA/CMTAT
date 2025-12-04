@@ -43,7 +43,7 @@ Reference: [keepachangelog.com/en/1.1.0/](https://keepachangelog.com/en/1.1.0/)
 
 ## 3.1.0
 
-This version is not audited
+> This version is not audited
 
 **Fixed**
 
@@ -78,12 +78,17 @@ This version is not audited
   - The allowance is no longer required to burn tokens to follow Optimism Superchain ERC20 and OpenZeppelin implementation
     See [ERC20BridgeableUpgradeable.so](https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/blob/e725abddf1e01cf05ace496e950fc8e243cc7cab/contracts/token/ERC20/extensions/draft-ERC20BridgeableUpgradeable.sol) & [SuperchainERC20.sol](https://github.com/ethereum-optimism/optimism/blob/develop/packages/contracts-bedrock/src/L2/SuperchainERC20.sol#L43). See issue [328#issuecomment-3455923837](https://github.com/CMTA/CMTAT/issues/328#issuecomment-3455923837)
 
+**Library**
+
+- Update Openzeppelin standard and upgradeable version to [v5.5.0](https://github.com/OpenZeppelin/openzeppelin-contracts/releases/tag/v5.5.0)
 
 **Documentation** (README)
 
 - Reference the new draft version of [ERC-7551](https://ethereum-magicians.org/t/erc-7551-crypto-security-token-smart-contract-interface-ewpg-reworked/25477)
 - Reference [ERC-5679](https://eips.ethereum.org/EIPS/eip-5679) as supported ERC by CMTAT
 - Add section to explain cross-chain bridge support ([Chainlink CCIP](https://docs.chain.link/ccip/concepts/cross-chain-token/evm) and [ERC-7802](https://eips.ethereum.org/EIPS/eip-7802) mainly)
+- Add summary tab for CMTAT framework functionalities to help build CMTAT version for other blockchains
+- Add audit reports made by [Nethermind Audit Agents](https://auditagent.nethermind.io)
 
 
 ## 3.0.0 - 2025-08-28

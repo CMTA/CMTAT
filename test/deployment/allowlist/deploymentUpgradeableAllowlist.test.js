@@ -41,6 +41,7 @@ describe('CMTAT Allowlist - Upgradeable', function () {
   EnforcementModuleCommon()
   ValidationModuleCommonCore()
   // Extensions
+  ERC20EnforcementModuleCommon()
   DocumentModuleCommon()
   ExtraInfoModuleCommon()
   // options

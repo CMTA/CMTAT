@@ -32,16 +32,9 @@ const SnapshotModuleZeroPlannedSnapshotTest = require('../common/SnapshotModuleC
 const SnapshotModuleSetSnapshotEngineCommon = require('../common/SnapshotModuleCommon/SnapshotModuleSetSnapshotEngineCommon')
 
 const VALUE = 20n
-describe('CMTAT Core - Upgradeable', function () {
+describe('CMTAT UUPS - Manual Deployment', function () {
   beforeEach(async function () {
     Object.assign(this, await loadFixture(fixture))
-   /* this.cmtat = await ethers.deployContract('CMTATUpgradeableUUPS', [
-      ZERO_ADDRESS
-    ])*/
-   /* await this.cmtat.initialize(this.admin,
-    ['CMTA Token', 'CMTAT', DEPLOYMENT_DECIMAL],
-    ['CMTAT_ISIN', TERMS, 'CMTAT_info'],
-    [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS])*/
     const ETHERS_CMTAT_PROXY_FACTORY = await ethers.getContractFactory(
       'CMTATUpgradeableUUPS'
     )

@@ -88,7 +88,6 @@
     "solc": "^0.8.19",
     "solidity-code-metrics": "^0.0.25",
     "solidity-coverage": "^0.8.14",
-    "solidity-docgen": "^0.6.0-beta.35",
     "surya": "^0.4.11"
   },
   "dependencies": {
