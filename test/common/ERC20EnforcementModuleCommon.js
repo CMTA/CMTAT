@@ -269,11 +269,10 @@ function ERC20EnforcementModuleCommon () {
         this.cmtat
           .connect(this.admin)
           .forcedTransfer(this.address1, this.address2, AMOUNT_TO_TRANSFER)
+      ).to.be.revertedWithCustomError(
+        this.cmtat,
+        'CMTAT_ERC20EnforcementModule_ValueExceedsAvailableBalance'
       )
-        .to.be.revertedWithCustomError(
-          this.cmtat,
-          'CMTAT_ERC20EnforcementModule_ValueExceedsAvailableBalance'
-        )
     })
 
     it('testCannotNonAdminTransferFunds', async function () {

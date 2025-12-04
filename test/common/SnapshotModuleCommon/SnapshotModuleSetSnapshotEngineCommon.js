@@ -20,12 +20,10 @@ function SnapshotModuleSetSnapshotEngineCommon () {
     })
 
     it('testCannotBeSetByAdminWithTheSameValue', async function () {
-      let snapshotEngineCurrent = await this.cmtat.snapshotEngine()
+      const snapshotEngineCurrent = await this.cmtat.snapshotEngine()
       // Act
       await expect(
-        this.cmtat
-          .connect(this.admin)
-          .setSnapshotEngine(snapshotEngineCurrent)
+        this.cmtat.connect(this.admin).setSnapshotEngine(snapshotEngineCurrent)
       ).to.be.revertedWithCustomError(
         this.cmtat,
         'CMTAT_SnapshotModule_SameValue'

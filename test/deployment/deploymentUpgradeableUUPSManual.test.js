@@ -38,23 +38,19 @@ describe('CMTAT UUPS - Manual Deployment', function () {
     const ETHERS_CMTAT_PROXY_FACTORY = await ethers.getContractFactory(
       'CMTATUpgradeableUUPS'
     )
-    this.cmtat = await upgrades.deployProxy(
-      ETHERS_CMTAT_PROXY_FACTORY,
-      [
-      ],
-      {
-        initializer: false,
-        constructorArgs: [ZERO_ADDRESS],
-        from: this.admin,
-        unsafeAllow: ['missing-initializer', 'missing-initializer-call']
-      }
-    )
+    this.cmtat = await upgrades.deployProxy(ETHERS_CMTAT_PROXY_FACTORY, [], {
+      initializer: false,
+      constructorArgs: [ZERO_ADDRESS],
+      from: this.admin,
+      unsafeAllow: ['missing-initializer', 'missing-initializer-call']
+    })
 
-    await this.cmtat.initialize(this.admin,
+    await this.cmtat.initialize(
+      this.admin,
       ['CMTA Token', 'CMTAT', DEPLOYMENT_DECIMAL],
       ['CMTAT_ISIN', TERMS, 'CMTAT_info'],
-      [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS])
-
+      [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]
+    )
   })
   // Core
   VersionModuleCommon()
