@@ -2277,7 +2277,7 @@ See also [docs.chain.link - Cross Chain Token (EVM)](https://docs.chain.link/cci
 
 CMTAT implements the following function `getCCIPAdmin()` to return the address authorized to register the token in CCIP.
 
-The alternative function proposed by CCIP, `owner`, is not implemented by CMTAT but this could be done easily. Note that `getCCIPAdmin`is the recommended function to use in the CCIP documentation.
+The alternative function proposed by CCIP, `owner`, is not implemented by CMTAT but this could be done easily. Note that `getCCIPAdmin` is the recommended function to use in the CCIP documentation.
 
 ##### [Transfer functions](https://docs.chain.link/ccip/concepts/cross-chain-token/evm/tokens#transfer-functions)
 
@@ -2321,7 +2321,9 @@ function burnFrom(address account, uint256 value) public virtual override(IBurnF
 function burn(uint256 value) public virtual onlyBurnerFrom
 ```
 
+#### Example
 
+[CMTAT-CCIP](https://github.com/Nox-Labs/CMTAT-CCIP) repository, made by [Nox Labs](https://github.com/Nox-Labs), contains a collection of Foundry scripts designed to simplify and show deployment of a CMTAT token (v3.1.0) with CCIP contracts.
 
 #### Optimism superchain ERC-20 (ERC-7802)
 
