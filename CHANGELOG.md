@@ -1,6 +1,6 @@
 # CHANGELOG
 
-Please follow [https://changelog.md conventions and the other conventions below
+Please follow [https://changelog.md](https://changelog.md) conventions and the other conventions below
 
 ## Semantic Version 2.0.0
 
