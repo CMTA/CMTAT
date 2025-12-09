@@ -23,6 +23,7 @@ import {ICMTATDeactivate} from "../../../interfaces/tokenization/ICMTAT.sol";
  */
 abstract contract PauseModule is PausableUpgradeable, IERC3643Pause, IERC7551Pause, ICMTATDeactivate {
     error CMTAT_PauseModule_ContractIsDeactivated();
+    error EnforcedDeactivate();
     /* ============ State Variables ============ */
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
 
@@ -110,6 +111,12 @@ abstract contract PauseModule is PausableUpgradeable, IERC3643Pause, IERC7551Pau
     /* ============ Access Control ============ */
     function _authorizePause() internal virtual;
     function _authorizeDeactivate() internal virtual;
+
+    function _requireNotDeactivated() internal view virtual {
+        if (deactivated()) {
+            revert EnforcedDeactivate();
+        }
+    }
 
     /* ============ ERC-7201 ============ */
     function _getPauseModuleStorage() private pure returns (PauseModuleStorage storage $) {

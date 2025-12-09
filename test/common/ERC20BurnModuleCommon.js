@@ -169,8 +169,7 @@ function ERC20BurnModuleCommon () {
       await expect(
         this.cmtat.connect(this.admin).burn(this.address1, VALUE_TYPED)
       )
-        .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
-        .withArgs(this.address1, ZERO_ADDRESS, VALUE1)
+        .to.be.revertedWithCustomError(this.cmtat, 'EnforcedPause')
     })
 
     it('testCanBeBurnEvenIfContractIsPaused', async function () {
@@ -191,8 +190,8 @@ function ERC20BurnModuleCommon () {
       await expect(
         this.cmtat.connect(this.admin).burn(this.address1, VALUE_TYPED)
       )
-        .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
-        .withArgs(this.address1.address, ZERO_ADDRESS, VALUE)
+        .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotTransact')
+        .withArgs(this.address1.address)
     })
   })
 
@@ -339,8 +338,7 @@ function ERC20BurnModuleCommon () {
             REASON
           )
       )
-        .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
-        .withArgs(this.address1, ZERO_ADDRESS, AMOUNT_TO_BURN)
+        .to.be.revertedWithCustomError(this.cmtat, 'EnforcedPause')
     })
 
     it('testCanBeBurnAndMintEvenIFContractIsPaused', async function () {
@@ -606,8 +604,7 @@ function ERC20BurnModuleCommon () {
           .connect(this.admin)
           .batchBurn(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS, REASON)
       )
-        .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
-        .withArgs(TOKEN_HOLDER[0], ZERO_ADDRESS, TOKEN_SUPPLY_BY_HOLDERS[0])
+        .to.be.revertedWithCustomError(this.cmtat, 'EnforcedPause')
     })
 
     it('testCannotBeBatchBurnIfToIsFrozen', async function () {
@@ -628,8 +625,8 @@ function ERC20BurnModuleCommon () {
           .connect(this.admin)
           .batchBurn(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS, REASON)
       )
-        .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
-        .withArgs(TOKEN_HOLDER[0], ZERO_ADDRESS, TOKEN_SUPPLY_BY_HOLDERS[0])
+        .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotTransact')
+        .withArgs(this.address1)
     })
   })
 }

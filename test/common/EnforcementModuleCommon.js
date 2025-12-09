@@ -268,11 +268,9 @@ function EnforcementModuleCommon () {
             .connect(this.address1)
             .transfer(this.address2, AMOUNT_TO_TRANSFER)
         )
-          .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
+          .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotTransact')
           .withArgs(
-            this.address1.address,
-            this.address2.address,
-            AMOUNT_TO_TRANSFER
+            this.address1.address
           )
       }
     })
@@ -311,11 +309,9 @@ function EnforcementModuleCommon () {
           .connect(this.address1)
           .transferFrom(this.address3, this.address2, AMOUNT_TO_TRANSFER)
       )
-        .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
+        .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotTransact')
         .withArgs(
-          this.address3.address,
-          this.address2.address,
-          AMOUNT_TO_TRANSFER
+          this.address2.address
         )
     })
 
@@ -366,11 +362,9 @@ function EnforcementModuleCommon () {
             .connect(this.address1)
             .transferFrom(this.address3, this.address2, AMOUNT_TO_TRANSFER)
         )
-          .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
+          .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotTransact')
           .withArgs(
-            this.address3.address,
-            this.address2.address,
-            AMOUNT_TO_TRANSFER
+            this.address1.address
           )
       }
     })

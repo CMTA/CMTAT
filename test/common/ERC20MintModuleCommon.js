@@ -166,8 +166,8 @@ function ERC20MintModuleCommon () {
       await this.cmtat.connect(this.admin).deactivateContract()
       // Act
       await expect(this.cmtat.connect(this.admin).mint(this.address1, VALUE1))
-        .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
-        .withArgs(ZERO_ADDRESS, this.address1, VALUE1)
+      .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
+      .withArgs(ZERO_ADDRESS, this.address1, VALUE1)
     })
 
     it('testCannotBeMintedIfToIsFrozen', async function () {
@@ -175,8 +175,7 @@ function ERC20MintModuleCommon () {
         .connect(this.admin)
         .setAddressFrozen(this.address1, true)
       await expect(this.cmtat.connect(this.admin).mint(this.address1, VALUE1))
-        .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
-        .withArgs(ZERO_ADDRESS, this.address1, VALUE1)
+        .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotTransact')
     })
   })
 
@@ -345,8 +344,8 @@ function ERC20MintModuleCommon () {
           .connect(this.admin)
           .batchMint(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS)
       )
-        .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
-        .withArgs(ZERO_ADDRESS, this.address1, TOKEN_SUPPLY_BY_HOLDERS[0])
+        .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotTransact')
+        .withArgs(this.address1)
     })
   })
 
@@ -472,8 +471,7 @@ function ERC20MintModuleCommon () {
           .connect(this.admin)
           .batchTransfer(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS)
       )
-        .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
-        .withArgs(this.admin, TOKEN_HOLDER[0], TOKEN_SUPPLY_BY_HOLDERS[0])
+        .to.be.revertedWithCustomError(this.cmtat, 'EnforcedPause')
     })
 
     it('testCannotBeBatchMTransferIfContractIsDeactivated', async function () {
@@ -493,8 +491,7 @@ function ERC20MintModuleCommon () {
           .connect(this.admin)
           .batchTransfer(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS)
       )
-        .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
-        .withArgs(this.admin, TOKEN_HOLDER[0], TOKEN_SUPPLY_BY_HOLDERS[0])
+        .to.be.revertedWithCustomError(this.cmtat, 'EnforcedPause')
     })
 
     it('testCannotBeBatchTransferIfToIsFrozen', async function () {
@@ -513,8 +510,8 @@ function ERC20MintModuleCommon () {
           .connect(this.admin)
           .batchTransfer(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS)
       )
-        .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
-        .withArgs(this.admin, TOKEN_HOLDER[1], TOKEN_SUPPLY_BY_HOLDERS[1])
+        .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotTransact')
+        .withArgs(TOKEN_HOLDER[1])
     })
   })
 }

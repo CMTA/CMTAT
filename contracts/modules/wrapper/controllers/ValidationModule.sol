@@ -15,6 +15,9 @@ abstract contract ValidationModule is
     PauseModule,
     EnforcementModule
 {
+    /// @notice Error reverted when an account is not allowed to transact. 
+    /// @param account The address of the account which is not allowed for transfers.
+    error ERC7943CannotTransact(address account);
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
@@ -40,6 +43,23 @@ abstract contract ValidationModule is
         }
     }
 
+    function _canTransferGenericByModuleAndRevert(
+        address spender,
+        address from,
+        address to
+    ) internal view virtual returns (bool) {
+        // Mint
+        if(from == address(0)){
+            return _canMintBurnByModuleAndRevert(to);
+        } // burn
+        else if(to == address(0)){
+            return _canMintBurnByModuleAndRevert(from);
+        } // Standard transfer
+        else {
+            return _canTransferStandardByModuleAndRevert(spender, from, to);
+        }
+    }
+
     /**
     * @dev check if the contract is deactivated or the address is frozen
     * check relevant for mint and burn operations
@@ -58,22 +78,92 @@ abstract contract ValidationModule is
     }
 
     /**
+    * @dev check if the contract is deactivated or the address is frozen
+    * check relevant for mint and burn operations
+    * Use forcedTransfer (or forcedBurn) to burn tokens from a frozen address
+    */ 
+    function _canMintBurnByModuleAndRevert(
+        address target
+    ) internal view virtual returns (bool) {
+        if(PauseModule.deactivated()){
+            // can not mint or burn if the contract is deactivated
+            return false;
+        }
+        // cannot burn if target is frozen (used forcedTransfer instead if available)
+        // cannot mint if target is frozen
+        if(EnforcementModule.isFrozen(target)){
+            revert ERC7943CannotTransact(target);
+        }
+        return true;
+    }
+
+    /**
     * @dev calls Pause and Enforcement module
     * check relevant for standard transfer
     * We don't check deactivated() because the contract must be in the pause state to be deactivated
     */
-    function _canTransferStandardByModule(
+
+
+    function _canTransferisFrozen(
         address spender,
         address from,
         address to
     ) internal view virtual returns (bool) {
         if (EnforcementModule.isFrozen(spender) 
         || EnforcementModule.isFrozen(from) 
-        || EnforcementModule.isFrozen(to) 
+        || EnforcementModule.isFrozen(to) ){
+            return true;
+        } else {
+             return false;
+        }
+    }
+
+    function _canTransferisFrozenAndRevert(
+        address spender,
+        address from,
+        address to
+    ) internal view virtual returns (bool) {
+        address target;
+        if (EnforcementModule.isFrozen(spender)){
+            target = spender;
+        } else if (EnforcementModule.isFrozen(from)) {
+            target = from;
+        } else if(EnforcementModule.isFrozen(to) ){
+            target = to;
+        } else {
+            return true;
+        }
+        revert ERC7943CannotTransact(target);
+    }
+
+  function _canTransferStandardByModule(
+        address spender,
+        address from,
+        address to
+    ) internal view virtual returns (bool) {
+        if (_canTransferisFrozen(spender, from, to)
         || PauseModule.paused())  {
             return false;
         } else {
              return true;
         }
     }
+
+    function _canTransferStandardByModuleAndRevert(
+        address spender,
+        address from,
+        address to
+    ) internal view virtual returns (bool) {
+        /**
+         * We don't check the deactivate status because
+         * the contract will be in the pause state if deactivated
+         * This remove a supplementary check and reduce runtime gas sot
+         */
+        _requireNotPaused();
+        _canTransferisFrozenAndRevert(spender, from, to);
+        return true;
+    }
+
+    
+
 }

@@ -175,6 +175,12 @@ abstract contract CMTATBaseAllowlist is
         return ValidationModuleAllowlist._canMintBurnByModule(target);
     }
 
+    function _canMintBurnByModuleAndRevert(
+        address target
+    ) internal view virtual override(ValidationModuleAllowlist, ValidationModule) returns (bool) {
+        return ValidationModuleAllowlist._canMintBurnByModuleAndRevert(target);
+    }
+
     function _canTransferStandardByModule(
         address spender,
         address from,
@@ -183,9 +189,17 @@ abstract contract CMTATBaseAllowlist is
         return ValidationModuleAllowlist._canTransferStandardByModule(spender, from, to);
     }
 
+    function _canTransferStandardByModuleAndRevert(
+        address spender,
+        address from,
+        address to
+    ) internal view virtual override(ValidationModule, ValidationModuleAllowlist) returns (bool) {
+        return ValidationModuleAllowlist._canTransferStandardByModuleAndRevert(spender, from, to);
+    }
+
     function _checkTransferred(address spender, address from, address to, uint256 value) internal virtual override(CMTATBaseCommon) {
         CMTATBaseCommon._checkTransferred(spender, from, to, value);
-        if (!ValidationModule._canTransferGenericByModule(spender, from, to)) {
+        if (!ValidationModule._canTransferGenericByModuleAndRevert(spender, from, to)) {
             revert Errors.CMTAT_InvalidTransfer(from, to, value);
         }
     } 

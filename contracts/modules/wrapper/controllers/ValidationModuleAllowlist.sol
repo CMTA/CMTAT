@@ -31,6 +31,62 @@ abstract contract ValidationModuleAllowlist is
         }
     }
 
+    function _canMintBurnByModuleAndRevert(
+        address target
+    ) internal view virtual override(ValidationModule) returns (bool) {
+
+        if(_isAllowlistEnabled() && !isAllowlisted(target)){
+            revert ERC7943CannotTransact(target);
+        } else {
+            return ValidationModule._canMintBurnByModuleAndRevert(target);
+        }
+    }
+
+    function _canTransferStandardByModuleAndRevert(
+        address spender,
+        address from,
+        address to
+    ) internal view virtual override(ValidationModule) returns (bool) {
+        _canTransferStandardByModuleAllowlistAndRevert(spender, from, to);
+        return ValidationModule._canTransferStandardByModuleAndRevert(spender, from, to);
+    }
+
+     /**
+    * @dev Add allowlist check for standard transfer
+    */
+    function _canTransferStandardByModuleAllowlist(
+        address spender,
+        address from,
+        address to
+    ) internal view virtual returns (bool) {
+        if(_isAllowlistEnabled()){
+            bool spenderCheck = spender != address(0) && !isAllowlisted(spender);
+            if (spenderCheck || !isAllowlisted(from) || !isAllowlisted(to)){
+                return true;
+            }
+        }
+       return false;
+    }
+
+    function _canTransferStandardByModuleAllowlistAndRevert(
+        address spender,
+        address from,
+        address to
+    ) internal view virtual returns (bool) {
+        address target;
+        if (spender != address(0) && !isAllowlisted(spender)){
+            target = spender;
+        } else if (!isAllowlisted(from)) {
+            target = from;
+        } else if(!isAllowlisted(to) ){
+            target = to;
+        } else {
+            return true;
+        }
+        revert ERC7943CannotTransact(target);
+    }
+
+
     /**
     * @dev Add allowlist check for standard transfer
     */
@@ -39,11 +95,8 @@ abstract contract ValidationModuleAllowlist is
         address from,
         address to
     ) internal view virtual override(ValidationModule) returns (bool) {
-        if(_isAllowlistEnabled()){
-            bool spenderCheck = spender != address(0) && !isAllowlisted(spender);
-            if (spenderCheck || !isAllowlisted(from) || !isAllowlisted(to)){
-                return false;
-            }
+        if(_canTransferStandardByModuleAllowlist(spender, from, to)){
+           return false;
         }
         return ValidationModule._canTransferStandardByModule(spender, from, to);
     }
