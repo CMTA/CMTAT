@@ -2988,7 +2988,7 @@ A version for [Starknet](https://www.starknet.io/) written in Cairo is currently
 Two versions are available for the blockchain [Tezos](https://tezos.com)
 
 - [CMTAT FA2](https://github.com/CMTA/CMTAT-Tezos-FA2): Official version written in SmartPy made by [AirGap](https://airgap.it) in collaboration with CMTA.
-- [@ligo/cmtat](https://github.com/ligolang/CMTAT-Ligo/): Unofficial version written in Ligo made by Frank Hillard.
+- [@ligo/cmtat](https://github.com/CMTA/CMTAT-Ligo): Unofficial version written in Ligo made by Frank Hillard.
   - See also [Tokenization of securities on Tezos by Frank Hillard](https://medium.com/@frank.hillard_62931/tokenization-of-securities-on-tezos-2e3c3e90fc5a)
 
 ### Summary tab
