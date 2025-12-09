@@ -1,10 +1,9 @@
-
-
 # CMTA Token 
 
 > To use the CMTAT, we recommend the latest audited version, from the [Releases](https://github.com/CMTA/CMTAT/releases) page. Currently, it is the version [v3.0.0](https://github.com/CMTA/CMTAT/releases/tag/v3.0.0).
 >
-> A pdf file of the v3.0.0 README is available here:  [CMTATSpecificationV3.0.0.pdf](./doc/specification/CMTATSpecificationV3.0.0.pdf) 
+> A pdf file of the v3.0.0 README is available here:  [CMTATSpecificationV3.0.0.pdf](./doc/specification/CMTATSpecificationV3.0.0.pdf)
+>
 
 ## Introduction
 
@@ -33,8 +32,8 @@ CMTAT has been built with five main goals:
    - Technicals: [ERC-2771](https://eips.ethereum.org/EIPS/eip-2771) (MetaTx/Gasless), [ERC-7201](https://eips.ethereum.org/EIPS/eip-7201), [ERC-7802](https://eips.ethereum.org/EIPS/eip-7802)...
 
 4. Security by undergoing audits from trusted firms like [ADBK](https://abdk.consulting) and [Halborn](https://www.halborn.com), and by implementing a range of industry best practices.
-   - Strong code coverage(~99.17%) with 2635 automated tests executed
-   - Run static analyzer ([Aderyn](https://github.com/Cyfrin/aderyn), [Slither](https://github.com/crytic/slither/tree/master)) before and after the audits
+   - Strong code statements coverage(~99.43%) with 3078 automated tests executed
+   - Run static analyzer ([Aderyn](https://github.com/Cyfrin/aderyn), [Slither](https://github.com/crytic/slither/tree/master)), as well as AI Auditing tool ([Nethermind Audit Agent](https://auditagent.nethermind.io)), before and after the audits
    - RBAC Access Control to clearly separates the different roles and permissions
    
 5. Freedom of use through an open-source weak copyleft license ([MPL-2.0](https://www.mozilla.org/en-US/MPL/2.0/FAQ/))
@@ -2978,7 +2977,7 @@ A specific version is available for [Aztec](https://aztec.network/): [Aztec Priv
 
 ### Solana
 
-Specification to deploy CMTAT compliant token on Solana are available in the repository [CMTAT_Solana](https://github.com/CMTA/CMTAT_Solana) made by [Taurus](https://www.taurushq.com) as an internal CMTA project in collaboration with Solana Foundation.
+Specification to deploy CMTAT compliant token on Solana are available in the repository [CMTAT-Solana](https://github.com/CMTA/CMTAT-Solana) made by [Taurus](https://www.taurushq.com) as an internal CMTA project in collaboration with Solana Foundation.
 
 ### Starknet (Cairo)
 
