@@ -28,7 +28,6 @@ contract CMTATStandaloneERC1363 is CMTATBaseERC1363 {
         ICMTATConstructor.Engine memory engines_ 
     ) ERC2771Module(forwarderIrrevocable) {
         // Initialize the contract to avoid front-running
-        // Warning : do not initialize the proxy
         initialize(
             admin,
             ERC20Attributes_,

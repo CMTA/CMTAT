@@ -1,4 +1,4 @@
-//SPDX-License-Identifier: MPL-2.0
+// SPDX-License-Identifier: MPL-2.0
 
 pragma solidity ^0.8.20;
 
@@ -13,14 +13,21 @@ import {DebtModule} from "./DebtModule.sol";
  * Retrieve debt and creditEvents information from a debtEngine
  */
 abstract contract DebtEngineModule is DebtModule {
-    error CMTAT_DebtEngineModule_SameValue();
-
+    /* ============ Events ============ */
     /**
     * @notice Emitted when a new DebtEngine is set.
     * @dev Indicates that the contract will delegate debt logic to a new external engine.
     * @param newDebtEngine The address of the new debt engine contract.
     */
     event DebtEngine(IDebtEngine indexed newDebtEngine);
+
+    /* ============ Error ============ */
+    error CMTAT_DebtEngineModule_SameValue();
+
+
+    /*//////////////////////////////////////////////////////////////
+                            PUBLIC/EXTERNAL FUNCTIONS
+    //////////////////////////////////////////////////////////////*/  
 
     /* ============  State Restricted Functions ============ */
     /**
@@ -33,7 +40,7 @@ abstract contract DebtEngineModule is DebtModule {
     */
     function setDebtEngine(
         IDebtEngine debtEngine_
-    ) public virtual onlyRole(DEBT_ROLE) {
+    ) public virtual onlyDebtManager {
         DebtModuleStorage storage $ = _getDebtModuleStorage();
         require($._debtEngine != debtEngine_, CMTAT_DebtEngineModule_SameValue());
         _setDebtEngine($, debtEngine_);

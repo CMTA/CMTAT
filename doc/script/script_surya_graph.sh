@@ -1,4 +1,4 @@
-#/bin/bash
+#!/bin/bash
 cd '../../'
 DIR=$(pwd)
 DIR_OUT=${DIR}/docOut/surya_graph

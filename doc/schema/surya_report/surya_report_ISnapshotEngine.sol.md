@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./interfaces/engine/ISnapshotEngine.sol | 8242846eec91d35da6c00c83d035a1d7a3381fa3 |
+| ./interfaces/engine/ISnapshotEngine.sol | 4e4c11102ebdaefd5a6e2755b5587a1a88fe6ba2 |
 
 
 ### Contracts Description Table

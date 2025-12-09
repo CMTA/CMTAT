@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/1_CMTATBaseRuleEngine.sol | fb572fc593b02978a9383f212ff59ae2acb1b572 |
+| ./modules/1_CMTATBaseRuleEngine.sol | 4f21dff6eb92c3f99fd172b10bd52a0326093a8f |
 
 
 ### Contracts Description Table
@@ -17,13 +17,17 @@
 ||||||
 | **CMTATBaseRuleEngine** | Implementation | CMTATBaseCommon, ValidationModuleRuleEngine |||
 | └ | initialize | Public ❗️ | 🛑  | initializer |
+| └ | _initialize | Internal 🔒 | 🛑  | onlyInitializing |
 | └ | __CMTAT_init | Internal 🔒 | 🛑  | onlyInitializing |
 | └ | __CMTAT_openzeppelin_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |
 | └ | __CMTAT_internal_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |
 | └ | __CMTAT_modules_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |
 | └ | canTransfer | Public ❗️ |   |NO❗️ |
 | └ | canTransferFrom | Public ❗️ |   |NO❗️ |
-| └ | hasRole | Public ❗️ |   |NO❗️ |
+| └ | _authorizePause | Internal 🔒 | 🛑  | onlyRole |
+| └ | _authorizeDeactivate | Internal 🔒 | 🛑  | onlyRole |
+| └ | _authorizeFreeze | Internal 🔒 | 🛑  | onlyRole |
+| └ | _authorizeRuleEngineManagement | Internal 🔒 | 🛑  | onlyRole |
 | └ | _checkTransferred | Internal 🔒 | 🛑  | |
 
 

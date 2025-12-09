@@ -19,13 +19,11 @@ abstract contract ValidationModuleAllowlist is
     //////////////////////////////////////////////////////////////*/
     /* ============ View functions ============ */
     /**
-    * @dev function used by canTransfer and operateOnTransfer
-    * Block mint if the contract is deactivated (PauseModule) 
-    * or if to is frozen
+    * @dev Use forcedTransfer (or forcedBurn) to burn tokens from an non-allowlist address
     */
     function _canMintBurnByModule(
         address target
-    ) internal view virtual override returns (bool) {
+    ) internal view virtual override(ValidationModule) returns (bool) {
         if(_isAllowlistEnabled() && !isAllowlisted(target)){
             return false;
         } else {
@@ -34,27 +32,19 @@ abstract contract ValidationModuleAllowlist is
     }
 
     /**
-    * @dev function used by canTransfer and operateOnTransfer
+    * @dev Add allowlist check for standard transfer
     */
-    function _canTransferGenericByModule(
+    function _canTransferStandardByModule(
         address spender,
         address from,
         address to
-    ) internal view virtual override returns (bool) {
-         if(_isAllowlistEnabled()){
-            // Mint
-            if(from == address(0)){
-                return _canMintBurnByModule(to);
-            } 
-            // burn
-            // Use forcedTransfer to burn tokens from a non-allowlisted address
-            else if(to == address(0)){
-                return _canMintBurnByModule(from);
-            }
-            else if ((spender != address(0) && !isAllowlisted(spender)) || !isAllowlisted(from) || !isAllowlisted(to)){
+    ) internal view virtual override(ValidationModule) returns (bool) {
+        if(_isAllowlistEnabled()){
+            bool spenderCheck = spender != address(0) && !isAllowlisted(spender);
+            if (spenderCheck || !isAllowlisted(from) || !isAllowlisted(to)){
                 return false;
-            } 
-         }
-         return ValidationModule._canTransferGenericByModule(spender, from, to);
+            }
+        }
+        return ValidationModule._canTransferStandardByModule(spender, from, to);
     }
 }

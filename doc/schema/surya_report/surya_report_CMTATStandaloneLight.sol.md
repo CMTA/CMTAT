@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./deployment/light/CMTATStandaloneLight.sol | 1930d8fa64bcdd47c7d442c111b6f8b4b2141d1e |
+| ./deployment/light/CMTATStandaloneLight.sol | c10b99c33e2f75b98de264ae5e04827b04be6f10 |
 
 
 ### Contracts Description Table

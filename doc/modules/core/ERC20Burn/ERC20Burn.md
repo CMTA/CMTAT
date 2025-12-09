@@ -127,7 +127,7 @@ function burn(address account, uint256 value) external;
 ```solidity
 function burn(address account,uint256 value) 
 public virtual override(IERC3643Burn) 
-onlyRole(BURNER_ROLE)
+onlyBurner 
 ```
 
 Burns a specific number of tokens from a single account by transferring them to the zero address.
@@ -163,9 +163,9 @@ function batchBurn(address[] calldata accounts, uint256[] calldata values) exter
 ```
 
 ```solidity
-function batchBurn(address[] calldata accounts,uint256[] calldata values) 
-public virtual override (IERC3643Burn) 
-onlyRole(BURNER_ROLE)
+ function batchBurn(address[] calldata accounts,uint256[] calldata values) 
+ public virtual override (IERC3643Burn) 
+ onlyBurner
 ```
 
 Performs multiple `burn` operations in a single transaction.
@@ -220,7 +220,7 @@ event Burn(address indexed burner, address indexed account, uint256 value, bytes
 
 #### Functions
 
-##### `burn`
+##### `burn(address,uint256,bytes)`
 
 ```solidity
 function burn(address account, uint256 amount, bytes calldata data) external;
@@ -228,8 +228,8 @@ function burn(address account, uint256 amount, bytes calldata data) external;
 
 ```solidity
 function burn(address account,uint256 value,bytes calldata data) 
-public virtual override(IERC7551Burn) 
-onlyRole(BURNER_ROLE)
+public virtual override(IERC5679Burn) 
+onlyBurner
 ```
 
 Burns a specific amount of tokens from the given account by sending them to the zero address.
@@ -256,7 +256,7 @@ Burns a specific amount of tokens from the given account by sending them to the 
 
 ------
 
-##### `batchBurn`
+##### `batchBurn(address[],uint256[],bytes)`
 
 ```solidity
 function batchBurn(address[] calldata accounts, uint256[] calldata values, bytes memory data) external;
@@ -264,8 +264,8 @@ function batchBurn(address[] calldata accounts, uint256[] calldata values, bytes
 
 ```solidity
 function batchBurn(address[] calldata accounts,uint256[] calldata values,bytes memory data) 
-public virtual override(IERC7551Burn) 
-onlyRole(BURNER_ROLE) 
+public virtual override(IBurnBatchERC20) 
+onlyBurner 
 ```
 
 Performs a batch burn operation from multiple accounts.

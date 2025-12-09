@@ -161,8 +161,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">368×</span>
-<span class="cline-any cline-yes">368×</span>
+<span class="cline-any cline-yes">438×</span>
+<span class="cline-any cline-yes">438×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -171,28 +171,19 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">111×</span>
-<span class="cline-any cline-yes">111×</span>
+<span class="cline-any cline-yes">222×</span>
+<span class="cline-any cline-yes">222×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1249×</span>
+<span class="cline-any cline-yes">1754×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">288×</span>
-<span class="cline-any cline-yes">286×</span>
-<span class="cline-any cline-yes">286×</span>
-<span class="cline-any cline-yes">1138×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">114×</span>
-<span class="cline-any cline-yes">114×</span>
+<span class="cline-any cline-yes">390×</span>
+<span class="cline-any cline-yes">386×</span>
+<span class="cline-any cline-yes">386×</span>
+<span class="cline-any cline-yes">1532×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -200,23 +191,32 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">773×</span>
-<span class="cline-any cline-yes">773×</span>
+<span class="cline-any cline-yes">116×</span>
+<span class="cline-any cline-yes">116×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1427×</span>
-<span class="cline-any cline-yes">1427×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1132×</span>
+<span class="cline-any cline-yes">1132×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3079×</span>
+<span class="cline-any cline-yes">1044×</span>
+<span class="cline-any cline-yes">1044×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3338×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -226,7 +226,7 @@
 pragma solidity ^0.8.20;
 &nbsp;
 import {ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
-import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import {Initializable} from "@openzeppelin/contracts/proxy/utils/Initializable.sol";
 import {EnforcementModuleLibrary} from "./common/EnforcementModuleLibrary.sol";
 /**
  * @dev Allowlist module internal.
@@ -277,7 +277,7 @@ abstract contract AllowlistModuleInternal is
     }
 &nbsp;
     /**
-     * @dev Returns true if the account is frozen, and false otherwise.
+     * @dev enable or disable the allowlist depending of `status` parameter
      */
     function _enableAllowlist(bool status) internal virtual {
         AllowlistModuleInternalStorage storage $ = _getAllowlistModuleInternalStorage();
@@ -286,7 +286,7 @@ abstract contract AllowlistModuleInternal is
 &nbsp;
     /* ============ View functions ============ */
     /**
-     * @dev Returns true if the account is frozen, and false otherwise.
+     * @dev Returns true if the account is listed, and false otherwise.
      */
     function _isAllowlisted(address account) internal view virtual returns (bool) {
         AllowlistModuleInternalStorage storage $ = _getAllowlistModuleInternalStorage();
@@ -316,7 +316,7 @@ abstract contract AllowlistModuleInternal is
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu Jul 31 2025 17:18:35 GMT+0200 (Central European Summer Time)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu Dec 04 2025 15:38:48 GMT+0100 (Central European Standard Time)
 </div>
 </div>
 <script src="../../prettify.js"></script>

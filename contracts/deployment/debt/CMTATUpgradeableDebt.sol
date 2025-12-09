@@ -9,7 +9,6 @@ import {CMTATBaseDebt} from "../../modules/2_CMTATBaseDebt.sol";
 contract CMTATUpgradeableDebt is CMTATBaseDebt {
     /**
      * @notice Contract version for the deployment with a proxy
-     * @param forwarderIrrevocable address of the forwarder, required for the gasless support
      */
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() {

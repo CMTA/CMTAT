@@ -10,7 +10,6 @@ import {ICMTATConstructor} from "../../interfaces/technical/ICMTATConstructor.so
 contract CMTATStandaloneDebt is CMTATBaseDebt {
     /**
      * @notice Contract version for standalone deployment
-     * @param forwarderIrrevocable address of the forwarder, required for the gasless support
      * @param admin address of the admin of contract (Access Control)
      * @param ERC20Attributes_ ERC20 name, symbol and decimals
      * @param baseModuleAttributes_ tokenId, terms, information
@@ -24,7 +23,6 @@ contract CMTATStandaloneDebt is CMTATBaseDebt {
         ICMTATConstructor.Engine memory engines_ 
     ) {
         // Initialize the contract to avoid front-running
-        // Warning : do not initialize the proxy
         initialize(
             admin,
             ERC20Attributes_,

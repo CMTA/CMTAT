@@ -1,9 +1,12 @@
-//SPDX-License-Identifier: MPL-2.0
+// SPDX-License-Identifier: MPL-2.0
 
 pragma solidity ^0.8.20;
 
-import {CMTATBaseCommon,AccessControlUpgradeable} from "./0_CMTATBaseCommon.sol";
+import {CMTATBaseCommon} from "./0_CMTATBaseCommon.sol";
 /* ==== Wrapper === */
+// Core
+import {PauseModule}  from "./wrapper/core/PauseModule.sol";
+import {EnforcementModule} from "./wrapper/core/EnforcementModule.sol";
 // Extensions
 import {ERC20EnforcementModule, ERC20EnforcementModuleInternal} from "./wrapper/extensions/ERC20EnforcementModule.sol";
 // Controllers
@@ -27,6 +30,9 @@ abstract contract CMTATBaseRuleEngine is
      * @param ERC20Attributes_ ERC20 name, symbol and decimals
      * @param extraInformationAttributes_ tokenId, terms, information
      * @param engines_ external contract
+     * @dev
+     * If you override the public function initialize,
+     * call inside directly the internal function, not the public one which is protected by the initializer modifier
      */
     function initialize(
         address admin,
@@ -34,6 +40,23 @@ abstract contract CMTATBaseRuleEngine is
         ICMTATConstructor.ExtraInformationAttributes memory extraInformationAttributes_,
         ICMTATConstructor.Engine memory engines_ 
     ) public virtual initializer {
+        _initialize(
+            admin,
+            ERC20Attributes_,
+            extraInformationAttributes_,
+            engines_
+        );
+    }
+
+    /**
+    * @dev don't call the initializer modifer
+    */
+    function _initialize(
+        address admin,
+        ICMTATConstructor.ERC20Attributes memory ERC20Attributes_,
+        ICMTATConstructor.ExtraInformationAttributes memory extraInformationAttributes_,
+        ICMTATConstructor.Engine memory engines_ 
+    ) internal virtual onlyInitializing{
         __CMTAT_init(
             admin,
             ERC20Attributes_,
@@ -59,7 +82,7 @@ abstract contract CMTATBaseRuleEngine is
         __ERC165_init_unchained();
 
         // Openzeppelin
-        __CMTAT_openzeppelin_init_unchained();
+        __CMTAT_openzeppelin_init_unchained(ERC20Attributes_);
         /* Internal Modules */
        __CMTAT_internal_init_unchained(engines_);
 
@@ -70,10 +93,12 @@ abstract contract CMTATBaseRuleEngine is
     /*
     * @dev OpenZeppelin
     */
-    function __CMTAT_openzeppelin_init_unchained() internal virtual onlyInitializing {
+    function __CMTAT_openzeppelin_init_unchained(ICMTATConstructor.ERC20Attributes memory ERC20Attributes_) internal virtual onlyInitializing {
          // AuthorizationModule inherits from AccessControlUpgradeable
         __AccessControl_init_unchained();
         __Pausable_init_unchained();
+        // Note that the Openzeppelin functions name() and symbol() are overriden in ERC20BaseModule
+        __ERC20_init_unchained(ERC20Attributes_.name, ERC20Attributes_.symbol);
     }
 
     /*
@@ -124,16 +149,18 @@ abstract contract CMTATBaseRuleEngine is
         }
     }
 
-    function hasRole(
-        bytes32 role,
-        address account
-    ) public view virtual override(AccessControlUpgradeable, CMTATBaseCommon) returns (bool) {
-        return CMTATBaseCommon.hasRole(role, account);
-    }
-
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
+    /* ==== Access Control ==== */
+    function _authorizePause() internal virtual override(PauseModule) onlyRole(PAUSER_ROLE){}
+    function _authorizeDeactivate() internal virtual override(PauseModule) onlyRole(DEFAULT_ADMIN_ROLE){}
+
+    function _authorizeFreeze() internal virtual override(EnforcementModule) onlyRole(ENFORCER_ROLE){}
+
+    function _authorizeRuleEngineManagement() internal virtual override(ValidationModuleRuleEngine) onlyRole(DEFAULT_ADMIN_ROLE){}
+
+    /* ==== Transfer/mint/burn restriction ==== */
     function _checkTransferred(address spender, address from, address to, uint256 value) internal virtual override(CMTATBaseCommon) {
         CMTATBaseCommon._checkTransferred(spender, from, to, value);
         require(ValidationModuleRuleEngine._transferred(spender, from, to, value), Errors.CMTAT_InvalidTransfer(from, to, value));

@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./mocks/ERC721MockUpgradeable.sol | 14a94e73b55ddb0f48dbf7b216da63a289457d5a |
+| ./mocks/ERC721MockUpgradeable.sol | d1112d613044a864ecae74abe3a877a8fa62e796 |
 
 
 ### Contracts Description Table
@@ -22,6 +22,9 @@
 | └ | safeTransferFrom | Public ❗️ | 🛑  |NO❗️ |
 | └ | transferFrom | Public ❗️ | 🛑  |NO❗️ |
 | └ | supportsInterface | Public ❗️ |   |NO❗️ |
+| └ | _authorizePause | Internal 🔒 | 🛑  | onlyRole |
+| └ | _authorizeDeactivate | Internal 🔒 | 🛑  | onlyRole |
+| └ | _authorizeFreeze | Internal 🔒 | 🛑  | onlyRole |
 
 
 ### Legend

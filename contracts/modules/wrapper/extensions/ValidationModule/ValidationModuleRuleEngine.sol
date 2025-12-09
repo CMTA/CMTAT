@@ -1,4 +1,4 @@
-//SPDX-License-Identifier: MPL-2.0
+// SPDX-License-Identifier: MPL-2.0
 
 pragma solidity ^0.8.20;
 
@@ -22,6 +22,12 @@ abstract contract ValidationModuleRuleEngine is
     */
     error CMTAT_ValidationModule_SameValue();
 
+    /* ============ Modifier ============ */
+    modifier onlyRuleEngineManager() {
+        _authorizeRuleEngineManagement();
+        _;
+    }
+
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
@@ -39,7 +45,7 @@ abstract contract ValidationModuleRuleEngine is
     */
     function setRuleEngine(
         IRuleEngine ruleEngine_
-    ) public virtual onlyRole(DEFAULT_ADMIN_ROLE) {
+    ) public virtual onlyRuleEngineManager {
          require(ruleEngine_ != ruleEngine(), CMTAT_ValidationModule_SameValue());
         _setRuleEngine(ruleEngine_);
     }
@@ -123,6 +129,9 @@ abstract contract ValidationModuleRuleEngine is
             return true;
         }
     }
+
+    /* ============ Access Control ============ */
+    function _authorizeRuleEngineManagement() internal virtual;
 
     /* ============ State functions ============ */
     function _transferred(address spender, address from, address to, uint256 value) internal virtual returns (bool){

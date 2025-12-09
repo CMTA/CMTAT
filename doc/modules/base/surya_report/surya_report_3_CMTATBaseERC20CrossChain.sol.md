@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/3_CMTATBaseERC20CrossChain.sol | [object Promise] |
+| ./modules/3_CMTATBaseERC20CrossChain.sol | 7d21beb134346630d07186c7ebb7672af11df4e9 |
 
 
 ### Contracts Description Table
@@ -15,13 +15,20 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **CMTATBaseERC20CrossChain** | Implementation | CMTATBaseERC1404, IERC7802, IBurnFromERC20 |||
-| └ | crosschainMint | Public ❗️ | 🛑  | onlyRole whenNotPaused |
-| └ | crosschainBurn | Public ❗️ | 🛑  | onlyRole whenNotPaused |
-| └ | burnFrom | Public ❗️ | 🛑  | onlyRole whenNotPaused |
-| └ | burn | Public ❗️ | 🛑  | onlyRole whenNotPaused |
+| **CMTATBaseERC20CrossChain** | Implementation | ERC20CrossChainModule, CCIPModule, CMTATBaseERC1404 |||
+| └ | transfer | Public ❗️ | 🛑  |NO❗️ |
+| └ | transferFrom | Public ❗️ | 🛑  |NO❗️ |
+| └ | _mintOverride | Internal 🔒 | 🛑  | |
+| └ | _burnOverride | Internal 🔒 | 🛑  | |
+| └ | _minterTransferOverride | Internal 🔒 | 🛑  | |
+| └ | decimals | Public ❗️ |   |NO❗️ |
+| └ | name | Public ❗️ |   |NO❗️ |
+| └ | symbol | Public ❗️ |   |NO❗️ |
 | └ | supportsInterface | Public ❗️ |   |NO❗️ |
-| └ | _burnFrom | Internal 🔒 | 🛑  | |
+| └ | _authorizeCCIPSetAdmin | Internal 🔒 | 🛑  | onlyRole |
+| └ | _checkTokenBridge | Internal 🔒 | 🛑  | whenNotPaused |
+| └ | _authorizeBurnFrom | Internal 🔒 | 🛑  | onlyRole whenNotPaused |
+| └ | _update | Internal 🔒 | 🛑  | |
 
 
 ### Legend

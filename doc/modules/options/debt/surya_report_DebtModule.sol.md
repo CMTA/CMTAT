@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/wrapper/options/DebtModule.sol | [object Promise] |
+| ./modules/wrapper/options/DebtModule.sol | 7db3012ecd1c49a9175098811c8bc04e6fc2c8f8 |
 
 
 ### Contracts Description Table
@@ -15,12 +15,13 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **DebtModule** | Implementation | AccessControlUpgradeable, IDebtModule |||
-| └ | setCreditEvents | Public ❗️ | 🛑  | onlyRole |
-| └ | setDebt | Public ❗️ | 🛑  | onlyRole |
-| └ | setDebtInstrument | Public ❗️ | 🛑  | onlyRole |
+| **DebtModule** | Implementation | IDebtModule |||
+| └ | setCreditEvents | Public ❗️ | 🛑  | onlyDebtManager |
+| └ | setDebt | Public ❗️ | 🛑  | onlyDebtManager |
+| └ | setDebtInstrument | Public ❗️ | 🛑  | onlyDebtManager |
 | └ | creditEvents | Public ❗️ |   |NO❗️ |
 | └ | debt | Public ❗️ |   |NO❗️ |
+| └ | _authorizeDebtManagement | Internal 🔒 | 🛑  | |
 | └ | _getDebtModuleStorage | Internal 🔒 |   | |
 
 

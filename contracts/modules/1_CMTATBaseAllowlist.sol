@@ -1,18 +1,22 @@
-//SPDX-License-Identifier: MPL-2.0
+// SPDX-License-Identifier: MPL-2.0
 
 pragma solidity ^0.8.20;
 
 /* ==== OpenZeppelin === */
-import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import {Initializable} from "@openzeppelin/contracts/proxy/utils/Initializable.sol";
 import {ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
 /* ==== Wrapper === */
 // Base
-import {CMTATBaseCommon, AccessControlUpgradeable} from "./0_CMTATBaseCommon.sol";
+import {CMTATBaseCommon} from "./0_CMTATBaseCommon.sol";
+// Core
+import {PauseModule}  from "./wrapper/core/PauseModule.sol";
+import {EnforcementModule} from "./wrapper/core/EnforcementModule.sol";
 // Extensions
 import {ERC20EnforcementModule, ERC20EnforcementModuleInternal} from "./wrapper/extensions/ERC20EnforcementModule.sol";
 import {DocumentEngineModule, IERC1643} from "./wrapper/extensions/DocumentEngineModule.sol";
 // options
 import {ERC2771Module, ERC2771ContextUpgradeable} from "./wrapper/options/ERC2771Module.sol";
+import {AllowlistModule} from "./wrapper/options/AllowlistModule.sol";
 // controller
 import {ValidationModuleAllowlist} from "./wrapper/controllers/ValidationModuleAllowlist.sol";
 import {ValidationModule, ValidationModuleCore} from "./wrapper/core/ValidationModuleCore.sol";
@@ -78,7 +82,7 @@ abstract contract CMTATBaseAllowlist is
         __ERC165_init_unchained();
 
         // Openzeppelin
-        __CMTAT_openzeppelin_init_unchained();
+        __CMTAT_openzeppelin_init_unchained(ERC20Attributes_);
 
         /* Wrapper modules */
         __CMTAT_modules_init_unchained(admin, ERC20Attributes_, extraInformationAttributes_, snapshotEngine_, documentEngine_ );
@@ -87,19 +91,13 @@ abstract contract CMTATBaseAllowlist is
     /*
     * @dev OpenZeppelin
     */
-    function __CMTAT_openzeppelin_init_unchained() internal virtual onlyInitializing {
+    function __CMTAT_openzeppelin_init_unchained(ICMTATConstructor.ERC20Attributes memory ERC20Attributes_) internal virtual onlyInitializing {
          // AuthorizationModule inherits from AccessControlUpgradeable
         __AccessControl_init_unchained();
         __Pausable_init_unchained();
-        // We don'use name and symbol set by the OpenZeppelin module
-        //__ERC20_init_unchained(ERC20Attributes_.name, ERC20Attributes_.symbol);
+        // Note that the Openzeppelin functions name() and symbol() are overriden in ERC20BaseModule
+        __ERC20_init_unchained(ERC20Attributes_.name, ERC20Attributes_.symbol);
     }
-
-
-
-    /*
-    * @dev CMTAT internal module
-    */
 
     /*
     * @dev CMTAT wrapper modules
@@ -155,16 +153,19 @@ abstract contract CMTATBaseAllowlist is
         }  
     }
 
-    function hasRole(
-        bytes32 role,
-        address account
-    ) public view virtual override(AccessControlUpgradeable, CMTATBaseCommon) returns (bool) {
-        return CMTATBaseCommon.hasRole(role, account);
-    }
-
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
+
+    /* ==== Access Control ==== */
+    function _authorizePause() internal virtual override(PauseModule) onlyRole(PAUSER_ROLE){}
+    function _authorizeDeactivate() internal virtual override(PauseModule) onlyRole(DEFAULT_ADMIN_ROLE){}
+
+    function _authorizeFreeze() internal virtual override(EnforcementModule) onlyRole(ENFORCER_ROLE){}
+
+    function _authorizeAllowlistManagement() internal virtual override(AllowlistModule) onlyRole(ALLOWLIST_ROLE) {}
+
+    /* ==== Transfer/mint/burn restriction ==== */
     /**
     * @inheritdoc ValidationModuleAllowlist
     */
@@ -174,20 +175,17 @@ abstract contract CMTATBaseAllowlist is
         return ValidationModuleAllowlist._canMintBurnByModule(target);
     }
 
-    /**
-    * @inheritdoc ValidationModuleAllowlist
-    */
-   function _canTransferGenericByModule(
+    function _canTransferStandardByModule(
         address spender,
         address from,
         address to
-    ) internal view virtual override(ValidationModuleAllowlist, ValidationModule) returns (bool) {
-        return ValidationModuleAllowlist._canTransferGenericByModule(spender, from, to);
+    ) internal view virtual override(ValidationModule, ValidationModuleAllowlist) returns (bool) {
+        return ValidationModuleAllowlist._canTransferStandardByModule(spender, from, to);
     }
 
-    function _checkTransferred(address spender, address from, address to, uint256 value) internal virtual override {
+    function _checkTransferred(address spender, address from, address to, uint256 value) internal virtual override(CMTATBaseCommon) {
         CMTATBaseCommon._checkTransferred(spender, from, to, value);
-        if (!ValidationModuleAllowlist._canTransferGenericByModule(spender, from, to)) {
+        if (!ValidationModule._canTransferGenericByModule(spender, from, to)) {
             revert Errors.CMTAT_InvalidTransfer(from, to, value);
         }
     } 

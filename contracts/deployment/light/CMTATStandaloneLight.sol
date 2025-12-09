@@ -20,7 +20,6 @@ contract CMTATStandaloneLight is CMTATBaseCore {
         ICMTATConstructor.ERC20Attributes memory ERC20Attributes_
     ) {
         // Initialize the contract to avoid front-running
-        // Warning : do not initialize the proxy
         initialize(
             admin,
             ERC20Attributes_

@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/wrapper/extensions/DocumentEngineModule.sol | a7f294ce335c1bac5914d39a3e23cc630e54c5d8 |
+| ./modules/wrapper/extensions/DocumentEngineModule.sol | 29e5c647559e05d6d71ceea1b2bde711ab3931fa |
 
 
 ### Contracts Description Table
@@ -15,13 +15,14 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **DocumentEngineModule** | Implementation | IDocumentEngineModule, AccessControlUpgradeable |||
+| **DocumentEngineModule** | Implementation | Initializable, IDocumentEngineModule |||
 | └ | __DocumentEngineModule_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |
 | └ | documentEngine | Public ❗️ |   |NO❗️ |
 | └ | getDocument | Public ❗️ |   |NO❗️ |
 | └ | getAllDocuments | Public ❗️ |   |NO❗️ |
-| └ | setDocumentEngine | Public ❗️ | 🛑  | onlyRole |
+| └ | setDocumentEngine | Public ❗️ | 🛑  | onlyDocumentManager |
 | └ | _setDocumentEngine | Internal 🔒 | 🛑  | |
+| └ | _authorizeDocumentManagement | Internal 🔒 | 🛑  | |
 | └ | _getDocumentEngineModuleStorage | Private 🔐 |   | |
 
 

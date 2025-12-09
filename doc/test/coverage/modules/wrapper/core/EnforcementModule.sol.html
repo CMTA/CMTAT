@@ -22,7 +22,7 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>6/6</span>
+        <span class='fraction'>7/7</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">83.33% </span>
@@ -32,12 +32,12 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>5/5</span>
+        <span class='fraction'>6/6</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>6/6</span>
+        <span class='fraction'>8/8</span>
       </div>
     </div>
   </div>
@@ -127,7 +127,16 @@
 82
 83
 84
-85</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -153,6 +162,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">405×</span>
+<span class="cline-any cline-yes">357×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -162,11 +173,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">104×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">117×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -180,43 +191,48 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">165×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">176×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">58×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">64×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">7390×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10962×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">344×</span>
-<span class="cline-any cline-yes">344×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">//SPDX-License-Identifier: MPL-2.0
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">373×</span>
+<span class="cline-any cline-yes">373×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// SPDX-License-Identifier: MPL-2.0
 &nbsp;
 pragma solidity ^0.8.20;
 &nbsp;
-/* ==== OpenZeppelin === */
-import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 /* ==== Module === */
 import {EnforcementModuleInternal} from "../../internal/EnforcementModuleInternal.sol";
 import {IERC3643Enforcement, IERC3643EnforcementEvent} from "../../../interfaces/tokenization/IERC3643Partial.sol";
@@ -229,12 +245,20 @@ import {IERC3643Enforcement, IERC3643EnforcementEvent} from "../../../interfaces
  */
 abstract contract EnforcementModule is
     EnforcementModuleInternal,
-    AccessControlUpgradeable,
     IERC3643Enforcement,
     IERC3643EnforcementEvent
 {
     /* ============ State Variables ============ */
     bytes32 public constant ENFORCER_ROLE = keccak256("ENFORCER_ROLE");
+&nbsp;
+&nbsp;
+    /* ============ Modifier ============ */
+    /// @dev Modifier to restrict access to the burner functions
+    modifier onlyEnforcer() {
+        _authorizeFreeze();
+        _;
+    }
+&nbsp;
 &nbsp;
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
@@ -245,7 +269,7 @@ abstract contract EnforcementModule is
     * @custom:access-control
     * - the caller must have the `ENFORCER_ROLE`.
     */
-    function setAddressFrozen(address account, bool freeze) public virtual override(IERC3643Enforcement) <span class="missing-if-branch" title="else path not taken" >E</span>onlyRole(ENFORCER_ROLE){
+    function setAddressFrozen(address account, bool freeze) public virtual override(IERC3643Enforcement) <span class="missing-if-branch" title="else path not taken" >E</span>onlyEnforcer{
          _addAddressToTheList(account, freeze, "");
     }
     
@@ -263,7 +287,7 @@ abstract contract EnforcementModule is
     */
     function setAddressFrozen(
         address account, bool freeze, bytes calldata data
-    ) public virtual onlyRole(ENFORCER_ROLE)  {
+    ) public virtual onlyEnforcer  {
          _addAddressToTheList(account, freeze, data);
     }
 &nbsp;
@@ -274,7 +298,7 @@ abstract contract EnforcementModule is
     */
     function batchSetAddressFrozen(
         address[] calldata accounts, bool[] calldata freezes
-    ) public virtual override(IERC3643Enforcement) onlyRole(ENFORCER_ROLE) {
+    ) public virtual override(IERC3643Enforcement) onlyEnforcer {
          _addAddressesToTheList(accounts, freezes, "");
     }
 &nbsp;
@@ -294,6 +318,9 @@ abstract contract EnforcementModule is
         EnforcementModuleInternal._addAddressToTheList($, account, freeze, data);
         emit AddressFrozen(account, freeze, _msgSender(), data);
     }
+&nbsp;
+    /* ============ Access Control ============ */
+    function _authorizeFreeze() internal virtual;
 }
 &nbsp;</pre></td></tr>
 </table></pre>
@@ -301,7 +328,7 @@ abstract contract EnforcementModule is
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu Jul 31 2025 17:18:35 GMT+0200 (Central European Summer Time)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu Dec 04 2025 15:38:48 GMT+0100 (Central European Standard Time)
 </div>
 </div>
 <script src="../../../prettify.js"></script>

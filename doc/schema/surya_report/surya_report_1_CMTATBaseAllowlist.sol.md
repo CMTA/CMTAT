@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/1_CMTATBaseAllowlist.sol | 23ce872fe70bf3bb746029a8fbd235e9168b46e6 |
+| ./modules/1_CMTATBaseAllowlist.sol | 1a9216f807988bed5050e9dac738adaccde203cd |
 
 
 ### Contracts Description Table
@@ -22,9 +22,12 @@
 | └ | __CMTAT_modules_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |
 | └ | canTransfer | Public ❗️ |   |NO❗️ |
 | └ | canTransferFrom | Public ❗️ |   |NO❗️ |
-| └ | hasRole | Public ❗️ |   |NO❗️ |
+| └ | _authorizePause | Internal 🔒 | 🛑  | onlyRole |
+| └ | _authorizeDeactivate | Internal 🔒 | 🛑  | onlyRole |
+| └ | _authorizeFreeze | Internal 🔒 | 🛑  | onlyRole |
+| └ | _authorizeAllowlistManagement | Internal 🔒 | 🛑  | onlyRole |
 | └ | _canMintBurnByModule | Internal 🔒 |   | |
-| └ | _canTransferGenericByModule | Internal 🔒 |   | |
+| └ | _canTransferStandardByModule | Internal 🔒 |   | |
 | └ | _checkTransferred | Internal 🔒 | 🛑  | |
 | └ | _msgSender | Internal 🔒 |   | |
 | └ | _contextSuffixLength | Internal 🔒 |   | |

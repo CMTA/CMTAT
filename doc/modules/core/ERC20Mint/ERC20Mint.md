@@ -88,6 +88,12 @@ Emitted when new tokens are minted and assigned to an account.
 function mint(address account, uint256 value, bytes calldata data) external;
 ```
 
+```solidity
+function mint(address account, uint256 value, bytes calldata data) 
+public virtual override(IERC5679Mint) 
+onlyMinter
+```
+
 Creates (`mints`) a specified amount of tokens and assigns them to an account.
 
 | Name    | Type           | Description                                                  |
@@ -117,7 +123,8 @@ function mint(address account, uint256 value) external;
 
 ```solidity
 function mint(address account, uint256 value) 
-public virtual override(IERC3643Mint) onlyRole(MINTER_ROLE)
+public virtual override(IERC3643Mint) 
+onlyMinter
 ```
 
 Creates (`mints`) a specified amount of tokens and assigns them to a single account.
@@ -141,8 +148,9 @@ function batchMint(address[] calldata accounts, uint256[] calldata values) exter
 ```
 
 ```solidity
-function batchMint(address[] calldata accounts, uint256[] calldata values) 
-public virtual override(IERC3643Mint) onlyRole(MINTER_ROLE)
+function batchMint(address[] calldata accounts,uint256[] calldata values) 
+public virtual override(IERC3643Mint) 
+onlyMinter
 ```
 
 Mints tokens to multiple recipients in a single transaction.
@@ -173,9 +181,9 @@ function batchTransfer(address[] tos, uint256[] values) external returns (bool s
 
 ```solidity
 function batchTransfer(address[] calldata tos,uint256[] calldata values) 
-public override(IERC3643BatchTransfer) 
-onlyRole(MINTER_ROLE) 
-returns (bool success_) 
+public virtual override(IERC3643BatchTransfer) 
+onlyMinter 
+returns (bool success_)
 ```
 
 Transfers tokens to multiple recipients in a single transaction.
@@ -185,8 +193,6 @@ Transfers tokens to multiple recipients in a single transaction.
 | `tos`      | address[] | List of recipient addresses. Must not be empty or contain zero addresses. |
 | `values`   | uint256[] | Token amounts to transfer to each corresponding recipient.   |
 | `success_` | bool      | Indicates whether the batch transfer was successful.         |
-
-
 
 **Requirements:**
 

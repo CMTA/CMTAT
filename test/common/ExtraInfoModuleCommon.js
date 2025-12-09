@@ -56,33 +56,23 @@ function ExtraInfoModuleCommon () {
         'https://example.com/doc2',
         '0xe405e5dad3b45f611e35717af4430b4560f12cd4054380b856446d286c341d05'
       ]
+
       // Act
       this.logs = await this.cmtat.connect(this.admin).setTerms(NEW_TERMS)
       // Assert
 
       // let blockTimestamp = (await ethers.provider.getBlock('latest')).timestamp;
       await checkTerms(this, NEW_TERMS)
-      /*
-      don't work
+      const blockTimestamp = (
+        await ethers.provider.getBlock(this.logs.blockNumber)
+      ).timestamp
+      const TAB_EVENT = [
+        NEW_TERMS[0],
+        [NEW_TERMS[1], NEW_TERMS[2], blockTimestamp]
+      ]
       await expect(this.logs)
-        .to.emit(this.cmtat, 'Term')
-        .withArgs( [NEW_TERMS[0],tab]
-
-      // Compute blocktimestamp
-        const blockTimestamp = (await ethers.provider.getBlock(this.logs.blockNumber)).timestamp;
-       let tab = [NEW_TERMS[1], NEW_TERMS[2], blockTimestamp]
-      // Encode struct argument
-          coder = new ethers.AbiCoder()
-         const encode = coder.encode(
-       ["tuple(string, tuple(string, bytes32, uint256))"], // Struct definition
-       [[NEW_TERMS[0], [NEW_TERMS[1], NEW_TERMS[2], blockTimestamp]]] );
-
-       // Check event hash
-        let hash = ethers.keccak256(encode)
-      await expect(this.logs)
-        .to.emit(this.cmtat, 'Term')
-        .withArgs( hash )
-        */
+        .to.emit(this.cmtat, 'Terms((string,(string,bytes32,uint256)))')
+        .withArgs(TAB_EVENT)
     })
     it('testCannotNonAdminUpdateTerms', async function () {
       // Arrange - Assert

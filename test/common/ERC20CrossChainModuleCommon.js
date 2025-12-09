@@ -1,7 +1,7 @@
 const {
   CROSS_CHAIN_ROLE,
   BURNER_FROM_ROLE,
-  MINTER_ROLE,
+  BURNER_SELF_ROLE,
   ZERO_ADDRESS
 } = require('../utils')
 const { expect } = require('chai')
@@ -86,10 +86,14 @@ function ERC20CrossChainModuleCommon () {
 
     it('testCanReturnSupportedInterface', async function () {
       const IERC721Interface = '0x80ac58cd'
-      const crossChainInterace = '0x33331994'
-      expect(await this.cmtat.supportsInterface(crossChainInterace)).to.equal(
+      const IERC165Id = '0x01ffc9a7'
+      const crossChainInterface = '0x33331994'
+      const IERC5679 = '0xd0017968'
+      expect(await this.cmtat.supportsInterface(crossChainInterface)).to.equal(
         true
       )
+      expect(await this.cmtat.supportsInterface(IERC5679)).to.equal(true)
+      expect(await this.cmtat.supportsInterface(IERC165Id)).to.equal(true)
       expect(await this.cmtat.supportsInterface(IERC721Interface)).to.equal(
         false
       )
@@ -210,7 +214,7 @@ function ERC20CrossChainModuleCommon () {
       // Arrange
       await this.cmtat
         .connect(this.admin)
-        .grantRole(BURNER_FROM_ROLE, this.address1)
+        .grantRole(BURNER_SELF_ROLE, this.address1)
       // Act
       const bindTest = testBurn.bind(this)
       await bindTest(this.address1)
@@ -222,7 +226,7 @@ function ERC20CrossChainModuleCommon () {
           this.cmtat,
           'AccessControlUnauthorizedAccount'
         )
-        .withArgs(this.address2.address, BURNER_FROM_ROLE)
+        .withArgs(this.address2.address, BURNER_SELF_ROLE)
 
       // Without reason
       await expect(this.cmtat.connect(this.address2).burn(20n))
@@ -230,7 +234,7 @@ function ERC20CrossChainModuleCommon () {
           this.cmtat,
           'AccessControlUnauthorizedAccount'
         )
-        .withArgs(this.address2.address, BURNER_FROM_ROLE)
+        .withArgs(this.address2.address, BURNER_SELF_ROLE)
     })
 
     /* //////////////////////////////////////////////////////////////
@@ -240,7 +244,7 @@ function ERC20CrossChainModuleCommon () {
     it('testCannotBeBurntIfBalanceExceeds', async function () {
       await this.cmtat
         .connect(this.admin)
-        .grantRole(BURNER_FROM_ROLE, this.address1)
+        .grantRole(BURNER_SELF_ROLE, this.address1)
       // error AccessControlUnauthorizedAccount(address account, bytes32 neededRole);
       const AMOUNT_TO_BURN = 200n
       const ADDRESS1_BALANCE = await this.cmtat.balanceOf(this.address1)
@@ -267,7 +271,7 @@ function ERC20CrossChainModuleCommon () {
     it('testCanBeBurnEvenIfContractIsPaused', async function () {
       await this.cmtat
         .connect(this.admin)
-        .grantRole(BURNER_FROM_ROLE, this.address1)
+        .grantRole(BURNER_SELF_ROLE, this.address1)
       await this.cmtat.connect(this.admin).pause()
       await expect(
         this.cmtat.connect(this.admin).burn(VALUE_TYPED)
@@ -281,7 +285,7 @@ function ERC20CrossChainModuleCommon () {
         .setAddressFrozen(this.address1, true)
       await this.cmtat
         .connect(this.admin)
-        .grantRole(BURNER_FROM_ROLE, this.address1)
+        .grantRole(BURNER_SELF_ROLE, this.address1)
       // Act
       const VALUE = 20
       const VALUE_TYPED = ethers.Typed.uint256(20)
@@ -324,6 +328,10 @@ function ERC20CrossChainModuleCommon () {
         .withArgs(this.address2, this.address1, this.address2, AMOUNT_TO_BURN)
       expect(await this.cmtat.balanceOf(this.address1)).to.equal(30n)
       expect(await this.cmtat.totalSupply()).to.equal(30n)
+      // emits a Spend event
+      await expect(this.logs)
+        .to.emit(this.cmtat, 'Spend')
+        .withArgs(this.address1, this.address2, AMOUNT_TO_BURN)
     })
 
     it('testCannotBeBurntWithoutBurnerFromRole', async function () {

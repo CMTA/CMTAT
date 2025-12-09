@@ -1,4 +1,4 @@
-//SPDX-License-Identifier: MPL-2.0
+// SPDX-License-Identifier: MPL-2.0
 
 pragma solidity ^0.8.20;
 /* ==== OpenZeppelin === */
@@ -6,9 +6,11 @@ import {ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/Cont
 import {ERC1363Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/ERC1363Upgradeable.sol";
 import {ERC20Upgradeable, IERC20} from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 /* ==== Module === */
-import {CMTATBaseERC1404, CMTATBaseCommon} from "./2_CMTATBaseERC1404.sol";
 import {CMTATBaseRuleEngine} from "./1_CMTATBaseRuleEngine.sol";
 import {CMTATBaseERC2771, CMTATBaseERC20CrossChain} from "../modules/4_CMTATBaseERC2771.sol";
+
+/* ==== Interface and other library === */
+import {ICMTATConstructor} from "../interfaces/technical/ICMTATConstructor.sol";
 /**
 * @title CMTAT Base for ERC-1363
 */
@@ -19,9 +21,9 @@ abstract contract CMTATBaseERC1363 is ERC1363Upgradeable,CMTATBaseERC2771{
     /**
     * @dev initializer function
     */
-    function __CMTAT_openzeppelin_init_unchained() internal virtual override onlyInitializing {
+    function __CMTAT_openzeppelin_init_unchained(ICMTATConstructor.ERC20Attributes memory ERC20Attributes_) internal virtual override onlyInitializing {
+        CMTATBaseRuleEngine.__CMTAT_openzeppelin_init_unchained(ERC20Attributes_);
         __ERC1363_init_unchained();
-        CMTATBaseRuleEngine.__CMTAT_openzeppelin_init_unchained();
     }
     
     /*//////////////////////////////////////////////////////////////
@@ -31,14 +33,14 @@ abstract contract CMTATBaseERC1363 is ERC1363Upgradeable,CMTATBaseERC2771{
     /* ============ State functions ============ */
 
     /**
-    * @inheritdoc CMTATBaseCommon
+    * @inheritdoc CMTATBaseERC20CrossChain
     */
-    function transfer(address to, uint256 value) public virtual override(ERC20Upgradeable, CMTATBaseCommon, IERC20) returns (bool) {
-        return CMTATBaseCommon.transfer(to, value);
+    function transfer(address to, uint256 value) public virtual override(ERC20Upgradeable, CMTATBaseERC20CrossChain, IERC20) returns (bool) {
+        return CMTATBaseERC20CrossChain.transfer(to, value);
     }
 
     /**
-    * @inheritdoc CMTATBaseCommon
+    * @inheritdoc CMTATBaseERC20CrossChain
     */
     function transferFrom(
         address sender,
@@ -47,10 +49,10 @@ abstract contract CMTATBaseERC1363 is ERC1363Upgradeable,CMTATBaseERC2771{
     )
         public
         virtual
-        override(ERC20Upgradeable, CMTATBaseCommon, IERC20)
+        override(ERC20Upgradeable, CMTATBaseERC20CrossChain, IERC20)
         returns (bool)
     {
-        return CMTATBaseCommon.transferFrom(sender, recipient, amount);
+        return CMTATBaseERC20CrossChain.transferFrom(sender, recipient, amount);
     }
 
     /* ============ View functions ============ */
@@ -63,31 +65,31 @@ abstract contract CMTATBaseERC1363 is ERC1363Upgradeable,CMTATBaseERC2771{
 
 
     /**
-    * @inheritdoc CMTATBaseCommon
+    * @inheritdoc CMTATBaseERC20CrossChain
     */
     function decimals()
         public
         view
         virtual
-        override(ERC20Upgradeable, CMTATBaseCommon)
+        override(ERC20Upgradeable, CMTATBaseERC20CrossChain)
         returns (uint8)
     {
-        return CMTATBaseCommon.decimals();
+        return CMTATBaseERC20CrossChain.decimals();
     }
 
 
     /**
-    * @inheritdoc CMTATBaseCommon
+    * @inheritdoc CMTATBaseERC20CrossChain
     */
-    function name() public virtual override(ERC20Upgradeable, CMTATBaseCommon) view returns (string memory) {
-        return CMTATBaseCommon.name();
+    function name() public virtual override(ERC20Upgradeable, CMTATBaseERC20CrossChain) view returns (string memory) {
+        return CMTATBaseERC20CrossChain.name();
     }
 
     /**
-    * @inheritdoc CMTATBaseCommon
+    * @inheritdoc CMTATBaseERC20CrossChain
     */
-    function symbol() public virtual override(ERC20Upgradeable, CMTATBaseCommon) view returns (string memory) {
-        return CMTATBaseCommon.symbol();
+    function symbol() public virtual override(ERC20Upgradeable, CMTATBaseERC20CrossChain) view returns (string memory) {
+        return CMTATBaseERC20CrossChain.symbol();
     }
 
 
@@ -96,14 +98,14 @@ abstract contract CMTATBaseERC1363 is ERC1363Upgradeable,CMTATBaseERC2771{
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
     /**
-    * @inheritdoc CMTATBaseCommon
+    * @inheritdoc CMTATBaseERC20CrossChain
     */
     function _update(
         address from,
         address to,
         uint256 amount
-    ) internal override(ERC20Upgradeable, CMTATBaseCommon) {
-        CMTATBaseCommon._update(from, to, amount);
+    ) internal override(ERC20Upgradeable, CMTATBaseERC20CrossChain) {
+        CMTATBaseERC20CrossChain._update(from, to, amount);
     }
 
     /*//////////////////////////////////////////////////////////////

@@ -1,5 +1,6 @@
 //SPDX-License-Identifier: MPL-2.0
 import {IERC3643ComplianceRead} from "./IERC3643Partial.sol";
+import {IERC5679Mint, IERC5679Burn} from "../technical/IERC5679.sol";
 pragma solidity ^0.8.20;
 
 
@@ -7,7 +8,7 @@ pragma solidity ^0.8.20;
  * @title IERC7551Mint
  * @dev Interface for token minting operations. 
  */
-interface IERC7551Mint {
+interface IERC7551Mint is IERC5679Mint {
      /**
      * @notice Emitted when new tokens are minted and assigned to an account.
      * @param minter The address that initiated the mint operation.
@@ -16,27 +17,11 @@ interface IERC7551Mint {
      * @param data Optional metadata associated with the mint (e.g., reason, reference ID).
      */
     event Mint(address indexed minter, address indexed account, uint256 value, bytes data);
-    /**
-     * @notice Creates a `value` amount of tokens and assigns them to `account`, by transferring it from address(0)
-     * @dev
-     * - Increases the total supply of tokens.
-     * - Emits both a `Mint` event and a standard ERC-20 `Transfer` event (with `from` set to the zero address).
-     * - The `data` parameter can be used to attach off-chain metadata or audit information.
-     * - If {IERC7551Pause} is implemented:
-     *   - Token issuance MUST NOT be blocked by paused transfer state.
-     * Requirements:
-     * - `account` cannot be the zero address
-     * @param account The address that will receive the newly minted tokens.
-     * @param value The amount of tokens to mint.
-     * @param data Additional contextual data to include with the mint (optional).
-     */
-    function mint(address account, uint256 value, bytes calldata data) external;
 }
-
 /**
 * @title interface for burn operation
 */
-interface IERC7551Burn {
+interface IERC7551Burn is IERC5679Burn {
      /**
      * @notice Emitted when tokens are burned from an account.
      * @param burner The address that initiated the burn.
@@ -45,20 +30,6 @@ interface IERC7551Burn {
      * @param data Additional data related to the burn.
      */
     event Burn(address indexed burner, address indexed account, uint256 value, bytes data);
-   
-    /**
-     * @notice Burns a specific number of tokens from the given account by transferring it to address(0)
-     * @dev 
-     * - The account's balance is decreased by the specified amount.
-     * - Emits a `Burn` event and a standard `Transfer` event with `to` set to `address(0)`.
-     * - If the account balance (including frozen tokens) is less than the burn amount, the transaction MUST revert.
-     * - If the token contract supports {IERC7551Pause}, paused transfers MUST NOT prevent this burn operation.
-     * - The `data` parameter MAY be used to provide additional context (e.g., audit trail or documentation).
-     * @param account The address whose tokens will be burned.
-     * @param amount The number of tokens to remove from circulation.
-     * @param data Arbitrary additional data to document the burn.
-     */
-    function burn(address account, uint256 amount, bytes calldata data) external;
 }
 
 interface IERC7551Pause {
@@ -191,6 +162,17 @@ interface IERC7551Compliance is IERC3643ComplianceRead {
 
 interface IERC7551Document {
     /**
+    * @notice Emitted when the terms are updated.
+    * @param hash_ The new hash value
+    * @param uri_ The new string uri
+    */
+    event Terms(bytes32 hash_, string uri_);
+    /**
+    * @notice Emitted when the metadata string is updated.
+    * @param newMetaData The new metadata value (e.g. a URL or reference hash).
+    */
+    event MetaData(string newMetaData);
+    /**
      * @notice Returns the hash of the "Terms" document.
      * @return hash_ The `bytes32` hash of the terms document.
      */
@@ -198,10 +180,10 @@ interface IERC7551Document {
 
     /**
      * @notice Sets the terms hash and URI.
-     * @param _hash The new hash of the document.
-     * @param _uri The corresponding URI.
+     * @param hash_ The new hash of the document.
+     * @param uri_ The corresponding URI.
      */
-    function setTerms(bytes32 _hash, string calldata _uri) external;
+    function setTerms(bytes32 hash_, string calldata uri_) external;
 
     /**
     * @notice Returns the metadata string (e.g. URL).

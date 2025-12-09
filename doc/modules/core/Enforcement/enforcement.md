@@ -42,8 +42,7 @@ This section describes the Ethereum API of the Enforcement Module.
 
 ```solidity
 function setAddressFrozen(address account, bool freeze, bytes calldata data) 
-public virtual 
-onlyRole(ENFORCER_ROLE)
+public virtual onlyEnforcer
 ```
 
 Updates the frozen status of a specific account, either freezing or unfreezing it.
@@ -133,7 +132,8 @@ function setAddressFrozen(address account, bool freeze) external;
 ```
 ```solidity
 function setAddressFrozen(address account, bool freeze) 
-public virtual override(IERC3643Enforcement) onlyRole(ENFORCER_ROLE)
+public virtual override(IERC3643Enforcement) 
+onlyEnforcer
 ```
 
 Sets the frozen status of a specific address.
@@ -171,7 +171,7 @@ function batchSetAddressFrozen(address[] calldata accounts, bool[] calldata free
 ```solidity
 function batchSetAddressFrozen(address[] calldata accounts, bool[] calldata freezes) 
 public virtual override(IERC3643Enforcement) 
-onlyRole(ENFORCER_ROLE)
+onlyEnforcer 
 ```
 
 Enables bulk freezing or unfreezing in a single call.

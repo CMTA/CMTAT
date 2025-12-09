@@ -22,12 +22,12 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>11/11</span>
+        <span class='fraction'>8/8</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>14/14</span>
+        <span class='fraction'>10/10</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
@@ -37,7 +37,7 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>9/9</span>
+        <span class='fraction'>8/8</span>
       </div>
     </div>
   </div>
@@ -93,17 +93,7 @@
 48
 49
 50
-51
-52
-53
-54
-55
-56
-57
-58
-59
-60
-61</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+51</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -129,12 +119,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">709×</span>
+<span class="cline-any cline-yes">14×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">613×</span>
-<span class="cline-any cline-yes">7×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">606×</span>
+<span class="cline-any cline-yes">695×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -146,21 +134,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">812×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">579×</span>
-<span class="cline-any cline-yes">349×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">331×</span>
+<span class="cline-any cline-yes">271×</span>
+<span class="cline-any cline-yes">271×</span>
+<span class="cline-any cline-yes">36×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">78×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">18×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">367×</span>
+<span class="cline-any cline-yes">295×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">//SPDX-License-Identifier: MPL-2.0
@@ -184,13 +164,11 @@ abstract contract ValidationModuleAllowlist is
     //////////////////////////////////////////////////////////////*/
     /* ============ View functions ============ */
     /**
-    * @dev function used by canTransfer and operateOnTransfer
-    * Block mint if the contract is deactivated (PauseModule) 
-    * or if to is frozen
+    * @dev Use forcedTransfer (or forcedBurn) to burn tokens from an non-allowlist address
     */
     function _canMintBurnByModule(
         address target
-    ) internal view virtual override returns (bool) {
+    ) internal view virtual override(ValidationModule) returns (bool) {
         if(_isAllowlistEnabled() &amp;&amp; !isAllowlisted(target)){
             return false;
         } else {
@@ -199,28 +177,20 @@ abstract contract ValidationModuleAllowlist is
     }
 &nbsp;
     /**
-    * @dev function used by canTransfer and operateOnTransfer
+    * @dev Add allowlist check for standard transfer
     */
-    function _canTransferGenericByModule(
+    function _canTransferStandardByModule(
         address spender,
         address from,
         address to
-    ) internal view virtual override returns (bool) {
-         if(_isAllowlistEnabled()){
-            // Mint
-            if(from == address(0)){
-                return _canMintBurnByModule(to);
-            } 
-            // burn
-            // Use forcedTransfer to burn tokens from a non-allowlisted address
-            else if(to == address(0)){
-                return _canMintBurnByModule(from);
-            }
-            else if ((spender != address(0) &amp;&amp; !isAllowlisted(spender)) || !isAllowlisted(from) || !isAllowlisted(to)){
+    ) internal view virtual override(ValidationModule) returns (bool) {
+        if(_isAllowlistEnabled()){
+            bool spenderCheck = spender != address(0) &amp;&amp; !isAllowlisted(spender);
+            if (spenderCheck || !isAllowlisted(from) || !isAllowlisted(to)){
                 return false;
-            } 
-         }
-         return ValidationModule._canTransferGenericByModule(spender, from, to);
+            }
+        }
+        return ValidationModule._canTransferStandardByModule(spender, from, to);
     }
 }
 &nbsp;</pre></td></tr>
@@ -229,7 +199,7 @@ abstract contract ValidationModuleAllowlist is
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu Jul 31 2025 17:18:35 GMT+0200 (Central European Summer Time)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu Dec 04 2025 15:38:48 GMT+0100 (Central European Standard Time)
 </div>
 </div>
 <script src="../../../prettify.js"></script>

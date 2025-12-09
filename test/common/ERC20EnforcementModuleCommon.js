@@ -262,6 +262,19 @@ function ERC20EnforcementModuleCommon () {
         .withArgs(this.address1, this.address2, AMOUNT_TO_TRANSFER)
     })
 
+    it('testCannotForceTransferFromAddress1ToAddress2IfBalanceNotEnough', async function () {
+      const AMOUNT_TO_TRANSFER = 100000
+      // Assert
+      await expect(
+        this.cmtat
+          .connect(this.admin)
+          .forcedTransfer(this.address1, this.address2, AMOUNT_TO_TRANSFER)
+      ).to.be.revertedWithCustomError(
+        this.cmtat,
+        'CMTAT_ERC20EnforcementModule_ValueExceedsAvailableBalance'
+      )
+    })
+
     it('testCannotNonAdminTransferFunds', async function () {
       // Act
       await expect(

@@ -66,4 +66,9 @@ contract ERC721MockUpgradeable is ERC721Upgradeable, CMTATBaseGeneric {
     }
 
 
+  function _authorizePause() internal virtual override onlyRole(PAUSER_ROLE){}
+  
+  function _authorizeDeactivate() internal virtual override onlyRole(DEFAULT_ADMIN_ROLE){}
+
+  function _authorizeFreeze() internal virtual override onlyRole(ENFORCER_ROLE){}
 }

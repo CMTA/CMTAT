@@ -10,7 +10,7 @@ const ERC20BaseModuleCommon = require('../../common/ERC20BaseModuleCommon')
 const ERC20MintModuleCommon = require('../../common/ERC20MintModuleCommon')
 const ERC20BurnModuleCommon = require('../../common/ERC20BurnModuleCommon')
 const EnforcementModuleCommon = require('../../common/EnforcementModuleCommon')
-const BaseModuleCommon = require('../../common/BaseModuleCommon')
+const VersionModuleCommon = require('../../common/VersionModuleCommon')
 const PauseModuleCommon = require('../../common/PauseModuleCommon')
 const ValidationModuleCommonCore = require('../../common/ValidationModule/ValidationModuleCommonCore')
 // Extensions
@@ -35,7 +35,7 @@ describe('CMTAT Allowlist- Standalone', function () {
     this.dontCheckTimestamp = true
   })
   // core
-  BaseModuleCommon()
+  VersionModuleCommon()
   PauseModuleCommon()
   ERC20BaseModuleCommon()
   ERC20BurnModuleCommon()

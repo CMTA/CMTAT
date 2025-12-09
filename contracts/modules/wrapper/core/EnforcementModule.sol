@@ -1,9 +1,7 @@
-//SPDX-License-Identifier: MPL-2.0
+// SPDX-License-Identifier: MPL-2.0
 
 pragma solidity ^0.8.20;
 
-/* ==== OpenZeppelin === */
-import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 /* ==== Module === */
 import {EnforcementModuleInternal} from "../../internal/EnforcementModuleInternal.sol";
 import {IERC3643Enforcement, IERC3643EnforcementEvent} from "../../../interfaces/tokenization/IERC3643Partial.sol";
@@ -16,12 +14,20 @@ import {IERC3643Enforcement, IERC3643EnforcementEvent} from "../../../interfaces
  */
 abstract contract EnforcementModule is
     EnforcementModuleInternal,
-    AccessControlUpgradeable,
     IERC3643Enforcement,
     IERC3643EnforcementEvent
 {
     /* ============ State Variables ============ */
     bytes32 public constant ENFORCER_ROLE = keccak256("ENFORCER_ROLE");
+
+
+    /* ============ Modifier ============ */
+    /// @dev Modifier to restrict access to the burner functions
+    modifier onlyEnforcer() {
+        _authorizeFreeze();
+        _;
+    }
+
 
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
@@ -32,7 +38,7 @@ abstract contract EnforcementModule is
     * @custom:access-control
     * - the caller must have the `ENFORCER_ROLE`.
     */
-    function setAddressFrozen(address account, bool freeze) public virtual override(IERC3643Enforcement) onlyRole(ENFORCER_ROLE){
+    function setAddressFrozen(address account, bool freeze) public virtual override(IERC3643Enforcement) onlyEnforcer{
          _addAddressToTheList(account, freeze, "");
     }
     
@@ -50,7 +56,7 @@ abstract contract EnforcementModule is
     */
     function setAddressFrozen(
         address account, bool freeze, bytes calldata data
-    ) public virtual onlyRole(ENFORCER_ROLE)  {
+    ) public virtual onlyEnforcer  {
          _addAddressToTheList(account, freeze, data);
     }
 
@@ -61,7 +67,7 @@ abstract contract EnforcementModule is
     */
     function batchSetAddressFrozen(
         address[] calldata accounts, bool[] calldata freezes
-    ) public virtual override(IERC3643Enforcement) onlyRole(ENFORCER_ROLE) {
+    ) public virtual override(IERC3643Enforcement) onlyEnforcer {
          _addAddressesToTheList(accounts, freezes, "");
     }
 
@@ -81,4 +87,7 @@ abstract contract EnforcementModule is
         EnforcementModuleInternal._addAddressToTheList($, account, freeze, data);
         emit AddressFrozen(account, freeze, _msgSender(), data);
     }
+
+    /* ============ Access Control ============ */
+    function _authorizeFreeze() internal virtual;
 }

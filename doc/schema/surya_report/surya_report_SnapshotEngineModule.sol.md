@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/wrapper/extensions/SnapshotEngineModule.sol | 58da15cb4e71de9d949c0f4f94392ced7a3ac7b3 |
+| ./modules/wrapper/extensions/SnapshotEngineModule.sol | ef0121267596e32a25ec794775407a854fd056f2 |
 
 
 ### Contracts Description Table
@@ -15,11 +15,12 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **SnapshotEngineModule** | Implementation | AccessControlUpgradeable, ISnapshotEngineModule |||
+| **SnapshotEngineModule** | Implementation | Initializable, ISnapshotEngineModule |||
 | └ | __SnapshotEngineModule_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |
-| └ | setSnapshotEngine | Public ❗️ | 🛑  | onlyRole |
+| └ | setSnapshotEngine | Public ❗️ | 🛑  | onlySnapshooter |
 | └ | snapshotEngine | Public ❗️ |   |NO❗️ |
 | └ | _setSnapshotEngine | Internal 🔒 | 🛑  | |
+| └ | _authorizeSnapshots | Internal 🔒 | 🛑  | |
 | └ | _getSnapshotEngineModuleStorage | Private 🔐 |   | |
 
 
