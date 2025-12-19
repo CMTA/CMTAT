@@ -26,7 +26,7 @@ contract ERC721MockUpgradeable is ERC721Upgradeable, CMTATBaseGeneric {
    */
   function mint(address to, uint256 tokenId) public {
     require(
-      _canMintBurnByModule(to),
+      _canMintBurnByModuleAndRevert(to),
       CMTAT_InvalidTransfer(address(0), to, tokenId)
     );
     ERC721Upgradeable._mint(to, tokenId);
@@ -35,7 +35,7 @@ contract ERC721MockUpgradeable is ERC721Upgradeable, CMTATBaseGeneric {
   function burn(uint256 tokenId) external {
     address currentOwner = ownerOf(tokenId);
     require(
-      _canMintBurnByModule(currentOwner),
+      _canMintBurnByModuleAndRevert(currentOwner),
       CMTAT_InvalidTransfer(currentOwner, address(0), tokenId)
     );
     ERC721Upgradeable._burn( tokenId);
@@ -47,7 +47,7 @@ contract ERC721MockUpgradeable is ERC721Upgradeable, CMTATBaseGeneric {
     uint256 tokenId,
     bytes memory data
   ) public virtual override {
-    require(_canTransferGenericByModule(msg.sender, from, to), CMTAT_InvalidTransfer(from, to, tokenId));
+    require(_canTransferGenericByModuleAndRevert(msg.sender, from, to), CMTAT_InvalidTransfer(from, to, tokenId));
     ERC721Upgradeable.safeTransferFrom(from, to, tokenId, data);
   }
 
@@ -56,7 +56,7 @@ contract ERC721MockUpgradeable is ERC721Upgradeable, CMTATBaseGeneric {
     address to,
     uint256 tokenId
   ) public override {
-    require(_canTransferGenericByModule(msg.sender, from, to), CMTAT_InvalidTransfer(from, to, tokenId));
+    require(_canTransferGenericByModuleAndRevert(msg.sender, from, to), CMTAT_InvalidTransfer(from, to, tokenId));
     ERC721Upgradeable.transferFrom(from, to, tokenId);
   }
 

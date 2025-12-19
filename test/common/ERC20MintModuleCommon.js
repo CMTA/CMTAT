@@ -166,8 +166,7 @@ function ERC20MintModuleCommon () {
       await this.cmtat.connect(this.admin).deactivateContract()
       // Act
       await expect(this.cmtat.connect(this.admin).mint(this.address1, VALUE1))
-      .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
-      .withArgs(ZERO_ADDRESS, this.address1, VALUE1)
+      .to.be.revertedWithCustomError(this.cmtat, 'EnforcedDeactivation')
     })
 
     it('testCannotBeMintedIfToIsFrozen', async function () {
@@ -329,8 +328,7 @@ function ERC20MintModuleCommon () {
           .connect(this.admin)
           .batchMint(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS)
       )
-        .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
-        .withArgs(ZERO_ADDRESS, this.admin, TOKEN_SUPPLY_BY_HOLDERS[0])
+        .to.be.revertedWithCustomError(this.cmtat, 'EnforcedDeactivation')
     })
 
     it('testCannotBeBatchMintedIfToIsFrozen', async function () {

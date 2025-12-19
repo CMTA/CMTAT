@@ -390,8 +390,8 @@ function ERC20CrossChainModuleCommon () {
         .setAddressFrozen(this.address1, true)
       // Act
       await expect(this.cmtat.connect(this.admin).burnFrom(this.address1, 20n))
-        .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
-        .withArgs(this.address1, ZERO_ADDRESS, VALUE1)
+        .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotTransact')
+        .withArgs(this.address1)
     })
   })
   context('CrossChainMinting', function () {
@@ -501,8 +501,8 @@ function ERC20CrossChainModuleCommon () {
       await expect(
         this.cmtat.connect(this.admin).crosschainMint(this.address1, VALUE1)
       )
-        .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
-        .withArgs(ZERO_ADDRESS, this.address1, VALUE1)
+        .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotTransact')
+        .withArgs(this.address1)
     })
   })
 }

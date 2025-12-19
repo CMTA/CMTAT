@@ -98,16 +98,15 @@ describe('ERC721MockUpgradeable', function () {
     await this.cmtat.mint(this.admin, 1)
     await this.cmtat.connect(this.admin).setAddressFrozen(this.address1, true)
     await expect(this.cmtat.transferFrom(this.admin, this.address1, 1))
-      .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
-      .withArgs(this.admin, this.address1, 1)
+      .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotTransact')
+      .withArgs(this.address1)
   })
 
   it('testCannotTransferIfContractIsPaused', async function () {
     await this.cmtat.mint(this.admin, 1)
     await this.cmtat.connect(this.admin).pause()
     await expect(this.cmtat.transferFrom(this.admin, this.address1, 1))
-      .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
-      .withArgs(this.admin, this.address1, 1)
+      .to.be.revertedWithCustomError(this.cmtat, 'EnforcedPause')
   })
 
   it('testCannotMintIfContractIsDeactivated', async function () {
@@ -116,8 +115,7 @@ describe('ERC721MockUpgradeable', function () {
     await this.cmtat.connect(this.admin).deactivateContract()
     // Act
     await expect(this.cmtat.mint(this.admin, 1))
-      .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
-      .withArgs(ZERO_ADDRESS, this.admin, 1)
+      .to.be.revertedWithCustomError(this.cmtat, 'EnforcedDeactivation')
   })
   // Core
   EnforcementModuleCommon()

@@ -238,13 +238,13 @@ abstract contract CMTATBaseCore is
 
     /* ==== Mint and Burn Operations ==== */
     function _mintOverride(address account, uint256 value) internal virtual override(ERC20MintModuleInternal) {
-        require(ValidationModule._canMintBurnByModule(account), Errors.CMTAT_InvalidTransfer(address(0), account, value) );
+        require(ValidationModule._canMintBurnByModuleAndRevert(account), Errors.CMTAT_InvalidTransfer(address(0), account, value) );
         ERC20MintModuleInternal._mintOverride(account, value);
     }
 
 
     function _burnOverride(address account, uint256 value) internal virtual override(ERC20BurnModuleInternal) {
-        require(ValidationModule._canMintBurnByModule(account), Errors.CMTAT_InvalidTransfer(account, address(0), value) );
+        require(ValidationModule._canMintBurnByModuleAndRevert(account), Errors.CMTAT_InvalidTransfer(account, address(0), value) );
         ERC20BurnModuleInternal._burnOverride(account, value);
     }
 
@@ -252,7 +252,7 @@ abstract contract CMTATBaseCore is
     * @dev Check if a minter transfer is valid
     */
     function _minterTransferOverride(address from, address to, uint256 value) internal virtual override(ERC20MintModuleInternal) {
-        require(ValidationModuleCore.canTransfer(from, to, value), Errors.CMTAT_InvalidTransfer(from, to, value) );
+        require(ValidationModule._canTransferGenericByModuleAndRevert(address(0), from, to), Errors.CMTAT_InvalidTransfer(from, to, value) );
         ERC20MintModuleInternal._minterTransferOverride(from, to, value);
     }
 

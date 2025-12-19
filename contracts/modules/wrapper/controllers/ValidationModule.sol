@@ -15,8 +15,12 @@ abstract contract ValidationModule is
     PauseModule,
     EnforcementModule
 {
-    /// @notice Error reverted when an account is not allowed to transact. 
-    /// @param account The address of the account which is not allowed for transfers.
+    /** 
+    * @notice Error reverted when an account is not allowed to transact. 
+    * @param account The address of the account which is not allowed for transfers.
+    * @dev Common to IERC7943Fungible, IERC7943NonFungible and IERC7943MultiToken
+    */
+
     error ERC7943CannotTransact(address account);
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
@@ -87,7 +91,7 @@ abstract contract ValidationModule is
     ) internal view virtual returns (bool) {
         if(PauseModule.deactivated()){
             // can not mint or burn if the contract is deactivated
-            return false;
+            revert EnforcedDeactivation();
         }
         // cannot burn if target is frozen (used forcedTransfer instead if available)
         // cannot mint if target is frozen
@@ -102,8 +106,6 @@ abstract contract ValidationModule is
     * check relevant for standard transfer
     * We don't check deactivated() because the contract must be in the pause state to be deactivated
     */
-
-
     function _canTransferisFrozen(
         address spender,
         address from,

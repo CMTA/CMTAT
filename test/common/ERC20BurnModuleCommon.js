@@ -169,7 +169,7 @@ function ERC20BurnModuleCommon () {
       await expect(
         this.cmtat.connect(this.admin).burn(this.address1, VALUE_TYPED)
       )
-        .to.be.revertedWithCustomError(this.cmtat, 'EnforcedPause')
+        .to.be.revertedWithCustomError(this.cmtat, 'EnforcedDeactivation')
     })
 
     it('testCanBeBurnEvenIfContractIsPaused', async function () {
@@ -338,7 +338,7 @@ function ERC20BurnModuleCommon () {
             REASON
           )
       )
-        .to.be.revertedWithCustomError(this.cmtat, 'EnforcedPause')
+        .to.be.revertedWithCustomError(this.cmtat, 'EnforcedDeactivation')
     })
 
     it('testCanBeBurnAndMintEvenIFContractIsPaused', async function () {
@@ -604,7 +604,7 @@ function ERC20BurnModuleCommon () {
           .connect(this.admin)
           .batchBurn(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS, REASON)
       )
-        .to.be.revertedWithCustomError(this.cmtat, 'EnforcedPause')
+        .to.be.revertedWithCustomError(this.cmtat, 'EnforcedDeactivation')
     })
 
     it('testCannotBeBatchBurnIfToIsFrozen', async function () {
