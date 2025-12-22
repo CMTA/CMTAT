@@ -3,6 +3,8 @@
 pragma solidity ^0.8.20;
 
 import {CMTATBaseCommon} from "./0_CMTATBaseCommon.sol";
+/* ==== OpenZeppelin === */
+import {ERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 /* ==== Wrapper === */
 // Core
 import {PauseModule}  from "./wrapper/core/PauseModule.sol";
@@ -118,6 +120,12 @@ abstract contract CMTATBaseRuleEngine is
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
+    /**
+    * @dev revert if the contract is in pause state
+    */
+    function approve(address spender, uint256 value) public virtual override(ERC20Upgradeable) whenNotPaused returns (bool) {
+        return ERC20Upgradeable.approve(spender, value);
+    }
     /**
     * @inheritdoc ValidationModuleRuleEngine
     */

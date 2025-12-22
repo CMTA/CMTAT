@@ -20,7 +20,6 @@ abstract contract ValidationModule is
     * @param account The address of the account which is not allowed for transfers.
     * @dev Common to IERC7943Fungible, IERC7943NonFungible and IERC7943MultiToken
     */
-
     error ERC7943CannotTransact(address account);
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
@@ -165,7 +164,4 @@ abstract contract ValidationModule is
         _canTransferisFrozenAndRevert(spender, from, to);
         return true;
     }
-
-    
-
 }

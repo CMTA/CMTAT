@@ -322,10 +322,10 @@ function ERC20BurnModuleCommon () {
     ////////////////////////////////////////////////////////////// */
 
     it('testCannotBeBurnAndMintIfContractIsDeactivated', async function () {
+      await this.cmtat.connect(this.address1).approve(this.admin, 50n)
       // Arrange
       await this.cmtat.connect(this.admin).pause()
       await this.cmtat.connect(this.admin).deactivateContract()
-      await this.cmtat.connect(this.address1).approve(this.admin, 50n)
       // Act
       await expect(
         this.cmtat

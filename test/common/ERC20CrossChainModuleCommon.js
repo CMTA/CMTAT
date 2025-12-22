@@ -363,9 +363,9 @@ function ERC20CrossChainModuleCommon () {
     ////////////////////////////////////////////////////////////// */
 
     it('testCannotBeBurnFromIfContractIsPaused', async function () {
+      await this.cmtat.connect(this.address1).approve(this.admin, 50n)
       // Arrange
       await this.cmtat.connect(this.admin).pause()
-      await this.cmtat.connect(this.address1).approve(this.admin, 50n)
       // Act
       await expect(
         this.cmtat.connect(this.admin).burnFrom(this.address1, 20n)
@@ -373,10 +373,11 @@ function ERC20CrossChainModuleCommon () {
     })
 
     it('testCannotBeBurnFromIfContractIsDeactivated', async function () {
+      await this.cmtat.connect(this.address1).approve(this.admin, 50n)
+      // First because revert if the contract is in the pause state
       // Arrange
       await this.cmtat.connect(this.admin).pause()
       await this.cmtat.connect(this.admin).deactivateContract()
-      await this.cmtat.connect(this.address1).approve(this.admin, 50n)
       // Act
       await expect(
         this.cmtat.connect(this.admin).burnFrom(this.address1, 20n)

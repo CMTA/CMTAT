@@ -16,6 +16,12 @@ import {CCIPModule} from "./wrapper/options/CCIPModule.sol";
  */
 abstract contract CMTATBaseERC20CrossChain is ERC20CrossChainModule, CCIPModule, CMTATBaseERC1404  {
      /* ============  State Functions ============ */
+        /**
+    * @dev revert if the contract is in pause state
+    */
+    function approve(address spender, uint256 value) public virtual override(ERC20Upgradeable, CMTATBaseRuleEngine) returns (bool) {
+        return CMTATBaseRuleEngine.approve(spender, value);
+    }
     function transfer(address to, uint256 value) public virtual override(ERC20Upgradeable, CMTATBaseCommon) returns (bool) {
          return CMTATBaseCommon.transfer(to, value);
     }

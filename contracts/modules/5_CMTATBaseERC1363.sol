@@ -31,6 +31,12 @@ abstract contract CMTATBaseERC1363 is ERC1363Upgradeable,CMTATBaseERC2771{
     //////////////////////////////////////////////////////////////*/
     
     /* ============ State functions ============ */
+    /**
+    * @dev revert if the contract is in pause state
+    */
+    function approve(address spender, uint256 value) public virtual override(ERC20Upgradeable, CMTATBaseERC20CrossChain, IERC20) returns (bool) {
+        return CMTATBaseERC20CrossChain.approve(spender, value);
+    }
 
     /**
     * @inheritdoc CMTATBaseERC20CrossChain
