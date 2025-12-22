@@ -74,16 +74,21 @@ abstract contract ValidationModuleAllowlist is
         address to
     ) internal view virtual returns (bool) {
         address target;
-        if (spender != address(0) && !isAllowlisted(spender)){
-            target = spender;
-        } else if (!isAllowlisted(from)) {
-            target = from;
-        } else if(!isAllowlisted(to) ){
-            target = to;
+        if(_isAllowlistEnabled()){
+            if (spender != address(0) && !isAllowlisted(spender)){
+                target = spender;
+            } else if (!isAllowlisted(from)) {
+                target = from;
+            } else if(!isAllowlisted(to) ){
+                target = to;
+            } else {
+                return true;
+            }
+            revert ERC7943CannotTransact(target);
         } else {
             return true;
         }
-        revert ERC7943CannotTransact(target);
+
     }
 
 

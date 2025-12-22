@@ -15,9 +15,9 @@ contract ERC721MockUpgradeable is ERC721Upgradeable, CMTATBaseGeneric {
 
     function initialize(
       string memory name_, string memory symbol_, 
-      address admin, ICMTATConstructor.ExtraInformationAttributes memory extraInformationAttributes_,IERC1643 documentEngine) public virtual initializer{
+      address admin, ICMTATConstructor.ExtraInformationAttributes memory extraInformationAttributes_) public virtual initializer{
         __ERC721_init_unchained(name_, symbol_);
-        __CMTAT_init(admin, extraInformationAttributes_, documentEngine);
+        __CMTAT_init(admin, extraInformationAttributes_);
   }
   /**
    * @notice Mints a new NFT.

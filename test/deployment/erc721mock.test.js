@@ -28,13 +28,13 @@ describe('ERC721MockUpgradeable', function () {
         NAME,
         SYMBOL,
         this.admin.address,
-        ['CMTAT_ISIN', TERMS, 'CMTAT_info'],
-        ZERO_ADDRESS
+        ['CMTAT_ISIN', TERMS, 'CMTAT_info']
       ],
       {
         initializer: 'initialize',
         constructorArgs: [],
-        from: this.admin.address
+        from: this.admin.address,
+        unsafeAllow: ['missing-initializer', 'missing-initializer-call']
       }
     )
     this.generic = true

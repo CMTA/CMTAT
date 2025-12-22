@@ -13,8 +13,6 @@ import {IERC1643CMTAT} from "../tokenization/draft-IERC1643CMTAT.sol";
 interface ICMTATConstructor {
     struct Engine {
         IRuleEngine ruleEngine;
-        ISnapshotEngine snapshotEngine;
-        IERC1643 documentEngine;
     }
     struct ERC20Attributes {
         // token name,

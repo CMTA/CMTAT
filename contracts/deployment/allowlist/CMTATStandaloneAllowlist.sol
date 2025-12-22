@@ -23,18 +23,14 @@ contract CMTATStandaloneAllowlist is CMTATBaseAllowlist {
         address forwarderIrrevocable,
         address admin,
         ICMTATConstructor.ERC20Attributes memory ERC20Attributes_,
-        ICMTATConstructor.ExtraInformationAttributes memory extraInformationAttributes_,
-        ISnapshotEngine snapshotEngine_,
-        IERC1643 documentEngine_
+        ICMTATConstructor.ExtraInformationAttributes memory extraInformationAttributes_
         
     ) ERC2771Module(forwarderIrrevocable){
         // Initialize the contract to avoid front-running
         initialize(
             admin,
             ERC20Attributes_,
-            extraInformationAttributes_,
-            snapshotEngine_,
-            documentEngine_
+            extraInformationAttributes_
         );
     }
 }

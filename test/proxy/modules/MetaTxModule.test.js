@@ -23,7 +23,7 @@ describe('Proxy - MetaTxModule', function () {
       'CMTAT_ISIN',
       TERMS,
       'CMTAT_info',
-      [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]
+      [ZERO_ADDRESS]
     )
   })
 

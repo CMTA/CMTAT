@@ -44,22 +44,16 @@ abstract contract CMTATBaseAllowlist is
      * @param admin address of the admin of contract (Access Control)
      * @param ERC20Attributes_ ERC20 name, symbol and decimals
      * @param extraInformationAttributes_ tokenId, terms, information
-     * @param snapshotEngine_ external contract
-     * @param documentEngine_ external contract
      */
     function initialize(
         address admin,
         ICMTATConstructor.ERC20Attributes memory ERC20Attributes_,
-        ICMTATConstructor.ExtraInformationAttributes memory extraInformationAttributes_,
-        ISnapshotEngine snapshotEngine_,
-        IERC1643 documentEngine_
+        ICMTATConstructor.ExtraInformationAttributes memory extraInformationAttributes_
     ) public virtual initializer {
         __CMTAT_init(
             admin,
             ERC20Attributes_,
-            extraInformationAttributes_,
-            snapshotEngine_,
-            documentEngine_
+            extraInformationAttributes_
         );
     }
 
@@ -70,9 +64,7 @@ abstract contract CMTATBaseAllowlist is
     function __CMTAT_init(
         address admin,
         ICMTATConstructor.ERC20Attributes memory ERC20Attributes_,
-        ICMTATConstructor.ExtraInformationAttributes memory extraInformationAttributes_,
-        ISnapshotEngine snapshotEngine_,
-        IERC1643 documentEngine_
+        ICMTATConstructor.ExtraInformationAttributes memory extraInformationAttributes_
     ) internal virtual onlyInitializing {
         /* OpenZeppelin library */
         // OZ init_unchained functions are called firstly due to inheritance
@@ -85,7 +77,7 @@ abstract contract CMTATBaseAllowlist is
         __CMTAT_openzeppelin_init_unchained(ERC20Attributes_);
 
         /* Wrapper modules */
-        __CMTAT_modules_init_unchained(admin, ERC20Attributes_, extraInformationAttributes_, snapshotEngine_, documentEngine_ );
+        __CMTAT_modules_init_unchained(admin, ERC20Attributes_, extraInformationAttributes_);
     }
 
     /*
@@ -102,9 +94,8 @@ abstract contract CMTATBaseAllowlist is
     /*
     * @dev CMTAT wrapper modules
     */
-    function __CMTAT_modules_init_unchained(address admin, ICMTATConstructor.ERC20Attributes memory ERC20Attributes_, ICMTATConstructor.ExtraInformationAttributes memory ExtraInformationAttributes_,  ISnapshotEngine snapshotEngine_,
-        IERC1643 documentEngine_ ) internal virtual onlyInitializing {
-         __CMTAT_commonModules_init_unchained(admin,ERC20Attributes_, ExtraInformationAttributes_, snapshotEngine_, documentEngine_);
+    function __CMTAT_modules_init_unchained(address admin, ICMTATConstructor.ERC20Attributes memory ERC20Attributes_, ICMTATConstructor.ExtraInformationAttributes memory ExtraInformationAttributes_ ) internal virtual onlyInitializing {
+         __CMTAT_commonModules_init_unchained(admin,ERC20Attributes_, ExtraInformationAttributes_);
         // option
         __Allowlist_init_unchained();
     }
