@@ -1,6 +1,6 @@
 const { expect } = require('chai')
 const {
-  deployCMTATDebtStandalone,
+  deployCMTATDebtEngineProxy,
   fixture,
   loadFixture
 } = require('../../deploymentUtils')
@@ -17,25 +17,24 @@ const ValidationModuleCommonCore = require('../../common/ValidationModule/Valida
 const ERC20EnforcementModuleCommon = require('../../common/ERC20EnforcementModuleCommon')
 const DocumentModuleCommon = require('../../common/DocumentModule/DocumentModuleCommon')
 const ExtraInfoModuleCommon = require('../../common/ExtraInfoModuleCommon')
+// debt
 const DebtModuleCommon = require('../../common/DebtModule/DebtModuleCommon')
-// Snapshot
-const SnapshotModuleSetSnapshotEngineCommon = require('../../common/SnapshotModuleCommon/SnapshotModuleSetSnapshotEngineCommon')
-describe('CMTAT Debt - Standalone', function () {
+const DebtModuleSetDebtEngineCommon = require('../../common/DebtModule/DebtModuleSetDebtEngineCommon')
+const DebtEngineModuleCommon = require('../../common/DebtModule/DebtEngineModuleCommon')
+
+describe('CMTAT DebtEngine - Upgradeable', function () {
   beforeEach(async function () {
     Object.assign(this, await loadFixture(fixture))
-    this.cmtat = await deployCMTATDebtStandalone(
+    this.cmtat = await deployCMTATDebtEngineProxy(
       this._.address,
       this.admin.address,
       this.deployerAddress.address
     )
-    // this.debtEngineMock = await ethers.deployContract('DebtEngineMock')
+    this.debtEngineMock = await ethers.deployContract('DebtEngineMock')
     this.erc1404 = true
     this.dontCheckTimestamp = true
-    this.transferEngineMock = await ethers.deployContract(
-      'SnapshotEngineMock',
-      [this.cmtat.target, this.admin]
-    )
   })
+  ExtraInfoModuleCommon()
   VersionModuleCommon()
   PauseModuleCommon()
   ERC20BaseModuleCommon()
@@ -43,12 +42,13 @@ describe('CMTAT Debt - Standalone', function () {
   ERC20MintModuleCommon()
   EnforcementModuleCommon()
   ValidationModuleCommonCore()
+
   // Extensions
-  ERC20EnforcementModuleCommon()
-  ExtraInfoModuleCommon()
+  ERC20EnforcementModuleCommon
   DocumentModuleCommon()
-  // Set snapshot Engine
-  SnapshotModuleSetSnapshotEngineCommon
+  ExtraInfoModuleCommon()
+
   // options
-  DebtModuleCommon()
+  DebtEngineModuleCommon()
+  DebtModuleSetDebtEngineCommon()
 })

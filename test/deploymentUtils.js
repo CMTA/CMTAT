@@ -64,6 +64,16 @@ async function deployCMTATDebtStandalone (_, admin, deployerAddress) {
   return cmtat
 }
 
+async function deployCMTATDebtEngineStandalone (_, admin, deployerAddress) {
+  const cmtat = await ethers.deployContract('CMTATStandaloneDebtEngine', [
+    admin,
+    ['CMTA Token', 'CMTAT', DEPLOYMENT_DECIMAL],
+    ['CMTAT_ISIN', TERMS, 'CMTAT_info'],
+    [ZERO_ADDRESS]
+  ])
+  return cmtat
+}
+
 async function deployCMTATERC1363Standalone (forwarder, admin, deployerAddress) {
   const cmtat = await ethers.deployContract('CMTATStandaloneERC1363', [
     forwarder,
@@ -271,6 +281,52 @@ async function deployCMTATDebtProxy (_, admin, deployerAddress) {
   return ETHERS_CMTAT_PROXY
 }
 
+async function deployCMTATDebtEngineProxy (_, admin, deployerAddress) {
+  // Ref: https://forum.openzeppelin.com/t/upgrades-hardhat-truffle5/30883/3
+  const ETHERS_CMTAT_PROXY_FACTORY = await ethers.getContractFactory(
+    'CMTATUpgradeableDebtEngine'
+  )
+  const ETHERS_CMTAT_PROXY = await upgrades.deployProxy(
+    ETHERS_CMTAT_PROXY_FACTORY,
+    [
+      admin,
+      ['CMTA Token', 'CMTAT', DEPLOYMENT_DECIMAL],
+      ['CMTAT_ISIN', TERMS, 'CMTAT_info'],
+      [ZERO_ADDRESS]
+    ],
+    {
+      initializer: 'initialize',
+      constructorArgs: [],
+      from: deployerAddress,
+      unsafeAllow: ['missing-initializer']
+    }
+  )
+  return ETHERS_CMTAT_PROXY
+}
+
+async function deployCMTATDebtProxy (_, admin, deployerAddress) {
+  // Ref: https://forum.openzeppelin.com/t/upgrades-hardhat-truffle5/30883/3
+  const ETHERS_CMTAT_PROXY_FACTORY = await ethers.getContractFactory(
+    'CMTATUpgradeableDebt'
+  )
+  const ETHERS_CMTAT_PROXY = await upgrades.deployProxy(
+    ETHERS_CMTAT_PROXY_FACTORY,
+    [
+      admin,
+      ['CMTA Token', 'CMTAT', DEPLOYMENT_DECIMAL],
+      ['CMTAT_ISIN', TERMS, 'CMTAT_info'],
+      [ZERO_ADDRESS]
+    ],
+    {
+      initializer: 'initialize',
+      constructorArgs: [],
+      from: deployerAddress,
+      unsafeAllow: ['missing-initializer']
+    }
+  )
+  return ETHERS_CMTAT_PROXY
+}
+
 async function deployCMTATUUPSProxy (_, admin, deployerAddress) {
   // Ref: https://forum.openzeppelin.com/t/upgrades-hardhat-truffle5/30883/3
   const ETHERS_CMTAT_PROXY_FACTORY = await ethers.getContractFactory(
@@ -337,7 +393,9 @@ module.exports = {
   deployCMTATAllowlistStandalone,
   deployCMTATAllowlistProxy,
   deployCMTATDebtStandalone,
+  deployCMTATDebtEngineStandalone,
   deployCMTATDebtProxy,
+  deployCMTATDebtEngineProxy,
   deployCMTATERC1363Proxy,
   deployCMTATERC1363Standalone,
   deployCMTATERC7551Proxy,
