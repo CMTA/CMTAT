@@ -103,7 +103,7 @@ The CMTAT was initially designed for the digitalization of company shares. For S
 
 ### Where CMTAT is mentioned?
 
-CMTAT is mentioned in several different reports. While these reports do not take into account the latest changes with the version v.3.0.0, it gives already a good indication of how CMTAT can be used. The points raised by these also allowed for numerous improvements to be made to the CMTAT.
+CMTAT is mentioned in several different reports. While these reports do not take into account the latest changes with the latest version, it gives already a good indication of how CMTAT can be used. The points raised by these also allowed for numerous improvements to be made to the CMTAT.
 
 - [Forum - Asset Tokenization in Financial Markets: The Next Generation of Value Exchange (2025)](https://reports.weforum.org/docs/WEF_Asset_Tokenization_in_Financial_Markets_2025.pdf), page 38
 - [King's Business School/Rhys Bidder - What Is The Future Of Stablecoins, And How Do We Get There? (2025)](https://www.kcl.ac.uk/business/assets/PDF/qcgbf-working-papers/taking-the-next-step-v5.pdf), page 33
@@ -564,7 +564,7 @@ The following table compares the functionalities and details how the relevant fu
 | 9                            | Transfer compliance<br />Check if a transfer with a spender is valid | `canTransferFrom(address spender, address from, address to, uint256 value) ` | &#x2611;                                              | &#x2611;             | -                                                            | ValidationModuleCore                                         |
 | 10                           | Active/Frozen <br/>Balance                                   | `getActiveBalanceOf(address tokenHolder)`<br />`getFrozenTokens(address tokenHolder)` | &#x2611;                                              | &#x2611;             | -                                                            | ERC20EnforcementModule                                       |
 
-#####  Fulls functions
+#####  Full functions
 
 ```solidity
 // IERC7551Mint 
@@ -659,7 +659,7 @@ CMTAT architecture is divided in two main components: modules and engines.
 
 #### Schema
 
-Here is an overview on how CMTAT is build:
+Here is an overview on how CMTAT is built:
 
 ![architecture-architecture-overview.drawio](./doc/schema/drawio/architecture-architecture-overview.drawio.png)
 
@@ -933,9 +933,9 @@ Here is the GitHub file structure for CMTAT repository.
 
 ### Base contract
 
-The base contracts are abstract contracts, so not directly deployable, which inherits from several different modules.
+The base contracts are abstract contracts, so not directly deployable, which inherit from several different modules.
 
-Base contracts are used by the different deployable contracts (CMTATStandalone, CMTATUpgradeable,...) to inherits from the different modules
+Base contracts are used by the different deployable contracts (CMTATStandalone, CMTATUpgradeable,...) to inherit from the different modules
 
 | Name                                                         | Level | Description                                                  | Associated contracts deployments                             |
 | ------------------------------------------------------------ | ----- | ------------------------------------------------------------ | ------------------------------------------------------------ |
@@ -1146,7 +1146,7 @@ Generally, these modules are required to be compliant with the CMTA specificatio
 
   
 
-##### Extensions modules
+##### Extension modules
 
 Generally, these modules are not required to be compliant with the CMTA specification.
 
@@ -1157,7 +1157,7 @@ Generally, these modules are not required to be compliant with the CMTA specific
 | [DocumentEngineModule](./doc/modules/extensions/documentEngine/document.md) | Set additional document (ERC1643) through a DocumentEngine   | [DocumentEngineModule.sol](./contracts/modules/wrapper/extensions/DocumentEngineModule.sol) | &#x2612;             | &#x2612;                                                 | &#x2611;                                            |
 | [ERC20EnforcementModule](./doc/modules/extensions/ERC20Enforcement/erc20enforcement.md) | The admin (or a third party appointed by it) can partially freeze a part of the balance of a token holder. | [ERC20EnforcementModule.sol](./contracts/modules/wrapper/extensions/ERC20EnforcementModule.sol) | &#x2612;             | &#x2612;                                                 | &#x2611;                                            |
 
-##### Options modules
+##### Option modules
 
 | Modules                                                      | Description                                                | File                                                         | CMTAT 1.0 | CMTAT 2.3.0                         | CMTAT >= 3.0.0           |           |                                                              |          |
 | ------------------------------------------------------------ | ---------------------------------------------------------- | ------------------------------------------------------------ | --------- | ----------------------------------- | ------------------------ | --------- | ------------------------------------------------------------ | -------- |
@@ -1191,7 +1191,7 @@ Firstly, wrapper modules will separately:
 -  define the roles useful to restrict its own functions
 -  define virtual functions `authorize<specific role name>` which require to be overridden in CMTAT base module to add access control check.
 
-To allow flexibility and customization, wrapper modules do not implement themselves the access control. Access control is defined in CMTAT base modules. Therefore,  it is possible to create a new base module to use a different access control.
+To allow flexibility and customization, wrapper modules do not implement the access control themselves . Access control is defined in CMTAT base modules. Therefore,  it is possible to create a new base module to use a different access control.
 
 **CMTAT base module**
 
@@ -1241,7 +1241,7 @@ Here is the list of roles and their 32 bytes identifier.
 
 #### Role by modules
 
-Here a summary tab for each restricted functions defined in a module
+Here is a summary tab for each restricted functions defined in a module
 For function signatures,  struct arguments are represented with their corresponding native type.
 
 Roles are defined in their specific modules but enforced in CMTAT Base module.
@@ -1633,7 +1633,7 @@ Here are the list of rules in development:
 | RuleBlacklist                | Ready-only                           | ☑                                     | This rule can be used to forbid transfer from/to addresses in the blacklist |
 | RuleSanctionList             | Ready-only                           | ☑                                     | The purpose of this contract is to use the oracle contract from Chainalysis to forbid transfer from/to an address included in a sanctions designation (US, EU, or UN). |
 | RuleConditionalTransferLight | Ready-Write                          | In development                        | This rule requires that transfers have to be approved before being executed by the token |
-| RuleConditionalTransfer      | Ready-Write                          | ☒<br /> (experimental rule)           | Same principle as the light version (see above) but we more options such as a time limit for approving a request as well as for carrying out the transfer |
+| RuleConditionalTransfer      | Ready-Write                          | ☒<br /> (experimental rule)           | Same principle as the light version (see above) but with more options such as a time limit for approving a request as well as for carrying out the transfer |
 
 #### SnapshotEngine
 
@@ -1711,9 +1711,9 @@ interface ICMTATCreditEvents {
 }
 ```
 
-Use an external contract provides two advantages: 
+Using an external contract provides two advantages: 
 
-- Reduce code size of CMTAT, which is near of the maximal size limit 
+- Reduces code size of CMTAT, which is near of the maximal size limit 
 - Allow to manage this information for several different tokens  (CMTAT or not).
 
 Here is the list of the different version available for each CMTAT version.
@@ -2001,7 +2001,7 @@ Contrary to a `mint`operation, the function `batchTransfer` will perform the com
 
 #### Allowlist (whitelist) module
 
-With the `Allowlist` module and the associated `ValidationModuleAllowlist`, a supplementary check will be performed on the concerned address to determine if they are in the allowlist.
+With the `Allowlist` module and the associated `ValidationModuleAllowlist`, a supplementary check will be performed on the relevant address to determine if they are in the allowlist.
 
 ```solidity
 interface IAllowlistModule {
@@ -2051,7 +2051,7 @@ interface IAllowlistModule {
 
 #### Schema
 
-Here a schema describing the different check performed during:
+Here is a schema describing the different check performed during:
 
 - `transfer`, `transferFrom` and `batchTransfer`
 - `burn` / `mint` (supply management)
@@ -2211,7 +2211,7 @@ Indeed, once issued, a security can only be cancelled by its issuer, not by its 
 
 **Alternative**
 
-You can still allow `self burn`by creating a new function or by overriden the corresponding functions.
+You can still allow `self burn`by creating a new function or by overriding the corresponding functions.
 
 ### Manage on-chain document
 
@@ -2992,7 +2992,7 @@ Two versions are available for the blockchain [Tezos](https://tezos.com)
 
 ### Summary tab
 
-If you create a version for another blockchains, feel free to use this summary tab to build a correspondence table between CMTAT framework, CMTAT Solidity version and your implementation.
+If you create a version for another blockchain, feel free to use this summary tab to build a correspondence table between CMTAT framework, CMTAT Solidity version and your implementation.
 
 #### CMTAT framework
 
@@ -3019,7 +3019,7 @@ In the below table, the CMTAT framework required features are mapped to Solidity
 
 To be compatible with [ERC-3643](https://eips.ethereum.org/EIPS/eip-3643), the freeze functionality is implemented with only one function: `setAddressFrozen` which takes the target address and the frozen status (true/false).
 
-However, for non-EVM blockchains, it could make clearer and makes more sense to separate the freeze and unfreeze (or `thaw`) functionality with two separates and distinct functions, such as: 
+However, for non-EVM blockchains, it could be clearer and make more sense to separate the freeze and unfreeze (or `thaw`) functionality with two separate and distinct functions, such as: 
 
 ```
 freeze(address targetAddress)
@@ -3046,7 +3046,7 @@ In the below table, the CMTAT framework extendedfeatures are mapped to Solidity 
 
 In the standard burn function, it is not possible to burn token from a frozen wallet.  CMTAT offers a dedicated function `forcedTransfer`which allows to force a transfer or a burn. If the `forcedTransfer` function is not available, the alternative is to implement only the function `forcedBurn`. 
 
-This is what is done for the CMTAT light version which does not include `forcedTransfer`. You can also decide to implement both. In this case, we suggest that only `forcedBurn`can burn tokens and not `forcedTransfer`. With the CMTAT Solidity version, when `forcedTransfer` is available, we do not implement `forcedBurn` to reduce smart contract code size, but this limitation is not necessary present with other blockchains.
+This is what is done for the CMTAT light version which does not include `forcedTransfer`. You can also decide to implement both. In this case, we suggest that only `forcedBurn`can burn tokens and not `forcedTransfer`. With the CMTAT Solidity version, when `forcedTransfer` is available, we do not implement `forcedBurn` to reduce smart contract code size, but this limitation is not necessarily present with other blockchains.
 
 #### Implementation details
 
@@ -3064,7 +3064,7 @@ It's deliberate that only the issuer (and not the tokenholder) can burn a token,
 
 Indeed, once issued, a security can only be cancelled by its issuer, not by its holder. Since the token serves as a vehicle for the security, the same must apply to the token itself. An investor wishing to "get rid of" a token must transfer it to the issuer, who can then cancel it when the law allows.
 
-However, feel free to add it in your CMTAT version if this makes sense for your from a legal or business perspective.
+However, feel free to add it in your CMTAT version if this makes sense for you from a legal or business perspective.
 
 ## Intellectual property
 
