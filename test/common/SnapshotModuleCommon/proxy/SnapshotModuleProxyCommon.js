@@ -42,37 +42,5 @@ function SnapshotModuleProxyCommon () {
     // Set snapshot Engine
     SnapshotModuleSetSnapshotEngineCommon
   })
-  context('Proxy - SnapshotModule - Constructor', function () {
-    beforeEach(async function () {
-      Object.assign(this, await loadFixture(fixture))
-      this.transferEngineMock = await ethers.deployContract(
-        'SnapshotEngineMock',
-        [ZERO_ADDRESS, this.admin]
-      )
-      this.definedAtDeployment = true
-      this.cmtat = await deployCMTATProxyWithParameter(
-        this.deployerAddress.address,
-        this._.address,
-        this.admin.address,
-        'CMTA Token',
-        'CMTAT',
-        DEPLOYMENT_DECIMAL,
-        'CMTAT_ISIN',
-        TERMS,
-        'CMTAT_info',
-        [ZERO_ADDRESS, this.transferEngineMock.target, ZERO_ADDRESS]
-      )
-      this.transferEngineMock.setERC20(this.cmtat)
-    })
-    SnapshotModuleMultiplePlannedTest()
-    SnapshotModuleOnePlannedSnapshotTest()
-    SnapshotModuleZeroPlannedSnapshotTest()
-    SnapshotModuleCommonRescheduling()
-    SnapshotModuleCommonScheduling()
-    SnapshotModuleCommonUnschedule()
-    SnapshotModuleCommonGetNextSnapshot()
-    // Set snapshot Engine
-    SnapshotModuleSetSnapshotEngineCommon()
-  })
 }
 module.exports = SnapshotModuleProxyCommon

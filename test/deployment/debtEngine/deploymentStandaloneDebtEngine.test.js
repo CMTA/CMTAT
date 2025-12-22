@@ -1,6 +1,6 @@
 const { expect } = require('chai')
 const {
-  deployCMTATDebtStandalone,
+  deployCMTATDebtEngineStandalone,
   fixture,
   loadFixture
 } = require('../../deploymentUtils')
@@ -17,13 +17,14 @@ const ValidationModuleCommonCore = require('../../common/ValidationModule/Valida
 const ERC20EnforcementModuleCommon = require('../../common/ERC20EnforcementModuleCommon')
 const DocumentModuleCommon = require('../../common/DocumentModule/DocumentModuleCommon')
 const ExtraInfoModuleCommon = require('../../common/ExtraInfoModuleCommon')
-const DebtModuleCommon = require('../../common/DebtModule/DebtModuleCommon')
+const DebtModuleSetDebtEngineCommon = require('../../common/DebtModule/DebtModuleSetDebtEngineCommon')
+const DebtEngineModuleCommon = require('../../common/DebtModule/DebtEngineModuleCommon')
 // Snapshot
 const SnapshotModuleSetSnapshotEngineCommon = require('../../common/SnapshotModuleCommon/SnapshotModuleSetSnapshotEngineCommon')
-describe('CMTAT Debt - Standalone', function () {
+describe('CMTAT DebtEngine - Standalone', function () {
   beforeEach(async function () {
     Object.assign(this, await loadFixture(fixture))
-    this.cmtat = await deployCMTATDebtStandalone(
+    this.cmtat = await deployCMTATDebtEngineStandalone(
       this._.address,
       this.admin.address,
       this.deployerAddress.address
@@ -50,5 +51,6 @@ describe('CMTAT Debt - Standalone', function () {
   // Set snapshot Engine
   SnapshotModuleSetSnapshotEngineCommon
   // options
-  DebtModuleCommon()
+  DebtEngineModuleCommon()
+  DebtModuleSetDebtEngineCommon()
 })

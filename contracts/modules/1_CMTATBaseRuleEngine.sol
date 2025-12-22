@@ -3,6 +3,8 @@
 pragma solidity ^0.8.20;
 
 import {CMTATBaseCommon} from "./0_CMTATBaseCommon.sol";
+/* ==== OpenZeppelin === */
+import {ERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 /* ==== Wrapper === */
 // Core
 import {PauseModule}  from "./wrapper/core/PauseModule.sol";
@@ -87,7 +89,7 @@ abstract contract CMTATBaseRuleEngine is
        __CMTAT_internal_init_unchained(engines_);
 
         /* Wrapper modules */
-        __CMTAT_modules_init_unchained(admin, ERC20Attributes_, ExtraInformationAttributes_, engines_ );
+        __CMTAT_modules_init_unchained(admin, ERC20Attributes_, ExtraInformationAttributes_);
     }
 
     /*
@@ -111,13 +113,19 @@ abstract contract CMTATBaseRuleEngine is
     /*
     * @dev CMTAT wrapper modules
     */
-    function __CMTAT_modules_init_unchained(address admin, ICMTATConstructor.ERC20Attributes memory ERC20Attributes_, ICMTATConstructor.ExtraInformationAttributes memory extraInformationAttributes_, ICMTATConstructor.Engine memory engines_) internal virtual onlyInitializing {
-        __CMTAT_commonModules_init_unchained(admin,ERC20Attributes_, extraInformationAttributes_, engines_.snapshotEngine, engines_ .documentEngine);
+    function __CMTAT_modules_init_unchained(address admin, ICMTATConstructor.ERC20Attributes memory ERC20Attributes_, ICMTATConstructor.ExtraInformationAttributes memory extraInformationAttributes_) internal virtual onlyInitializing {
+        __CMTAT_commonModules_init_unchained(admin,ERC20Attributes_, extraInformationAttributes_);
     }
 
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
+    /**
+    * @dev revert if the contract is in pause state
+    */
+    function approve(address spender, uint256 value) public virtual override(ERC20Upgradeable) whenNotPaused returns (bool) {
+        return ERC20Upgradeable.approve(spender, value);
+    }
     /**
     * @inheritdoc ValidationModuleRuleEngine
     */

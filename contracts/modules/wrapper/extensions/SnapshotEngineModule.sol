@@ -24,13 +24,15 @@ abstract contract SnapshotEngineModule is Initializable, ISnapshotEngineModule {
         _authorizeSnapshots();
         _;
     }
+
     /* ============  Initializer Function ============ */
     /**
      * @dev
      *
      * - The grant to the admin role is done by AccessControlDefaultAdminRules
      * - The control of the zero address is done by AccessControlDefaultAdminRules
-     *
+     * Warning: not used in the different deployment version to reduce contract code size and simplify code
+     * If not used, the function will not be included in the final bytecode if compiled with the optimizer enabled
      */
     function __SnapshotEngineModule_init_unchained(ISnapshotEngine snapshotEngine_)
     internal virtual onlyInitializing {

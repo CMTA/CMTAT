@@ -36,7 +36,8 @@ abstract contract DocumentEngineModule is Initializable, IDocumentEngineModule {
      * @dev
      *
      * - set a DocumentEngine if address different from zero
-     *
+     * Warning: not used in the different deployment version to reduce contract code size and simplify code
+     * If not used, the function will not be included in the final bytecode if compiled with the optimizer enabled
      */
     function __DocumentEngineModule_init_unchained(IERC1643 documentEngine_)
     internal virtual onlyInitializing {
@@ -45,6 +46,7 @@ abstract contract DocumentEngineModule is Initializable, IDocumentEngineModule {
             _setDocumentEngine($, documentEngine_);
         }
     }
+
 
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS

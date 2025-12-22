@@ -31,12 +31,7 @@ function PauseModuleCommon () {
             .connect(this.address1)
             .transfer(this.address2, AMOUNT_TO_TRANSFER)
         )
-          .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
-          .withArgs(
-            this.address1.address,
-            this.address2.address,
-            AMOUNT_TO_TRANSFER
-          )
+          .to.be.revertedWithCustomError(this.cmtat, 'EnforcedPause')
       }
     })
 
@@ -63,12 +58,7 @@ function PauseModuleCommon () {
             .connect(this.address1)
             .transfer(this.address2, AMOUNT_TO_TRANSFER)
         )
-          .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
-          .withArgs(
-            this.address1.address,
-            this.address2.address,
-            AMOUNT_TO_TRANSFER
-          )
+          .to.be.revertedWithCustomError(this.cmtat, 'EnforcedPause')
       }
     })
 
@@ -192,12 +182,7 @@ function PauseModuleCommon () {
             .connect(this.address1)
             .transfer(this.address2, AMOUNT_TO_TRANSFER)
         )
-          .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
-          .withArgs(
-            this.address1.address,
-            this.address2.address,
-            AMOUNT_TO_TRANSFER
-          )
+          .to.be.revertedWithCustomError(this.cmtat, 'EnforcedPause')
       }
     })
 
@@ -285,12 +270,7 @@ function PauseModuleCommon () {
             .connect(this.address3)
             .transferFrom(this.address1, this.address2, AMOUNT_TO_TRANSFER)
         )
-          .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
-          .withArgs(
-            this.address1.address,
-            this.address2.address,
-            AMOUNT_TO_TRANSFER
-          )
+          .to.be.revertedWithCustomError(this.cmtat, 'EnforcedPause')
       }
     })
   })
@@ -322,12 +302,7 @@ function PauseModuleCommon () {
             .connect(this.address1)
             .transfer(this.address2, AMOUNT_TO_TRANSFER)
         )
-          .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
-          .withArgs(
-            this.address1.address,
-            this.address2.address,
-            AMOUNT_TO_TRANSFER
-          )
+          .to.be.revertedWithCustomError(this.cmtat, 'EnforcedPause')
       }
 
       if (!this.generic) {
@@ -385,12 +360,7 @@ function PauseModuleCommon () {
             .connect(this.address3)
             .transferFrom(this.address1, this.address2, AMOUNT_TO_TRANSFER)
         )
-          .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
-          .withArgs(
-            this.address1.address,
-            this.address2.address,
-            AMOUNT_TO_TRANSFER
-          )
+          .to.be.revertedWithCustomError(this.cmtat, 'EnforcedPause')
       }
 
       // Unpause is reverted
