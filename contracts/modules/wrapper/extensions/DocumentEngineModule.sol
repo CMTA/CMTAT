@@ -12,9 +12,8 @@ import {IDocumentEngineModule} from "../../../interfaces/modules/IDocumentEngine
  * @title Document module (ERC1643)
  * @dev 
  *
- * Retrieve documents from a documentEngine
+ * Retrieve documents from a documentEngine (external contract)
  */
-
 abstract contract DocumentEngineModule is Initializable, IDocumentEngineModule {
     /* ============ ERC-7201 ============ */
     bytes32 public constant DOCUMENT_ROLE = keccak256("DOCUMENT_ROLE");

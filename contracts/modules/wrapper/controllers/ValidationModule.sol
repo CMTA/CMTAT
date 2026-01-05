@@ -5,7 +5,7 @@ pragma solidity ^0.8.20;
 /* ==== Module === */
 import {PauseModule}  from "../core/PauseModule.sol";
 import {EnforcementModule} from "../core/EnforcementModule.sol";
-import {IERC7943FungibleTransactError} from "../../../interfaces/tokenization/draft-IERC7943.sol";
+import {IERC7943TransactError} from "../../../interfaces/tokenization/draft-IERC7943.sol";
 /**
  * @title Validation module
  * @dev 
@@ -15,7 +15,7 @@ import {IERC7943FungibleTransactError} from "../../../interfaces/tokenization/dr
 abstract contract ValidationModule is
     PauseModule,
     EnforcementModule,
-    IERC7943FungibleTransactError
+    IERC7943TransactError
 {
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS

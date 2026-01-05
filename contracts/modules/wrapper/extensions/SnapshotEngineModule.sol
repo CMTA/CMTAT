@@ -7,6 +7,12 @@ import {Initializable} from "@openzeppelin/contracts/proxy/utils/Initializable.s
 /* ==== Engine === */
 import {ISnapshotEngine, ISnapshotEngineModule} from "../../../interfaces/modules/ISnapshotEngineModule.sol";
 
+/**
+ * @title SnapshotEngine module 
+ * @dev 
+ *
+ * Add on-chain snapshot through a SnapshotEngine (external contract) 
+ */
 abstract contract SnapshotEngineModule is Initializable, ISnapshotEngineModule {
     /* ============ State Variables ============ */
     bytes32 public constant SNAPSHOOTER_ROLE = keccak256("SNAPSHOOTER_ROLE");

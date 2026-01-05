@@ -10,7 +10,7 @@ import {IDebtEngineModule} from "../../../interfaces/modules/IDebtEngineModule.s
  * @title Debt Engine module
  * @dev 
  *
- * Retrieve debt and creditEvents information from a debtEngine
+ * Retrieve debt and creditEvents information from a debtEngine (external contract)
  */
 abstract contract DebtEngineModule is IDebtEngineModule {
     /* ============ State Variables ============ */

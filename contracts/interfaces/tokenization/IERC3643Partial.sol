@@ -9,6 +9,8 @@
 
 pragma solidity ^0.8.20;
 
+import {IERC7943ERC20Enforcement} from "./draft-IERC7943.sol";
+
 /**
  * @title IERC3643Pause
  * @dev Interface for pausing and unpausing token transfers.
@@ -166,19 +168,8 @@ interface IERC3643Enforcement {
  * @notice Interface for enforcing partial token freezes and forced transfers, typically used in compliance-sensitive ERC-1400 scenarios.
  * @dev For event definitions, see {IERC7551ERC20Enforcement}.
  */
-interface IERC3643ERC20Enforcement {
-    /* ============ View Functions ============ */
-    /**
-     * @notice Returns the number of tokens that are currently frozen (i.e., non-transferable) for a given account.
-     * @dev The frozen amount is always less than or equal to the total balance of the account.
-     * @param account The address of the wallet being queried.
-     * @return frozenBalance_ The amount of frozen tokens held by the account.
-     */
-    function getFrozenTokens(address account) external view returns (uint256 frozenBalance_);
-
-
+interface IERC3643ERC20Enforcement is IERC7943ERC20Enforcement {
     /* ============ State Functions ============ */
-
     /**
      * @notice Freezes a specific amount of tokens for a given account.
      * @dev Emits a `TokensFrozen` event. Prevents the frozen amount from being transferred.
@@ -194,28 +185,6 @@ interface IERC3643ERC20Enforcement {
      *  @param value Amount of Tokens to be unfrozen
      */
     function unfreezePartialTokens(address account, uint256 value) external;
-    /**
-     *  
-     *  @notice Triggers a forced transfer.
-     *  @dev 
-*    *  Force a transfer of tokens between 2 token holders
-     *  If IERC364320Enforcement is implemented:
-     *      Require that the total value should not exceed available balance.
-     *      In case the `from` address has not enough free tokens (unfrozen tokens)
-     *      but has a total balance higher or equal to the `amount`
-     *      the amount of frozen tokens is reduced in order to have enough free tokens
-     *      to proceed the transfer, in such a case, the remaining balance on the `from`
-     *      account is 100% composed of frozen tokens post-transfer.
-     *      emits a `TokensUnfrozen` event if `value` is higher than the free balance of `from`
-     *  Emits a `Transfer` event
-     *  @param from The address of the token holder
-     *  @param to The address of the receiver
-     *  @param value amount of tokens to transfer
-     *  @return success_ `true` if successful and revert if unsuccessful
-
-     */
-    function forcedTransfer(address from, address to, uint256 value) external returns (bool success_);
-
 }
 /**
 * @title IERC3643Mint — Token Minting Interface
