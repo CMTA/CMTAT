@@ -1,3 +1,7 @@
+// SPDX-License-Identifier: MPL-2.0
+
+pragma solidity ^0.8.20;
+
 /// @notice Interface for ERC-20 based implementations.
 interface IERC7943ERC20Enforcement{
 
@@ -18,14 +22,14 @@ interface IERC7943FungibleEnforcementEvent{
     event ForcedTransfer(address indexed from, address indexed to, uint256 amount);
 }
 
-interface IERC7943FungibleTransactErrors{
+interface IERC7943FungibleTransactError{
     /// @notice Error reverted when an account is not allowed to transact. 
     /// @param account The address of the account which is not allowed for transfers.
     error ERC7943CannotTransact(address account);
 
 
 }
-interface IERC7943FungibleTransferErrors {
+interface IERC7943FungibleTransferError {
     /// @notice Error reverted when a transfer is not allowed according to internal rules. 
     /// @param from The address from which tokens are being sent.
     /// @param to The address to which tokens are being sent.

@@ -24,7 +24,7 @@ import {ValidationModule, ValidationModuleCore} from "./wrapper/core/ValidationM
  /* ==== Interface and other library === */
 import {ICMTATConstructor} from "../interfaces/technical/ICMTATConstructor.sol";
 import {ISnapshotEngine} from "../interfaces/engine/ISnapshotEngine.sol";
-import {Errors} from "../libraries/Errors.sol";
+import {IERC7943FungibleTransferError}  from "../interfaces/tokenization/draft-IERC7943.sol";
 abstract contract CMTATBaseAllowlist is
     // OpenZeppelin
     Initializable,
@@ -33,7 +33,8 @@ abstract contract CMTATBaseAllowlist is
     CMTATBaseCommon,
     ValidationModuleAllowlist,
     ValidationModuleCore,
-    ERC2771Module
+    ERC2771Module,
+    IERC7943FungibleTransferError
 {  
     /*//////////////////////////////////////////////////////////////
                          INITIALIZER FUNCTION
@@ -198,7 +199,7 @@ abstract contract CMTATBaseAllowlist is
     function _checkTransferred(address spender, address from, address to, uint256 value) internal virtual override(CMTATBaseCommon) {
         CMTATBaseCommon._checkTransferred(spender, from, to, value);
         if (!ValidationModule._canTransferGenericByModuleAndRevert(spender, from, to)) {
-            revert Errors.CMTAT_InvalidTransfer(from, to, value);
+            revert ERC7943CannotTransfer(from, to, value);
         }
     } 
 

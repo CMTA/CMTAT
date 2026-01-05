@@ -16,10 +16,11 @@ import {ValidationModuleRuleEngine} from "./wrapper/extensions/ValidationModule/
 
  /* ==== Interface and other library === */
 import {ICMTATConstructor} from "../interfaces/technical/ICMTATConstructor.sol";
-import {Errors} from "../libraries/Errors.sol";
+import {IERC7943FungibleTransferError}  from "../interfaces/tokenization/draft-IERC7943.sol";
 abstract contract CMTATBaseRuleEngine is
     CMTATBaseCommon,
-    ValidationModuleRuleEngine
+    ValidationModuleRuleEngine,
+    IERC7943FungibleTransferError
 {
     /*//////////////////////////////////////////////////////////////
                          INITIALIZER FUNCTION
@@ -171,6 +172,6 @@ abstract contract CMTATBaseRuleEngine is
     /* ==== Transfer/mint/burn restriction ==== */
     function _checkTransferred(address spender, address from, address to, uint256 value) internal virtual override(CMTATBaseCommon) {
         CMTATBaseCommon._checkTransferred(spender, from, to, value);
-        require(ValidationModuleRuleEngine._transferred(spender, from, to, value), Errors.CMTAT_InvalidTransfer(from, to, value));
+        require(ValidationModuleRuleEngine._transferred(spender, from, to, value), ERC7943CannotTransfer(from, to, value));
     } 
 }

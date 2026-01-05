@@ -5,6 +5,7 @@ pragma solidity ^0.8.20;
 /* ==== Module === */
 import {PauseModule}  from "../core/PauseModule.sol";
 import {EnforcementModule} from "../core/EnforcementModule.sol";
+import {IERC7943FungibleTransactError} from "../../../interfaces/tokenization/draft-IERC7943.sol";
 /**
  * @title Validation module
  * @dev 
@@ -13,14 +14,9 @@ import {EnforcementModule} from "../core/EnforcementModule.sol";
  */
 abstract contract ValidationModule is
     PauseModule,
-    EnforcementModule
+    EnforcementModule,
+    IERC7943FungibleTransactError
 {
-    /** 
-    * @notice Error reverted when an account is not allowed to transact. 
-    * @param account The address of the account which is not allowed for transfers.
-    * @dev Common to IERC7943Fungible, IERC7943NonFungible and IERC7943MultiToken
-    */
-    error ERC7943CannotTransact(address account);
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
