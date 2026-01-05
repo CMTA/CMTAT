@@ -81,11 +81,17 @@ function ERC20EnforcementModuleCommon () {
         .to.emit(this.cmtat, 'Enforcement')
         .withArgs(this.admin, this.address1, AMOUNT_TO_TRANSFER, REASON_EVENT)
       await expect(this.logs)
+        .to.emit(this.cmtat, 'ForcedTransfer')
+        .withArgs(this.address1,this.address2, AMOUNT_TO_TRANSFER)
+      await expect(this.logs)
         .to.emit(this.cmtat, 'Transfer')
         .withArgs(this.address1, this.address2, AMOUNT_TO_TRANSFER)
       await expect(this.logs)
         .to.emit(this.cmtat, 'TokensUnfrozen')
         .withArgs(this.address1, '10', REASON_EVENT)
+      await expect(this.logs)
+        .to.emit(this.cmtat, 'Frozen')
+        .withArgs(this.address1, '30')
     })
 
     it('testCanForceTransferFromAddress1ToAddress2AsAdminWithoutUnfreezeTokens', async function () {
@@ -116,6 +122,9 @@ function ERC20EnforcementModuleCommon () {
       await expect(this.logs)
         .to.emit(this.cmtat, 'Enforcement')
         .withArgs(this.admin, this.address1, AMOUNT_TO_TRANSFER, REASON_EVENT)
+      await expect(this.logs)
+        .to.emit(this.cmtat, 'ForcedTransfer')
+        .withArgs(this.address1,this.address2, AMOUNT_TO_TRANSFER)
       await expect(this.logs)
         .to.emit(this.cmtat, 'Transfer')
         .withArgs(this.address1, this.address2, AMOUNT_TO_TRANSFER)
@@ -155,11 +164,17 @@ function ERC20EnforcementModuleCommon () {
         .to.emit(this.cmtat, 'Enforcement')
         .withArgs(this.admin, this.address1, AMOUNT_TO_TRANSFER, REASON_EVENT)
       await expect(this.logs)
+        .to.emit(this.cmtat, 'ForcedTransfer')
+        .withArgs(this.address1,ZERO_ADDRESS, AMOUNT_TO_TRANSFER)
+      await expect(this.logs)
         .to.emit(this.cmtat, 'Transfer')
         .withArgs(this.address1, ZERO_ADDRESS, AMOUNT_TO_TRANSFER)
       await expect(this.logs)
         .to.emit(this.cmtat, 'TokensUnfrozen')
         .withArgs(this.address1, '10', REASON_EVENT)
+      await expect(this.logs)
+        .to.emit(this.cmtat, 'Frozen')
+        .withArgs(this.address1, '30')
     })
 
     it('testCanForceTransferFromAddress1ToAddress2AsAdminAndReduceAllowanceToZero', async function () {
@@ -187,6 +202,9 @@ function ERC20EnforcementModuleCommon () {
       await expect(this.logs)
         .to.emit(this.cmtat, 'Enforcement')
         .withArgs(this.admin, this.address1, AMOUNT_TO_TRANSFER, REASON_EVENT)
+      await expect(this.logs)
+        .to.emit(this.cmtat, 'ForcedTransfer')
+        .withArgs(this.address1,this.address2, AMOUNT_TO_TRANSFER)
       await expect(this.logs)
         .to.emit(this.cmtat, 'Transfer')
         .withArgs(this.address1, this.address2, AMOUNT_TO_TRANSFER)
@@ -218,6 +236,9 @@ function ERC20EnforcementModuleCommon () {
         .to.emit(this.cmtat, 'Enforcement')
         .withArgs(this.admin, this.address1, AMOUNT_TO_TRANSFER, REASON_EVENT)
       await expect(this.logs)
+        .to.emit(this.cmtat, 'ForcedTransfer')
+        .withArgs(this.address1,this.address2, AMOUNT_TO_TRANSFER)
+      await expect(this.logs)
         .to.emit(this.cmtat, 'Transfer')
         .withArgs(this.address1, this.address2, AMOUNT_TO_TRANSFER)
     })
@@ -240,6 +261,9 @@ function ERC20EnforcementModuleCommon () {
         .to.emit(this.cmtat, 'Enforcement')
         .withArgs(this.admin, this.address1, AMOUNT_TO_TRANSFER, REASON_EVENT)
       await expect(this.logs)
+        .to.emit(this.cmtat, 'ForcedTransfer')
+        .withArgs(this.address1,ZERO_ADDRESS, AMOUNT_TO_TRANSFER)
+      await expect(this.logs)
         .to.emit(this.cmtat, 'Transfer')
         .withArgs(this.address1, ZERO_ADDRESS, AMOUNT_TO_TRANSFER)
     })
@@ -257,6 +281,9 @@ function ERC20EnforcementModuleCommon () {
       await expect(this.logs)
         .to.emit(this.cmtat, 'Enforcement')
         .withArgs(this.admin, this.address1, AMOUNT_TO_TRANSFER, '0x')
+      await expect(this.logs)
+        .to.emit(this.cmtat, 'ForcedTransfer')
+        .withArgs(this.address1,this.address2, AMOUNT_TO_TRANSFER)
       await expect(this.logs)
         .to.emit(this.cmtat, 'Transfer')
         .withArgs(this.address1, this.address2, AMOUNT_TO_TRANSFER)
@@ -336,6 +363,10 @@ function ERC20EnforcementModuleCommon () {
     await expect(this.logs)
       .to.emit(this.cmtat, 'TokensFrozen')
       .withArgs(this.address1, FREEZE_AMOUNT, REASON_EMPTY_EVENT)
+
+    await expect(this.logs)
+      .to.emit(this.cmtat, 'Frozen')
+      .withArgs(this.address1, FREEZE_AMOUNT)
   }
 
   async function testFreezeReason (sender) {
@@ -373,6 +404,10 @@ function ERC20EnforcementModuleCommon () {
     await expect(this.logs)
       .to.emit(this.cmtat, 'TokensFrozen')
       .withArgs(this.address1, FREEZE_AMOUNT, REASON_EVENT)
+
+    await expect(this.logs)
+      .to.emit(this.cmtat, 'Frozen')
+      .withArgs(this.address1, FREEZE_AMOUNT)
   }
 
   async function testUnfreeze (sender) {
@@ -402,8 +437,9 @@ function ERC20EnforcementModuleCommon () {
         INITIAL_BALANCE - FREEZE_AMOUNT + UNFREEZE_AMOUNT
       )
     ).to.equal(true)
+    const frozenTokens = FREEZE_AMOUNT - UNFREEZE_AMOUNT
     expect(await this.cmtat.getFrozenTokens(this.address1)).to.equal(
-      FREEZE_AMOUNT - UNFREEZE_AMOUNT
+      frozenTokens
     )
     expect(await this.cmtat.getActiveBalanceOf(this.address1)).to.equal(
       INITIAL_BALANCE - FREEZE_AMOUNT + UNFREEZE_AMOUNT
@@ -412,9 +448,14 @@ function ERC20EnforcementModuleCommon () {
     await expect(this.logs)
       .to.emit(this.cmtat, 'TokensUnfrozen')
       .withArgs(this.address1, UNFREEZE_AMOUNT, REASON_EMPTY_EVENT)
+
+    await expect(this.logs)
+      .to.emit(this.cmtat, 'Frozen')
+      .withArgs(this.address1, frozenTokens)
   }
 
   async function testUnfreezeReason (sender) {
+    const frozenTokens = FREEZE_AMOUNT - UNFREEZE_AMOUNT
     // Arrange
     const bindTest = await testFreeze.bind(this)
     await bindTest(sender)
@@ -442,7 +483,7 @@ function ERC20EnforcementModuleCommon () {
       )
     ).to.equal(true)
     expect(await this.cmtat.getFrozenTokens(this.address1)).to.equal(
-      FREEZE_AMOUNT - UNFREEZE_AMOUNT
+      frozenTokens
     )
     expect(await this.cmtat.getActiveBalanceOf(this.address1)).to.equal(
       INITIAL_BALANCE - FREEZE_AMOUNT + UNFREEZE_AMOUNT
@@ -451,6 +492,10 @@ function ERC20EnforcementModuleCommon () {
     await expect(this.logs)
       .to.emit(this.cmtat, 'TokensUnfrozen')
       .withArgs(this.address1, UNFREEZE_AMOUNT, REASON_EVENT)
+
+    await expect(this.logs)
+      .to.emit(this.cmtat, 'Frozen')
+      .withArgs(this.address1, frozenTokens)
   }
 
   context('Freeze', function () {
