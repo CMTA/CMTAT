@@ -46,7 +46,6 @@ abstract contract ERC20EnforcementModuleInternal is ERC20Upgradeable,IERC7551ERC
         } else { // Less probable path at the end
             revert CMTAT_ERC20EnforcementModule_ValueEqualCurrentFrozenTokens();
         }
-        // We do nothing if value == frozenTokensLocal
         return true;
     }
 
@@ -60,16 +59,6 @@ abstract contract ERC20EnforcementModuleInternal is ERC20Upgradeable,IERC7551ERC
         // Update frozenTokens
         $._frozenTokens[account] = frozenTokensLocal;
         _freezeTokensEmitEvents(account, value, frozenTokensLocal, data);
-    }
-    
-    function _freezeTokensEmitEvents(address account, uint256 difference, uint256 frozenTokens,  bytes memory data) internal virtual {
-        emit TokensFrozen(account, difference, data);
-        emit IERC7943FungibleEnforcementEvent.Frozen(account, frozenTokens);
-    }
-
-    function _unfreezeTokensEmitEvents(address account, uint256 difference, uint256 frozenTokens, bytes memory data) internal virtual {
-        emit TokensUnfrozen(account, difference, data);
-        emit IERC7943FungibleEnforcementEvent.Frozen(account, frozenTokens );
     }
 
     function _unfreezePartialTokens(address account, uint256 value, bytes memory data) internal virtual{
@@ -124,6 +113,16 @@ abstract contract ERC20EnforcementModuleInternal is ERC20Upgradeable,IERC7551ERC
         }
         emit Enforcement(_msgSender(), from, value, data);
         emit ForcedTransfer(from, to, value);
+    }
+
+    function _freezeTokensEmitEvents(address account, uint256 difference, uint256 frozenTokens,  bytes memory data) internal virtual {
+        emit TokensFrozen(account, difference, data);
+        emit IERC7943FungibleEnforcementEvent.Frozen(account, frozenTokens);
+    }
+
+    function _unfreezeTokensEmitEvents(address account, uint256 difference, uint256 frozenTokens, bytes memory data) internal virtual {
+        emit TokensUnfrozen(account, difference, data);
+        emit IERC7943FungibleEnforcementEvent.Frozen(account, frozenTokens );
     }
 
     /* ============ View functions ============ */
