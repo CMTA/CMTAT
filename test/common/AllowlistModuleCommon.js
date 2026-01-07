@@ -34,6 +34,7 @@ function AllowlistModuleCommon () {
 
       // Arrange - Assert
       expect(await this.cmtat.isAllowlisted(this.address1)).to.equal(false)
+      expect(await this.cmtat.canTransact(this.address1)).to.equal(false)
       // Act
       this.logs = await this.cmtat
         .connect(sender)
@@ -49,6 +50,8 @@ function AllowlistModuleCommon () {
 
       expect(await this.cmtat.isAllowlisted(this.address1)).to.equal(true)
       expect(await this.cmtat.isAllowlisted(this.address2)).to.equal(true)
+      expect(await this.cmtat.canTransact(this.address1)).to.equal(true)
+      expect(await this.cmtat.canTransact(this.address2)).to.equal(true)
 
       // emits a Freeze event
       await expect(this.logs)
@@ -69,6 +72,8 @@ function AllowlistModuleCommon () {
         .batchSetAddressAllowlist(accounts, unAllowlist)
       expect(await this.cmtat.isAllowlisted(this.address1)).to.equal(false)
       expect(await this.cmtat.isAllowlisted(this.address2)).to.equal(false)
+      expect(await this.cmtat.canTransact(this.address1)).to.equal(false)
+      expect(await this.cmtat.canTransact(this.address2)).to.equal(false)
 
       // Assert - canTransfer
       expect(
@@ -132,6 +137,8 @@ function AllowlistModuleCommon () {
       ).to.equal(true)
       expect(await this.cmtat.isAllowlisted(this.address1)).to.equal(true)
       expect(await this.cmtat.isAllowlisted(this.address2)).to.equal(true)
+      expect(await this.cmtat.canTransact(this.address1)).to.equal(true)
+      expect(await this.cmtat.canTransact(this.address2)).to.equal(true)
 
       // emits a Allowlist event
       await expect(this.logs)
@@ -166,6 +173,7 @@ function AllowlistModuleCommon () {
 
       // Assert
       expect(await this.cmtat.isAllowlisted(this.address1)).to.equal(false)
+      expect(await this.cmtat.canTransact(this.address1)).to.equal(false)
       expect(
         await this.cmtat.canTransfer(this.address1, this.address2, 10)
       ).to.equal(false)
@@ -202,6 +210,7 @@ function AllowlistModuleCommon () {
         .connect(this.admin)
         .setAddressAllowlist(this.address1, false)
       expect(await this.cmtat.isAllowlisted(this.address1)).to.equal(false)
+      expect(await this.cmtat.canTransact(this.address1)).to.equal(false)
     })
 
     it('testAdminCanBatchAllowlistAddress', async function () {
@@ -294,6 +303,7 @@ function AllowlistModuleCommon () {
         .withArgs(this.address2.address, ALLOWLIST_ROLE)
       // Assert
       expect(await this.cmtat.isAllowlisted(this.address1)).to.equal(false)
+      expect(await this.cmtat.canTransact(this.address1)).to.equal(false)
 
       // without reason
       await expect(
@@ -308,6 +318,7 @@ function AllowlistModuleCommon () {
         .withArgs(this.address2.address, ALLOWLIST_ROLE)
       // Assert
       expect(await this.cmtat.isAllowlisted(this.address1)).to.equal(false)
+      expect(await this.cmtat.canTransact(this.address1)).to.equal(false)
     })
 
     it('testCannotNonEnforcerBatchAllowlistAddress', async function () {
@@ -344,6 +355,7 @@ function AllowlistModuleCommon () {
         .withArgs(this.address2.address, ALLOWLIST_ROLE)
       // Assert
       expect(await this.cmtat.isAllowlisted(this.address1)).to.equal(true)
+      expect(await this.cmtat.canTransact(this.address1)).to.equal(true)
     })
 
     /* //////////////////////////////////////////////////////////////

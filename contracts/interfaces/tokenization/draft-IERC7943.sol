@@ -2,6 +2,8 @@
 
 pragma solidity ^0.8.20;
 
+import {IERC3643ComplianceRead} from "./IERC3643Partial.sol";
+
 /**
 * @notice Enforcement Interface for ERC-20 based implementations common with ERC-3643 interface.
 * 
@@ -101,3 +103,14 @@ interface IERC7943FungibleTransferError {
     */
     error ERC7943CannotTransfer(address from, address to, uint256 amount);
 }
+
+interface IERC7943FungibleTransactCheck{
+     /// @notice Checks if a specific account is allowed to transact according to token rules.
+    /// @dev This is often used for allowlist/KYC/KYB/AML checks.
+    /// @param account The address to check.
+    /// @return allowed True if the account is allowed, false otherwise.
+    function canTransact(address account) external view returns (bool allowed);
+}
+
+
+   

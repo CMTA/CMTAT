@@ -169,16 +169,20 @@ abstract contract CMTATBaseAllowlist is
     * @inheritdoc ValidationModuleAllowlist
     */
     function _canMintBurnByModule(
-        address target
+        address account
     ) internal view virtual override(ValidationModuleAllowlist, ValidationModule) returns (bool) {
-        return ValidationModuleAllowlist._canMintBurnByModule(target);
+        return ValidationModuleAllowlist._canMintBurnByModule(account);
     }
 
     function _canMintBurnByModuleAndRevert(
-        address target
+        address account
     ) internal view virtual override(ValidationModuleAllowlist, ValidationModule) returns (bool) {
-        return ValidationModuleAllowlist._canMintBurnByModuleAndRevert(target);
+        return ValidationModuleAllowlist._canMintBurnByModuleAndRevert(account);
     }
+
+  function _canTransact(address account) internal view virtual override(ValidationModuleAllowlist, ValidationModule) returns (bool allowed) {
+    return ValidationModuleAllowlist._canTransact(account);
+  }
 
     function _canTransferStandardByModule(
         address spender,

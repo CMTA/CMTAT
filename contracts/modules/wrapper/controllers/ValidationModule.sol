@@ -6,6 +6,7 @@ pragma solidity ^0.8.20;
 import {PauseModule}  from "../core/PauseModule.sol";
 import {EnforcementModule} from "../core/EnforcementModule.sol";
 import {IERC7943TransactError} from "../../../interfaces/tokenization/draft-IERC7943.sol";
+import {IERC7943FungibleTransactCheck} from "../../../interfaces/tokenization/draft-IERC7943.sol";
 /**
  * @title Validation module
  * @dev 
@@ -15,8 +16,16 @@ import {IERC7943TransactError} from "../../../interfaces/tokenization/draft-IERC
 abstract contract ValidationModule is
     PauseModule,
     EnforcementModule,
-    IERC7943TransactError
+    IERC7943TransactError,
+    IERC7943FungibleTransactCheck
 {
+
+    /*//////////////////////////////////////////////////////////////
+                            PUBLIC FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
+    function canTransact(address account) public view virtual override(IERC7943FungibleTransactCheck) returns (bool allowed) {
+        return _canTransact(account);
+    }
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
@@ -159,5 +168,20 @@ abstract contract ValidationModule is
         _requireNotPaused();
         _canTransferisFrozenAndRevert(spender, from, to);
         return true;
+    }
+
+
+    /** 
+    * @notice Checks if a specific account is allowed to transact according to token rules.
+    * @dev This is often used for allowlist/KYC/KYB/AML checks.
+    * @param account The address to check.
+    * @return allowed True if the account is allowed, false otherwise.
+    */
+    function _canTransact(address account) internal view virtual returns (bool allowed) {
+        if(EnforcementModule.isFrozen(account)) {
+            return false;
+        } else {
+            return true;
+        }
     }
 }

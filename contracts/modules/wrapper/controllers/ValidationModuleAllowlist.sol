@@ -22,36 +22,16 @@ abstract contract ValidationModuleAllowlist is
     * @dev Use forcedTransfer (or forcedBurn) to burn tokens from an non-allowlist address
     */
     function _canMintBurnByModule(
-        address target
+        address account
     ) internal view virtual override(ValidationModule) returns (bool) {
-        if(_isAllowlistEnabled() && !isAllowlisted(target)){
+        if(_isAllowlistEnabled() && !isAllowlisted(account)){
             return false;
         } else {
-            return ValidationModule._canMintBurnByModule(target);
+            return ValidationModule._canMintBurnByModule(account);
         }
     }
 
-    function _canMintBurnByModuleAndRevert(
-        address target
-    ) internal view virtual override(ValidationModule) returns (bool) {
-
-        if(_isAllowlistEnabled() && !isAllowlisted(target)){
-            revert ERC7943CannotTransact(target);
-        } else {
-            return ValidationModule._canMintBurnByModuleAndRevert(target);
-        }
-    }
-
-    function _canTransferStandardByModuleAndRevert(
-        address spender,
-        address from,
-        address to
-    ) internal view virtual override(ValidationModule) returns (bool) {
-        _canTransferStandardByModuleAllowlistAndRevert(spender, from, to);
-        return ValidationModule._canTransferStandardByModuleAndRevert(spender, from, to);
-    }
-
-     /**
+    /**
     * @dev Add allowlist check for standard transfer
     */
     function _canTransferStandardByModuleAllowlist(
@@ -68,30 +48,6 @@ abstract contract ValidationModuleAllowlist is
        return false;
     }
 
-    function _canTransferStandardByModuleAllowlistAndRevert(
-        address spender,
-        address from,
-        address to
-    ) internal view virtual returns (bool) {
-        address target;
-        if(_isAllowlistEnabled()){
-            if (spender != address(0) && !isAllowlisted(spender)){
-                target = spender;
-            } else if (!isAllowlisted(from)) {
-                target = from;
-            } else if(!isAllowlisted(to) ){
-                target = to;
-            } else {
-                return true;
-            }
-            revert ERC7943CannotTransact(target);
-        } else {
-            return true;
-        }
-
-    }
-
-
     /**
     * @dev Add allowlist check for standard transfer
     */
@@ -104,5 +60,56 @@ abstract contract ValidationModuleAllowlist is
            return false;
         }
         return ValidationModule._canTransferStandardByModule(spender, from, to);
+    }
+
+    function _canTransact(address account) internal view virtual override(ValidationModule) returns (bool allowed) {
+        if(_isAllowlistEnabled() && !isAllowlisted(account)){
+            return false;
+        } else {
+            return ValidationModule._canTransact(account);
+        }
+    }
+
+    /* ============ View functions which revert ============ */
+    function _canMintBurnByModuleAndRevert(
+        address account
+    ) internal view virtual override(ValidationModule) returns (bool) {
+        if(_isAllowlistEnabled() && !isAllowlisted(account)){
+            revert ERC7943CannotTransact(account);
+        } else {
+            return ValidationModule._canMintBurnByModuleAndRevert(account);
+        }
+    }
+
+    function _canTransferStandardByModuleAndRevert(
+        address spender,
+        address from,
+        address to
+    ) internal view virtual override(ValidationModule) returns (bool) {
+        _canTransferStandardByModuleAllowlistAndRevert(spender, from, to);
+        return ValidationModule._canTransferStandardByModuleAndRevert(spender, from, to);
+    }
+
+    function _canTransferStandardByModuleAllowlistAndRevert(
+        address spender,
+        address from,
+        address to
+    ) internal view virtual returns (bool) {
+        address account;
+        if(_isAllowlistEnabled()){
+            if (spender != address(0) && !isAllowlisted(spender)){
+                account = spender;
+            } else if (!isAllowlisted(from)) {
+                account = from;
+            } else if(!isAllowlisted(to) ){
+                account = to;
+            } else {
+                return true;
+            }
+            // Will revert if the last else branch has not be taken
+            revert ERC7943CannotTransact(account);
+        } else {
+            return true;
+        }
     }
 }
