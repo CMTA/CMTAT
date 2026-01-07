@@ -2,11 +2,8 @@
 
 pragma solidity ^0.8.20;
 
-/* ==== OpenZeppelin === */
-import { IERC165 } from "@openzeppelin/contracts/interfaces/IERC165.sol";
+
 /* ==== Wrapper === */
-// Security
-import {AccessControlUpgradeable, AccessControlModule} from "./wrapper/security/AccessControlModule.sol";
 // Core
 import {VersionModule} from "./wrapper/core/VersionModule.sol";
 import {ERC20BurnModule, ERC20BurnModuleInternal} from "./wrapper/core/ERC20BurnModule.sol";
@@ -35,22 +32,11 @@ abstract contract CMTATBaseCommon is
     ERC20EnforcementModule,
     DocumentEngineModule,
     ExtraInformationModule,
-    AccessControlModule,
     // Interfaces
     IBurnMintERC20,
     IERC5679
 {  
-    /*//////////////////////////////////////////////////////////////
-                            PUBLIC/EXTERNAL FUNCTIONS
-    //////////////////////////////////////////////////////////////*/
-    function __CMTAT_commonModules_init_unchained(address admin, ICMTATConstructor.ERC20Attributes memory ERC20Attributes_, ICMTATConstructor.ExtraInformationAttributes memory ExtraInformationModuleAttributes_) internal virtual onlyInitializing {
-        // AccessControlModule_init_unchained is called firstly due to inheritance
-        __AccessControlModule_init_unchained(admin);
-        // Core
-        __ERC20BaseModule_init_unchained(ERC20Attributes_.decimalsIrrevocable, ERC20Attributes_.name, ERC20Attributes_.symbol);
-        /* Extensions */
-        __ExtraInformationModule_init_unchained(ExtraInformationModuleAttributes_.tokenId, ExtraInformationModuleAttributes_.terms, ExtraInformationModuleAttributes_.information);
-    }
+
 
     /*//////////////////////////////////////////////////////////////
                 Override ERC20Upgradeable, ERC20BaseModule
@@ -86,15 +72,6 @@ abstract contract CMTATBaseCommon is
         return ERC20BaseModule.symbol();
     }
 
-    /**
-     * @inheritdoc AccessControlUpgradeable
-     * @dev 
-     * We can not use type(IERC5679).interfaceId instead of 0xd0017968
-     * because IERC5679 inherits from two interfaces (IERC5679Burn and Mint)
-     */
-    function supportsInterface(bytes4 interfaceId) public view virtual override(AccessControlUpgradeable, IERC165) returns (bool) {
-        return interfaceId == 0xd0017968 || AccessControlUpgradeable.supportsInterface(interfaceId);
-    }
 
     /* ============  State Functions ============ */
     function transfer(address to, uint256 value) public virtual override(ERC20Upgradeable) returns (bool) {
@@ -132,7 +109,8 @@ abstract contract CMTATBaseCommon is
     * - Input validation is also managed by the functions burn and mint
     * - You can mint more tokens than burnt
     */
-    function burnAndMint(address from, address to, uint256 amountToBurn, uint256 amountToMint, bytes calldata data) public virtual override(IBurnMintERC20) {
+    function burnAndMint(address from, address to, uint256 amountToBurn, uint256 amountToMint, bytes calldata data) 
+    public virtual override(IBurnMintERC20) {
         ERC20BurnModule.burn(from, amountToBurn, data);
         ERC20MintModule.mint(to, amountToMint, data);
     }
@@ -203,54 +181,4 @@ abstract contract CMTATBaseCommon is
         _checkTransferred(address(0), from, to, value);
         ERC20MintModuleInternal._minterTransferOverride(from, to, value);
     }
-
-    /* ==== Access Control Functions ==== */
-
-    /** 
-    * @custom:access-control
-    * - the caller must have the `DEFAULT_ADMIN_ROLE`.
-    */
-    function _authorizeERC20AttributeManagement() internal virtual override(ERC20BaseModule) onlyRole(DEFAULT_ADMIN_ROLE){}
-
-    /** 
-    * @custom:access-control
-    * - the caller must have the `MINTER_ROLE`.
-    */
-    function _authorizeMint() internal virtual override(ERC20MintModule) onlyRole(MINTER_ROLE){}
-
-    /** 
-    * @custom:access-control
-    * - The caller must have the `BURNER_ROLE`.
-    */
-    function _authorizeBurn() internal virtual override(ERC20BurnModule) onlyRole(BURNER_ROLE){}
-
-    /** 
-    * @custom:access-control
-    * - the caller must have the `DOCUMENT_ROLE`.
-    */
-    function  _authorizeDocumentManagement() internal virtual override(DocumentEngineModule) onlyRole(DOCUMENT_ROLE){}
-
-    /** 
-    * @custom:access-control
-    * - the caller must have the `EXTRA_INFORMATION_ROLE`.
-    */
-    function  _authorizeExtraInfoManagement() internal virtual override(ExtraInformationModule) onlyRole(EXTRA_INFORMATION_ROLE){}
-
-    /** 
-    * @custom:access-control
-    * - the caller must have the `ERC20ENFORCER_ROLE`.
-    */
-    function _authorizeERC20Enforcer() internal virtual override(ERC20EnforcementModule) onlyRole(ERC20ENFORCER_ROLE){}
-
-    /** 
-    * @custom:access-control
-    * - the caller must have the `DEFAULT_ADMIN_ROLE`.
-    */
-    function _authorizeForcedTransfer() internal virtual override(ERC20EnforcementModule) onlyRole(DEFAULT_ADMIN_ROLE){}
-
-    /** 
-    * @custom:access-control
-    * - the caller must have the `SNAPSHOOTER_ROLE`.
-    */
-    function _authorizeSnapshots() internal virtual override(SnapshotEngineModule) onlyRole(SNAPSHOOTER_ROLE){}
 }

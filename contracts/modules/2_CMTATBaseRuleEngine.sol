@@ -7,6 +7,7 @@ import {CMTATBaseCommon} from "./0_CMTATBaseCommon.sol";
 import {ERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 /* ==== Wrapper === */
 // Core
+import {CMTATBaseAccessControl} from "./1_CMTATBaseAccessControl.sol";
 import {PauseModule}  from "./wrapper/core/PauseModule.sol";
 import {EnforcementModule} from "./wrapper/core/EnforcementModule.sol";
 // Extensions
@@ -18,7 +19,7 @@ import {ValidationModuleRuleEngine} from "./wrapper/extensions/ValidationModule/
 import {ICMTATConstructor} from "../interfaces/technical/ICMTATConstructor.sol";
 import {IERC7943FungibleTransferError}  from "../interfaces/tokenization/draft-IERC7943.sol";
 abstract contract CMTATBaseRuleEngine is
-    CMTATBaseCommon,
+    CMTATBaseAccessControl,
     ValidationModuleRuleEngine,
     IERC7943FungibleTransferError
 {

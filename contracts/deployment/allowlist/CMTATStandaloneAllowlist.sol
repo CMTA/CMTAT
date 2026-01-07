@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.20;
 
-import {CMTATBaseAllowlist, ISnapshotEngine, IERC1643} from "../../modules/1_CMTATBaseAllowlist.sol";
+import {CMTATBaseAllowlist, ISnapshotEngine, IERC1643} from "../../modules/2_CMTATBaseAllowlist.sol";
 import {ERC2771Module, ERC2771ContextUpgradeable} from "../../modules/wrapper/options/ERC2771Module.sol";
 import {ICMTATConstructor} from "../../interfaces/technical/ICMTATConstructor.sol";
 

@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.20;
 
-import {CMTATBaseDebtEngine} from "../../modules/4_CMTATBaseDebtEngine.sol";
+import {CMTATBaseDebtEngine} from "../../modules/5_CMTATBaseDebtEngine.sol";
 import {ICMTATConstructor} from "../../interfaces/technical/ICMTATConstructor.sol";
 /**
 * @title CMTAT version for a standalone deployment (without proxy)
