@@ -5,9 +5,11 @@ pragma solidity ^0.8.20;
 /* ==== OpenZeppelin === */
 import {Initializable} from "@openzeppelin/contracts/proxy/utils/Initializable.sol";
 import {ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
+import {ERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 /* ==== Wrapper === */
 // Base
 import {CMTATBaseCommon} from "./0_CMTATBaseCommon.sol";
+import {CMTATBaseAccessControl} from "./1_CMTATBaseAccessControl.sol";
 // Core
 import {PauseModule}  from "./wrapper/core/PauseModule.sol";
 import {EnforcementModule} from "./wrapper/core/EnforcementModule.sol";
@@ -23,16 +25,17 @@ import {ValidationModule, ValidationModuleCore} from "./wrapper/core/ValidationM
  /* ==== Interface and other library === */
 import {ICMTATConstructor} from "../interfaces/technical/ICMTATConstructor.sol";
 import {ISnapshotEngine} from "../interfaces/engine/ISnapshotEngine.sol";
-import {Errors} from "../libraries/Errors.sol";
+import {IERC7943FungibleTransferError}  from "../interfaces/tokenization/draft-IERC7943.sol";
 abstract contract CMTATBaseAllowlist is
     // OpenZeppelin
     Initializable,
     ContextUpgradeable,
     // Core
-    CMTATBaseCommon,
+    CMTATBaseAccessControl,
     ValidationModuleAllowlist,
     ValidationModuleCore,
-    ERC2771Module
+    ERC2771Module,
+    IERC7943FungibleTransferError
 {  
     /*//////////////////////////////////////////////////////////////
                          INITIALIZER FUNCTION
@@ -44,22 +47,16 @@ abstract contract CMTATBaseAllowlist is
      * @param admin address of the admin of contract (Access Control)
      * @param ERC20Attributes_ ERC20 name, symbol and decimals
      * @param extraInformationAttributes_ tokenId, terms, information
-     * @param snapshotEngine_ external contract
-     * @param documentEngine_ external contract
      */
     function initialize(
         address admin,
         ICMTATConstructor.ERC20Attributes memory ERC20Attributes_,
-        ICMTATConstructor.ExtraInformationAttributes memory extraInformationAttributes_,
-        ISnapshotEngine snapshotEngine_,
-        IERC1643 documentEngine_
+        ICMTATConstructor.ExtraInformationAttributes memory extraInformationAttributes_
     ) public virtual initializer {
         __CMTAT_init(
             admin,
             ERC20Attributes_,
-            extraInformationAttributes_,
-            snapshotEngine_,
-            documentEngine_
+            extraInformationAttributes_
         );
     }
 
@@ -70,9 +67,7 @@ abstract contract CMTATBaseAllowlist is
     function __CMTAT_init(
         address admin,
         ICMTATConstructor.ERC20Attributes memory ERC20Attributes_,
-        ICMTATConstructor.ExtraInformationAttributes memory extraInformationAttributes_,
-        ISnapshotEngine snapshotEngine_,
-        IERC1643 documentEngine_
+        ICMTATConstructor.ExtraInformationAttributes memory extraInformationAttributes_
     ) internal virtual onlyInitializing {
         /* OpenZeppelin library */
         // OZ init_unchained functions are called firstly due to inheritance
@@ -85,7 +80,7 @@ abstract contract CMTATBaseAllowlist is
         __CMTAT_openzeppelin_init_unchained(ERC20Attributes_);
 
         /* Wrapper modules */
-        __CMTAT_modules_init_unchained(admin, ERC20Attributes_, extraInformationAttributes_, snapshotEngine_, documentEngine_ );
+        __CMTAT_modules_init_unchained(admin, ERC20Attributes_, extraInformationAttributes_);
     }
 
     /*
@@ -102,9 +97,8 @@ abstract contract CMTATBaseAllowlist is
     /*
     * @dev CMTAT wrapper modules
     */
-    function __CMTAT_modules_init_unchained(address admin, ICMTATConstructor.ERC20Attributes memory ERC20Attributes_, ICMTATConstructor.ExtraInformationAttributes memory ExtraInformationAttributes_,  ISnapshotEngine snapshotEngine_,
-        IERC1643 documentEngine_ ) internal virtual onlyInitializing {
-         __CMTAT_commonModules_init_unchained(admin,ERC20Attributes_, ExtraInformationAttributes_, snapshotEngine_, documentEngine_);
+    function __CMTAT_modules_init_unchained(address admin, ICMTATConstructor.ERC20Attributes memory ERC20Attributes_, ICMTATConstructor.ExtraInformationAttributes memory ExtraInformationAttributes_ ) internal virtual onlyInitializing {
+         __CMTAT_commonModules_init_unchained(admin,ERC20Attributes_, ExtraInformationAttributes_);
         // option
         __Allowlist_init_unchained();
     }
@@ -116,6 +110,12 @@ abstract contract CMTATBaseAllowlist is
     /*//////////////////////////////////////////////////////////////
                 Functions requiring several modules
     //////////////////////////////////////////////////////////////*/
+    /**
+    * @dev revert if the contract is in pause state
+    */
+    function approve(address spender, uint256 value) public virtual override(ERC20Upgradeable) whenNotPaused returns (bool) {
+        return ERC20Upgradeable.approve(spender, value);
+    }
 
     /**
     * @inheritdoc ValidationModuleCore
@@ -170,10 +170,20 @@ abstract contract CMTATBaseAllowlist is
     * @inheritdoc ValidationModuleAllowlist
     */
     function _canMintBurnByModule(
-        address target
+        address account
     ) internal view virtual override(ValidationModuleAllowlist, ValidationModule) returns (bool) {
-        return ValidationModuleAllowlist._canMintBurnByModule(target);
+        return ValidationModuleAllowlist._canMintBurnByModule(account);
     }
+
+    function _canMintBurnByModuleAndRevert(
+        address account
+    ) internal view virtual override(ValidationModuleAllowlist, ValidationModule) returns (bool) {
+        return ValidationModuleAllowlist._canMintBurnByModuleAndRevert(account);
+    }
+
+  function _canTransact(address account) internal view virtual override(ValidationModuleAllowlist, ValidationModule) returns (bool allowed) {
+    return ValidationModuleAllowlist._canTransact(account);
+  }
 
     function _canTransferStandardByModule(
         address spender,
@@ -183,10 +193,18 @@ abstract contract CMTATBaseAllowlist is
         return ValidationModuleAllowlist._canTransferStandardByModule(spender, from, to);
     }
 
+    function _canTransferStandardByModuleAndRevert(
+        address spender,
+        address from,
+        address to
+    ) internal view virtual override(ValidationModule, ValidationModuleAllowlist) returns (bool) {
+        return ValidationModuleAllowlist._canTransferStandardByModuleAndRevert(spender, from, to);
+    }
+
     function _checkTransferred(address spender, address from, address to, uint256 value) internal virtual override(CMTATBaseCommon) {
         CMTATBaseCommon._checkTransferred(spender, from, to, value);
-        if (!ValidationModule._canTransferGenericByModule(spender, from, to)) {
-            revert Errors.CMTAT_InvalidTransfer(from, to, value);
+        if (!ValidationModule._canTransferGenericByModuleAndRevert(spender, from, to)) {
+            revert ERC7943CannotTransfer(from, to, value);
         }
     } 
 

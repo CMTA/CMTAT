@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.20;
 
-import {CMTATBaseRuleEngine} from "./1_CMTATBaseRuleEngine.sol";
+import {CMTATBaseRuleEngine} from "./2_CMTATBaseRuleEngine.sol";
 /* ==== Wrapper === */
 // Use by detectTransferRestriction
 import {ERC20BaseModule, ERC20Upgradeable} from "./wrapper/core/ERC20BaseModule.sol";

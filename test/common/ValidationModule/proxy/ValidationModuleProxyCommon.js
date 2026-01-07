@@ -62,7 +62,7 @@ function ValidationModuleProxyCommon () {
         'CMTAT_ISIN',
         TERMS,
         'CMTAT_info',
-        [this.ruleEngineMock.target, ZERO_ADDRESS, ZERO_ADDRESS]
+        [this.ruleEngineMock.target]
       )
       await this.cmtat
         .connect(this.admin)

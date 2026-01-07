@@ -3,8 +3,11 @@
 pragma solidity ^0.8.20;
 
 import {CMTATBaseCommon} from "./0_CMTATBaseCommon.sol";
+/* ==== OpenZeppelin === */
+import {ERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 /* ==== Wrapper === */
 // Core
+import {CMTATBaseAccessControl} from "./1_CMTATBaseAccessControl.sol";
 import {PauseModule}  from "./wrapper/core/PauseModule.sol";
 import {EnforcementModule} from "./wrapper/core/EnforcementModule.sol";
 // Extensions
@@ -14,10 +17,11 @@ import {ValidationModuleRuleEngine} from "./wrapper/extensions/ValidationModule/
 
  /* ==== Interface and other library === */
 import {ICMTATConstructor} from "../interfaces/technical/ICMTATConstructor.sol";
-import {Errors} from "../libraries/Errors.sol";
+import {IERC7943FungibleTransferError}  from "../interfaces/tokenization/draft-IERC7943.sol";
 abstract contract CMTATBaseRuleEngine is
-    CMTATBaseCommon,
-    ValidationModuleRuleEngine
+    CMTATBaseAccessControl,
+    ValidationModuleRuleEngine,
+    IERC7943FungibleTransferError
 {
     /*//////////////////////////////////////////////////////////////
                          INITIALIZER FUNCTION
@@ -87,7 +91,7 @@ abstract contract CMTATBaseRuleEngine is
        __CMTAT_internal_init_unchained(engines_);
 
         /* Wrapper modules */
-        __CMTAT_modules_init_unchained(admin, ERC20Attributes_, ExtraInformationAttributes_, engines_ );
+        __CMTAT_modules_init_unchained(admin, ERC20Attributes_, ExtraInformationAttributes_);
     }
 
     /*
@@ -111,13 +115,19 @@ abstract contract CMTATBaseRuleEngine is
     /*
     * @dev CMTAT wrapper modules
     */
-    function __CMTAT_modules_init_unchained(address admin, ICMTATConstructor.ERC20Attributes memory ERC20Attributes_, ICMTATConstructor.ExtraInformationAttributes memory extraInformationAttributes_, ICMTATConstructor.Engine memory engines_) internal virtual onlyInitializing {
-        __CMTAT_commonModules_init_unchained(admin,ERC20Attributes_, extraInformationAttributes_, engines_.snapshotEngine, engines_ .documentEngine);
+    function __CMTAT_modules_init_unchained(address admin, ICMTATConstructor.ERC20Attributes memory ERC20Attributes_, ICMTATConstructor.ExtraInformationAttributes memory extraInformationAttributes_) internal virtual onlyInitializing {
+        __CMTAT_commonModules_init_unchained(admin,ERC20Attributes_, extraInformationAttributes_);
     }
 
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
+    /**
+    * @dev revert if the contract is in pause state
+    */
+    function approve(address spender, uint256 value) public virtual override(ERC20Upgradeable) whenNotPaused returns (bool) {
+        return ERC20Upgradeable.approve(spender, value);
+    }
     /**
     * @inheritdoc ValidationModuleRuleEngine
     */
@@ -163,6 +173,6 @@ abstract contract CMTATBaseRuleEngine is
     /* ==== Transfer/mint/burn restriction ==== */
     function _checkTransferred(address spender, address from, address to, uint256 value) internal virtual override(CMTATBaseCommon) {
         CMTATBaseCommon._checkTransferred(spender, from, to, value);
-        require(ValidationModuleRuleEngine._transferred(spender, from, to, value), Errors.CMTAT_InvalidTransfer(from, to, value));
+        require(ValidationModuleRuleEngine._transferred(spender, from, to, value), ERC7943CannotTransfer(from, to, value));
     } 
 }

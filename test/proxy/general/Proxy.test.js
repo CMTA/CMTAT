@@ -37,7 +37,7 @@ describe('Proxy - Security Test', function () {
             this.attacker,
             ['CMTA Token', 'CMTAT', DEPLOYMENT_DECIMAL],
             ['CMTAT_ISIN', TERMS, 'CMTAT_info'],
-            [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]
+            [ZERO_ADDRESS]
           )
       ).to.be.revertedWithCustomError(
         this.implementationContract,

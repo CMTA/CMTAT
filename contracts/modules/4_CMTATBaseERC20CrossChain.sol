@@ -4,7 +4,8 @@ pragma solidity ^0.8.20;
 /* ==== OpenZeppelin === */
 import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 /* ==== Module === */
-import {CMTATBaseERC1404, CMTATBaseRuleEngine, ERC20Upgradeable} from "./2_CMTATBaseERC1404.sol";
+import {CMTATBaseERC1404, CMTATBaseRuleEngine, ERC20Upgradeable} from "./3_CMTATBaseERC1404.sol";
+import {CMTATBaseAccessControl} from "./1_CMTATBaseAccessControl.sol";
 import {CMTATBaseCommon} from "./0_CMTATBaseCommon.sol";
 import {ERC20BurnModule, ERC20BurnModuleInternal} from "./wrapper/core/ERC20BurnModule.sol";
 import {ERC20MintModule, ERC20MintModuleInternal} from "./wrapper/core/ERC20MintModule.sol";
@@ -16,6 +17,12 @@ import {CCIPModule} from "./wrapper/options/CCIPModule.sol";
  */
 abstract contract CMTATBaseERC20CrossChain is ERC20CrossChainModule, CCIPModule, CMTATBaseERC1404  {
      /* ============  State Functions ============ */
+        /**
+    * @dev revert if the contract is in pause state
+    */
+    function approve(address spender, uint256 value) public virtual override(ERC20Upgradeable, CMTATBaseRuleEngine) returns (bool) {
+        return CMTATBaseRuleEngine.approve(spender, value);
+    }
     function transfer(address to, uint256 value) public virtual override(ERC20Upgradeable, CMTATBaseCommon) returns (bool) {
          return CMTATBaseCommon.transfer(to, value);
     }
@@ -65,8 +72,8 @@ abstract contract CMTATBaseERC20CrossChain is ERC20CrossChainModule, CCIPModule,
         return CMTATBaseCommon.symbol();
     }
 
-    function supportsInterface(bytes4 _interfaceId) public view virtual override(CMTATBaseCommon, ERC20CrossChainModule) returns (bool) {
-        return  ERC20CrossChainModule.supportsInterface(_interfaceId)|| CMTATBaseCommon.supportsInterface( _interfaceId);
+    function supportsInterface(bytes4 _interfaceId) public view virtual override(CMTATBaseAccessControl, ERC20CrossChainModule) returns (bool) {
+        return  ERC20CrossChainModule.supportsInterface(_interfaceId)|| CMTATBaseAccessControl.supportsInterface( _interfaceId);
     }
 
     /*//////////////////////////////////////////////////////////////

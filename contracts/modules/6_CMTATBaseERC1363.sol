@@ -6,8 +6,8 @@ import {ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/Cont
 import {ERC1363Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/ERC1363Upgradeable.sol";
 import {ERC20Upgradeable, IERC20} from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 /* ==== Module === */
-import {CMTATBaseRuleEngine} from "./1_CMTATBaseRuleEngine.sol";
-import {CMTATBaseERC2771, CMTATBaseERC20CrossChain} from "../modules/4_CMTATBaseERC2771.sol";
+import {CMTATBaseRuleEngine} from "./2_CMTATBaseRuleEngine.sol";
+import {CMTATBaseERC2771, CMTATBaseERC20CrossChain} from "../modules/5_CMTATBaseERC2771.sol";
 
 /* ==== Interface and other library === */
 import {ICMTATConstructor} from "../interfaces/technical/ICMTATConstructor.sol";
@@ -31,6 +31,12 @@ abstract contract CMTATBaseERC1363 is ERC1363Upgradeable,CMTATBaseERC2771{
     //////////////////////////////////////////////////////////////*/
     
     /* ============ State functions ============ */
+    /**
+    * @dev revert if the contract is in pause state
+    */
+    function approve(address spender, uint256 value) public virtual override(ERC20Upgradeable, CMTATBaseERC20CrossChain, IERC20) returns (bool) {
+        return CMTATBaseERC20CrossChain.approve(spender, value);
+    }
 
     /**
     * @inheritdoc CMTATBaseERC20CrossChain

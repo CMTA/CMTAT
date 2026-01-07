@@ -7,6 +7,13 @@ import {ExtraInformationModule} from "../extensions/ExtraInformationModule.sol";
 /* ==== Tokenization === */
 import {IERC1643CMTAT, IERC1643} from "../../../interfaces/tokenization/draft-IERC1643CMTAT.sol";
 import {IERC7551Document} from "../../../interfaces/tokenization/draft-IERC7551.sol";
+
+/**
+ * @title ERC7551 module
+ * @dev 
+ *
+ * Implements specific function for compatibility with ERC-7551
+ */
 abstract contract ERC7551Module is ExtraInformationModule, IERC7551Document {
     /* ============ ERC-7201 ============ */
     // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.ERC7551Module")) - 1)) & ~bytes32(uint256(0xff))

@@ -7,6 +7,13 @@ import {Initializable} from "@openzeppelin/contracts/proxy/utils/Initializable.s
 /* ==== Tokenization === */
 import {IERC1643CMTAT, IERC1643} from "../../../interfaces/tokenization/draft-IERC1643CMTAT.sol";
 import {ICMTATBase} from "../../../interfaces/tokenization/ICMTAT.sol";
+
+/**
+ * @title ExtraInformation module.
+ * @dev 
+ *
+ * Add supplementary information on-chain (terms, tokenId, generic information)
+ */
 abstract contract ExtraInformationModule is Initializable, ICMTATBase {
      bytes32 public constant EXTRA_INFORMATION_ROLE = keccak256("EXTRA_INFORMATION_ROLE");
     /* ============ ERC-7201 ============ */

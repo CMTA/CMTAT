@@ -2,12 +2,12 @@
 
 pragma solidity ^0.8.20;
 
-import {CMTATBaseDebt} from "../../modules/3_CMTATBaseDebt.sol";
+import {CMTATBaseDebtEngine} from "../../modules/5_CMTATBaseDebtEngine.sol";
 import {ICMTATConstructor} from "../../interfaces/technical/ICMTATConstructor.sol";
 /**
 * @title CMTAT version for a standalone deployment (without proxy)
 */
-contract CMTATStandaloneDebt is CMTATBaseDebt {
+contract CMTATStandaloneDebtEngine is CMTATBaseDebtEngine {
     /**
      * @notice Contract version for standalone deployment
      * @param admin address of the admin of contract (Access Control)

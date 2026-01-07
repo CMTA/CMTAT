@@ -62,7 +62,6 @@ abstract contract ERC20BaseModule is ERC20Upgradeable, IERC20Allowance, IERC3643
     //////////////////////////////////////////////////////////////*/
 
     /* ============  ERC-20 standard ============ */
-    
     /* ======== State functions ======= */
      /**
      * @notice Transfers `value` amount of tokens from address `from` to address `to`

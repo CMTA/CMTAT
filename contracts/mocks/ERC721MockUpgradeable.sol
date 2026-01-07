@@ -11,13 +11,17 @@ import "../modules/0_CMTATBaseGeneric.sol";
  * @dev This is an example contract implementation of NFToken.
  */
 contract ERC721MockUpgradeable is ERC721Upgradeable, CMTATBaseGeneric {
-  error CMTAT_InvalidTransfer(address from, address to, uint256 tokenId);
-
+    /// @notice Error reverted when a transfer is not allowed according to internal rules. 
+    /// @param from The address from which tokens are being sent.
+    /// @param to The address to which tokens are being sent.
+    /// @param tokenId The id of the token being sent.
+    error ERC7943CannotTransfer(address from, address to, uint256 tokenId);
+ 
     function initialize(
       string memory name_, string memory symbol_, 
-      address admin, ICMTATConstructor.ExtraInformationAttributes memory extraInformationAttributes_,IERC1643 documentEngine) public virtual initializer{
+      address admin, ICMTATConstructor.ExtraInformationAttributes memory extraInformationAttributes_) public virtual initializer{
         __ERC721_init_unchained(name_, symbol_);
-        __CMTAT_init(admin, extraInformationAttributes_, documentEngine);
+        __CMTAT_init(admin, extraInformationAttributes_);
   }
   /**
    * @notice Mints a new NFT.
@@ -26,8 +30,8 @@ contract ERC721MockUpgradeable is ERC721Upgradeable, CMTATBaseGeneric {
    */
   function mint(address to, uint256 tokenId) public {
     require(
-      _canMintBurnByModule(to),
-      CMTAT_InvalidTransfer(address(0), to, tokenId)
+      _canMintBurnByModuleAndRevert(to),
+      ERC7943CannotTransfer(address(0), to, tokenId)
     );
     ERC721Upgradeable._mint(to, tokenId);
   }
@@ -35,8 +39,8 @@ contract ERC721MockUpgradeable is ERC721Upgradeable, CMTATBaseGeneric {
   function burn(uint256 tokenId) external {
     address currentOwner = ownerOf(tokenId);
     require(
-      _canMintBurnByModule(currentOwner),
-      CMTAT_InvalidTransfer(currentOwner, address(0), tokenId)
+      _canMintBurnByModuleAndRevert(currentOwner),
+      ERC7943CannotTransfer(currentOwner, address(0), tokenId)
     );
     ERC721Upgradeable._burn( tokenId);
   }
@@ -47,7 +51,7 @@ contract ERC721MockUpgradeable is ERC721Upgradeable, CMTATBaseGeneric {
     uint256 tokenId,
     bytes memory data
   ) public virtual override {
-    require(_canTransferGenericByModule(msg.sender, from, to), CMTAT_InvalidTransfer(from, to, tokenId));
+    require(_canTransferGenericByModuleAndRevert(msg.sender, from, to), ERC7943CannotTransfer(from, to, tokenId));
     ERC721Upgradeable.safeTransferFrom(from, to, tokenId, data);
   }
 
@@ -56,7 +60,7 @@ contract ERC721MockUpgradeable is ERC721Upgradeable, CMTATBaseGeneric {
     address to,
     uint256 tokenId
   ) public override {
-    require(_canTransferGenericByModule(msg.sender, from, to), CMTAT_InvalidTransfer(from, to, tokenId));
+    require(_canTransferGenericByModuleAndRevert(msg.sender, from, to), ERC7943CannotTransfer(from, to, tokenId));
     ERC721Upgradeable.transferFrom(from, to, tokenId);
   }
 
