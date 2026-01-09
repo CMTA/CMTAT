@@ -7,7 +7,6 @@ pragma solidity ^0.8.20;
 * this interface does not inherit directly from the ERC20 interface
 */
 interface IERC1404 {
-
     /**
      * @notice Returns a uint8 code to indicate if a transfer is restricted or not
      * @dev 

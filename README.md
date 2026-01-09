@@ -1370,17 +1370,28 @@ Here is a schema with the different modules and the associated engines.
 
 The `RuleEngine` is an external contract used to apply transfer restrictions to the CMTAT through whitelisting, blacklisting,...
 
-This contract is defined in the `ValidationModule`.
+This contract is defined in the module `ValidationModuleRuleEngine` with the following interface `IRuleEngine`.
 
 ##### Requirement
 
-Since the version v3.0.0, the requirements to use a RuleEngine are the following:
+Since the version v3.2.0, the requirements to use a RuleEngine are the following:
 
-> The `RuleEngine` must import and implement the interface `IRuleEngine` which declares the ERC-3643 functions `transferred`(read-write) and `canTransfer`(ready-only) with several other functions related to [ERC-1404](https://github.com/ethereum/eips/issues/1404), [ERC-7551](https://ethereum-magicians.org/t/erc-7551-crypto-security-token-smart-contract-interface-ewpg/16416) and [ERC-3643](https://eips.ethereum.org/EIPS/eip-3643).
+> To be used with a deployment version including the module `ValidationModuleRuleEngine`:
+>
+> The `RuleEngine` must import and implement the interface `IRuleEngine` which declares the ERC-3643 functions `transferred`(read-write) and `canTransfer`(ready-only) with several other functions related to [ERC-7551](https://ethereum-magicians.org/t/erc-7551-crypto-security-token-smart-contract-interface-ewpg/16416) and [ERC-3643](https://eips.ethereum.org/EIPS/eip-3643).
+>
+> To be used with a deployment version including the module `ValidationModuleERC1404`:
+>
+> The `RuleEngine` must import and implement the interface `IRuleEngineERC1404`  which extends the interface `IRuleEngine`and defines functions related to [ERC-1404](https://github.com/ethereum/eips/issues/1404).
+>
+> Currently, all deployed version supporting a RuleEngine used the ERC-1404 version `ValidationModuleERC1404`
 
-This interface can be found in [IRuleEngine.sol](./contracts/interfaces/engine/IRuleEngine.sol).
+The two interfaces (`IRuleEngine`and `IRuleEngineERC1404`) can be found in [IRuleEngine.sol](./contracts/interfaces/engine/IRuleEngine.sol).
 
-Warning: The `RuleEngine` has to restrict the access of the function `transferred` to only the `CMTAT token contract`. 
+Warning: 
+
+- The `RuleEngine` has to restrict the access of the function `transferred` to only the `CMTAT token contract`.
+- To stay flexible, the `ValidationModule` stores the RuleEngine with the the following engine: `IRuleEngine`. If you want to implement the standard ERC-1404, you have to use an engine implementing the interface `IRuleEngineERC1404`.
 
 ##### How it works
 
