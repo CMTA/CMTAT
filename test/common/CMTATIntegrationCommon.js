@@ -1,9 +1,21 @@
 const { expect } = require('chai')
-const { ZERO_ADDRESS } = require('../utils')
+const { ZERO_ADDRESS,
+  IERC165_INTERFACEID, IERC721_INTERFACEID,IACCESSCONTROL_INTERFACEID,
+  IERC5679_INTERFACEID } = require('../utils')
 const VALUE1 = 20n
 const VALUE2 = 50n
 function CMTATIntegrationCommon () {
   context('CMTAT integration test', function () {
+      /* ============ ERC165 ============ */
+    it('testSupportRightInterface', async function () {
+      // Assert
+      expect(await this.cmtat.supportsInterface(IACCESSCONTROL_INTERFACEID)).to.equal(true)
+      expect(await this.cmtat.supportsInterface(IERC165_INTERFACEID)).to.equal(true)
+      expect(await this.cmtat.supportsInterface(IERC721_INTERFACEID)).to.equal(
+          false)
+      expect(await this.cmtat.supportsInterface(IERC5679_INTERFACEID)).to.equal(true)
+    })
+
     it('testCMTATIntegration', async function () {
       /* ============ ERC20 Base Module ============ */
       const NEW_NAME = 'New Name'
