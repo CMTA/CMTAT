@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/2_CMTATBaseERC1404.sol | 8769828373a6eb13fa46ead7e2ff0e5978ad2d85 |
+| ./deployment/debtEngine/CMTATUpgradeableDebtEngine.sol | 3281a4180d6c3aaa9bf72ba5fb35958c078ef3b8 |
 
 
 ### Contracts Description Table
@@ -15,11 +15,8 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **CMTATBaseERC1404** | Implementation | CMTATBaseRuleEngine, ValidationModuleERC1404 |||
-| └ | messageForTransferRestriction | Public ❗️ |   |NO❗️ |
-| └ | canTransfer | Public ❗️ |   |NO❗️ |
-| └ | canTransferFrom | Public ❗️ |   |NO❗️ |
-| └ | _detectTransferRestriction | Internal 🔒 |   | |
+| **CMTATUpgradeableDebtEngine** | Implementation | CMTATBaseDebtEngine |||
+| └ | <Constructor> | Public ❗️ | 🛑  |NO❗️ |
 
 
 ### Legend

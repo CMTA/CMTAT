@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/2_CMTATBaseDebt.sol | b0604344c76e3023e0c3ae3945664987075ec94e |
+| ./mocks/ERC165Helper/ExampleRuleEngineERC165.sol | a3f2bce7947b94588e9af92840fd5ea2e1175dc1 |
 
 
 ### Contracts Description Table
@@ -15,8 +15,15 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **CMTATBaseDebt** | Implementation | CMTATBaseRuleEngine, DebtEngineModule |||
-| └ | _authorizeDebtManagement | Internal 🔒 | 🛑  | onlyRole |
+| **IRuleEngineERC165** | Interface |  |||
+| └ | transferred | External ❗️ | 🛑  |NO❗️ |
+| └ | transferred | External ❗️ | 🛑  |NO❗️ |
+| └ | canTransferFrom | External ❗️ |   |NO❗️ |
+| └ | canTransfer | External ❗️ |   |NO❗️ |
+||||||
+| **ExampleRuleEngineERC165** | Implementation |  |||
+| └ | supportsInterface | Public ❗️ |   |NO❗️ |
+| └ | getInterfaceId | External ❗️ |   |NO❗️ |
 
 
 ### Legend

@@ -2868,6 +2868,7 @@ Here are the reports produced by [Aderyn](https://github.com/Cyfrin/aderyn):
 
 | Version | File                                                         |
 | ------- | ------------------------------------------------------------ |
+| v3.2.0  | [v3.2.0-aderyn-report.md](./doc/audits/tools/aderyn/v3.2.0-aderyn-report.md) |
 | v3.1.0  | [v3.1.0-aderyn-report.md](./doc/audits/tools/aderyn/v3.1.0-aderyn-report.md) |
 | v3.0.0  | [v3.0.0-aderyn-report.md](./doc/audits/tools/aderyn/v3.0.0-aderyn-report.md) |
 
@@ -2877,6 +2878,7 @@ Here are the reports produced by [Slither](https://github.com/crytic/slither):
 
 | Version | File                                                         |
 | ------- | ------------------------------------------------------------ |
+| v3.2.0  | [v3.2.0-slither-report.md](./doc/audits/tools/slither/v3.2.0-slither-report.md) |
 | v3.1.0  | [v3.1.0-slither-report.md](./doc/audits/tools/slither/v3.1.0-slither-report.md) |
 | v3.0.0  | [v3.0.0-slither-report.md](./doc/audits/tools/slither/v3.0.0-slither-report.md) |
 | v2.5.0  | [v2.5.0-slither-report.md](./doc/audits/tools/slither/v2.5.0-slither-report.md) |

@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/5_CMTATBaseERC7551.sol | 6fb7d71399fbf4f0135697c09f928ee646074e05 |
+| ./modules/3_CMTATBaseERC1404.sol | 480c97434b4fd3b301f436c3c4fc8a7a76dd05dd |
 
 
 ### Contracts Description Table
@@ -15,8 +15,11 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **CMTATBaseERC7551** | Implementation | CMTATBaseERC2771, ERC7551Module |||
-| └ | _authorizeExtraInfoManagement | Internal 🔒 | 🛑  | |
+| **CMTATBaseERC1404** | Implementation | CMTATBaseRuleEngine, ValidationModuleERC1404 |||
+| └ | messageForTransferRestriction | Public ❗️ |   |NO❗️ |
+| └ | canTransfer | Public ❗️ |   |NO❗️ |
+| └ | canTransferFrom | Public ❗️ |   |NO❗️ |
+| └ | _detectTransferRestriction | Internal 🔒 |   | |
 
 
 ### Legend

@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/5_CMTATBaseERC1363.sol | 049887d14aabf5cfabf021bd14fcf5c4ff8bac12 |
+| ./modules/5_CMTATBaseERC2771.sol | 1bfc46328036cec1ea2cb5d9f64fac48c0ba86b9 |
 
 
 ### Contracts Description Table
@@ -15,15 +15,7 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **CMTATBaseERC1363** | Implementation | ERC1363Upgradeable, CMTATBaseERC2771 |||
-| └ | __CMTAT_openzeppelin_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |
-| └ | transfer | Public ❗️ | 🛑  |NO❗️ |
-| └ | transferFrom | Public ❗️ | 🛑  |NO❗️ |
-| └ | supportsInterface | Public ❗️ |   |NO❗️ |
-| └ | decimals | Public ❗️ |   |NO❗️ |
-| └ | name | Public ❗️ |   |NO❗️ |
-| └ | symbol | Public ❗️ |   |NO❗️ |
-| └ | _update | Internal 🔒 | 🛑  | |
+| **CMTATBaseERC2771** | Implementation | CMTATBaseERC20CrossChain, ERC2771Module |||
 | └ | _msgSender | Internal 🔒 |   | |
 | └ | _contextSuffixLength | Internal 🔒 |   | |
 | └ | _msgData | Internal 🔒 |   | |

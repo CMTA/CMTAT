@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/4_CMTATBaseERC2771.sol | 18a1e63f5488933e24d4b1c9de1d12ecd30f36af |
+| ./interfaces/modules/IDebtEngineModule.sol | 4ad9b598f89c4bd6cc4420c5acf3ad467811710a |
 
 
 ### Contracts Description Table
@@ -15,10 +15,9 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **CMTATBaseERC2771** | Implementation | CMTATBaseERC20CrossChain, ERC2771Module |||
-| └ | _msgSender | Internal 🔒 |   | |
-| └ | _contextSuffixLength | Internal 🔒 |   | |
-| └ | _msgData | Internal 🔒 |   | |
+| **IDebtEngineModule** | Interface | ICMTATDebt, ICMTATCreditEvents |||
+| └ | debtEngine | External ❗️ |   |NO❗️ |
+| └ | setDebtEngine | External ❗️ | 🛑  |NO❗️ |
 
 
 ### Legend

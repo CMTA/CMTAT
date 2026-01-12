@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/1_CMTATBaseAllowlist.sol | 1a9216f807988bed5050e9dac738adaccde203cd |
+| ./modules/2_CMTATBaseRuleEngine.sol | 9f24fd10583b2933a154bd6ad685fff24bd2570c |
 
 
 ### Contracts Description Table
@@ -15,23 +15,21 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **CMTATBaseAllowlist** | Implementation | Initializable, ContextUpgradeable, CMTATBaseCommon, ValidationModuleAllowlist, ValidationModuleCore, ERC2771Module |||
+| **CMTATBaseRuleEngine** | Implementation | CMTATBaseAccessControl, ValidationModuleRuleEngine, IERC7943FungibleTransferError |||
 | └ | initialize | Public ❗️ | 🛑  | initializer |
+| └ | _initialize | Internal 🔒 | 🛑  | onlyInitializing |
 | └ | __CMTAT_init | Internal 🔒 | 🛑  | onlyInitializing |
 | └ | __CMTAT_openzeppelin_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |
+| └ | __CMTAT_internal_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |
 | └ | __CMTAT_modules_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |
+| └ | approve | Public ❗️ | 🛑  | whenNotPaused |
 | └ | canTransfer | Public ❗️ |   |NO❗️ |
 | └ | canTransferFrom | Public ❗️ |   |NO❗️ |
 | └ | _authorizePause | Internal 🔒 | 🛑  | onlyRole |
 | └ | _authorizeDeactivate | Internal 🔒 | 🛑  | onlyRole |
 | └ | _authorizeFreeze | Internal 🔒 | 🛑  | onlyRole |
-| └ | _authorizeAllowlistManagement | Internal 🔒 | 🛑  | onlyRole |
-| └ | _canMintBurnByModule | Internal 🔒 |   | |
-| └ | _canTransferStandardByModule | Internal 🔒 |   | |
+| └ | _authorizeRuleEngineManagement | Internal 🔒 | 🛑  | onlyRole |
 | └ | _checkTransferred | Internal 🔒 | 🛑  | |
-| └ | _msgSender | Internal 🔒 |   | |
-| └ | _contextSuffixLength | Internal 🔒 |   | |
-| └ | _msgData | Internal 🔒 |   | |
 
 
 ### Legend
