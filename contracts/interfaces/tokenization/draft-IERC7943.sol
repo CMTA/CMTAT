@@ -2,8 +2,6 @@
 
 pragma solidity ^0.8.20;
 
-import {IERC3643ComplianceRead} from "./IERC3643Partial.sol";
-
 /**
 * @notice Enforcement Interface for ERC-20 based implementations common with ERC-3643 interface.
 * 

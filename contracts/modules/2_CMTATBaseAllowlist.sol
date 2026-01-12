@@ -15,7 +15,6 @@ import {PauseModule}  from "./wrapper/core/PauseModule.sol";
 import {EnforcementModule} from "./wrapper/core/EnforcementModule.sol";
 // Extensions
 import {ERC20EnforcementModule, ERC20EnforcementModuleInternal} from "./wrapper/extensions/ERC20EnforcementModule.sol";
-import {DocumentEngineModule, IERC1643} from "./wrapper/extensions/DocumentEngineModule.sol";
 // options
 import {ERC2771Module, ERC2771ContextUpgradeable} from "./wrapper/options/ERC2771Module.sol";
 import {AllowlistModule} from "./wrapper/options/AllowlistModule.sol";
@@ -24,7 +23,6 @@ import {ValidationModuleAllowlist} from "./wrapper/controllers/ValidationModuleA
 import {ValidationModule, ValidationModuleCore} from "./wrapper/core/ValidationModuleCore.sol";
  /* ==== Interface and other library === */
 import {ICMTATConstructor} from "../interfaces/technical/ICMTATConstructor.sol";
-import {ISnapshotEngine} from "../interfaces/engine/ISnapshotEngine.sol";
 import {IERC7943FungibleTransferError}  from "../interfaces/tokenization/draft-IERC7943.sol";
 abstract contract CMTATBaseAllowlist is
     // OpenZeppelin
@@ -125,9 +123,7 @@ abstract contract CMTATBaseAllowlist is
         address to,
         uint256 value
     ) public virtual override (ValidationModuleCore) view returns (bool) {
-        if(!_canTransferGenericByModule(address(0), from, to)){
-            return false;
-        } else if(!ERC20EnforcementModuleInternal._checkActiveBalance(from, value)){
+        if(!ERC20EnforcementModuleInternal._checkActiveBalance(from, value)){
             return false;
         } else {
             return ValidationModuleCore.canTransfer(from, to, value);
@@ -144,11 +140,9 @@ abstract contract CMTATBaseAllowlist is
         address to,
         uint256 value
     ) public virtual override (ValidationModuleCore) view returns (bool) {
-        if(!_canTransferGenericByModule(spender, from, to)){
+        if(!ERC20EnforcementModuleInternal._checkActiveBalance(from, value)){
             return false;
-        }else if(!ERC20EnforcementModuleInternal._checkActiveBalance(from, value)){
-            return false;
-        }else {
+        } else {
             return ValidationModuleCore.canTransferFrom(spender, from, to, value);
         }  
     }

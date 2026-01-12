@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.20;
 
-import {CMTATBaseAllowlist, ISnapshotEngine, IERC1643} from "../../modules/2_CMTATBaseAllowlist.sol";
+import {CMTATBaseAllowlist} from "../../modules/2_CMTATBaseAllowlist.sol";
 import {ERC2771Module, ERC2771ContextUpgradeable} from "../../modules/wrapper/options/ERC2771Module.sol";
 import {ICMTATConstructor} from "../../interfaces/technical/ICMTATConstructor.sol";
 
@@ -24,7 +24,6 @@ contract CMTATStandaloneAllowlist is CMTATBaseAllowlist {
         address admin,
         ICMTATConstructor.ERC20Attributes memory ERC20Attributes_,
         ICMTATConstructor.ExtraInformationAttributes memory extraInformationAttributes_
-        
     ) ERC2771Module(forwarderIrrevocable){
         // Initialize the contract to avoid front-running
         initialize(

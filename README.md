@@ -103,7 +103,7 @@ The CMTAT was initially designed for the digitalization of company shares. For S
 
 ### Where CMTAT is mentioned?
 
-CMTAT is mentioned in several different reports. While these reports do not take into account the latest changes with the latest version, it gives already a good indication of how CMTAT can be used. The points raised by these also allowed for numerous improvements to be made to the CMTAT.
+CMTAT is referenced in several reports. Although these reports do not reflect the most recent version, they already provide a good indication of potential use cases. The insights from these reports have also contributed to numerous improvements in CMTAT.
 
 - [Forum - Asset Tokenization in Financial Markets: The Next Generation of Value Exchange (2025)](https://reports.weforum.org/docs/WEF_Asset_Tokenization_in_Financial_Markets_2025.pdf), page 38
 - [King's Business School/Rhys Bidder - What Is The Future Of Stablecoins, And How Do We Get There? (2025)](https://www.kcl.ac.uk/business/assets/PDF/qcgbf-working-papers/taking-the-next-step-v5.pdf), page 33
@@ -1203,7 +1203,7 @@ Firstly, wrapper modules will separately:
 -  define the roles useful to restrict its own functions
 -  define virtual functions `authorize<specific role name>` which require to be overridden in CMTAT base module to add access control check.
 
-To allow flexibility and customisation, wrapper modules do not implement the access control themselves. Access control is defined in CMTAT base modules. Therefore,  it is possible to create a new base module to use a different access control.
+To allow flexibility and customisation, wrapper modules do not implement the access control themselves. Access control is defined in CMTAT base modules. Therefore, it is possible to create a new base module to use a different access control.
 
 **CMTAT base module**
 
@@ -1435,6 +1435,8 @@ This allows the `RuleEngine`to also apply restriction on the spender.
 
 ##### Interface
 
+###### IRuleEngine
+
 Here the list of functions defined by the RuleEngine interface through inheritance
 
 ```solidity
@@ -1442,6 +1444,32 @@ Here the list of functions defined by the RuleEngine interface through inheritan
 function transferred(address spender, address from, address to, uint256 value) 
 external;
 
+// IERC3643IComplianceContract
+function transferred(address from, address to, uint256 value) 
+external;
+
+// IERC7551Compliance
+function canTransferFrom(address spender,address from,address to,uint256 value)
+external view returns (bool);
+
+
+// IER3643ComplianceRead
+function canTransfer(address from,address to,uint256 value) 
+external view returns (bool isValid);
+
+// ERC-165
+// Should not be used to compute the IRuleEngine ERC-165 interface ID
+ function supportsInterface(bytes4 interfaceId) 
+ public view override returns (bool)
+```
+
+The ERC-165 interface id for the `IRuleEngine` interface is `0x20c49ce7`
+
+###### IRuleEngineERC1404
+
+Here the list of functions defined by the RuleEngineERC1404 interface through the supplementary ERC-1404 inheritance `IERC1404Extend`
+
+```solidity
 // IERC-1404
 function detectTransferRestriction(address from,address to,uint256 value) 
 external view returns (uint8);
@@ -1462,23 +1490,9 @@ enum REJECTED_CODE_BASE {
 
 function detectTransferRestrictionFrom(address spender,address from,address to,uint256 value) 
 external view returns (uint8);
-   
- 
-// IERC7551Compliance
-function canTransferFrom(address spender,address from,address to,uint256 value)
-external view returns (bool);
-
-
-// IER3643ComplianceRead
-function canTransfer(address from,address to,uint256 value) 
-external view returns (bool isValid);
-
-// IERC3643IComplianceContract
-function transferred(address from, address to, uint256 value) 
-external;
 ```
 
-
+The ERC-165 interface id for the `IERC1404Extend` interface is `0x78a8de7d`
 
 ##### Interface details
 
@@ -1713,8 +1727,7 @@ The [SnapshotEngine](https://github.com/CMTA/SnapshotEngine) repository provides
 This engine can be used to configure Debt and Credits Events information
 
 - It is defined in the `DebtEngineModule` (option module)
-- It extends the `DebtModule`(option module) by allowing to set Credit Events  and Debt info through an external contract called `DebtEngine`.
-- If a `DebtEngine` is configured, the function `debt` will return the debt configured by the `DebtEngine` instead of the `DebtModule`.
+- It allows to set Credit Events  and Debt info through an external contract called `DebtEngine`.
 
 This module only implements two functions, available in the interface [IDebtEngine](./contracts/interfaces/engine/IDebtEngine.sol) to get information from the `DebtEngine`.
 
@@ -2100,7 +2113,7 @@ With the same objective, the `Light` deployment version does not perform any che
 
 #### Event
 
-Here the list of events emitted by functions, which modify the total supply.
+Here is the list of events emitted by functions, which modify the total supply.
 
 | Name                                                         | Defined                       | Standard              | Concerned functions                                          |
 | ------------------------------------------------------------ | ----------------------------- | --------------------- | ------------------------------------------------------------ |
@@ -2246,7 +2259,7 @@ Indeed, once issued, a security can only be cancelled by its issuer, not by its 
 
 **Alternative**
 
-You can still allow `self burn`by creating a new function or by overriding the corresponding functions.
+You can still allow `self burn` by creating a new function or by overriding the corresponding functions.
 
 ### Manage on-chain document
 
@@ -2796,7 +2809,7 @@ See [AccessControlModule.sol](./contracts/modules/wrapper/security/AccessControl
 
 CMTAT is regularly audited by globally recognised firm specialised in smart contracts security.
 
-Only the version audited should be used in production.
+Only the audited version should be used in production.
 
 | Version                                                      | Security Audit Firm                            |
 | ------------------------------------------------------------ | ---------------------------------------------- |
@@ -3058,7 +3071,7 @@ To be compatible with [ERC-3643](https://eips.ethereum.org/EIPS/eip-3643), the f
 
 However, for non-EVM blockchains, it could be clearer and make more sense to separate the freeze and unfreeze (or `thaw`) functionality with two separate and distinct functions, such as: 
 
-```
+```solidity
 freeze(address targetAddress)
 unfreeze(address targetAddress)
 ```

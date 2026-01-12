@@ -41,7 +41,30 @@ Reference: [keepachangelog.com/en/1.1.0/](https://keepachangelog.com/en/1.1.0/)
   
   - Update changelog
 
-## 3.1.0
+
+
+## 3.2.0
+
+> **Note:** This version has not been audited.
+
+### Added
+
+- Support for **ERC-7943** ([#337](https://github.com/CMTA/CMTAT/issues/337)).
+- New dedicated deployment variant with **DebtEngine** support (see *Removed* section for rationale).
+- **IRuleEngine**: ERC-165 support added ([#342](https://github.com/CMTA/CMTAT/issues/342)) to enable interface compliance checks.
+- New base contract **CMTATBaseAccessControl** ([#350](https://github.com/CMTA/CMTAT/issues/350)).
+
+### Changed
+
+- **Transfer** now reverts with specific errors when the contract is paused or deactivated ([#338](https://github.com/CMTA/CMTAT/issues/338)) to improve error clarity.
+- The `approve` function now reverts when the contract is paused for all deployment variants except **Light** ([#335](https://github.com/CMTA/CMTAT/issues/335)).
+
+### Removed
+
+- **DocumentEngine** and **SnapshotEngine** removed from constructors and initialization ([#343](https://github.com/CMTA/CMTAT/issues/343)) to simplify deployment and reduce bytecode size.
+- **DebtDeployment**: DebtEngine support removed and moved to a dedicated deployment variant ([#339](https://github.com/CMTA/CMTAT/issues/339)) to reduce contract size and enable additional modules in DebtEngine-based deployments.
+
+## 3.1.0 - 20251209
 
 > This version is not audited
 
@@ -63,7 +86,6 @@ Reference: [keepachangelog.com/en/1.1.0/](https://keepachangelog.com/en/1.1.0/)
 - In `ERC7551Module`, the function `setTerms` emits the `Terms` event
   - Reason: meet the specification of the draft ERC [ERC-7551](https://ethereum-magicians.org/t/erc-7551-crypto-security-token-smart-contract-interface-ewpg-reworked/25477).
 - Create specific module `ERC20CrossChain` for cross-chain transfers (ERC-7802 and other burn/mint related function), code previously put in `CMTATBaseCrossChain`.
-
 
 **Changed**
 

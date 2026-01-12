@@ -128,7 +128,7 @@ abstract contract ValidationModule is
         address spender,
         address from,
         address to
-    ) internal view virtual returns (bool) {
+    ) internal view virtual {
         address target;
         if (EnforcementModule.isFrozen(spender)){
             target = spender;
@@ -137,7 +137,7 @@ abstract contract ValidationModule is
         } else if(EnforcementModule.isFrozen(to) ){
             target = to;
         } else {
-            return true;
+            return;
         }
         revert ERC7943CannotTransact(target);
     }

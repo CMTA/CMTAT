@@ -5,11 +5,12 @@ pragma solidity ^0.8.20;
 import {IERC1404Extend} from "../tokenization/draft-IERC1404.sol";
 import {IERC3643IComplianceContract} from "../tokenization/IERC3643Partial.sol";
 import {IERC7551Compliance} from "../tokenization/draft-IERC7551.sol";
+import {IERC165} from "@openzeppelin/contracts/utils/introspection/IERC165.sol";
 
 /*
 * @title IRuleEngine - Minimal interface to define a RuleEngine
 */
-interface IRuleEngine is IERC7551Compliance,  IERC3643IComplianceContract {
+interface IRuleEngine is IERC7551Compliance, IERC3643IComplianceContract, IERC165 {
     /**
      *  @notice
      *  Function called whenever tokens are transferred from one wallet to another

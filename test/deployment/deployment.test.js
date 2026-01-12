@@ -1,4 +1,6 @@
-const { ZERO_ADDRESS } = require('../utils')
+const { ZERO_ADDRESS,
+  IERC165_INTERFACEID, IERC721_INTERFACEID,IACCESSCONTROL_INTERFACEID,
+  IERC5679_INTERFACEID } = require('../utils')
 const { expect } = require('chai')
 const {
   deployCMTATProxyWithParameter,
@@ -58,5 +60,15 @@ describe('CMTAT - Deployment', function () {
       this.cmtatCustomError,
       'CMTAT_AccessControlModule_AddressZeroNotAllowed'
     )
+  })
+
+  /* ============ ERC165 ============ */
+  it('testSupportRightInterface', async function () {
+    // Assert
+    expect(await this.cmtat.supportsInterface(IACCESSCONTROL_INTERFACEID)).to.equal(true)
+    expect(await this.cmtat.supportsInterface(IERC165_INTERFACEID)).to.equal(true)
+    expect(await this.cmtat.supportsInterface(IERC721_INTERFACEID)).to.equal(
+         false)
+    expect(await this.cmtat.supportsInterface(IERC5679_INTERFACEID)).to.equal(true)
   })
 })

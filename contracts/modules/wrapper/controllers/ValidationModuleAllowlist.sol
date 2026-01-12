@@ -94,7 +94,7 @@ abstract contract ValidationModuleAllowlist is
         address spender,
         address from,
         address to
-    ) internal view virtual returns (bool) {
+    ) internal view virtual {
         address account;
         if(_isAllowlistEnabled()){
             if (spender != address(0) && !isAllowlisted(spender)){
@@ -104,12 +104,10 @@ abstract contract ValidationModuleAllowlist is
             } else if(!isAllowlisted(to) ){
                 account = to;
             } else {
-                return true;
+               return;
             }
             // Will revert if the last else branch has not be taken
             revert ERC7943CannotTransact(account);
-        } else {
-            return true;
         }
     }
 }

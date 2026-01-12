@@ -2,8 +2,6 @@
 pragma solidity ^0.8.20;
 
 import {IRuleEngine} from "../engine/IRuleEngine.sol";
-import {ISnapshotEngine} from "../engine/ISnapshotEngine.sol";
-import {IDocumentEngine, IERC1643} from "../engine/IDocumentEngine.sol";
 import {IERC1643CMTAT} from "../tokenization/draft-IERC1643CMTAT.sol";
 
 

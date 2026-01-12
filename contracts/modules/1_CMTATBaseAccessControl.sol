@@ -8,7 +8,6 @@ import { IERC165 } from "@openzeppelin/contracts/interfaces/IERC165.sol";
 // Security
 import {AccessControlUpgradeable, AccessControlModule} from "./wrapper/security/AccessControlModule.sol";
 // Core
-import {VersionModule} from "./wrapper/core/VersionModule.sol";
 import {ERC20BurnModule, ERC20BurnModuleInternal} from "./wrapper/core/ERC20BurnModule.sol";
 import {ERC20MintModule, ERC20MintModuleInternal} from "./wrapper/core/ERC20MintModule.sol";
 // Extensions
@@ -25,9 +24,6 @@ abstract contract CMTATBaseAccessControl is
     AccessControlModule,
     CMTATBaseCommon
 {  
-        /*//////////////////////////////////////////////////////////////
-                            PUBLIC/EXTERNAL FUNCTIONS
-    //////////////////////////////////////////////////////////////*/
     /*//////////////////////////////////////////////////////////////
                          INITIALIZER FUNCTION
     //////////////////////////////////////////////////////////////*/
@@ -39,6 +35,10 @@ abstract contract CMTATBaseAccessControl is
         /* Extensions */
         __ExtraInformationModule_init_unchained(ExtraInformationModuleAttributes_.tokenId, ExtraInformationModuleAttributes_.terms, ExtraInformationModuleAttributes_.information);
     }
+    
+    /*//////////////////////////////////////////////////////////////
+                            PUBLIC/EXTERNAL FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
     /**
      * @inheritdoc AccessControlUpgradeable
      * @dev 
