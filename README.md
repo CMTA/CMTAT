@@ -2,7 +2,7 @@
 
 > To use the CMTAT, we recommend the latest audited version, from the [Releases](https://github.com/CMTA/CMTAT/releases) page. Currently, it is the version [v3.0.0](https://github.com/CMTA/CMTAT/releases/tag/v3.0.0).
 >
-> PDF files of README are available here: [CMTATSpecificationV3.0.0.pdf](./doc/specification/CMTATSpecificationV3.0.0.pdf), [CMTATSpecificationV3.0.0.pdf](./doc/specification/CMTATSpecificationV3.1.0.pdf)
+> PDF files of README are available here: [CMTATSpecificationV3.0.0.pdf](./doc/specification/CMTATSpecificationV3.0.0.pdf), [CMTATSpecificationV3.1.0.pdf](./doc/specification/CMTATSpecificationV3.1.0.pdf)
 
 ## Introduction
 
