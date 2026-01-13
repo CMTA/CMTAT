@@ -44,6 +44,17 @@ function ERC20BaseModuleCommon () {
     })
   })
 
+  context('ERC20 approval', function () {
+    it('testCannotApproveIfPaused', async function () {
+      if(!this.erc1404){
+        await this.cmtat.connect(this.admin).pause();
+        await expect(
+          this.cmtat.connect(this.admin).approve(this.address1, 20n)
+        ).to.be.revertedWithCustomError(this.cmtat, 'EnforcedPause')
+      }
+    })
+  })
+
   context('Token Symbol', function () {
     it('testAdminCanUpdateSymbol', async function () {
       const NEW_SYMBOL = 'New Symbol'

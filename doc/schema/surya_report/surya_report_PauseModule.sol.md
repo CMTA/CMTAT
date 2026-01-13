@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/wrapper/core/PauseModule.sol | 1af52c2f0a418e75c9db436249ee77f334bf4ed3 |
+| ./modules/wrapper/core/PauseModule.sol | 0980a0d824c410ca19ee321e50b766924453fd56 |
 
 
 ### Contracts Description Table
@@ -23,6 +23,7 @@
 | └ | deactivated | Public ❗️ |   |NO❗️ |
 | └ | _authorizePause | Internal 🔒 | 🛑  | |
 | └ | _authorizeDeactivate | Internal 🔒 | 🛑  | |
+| └ | _requireNotDeactivated | Internal 🔒 |   | |
 | └ | _getPauseModuleStorage | Private 🔐 |   | |
 
 

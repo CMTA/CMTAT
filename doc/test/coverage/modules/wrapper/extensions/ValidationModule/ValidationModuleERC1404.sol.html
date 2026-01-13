@@ -200,7 +200,13 @@
 155
 156
 157
-158</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+158
+159
+160
+161</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -299,14 +305,14 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">108×</span>
-<span class="cline-any cline-yes">108×</span>
-<span class="cline-any cline-yes">108×</span>
-<span class="cline-any cline-yes">56×</span>
+<span class="cline-any cline-yes">136×</span>
+<span class="cline-any cline-yes">136×</span>
+<span class="cline-any cline-yes">136×</span>
+<span class="cline-any cline-yes">77×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">42×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-yes">17×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -316,17 +322,17 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">94×</span>
-<span class="cline-any cline-yes">94×</span>
+<span class="cline-any cline-yes">122×</span>
+<span class="cline-any cline-yes">122×</span>
 <span class="cline-any cline-yes">7×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">87×</span>
-<span class="cline-any cline-yes">87×</span>
-<span class="cline-any cline-yes">56×</span>
+<span class="cline-any cline-yes">115×</span>
+<span class="cline-any cline-yes">115×</span>
+<span class="cline-any cline-yes">77×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">24×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-yes">14×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -343,7 +349,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">153×</span>
+<span class="cline-any cline-yes">167×</span>
 <span class="cline-any cline-yes">21×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">35×</span>
@@ -353,7 +359,7 @@
 <span class="cline-any cline-yes">7×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">83×</span>
+<span class="cline-any cline-yes">97×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -364,11 +370,14 @@ pragma solidity ^0.8.20;
 &nbsp;
 /* ==== Tokenization === */
 import {IERC1404, IERC1404Extend} from "../../../../interfaces/tokenization/draft-IERC1404.sol";
-import {ValidationModuleRuleEngine, IRuleEngine} from "./ValidationModuleRuleEngine.sol";
+import {ValidationModuleRuleEngine} from "./ValidationModuleRuleEngine.sol";
+import {IRuleEngineERC1404} from "../../../../interfaces/engine/IRuleEngine.sol";
+&nbsp;
 /**
  * @dev Validation module (ERC-1404)
  *
  * Useful for to restrict and validate transfers
+ * Required a RuleEngine implementing the interface IRuleEngineERC1404
  */
 abstract contract ValidationModuleERC1404 is
    ValidationModuleRuleEngine, IERC1404Extend
@@ -408,7 +417,7 @@ abstract contract ValidationModuleERC1404 is
     function messageForTransferRestriction(
         uint8 restrictionCode
     ) public virtual view override(IERC1404) returns (string memory message) {
-          IRuleEngine ruleEngine_ = ruleEngine();
+          IRuleEngineERC1404 ruleEngine_ = IRuleEngineERC1404(address(ruleEngine()));
         if (restrictionCode == uint8(IERC1404Extend.REJECTED_CODE_BASE.TRANSFER_OK)) {
             return TEXT_TRANSFER_OK;
         } else if (
@@ -456,7 +465,7 @@ abstract contract ValidationModuleERC1404 is
         address to,
         uint256 value
     ) public virtual view override(IERC1404) returns (uint8 code) {
-         IRuleEngine ruleEngine_ = ruleEngine();
+         IRuleEngineERC1404 ruleEngine_ = IRuleEngineERC1404(address(ruleEngine()));
          uint8 codeReturn = _detectTransferRestriction(from, to, value);
          if(codeReturn != uint8(IERC1404Extend.REJECTED_CODE_BASE.TRANSFER_OK) ){
             return codeReturn;
@@ -473,7 +482,7 @@ abstract contract ValidationModuleERC1404 is
         address to,
         uint256 value
     ) public virtual view override(IERC1404Extend) returns (uint8 code) {
-        IRuleEngine ruleEngine_ = ruleEngine();
+        IRuleEngineERC1404 ruleEngine_ = IRuleEngineERC1404(address(ruleEngine()));
         if (isFrozen(spender)) {
             return uint8(IERC1404Extend.REJECTED_CODE_BASE.TRANSFER_REJECTED_SPENDER_FROZEN);
         } else {
@@ -520,7 +529,7 @@ abstract contract ValidationModuleERC1404 is
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu Dec 04 2025 15:38:48 GMT+0100 (Central European Standard Time)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Mon Jan 12 2026 21:42:04 GMT+0100 (Central European Standard Time)
 </div>
 </div>
 <script src="../../../../prettify.js"></script>

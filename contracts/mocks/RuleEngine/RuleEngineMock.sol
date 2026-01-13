@@ -6,13 +6,16 @@ import {IRule} from "./interfaces/IRule.sol";
 import {IRuleEngineMock} from "./interfaces/IRuleEngineMock.sol";
 import {RuleMock} from "./RuleMock.sol";
 import {RuleMockMint} from "./RuleMockMint.sol";
+import {ERC165, IERC165} from "@openzeppelin/contracts/utils/introspection/ERC165.sol";
 /*
 * @title a RuleEngine mock for testing, not suitable for production
 */
-contract RuleEngineMock is IRuleEngineMock {
+contract RuleEngineMock is ERC165, IRuleEngineMock {
     IRule[] internal _rules;
     address immutable authorizedSpender;
     error RuleEngine_InvalidTransfer(address from, address to, uint256 value);
+    bytes4 private RULE_ENGINE_INTERFACE_ID = 0x20c49ce7;
+    bytes4 private ERC1404EXTEND_INTERFACE_ID = 0x78a8de7d;
 
     constructor(address spender) {
         _rules.push(new RuleMock());
@@ -140,5 +143,13 @@ contract RuleEngineMock is IRuleEngineMock {
             }
         }
         return "UnknownRestrictionCode";
+    }
+
+    function supportsInterface(bytes4 interfaceId) public view virtual override(ERC165, IERC165) returns (bool) {
+        return interfaceId == RULE_ENGINE_INTERFACE_ID || interfaceId == ERC1404EXTEND_INTERFACE_ID || super.supportsInterface(interfaceId);
+    }
+
+    function returnInterfaceId() public view returns (bytes4) {
+        return RULE_ENGINE_INTERFACE_ID;
     }
 }

@@ -3,9 +3,9 @@
 pragma solidity ^0.8.20;
 
 import {IRule} from "./IRule.sol";
-import {IRuleEngine} from "../../../interfaces/engine/IRuleEngine.sol";
+import {IRuleEngineERC1404} from "../../../interfaces/engine/IRuleEngine.sol";
 
-interface IRuleEngineMock is IRuleEngine {
+interface IRuleEngineMock is IRuleEngineERC1404 {
     /**
      * @dev define the rules, the precedent rules will be overwritten
      */

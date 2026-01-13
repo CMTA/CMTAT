@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/wrapper/extensions/ERC20EnforcementModule.sol | b59b50648f072b929cce35ec8fc5695fb919e4c6 |
+| ./modules/wrapper/extensions/ERC20EnforcementModule.sol | 6206454ac2fc86adb14fc2e6a9f8eccd19990701 |
 
 
 ### Contracts Description Table
@@ -15,13 +15,14 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **ERC20EnforcementModule** | Implementation | ERC20EnforcementModuleInternal, IERC7551ERC20Enforcement, IERC3643ERC20Enforcement |||
+| **ERC20EnforcementModule** | Implementation | ERC20EnforcementModuleInternal, IERC7551ERC20Enforcement, IERC3643ERC20Enforcement, IERC7943ERC20EnforcementSpecific |||
 | └ | getFrozenTokens | Public ❗️ |   |NO❗️ |
 | └ | getActiveBalanceOf | Public ❗️ |   |NO❗️ |
 | └ | forcedTransfer | Public ❗️ | 🛑  | onlyForcedTransferManager |
 | └ | forcedTransfer | Public ❗️ | 🛑  | onlyForcedTransferManager |
 | └ | freezePartialTokens | Public ❗️ | 🛑  | onlyERC20Enforcer |
 | └ | unfreezePartialTokens | Public ❗️ | 🛑  | onlyERC20Enforcer |
+| └ | setFrozenTokens | Public ❗️ | 🛑  | onlyERC20Enforcer |
 | └ | freezePartialTokens | Public ❗️ | 🛑  | onlyERC20Enforcer |
 | └ | unfreezePartialTokens | Public ❗️ | 🛑  | onlyERC20Enforcer |
 | └ | _authorizeERC20Enforcer | Internal 🔒 | 🛑  | |

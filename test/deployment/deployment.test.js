@@ -1,4 +1,4 @@
-const { ZERO_ADDRESS } = require('../utils')
+const { ZERO_ADDRESS} = require('../utils')
 const { expect } = require('chai')
 const {
   deployCMTATProxyWithParameter,
@@ -32,7 +32,7 @@ describe('CMTAT - Deployment', function () {
         'CMTAT_ISIN',
         TERMS,
         'CMTAT_info',
-        [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]
+        [ZERO_ADDRESS]
       )
     ).to.be.revertedWithCustomError(
       this.cmtatCustomError,
@@ -52,7 +52,7 @@ describe('CMTAT - Deployment', function () {
         'CMTAT_ISIN',
         TERMS,
         'CMTAT_info',
-        [ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS]
+        [ZERO_ADDRESS]
       )
     ).to.be.revertedWithCustomError(
       this.cmtatCustomError,

@@ -34,6 +34,7 @@ function AllowlistModuleCommon () {
 
       // Arrange - Assert
       expect(await this.cmtat.isAllowlisted(this.address1)).to.equal(false)
+      expect(await this.cmtat.canTransact(this.address1)).to.equal(false)
       // Act
       this.logs = await this.cmtat
         .connect(sender)
@@ -49,6 +50,8 @@ function AllowlistModuleCommon () {
 
       expect(await this.cmtat.isAllowlisted(this.address1)).to.equal(true)
       expect(await this.cmtat.isAllowlisted(this.address2)).to.equal(true)
+      expect(await this.cmtat.canTransact(this.address1)).to.equal(true)
+      expect(await this.cmtat.canTransact(this.address2)).to.equal(true)
 
       // emits a Freeze event
       await expect(this.logs)
@@ -69,6 +72,8 @@ function AllowlistModuleCommon () {
         .batchSetAddressAllowlist(accounts, unAllowlist)
       expect(await this.cmtat.isAllowlisted(this.address1)).to.equal(false)
       expect(await this.cmtat.isAllowlisted(this.address2)).to.equal(false)
+      expect(await this.cmtat.canTransact(this.address1)).to.equal(false)
+      expect(await this.cmtat.canTransact(this.address2)).to.equal(false)
 
       // Assert - canTransfer
       expect(
@@ -132,6 +137,8 @@ function AllowlistModuleCommon () {
       ).to.equal(true)
       expect(await this.cmtat.isAllowlisted(this.address1)).to.equal(true)
       expect(await this.cmtat.isAllowlisted(this.address2)).to.equal(true)
+      expect(await this.cmtat.canTransact(this.address1)).to.equal(true)
+      expect(await this.cmtat.canTransact(this.address2)).to.equal(true)
 
       // emits a Allowlist event
       await expect(this.logs)
@@ -166,6 +173,7 @@ function AllowlistModuleCommon () {
 
       // Assert
       expect(await this.cmtat.isAllowlisted(this.address1)).to.equal(false)
+      expect(await this.cmtat.canTransact(this.address1)).to.equal(false)
       expect(
         await this.cmtat.canTransfer(this.address1, this.address2, 10)
       ).to.equal(false)
@@ -202,6 +210,7 @@ function AllowlistModuleCommon () {
         .connect(this.admin)
         .setAddressAllowlist(this.address1, false)
       expect(await this.cmtat.isAllowlisted(this.address1)).to.equal(false)
+      expect(await this.cmtat.canTransact(this.address1)).to.equal(false)
     })
 
     it('testAdminCanBatchAllowlistAddress', async function () {
@@ -294,6 +303,7 @@ function AllowlistModuleCommon () {
         .withArgs(this.address2.address, ALLOWLIST_ROLE)
       // Assert
       expect(await this.cmtat.isAllowlisted(this.address1)).to.equal(false)
+      expect(await this.cmtat.canTransact(this.address1)).to.equal(false)
 
       // without reason
       await expect(
@@ -308,6 +318,7 @@ function AllowlistModuleCommon () {
         .withArgs(this.address2.address, ALLOWLIST_ROLE)
       // Assert
       expect(await this.cmtat.isAllowlisted(this.address1)).to.equal(false)
+      expect(await this.cmtat.canTransact(this.address1)).to.equal(false)
     })
 
     it('testCannotNonEnforcerBatchAllowlistAddress', async function () {
@@ -344,6 +355,7 @@ function AllowlistModuleCommon () {
         .withArgs(this.address2.address, ALLOWLIST_ROLE)
       // Assert
       expect(await this.cmtat.isAllowlisted(this.address1)).to.equal(true)
+      expect(await this.cmtat.canTransact(this.address1)).to.equal(true)
     })
 
     /* //////////////////////////////////////////////////////////////
@@ -365,11 +377,9 @@ function AllowlistModuleCommon () {
           .connect(this.address1)
           .transfer(this.address2, AMOUNT_TO_TRANSFER)
       )
-        .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
+        .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotTransact')
         .withArgs(
-          this.address1.address,
-          this.address2.address,
-          AMOUNT_TO_TRANSFER
+          this.address1.address
         )
     })
 
@@ -390,8 +400,8 @@ function AllowlistModuleCommon () {
       await expect(
         this.cmtat.connect(this.admin).mint(this.address1, AMOUNT_TO_TRANSFER)
       )
-        .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
-        .withArgs(ZERO_ADDRESS, this.address1.address, AMOUNT_TO_TRANSFER)
+        .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotTransact')
+        .withArgs(this.address1.address)
     })
 
     it('testCannotBatchMintToNoWhitelistAddress', async function () {
@@ -411,11 +421,9 @@ function AllowlistModuleCommon () {
           .connect(this.admin)
           .batchMint(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS)
       )
-        .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
+        .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotTransact')
         .withArgs(
-          ZERO_ADDRESS,
-          this.address3.address,
-          TOKEN_SUPPLY_BY_HOLDERS[0]
+          this.address3
         )
     })
 
@@ -513,11 +521,9 @@ function AllowlistModuleCommon () {
           .connect(this.admin)
           .batchBurn(TOKEN_HOLDER, TOKEN_BY_HOLDERS_TO_BURN)
       )
-        .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
+        .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotTransact')
         .withArgs(
-          this.address1.address,
-          ZERO_ADDRESS,
-          TOKEN_BY_HOLDERS_TO_BURN[1]
+          this.address1.address
         )
     })
 
@@ -580,8 +586,8 @@ function AllowlistModuleCommon () {
       await expect(
         this.cmtat.connect(this.admin).burn(this.address1, AMOUNT_TO_TRANSFER)
       )
-        .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
-        .withArgs(this.address1.address, ZERO_ADDRESS, AMOUNT_TO_TRANSFER)
+        .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotTransact')
+        .withArgs(this.address1.address)
     })
 
     /* //////////////////////////////////////////////////////////////
@@ -608,8 +614,8 @@ function AllowlistModuleCommon () {
           .connect(this.admin)
           .batchTransfer(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS)
       )
-        .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
-        .withArgs(this.admin, TOKEN_HOLDER[2], TOKEN_SUPPLY_BY_HOLDERS[2])
+        .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotTransact')
+        .withArgs(this.address2)
     })
 
     /* //////////////////////////////////////////////////////////////
@@ -669,11 +675,9 @@ function AllowlistModuleCommon () {
           .connect(this.address1)
           .transferFrom(this.address3, this.address2, AMOUNT_TO_TRANSFER)
       )
-        .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
+        .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotTransact')
         .withArgs(
-          this.address3.address,
-          this.address2.address,
-          AMOUNT_TO_TRANSFER
+          this.address2.address
         )
     })
 
@@ -705,11 +709,9 @@ function AllowlistModuleCommon () {
           .connect(this.address1)
           .transferFrom(this.address3, this.address2, AMOUNT_TO_TRANSFER)
       )
-        .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
+        .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotTransact')
         .withArgs(
-          this.address3.address,
-          this.address2.address,
-          AMOUNT_TO_TRANSFER
+          this.address1.address
         )
     })
 
