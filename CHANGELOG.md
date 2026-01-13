@@ -58,6 +58,7 @@ Reference: [keepachangelog.com/en/1.1.0/](https://keepachangelog.com/en/1.1.0/)
 
 - **Transfer** now reverts with specific errors when the contract is paused or deactivated ([#338](https://github.com/CMTA/CMTAT/issues/338)) to improve error clarity.
 - The `approve` function now reverts when the contract is paused for all deployment variants except **Light** ([#335](https://github.com/CMTA/CMTAT/issues/335)).
+- Update Solidity version to [0.8.33](https://www.soliditylang.org/blog/2025/12/18/solidity-0.8.32-0.8.33-release-announcement) in Hardhat config file.
 
 ### Removed
 

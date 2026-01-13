@@ -2822,13 +2822,13 @@ Inside each contract, library or interface, use the following order:
 The project is built with [Hardhat](https://hardhat.org) and uses [OpenZeppelin](https://www.openzeppelin.com/solidity-contracts)
 
 - hardhat.config.js
-  - Solidity [v0.8.30](https://docs.soliditylang.org/en/v0.8.30/)
+  - Solidity [v0.8.33](https://docs.soliditylang.org/en/v0.8.33/)
   - EVM version: Prague (Pectra upgrade)
   - Optimizer: true, 200 runs
 
 - Package.json
-  - OpenZeppelin Contracts (Node.js module): [v5.4.0](https://github.com/OpenZeppelin/openzeppelin-contracts/releases/tag/v5.4.0) 
-  - OpenZeppelin Contracts Upgradeable (Node.js module): [v5.4.0](https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/releases/tag/v5.3.0)
+  - OpenZeppelin Contracts (Node.js module): [v5.5.0](https://github.com/OpenZeppelin/openzeppelin-contracts/releases/tag/v5.5.0) 
+  - OpenZeppelin Contracts Upgradeable (Node.js module): [v5.5.0](https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/releases/tag/v5.3.0)
 
 #### Installation & Compilation
 

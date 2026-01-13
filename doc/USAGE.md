@@ -12,12 +12,12 @@ are the latest ones that we tested:
 ### Smart contract
 
 - hardhat.config.js
-  - Solidity 0.8.30 (via solc-js)
+  - Solidity [0.8.33](https://www.soliditylang.org/blog/2025/12/18/solidity-0.8.32-0.8.33-release-announcement) (via solc-js)
   - EVM version: Prague (Pectra upgrade)
 
 - Package.json
-  - OpenZeppelin Contracts (Node.js module): [v5.5.0](https://github.com/OpenZeppelin/openzeppelin-contracts/releases/tag/v5.4.0) 
-  - OpenZeppelin Contracts Upgradeable (Node.js module): [v5.5.0](https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/releases/tag/v5.4.0)
+  - OpenZeppelin Contracts (Node.js module): [v5.5.0](https://github.com/OpenZeppelin/openzeppelin-contracts/releases/tag/v5.5.0) 
+  - OpenZeppelin Contracts Upgradeable (Node.js module): [v5.5.0](https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/releases/tag/v5.5.0)
 
 
 ### Tools
