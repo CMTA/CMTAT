@@ -1003,7 +1003,8 @@ function ERC20EnforcementModuleCommon () {
           .transfer(this.address2, AMOUNT_TO_TRANSFER)
       ).to.be.revertedWithCustomError(
         this.cmtat,
-        'CMTAT_ERC20EnforcementModule_ValueExceedsActiveBalance'
+        'ERC7943InsufficientUnfrozenBalance').withArgs(
+          this.address1, AMOUNT_TO_TRANSFER, INITIAL_BALANCE - FREEZE_AMOUNT
       )
     })
 
@@ -1118,7 +1119,8 @@ function ERC20EnforcementModuleCommon () {
           .transferFrom(this.address1, this.address2, AMOUNT_TO_TRANSFER)
       ).to.be.revertedWithCustomError(
         this.cmtat,
-        'CMTAT_ERC20EnforcementModule_ValueExceedsActiveBalance'
+        'ERC7943InsufficientUnfrozenBalance').withArgs(
+          this.address1, AMOUNT_TO_TRANSFER, INITIAL_BALANCE - FREEZE_AMOUNT
       )
     })
 
@@ -1194,8 +1196,8 @@ function ERC20EnforcementModuleCommon () {
           .connect(this.address3)
           .transferFrom(this.address1, this.address2, AMOUNT_TO_TRANSFER)
       ).to.be.revertedWithCustomError(
-        this.cmtat,
-        'CMTAT_ERC20EnforcementModule_ValueExceedsActiveBalance'
+        this.cmtat, 'ERC7943InsufficientUnfrozenBalance').withArgs(
+          this.address1, AMOUNT_TO_TRANSFER, INITIAL_BALANCE - FREEZE_AMOUNT
       )
     })
   })
@@ -1299,7 +1301,8 @@ function ERC20EnforcementModuleCommon () {
           .transfer(this.address2, AMOUNT_TO_TRANSFER)
       ).to.be.revertedWithCustomError(
         this.cmtat,
-        'CMTAT_ERC20EnforcementModule_ValueExceedsActiveBalance'
+        'ERC7943InsufficientUnfrozenBalance').withArgs(
+          this.address1, AMOUNT_TO_TRANSFER, INITIAL_BALANCE - FREEZE_AMOUNT
       )
     })
 
@@ -1414,7 +1417,8 @@ function ERC20EnforcementModuleCommon () {
           .transferFrom(this.address1, this.address2, AMOUNT_TO_TRANSFER)
       ).to.be.revertedWithCustomError(
         this.cmtat,
-        'CMTAT_ERC20EnforcementModule_ValueExceedsActiveBalance'
+        'ERC7943InsufficientUnfrozenBalance').withArgs(
+          this.address1, AMOUNT_TO_TRANSFER, INITIAL_BALANCE - FREEZE_AMOUNT
       )
     })
 
@@ -1491,7 +1495,8 @@ function ERC20EnforcementModuleCommon () {
           .transferFrom(this.address1, this.address2, AMOUNT_TO_TRANSFER)
       ).to.be.revertedWithCustomError(
         this.cmtat,
-        'CMTAT_ERC20EnforcementModule_ValueExceedsActiveBalance'
+        'ERC7943InsufficientUnfrozenBalance').withArgs(
+          this.address1, AMOUNT_TO_TRANSFER, INITIAL_BALANCE - FREEZE_AMOUNT
       )
     })
   })

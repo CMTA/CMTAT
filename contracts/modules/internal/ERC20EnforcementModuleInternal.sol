@@ -6,17 +6,17 @@ pragma solidity ^0.8.20;
 import {ERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 /* ==== Tokenization === */
 import {IERC7551ERC20EnforcementTokenFrozenEvent, IERC7551ERC20EnforcementEvent} from "../../interfaces/tokenization/draft-IERC7551.sol";
-import {IERC7943FungibleEnforcementEvent} from "../../interfaces/tokenization/draft-IERC7943.sol";
+import {IERC7943FungibleEnforcementEventAndError} from "../../interfaces/tokenization/draft-IERC7943.sol";
+
 /**
  * @title ERC20Enforcement module internal.
  * @dev 
  *
  * Contains specific ERC-20 enforcement actions
  */
-abstract contract ERC20EnforcementModuleInternal is ERC20Upgradeable,IERC7551ERC20EnforcementEvent,  IERC7551ERC20EnforcementTokenFrozenEvent, IERC7943FungibleEnforcementEvent {
+abstract contract ERC20EnforcementModuleInternal is ERC20Upgradeable,IERC7551ERC20EnforcementEvent,  IERC7551ERC20EnforcementTokenFrozenEvent, IERC7943FungibleEnforcementEventAndError {
     // no argument to reduce contract code size
     error CMTAT_ERC20EnforcementModule_ValueExceedsAvailableBalance();
-    error CMTAT_ERC20EnforcementModule_ValueExceedsActiveBalance();
     error CMTAT_ERC20EnforcementModule_ValueExceedsFrozenBalance(); 
     error CMTAT_ERC20EnforcementModule_ValueEqualCurrentFrozenTokens(); 
     /* ============ ERC-7201 ============ */
@@ -117,34 +117,37 @@ abstract contract ERC20EnforcementModuleInternal is ERC20Upgradeable,IERC7551ERC
 
     function _freezeTokensEmitEvents(address account, uint256 difference, uint256 frozenTokens,  bytes memory data) internal virtual {
         emit TokensFrozen(account, difference, data);
-        emit IERC7943FungibleEnforcementEvent.Frozen(account, frozenTokens);
+        emit IERC7943FungibleEnforcementEventAndError.Frozen(account, frozenTokens);
     }
 
     function _unfreezeTokensEmitEvents(address account, uint256 difference, uint256 frozenTokens, bytes memory data) internal virtual {
         emit TokensUnfrozen(account, difference, data);
-        emit IERC7943FungibleEnforcementEvent.Frozen(account, frozenTokens );
+        emit IERC7943FungibleEnforcementEventAndError.Frozen(account, frozenTokens );
     }
 
     /* ============ View functions ============ */
     function _checkActiveBalanceAndRevert(address from, uint256 value) internal virtual view {
-        require(_checkActiveBalance(from, value),  CMTAT_ERC20EnforcementModule_ValueExceedsActiveBalance() );
+        bool isValid;
+        uint256 activeBalance;
+        (isValid, activeBalance) = _checkActiveBalance(from, value);
+        require(isValid, ERC7943InsufficientUnfrozenBalance(from, value,  activeBalance) );
     }
 
     /**
     * @dev we only check the balance if frozenTokens > 0
     */
-    function _checkActiveBalance(address from, uint256 value) internal virtual view returns(bool){
+    function _checkActiveBalance(address from, uint256 value) internal virtual view returns(bool isValid, uint256 activeBalance){
         uint256 frozenTokensLocal = _getFrozenTokens(from);
         if(frozenTokensLocal > 0 ){
             // Frozen amounts can not be > balance
-            uint256 activeBalance = ERC20Upgradeable.balanceOf(from) - frozenTokensLocal;
+            activeBalance = ERC20Upgradeable.balanceOf(from) - frozenTokensLocal;
             if(value > activeBalance) {
-                   return false;
+                   return (false, activeBalance);
             }
         } 
         // We don't check the balance if frozenTokens == 0
         // In case of insufficient balance for write call, the transaction (transfer, burn) will revert with an ERC-6093 custom errors
-        return true;
+        return (true, activeBalance);
     }
 
     function _getFrozenTokens(address account) internal view virtual returns (uint256) {

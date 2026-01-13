@@ -551,38 +551,67 @@ Note: `canTransfer` is defined for the compliance contract in ERC-3643.
 >
 > Status: draft
 
-### ERC-7943 Implementation in CMTAT
+#### ERC-7943 Implementation in CMTAT
 
 ERC-7943 is a standard  defining a set of interfaces for tokenized Real World Assets (RWAs) such as securities, real estate, commodities, or other physical/financial assets on the blockchain. The uRWA standard extends common token standards like [ERC-20](https://eips.ethereum.org/EIPS/eip-20), [ERC-721](https://eips.ethereum.org/EIPS/eip-721) or [ERC-1155](https://eips.ethereum.org/EIPS/eip-1155) by introducing essential compliance functions while remaining minimal and not opinionated about specific implementation details.
 
 CMTAT implements it by splitting functionality into interfaces and modules.
 
-#### Interface Breakdown
+##### Interface Breakdown
 
 All related interfaces are defined in the interface file [draft-IERC7943.sol](./contracts/interfaces/tokenization/draft-IERC7943.sol).
 
-| Interface                          | Purpose                             |
-| ---------------------------------- | ----------------------------------- |
-| `IERC7943ERC20Enforcement`         | `forcedTransfer`, `getFrozenTokens` |
-| `IERC7943ERC20EnforcementSpecific` | `setFrozenTokens`                   |
-| `IERC7943FungibleEnforcementEvent` | `Frozen`, `ForcedTransfer` events   |
-| `IERC7943TransactError`            | `ERC7943CannotTransact` error       |
-| `IERC7943FungibleTransferError`    | `ERC7943CannotTransfer` error       |
-| `IERC7943FungibleTransactCheck`    | `canTransact`                       |
+| Interface                                  | Purpose                                                      |
+| ------------------------------------------ | ------------------------------------------------------------ |
+| `IERC7943ERC20Enforcement`                 | `forcedTransfer`, `getFrozenTokens`                          |
+| `IERC7943ERC20EnforcementSpecific`         | `setFrozenTokens`                                            |
+| `IERC7943FungibleEnforcementEventAndError` | `Frozen`, `ForcedTransfer` events<br />`ERC7943InsufficientUnfrozenBalance` |
+| `IERC7943TransactError`                    | `ERC7943CannotTransact` error                                |
+| `IERC7943FungibleTransferError`            | `ERC7943CannotTransfer` error                                |
+| `IERC7943FungibleTransactCheck`            | `canTransact`                                                |
 
-#### Implementation Mapping
+##### Implementation Mapping
 
-| ERC-7943 Requirement               | CMTAT Implementation                                         |
-| ---------------------------------- | ------------------------------------------------------------ |
-| `forcedTransfer(from, to, amount)` | `ERC20EnforcementModule.sol`                                 |
-| `setFrozenTokens(account, amount)` | `ERC20EnforcementModule.sol`                                 |
-| `getFrozenTokens(account)`         | `ERC20EnforcementModule.sol`                                 |
-| `canTransact(account)`             | `ValidationModule.sol`                                       |
-| `canTransfer(from, to, amount)`    | `ValidationModuleCore.sol`                                   |
-| `ERC7943CannotTransact` error      | `ValidationModule.sol`                                       |
-| `ERC7943CannotTransfer` error      | `CMTATBaseCore.sol`, `CMTATBaseAllowlist`, `CMTATBaseRuleEngine` |
-| `Frozen` event                     | `ERC20EnforcementModuleInternal.sol`                         |
-| `ForcedTransfer` event             | `ERC20EnforcementModuleInternal.sol`                         |
+| ERC-7943 Requirement                 | CMTAT Implementation                                         |
+| ------------------------------------ | ------------------------------------------------------------ |
+| **Functions**                        |                                                              |
+| `forcedTransfer(from, to, amount)`   | `ERC20EnforcementModule.sol`                                 |
+| `setFrozenTokens(account, amount)`   | `ERC20EnforcementModule.sol`                                 |
+| `getFrozenTokens(account)`           | `ERC20EnforcementModule.sol`                                 |
+| `canTransact(account)`               | `ValidationModule.sol`                                       |
+| `canTransfer(from, to, amount)`      | `ValidationModuleCore.sol`                                   |
+| **Error**                            |                                                              |
+| `ERC7943CannotTransact`              | `ValidationModule.sol`                                       |
+| `ERC7943CannotTransfer`              | `CMTATBaseCore.sol`, `CMTATBaseAllowlist`, `CMTATBaseRuleEngine` |
+| `ERC7943InsufficientUnfrozenBalance` | `ERC20EnforcementModuleInternal.sol`                         |
+| **Event**                            |                                                              |
+| `Frozen`                             | `ERC20EnforcementModuleInternal.sol`                         |
+| `ForcedTransfer`                     | `ERC20EnforcementModuleInternal.sol`                         |
+
+
+
+##### Transfer Flow Diagram
+
+When a transfer is attempted with the standard CMTAT version:
+
+transfer(to, 100)
+│
+├─ Is contract paused? ──────────────→ revert EnforcedPause()
+│
+├─ Is sender/receiver frozen? ───────→ revert ERC7943CannotTransact(account)
+│
+
+├─ RuleEngine says no? ─────────────→ RuleEngine reverts with its own errors
+
+├─ Other check (transferred) says no? ─────────────→ revert ERC7943CannotTransfer(...)
+│
+├─ Not enough active balance? ───────→ revert ERC7943InsufficientUnfrozenBalance(...)
+│
+└─ Transfer executes
+
+There are three ERC-7943 errors used in this workflow: `ERC7943CannotTransact`, `ERC7943CannotTransfer` and `ERC7943InsufficientUnfrozenBalance`
+
+
 
 ####  ERC-7551 (eWPG)
 

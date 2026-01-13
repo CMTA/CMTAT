@@ -136,7 +136,8 @@ abstract contract CMTATBaseRuleEngine is
         address to,
         uint256 value
     ) public virtual override (ValidationModuleRuleEngine) view returns (bool) {
-        if(!ERC20EnforcementModuleInternal._checkActiveBalance(from, value)){
+        (bool isValid, ) = ERC20EnforcementModuleInternal._checkActiveBalance(from, value);
+        if(!isValid){
             return false;
         } else {
             return ValidationModuleRuleEngine.canTransfer(from, to, value);
@@ -152,7 +153,8 @@ abstract contract CMTATBaseRuleEngine is
         address to,
         uint256 value
     ) public virtual override (ValidationModuleRuleEngine) view returns (bool) {
-        if(!ERC20EnforcementModuleInternal._checkActiveBalance(from, value)){
+        (bool isValid,) = ERC20EnforcementModuleInternal._checkActiveBalance(from, value);
+        if(!isValid){
             return false;
         } else {
             return ValidationModuleRuleEngine.canTransferFrom(spender, from, to, value);

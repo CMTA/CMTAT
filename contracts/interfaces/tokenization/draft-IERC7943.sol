@@ -60,7 +60,15 @@ interface IERC7943ERC20EnforcementSpecific {
     */
     function setFrozenTokens(address account, uint256 amount) external returns(bool result);
 }
-interface IERC7943FungibleEnforcementEvent{
+interface IERC7943FungibleEnforcementEventAndError{
+    /**
+     * @notice Error reverted when a transfer is attempted from `account` with an `amount` less than or equal to its balance, but greater than its unfrozen balance.
+     * @param account The address holding the tokens.
+     * @param amount The amount being transferred.
+     * @param unfrozen The amount of tokens that are unfrozen and available to transfer.
+     */
+    error ERC7943InsufficientUnfrozenBalance(address account, uint256 amount, uint256 unfrozen);
+    
     /** 
     * @notice Emitted when `setFrozenTokens` is called, changing the frozen `amount` of tokens for `account`.
     * @param account The address of the account whose tokens are being frozen.
