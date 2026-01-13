@@ -547,7 +547,7 @@ Note: `canTransfer` is defined for the compliance contract in ERC-3643.
 
 > [ERC specification](https://eips.ethereum.org/EIPS/eip-7943) / [Ethereum magician](https://ethereum-magicians.org/t/erc-7943-universal-rwa-interface-urwa/23972)
 >
-> Status: draft
+> Status: review
 
 #### ERC-7943 Implementation in CMTAT
 
