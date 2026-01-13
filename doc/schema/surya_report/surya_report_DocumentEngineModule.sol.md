@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/wrapper/extensions/DocumentEngineModule.sol | 29e5c647559e05d6d71ceea1b2bde711ab3931fa |
+| ./modules/wrapper/extensions/DocumentEngineModule.sol | a96b453eb169a3ac7cd0f614bfb17dfb8eb7fbbe |
 
 
 ### Contracts Description Table

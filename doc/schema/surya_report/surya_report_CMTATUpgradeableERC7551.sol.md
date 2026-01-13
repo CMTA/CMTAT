@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./deployment/ERC7551/CMTATUpgradeableERC7551.sol | 0ce3e23bbf2cc9de84cb3e7b9ecfa7944d890bd0 |
+| ./deployment/ERC7551/CMTATUpgradeableERC7551.sol | 20959d1a0d35311059307f9366f60e66beb6f53c |
 
 
 ### Contracts Description Table

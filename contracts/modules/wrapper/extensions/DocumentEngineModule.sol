@@ -12,9 +12,8 @@ import {IDocumentEngineModule} from "../../../interfaces/modules/IDocumentEngine
  * @title Document module (ERC1643)
  * @dev 
  *
- * Retrieve documents from a documentEngine
+ * Retrieve documents from a documentEngine (external contract)
  */
-
 abstract contract DocumentEngineModule is Initializable, IDocumentEngineModule {
     /* ============ ERC-7201 ============ */
     bytes32 public constant DOCUMENT_ROLE = keccak256("DOCUMENT_ROLE");
@@ -36,7 +35,8 @@ abstract contract DocumentEngineModule is Initializable, IDocumentEngineModule {
      * @dev
      *
      * - set a DocumentEngine if address different from zero
-     *
+     * Warning: not used in the different deployment version to reduce contract code size and simplify code
+     * If not used, the function will not be included in the final bytecode if compiled with the optimizer enabled
      */
     function __DocumentEngineModule_init_unchained(IERC1643 documentEngine_)
     internal virtual onlyInitializing {
@@ -45,6 +45,7 @@ abstract contract DocumentEngineModule is Initializable, IDocumentEngineModule {
             _setDocumentEngine($, documentEngine_);
         }
     }
+
 
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS

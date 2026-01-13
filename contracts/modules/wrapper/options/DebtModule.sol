@@ -23,8 +23,6 @@ abstract contract DebtModule is IDebtModule {
     struct DebtModuleStorage {
         ICMTATDebt.DebtInformation _debt;
         ICMTATCreditEvents.CreditEvents _creditEvents;
-        // Can be used to set a debtEngine
-        IDebtEngine _debtEngine;
     }
 
     /* ============ Modifier ============ */

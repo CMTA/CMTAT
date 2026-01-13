@@ -5,11 +5,14 @@ pragma solidity ^0.8.20;
 
 /* ==== Tokenization === */
 import {IERC1404, IERC1404Extend} from "../../../../interfaces/tokenization/draft-IERC1404.sol";
-import {ValidationModuleRuleEngine, IRuleEngine} from "./ValidationModuleRuleEngine.sol";
+import {ValidationModuleRuleEngine} from "./ValidationModuleRuleEngine.sol";
+import {IRuleEngineERC1404} from "../../../../interfaces/engine/IRuleEngine.sol";
+
 /**
  * @dev Validation module (ERC-1404)
  *
  * Useful for to restrict and validate transfers
+ * Required a RuleEngine implementing the interface IRuleEngineERC1404
  */
 abstract contract ValidationModuleERC1404 is
    ValidationModuleRuleEngine, IERC1404Extend
@@ -49,7 +52,7 @@ abstract contract ValidationModuleERC1404 is
     function messageForTransferRestriction(
         uint8 restrictionCode
     ) public virtual view override(IERC1404) returns (string memory message) {
-          IRuleEngine ruleEngine_ = ruleEngine();
+          IRuleEngineERC1404 ruleEngine_ = IRuleEngineERC1404(address(ruleEngine()));
         if (restrictionCode == uint8(IERC1404Extend.REJECTED_CODE_BASE.TRANSFER_OK)) {
             return TEXT_TRANSFER_OK;
         } else if (
@@ -97,7 +100,7 @@ abstract contract ValidationModuleERC1404 is
         address to,
         uint256 value
     ) public virtual view override(IERC1404) returns (uint8 code) {
-         IRuleEngine ruleEngine_ = ruleEngine();
+         IRuleEngineERC1404 ruleEngine_ = IRuleEngineERC1404(address(ruleEngine()));
          uint8 codeReturn = _detectTransferRestriction(from, to, value);
          if(codeReturn != uint8(IERC1404Extend.REJECTED_CODE_BASE.TRANSFER_OK) ){
             return codeReturn;
@@ -114,7 +117,7 @@ abstract contract ValidationModuleERC1404 is
         address to,
         uint256 value
     ) public virtual view override(IERC1404Extend) returns (uint8 code) {
-        IRuleEngine ruleEngine_ = ruleEngine();
+        IRuleEngineERC1404 ruleEngine_ = IRuleEngineERC1404(address(ruleEngine()));
         if (isFrozen(spender)) {
             return uint8(IERC1404Extend.REJECTED_CODE_BASE.TRANSFER_REJECTED_SPENDER_FROZEN);
         } else {

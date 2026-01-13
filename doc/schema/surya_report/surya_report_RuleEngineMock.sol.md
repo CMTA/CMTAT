@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./mocks/RuleEngine/RuleEngineMock.sol | 7ee0690188cb1e7bf558fde3d7c97f414e8aeef9 |
+| ./mocks/RuleEngine/RuleEngineMock.sol | e2ab7dc1d6e3884a8d66203f6a512111f4f6e429 |
 
 
 ### Contracts Description Table
@@ -15,7 +15,7 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **RuleEngineMock** | Implementation | IRuleEngineMock |||
+| **RuleEngineMock** | Implementation | ERC165, IRuleEngineMock |||
 | └ | <Constructor> | Public ❗️ | 🛑  |NO❗️ |
 | └ | setRules | External ❗️ | 🛑  |NO❗️ |
 | └ | rulesCount | External ❗️ |   |NO❗️ |
@@ -28,6 +28,8 @@
 | └ | transferred | Public ❗️ |   |NO❗️ |
 | └ | transferred | Public ❗️ |   |NO❗️ |
 | └ | messageForTransferRestriction | Public ❗️ |   |NO❗️ |
+| └ | supportsInterface | Public ❗️ |   |NO❗️ |
+| └ | returnInterfaceId | Public ❗️ |   |NO❗️ |
 
 
 ### Legend
