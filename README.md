@@ -581,10 +581,10 @@ All related interfaces are defined in the interface file [draft-IERC7943.sol](./
 | **Error**                            |                                                              |
 | `ERC7943CannotTransact`              | `ValidationModule.sol`                                       |
 | `ERC7943CannotTransfer`              | `CMTATBaseCore.sol`, `CMTATBaseAllowlist`, `CMTATBaseRuleEngine` |
-| `ERC7943InsufficientUnfrozenBalance` | `ERC20EnforcementModuleInternal.sol`                         |
-| **Event**                            |                                                              |
-| `Frozen`                             | `ERC20EnforcementModuleInternal.sol`                         |
-| `ForcedTransfer`                     | `ERC20EnforcementModuleInternal.sol`                         |
+| `ERC7943InsufficientUnfrozenBalance` | [ERC20EnforcementModuleInternal.sol](./contracts/modules/internal/ERC20EnforcementModuleInternal.sol) |
+| **Event**                            | [ERC20EnforcementModuleInternal.sol](./contracts/modules/internal/ERC20EnforcementModuleInternal.sol) |
+|                                      |                                                              |
+| `ForcedTransfer`                     | [ERC20EnforcementModuleInternal.sol](./contracts/modules/internal/ERC20EnforcementModuleInternal.sol) |
 
 
 
@@ -592,20 +592,20 @@ All related interfaces are defined in the interface file [draft-IERC7943.sol](./
 
 When a transfer is attempted with the standard CMTAT version:
 
+```
 transfer(to, 100)
 │
 ├─ Is contract paused? ──────────────→ revert EnforcedPause()
 │
 ├─ Is sender/receiver frozen? ───────→ revert ERC7943CannotTransact(account)
 │
-
 ├─ RuleEngine says no? ─────────────→ RuleEngine reverts with its own errors
-
 ├─ Other check (transferred) says no? ─────────────→ revert ERC7943CannotTransfer(...)
 │
 ├─ Not enough active balance? ───────→ revert ERC7943InsufficientUnfrozenBalance(...)
 │
 └─ Transfer executes
+```
 
 There are three ERC-7943 errors used in this workflow: `ERC7943CannotTransact`, `ERC7943CannotTransfer` and `ERC7943InsufficientUnfrozenBalance`
 
