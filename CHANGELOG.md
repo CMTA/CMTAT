@@ -49,7 +49,7 @@ Reference: [keepachangelog.com/en/1.1.0/](https://keepachangelog.com/en/1.1.0/)
 
 ### Added
 
-- Support for **ERC-7943** ([#337](https://github.com/CMTA/CMTAT/issues/337)).
+- Support of **ERC-7943** ([#337](https://github.com/CMTA/CMTAT/issues/337)).
 - New dedicated deployment variant with **DebtEngine** support (see *Removed* section for rationale).
 - **IRuleEngine**: ERC-165 support added ([#342](https://github.com/CMTA/CMTAT/issues/342)) to enable interface compliance checks.
 - New base contract **CMTATBaseAccessControl** ([#350](https://github.com/CMTA/CMTAT/issues/350)).
