@@ -829,11 +829,11 @@ CMTAT Base Core adds several functions:
 
 ##### CMTAT Base RuleEngine
 
-![surya_inheritance_CMTATBaseWhitelist.sol](./doc/schema/surya_inheritance/surya_inheritance_1_CMTATBaseRuleEngine.sol.png)
+![surya_inheritance_CMTATBaseWhitelist.sol](./doc/schema/surya_inheritance/surya_inheritance_2_CMTATBaseRuleEngine.sol.png)
 
 ##### CMTAT Base Allowlist
 
-![surya_inheritance_CMTATBaseWhitelist.sol](./doc/schema/surya_inheritance/surya_inheritance_1_CMTATBaseAllowlist.sol.png)
+![surya_inheritance_CMTATBaseWhitelist.sol](./doc/schema/surya_inheritance/surya_inheritance_2_CMTATBaseAllowlist.sol.png)
 
 
 
