@@ -111,6 +111,20 @@ CMTAT is referenced in several reports. Although these reports do not reflect th
 - [Project Guardian - Fixed Income Framework (2024)](https://www.mas.gov.sg/-/media/mas-media-library/development/fintech/guardian/guardian-fixed-income-framework.pdf): page 13, 39, 59 & 65
 - [ICMA contribution to MAS Guardian Fixed Income Framework (GFIF) publication (2024)](https://www.icmagroup.org/assets/Summary-of-third-party-proposals-for-integrating-ICMAs-Bond-Data-Taxonomy-in-token-frameworks-and-DLT-platforms-complementing-section-6-Data-Model-of-GFIF.pdf)
 
+### What Makes CMTAT Different from a Regular ERC-20 Token?
+
+Standard ERC-20 tokens allow anyone to transfer freely.  
+CMTAT adds **compliance features** required for real-world financial assets such as:
+
+| Feature                                | Purpose                                                      |
+| -------------------------------------- | ------------------------------------------------------------ |
+| **Pause**                              | Freeze all transfers globally (e.g., during corporate actions) |
+| **Account Freeze**                     | Block specific addresses from transferring                   |
+| **Transfer Validation - Custom rules** | Custom rules (`RuleEngine`) allowing to restrict transfers based on the origin, the receiver or the amount transferred |
+| **Forced Transfer**                    | Admins can move tokens from frozen accounts                  |
+| **Snapshots**                          | Record balances at specific times (for dividends)            |
+| **Documents**                          | Attach legal documents to the token                          |
+
 ### Use case
 
 #### Financial instruments
@@ -531,6 +545,45 @@ Note: `canTransfer` is defined for the compliance contract in ERC-3643.
 | :----------------------------------------------------------- | :----------------------------------------------------- | ------------------ |
 | `canTransfer(address _from, address _to, uint256 _amount) external view returns (bool)` | `canTransfer(address from, address to, uint256 value)` | All                |
 
+#### ERC-7943 (uRWA)
+
+> [ERC specification](https://eips.ethereum.org/EIPS/eip-7943) / [Ethereum magician](https://ethereum-magicians.org/t/erc-7943-universal-rwa-interface-urwa/23972)
+>
+> Status: draft
+
+### ERC-7943 Implementation in CMTAT
+
+ERC-7943 is a standard  defining a set of interfaces for tokenized Real World Assets (RWAs) such as securities, real estate, commodities, or other physical/financial assets on the blockchain. The uRWA standard extends common token standards like [ERC-20](https://eips.ethereum.org/EIPS/eip-20), [ERC-721](https://eips.ethereum.org/EIPS/eip-721) or [ERC-1155](https://eips.ethereum.org/EIPS/eip-1155) by introducing essential compliance functions while remaining minimal and not opinionated about specific implementation details.
+
+CMTAT implements it by splitting functionality into interfaces and modules.
+
+#### Interface Breakdown
+
+All related interfaces are defined in the interface file [draft-IERC7943.sol](./contracts/interfaces/tokenization/draft-IERC7943.sol).
+
+| Interface                          | Purpose                             |
+| ---------------------------------- | ----------------------------------- |
+| `IERC7943ERC20Enforcement`         | `forcedTransfer`, `getFrozenTokens` |
+| `IERC7943ERC20EnforcementSpecific` | `setFrozenTokens`                   |
+| `IERC7943FungibleEnforcementEvent` | `Frozen`, `ForcedTransfer` events   |
+| `IERC7943TransactError`            | `ERC7943CannotTransact` error       |
+| `IERC7943FungibleTransferError`    | `ERC7943CannotTransfer` error       |
+| `IERC7943FungibleTransactCheck`    | `canTransact`                       |
+
+#### Implementation Mapping
+
+| ERC-7943 Requirement               | CMTAT Implementation                                         |
+| ---------------------------------- | ------------------------------------------------------------ |
+| `forcedTransfer(from, to, amount)` | `ERC20EnforcementModule.sol`                                 |
+| `setFrozenTokens(account, amount)` | `ERC20EnforcementModule.sol`                                 |
+| `getFrozenTokens(account)`         | `ERC20EnforcementModule.sol`                                 |
+| `canTransact(account)`             | `ValidationModule.sol`                                       |
+| `canTransfer(from, to, amount)`    | `ValidationModuleCore.sol`                                   |
+| `ERC7943CannotTransact` error      | `ValidationModule.sol`                                       |
+| `ERC7943CannotTransfer` error      | `CMTATBaseCore.sol`, `CMTATBaseAllowlist`, `CMTATBaseRuleEngine` |
+| `Frozen` event                     | `ERC20EnforcementModuleInternal.sol`                         |
+| `ForcedTransfer` event             | `ERC20EnforcementModuleInternal.sol`                         |
+
 ####  ERC-7551 (eWPG)
 
 > [ERC specification](https://github.com/ethereum/ERCs/blob/60a282eb3c867af2dbed8eff12e7549b548cf1bf/ERCS/erc-7551.md) / [Ethereum magician](https://ethereum-magicians.org/t/erc-7551-crypto-security-token-smart-contract-interface-ewpg-reworked/25477)
@@ -677,269 +730,18 @@ Here is an overview on how CMTAT is built:
 
 Here is the GitHub file structure for CMTAT repository.
 
-- Contracts
-
 ```
-├── deployment
-│   ├── allowlist
-│   │   ├── CMTATStandaloneAllowlist.sol
-│   │   └── CMTATUpgradeableAllowlist.sol
-│   ├── CMTATStandalone.sol
-│   ├── CMTATUpgradeable.sol
-│   ├── CMTATUpgradeableUUPS.sol
-│   ├── debt
-│   │   ├── CMTATStandaloneDebt.sol
-│   │   └── CMTATUpgradeableDebt.sol
-│   ├── ERC1363
-│   │   ├── CMTATStandaloneERC1363.sol
-│   │   └── CMTATUpgradeableERC1363.sol
-│   ├── ERC7551
-│   │   ├── CMTATStandaloneERC7551.sol
-│   │   └── CMTATUpgradeableERC7551.sol
-│   └── light
-│       ├── CMTATStandaloneLight.sol
-│       └── CMTATUpgradeableLight.sol
-├── interfaces
-│   ├── engine
-│   │   ├── IDebtEngine.sol
-│   │   ├── IDocumentEngine.sol
-│   │   ├── IRuleEngine.sol
-│   │   └── ISnapshotEngine.sol
-│   ├── modules
-│   │   ├── IAllowlistModule.sol
-│   │   ├── IDebtModule.sol
-│   │   ├── IDocumentEngineModule.sol
-│   │   └── ISnapshotEngineModule.sol
-│   ├── technical
-│   │   ├── ICMTATConstructor.sol
-│   │   ├── IERC20Allowance.sol
-│   │   ├── IERC5679.sol
-│   │   ├── IERC7802.sol
-│   │   ├── IGetCCIPAdmin.sol
-│   │   └── IMintBurnToken.sol
-│   └── tokenization
-│       ├── draft-IERC1404.sol
-│       ├── draft-IERC1643CMTAT.sol
-│       ├── draft-IERC1643.sol
-│       ├── draft-IERC7551.sol
-│       ├── ICMTAT.sol
-│       └── IERC3643Partial.sol
-├── libraries
-│   └── Errors.sol
-├── mocks
-│   ├── DebtEngineMock.sol
-│   ├── DocumentEngineMock.sol
-│   ├── ERC1363ReceiverMock.sol
-│   ├── ERC721MockUpgradeable.sol
-│   ├── library
-│   │   └── snapshot
-│   │       ├── ICMTATSnapshot.sol
-│   │       ├── SnapshotErrors.sol
-│   │       └── SnapshotModuleBase.sol
-│   ├── MinimalForwarderMock.sol
-│   ├── readme.txt
-│   ├── RuleEngine
-│   │   ├── CodeList.sol
-│   │   ├── interfaces
-│   │   │   ├── IRuleEngineMock.sol
-│   │   │   └── IRule.sol
-│   │   ├── RuleEngineMock.sol
-│   │   ├── RuleMockMint.sol
-│   │   └── RuleMock.sol
-│   ├── SnapshotEngineMock.sol
-│   └── test
-│       └── proxy
-│           ├── CMTAT_PROXY_TEST.sol
-│           └── CMTAT_PROXY_TEST_UUPS.sol
-└── modules
-    ├── 0_CMTATBaseCommon.sol
-    ├── 0_CMTATBaseCore.sol
-    ├── 0_CMTATBaseGeneric.sol
-    ├── 1_CMTATBaseAllowlist.sol
-    ├── 1_CMTATBaseRuleEngine.sol
-    ├── 2_CMTATBaseDebt.sol
-    ├── 2_CMTATBaseERC1404.sol
-    ├── 3_CMTATBaseERC20CrossChain.sol
-    ├── 4_CMTATBaseERC2771.sol
-    ├── 5_CMTATBaseERC1363.sol
-    ├── 5_CMTATBaseERC7551.sol
-    ├── internal
-    │   ├── AllowlistModuleInternal.sol
-    │   ├── common
-    │   │   └── EnforcementModuleLibrary.sol
-    │   ├── EnforcementModuleInternal.sol
-    │   ├── ERC20BurnModuleInternal.sol
-    │   ├── ERC20EnforcementModuleInternal.sol
-    │   ├── ERC20MintModuleInternal.sol
-    │   └── ValidationModuleRuleEngineInternal.sol
-    └── wrapper
-        ├── controllers
-        │   ├── ValidationModuleAllowlist.sol
-        │   └── ValidationModule.sol
-        ├── core
-        │   ├── EnforcementModule.sol
-        │   ├── ERC20BaseModule.sol
-        │   ├── ERC20BurnModule.sol
-        │   ├── ERC20MintModule.sol
-        │   ├── PauseModule.sol
-        │   ├── ValidationModuleCore.sol
-        │   └── VersionModule.sol
-        ├── extensions
-        │   ├── DocumentEngineModule.sol
-        │   ├── ERC20EnforcementModule.sol
-        │   ├── ExtraInformationModule.sol
-        │   ├── SnapshotEngineModule.sol
-        │   └── ValidationModule
-        │       ├── ValidationModuleERC1404.sol
-        │       └── ValidationModuleRuleEngine.sol
-        ├── options
-        │   ├── AllowlistModule.sol
-        │   ├── CCIPModule.sol
-        │   ├── DebtEngineModule.sol
-        │   ├── DebtModule.sol
-        │   ├── ERC20CrossChain.sol
-        │   ├── ERC2771Module.sol
-        │   └── ERC7551Module.sol
-        └── security
-            └── AccessControlModule.sol
-
-29 directories, 93 files
+contracts/
+ ├── deployment/       # Ready-to-deploy token contracts
+ ├── modules/
+ │   ├── internal/     # Core logic (low-level)
+ │   └── wrapper/      # Public interfaces using internal modules or OpenZeppelin library
+ │       ├── core/           # ERC20, mint, burn, pause
+ │       ├── controllers/    # Transfer validation
+ │       ├── extensions/     # Snapshots, documents
+ │       └── options/        # Optional features (debt, allowlist)
+ └── interfaces/       # Contract interfaces
 ```
-
-- Docs
-
-```
-.
-├── audits
-│   ├── ABDK_CMTA_CMTATRuleEngine_v_1_0
-│   │   ├── ABDK_CMTA_CMTATRuleEngine_v_1_0.pdf
-│   │   ├── Taurus.Audit3.1.CollectedIssues.ods
-│   │   └── Taurus. Audit 3.3. Collected.ods
-│   ├── ABDK-CMTAT-audit-20210910
-│   │   ├── ABDK-CMTAT-audit-20210910.pdf
-│   │   ├── CMTAT-Audit-20210910-summary.odt
-│   │   └── CMTAT-Audit-20210910-summary.pdf
-│   └── tools
-│       ├── aderyn
-│       │   └── v3.0.0-aderyn-report.md
-│       ├── mythril
-│       │   └── v2.5.0
-│       │       ├── myth_proxy_report.md
-│       │       └── myth_standalone_report.md
-│       └── slither
-│           ├── v2.3.0-slither-report.md
-│           ├── v2.5.0-slither-report.md
-│           └── v3.0.0-slither-report.md
-├── general
-│   ├── contract-size.png
-│   ├── coverage.png
-│   ├── crosschain-bridge-support.md
-│   └── FAQ.md
-├── modules
-│   ├── base
-│   │   ├── 0_CMTATBaseCore.md
-│   │   ├── 3_CMTATERC20CrossChain.md
-│   │   └── surya_report
-│   ├── controllers
-│   │   ├── surya_report_ValidationModuleAllowlist.sol.md
-│   │   ├── surya_report_ValidationModuleCore.sol.md
-│   │   ├── surya_report_ValidationModuleERC1404.sol.md
-│   │   ├── surya_report_ValidationModuleRuleEngineInternal.sol.md
-│   │   ├── surya_report_ValidationModuleRuleEngine.sol.md
-│   │   ├── surya_report_ValidationModule.sol.md
-│   │   ├── validationAllowlist.md
-│   │   ├── validation.md
-│   │   └── validationRuleEngine.md
-│   ├── core
-│   │   ├── Base
-│   │   │   ├── base.md
-│   │   │   └── surya_report_VersionModule.sol.md
-│   │   ├── Enforcement
-│   │   │   ├── enforcement.md
-│   │   │   ├── surya_report_EnforcementModuleInternal.sol.md
-│   │   │   ├── surya_report_EnforcementModuleLibrary.sol.md
-│   │   │   └── surya_report_EnforcementModule.sol.md
-│   │   ├── ERC20Base
-│   │   │   ├── ERC20base.md
-│   │   │   └── surya_report_ERC20BaseModule.sol.md
-│   │   ├── ERC20Burn
-│   │   │   ├── ERC20Burn.md
-│   │   │   ├── surya_report_ERC20BurnModuleInternal.sol.md
-│   │   │   └── surya_report_ERC20BurnModule.sol.md
-│   │   ├── ERC20Mint
-│   │   │   ├── ERC20Mint.md
-│   │   │   ├── surya_report_ERC20MintModuleInternal.sol.md
-│   │   │   └── surya_report_ERC20MintModule.sol.md
-│   │   └── Pause
-│   │       ├── pause.md
-│   │       └── surya_report_PauseModule.sol.md
-│   ├── deployment
-│   │   └── surya_report
-│   ├── extensions
-│   │   ├── documentEngine
-│   │   │   ├── document.md
-│   │   │   └── surya_report_DocumentEngineModule.sol.md
-│   │   ├── ERC20Enforcement
-│   │   │   ├── erc20enforcement.md
-│   │   │   ├── surya_report_ERC20EnforcementModuleInternal.sol.md
-│   │   │   └── surya_report_ERC20EnforcementModule.sol.md
-│   │   ├── ExtraInformation
-│   │   │   ├── extraInformation.md
-│   │   │   └── surya_report_ExtraInformationModule.sol.md
-│   │   └── snapshotEngine
-│   │       ├── Snapshot.md
-│   │       └── surya_report_SnapshotEngineModule.sol.md
-│   ├── options
-│   │   ├── allowlist
-│   │   │   ├── allowlist.md
-│   │   │   ├── surya_report_AllowlistModuleInternal.sol.md
-│   │   │   └── surya_report_AllowlistModule.sol.md
-│   │   ├── debt
-│   │   │   ├── debt.md
-│   │   │   └── surya_report_DebtModule.sol.md
-│   │   ├── debtEngine
-│   │   │   ├── debtEngine.md
-│   │   │   └── surya_report_DebtEngineModule.sol.md
-│   │   ├── erc2771
-│   │   │   ├── erc2771.md
-│   │   │   └── surya_report_ERC2771Module.sol.md
-│   │   └── erc7551
-│   │       ├── erc7551.md
-│   │       └── surya_report_ERC7551Module.sol.md
-│   └── security
-│       ├── access.md
-│       └── surya_report_AccessControlModule.sol.md
-├── schema
-│   ├── accessControl
-│   │   ├── RBAC-diagram.drawio
-│   │   └── RBAC-diagram-RBAC.drawio.png
-│   ├── drawio
-│   │   ├── architecture.drawio
-│   │   ├── architecture-ERC.drawio.png
-│   │   ├── architecture.pdf
-│   │   ├── Engine-AuthorizationEngine.drawio.png
-│   │   ├── Engine-DebtVault.drawio.png
-│   │   ├── Engine.drawio
-│   │   ├── Engine-Engine.drawio.png
-│   │   ├── Engine-RuleEngine-Base.drawio.png
-│   │   ├── Engine-RuleEngine.drawio.png
-│   │   ├── RuleEngine.drawio
-│   │   ├── RuleEngine.png
-│   │   ├── transfer_restriction-allowlist.drawio.png
-│   │   ├── transfer_restriction.drawio
-│   │   └── transfer_restriction.drawio.png
-│   └── uml
-├── script
-│   ├── script_surya_graph.sh
-│   ├── script_surya_inheritance.sh
-│   └── script_surya_report.sh
-├── test
-│   ├── coverage
-│   └── coverage.json
-└── USAGE.md
-```
-
-
 
 ### Base contract
 
@@ -1341,7 +1143,7 @@ This schema contains the different roles and their restricted functions.
 
 ![RBAC-diagram-RBAC.drawio](./doc/schema/accessControl/RBAC-diagram-RBAC.drawio.png)
 
-The OpenZepplin functions `grantRole`and `revokeRole`can be used by the admin to grant and revoke role to an address.
+The OpenZepplin functions `grantRole`and `revokeRole` can be used by the admin to grant and revoke role to an address.
 
 #### Transfer adminship
 
@@ -1826,6 +1628,157 @@ There was only one prototype available: [CMTA/AuthorizationEngine](https://githu
 
 ----
 
+## Enforcement / Transfer restriction
+
+There are several ways to restrict transfers as well as burn/mint operations
+
+### Pre-Check
+
+CMTAT provides **pre-check functions** to verify if a transfer will succeed before executing it.  
+These functions are useful to avoid failed transactions due to compliance rules.
+
+| Function                                    | ERC                                                          | Purpose                                     | Module               |
+| ------------------------------------------- | ------------------------------------------------------------ | ------------------------------------------- | -------------------- |
+| `canTransfer(from, to, value)`              | [ERC-7943](https://eips.ethereum.org/EIPS/eip-7943), [ERC-7551](https://github.com/ethereum/ERCs/blob/60a282eb3c867af2dbed8eff12e7549b548cf1bf/ERCS/erc-7551.md) | Check if a direct transfer is allowed       | ValidationModuleCore |
+| `canTransferFrom(spender, from, to, value)` | [ERC-7551](https://github.com/ethereum/ERCs/blob/60a282eb3c867af2dbed8eff12e7549b548cf1bf/ERCS/erc-7551.md) | Check if a delegated transfer is allowed    | ValidationModuleCore |
+| `canTransact(account)`                      | [ERC-7943](https://eips.ethereum.org/EIPS/eip-7943)          | Check if an account can transact (ERC-7943) | ValidationModule     |
+
+### Enforcement Module
+
+Specific addresses can be frozen with the following ERC-3643 functions `setAddressFrozen`and `batchSetAddressFrozen`
+
+```solidity
+interface IERC3643Enforcement {
+    function isFrozen(address account) external view returns (bool);
+    function setAddressFrozen(address account, bool freeze) external;
+    function batchSetAddressFrozen(address[] calldata accounts, bool[] calldata freeze) external;
+}
+```
+
+Additionally,  a `data`parameter can be also used, which will be emitted inside the smart contract
+
+```solidity
+function setAddressFrozen(address account, bool freeze, bytes calldata data)
+```
+
+Due to a limited contract size, there is no batch version with a data parameter available.
+
+When an address is frozen, it is not possible to mint tokens to this address or burn its tokens. To move tokens from a frozen address, the issuer must use the function `forcedTransfer`.
+
+### ERC20EnforcementModule
+
+- A part of the balance of a specific address can be frozen with the following ERC3643 function `freezePartialTokens` and `unfreezePartialTokens`
+- Transfer/burn can be forced by the admin  (ERC20EnforcementModule) with the following ERC3643 function `forcedTransfer`.
+  - In this case, if a part of the balance is frozen, the tokens are unfrozen before being burnt or transferred.
+
+```solidity
+interface IERC3643ERC20Enforcement {
+    /**
+     *  @notice Returns the amount of tokens that are partially frozen on a wallet
+     */
+    function getFrozenTokens(address account) external view returns (uint256);
+
+    /**
+     *  @notice freezes token amount specified for given address.
+     */
+    function freezePartialTokens(address account, uint256 value) external;
+    /**
+     *  @notice unfreezes token amount specified for given address
+     */
+    function unfreezePartialTokens(address account, uint256 value) external;
+    /**
+     *  
+     *  @notice Triggers a forced transfer.
+     */ 
+    function forcedTransfer(address from, address to, uint256 value) external returns (bool);
+}
+```
+
+### Pause & Deactivate contract (PauseModule)
+
+#### Pause
+
+- Standard transfers can be put in pause with the following ERC3643 function `pause`and `unpause`
+
+- From ERC-3643
+
+```solidity
+interface IERC3643Pause {
+    /**
+     * @notice Returns true if the contract is paused, and false otherwise.
+     */
+    function paused() external view returns (bool);
+    /**
+     *  @notice pauses the token contract, 
+     *  @dev When contract is paused token holders cannot transfer tokens anymore
+     *  
+     */
+    function pause() external;
+
+    /**
+     *  @notice unpauses the token contract, 
+     *  @dev When contract is unpaused token holders can transfer tokens
+     * 
+     */
+    function unpause() external;
+}
+```
+
+#### Note
+
+The pause function does not affect burn and mint operations implemented in the contracts `ERC20MintModule` and `ERC20BurnModule`.
+
+By separating burn/mint from standard transfer, the admin can re-adjust the supply while the standard transfers are paused. The alternative in this case to block mint and burn operations is to remove the MINTER and BURNER roles from the addresses concerned.
+
+On the other hand, specific function for cross-chain bridge (`3_CMTATBaseERC20CrossChain.sol`) will revert if contract is paused because they are not intended to be used by the issuer to manage the supply.
+
+#### Future possible improvement
+
+An alternative solution would be to provide an additional function `pauseAllTransfers` which would pause standard transfers, as well as all burn and mint operations.
+However, due to the architecture of current contracts, it is not possible to add this functionality without exceeding the maximum contract size on Ethereum. 
+Consideration will be given to how this can be achieved in a future release.
+
+#### Deactivate contracts
+
+```solidity
+interface ICMTATDeactivate {
+    event Deactivated(address account);
+    /**
+    * @notice deactivate the contract
+    * Warning: the operation is irreversible, be careful
+    */
+    function deactivateContract() external;
+
+    /**
+    * @notice Returns true if the contract is deactivated, and false otherwise.
+    */
+    function deactivated() external view returns (bool) ;
+}
+```
+
+Since the version v2.3.1, a function `deactivateContract` is implemented in the PauseModule to deactivate the contract.
+
+If a contract is deactivated, it is no longer possible to perform transfer and burn/mint operations.
+
+##### Kill (previous version)
+
+CMTAT initially supported a `kill()` function relying on the SELFDESTRUCT opcode (which effectively destroyed the contract's storage and code).
+However, Ethereum's [Cancun upgrade](https://github.com/ethereum/execution-specs/blob/master/network-upgrades/mainnet-upgrades/cancun.md) (rolled out in Q1 of 2024)  has removed support for SELFDESTRUCT (see [EIP-6780](https://eips.ethereum.org/EIPS/eip-6780)).
+
+From then on, the `kill` function no longer worked as expected, and we have replaced it by the function `deactivateContract` .
+
+##### How it works
+
+Firstly, the contract must be in `pause`state, by calling the function `pause`, otherwise the function reverts.
+
+This function sets a boolean state variable `isDeactivated` to true.
+The function `unpause `is updated to revert if the previous variable is set to true, thus the contract is in the pause state "forever".
+
+The consequences are the following:
+
+- In standalone deployment, this operation is irreversible, it is not possible to rollback.
+- In upgradeable deployment (with a proxy), it is still possible to rollback by deploying a new implementation which sets the variable `isDeactivated`to false.
+
 ## Functionality details
 
 ### ERC-20 properties 
@@ -1869,151 +1822,21 @@ References:
 
 - OpenGSN has deployed several forwarders, see their [documentation](https://docs.opengsn.org/contracts/#receiving-a-relayed-call) to see some examples.
 
-### Enforcement / Transfer restriction
-
-There are several ways to restrict transfers as well as burn/mint operations.
-
-#### Enforcement Module
-
-Specific addresses can be frozen with the following ERC-3643 functions `setAddressFrozen`and `batchSetAddressFrozen`
-
-```solidity
-interface IERC3643Enforcement {
-    function isFrozen(address account) external view returns (bool);
-    function setAddressFrozen(address account, bool freeze) external;
-    function batchSetAddressFrozen(address[] calldata accounts, bool[] calldata freeze) external;
-}
-```
-
-Additionally,  a `data`parameter can be also used, which will be emitted inside the smart contract
-
-```solidity
-function setAddressFrozen(address account, bool freeze, bytes calldata data)
-```
-
-Due to a limited contract size, there is no batch version with a data parameter available.
-
-When an address is frozen, it is not possible to mint tokens to this address or burn its tokens. To move tokens from a frozen address, the issuer must use the function `forcedTransfer`.
-
-#### ERC20EnforcementModule
-
-- A part of the balance of a specific address can be frozen with the following ERC3643 function `freezePartialTokens` and `unfreezePartialTokens`
-- Transfer/burn can be forced by the admin  (ERC20EnforcementModule) with the following ERC3643 function `forcedTransfer`.
-  - In this case, if a part of the balance is frozen, the tokens are unfrozen before being burnt or transferred.
-
-```solidity
-interface IERC3643ERC20Enforcement {
-    /**
-     *  @notice Returns the amount of tokens that are partially frozen on a wallet
-     */
-    function getFrozenTokens(address account) external view returns (uint256);
-
-    /**
-     *  @notice freezes token amount specified for given address.
-     */
-    function freezePartialTokens(address account, uint256 value) external;
-    /**
-     *  @notice unfreezes token amount specified for given address
-     */
-    function unfreezePartialTokens(address account, uint256 value) external;
-    /**
-     *  
-     *  @notice Triggers a forced transfer.
-     */ 
-    function forcedTransfer(address from, address to, uint256 value) external returns (bool);
-}
-```
-
-#### Pause & Deactivate contract (PauseModule)
-
-##### Pause
-
-- Standard transfers can be put in pause with the following ERC3643 function `pause`and `unpause`
-
-- From ERC-3643
-
-```solidity
-interface IERC3643Pause {
-    /**
-     * @notice Returns true if the contract is paused, and false otherwise.
-     */
-    function paused() external view returns (bool);
-    /**
-     *  @notice pauses the token contract, 
-     *  @dev When contract is paused token holders cannot transfer tokens anymore
-     *  
-     */
-    function pause() external;
-
-    /**
-     *  @notice unpauses the token contract, 
-     *  @dev When contract is unpaused token holders can transfer tokens
-     * 
-     */
-    function unpause() external;
-}
-```
-
-**Note:**
-
-The pause function does not affect burn and mint operations implemented in the contracts `ERC20MintModule` and `ERC20BurnModule`.
-
-By separating burn/mint from standard transfer, the admin can re-adjust the supply while the standard transfers are paused. The alternative in this case to block mint and burn operations is to remove the MINTER and BURNER roles from the addresses concerned.
-
-On the other hand, specific function for cross-chain bridge (`3_CMTATBaseERC20CrossChain.sol`) will revert if contract is paused because they are not intended to be used by the issuer to manage the supply.
-
-**Future possible improvement:**
-
-An alternative solution would be to provide an additional function `pauseAllTransfers` which would pause standard transfers, as well as all burn and mint operations.
-However, due to the architecture of current contracts, it is not possible to add this functionality without exceeding the maximum contract size on Ethereum. 
-Consideration will be given to how this can be achieved in a future release.
-
-##### Deactivate contracts
-
-```solidity
-interface ICMTATDeactivate {
-    event Deactivated(address account);
-    /**
-    * @notice deactivate the contract
-    * Warning: the operation is irreversible, be careful
-    */
-    function deactivateContract() external;
-
-    /**
-    * @notice Returns true if the contract is deactivated, and false otherwise.
-    */
-    function deactivated() external view returns (bool) ;
-}
-```
-
-Since the version v2.3.1, a function `deactivateContract` is implemented in the PauseModule to deactivate the contract.
-
-If a contract is deactivated, it is no longer possible to perform transfer and burn/mint operations.
-
-###### Kill (previous version)
-
-CMTAT initially supported a `kill()` function relying on the SELFDESTRUCT opcode (which effectively destroyed the contract's storage and code).
-However, Ethereum's [Cancun upgrade](https://github.com/ethereum/execution-specs/blob/master/network-upgrades/mainnet-upgrades/cancun.md) (rolled out in Q1 of 2024)  has removed support for SELFDESTRUCT (see [EIP-6780](https://eips.ethereum.org/EIPS/eip-6780)).
-
-From then on, the `kill` function no longer worked as expected, and we have replaced it by the function `deactivateContract` .
-
-###### How it works
-
-Firstly, the contract must be in `pause`state, by calling the function `pause`, otherwise the function reverts.
-
-This function sets a boolean state variable `isDeactivated` to true.
-The function `unpause `is updated to revert if the previous variable is set to true, thus the contract is in the pause state "forever".
-
-The consequences are the following:
-
-- In standalone deployment, this operation is irreversible, it is not possible to rollback.
-- In upgradeable deployment (with a proxy), it is still possible to rollback by deploying a new implementation which sets the variable `isDeactivated`to false.
-
 
 
 #### Supply management (burn & mint)
 
-This tab summarizes the different behavior of burn/mint functions if:
+ Minting and burning follow a simpler path:
+    1. Check if contract is deactivated (permanent pause)
+    2. Check if target address is frozen
+
+These behaviour are enforced in the different `ValidationModule`
+
+Frozen accounts can only have tokens removed via `forcedBurn()` or `forcedTransfer()` by admins.
+
+##### Summary tab
+
+This tab summarises the different behaviour of burn/mint functions if:
 
 - The target address is frozen (EnforcementModule)
 - The target address does not have enough active balance (ERC20EnforcementModule)
@@ -2030,6 +1853,8 @@ This tab summarizes the different behavior of burn/mint functions if:
 | Call the `RuleEngine`                                        | &#x2611;  | &#x2611;  | &#x2611;                 | Same as burn  & mint | &#x2611;  | &#x2611;  | &#x2611;      | &#x2611;                 | &#x2611;                 | &#x2612;         |
 | Authorised if contract is in pause state                     | &#x2611;  | &#x2611;  | &#x2612;                 | Same as burn  & mint | &#x2611;  | &#x2611;  | &#x2612;      | &#x2612;                 | &#x2612;                 | &#x2611;         |
 | Authorised if the contract is deactivated                    | &#x2612;  | &#x2612;  | &#x2612;                 | Same as burn  & mint | &#x2612;  | &#x2612;  | &#x2612;      | &#x2612;                 | &#x2612;                 | &#x2611;         |
+
+
 
 **Note**
 
@@ -2512,7 +2337,7 @@ More information on this standard here: [erc1363.org](https://erc1363.org), [Rar
 
 - CMTAT ERC-1363 Base
 
-![surya_inheritance_CMTAT_ERC1363_BASE.sol](./doc/schema/surya_inheritance/surya_inheritance_5_CMTATBaseERC1363.sol.png)
+![surya_inheritance_CMTAT_ERC1363_BASE.sol](./doc/schema/surya_inheritance/surya_inheritance_6_CMTATBaseERC1363.sol.png)
 
 
 
@@ -2683,7 +2508,7 @@ Here are the different fields and functions to read and store the related debt i
 
 
 
-![surya_inheritance_CMTATBaseDebt.sol](./doc/schema/surya_inheritance/surya_inheritance_2_CMTATBaseDebt.sol.png)
+![surya_inheritance_CMTATBaseDebt.sol](./doc/schema/surya_inheritance/surya_inheritance_3_CMTATBaseDebt.sol.png)
 
 ### Allowlist
 
@@ -2721,7 +2546,7 @@ More information regarding the Ethereum API available in the [Allowlist module d
 
 
 
-![surya_inheritance_CMTATBaseAllowlist.sol](./doc/schema/surya_inheritance/surya_inheritance_1_CMTATBaseAllowlist.sol.png)
+![surya_inheritance_CMTATBaseAllowlist.sol](./doc/schema/surya_inheritance/surya_inheritance_2_CMTATBaseAllowlist.sol.png)
 
 ### Factory
 

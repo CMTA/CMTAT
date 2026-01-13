@@ -1,0 +1,407 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for interfaces/tokenization/draft-IERC7943.sol</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../prettify.css" />
+    <link rel="stylesheet" href="../../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../../index.html">all files</a> / <a href="index.html">interfaces/tokenization/</a> draft-IERC7943.sol
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>0/0</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>0/0</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>0/0</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>0/0</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line high'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// SPDX-License-Identifier: MPL-2.0
+&nbsp;
+pragma solidity ^0.8.20;
+&nbsp;
+/**
+* @notice Enforcement Interface for ERC-20 based implementations common with ERC-3643 interface.
+* 
+*/
+interface IERC7943ERC20Enforcement {
+    /* ============ View Functions ============ */
+    /** 
+    * @notice Checks the frozen status/amount.
+    * @param account The address of the account.
+    * @dev 
+    * ERC-7943 specification: 
+    *   It could return an amount higher than the account's balance.
+    * ERC-3643 compatibility
+    *   The frozen amount is always less than or equal to the total balance of the account.
+    * @return amount The amount of tokens currently frozen for `account`.
+    */
+    function getFrozenTokens(address account) external view returns (uint256 amount);
+    
+    /* ============ State Functions ============ */
+    /** 
+    * @notice Takes tokens from one address and transfers them to another.
+    * @dev 
+    * Requires specific authorization. Used for regulatory compliance or recovery scenarios.
+    * It MAY bypass the canTransfer checks. 
+    *   If this happens, it MUST unfreeze the assets first 
+    *   and emit a Frozen event before the underlying base token transfer event reflecting the change. 
+    *   Having the unfrozen amount changed before the actual transfer is critical 
+    *   for tokens that might be susceptible to reentrancy attacks doing external checks on recipients 
+    *   as it is the case for ERC-721 and ERC-1155 tokens.
+    * Compatibility with ERC-3643 (not part of IERC7943 interface):
+    *      If IERC364320Enforcement is implemented:
+    *      Require that the total value should not exceed available balance.
+    *      In case the `from` address has not enough free tokens (unfrozen tokens)
+    *      but has a total balance higher or equal to the `amount`
+    *      the amount of frozen tokens is reduced in order to have enough free tokens
+    *      to proceed the transfer, in such a case, the remaining balance on the `from`
+    *      account is 100% composed of frozen tokens post-transfer.
+    *      Emits a `TokensUnfrozen` event if `value` is higher than the free balance of `from`
+    *      Emits a `Transfer` event
+    * @param from The address from which `amount` is taken.
+    * @param to The address that receives `amount`.
+    * @param amount The amount to force transfer.
+    * @return result True if the transfer executed correctly, false otherwise.
+    */
+    function forcedTransfer(address from, address to, uint256 amount) external returns(bool result);
+}
+&nbsp;
+interface IERC7943ERC20EnforcementSpecific {
+    /** 
+    * @notice Changes the frozen status of `amount` tokens belonging to `account`.
+    * This overwrites the current value, similar to an `approve` function.
+    * @dev Requires specific authorization. Frozen tokens cannot be transferred by the account.
+    * @param account The address of the account whose tokens are to be frozen.
+    * @param amount The amount of tokens to freeze. It can be greater than account balance.
+    * @return result True if the freezing executed correctly, false otherwise.
+    */
+    function setFrozenTokens(address account, uint256 amount) external returns(bool result);
+}
+interface IERC7943FungibleEnforcementEvent{
+    /** 
+    * @notice Emitted when `setFrozenTokens` is called, changing the frozen `amount` of tokens for `account`.
+    * @param account The address of the account whose tokens are being frozen.
+    * @param amount The amount of tokens frozen after the change.
+    */
+    event Frozen(address indexed account, uint256 amount);
+&nbsp;
+    /** @notice Emitted when tokens are taken from one address and transferred to another.
+    * @param from The address from which tokens were taken.
+    * @param to The address to which seized tokens were transferred.
+    * @param amount The amount seized.
+    */
+    event ForcedTransfer(address indexed from, address indexed to, uint256 amount);
+}
+&nbsp;
+/**
+* @notice Transfer Error Interface for ERC-20, ERC-721 and ERC-1155 based implementations.
+* 
+*/
+interface IERC7943TransactError{
+    /**
+    * @notice Error reverted when an account is not allowed to transact. 
+    * @param account The address of the account which is not allowed for transfers.
+    */ 
+    error ERC7943CannotTransact(address account);
+}
+&nbsp;
+/**
+* @notice Transfer Error Interface for ERC-20 based implementations.
+* 
+*/
+interface IERC7943FungibleTransferError {
+    /** 
+    * @notice Error reverted when a transfer is not allowed according to internal rules. 
+    * @param from The address from which tokens are being sent.
+    * @param to The address to which tokens are being sent.
+    * @param amount The amount sent.
+    */
+    error ERC7943CannotTransfer(address from, address to, uint256 amount);
+}
+&nbsp;
+interface IERC7943FungibleTransactCheck{
+     /// @notice Checks if a specific account is allowed to transact according to token rules.
+    /// @dev This is often used for allowlist/KYC/KYB/AML checks.
+    /// @param account The address to check.
+    /// @return allowed True if the account is allowed, false otherwise.
+    function canTransact(address account) external view returns (bool allowed);
+}
+&nbsp;
+&nbsp;
+   
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Mon Jan 12 2026 21:42:04 GMT+0100 (Central European Standard Time)
+</div>
+</div>
+<script src="../../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../../sorter.js"></script>
+</body>
+</html>
