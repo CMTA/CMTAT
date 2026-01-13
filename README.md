@@ -841,23 +841,23 @@ CMTAT Base Core adds several functions:
 
 ##### CMTATBaseDebt
 
-![surya_inheritance_CMTATBase.sol](./doc/schema/surya_inheritance/surya_inheritance_2_CMTATBaseDebt.sol.png)
+![surya_inheritance_CMTATBase.sol](./doc/schema/surya_inheritance/surya_inheritance_3_CMTATBaseDebt.sol.png)
 
 ##### CMTATBaseERC1404
 
-![surya_inheritance_CMTATBase.sol](./doc/schema/surya_inheritance/surya_inheritance_2_CMTATBaseERC1404.sol.png)
+![surya_inheritance_CMTATBase.sol](./doc/schema/surya_inheritance/surya_inheritance_3_CMTATBaseERC1404.sol.png)
 
 
 
 #### Level 3 (cross-chain transfer)
 
-![surya_inheritance_CMTATBase.sol](./doc/schema/surya_inheritance/surya_inheritance_3_CMTATBaseERC20CrossChain.sol.png)
+![surya_inheritance_CMTATBase.sol](./doc/schema/surya_inheritance/surya_inheritance_4_CMTATBaseERC20CrossChain.sol.png)
 
 #### Level 4 (metaTx)
 
 ##### CMTAT Base ERC2771
 
-![surya_inheritance_CMTATBaseOption.sol](./doc/schema/surya_inheritance/surya_inheritance_4_CMTATBaseERC2771.sol.png)
+![surya_inheritance_CMTATBaseOption.sol](./doc/schema/surya_inheritance/surya_inheritance_5_CMTATBaseERC2771.sol.png)
 
 #### Level 5 (use case)
 
@@ -867,7 +867,7 @@ CMTAT Base Core adds several functions:
 
 
 
-![surya_inheritance_CMTATERC1363Base.sol](./doc/schema/surya_inheritance/surya_inheritance_5_CMTATBaseERC1363.sol.png)
+![surya_inheritance_CMTATERC1363Base.sol](./doc/schema/surya_inheritance/surya_inheritance_6_CMTATBaseERC1363.sol.png)
 
 
 
@@ -879,7 +879,7 @@ CMTAT Base Core adds several functions:
 
 
 
-![surya_inheritance_CMTATERC1363Base.sol](./doc/schema/surya_inheritance/surya_inheritance_5_CMTATBaseERC7551.sol.png)
+![surya_inheritance_CMTATERC1363Base.sol](./doc/schema/surya_inheritance/surya_inheritance_6_CMTATBaseERC7551.sol.png)
 
 
 
@@ -1806,52 +1806,7 @@ The consequences are the following:
 - In standalone deployment, this operation is irreversible, it is not possible to rollback.
 - In upgradeable deployment (with a proxy), it is still possible to rollback by deploying a new implementation which sets the variable `isDeactivated`to false.
 
-## Functionality details
-
-### ERC-20 properties 
-
-All ERC-20 properties (`name`, `symbol`and `decimals`) can be set at deployment or initialization if a proxy is used.
-
-Once the contract is deployed, the core module `ERC20BaseModule` offers two ERC-3643 functions which allow to update the name and the symbol (but not the decimals).
-
-```solidity
-interface IERC3643ERC20Base {
-    /**
-     *  @notice sets the token name
-     */
-    function setName(string calldata name) external;
-    /**
-     *  @notice sets the token symbol
-     */
-    function setSymbol(string calldata symbol) external;
-}
-```
-
-
-
-### MetaTx/Gasless support (ERC-2771 module)
-
-The CMTAT supports client-side gasless transactions using the standard [ERC-2771](https://eips.ethereum.org/EIPS/eip-2771).
-
-The contract uses the OpenZeppelin contract `ERC2771ContextUpgradeable`, which allows a contract to get the original client with `_msgSender()` instead of the feepayer given by `msg.sender`.
-
-At deployment, the parameter  `forwarder` inside the CMTAT contract constructor has to be set  with the defined address of the forwarder. 
-
-After deployment:
-
-- In standalone deployment, the forwarder is immutable and can not be changed after deployment.
-
-- In upgradeable deployment (with a proxy), it is possible to change the forwarder by deploying a new implementation. This is possible because the forwarder is stored inside the implementation contract bytecode instead of the proxy's storage.
-
-References:
-
-- [OpenZeppelin Meta Transactions](https://docs.openzeppelin.com/contracts/5.x/api/metatx)
-
-- OpenGSN has deployed several forwarders, see their [documentation](https://docs.opengsn.org/contracts/#receiving-a-relayed-call) to see some examples.
-
-
-
-#### Supply management (burn & mint)
+### Supply management (burn & mint)
 
  Minting and burning follow a simpler path:
     1. Check if contract is deactivated (permanent pause)
@@ -1861,7 +1816,7 @@ These behaviour are enforced in the different `ValidationModule`
 
 Frozen accounts can only have tokens removed via `forcedBurn()` or `forcedTransfer()` by admins.
 
-##### Summary tab
+#### Summary tab
 
 This tab summarises the different behaviour of burn/mint functions if:
 
@@ -1883,15 +1838,17 @@ This tab summarises the different behaviour of burn/mint functions if:
 
 
 
-**Note**
+##### Note
 
 Contrary to a `mint`operation, the function `batchTransfer` will perform the compliance check on the `from` address, which will be an address with the minter role. Another difference is the function will revert if the contract is in pause state.
 
 
 
-#### Allowlist (whitelist) module
+### Allowlist (whitelist) module
 
 With the `Allowlist` module and the associated `ValidationModuleAllowlist`, a supplementary check will be performed on the relevant address to determine if they are in the allowlist.
+
+#### Interface
 
 ```solidity
 interface IAllowlistModule {
@@ -1935,11 +1892,13 @@ interface IAllowlistModule {
 
 ```
 
+#### Schema
+
 ![transfer_restriction-allowlist.drawio](./doc/schema/drawio/transfer_restriction-allowlist.drawio.png)
 
 
 
-#### Schema
+### Schema
 
 Here is a schema describing the different check performed during:
 
@@ -1949,9 +1908,9 @@ Here is a schema describing the different check performed during:
 
 ![transfer_restriction.drawio](./doc/schema/drawio/transfer_restriction.drawio.png)
 
-##### ERC-20 approve
+### ERC-20 approve
 
-The ERC-20 function `approve` will also revert if the contract is in the pause state.
+The ERC-20 `approve` function reverts when the contract is paused, except in the Light version.
 
 This behaviour is enforced in CMTAT base module.
 
@@ -1961,7 +1920,50 @@ With the same objective, the `Light` deployment version does not perform any che
 
 ![Approve restriction](./doc/schema/drawio/transfer_restriction-approve.drawio.png)
 
-### Supply management
+## Functionality details
+
+### ERC-20 properties 
+
+All ERC-20 properties (`name`, `symbol`and `decimals`) can be set at deployment or initialization if a proxy is used.
+
+Once the contract is deployed, the core module `ERC20BaseModule` offers two ERC-3643 functions which allow to update the name and the symbol (but not the decimals).
+
+```solidity
+interface IERC3643ERC20Base {
+    /**
+     *  @notice sets the token name
+     */
+    function setName(string calldata name) external;
+    /**
+     *  @notice sets the token symbol
+     */
+    function setSymbol(string calldata symbol) external;
+}
+```
+
+
+
+### MetaTx/Gasless support (ERC-2771 module)
+
+The CMTAT supports client-side gasless transactions using the standard [ERC-2771](https://eips.ethereum.org/EIPS/eip-2771).
+
+The contract uses the OpenZeppelin contract `ERC2771ContextUpgradeable`, which allows a contract to get the original client with `_msgSender()` instead of the feepayer given by `msg.sender`.
+
+At deployment, the parameter  `forwarder` inside the CMTAT contract constructor has to be set  with the defined address of the forwarder. 
+
+After deployment:
+
+- In standalone deployment, the forwarder is immutable and can not be changed after deployment.
+
+- In upgradeable deployment (with a proxy), it is possible to change the forwarder by deploying a new implementation. This is possible because the forwarder is stored inside the implementation contract bytecode instead of the proxy's storage.
+
+References:
+
+- [OpenZeppelin Meta Transactions](https://docs.openzeppelin.com/contracts/5.x/api/metatx)
+
+- OpenGSN has deployed several forwarders, see their [documentation](https://docs.opengsn.org/contracts/#receiving-a-relayed-call) to see some examples.
+
+### Supply management (mint/burn)
 
 #### Event
 
