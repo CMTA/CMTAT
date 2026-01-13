@@ -1,10 +1,8 @@
-
-
 # CMTA Token 
 
 > To use the CMTAT, we recommend the latest audited version, from the [Releases](https://github.com/CMTA/CMTAT/releases) page. Currently, it is the version [v3.0.0](https://github.com/CMTA/CMTAT/releases/tag/v3.0.0).
 >
-> A pdf file of the v3.0.0 README is available here:  [CMTATSpecificationV3.0.0.pdf](./doc/specification/CMTATSpecificationV3.0.0.pdf) 
+> PDF files of README are available here: [CMTATSpecificationV3.0.0.pdf](./doc/specification/CMTATSpecificationV3.0.0.pdf), [CMTATSpecificationV3.0.0.pdf](./doc/specification/CMTATSpecificationV3.1.0.pdf)
 
 ## Introduction
 
@@ -33,8 +31,8 @@ CMTAT has been built with five main goals:
    - Technicals: [ERC-2771](https://eips.ethereum.org/EIPS/eip-2771) (MetaTx/Gasless), [ERC-7201](https://eips.ethereum.org/EIPS/eip-7201), [ERC-7802](https://eips.ethereum.org/EIPS/eip-7802),...
 
 4. Security by undergoing audits from trusted firms like [ADBK](https://abdk.consulting) and [Halborn](https://www.halborn.com), and by implementing a range of industry best practices.
-   - Strong code coverage(~99.17%) with 2635 automated tests executed
-   - Run static analyzer ([Aderyn](https://github.com/Cyfrin/aderyn), [Slither](https://github.com/crytic/slither/tree/master)) before and after the audits
+   - Strong code statements coverage(~99.43%) with 3078 automated tests executed
+   - Run static analyzer ([Aderyn](https://github.com/Cyfrin/aderyn), [Slither](https://github.com/crytic/slither/tree/master)), as well as AI Auditing tool ([Nethermind Audit Agent](https://auditagent.nethermind.io)), before and after the audits
    - RBAC Access Control to clearly separates the different roles and permissions
    
 5. Freedom of use through an open-source weak copyleft license ([MPL-2.0](https://www.mozilla.org/en-US/MPL/2.0/FAQ/))
@@ -84,9 +82,9 @@ The CMTAT was initially designed for the digitalization of company shares. For S
 - In early 2024, [UBS](https://www.ubs.com/global/en/investment-bank/tokenize.html) executed a pilot transaction with OSL, a licensed professional investor in Hong Kong, to issue a tokenized warrant on Ethereum using the CMTAT smart contract framework. The tokenization arrangement for this warrant utilizes the CMTAT codebase to represent the warrant smart contract, which forms part of the tokenized register of holders. See [ubs.com - UBS expands its digital asset capabilities by launching Hong Kong’s first-ever tokenized warrant on the Ethereum network [ubs.com]](https://www.ubs.com/global/en/media/display-page-ndp/en-20240207-tokenized-warrant.html).
 - [Credit Suisse, Pictet and Vontobel (2022)](https://cmta.ch/news-articles/trading-and-settlement-in-digital-securities) issued tokenized investment products that were traded on [BX Swiss](https://www.bxswiss.com/news/20221213-BX-Swiss-legt-das-technische-Fundament-fuer-die-Zukunft-des-regulierten-Handels-mit-tokenisierten-Wertpapieren) as part of a proof-of-concept leveraging the CMTAT.
 
-#### Digitalization of piece of art
+#### Digitalization of artwork
 
-- [Syz Group](https://www.syzgroup.com/en) has digitalized two piece of Art by using CMTAT in 2023 and 2024. See [Syz Art Tokenisation](https://www.syzgroup.com/en/tokenization-syzart)
+- [Syz Group](https://www.syzgroup.com/en), a Swiss private bank, has successfully digitized two pieces of art using CMTAT in 2023 and 2024. See [Syz Art Tokenisation](https://www.syzgroup.com/en/tokenization-syzart)
 
 #### Tokenized market funds
 
@@ -2179,7 +2177,7 @@ See also [docs.chain.link - Cross Chain Token (EVM)](https://docs.chain.link/cci
 
 CMTAT implements the following function `getCCIPAdmin()` to return the address authorized to register the token in CCIP.
 
-The alternative function proposed by CCIP, `owner`, is not implemented by CMTAT but this could be done easily. Note that `getCCIPAdmin`is the recommended function to use in the CCIP documentation.
+The alternative function proposed by CCIP, `owner`, is not implemented by CMTAT but this could be done easily. Note that `getCCIPAdmin` is the recommended function to use in the CCIP documentation.
 
 ##### [Transfer functions](https://docs.chain.link/ccip/concepts/cross-chain-token/evm/tokens#transfer-functions)
 
@@ -2223,7 +2221,9 @@ function burnFrom(address account, uint256 value) public virtual override(IBurnF
 function burn(uint256 value) public virtual onlyBurnerFrom
 ```
 
+#### Example
 
+[CMTAT-CCIP](https://github.com/Nox-Labs/CMTAT-CCIP) repository, made by [Nox Labs](https://github.com/Nox-Labs), contains a collection of Foundry scripts designed to simplify and show deployment of a CMTAT token (v3.1.0) with CCIP contracts.
 
 #### Optimism superchain ERC-20 (ERC-7802)
 
@@ -2882,7 +2882,7 @@ A specific version is available for [Aztec](https://aztec.network/): [Aztec Priv
 
 ### Solana
 
-Specification to deploy CMTAT compliant token on Solana are available in the repository [CMTAT_Solana](https://github.com/CMTA/CMTAT_Solana) made by [Taurus](https://www.taurushq.com) as an internal CMTA project in collaboration with Solana Foundation.
+Specification to deploy CMTAT compliant token on Solana are available in the repository [CMTAT-Solana](https://github.com/CMTA/CMTAT-Solana) made by [Taurus](https://www.taurushq.com) as an internal CMTA project in collaboration with Solana Foundation.
 
 ### Starknet (Cairo)
 
@@ -2893,7 +2893,7 @@ A version for [Starknet](https://www.starknet.io/) written in Cairo is currently
 Two versions are available for the blockchain [Tezos](https://tezos.com)
 
 - [CMTAT FA2](https://github.com/CMTA/CMTAT-Tezos-FA2): Official version written in SmartPy made by [AirGap](https://airgap.it) in collaboration with CMTA.
-- [@ligo/cmtat](https://github.com/ligolang/CMTAT-Ligo/): Unofficial version written in Ligo made by Frank Hillard.
+- [@ligo/cmtat](https://github.com/CMTA/CMTAT-Ligo): Unofficial version written in Ligo made by Frank Hillard.
   - See also [Tokenization of securities on Tezos by Frank Hillard](https://medium.com/@frank.hillard_62931/tokenization-of-securities-on-tezos-2e3c3e90fc5a)
 
 ### Summary tab
