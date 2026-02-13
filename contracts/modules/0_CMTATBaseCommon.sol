@@ -16,11 +16,13 @@ import {ExtraInformationModule} from "./wrapper/extensions/ExtraInformationModul
 import {ERC20EnforcementModule, ERC20EnforcementModuleInternal} from "./wrapper/extensions/ERC20EnforcementModule.sol";
 import {DocumentEngineModule,  IERC1643} from "./wrapper/extensions/DocumentEngineModule.sol";
 import {SnapshotEngineModule} from "./wrapper/extensions/SnapshotEngineModule.sol";
+import {FixDescriptorEngineModule} from "./wrapper/extensions/FixDescriptorEngineModule.sol";
 // options
 import {ERC20BaseModule, ERC20Upgradeable} from "./wrapper/core/ERC20BaseModule.sol";
  /* ==== Interface and other library === */
 import {ICMTATConstructor} from "../interfaces/technical/ICMTATConstructor.sol";
 import {ISnapshotEngine} from "../interfaces/engine/ISnapshotEngine.sol";
+import {IFixDescriptorEngine} from "../interfaces/engine/IFixDescriptorEngine.sol";
 import {IBurnMintERC20} from "../interfaces/technical/IMintBurnToken.sol";
 import {IERC5679} from "../interfaces/technical/IERC5679.sol";
 
@@ -34,6 +36,7 @@ abstract contract CMTATBaseCommon is
     SnapshotEngineModule,
     ERC20EnforcementModule,
     DocumentEngineModule,
+    FixDescriptorEngineModule,
     ExtraInformationModule,
     AccessControlModule,
     // Interfaces
@@ -45,7 +48,8 @@ abstract contract CMTATBaseCommon is
     //////////////////////////////////////////////////////////////*/
     function __CMTAT_commonModules_init_unchained(address admin, ICMTATConstructor.ERC20Attributes memory ERC20Attributes_, ICMTATConstructor.ExtraInformationAttributes memory ExtraInformationModuleAttributes_,
      ISnapshotEngine snapshotEngine_,
-        IERC1643 documentEngine_ ) internal virtual onlyInitializing {
+        IERC1643 documentEngine_,
+        IFixDescriptorEngine fixDescriptorEngine_ ) internal virtual onlyInitializing {
         // AccessControlModule_init_unchained is called firstly due to inheritance
         __AccessControlModule_init_unchained(admin);
 
@@ -55,6 +59,7 @@ abstract contract CMTATBaseCommon is
         __ExtraInformationModule_init_unchained(ExtraInformationModuleAttributes_.tokenId, ExtraInformationModuleAttributes_.terms, ExtraInformationModuleAttributes_.information);
         __SnapshotEngineModule_init_unchained(snapshotEngine_);
         __DocumentEngineModule_init_unchained(documentEngine_);
+        __FixDescriptorEngineModule_init_unchained(fixDescriptorEngine_);
     }
 
     /*//////////////////////////////////////////////////////////////
@@ -258,4 +263,10 @@ abstract contract CMTATBaseCommon is
     * - the caller must have the `SNAPSHOOTER_ROLE`.
     */
     function _authorizeSnapshots() internal virtual override(SnapshotEngineModule) onlyRole(SNAPSHOOTER_ROLE){}
+
+    /** 
+    * @custom:access-control
+    * - the caller must have the `DESCRIPTOR_ENGINE_ROLE`.
+    */
+    function _authorizeFixDescriptorEngine() internal virtual override(FixDescriptorEngineModule) onlyRole(DESCRIPTOR_ENGINE_ROLE){}
 }

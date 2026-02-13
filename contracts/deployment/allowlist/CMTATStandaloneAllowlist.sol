@@ -3,6 +3,7 @@
 pragma solidity ^0.8.20;
 
 import {CMTATBaseAllowlist, ISnapshotEngine, IERC1643} from "../../modules/1_CMTATBaseAllowlist.sol";
+import {IFixDescriptorEngine} from "../../interfaces/engine/IFixDescriptorEngine.sol";
 import {ERC2771Module, ERC2771ContextUpgradeable} from "../../modules/wrapper/options/ERC2771Module.sol";
 import {ICMTATConstructor} from "../../interfaces/technical/ICMTATConstructor.sol";
 
@@ -16,7 +17,9 @@ contract CMTATStandaloneAllowlist is CMTATBaseAllowlist {
      * @param admin address of the admin of contract (Access Control)
      * @param ERC20Attributes_ ERC20 name, symbol and decimals
      * @param extraInformationAttributes_ tokenId, terms, information
-     * @param engines_ external contract
+     * @param snapshotEngine_ external contract
+     * @param documentEngine_ external contract
+     * @param fixDescriptorEngine_ external contract
      */
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor(
@@ -25,8 +28,8 @@ contract CMTATStandaloneAllowlist is CMTATBaseAllowlist {
         ICMTATConstructor.ERC20Attributes memory ERC20Attributes_,
         ICMTATConstructor.ExtraInformationAttributes memory extraInformationAttributes_,
         ISnapshotEngine snapshotEngine_,
-        IERC1643 documentEngine_
-        
+        IERC1643 documentEngine_,
+        IFixDescriptorEngine fixDescriptorEngine_
     ) ERC2771Module(forwarderIrrevocable){
         // Initialize the contract to avoid front-running
         initialize(
@@ -34,7 +37,8 @@ contract CMTATStandaloneAllowlist is CMTATBaseAllowlist {
             ERC20Attributes_,
             extraInformationAttributes_,
             snapshotEngine_,
-            documentEngine_
+            documentEngine_,
+            fixDescriptorEngine_
         );
     }
 }

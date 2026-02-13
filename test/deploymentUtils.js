@@ -94,6 +94,7 @@ async function deployCMTATAllowlistStandalone (
     ['CMTA Token', 'CMTAT', DEPLOYMENT_DECIMAL],
     ['CMTAT_ISIN', TERMS, 'CMTAT_info'],
     ZERO_ADDRESS,
+    ZERO_ADDRESS,
     ZERO_ADDRESS
   ])
   return cmtat
@@ -175,6 +176,7 @@ async function deployCMTATAllowlistProxy (forwarder, admin, deployerAddress) {
       admin,
       ['CMTA Token', 'CMTAT', DEPLOYMENT_DECIMAL],
       ['CMTAT_ISIN', TERMS, 'CMTAT_info'],
+      ZERO_ADDRESS,
       ZERO_ADDRESS,
       ZERO_ADDRESS
     ],

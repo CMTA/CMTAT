@@ -4,6 +4,7 @@ pragma solidity ^0.8.20;
 import {IRuleEngine} from "../engine/IRuleEngine.sol";
 import {ISnapshotEngine} from "../engine/ISnapshotEngine.sol";
 import {IDocumentEngine, IERC1643} from "../engine/IDocumentEngine.sol";
+import {IFixDescriptorEngine} from "../engine/IFixDescriptorEngine.sol";
 import {IERC1643CMTAT} from "../tokenization/draft-IERC1643CMTAT.sol";
 
 
@@ -15,6 +16,7 @@ interface ICMTATConstructor {
         IRuleEngine ruleEngine;
         ISnapshotEngine snapshotEngine;
         IERC1643 documentEngine;
+        IFixDescriptorEngine fixDescriptorEngine;
     }
     struct ERC20Attributes {
         // token name,

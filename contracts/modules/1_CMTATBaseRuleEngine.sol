@@ -112,7 +112,7 @@ abstract contract CMTATBaseRuleEngine is
     * @dev CMTAT wrapper modules
     */
     function __CMTAT_modules_init_unchained(address admin, ICMTATConstructor.ERC20Attributes memory ERC20Attributes_, ICMTATConstructor.ExtraInformationAttributes memory extraInformationAttributes_, ICMTATConstructor.Engine memory engines_) internal virtual onlyInitializing {
-        __CMTAT_commonModules_init_unchained(admin,ERC20Attributes_, extraInformationAttributes_, engines_.snapshotEngine, engines_ .documentEngine);
+        __CMTAT_commonModules_init_unchained(admin,ERC20Attributes_, extraInformationAttributes_, engines_.snapshotEngine, engines_.documentEngine, engines_.fixDescriptorEngine);
     }
 
     /*//////////////////////////////////////////////////////////////

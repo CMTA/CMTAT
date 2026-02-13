@@ -23,6 +23,7 @@ import {ValidationModule, ValidationModuleCore} from "./wrapper/core/ValidationM
  /* ==== Interface and other library === */
 import {ICMTATConstructor} from "../interfaces/technical/ICMTATConstructor.sol";
 import {ISnapshotEngine} from "../interfaces/engine/ISnapshotEngine.sol";
+import {IFixDescriptorEngine} from "../interfaces/engine/IFixDescriptorEngine.sol";
 import {Errors} from "../libraries/Errors.sol";
 abstract contract CMTATBaseAllowlist is
     // OpenZeppelin
@@ -46,20 +47,23 @@ abstract contract CMTATBaseAllowlist is
      * @param extraInformationAttributes_ tokenId, terms, information
      * @param snapshotEngine_ external contract
      * @param documentEngine_ external contract
+     * @param fixDescriptorEngine_ external contract
      */
     function initialize(
         address admin,
         ICMTATConstructor.ERC20Attributes memory ERC20Attributes_,
         ICMTATConstructor.ExtraInformationAttributes memory extraInformationAttributes_,
         ISnapshotEngine snapshotEngine_,
-        IERC1643 documentEngine_
+        IERC1643 documentEngine_,
+        IFixDescriptorEngine fixDescriptorEngine_
     ) public virtual initializer {
         __CMTAT_init(
             admin,
             ERC20Attributes_,
             extraInformationAttributes_,
             snapshotEngine_,
-            documentEngine_
+            documentEngine_,
+            fixDescriptorEngine_
         );
     }
 
@@ -72,7 +76,8 @@ abstract contract CMTATBaseAllowlist is
         ICMTATConstructor.ERC20Attributes memory ERC20Attributes_,
         ICMTATConstructor.ExtraInformationAttributes memory extraInformationAttributes_,
         ISnapshotEngine snapshotEngine_,
-        IERC1643 documentEngine_
+        IERC1643 documentEngine_,
+        IFixDescriptorEngine fixDescriptorEngine_
     ) internal virtual onlyInitializing {
         /* OpenZeppelin library */
         // OZ init_unchained functions are called firstly due to inheritance
@@ -85,7 +90,7 @@ abstract contract CMTATBaseAllowlist is
         __CMTAT_openzeppelin_init_unchained(ERC20Attributes_);
 
         /* Wrapper modules */
-        __CMTAT_modules_init_unchained(admin, ERC20Attributes_, extraInformationAttributes_, snapshotEngine_, documentEngine_ );
+        __CMTAT_modules_init_unchained(admin, ERC20Attributes_, extraInformationAttributes_, snapshotEngine_, documentEngine_, fixDescriptorEngine_ );
     }
 
     /*
@@ -103,8 +108,9 @@ abstract contract CMTATBaseAllowlist is
     * @dev CMTAT wrapper modules
     */
     function __CMTAT_modules_init_unchained(address admin, ICMTATConstructor.ERC20Attributes memory ERC20Attributes_, ICMTATConstructor.ExtraInformationAttributes memory ExtraInformationAttributes_,  ISnapshotEngine snapshotEngine_,
-        IERC1643 documentEngine_ ) internal virtual onlyInitializing {
-         __CMTAT_commonModules_init_unchained(admin,ERC20Attributes_, ExtraInformationAttributes_, snapshotEngine_, documentEngine_);
+        IERC1643 documentEngine_,
+        IFixDescriptorEngine fixDescriptorEngine_ ) internal virtual onlyInitializing {
+         __CMTAT_commonModules_init_unchained(admin,ERC20Attributes_, ExtraInformationAttributes_, snapshotEngine_, documentEngine_, fixDescriptorEngine_);
         // option
         __Allowlist_init_unchained();
     }
