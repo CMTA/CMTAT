@@ -33,7 +33,7 @@ contract FixDescriptorEngineMock is IFixDescriptorEngine, IFixDescriptor {
         } else {
             emit FixDescriptorSet(
                 descriptor.fixRoot,
-                descriptor.dictHash,
+                descriptor.schemaHash,
                 descriptor.fixSBEPtr,
                 descriptor.fixSBELen
             );

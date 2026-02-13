@@ -24,9 +24,7 @@ function FixDescriptorModuleCommon () {
     })
     it('testCanGetFixDescriptor', async function () {
       const descriptor = {
-        fixMajor: 4,
-        fixMinor: 4,
-        dictHash: ethers.keccak256(ethers.toUtf8Bytes('dictionary')),
+        schemaHash: ethers.keccak256(ethers.toUtf8Bytes('dictionary')),
         fixRoot: ethers.keccak256(ethers.toUtf8Bytes('root')),
         fixSBEPtr: ethers.ZeroAddress,
         fixSBELen: 0,
@@ -36,9 +34,7 @@ function FixDescriptorModuleCommon () {
       await this.fixDescriptorEngineMock.setFixDescriptor(descriptor)
 
       const result = await this.cmtat.getFixDescriptor()
-      expect(result.fixMajor).to.equal(descriptor.fixMajor)
-      expect(result.fixMinor).to.equal(descriptor.fixMinor)
-      expect(result.dictHash).to.equal(descriptor.dictHash)
+      expect(result.schemaHash).to.equal(descriptor.schemaHash)
       expect(result.fixRoot).to.equal(descriptor.fixRoot)
       expect(result.fixSBEPtr).to.equal(descriptor.fixSBEPtr)
       expect(result.fixSBELen).to.equal(descriptor.fixSBELen)
@@ -48,9 +44,7 @@ function FixDescriptorModuleCommon () {
     it('testCanGetFixRoot', async function () {
       const fixRoot = ethers.keccak256(ethers.toUtf8Bytes('test-root'))
       const descriptor = {
-        fixMajor: 4,
-        fixMinor: 4,
-        dictHash: ethers.keccak256(ethers.toUtf8Bytes('dictionary')),
+        schemaHash: ethers.keccak256(ethers.toUtf8Bytes('dictionary')),
         fixRoot: fixRoot,
         fixSBEPtr: ethers.ZeroAddress,
         fixSBELen: 0,

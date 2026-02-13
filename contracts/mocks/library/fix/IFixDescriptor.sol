@@ -10,9 +10,7 @@ pragma solidity ^0.8.20;
 interface IFixDescriptor {
     /// @notice FIX descriptor structure
     struct FixDescriptor {
-        uint16 fixMajor;           // FIX version major (e.g., 4)
-        uint16 fixMinor;           // FIX version minor (e.g., 4)
-        bytes32 dictHash;          // FIX dictionary/Orchestra hash
+        bytes32 schemaHash;        // FIX schema/dictionary hash
         bytes32 fixRoot;           // Merkle root commitment
         address fixSBEPtr;         // SSTORE2 data contract address
         uint32 fixSBELen;          // SBE data length
@@ -22,7 +20,7 @@ interface IFixDescriptor {
     /// @notice Emitted when descriptor is first set
     event FixDescriptorSet(
         bytes32 indexed fixRoot,
-        bytes32 indexed dictHash,
+        bytes32 indexed schemaHash,
         address fixSBEPtr,
         uint32 fixSBELen
     );
