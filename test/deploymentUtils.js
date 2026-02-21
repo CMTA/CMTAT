@@ -85,6 +85,16 @@ async function deployCMTATERC1363Standalone (forwarder, admin, deployerAddress) 
   return cmtat
 }
 
+async function deployCMTATPermitStandalone (admin, deployerAddress) {
+  const cmtat = await ethers.deployContract('CMTATStandalonePermit', [
+    admin,
+    ['CMTA Token', 'CMTAT', DEPLOYMENT_DECIMAL],
+    ['CMTAT_ISIN', TERMS, 'CMTAT_info'],
+    [ZERO_ADDRESS]
+  ])
+  return cmtat
+}
+
 async function deployCMTATLightStandalone (admin, deployerAddress) {
   const cmtat = await ethers.deployContract('CMTATStandaloneLight', [
     admin,
@@ -228,6 +238,28 @@ async function deployCMTATERC7551Proxy (forwarder, admin, deployerAddress) {
     {
       initializer: 'initialize',
       constructorArgs: [forwarder],
+      from: deployerAddress,
+      unsafeAllow: ['missing-initializer']
+    }
+  )
+  return ETHERS_CMTAT_PROXY
+}
+
+async function deployCMTATPermitProxy (admin, deployerAddress) {
+  const ETHERS_CMTAT_PROXY_FACTORY = await ethers.getContractFactory(
+    'CMTATUpgradeablePermit'
+  )
+  const ETHERS_CMTAT_PROXY = await upgrades.deployProxy(
+    ETHERS_CMTAT_PROXY_FACTORY,
+    [
+      admin,
+      ['CMTA Token', 'CMTAT', DEPLOYMENT_DECIMAL],
+      ['CMTAT_ISIN', TERMS, 'CMTAT_info'],
+      [ZERO_ADDRESS]
+    ],
+    {
+      initializer: 'initialize',
+      constructorArgs: [],
       from: deployerAddress,
       unsafeAllow: ['missing-initializer']
     }
@@ -398,8 +430,10 @@ module.exports = {
   deployCMTATDebtEngineProxy,
   deployCMTATERC1363Proxy,
   deployCMTATERC1363Standalone,
+  deployCMTATPermitStandalone,
   deployCMTATERC7551Proxy,
   deployCMTATERC7551Standalone,
+  deployCMTATPermitProxy,
   deployCMTATProxyWithParameter,
   deployCMTATStandaloneWithParameter,
   DEPLOYMENT_DECIMAL,
