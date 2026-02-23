@@ -20,8 +20,6 @@ import {FixDescriptorEngineModule} from "./wrapper/extensions/FixDescriptorEngin
 import {ERC20BaseModule, ERC20Upgradeable} from "./wrapper/core/ERC20BaseModule.sol";
  /* ==== Interface and other library === */
 import {ICMTATConstructor} from "../interfaces/technical/ICMTATConstructor.sol";
-import {ISnapshotEngine} from "../interfaces/engine/ISnapshotEngine.sol";
-import {IFixDescriptorEngine} from "../interfaces/engine/IFixDescriptorEngine.sol";
 import {CMTATBaseCommon} from "./0_CMTATBaseCommon.sol";
 abstract contract CMTATBaseAccessControl is
     AccessControlModule,
@@ -37,9 +35,6 @@ abstract contract CMTATBaseAccessControl is
         __ERC20BaseModule_init_unchained(ERC20Attributes_.decimalsIrrevocable, ERC20Attributes_.name, ERC20Attributes_.symbol);
         /* Extensions */
         __ExtraInformationModule_init_unchained(ExtraInformationModuleAttributes_.tokenId, ExtraInformationModuleAttributes_.terms, ExtraInformationModuleAttributes_.information);
-        __SnapshotEngineModule_init_unchained(ISnapshotEngine(address(0)));
-        __DocumentEngineModule_init_unchained(IERC1643(address(0)));
-        __FixDescriptorEngineModule_init_unchained(IFixDescriptorEngine(address(0)));
     }
     
     /*//////////////////////////////////////////////////////////////
