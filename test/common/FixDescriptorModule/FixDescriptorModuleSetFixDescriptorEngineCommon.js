@@ -6,7 +6,7 @@ function FixDescriptorModuleSetFixDescriptorEngineCommon () {
     it('testCanBeSetByAdmin', async function () {
       this.fixDescriptorEngineMock = await ethers.deployContract(
         'FixDescriptorEngineMock',
-        [ZERO_ADDRESS, this.admin]
+        [this.cmtat.target, this.admin]
       )
       // Act
       this.logs = await this.cmtat
@@ -33,7 +33,7 @@ function FixDescriptorModuleSetFixDescriptorEngineCommon () {
     it('testCannotBeSetByNonAdmin', async function () {
       this.fixDescriptorEngineMock = await ethers.deployContract(
         'FixDescriptorEngineMock',
-        [ZERO_ADDRESS, this.admin]
+        [this.cmtat.target, this.admin]
       )
       // Act
       await expect(
@@ -46,6 +46,23 @@ function FixDescriptorModuleSetFixDescriptorEngineCommon () {
           'AccessControlUnauthorizedAccount'
         )
         .withArgs(this.address1.address, DESCRIPTOR_ENGINE_ROLE)
+    })
+
+    it('testCannotSetEngineBoundToAnotherToken', async function () {
+      const otherToken = this.address2.address
+      this.fixDescriptorEngineMock = await ethers.deployContract(
+        'FixDescriptorEngineMock',
+        [otherToken, this.admin]
+      )
+
+      await expect(
+        this.cmtat.connect(this.admin).setFixDescriptorEngine(this.fixDescriptorEngineMock.target)
+      )
+        .to.be.revertedWithCustomError(
+          this.cmtat,
+          'CMTAT_FixDescriptorModule_InvalidTokenBinding'
+        )
+        .withArgs(this.cmtat.target, otherToken)
     })
   })
 }
