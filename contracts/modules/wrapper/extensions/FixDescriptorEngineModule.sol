@@ -56,6 +56,13 @@ abstract contract FixDescriptorEngineModule is Initializable, IFixDescriptorEngi
     ) public virtual override(IFixDescriptorEngineModule) onlyDescriptorEngine  {
         FixDescriptorEngineModuleStorage storage $ = _getFixDescriptorEngineModuleStorage();
         require($._fixDescriptorEngine != fixDescriptorEngine_, CMTAT_FixDescriptorModule_SameValue());
+        if (address(fixDescriptorEngine_) != address(0)) {
+            address engineToken = fixDescriptorEngine_.token();
+            require(
+                engineToken == address(this),
+                CMTAT_FixDescriptorModule_InvalidTokenBinding(address(this), engineToken)
+            );
+        }
         _setFixDescriptorEngine($, fixDescriptorEngine_);
     }
 

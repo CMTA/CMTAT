@@ -22,6 +22,10 @@ interface IFixDescriptorEngineModule {
      * @dev Reverts if the new FIX descriptor engine is the same as the current one.
      */
     error CMTAT_FixDescriptorModule_SameValue();
+    /**
+     * @dev Reverts if the provided engine is not bound to the current token.
+     */
+    error CMTAT_FixDescriptorModule_InvalidTokenBinding(address expectedToken, address actualToken);
     /* ============ Functions ============ */
     /**
      * @notice Sets the address of the FIX descriptor engine contract.
