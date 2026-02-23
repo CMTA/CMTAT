@@ -1,4 +1,4 @@
-//SPDX-License-Identifier: MPL-2.0
+// SPDX-License-Identifier: MPL-2.0
 
 /**
 * Note:
@@ -8,6 +8,8 @@
 */ 
 
 pragma solidity ^0.8.20;
+
+import {IERC7943FungibleEnforcement} from "./draft-IERC7943.sol";
 
 /**
  * @title IERC3643Pause
@@ -166,19 +168,8 @@ interface IERC3643Enforcement {
  * @notice Interface for enforcing partial token freezes and forced transfers, typically used in compliance-sensitive ERC-1400 scenarios.
  * @dev For event definitions, see {IERC7551ERC20Enforcement}.
  */
-interface IERC3643ERC20Enforcement {
-    /* ============ View Functions ============ */
-    /**
-     * @notice Returns the number of tokens that are currently frozen (i.e., non-transferable) for a given account.
-     * @dev The frozen amount is always less than or equal to the total balance of the account.
-     * @param account The address of the wallet being queried.
-     * @return frozenBalance_ The amount of frozen tokens held by the account.
-     */
-    function getFrozenTokens(address account) external view returns (uint256 frozenBalance_);
-
-
+interface IERC3643ERC20Enforcement is IERC7943FungibleEnforcement {
     /* ============ State Functions ============ */
-
     /**
      * @notice Freezes a specific amount of tokens for a given account.
      * @dev Emits a `TokensFrozen` event. Prevents the frozen amount from being transferred.
@@ -194,28 +185,6 @@ interface IERC3643ERC20Enforcement {
      *  @param value Amount of Tokens to be unfrozen
      */
     function unfreezePartialTokens(address account, uint256 value) external;
-    /**
-     *  
-     *  @notice Triggers a forced transfer.
-     *  @dev 
-*    *  Force a transfer of tokens between 2 token holders
-     *  If IERC364320Enforcement is implemented:
-     *      Require that the total value should not exceed available balance.
-     *      In case the `from` address has not enough free tokens (unfrozen tokens)
-     *      but has a total balance higher or equal to the `amount`
-     *      the amount of frozen tokens is reduced in order to have enough free tokens
-     *      to proceed the transfer, in such a case, the remaining balance on the `from`
-     *      account is 100% composed of frozen tokens post-transfer.
-     *      emits a `TokensUnfrozen` event if `value` is higher than the free balance of `from`
-     *  Emits a `Transfer` event
-     *  @param from The address of the token holder
-     *  @param to The address of the receiver
-     *  @param value amount of tokens to transfer
-     *  @return success_ `true` if successful and revert if unsuccessful
-
-     */
-    function forcedTransfer(address from, address to, uint256 value) external returns (bool success_);
-
 }
 /**
 * @title IERC3643Mint — Token Minting Interface
@@ -226,7 +195,8 @@ interface IERC3643Mint{
     /**
      * @notice Creates (`mints`) a specified `value` of tokens and assigns them to the `account`.
      * @dev Tokens are minted by transferring them from the zero address (`address(0)`).
-     * Emits a {Mint} event and a {Transfer} event with `from` set to `address(0)`.
+     * Emits a {Transfer} event with `from` set to `address(0)`.
+     * Not part of ERC-3643: emits also a {Mint} event
      * Requirement:
      * Account must not be the zero address.
      * @param account The address that will receive the newly minted tokens. 
@@ -237,9 +207,9 @@ interface IERC3643Mint{
      * @notice Batch version of {mint}, allowing multiple mint operations in a single transaction.
      * @dev
      * For each mint action:
-     *   - Emits a {Mint} event.
      *   - Emits a {Transfer} event with `from` set to the zero address.
-     * - Requires that `accounts` and `values` arrays have the same length.
+     * Not part of ERC-3643: emits also a {BatchMint} event
+     *- Requires that `accounts` and `values` arrays have the same length.
      * - None of the addresses in `accounts` can be the zero address.
      * - Be cautious with large arrays as the transaction may run out of gas.
      * @param accounts The list of recipient addresses for the minted tokens.
@@ -259,6 +229,7 @@ interface IERC3643Burn{
      * @dev 
      * - Decreases the total token supply by the specified `value`.
      * - Emits a `Transfer` event to indicate the burn (with `to` set to `address(0)`).
+     * - Not part of ERC-3643: emits also a {Burn} event
      * - If `IERC364320Enforcement` is implemented:
      *   - If the account has insufficient free (unfrozen) tokens but a sufficient total balance, 
      *     frozen tokens are reduced to complete the burn.
@@ -275,7 +246,8 @@ interface IERC3643Burn{
      * - Batch version of {burn}
      * - Executes the burn operation for each account in the `accounts` array, using corresponding amounts in the `values` array.
      * - Emits a `Transfer` event for each burn (with `to` set to `address(0)`).
-     * - This operation is gas-intensive and may fail if the number of accounts (`accounts.length`) is too large, causing an "out of gas" error.
+     *  Not part of ERC-3643: emits also a {BatchBurn} event
+     *- This operation is gas-intensive and may fail if the number of accounts (`accounts.length`) is too large, causing an "out of gas" error.
      * - Use with caution to avoid unnecessary transaction fees.
      * Requirement:
      *  - `accounts` and `values` must have the same length

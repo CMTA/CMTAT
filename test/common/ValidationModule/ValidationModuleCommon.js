@@ -542,5 +542,32 @@ function ValidationModuleCommon () {
         .withArgs(ZERO_ADDRESS, TOKEN_HOLDER[2], TOKEN_SUPPLY_BY_HOLDERS[2])
     })
   })
+
+  // Coverage tests for _canMintBurnByModule branch (deactivated || frozen -> return false)
+  context('ValidationModuleMintBurnFrozenTest', function () {
+    it('testCanTransferReturnsFalseForMintToFrozenAddress', async function () {
+      // Freeze address1
+      await this.cmtat
+        .connect(this.admin)
+        .setAddressFrozen(this.address1, true)
+
+      // canTransfer for mint (from = ZERO_ADDRESS) to frozen address should return false
+      expect(
+        await this.cmtat.canTransfer(ZERO_ADDRESS, this.address1, 10)
+      ).to.equal(false)
+    })
+
+    it('testCanTransferReturnsFalseForBurnFromFrozenAddress', async function () {
+      // Freeze address1
+      await this.cmtat
+        .connect(this.admin)
+        .setAddressFrozen(this.address1, true)
+
+      // canTransfer for burn (to = ZERO_ADDRESS) from frozen address should return false
+      expect(
+        await this.cmtat.canTransfer(this.address1, ZERO_ADDRESS, 10)
+      ).to.equal(false)
+    })
+  })
 }
 module.exports = ValidationModuleCommon

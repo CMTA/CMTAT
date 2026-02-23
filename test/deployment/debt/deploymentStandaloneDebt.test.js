@@ -18,16 +18,7 @@ const ERC20EnforcementModuleCommon = require('../../common/ERC20EnforcementModul
 const DocumentModuleCommon = require('../../common/DocumentModule/DocumentModuleCommon')
 const ExtraInfoModuleCommon = require('../../common/ExtraInfoModuleCommon')
 const DebtModuleCommon = require('../../common/DebtModule/DebtModuleCommon')
-const DebtModuleSetDebtEngineCommon = require('../../common/DebtModule/DebtModuleSetDebtEngineCommon')
-const DebtEngineModuleCommon = require('../../common/DebtModule/DebtEngineModuleCommon')
 // Snapshot
-const SnapshotModuleCommonRescheduling = require('../../common/SnapshotModuleCommon/SnapshotModuleCommonRescheduling')
-const SnapshotModuleCommonScheduling = require('../../common/SnapshotModuleCommon/SnapshotModuleCommonScheduling')
-const SnapshotModuleCommonUnschedule = require('../../common/SnapshotModuleCommon/SnapshotModuleCommonUnschedule')
-const SnapshotModuleCommonGetNextSnapshot = require('../../common/SnapshotModuleCommon/SnapshotModuleCommonGetNextSnapshot')
-const SnapshotModuleMultiplePlannedTest = require('../../common/SnapshotModuleCommon/global/SnapshotModuleMultiplePlannedTest')
-const SnapshotModuleOnePlannedSnapshotTest = require('../../common/SnapshotModuleCommon/global/SnapshotModuleOnePlannedSnapshotTest')
-const SnapshotModuleZeroPlannedSnapshotTest = require('../../common/SnapshotModuleCommon/global/SnapshotModuleZeroPlannedSnapshot')
 const SnapshotModuleSetSnapshotEngineCommon = require('../../common/SnapshotModuleCommon/SnapshotModuleSetSnapshotEngineCommon')
 describe('CMTAT Debt - Standalone', function () {
   beforeEach(async function () {
@@ -56,17 +47,8 @@ describe('CMTAT Debt - Standalone', function () {
   ERC20EnforcementModuleCommon()
   ExtraInfoModuleCommon()
   DocumentModuleCommon()
-  SnapshotModuleMultiplePlannedTest()
-  SnapshotModuleOnePlannedSnapshotTest()
-  SnapshotModuleZeroPlannedSnapshotTest()
-  SnapshotModuleCommonRescheduling()
-  SnapshotModuleCommonScheduling()
-  SnapshotModuleCommonUnschedule()
-  SnapshotModuleCommonGetNextSnapshot()
   // Set snapshot Engine
   SnapshotModuleSetSnapshotEngineCommon
   // options
   DebtModuleCommon()
-  DebtEngineModuleCommon()
-  DebtModuleSetDebtEngineCommon()
 })

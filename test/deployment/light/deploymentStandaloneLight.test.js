@@ -26,6 +26,7 @@ describe('CMTAT Core - Standalone', function () {
       this.deployerAddress.address
     )
     this.erc1404 = true
+    this.core = true
   })
   VersionModuleCommon()
   PauseModuleCommon()

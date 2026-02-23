@@ -16,6 +16,7 @@ import {ERC20MintModule, ERC20MintModuleInternal} from "../core/ERC20MintModule.
  * @dev 
  *
  * Contains all mint and burn functions, inherits from ERC-20
+ * Implements ERC-7802 for cross-chain burn and mint
  */
 abstract contract ERC20CrossChainModule is ERC20MintModule, ERC20BurnModule, ERC165Upgradeable, IERC7802, IBurnFromERC20 {
     /* ============ State Variables ============ */

@@ -2,6 +2,7 @@ node_modules
 build
 /coverage
 ./coverage.json
+coverage.json
 bin/*
 #exception
 #!doc/general/test/coverage
@@ -19,3 +20,9 @@ cache
 mcore_*
 #secrets
 .env
+
+#ackee wake
+.wake
+#Claude
+PLAN.md
+INSTRUCTION.md

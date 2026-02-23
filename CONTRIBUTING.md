@@ -4,7 +4,23 @@ There are many ways to contribute to CMTAT Contracts.
 
 ## Development branch
 
-If you want to propose some improvement to CMTAT codebase, use the current development branch `dev`to perform the modification.
+If you want to propose some improvement to CMTAT codebase, use the current development branch `dev` to perform the modification.
+
+For big change or experimental features, we recommend to create a dedicated repository and use CMTAT as a [github submodule](https://www.atlassian.com/git/tutorials/git-submodule).
+
+```bash
+git submodule add https://github.com/CMTA/CMTAT
+```
+
+You can find example of using CMTAT as a github submodule in following repositories: [SnapshotEngine](https://github.com/CMTA/SnapshotEngine) or [CMTAT Factory](https://github.com/CMTA/CMTATFactory)
+
+## Using CMTAT
+
+If you want to use CMTAT, we recommend to use CMTAT as a library through GitHub submodule instead of a fork
+
+This would make it easier to keep your changes separate from the upstream CMTAT codebase. 
+
+It also simplifies upgrading to newer versions of CMTAT, since updating a submodule is typically cleaner and more straightforward than maintaining a fork.
 
 ## Opening an issue
 
@@ -19,8 +35,6 @@ When requesting a new feature, include as many details as you can, especially ar
 If you would like to contribute code or documentation you may do so by forking the repository and submitting a pull request.
 
 Run linter and tests to make sure your pull request is good before submitting it.
-
-
 
 ## Reference
 

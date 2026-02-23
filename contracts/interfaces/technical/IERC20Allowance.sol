@@ -10,11 +10,15 @@ interface IERC20Allowance {
    /* ============ Events ============ */
     /**
      * @notice Emitted when a `spender` spends a `value` amount of tokens on behalf of an `account`.
-     * @dev 
+     * @dev
      * - This event is similar in semantics to the ERC-20 `Approval` event.
      * Approval(address indexed _owner, address indexed _spender, uint256 _value)
      * - It represents a reduction in the spender’s allowance granted by the account.
      * - Can also be used for function which uses the allowance, e.g.`burnFrom
+     * - This event is NOT emitted when the allowance is infinite (type(uint256).max),
+     *   because in that case OpenZeppelin does not reduce the allowance.
+     *   Integrators must not rely solely on this event to track allowance changes
+     *   when infinite approvals are in use.
      * @param account The owner of the tokens whose allowance is being spent.
      * @param spender The address authorized to spend the tokens.
      * @param value The amount of tokens that were spent.

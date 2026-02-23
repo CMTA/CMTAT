@@ -17,10 +17,8 @@ function FixDescriptorModuleCommon () {
       }
     })
     it('testCanReturnTheRightAddressIfSet', async function () {
-      if (this.definedAtDeployment) {
-        const fixDescriptorEngine = await this.cmtat.fixDescriptorEngine()
-        expect(this.fixDescriptorEngineMock.target).to.equal(fixDescriptorEngine)
-      }
+      const fixDescriptorEngine = await this.cmtat.fixDescriptorEngine()
+      expect(this.fixDescriptorEngineMock.target).to.equal(fixDescriptorEngine)
     })
     it('testCanSetZeroAddressEngine', async function () {
       await this.cmtat

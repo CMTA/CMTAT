@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./interfaces/tokenization/draft-IERC1404.sol | c88032359d0a05c66710b55c1e901e20fded1531 |
+| ./interfaces/tokenization/draft-IERC1404.sol | 749052b2adf2e813b9c5298b273e56aadffc9258 |
 
 
 ### Contracts Description Table

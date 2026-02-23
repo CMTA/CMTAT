@@ -11,8 +11,7 @@ async function main() {
   const admin = "0x1000000000000000000000000000000000000001";
   
   const ruleEngine = ZeroAddress;
-  const snapshotEngine = ZeroAddress;
-  const documentEngine = ZeroAddress;
+
   const ERC20Attributes = {
     name: "Security Token",
     symbol: "ST",
@@ -32,9 +31,7 @@ async function main() {
   };
 
   const engines = {
-    ruleEngine: ruleEngine,
-    snapshotEngine: snapshotEngine,
-    documentEngine: documentEngine
+    ruleEngine: ruleEngine
   };
 
   const CMTATStandalone = await ethers.getContractFactory("CMTATStandalone");

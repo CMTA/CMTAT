@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/internal/ERC20EnforcementModuleInternal.sol | 73b5d03e67ebb9c64a54e26ade91d118accee2f4 |
+| ./modules/internal/ERC20EnforcementModuleInternal.sol | 27f44eaac70af6fac87e5ccd29917d399cb6289a |
 
 
 ### Contracts Description Table
@@ -15,11 +15,14 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **ERC20EnforcementModuleInternal** | Implementation | ERC20Upgradeable, IERC7551ERC20EnforcementEvent, IERC7551ERC20EnforcementTokenFrozenEvent |||
+| **ERC20EnforcementModuleInternal** | Implementation | ERC20Upgradeable, IERC7551ERC20EnforcementEvent, IERC7551ERC20EnforcementTokenFrozenEvent, IERC7943FungibleEnforcementEvent |||
+| └ | _setFrozenTokens | Internal 🔒 | 🛑  | |
 | └ | _freezePartialTokens | Internal 🔒 | 🛑  | |
 | └ | _unfreezePartialTokens | Internal 🔒 | 🛑  | |
 | └ | _unfreezeTokens | Internal 🔒 | 🛑  | |
 | └ | _forcedTransfer | Internal 🔒 | 🛑  | |
+| └ | _freezeTokensEmitEvents | Internal 🔒 | 🛑  | |
+| └ | _unfreezeTokensEmitEvents | Internal 🔒 | 🛑  | |
 | └ | _checkActiveBalanceAndRevert | Internal 🔒 |   | |
 | └ | _checkActiveBalance | Internal 🔒 |   | |
 | └ | _getFrozenTokens | Internal 🔒 |   | |

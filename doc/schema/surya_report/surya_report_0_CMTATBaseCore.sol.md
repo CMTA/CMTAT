@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/0_CMTATBaseCore.sol | 76b6076f8784a87828b0fd5543a7463e4419d98c |
+| ./modules/0_CMTATBaseCore.sol | 2e7402c9225bdab6f6d450f6fbc4c116c4459b2a |
 
 
 ### Contracts Description Table
@@ -15,7 +15,7 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **CMTATBaseCore** | Implementation | Initializable, ContextUpgradeable, VersionModule, ERC20MintModule, ERC20BurnModule, ValidationModuleCore, ERC20BaseModule, AccessControlModule, IForcedBurnERC20, IBurnMintERC20, IERC7551ERC20EnforcementEvent, IERC5679 |||
+| **CMTATBaseCore** | Implementation | Initializable, ContextUpgradeable, VersionModule, ERC20MintModule, ERC20BurnModule, ValidationModuleCore, ERC20BaseModule, AccessControlModule, IForcedBurnERC20, IBurnMintERC20, IERC7551ERC20EnforcementEvent, IERC5679, IERC7943FungibleTransferError |||
 | └ | initialize | Public ❗️ | 🛑  | initializer |
 | └ | __CMTAT_init | Internal 🔒 | 🛑  | onlyInitializing |
 | └ | __CMTAT_openzeppelin_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |

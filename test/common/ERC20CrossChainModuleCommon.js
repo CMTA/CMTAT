@@ -156,8 +156,8 @@ function ERC20CrossChainModuleCommon () {
       await expect(
         this.cmtat.connect(this.admin).crosschainBurn(this.address1, VALUE)
       )
-        .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
-        .withArgs(this.address1.address, ZERO_ADDRESS, VALUE)
+        .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotTransact')
+        .withArgs(this.address1.address)
     })
   })
 
@@ -290,8 +290,8 @@ function ERC20CrossChainModuleCommon () {
       const VALUE = 20
       const VALUE_TYPED = ethers.Typed.uint256(20)
       await expect(this.cmtat.connect(this.address1).burn(VALUE_TYPED))
-        .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
-        .withArgs(this.address1.address, ZERO_ADDRESS, VALUE)
+        .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotTransact')
+        .withArgs(this.address1.address)
     })
   })
 
@@ -363,9 +363,9 @@ function ERC20CrossChainModuleCommon () {
     ////////////////////////////////////////////////////////////// */
 
     it('testCannotBeBurnFromIfContractIsPaused', async function () {
+      await this.cmtat.connect(this.address1).approve(this.admin, 50n)
       // Arrange
       await this.cmtat.connect(this.admin).pause()
-      await this.cmtat.connect(this.address1).approve(this.admin, 50n)
       // Act
       await expect(
         this.cmtat.connect(this.admin).burnFrom(this.address1, 20n)
@@ -373,10 +373,11 @@ function ERC20CrossChainModuleCommon () {
     })
 
     it('testCannotBeBurnFromIfContractIsDeactivated', async function () {
+      await this.cmtat.connect(this.address1).approve(this.admin, 50n)
+      // First because revert if the contract is in the pause state
       // Arrange
       await this.cmtat.connect(this.admin).pause()
       await this.cmtat.connect(this.admin).deactivateContract()
-      await this.cmtat.connect(this.address1).approve(this.admin, 50n)
       // Act
       await expect(
         this.cmtat.connect(this.admin).burnFrom(this.address1, 20n)
@@ -390,8 +391,8 @@ function ERC20CrossChainModuleCommon () {
         .setAddressFrozen(this.address1, true)
       // Act
       await expect(this.cmtat.connect(this.admin).burnFrom(this.address1, 20n))
-        .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
-        .withArgs(this.address1, ZERO_ADDRESS, VALUE1)
+        .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotTransact')
+        .withArgs(this.address1)
     })
   })
   context('CrossChainMinting', function () {
@@ -501,8 +502,8 @@ function ERC20CrossChainModuleCommon () {
       await expect(
         this.cmtat.connect(this.admin).crosschainMint(this.address1, VALUE1)
       )
-        .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
-        .withArgs(ZERO_ADDRESS, this.address1, VALUE1)
+        .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotTransact')
+        .withArgs(this.address1)
     })
   })
 }

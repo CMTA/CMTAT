@@ -62,7 +62,6 @@ abstract contract ERC20BaseModule is ERC20Upgradeable, IERC20Allowance, IERC3643
     //////////////////////////////////////////////////////////////*/
 
     /* ============  ERC-20 standard ============ */
-    
     /* ======== State functions ======= */
      /**
      * @notice Transfers `value` amount of tokens from address `from` to address `to`
@@ -79,6 +78,8 @@ abstract contract ERC20BaseModule is ERC20Upgradeable, IERC20Allowance, IERC3643
         bool result = ERC20Upgradeable.transferFrom(from, to, value);
         // The result will be normally always true because OpenZeppelin will revert in case of an error
         if (result) {
+            // emit Spend does not necessarily imply an allowance reduction
+            // This is the case if the allowance is set to uint256.max
             emit Spend(from, _msgSender(), value);
         }
 

@@ -41,7 +41,64 @@ Reference: [keepachangelog.com/en/1.1.0/](https://keepachangelog.com/en/1.1.0/)
   
   - Update changelog
 
-## 3.1.0
+
+
+## 3.2.0
+
+> **Note:** This version has not been audited.
+
+### Smart contract
+
+#### Added
+
+- Support of **ERC-7943** ([#337](https://github.com/CMTA/CMTAT/issues/337)):
+  - New functions `setFrozenTokens` and `canTransact` in the enforcement module.
+  - New error `ERC7943InsufficientUnfrozenBalance` in `ERC20EnforcementModule`.
+  - Emit ERC-7943 enforcement events (`TokensFrozen`, `TokensUnfrozen`).
+  - ERC-7943 ERC-165 interface ID support.
+- New dedicated deployment variant with **DebtEngine** support (see *Removed* section for rationale).
+- **IRuleEngine**: ERC-165 support added ([#342](https://github.com/CMTA/CMTAT/issues/342)) to enable interface compliance checks.
+  - New interface `IRuleEngineERC1404` inheriting from both `IERC1404Extend` and `IRuleEngine`.
+  - Library contracts `RuleEngineInterfaceId` and `ERC1404ExtendInterfaceId` to store ERC-165 interface IDs.
+- New base contract **CMTATBaseAccessControl** ([#350](https://github.com/CMTA/CMTAT/issues/350)).
+
+#### Changed
+
+- **Transfer** now reverts with specific errors when the contract is paused or deactivated ([#338](https://github.com/CMTA/CMTAT/issues/338)) to improve error clarity.
+- The `approve` function now reverts when the contract is paused for all deployment variants except **Light** ([#335](https://github.com/CMTA/CMTAT/issues/335)).
+- ValidationModule: Optimized code size by removing useless boolean returns.
+- Updating contract address comparisons (Solidity v3.2.0).
+- Replaced CMTAT library errors with ERC-7943 specific errors.
+- Renamed custom errors for consistency.
+
+#### Fixed
+
+- **Wake Arena audit (M1/M2/M3)**: Removed redundant `CMTATBaseRuleEngine._checkTransferred` calls in `CMTATBaseERC20CrossChain._mintOverride`, `_burnOverride`, and `_minterTransferOverride`. The rule-engine compliance hook was being executed twice per operation; the single authoritative call in the `CMTATBaseCommon` parent overrides is now sufficient.
+- **Wake Arena audit (I1)**: Corrected NatSpec comment in `CMTATBaseERC20CrossChain._authorizeSelfBurn` which incorrectly referenced `BURNER_FROM_ROLE` instead of `BURNER_SELF_ROLE`.
+
+#### NatSpec / Comments
+
+- **Wake Arena audit (L1)**: Added clarifying comment in `ERC20BaseModule.transferFrom` and updated `IERC20Allowance.Spend` event NatSpec to state that the event is not emitted when the allowance is infinite (`type(uint256).max`), as no deduction occurs in that case.
+- **Wake Arena audit (L2)**: Added NatSpec warning on `approve` in `CMTATBaseAllowlist` documenting the standard ERC-20 allowance race condition and advising callers to set the allowance to zero before assigning a new non-zero value.
+
+#### Removed
+
+- **DocumentEngine** and **SnapshotEngine** removed from constructors and initialization ([#343](https://github.com/CMTA/CMTAT/issues/343)) to simplify deployment and reduce bytecode size.
+- **DebtDeployment**: DebtEngine support removed and moved to a dedicated deployment variant ([#339](https://github.com/CMTA/CMTAT/issues/339)) to reduce contract size and enable additional modules in DebtEngine-based deployments.
+- CMTAT `Errors` library removed, errors are now defined in their respective interfaces.
+
+### Test / Doc / Script
+
+#### Added
+
+- Missing ERC-2771 integration tests for MetaTx module.
+- Script to compute ERC-165 interface IDs (`npm run erc165:interfaceId`).
+
+#### Changed
+
+- Update Solidity version to [0.8.34](https://www.soliditylang.org/blog/2026/02/18/solidity-0.8.34-release-announcement) in Hardhat config file.
+
+## 3.1.0 - 20251209
 
 > This version is not audited
 
@@ -63,7 +120,6 @@ Reference: [keepachangelog.com/en/1.1.0/](https://keepachangelog.com/en/1.1.0/)
 - In `ERC7551Module`, the function `setTerms` emits the `Terms` event
   - Reason: meet the specification of the draft ERC [ERC-7551](https://ethereum-magicians.org/t/erc-7551-crypto-security-token-smart-contract-interface-ewpg-reworked/25477).
 - Create specific module `ERC20CrossChain` for cross-chain transfers (ERC-7802 and other burn/mint related function), code previously put in `CMTATBaseCrossChain`.
-
 
 **Changed**
 

@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./mocks/RuleEngine/interfaces/IRuleEngineMock.sol | 32763c55e25fcee9b872d6859a3e9dfaaf72d26f |
+| ./mocks/RuleEngine/interfaces/IRuleEngineMock.sol | 16e5f8751c5bd3efe8f259b6a8bae034984e31b2 |
 
 
 ### Contracts Description Table
@@ -15,7 +15,7 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **IRuleEngineMock** | Interface | IRuleEngine |||
+| **IRuleEngineMock** | Interface | IRuleEngineERC1404 |||
 | └ | setRules | External ❗️ | 🛑  |NO❗️ |
 | └ | rulesCount | External ❗️ |   |NO❗️ |
 | └ | rule | External ❗️ |   |NO❗️ |

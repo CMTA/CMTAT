@@ -4,6 +4,11 @@ const {
   fixture,
   loadFixture
 } = require('../../deploymentUtils')
+const {
+  IERC165_INTERFACEID, IERC721_INTERFACEID,IACCESSCONTROL_INTERFACEID,
+  IERC1363_INTERFACEID, IERC5679_INTERFACEID
+} = require('../../utils')
+
 // Core
 const VersionModuleCommon = require('../../common/VersionModuleCommon')
 const PauseModuleCommon = require('../../common/PauseModuleCommon')
@@ -44,19 +49,13 @@ describe('CMTAT - ERC1363 Proxy Deployment', function () {
   })
   /* ============ ERC165 ============ */
   it('testSupportRightInterface', async function () {
-    const erc1363Interface = '0xb0202a11'
-    // don't really know how to compute this easily
-    //  type(IAccessControl).interfaceId
-    const IERC165Interface = '0x01ffc9a7'
-    const IERC721Interface = '0x80ac58cd'
-    const IERC5679 = '0xd0017968'
     // Assert
-    expect(await this.cmtat.supportsInterface(erc1363Interface)).to.equal(true)
-    expect(await this.cmtat.supportsInterface(IERC165Interface)).to.equal(true)
-    expect(await this.cmtat.supportsInterface(IERC721Interface)).to.equal(
-      false
-    )
-    expect(await this.cmtat.supportsInterface(IERC5679)).to.equal(true)
+    expect(await this.cmtat.supportsInterface(IACCESSCONTROL_INTERFACEID)).to.equal(true)
+    expect(await this.cmtat.supportsInterface(IERC165_INTERFACEID)).to.equal(true)
+    expect(await this.cmtat.supportsInterface(IERC721_INTERFACEID)).to.equal(
+         false)
+    expect(await this.cmtat.supportsInterface(IERC5679_INTERFACEID)).to.equal(true)
+    expect(await this.cmtat.supportsInterface(IERC1363_INTERFACEID)).to.equal(true)
   })
   it('testCanSendTokenToReceiverContract', async function () {
     // Arrange

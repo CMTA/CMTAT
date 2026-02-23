@@ -1,7 +1,7 @@
 #!/bin/bash
 cd '../../'
 DIR=$(pwd)
-DIR_OUT=${DIR}/docOut/inheritance
+DIR_OUT=${DIR}/docOut/surya_inheritance
 if ! [ -d "$DIR_OUT" ]; then
     mkdir -p ./docOut/surya_inheritance
 fi

@@ -21,6 +21,7 @@ function EnforcementModuleCommon () {
     async function testFreeze (sender) {
       // Arrange - Assert
       expect(await this.cmtat.isFrozen(this.address1)).to.equal(false)
+      expect(await this.cmtat.canTransact(this.address1)).to.equal(true)
       // Act
       this.logs = await this.cmtat
         .connect(sender)
@@ -32,6 +33,7 @@ function EnforcementModuleCommon () {
         ).to.equal(false)
       }
       expect(await this.cmtat.isFrozen(this.address1)).to.equal(true)
+      expect(await this.cmtat.canTransact(this.address1)).to.equal(false)
       // emits a Freeze event
       await expect(this.logs)
         .to.emit(this.cmtat, 'AddressFrozen')
@@ -44,6 +46,8 @@ function EnforcementModuleCommon () {
       // Arrange - Assert
       expect(await this.cmtat.isFrozen(this.address1)).to.equal(false)
       expect(await this.cmtat.isFrozen(this.address2)).to.equal(false)
+      expect(await this.cmtat.canTransact(this.address1)).to.equal(true)
+      expect(await this.cmtat.canTransact(this.address1)).to.equal(true)
       // Act
       this.logs = await this.cmtat
         .connect(sender)
@@ -62,6 +66,8 @@ function EnforcementModuleCommon () {
       }
       expect(await this.cmtat.isFrozen(this.address1)).to.equal(true)
       expect(await this.cmtat.isFrozen(this.address2)).to.equal(true)
+      expect(await this.cmtat.canTransact(this.address1)).to.equal(false)
+      expect(await this.cmtat.canTransact(this.address2)).to.equal(false)
       // emits a Freeze event
       await expect(this.logs)
         .to.emit(this.cmtat, 'AddressFrozen')
@@ -97,6 +103,8 @@ function EnforcementModuleCommon () {
 
       expect(await this.cmtat.isFrozen(this.address1)).to.equal(false)
       expect(await this.cmtat.isFrozen(this.address2)).to.equal(false)
+      expect(await this.cmtat.canTransact(this.address1)).to.equal(true)
+      expect(await this.cmtat.canTransact(this.address2)).to.equal(true)
       // emits a Freeze event
       await expect(this.logs)
         .to.emit(this.cmtat, 'AddressFrozen')
@@ -128,6 +136,7 @@ function EnforcementModuleCommon () {
         .setAddressFrozen(this.address1, false, reasonUnfreeze)
       // Assert
       expect(await this.cmtat.isFrozen(this.address1)).to.equal(false)
+      expect(await this.cmtat.canTransact(this.address1)).to.equal(true)
       if (!this.generic) {
         expect(
           await this.cmtat.canTransfer(this.address1, this.address2, 10)
@@ -268,11 +277,9 @@ function EnforcementModuleCommon () {
             .connect(this.address1)
             .transfer(this.address2, AMOUNT_TO_TRANSFER)
         )
-          .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
+          .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotTransact')
           .withArgs(
-            this.address1.address,
-            this.address2.address,
-            AMOUNT_TO_TRANSFER
+            this.address1.address
           )
       }
     })
@@ -311,11 +318,9 @@ function EnforcementModuleCommon () {
           .connect(this.address1)
           .transferFrom(this.address3, this.address2, AMOUNT_TO_TRANSFER)
       )
-        .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
+        .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotTransact')
         .withArgs(
-          this.address3.address,
-          this.address2.address,
-          AMOUNT_TO_TRANSFER
+          this.address2.address
         )
     })
 
@@ -366,11 +371,9 @@ function EnforcementModuleCommon () {
             .connect(this.address1)
             .transferFrom(this.address3, this.address2, AMOUNT_TO_TRANSFER)
         )
-          .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
+          .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotTransact')
           .withArgs(
-            this.address3.address,
-            this.address2.address,
-            AMOUNT_TO_TRANSFER
+            this.address1.address
           )
       }
     })

@@ -46,7 +46,7 @@ abstract contract ValidationModuleRuleEngine is
     function setRuleEngine(
         IRuleEngine ruleEngine_
     ) public virtual onlyRuleEngineManager {
-         require(ruleEngine_ != ruleEngine(), CMTAT_ValidationModule_SameValue());
+         require(address(ruleEngine_) != address(ruleEngine()), CMTAT_ValidationModule_SameValue());
         _setRuleEngine(ruleEngine_);
     }
     /* ============ View functions ============ */
@@ -134,19 +134,15 @@ abstract contract ValidationModuleRuleEngine is
     function _authorizeRuleEngineManagement() internal virtual;
 
     /* ============ State functions ============ */
-    function _transferred(address spender, address from, address to, uint256 value) internal virtual returns (bool){
-        if(!_canTransferGenericByModule(spender, from, to)){
-            return false;
-        } else {
-             IRuleEngine ruleEngine_ = ruleEngine();
-             if (address(ruleEngine_) != address(0)){
-                 if(spender != address(0)){
-                    ruleEngine_.transferred(spender, from, to, value);
-                  } else {
-                     ruleEngine_.transferred(from, to, value);
-                  }
+    function _transferred(address spender, address from, address to, uint256 value) internal virtual{
+        _canTransferGenericByModuleAndRevert(spender, from, to);
+        IRuleEngine ruleEngine_ = ruleEngine();
+        if (address(ruleEngine_) != address(0)){
+            if(spender != address(0)){
+                ruleEngine_.transferred(spender, from, to, value);
+            } else {
+                ruleEngine_.transferred(from, to, value);
             }
         }
-        return true;
     }
 }

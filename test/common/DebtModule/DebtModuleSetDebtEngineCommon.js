@@ -1,5 +1,5 @@
 const { expect } = require('chai')
-const { DEBT_ROLE } = require('../../utils.js')
+const { DEBT_ENGINE_ROLE } = require('../../utils.js')
 
 function DebtModuleSetDebtEngineCommon () {
   context('DebtEngineSetTest', function () {
@@ -41,7 +41,7 @@ function DebtModuleSetDebtEngineCommon () {
           this.cmtat,
           'AccessControlUnauthorizedAccount'
         )
-        .withArgs(this.address1.address, DEBT_ROLE)
+        .withArgs(this.address1.address, DEBT_ENGINE_ROLE)
     })
 
     it('testGetEmptyDebtIfNoDebtEngine', async function () {

@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/wrapper/controllers/ValidationModule.sol | cb204b5a174e5c88820aecf796430e6bc545644e |
+| ./modules/wrapper/controllers/ValidationModule.sol | b5066172e0053da26db7aa93b04ffa09fa40feec |
 
 
 ### Contracts Description Table
@@ -15,10 +15,17 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **ValidationModule** | Implementation | PauseModule, EnforcementModule |||
+| **ValidationModule** | Implementation | PauseModule, EnforcementModule, IERC7943TransactError, IERC7943FungibleTransactCheck |||
+| └ | canTransact | Public ❗️ |   |NO❗️ |
 | └ | _canTransferGenericByModule | Internal 🔒 |   | |
+| └ | _canTransferGenericByModuleAndRevert | Internal 🔒 |   | |
 | └ | _canMintBurnByModule | Internal 🔒 |   | |
+| └ | _canMintBurnByModuleAndRevert | Internal 🔒 |   | |
+| └ | _canTransferisFrozen | Internal 🔒 |   | |
+| └ | _canTransferisFrozenAndRevert | Internal 🔒 |   | |
 | └ | _canTransferStandardByModule | Internal 🔒 |   | |
+| └ | _canTransferStandardByModuleAndRevert | Internal 🔒 |   | |
+| └ | _canTransact | Internal 🔒 |   | |
 
 
 ### Legend

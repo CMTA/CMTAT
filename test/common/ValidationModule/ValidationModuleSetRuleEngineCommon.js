@@ -1,5 +1,7 @@
 const { expect } = require('chai')
-const { DEFAULT_ADMIN_ROLE, ZERO_ADDRESS } = require('../../utils')
+const { DEFAULT_ADMIN_ROLE, ZERO_ADDRESS,
+  IERC165_INTERFACEID, IERC721_INTERFACEID, 
+  IRULEENGINE_INTERFACEID, IERC1404EXTEND_INTERFACEID  } = require('../../utils')
 
 function ValidationModuleSetRuleEngineCommon () {
   context('RuleEngineSetTest', function () {
@@ -8,6 +10,18 @@ function ValidationModuleSetRuleEngineCommon () {
         this.admin
       ])
     })
+    it('testCanReturnTheRightInterface', async function () {
+      let ruleEngineInterfaceId = await this.ruleEngineMock.returnInterfaceId()
+
+      // Assert
+      expect(ruleEngineInterfaceId).to.equal(IRULEENGINE_INTERFACEID);
+      expect(await this.ruleEngineMock.supportsInterface(IRULEENGINE_INTERFACEID)).to.equal(true)
+      expect(await this.ruleEngineMock.supportsInterface(IERC1404EXTEND_INTERFACEID)).to.equal(true)
+      expect(await this.ruleEngineMock.supportsInterface(IERC165_INTERFACEID)).to.equal(true)
+      expect(await this.ruleEngineMock.supportsInterface(IERC721_INTERFACEID)).to.equal(false)
+      // Act
+    })
+
     it('testCanBeSetByAdmin', async function () {
       // Assert
       expect(await this.cmtat.ruleEngine()).to.equal(ZERO_ADDRESS)

@@ -12,21 +12,20 @@ are the latest ones that we tested:
 ### Smart contract
 
 - hardhat.config.js
-  - Solidity 0.8.30 (via solc-js)
+  - Solidity [0.8.34](https://www.soliditylang.org/blog/2026/02/18/solidity-0.8.34-release-announcement) (via solc-js)
   - EVM version: Prague (Pectra upgrade)
 
 - Package.json
-  - OpenZeppelin Contracts (Node.js module): [v5.5.0](https://github.com/OpenZeppelin/openzeppelin-contracts/releases/tag/v5.4.0) 
-  - OpenZeppelin Contracts Upgradeable (Node.js module): [v5.5.0](https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/releases/tag/v5.4.0)
+  - OpenZeppelin Contracts (Node.js module): [v5.5.0](https://github.com/OpenZeppelin/openzeppelin-contracts/releases/tag/v5.5.0) 
+  - OpenZeppelin Contracts Upgradeable (Node.js module): [v5.5.0](https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/releases/tag/v5.5.0)
 
 
 ### Tools
 
-- Node 20.5.0
+- Node v24.12.0
 
 - npm 10.2.5
 - Nomiclabs - Hardhat: ^2.24.0
-  - **[hardhat-web3](https://hardhat.org/hardhat-runner/plugins/nomiclabs-hardhat-web3)**: This plugin integrates [Web3.js](https://github.com/ethereum/web3.js) `1.x` into [Hardhat](https://hardhat.org/).
   - **[hardhat-ethers](https://www.npmjs.com/package/@nomicfoundation/hardhat-ethers)**
   - [Hardhat](https://hardhat.org/) plugin for integration with [ethers.js](https://github.com/ethers-io/ethers.js/)
   - **[hardhat-contract-sizer](https://www.npmjs.com/package/hardhat-contract-sizer)**: Output Solidity contract sizes with Hardhat.
@@ -298,3 +297,8 @@ npx hardhat run scripts/deploy-cmtat-standalone.js
 npx hardhat run scripts/deploy-cmtat-standalone-light.js
 ```
 
+## Claude
+
+This project contains a directory `.claude` and a CLAUDE.md file to help using Claude on CMTAT codebase
+
+See [code.claude.com](https://code.claude.com)

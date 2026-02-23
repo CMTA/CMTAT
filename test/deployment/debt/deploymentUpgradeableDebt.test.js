@@ -19,9 +19,6 @@ const DocumentModuleCommon = require('../../common/DocumentModule/DocumentModule
 const ExtraInfoModuleCommon = require('../../common/ExtraInfoModuleCommon')
 // debt
 const DebtModuleCommon = require('../../common/DebtModule/DebtModuleCommon')
-const DebtModuleSetDebtEngineCommon = require('../../common/DebtModule/DebtModuleSetDebtEngineCommon')
-const DebtEngineModuleCommon = require('../../common/DebtModule/DebtEngineModuleCommon')
-
 describe('CMTAT Debt - Upgradeable', function () {
   beforeEach(async function () {
     Object.assign(this, await loadFixture(fixture))
@@ -30,7 +27,6 @@ describe('CMTAT Debt - Upgradeable', function () {
       this.admin.address,
       this.deployerAddress.address
     )
-    this.debtEngineMock = await ethers.deployContract('DebtEngineMock')
     this.erc1404 = true
     this.dontCheckTimestamp = true
   })
@@ -50,6 +46,4 @@ describe('CMTAT Debt - Upgradeable', function () {
 
   // options
   DebtModuleCommon()
-  DebtEngineModuleCommon()
-  DebtModuleSetDebtEngineCommon()
 })

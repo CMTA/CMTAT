@@ -26,8 +26,8 @@ import {ICMTATConstructor} from "../interfaces/technical/ICMTATConstructor.sol";
 import {IForcedBurnERC20} from "../interfaces/technical/IMintBurnToken.sol";
 import {IBurnMintERC20} from "../interfaces/technical/IMintBurnToken.sol";
 import {IERC7551ERC20EnforcementEvent} from "../interfaces/tokenization/draft-IERC7551.sol";
+import {IERC7943FungibleTransferError}  from "../interfaces/tokenization/draft-IERC7943.sol";
 import {IERC5679} from "../interfaces/technical/IERC5679.sol";
-import {Errors} from "../libraries/Errors.sol";
 
 /**
 * @dev CMTAT with core modules
@@ -46,7 +46,8 @@ abstract contract CMTATBaseCore is
     IForcedBurnERC20,
     IBurnMintERC20,
     IERC7551ERC20EnforcementEvent,
-    IERC5679
+    IERC5679,
+    IERC7943FungibleTransferError
     
 { 
     /* ============ Error ============ */ 
@@ -160,8 +161,9 @@ abstract contract CMTATBaseCore is
     /**
      * @inheritdoc AccessControlUpgradeable
      * @dev 
-     * We can not use type(IERC5679).interfaceId instead of 0xd0017968
+     * We can not use type(IERC5679).interfaceId, we use instead of 0xd0017968
      * because IERC5679 inherits from two interfaces (IERC5679Burn and Mint)
+     * Core version does not implement in its integrality ERC-7943 (0x29388973)
      */
     function supportsInterface(bytes4 interfaceId) public view virtual override(AccessControlUpgradeable, IERC165) returns (bool) {
         return interfaceId == 0xd0017968 || AccessControlUpgradeable.supportsInterface(interfaceId);
@@ -173,7 +175,7 @@ abstract contract CMTATBaseCore is
     */
     function transfer(address to, uint256 value) public virtual override returns (bool) {
         address from = _msgSender();
-        require(ValidationModuleCore.canTransfer(from, to, value), Errors.CMTAT_InvalidTransfer(from, to, value) );
+        ValidationModule._canTransferGenericByModuleAndRevert(address(0), from, to);
         ERC20Upgradeable._transfer(from, to, value);
         return true;
     }
@@ -190,7 +192,7 @@ abstract contract CMTATBaseCore is
         override(ERC20Upgradeable, ERC20BaseModule)
         returns (bool)
     {
-        require(ValidationModuleCore.canTransferFrom(_msgSender(),from, to, value), Errors.CMTAT_InvalidTransfer(from, to, value) );
+        ValidationModule._canTransferGenericByModuleAndRevert(_msgSender(), from, to);
         return ERC20BaseModule.transferFrom(from, to, value);
     }
 
@@ -234,13 +236,13 @@ abstract contract CMTATBaseCore is
 
     /* ==== Mint and Burn Operations ==== */
     function _mintOverride(address account, uint256 value) internal virtual override(ERC20MintModuleInternal) {
-        require(ValidationModule._canMintBurnByModule(account), Errors.CMTAT_InvalidTransfer(address(0), account, value) );
+        ValidationModule._canMintBurnByModuleAndRevert(account);
         ERC20MintModuleInternal._mintOverride(account, value);
     }
 
 
     function _burnOverride(address account, uint256 value) internal virtual override(ERC20BurnModuleInternal) {
-        require(ValidationModule._canMintBurnByModule(account), Errors.CMTAT_InvalidTransfer(account, address(0), value) );
+        ValidationModule._canMintBurnByModuleAndRevert(account);
         ERC20BurnModuleInternal._burnOverride(account, value);
     }
 
@@ -248,7 +250,7 @@ abstract contract CMTATBaseCore is
     * @dev Check if a minter transfer is valid
     */
     function _minterTransferOverride(address from, address to, uint256 value) internal virtual override(ERC20MintModuleInternal) {
-        require(ValidationModuleCore.canTransfer(from, to, value), Errors.CMTAT_InvalidTransfer(from, to, value) );
+        ValidationModule._canTransferGenericByModuleAndRevert(address(0), from, to);
         ERC20MintModuleInternal._minterTransferOverride(from, to, value);
     }
 
