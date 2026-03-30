@@ -20,8 +20,10 @@ test
 │   ├── ERC20MintModuleCommon.js
 │   ├── ERC7551ModuleCommon.js
 │   ├── ExtraInfoModuleCommon.js
+│   ├── MulticallModuleCommon.js
 │   ├── MetaTxModuleCommon.js
 │   ├── PauseModuleCommon.js
+│   ├── PermitModuleCommon.js
 │   ├── SnapshotModuleCommon
 │   │   ├── global
 │   │   │   ├── SnapshotModuleMultiplePlannedTest.js
@@ -68,6 +70,9 @@ test
 │   ├── erc7551
 │   │   ├── deploymentERC7551Standalone.test.js
 │   │   └── deploymentERC7551Upgradeable.test.js
+│   ├── permit
+│   │   ├── deploymentPermitStandalone.test.js
+│   │   └── deploymentPermitUpgradeable.test.js
 │   └── light
 │       ├── deploymentStandaloneLight.test.js
 │       └── deploymentUpgradeableLight.test.js
