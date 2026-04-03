@@ -47,7 +47,7 @@ abstract contract CMTATBaseERC2612 is CMTATBaseERC20CrossChain, ERC20PermitUpgra
         bytes32 r,
         bytes32 s
     ) public virtual override(ERC20PermitUpgradeable) {
-        _canTransferStandardByModuleAndRevert(spender, owner, spender);
+        _canAuthorizeAllowanceByModuleAndRevert(owner, spender);
         ERC20PermitUpgradeable.permit(owner, spender, value, deadline, v, r, s);
     }
 

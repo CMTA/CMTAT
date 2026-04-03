@@ -127,6 +127,7 @@ contracts
 │       │   ├── ExtraInformationModule.sol
 │       │   ├── SnapshotEngineModule.sol
 │       │   └── ValidationModule
+│       │       ├── ValidationModuleAllowance.sol
 │       │       ├── ValidationModuleERC1404.sol
 │       │       └── ValidationModuleRuleEngine.sol
 │       ├── options

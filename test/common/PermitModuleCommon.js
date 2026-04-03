@@ -135,7 +135,9 @@ function PermitModuleCommon () {
             permit.r,
             permit.s
           )
-      ).to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotTransact')
+      )
+        .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotTransact')
+        .withArgs(owner)
     })
 
     it('reverts when spender is frozen', async function () {
@@ -157,7 +159,9 @@ function PermitModuleCommon () {
             permit.r,
             permit.s
           )
-      ).to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotTransact')
+      )
+        .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotTransact')
+        .withArgs(spender)
     })
   })
 }

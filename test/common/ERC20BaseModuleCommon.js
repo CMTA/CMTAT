@@ -46,12 +46,28 @@ function ERC20BaseModuleCommon () {
 
   context('ERC20 approval / approve', function () {
     it('testCannotApproveIfPaused', async function () {
-      if(!this.core){
-        await this.cmtat.connect(this.admin).pause();
-        await expect(
-          this.cmtat.connect(this.admin).approve(this.address1, 20n)
-        ).to.be.revertedWithCustomError(this.cmtat, 'EnforcedPause')
-      }
+      await this.cmtat.connect(this.admin).pause()
+      await expect(
+        this.cmtat.connect(this.admin).approve(this.address1, 20n)
+      ).to.be.revertedWithCustomError(this.cmtat, 'EnforcedPause')
+    })
+
+    it('testCannotApproveIfOwnerIsFrozen', async function () {
+      await this.cmtat.connect(this.admin).setAddressFrozen(this.address1, true)
+      await expect(
+        this.cmtat.connect(this.address1).approve(this.address3, 20n)
+      )
+        .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotTransact')
+        .withArgs(this.address1.address)
+    })
+
+    it('testCannotApproveIfSpenderIsFrozen', async function () {
+      await this.cmtat.connect(this.admin).setAddressFrozen(this.address3, true)
+      await expect(
+        this.cmtat.connect(this.address1).approve(this.address3, 20n)
+      )
+        .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotTransact')
+        .withArgs(this.address3.address)
     })
   })
 

@@ -27,7 +27,7 @@ CMTAT has been built with five main goals:
 
 2. Easy to modify and adapt for specific use-case (customization) through its modular architecture
 3. Interoperability with the Ethereum ecosystem by implementing recognized standards: 
-   - Tokenization: [ERC-20](https://eips.ethereum.org/EIPS/eip-20), [ERC-3643](https://eips.ethereum.org/EIPS/eip-3643) (without on-chain identity), [ERC-7943 (uRWA)](https://eips.ethereum.org/EIPS/eip-7943), [ERC-1404](https://github.com/ethereum/EIPs/issues/1404), [ERC-7551](https://ethereum-magicians.org/t/erc-7551-crypto-security-token-smart-contract-interface-ewpg-reworked/25477), [ERC-1363](https://eips.ethereum.org/EIPS/eip-1363),...
+   - Tokenization: [ERC-20](https://eips.ethereum.org/EIPS/eip-20), [ERC-3643](https://eips.ethereum.org/EIPS/eip-3643) (without on-chain identity), [ERC-7943 (uRWA)](https://eips.ethereum.org/EIPS/eip-7943), [ERC-1404](https://github.com/ethereum/EIPs/issues/1404), [ERC-7551](https://ethereum-magicians.org/t/erc-7551-crypto-security-token-smart-contract-interface-ewpg-reworked/25477), [ERC-1363](https://eips.ethereum.org/EIPS/eip-1363), [ERC-2612 Permit](https://eips.ethereum.org/EIPS/eip-2612),...
    - Technicals: [ERC-2771](https://eips.ethereum.org/EIPS/eip-2771) (MetaTx/Gasless), [ERC-7201](https://eips.ethereum.org/EIPS/eip-7201), [ERC-7802](https://eips.ethereum.org/EIPS/eip-7802),...
 
 4. Security by undergoing audits from trusted firms like [ADBK](https://abdk.consulting) and [Halborn](https://www.halborn.com), and by implementing a range of industry best practices.
@@ -163,7 +163,8 @@ CMTAT comes with several different deployment versions to meet specific use case
 | Restrict transfer to inside a whitelist / Allowlist          | CMTAT Allowlist<br />Or all other deployment (except Light) version with a `RuleEngine` configured |
 | On-chain snapshot<br />(useful for on-chain dividend distribution) | All deployment version (except Light) with a `SnapshotEngine`configured |
 | Deployment through proxy (Upgradeable)<br />Deployment immutable (standalone / without proxy) | Each deployment version comes with a standalone (immutable) or upgradeable mode.<br />A specific deployment version exists for UUPS Proxy |
-| MetaTx/Gasless with ERC-2771                                 | All deployment version, except Debt & Light version          |
+| MetaTx/Gasless with ERC-2771                                 | All deployment version, except Debt, Permit & Light version  |
+| ERC-2612 Permit + [ERC-6357 Multicall](https://eips.ethereum.org/EIPS/eip-6357)<br />(gas sponsorship approval & batch transaction) | CMTAT Permit (Standalone / Upgradeable)                      |
 
 #### CMTAT for stablecoins
 
@@ -176,7 +177,7 @@ Here is a comparison between the features present in major custodian stablecoin 
 | Company behind                 |                                                              | [Monerium](https://monerium.com)                             | [Circle](https://www.circle.com)                             | [Tether](https://tether.to/en/)                              | [CMTA](https://cmta.ch/)                                     | [CMTA](https://cmta.ch/)                                     |
 | **Standard**                   |                                                              |                                                              |                                                              |                                                              |                                                              |                                                              |
 |                                | [ERC-20](https://eips.ethereum.org/EIPS/eip-20)              | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | Same as standard version                                     | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> |
-|                                | [ERC-2612 Permit](https://eips.ethereum.org/EIPS/eip-2612)   | <strong><span style="color: #1e7e34;">&#x2714;</span></strong><br /> ([GitHub)](https://github.com/monerium/smart-contracts/blob/ec59a3677a17a06610d7e4788211c19da561241b/src/Token.sol#L152) | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #b00020;">&#x2718;</span></strong> | Same as standard version                                     | <strong><span style="color: #b00020;">&#x2718;</span></strong> |
+|                                | [ERC-2612 Permit](https://eips.ethereum.org/EIPS/eip-2612)   | <strong><span style="color: #1e7e34;">&#x2714;</span></strong><br /> ([GitHub)](https://github.com/monerium/smart-contracts/blob/ec59a3677a17a06610d7e4788211c19da561241b/src/Token.sol#L152) | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #b00020;">&#x2718;</span></strong> | Available via CMTAT Permit deployment version                | Available via CMTAT Permit deployment version                |
 |                                | [ERC-3009](https://eips.ethereum.org/EIPS/eip-3009)<br />(Transfer With Authorization) | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #b00020;">&#x2718;</span></strong> | Same as standard version                                     | <strong><span style="color: #b00020;">&#x2718;</span></strong> |
 |                                | [ERC-2771](https://eips.ethereum.org/EIPS/eip-2771) (MetaTX) | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong><br />(ERC2771Module / CMTATBaseERC2771) |
 | ERC-20 extends functionalities |                                                              |                                                              |                                                              |                                                              |                                                              |                                                              |
@@ -215,7 +216,7 @@ Here is a comparison between the features present in known tokenized market fund
 | **Standard**                                                 |                                                              |                                                              |                                                              |                                                              |                                                              |                                                              |
 |                                                              | [ERC-20](https://eips.ethereum.org/EIPS/eip-20)              | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | Same as standard version                                     |
 |                                                              | [ERC-1363](https://eips.ethereum.org/EIPS/eip-1363)          | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> |
-|                                                              | [ERC-2612 Permit](https://eips.ethereum.org/EIPS/eip-2612)   | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> <br />([GitHub)](https://github.com/spiko-tech/contracts/blob/9ef58f31bc8dc9cb562dfcbae6091866b3da5121/contracts/token/Token.sol#L26) | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #b00020;">&#x2718;</span></strong><br />(Could be extended to support it) | Same as standard version                                     |
+|                                                              | [ERC-2612 Permit](https://eips.ethereum.org/EIPS/eip-2612)   | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> <br />([GitHub)](https://github.com/spiko-tech/contracts/blob/9ef58f31bc8dc9cb562dfcbae6091866b3da5121/contracts/token/Token.sol#L26) | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #b00020;">&#x2718;</span></strong> | Available via CMTAT Permit deployment version                | Available via CMTAT Permit deployment version                |
 |                                                              | [ERC-2771](https://eips.ethereum.org/EIPS/eip-2771) (MetaTX) | <strong><span style="color: #1e7e34;">&#x2714;</span></strong><br />([GitHub](https://github.com/spiko-tech/contracts/blob/9ef58f31bc8dc9cb562dfcbae6091866b3da5121/contracts/token/Token.sol#L22)) | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | Same as standard version                                     |
 | ERC-20 extends functionalities                               |                                                              |                                                              |                                                              |                                                              |                                                              |                                                              |
 |                                                              | Mint/issue                                                   | <strong><span style="color: #1e7e34;">&#x2714;</span></strong><br />([GitHub](https://github.com/spiko-tech/contracts/blob/9ef58f31bc8dc9cb562dfcbae6091866b3da5121/contracts/token/Token.sol#L59)) | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | Same as standard version                                     |
@@ -793,6 +794,7 @@ Base contracts are used by the different deployable contracts (CMTATStandalone, 
 | [CMTATBaseDebt](./contracts/modules/3_CMTATBaseDebt.sol)     | 3     | Add debt support by inheriting from Debt module              | CMTAT Debt (Standalone & Upgradeable)                        |
 | [CMTATBaseERC1404](./contracts/modules/3_CMTATBaseERC1404.sol) | 3     | Add [ERC-1404](https://github.com/ethereum/EIPs/issues/1404) support | CMTAT Standalone / Upgradeable                               |
 | [CMTATBaseERC20CrossChain](./contracts/modules/4_CMTATBaseERC20CrossChain.sol) | 4     | Add cross-chain support, notably [ERC-7802](https://eips.ethereum.org/EIPS/eip-7802) | No deployment contract directly inherits from this base contract (see next level) |
+| [CMTATBaseERC2612](./contracts/modules/4_CMTATBaseERC2612.sol) | 4     | Add [ERC-2612 Permit](https://eips.ethereum.org/EIPS/eip-2612) + [ERC-6357 Multicall](https://eips.ethereum.org/EIPS/eip-6357) | CMTAT Permit (Standalone / Upgradeable)                      |
 | [CMTATBaseERC2771](./contracts/modules/5_CMTATBaseERC2771.sol) | 5     | Add [ERC-2771](https://eips.ethereum.org/EIPS/eip-2771) support by inheriting from ERC2771Module | CMTAT Standalone / Upgradeable<br />CMTAT Upgradeable UUPS   |
 | [CMTATBaseDebtEngine](./contracts/modules/5_CMTATBaseDebtEngine.sol) | 5     | Add DebtEngine support by inheriting from DebtEngine module  | CMTAT Standalone DebtEngine / Upgradeable                    |
 | [CMTATBaseERC1363](./contracts/modules/6_CMTATBaseERC1363.sol) | 6     | Add [ERC-1363](https://eips.ethereum.org/EIPS/eip-1363) support by inheriting directly from OpenZeppelin contract | CMTAT ERC1363 (Upgradeable & Standalone)                     |
@@ -1917,13 +1919,23 @@ Here is a schema describing the different check performed during:
 
 ### ERC-20 approve
 
-The ERC-20 `approve` function reverts when the contract is paused, except in the Light version.
+The ERC-20 `approve` function reverts when the contract is paused.
 
-This behaviour is enforced in CMTAT base module.
+This behaviour is enforced in the CMTAT base modules and applies to the standard deployment versions, including Permit, ERC-1363, ERC-7551, Debt, DebtEngine, UUPS and Allowlist.
 
-To avoid exceeding the maximum contract code size and to reduce gas costs at runtime, enforcement checks (such as whether the sender or spender is frozen, or whether they are allowlisted for the allowlist deployment version) are not performed.
+The `approve` function also validates the allowance authorization domain:
 
-With the same objective, the `Light` deployment version does not perform any checks in the `approve` function, including checks on the pause state. This is acceptable because tokens can only be transferred via the `transferFrom` function, which enforces all the required checks.
+- the owner (`msg.sender`) must be allowed to transact
+- the spender must be allowed to transact
+
+As a consequence:
+
+- if an address is frozen, it cannot grant or receive an ERC-20 allowance
+- in the Allowlist deployment version, if the allowlist is enabled, the owner and the spender must both be allowlisted for `approve` to succeed
+
+The `Light` deployment version follows the same pause and allowance-authorization checks for `approve`.
+
+For the Permit deployment version, the same allowance-authorization checks are also applied to `permit`, using the signed `owner` and `spender` addresses.
 
 ![Approve restriction](./doc/schema/drawio/transfer_restriction-approve.drawio.png)
 
@@ -2285,7 +2297,8 @@ To bridge tokens through LayerZero, you can use an adapter which implements one 
 
 ## Deployment model 
 
-Contracts for deployment are available in the directory [contracts/deployment](./contracts/deployment)
+Contracts for deployment are available in the directory [contracts/deployment](./contracts/deployment).
+A dedicated Permit deployment version is available: `CMTATStandalonePermit` and `CMTATUpgradeablePermit`.
 
 ### Summary tab
 
@@ -2296,6 +2309,8 @@ Contracts for deployment are available in the directory [contracts/deployment](.
 | Upgradeable UUPS     | Deployment with a UUPS proxy                                 | Only upgradeable | [CMTATUpgradeableUUPS](./contracts/deployment/CMTATUpgradeableUUPS.sol) | Same as standard version, but adds also the UUPS proxy support |
 | ERC-1363             | Implements [ERC-1363](https://eips.ethereum.org/EIPS/eip-1363) | Standalone       | [CMTATStandaloneERC1363](./contracts/deployment/ERC1363/CMTATStandaloneERC1363.sol) | Same as standard version, but adds also the support of `ERC-1363` |
 |                      | -                                                            | Upgradeable      | [CMTATUpgradeableERC1363](./contracts/deployment/ERC1363/CMTATUpgradeableERC1363.sol) | -                                                            |
+| Permit               | Adds [ERC-2612 Permit](https://eips.ethereum.org/EIPS/eip-2612) + [ERC-6357 Multicall](https://eips.ethereum.org/EIPS/eip-6357) | Standalone       | [CMTATStandalonePermit](./contracts/deployment/permit/CMTATStandalonePermit.sol) | Same as standard version, but without `ERC2771` to keep bytecode lean |
+|                      | -                                                            | Upgradeable      | [CMTATUpgradeablePermit](./contracts/deployment/permit/CMTATUpgradeablePermit.sol) | -                                                            |
 | Light                | Only core modules                                            | Standalone       | [CMTATStandaloneLight](./contracts/deployment/light/CMTATStandaloneLight.sol) | The core features (i.e., minting, burning,address freeze / blacklisting, pause) without additional functions required by equities and debt instruments (e.g., document management, snapshot, partial freeze of balances). |
 |                      |                                                              | Upgradeable      | [CMTATUpgradeableLight](./contracts/deployment/light/CMTATUpgradeableLight.sol) | -                                                            |
 | Debt                 | Set Debt information and Credit Events                       | Standalone       | [CMTATStandaloneDebt](./contracts/deployment/debt/CMTATStandaloneDebt.sol) | Add the debt support.<br />Contrary to the standard version, it does not include the module `ERC2771Module` and the support of `ERC20CrossChain` |
@@ -2589,6 +2604,35 @@ Here are the different fields and functions to read and store the related debt i
 
 
 
+### Permit + ERC-6357 Multicall
+
+The Permit deployment version adds support for [ERC-2612 Permit](https://eips.ethereum.org/EIPS/eip-2612) and [ERC-6357 single-contract Multicall](https://eips.ethereum.org/EIPS/eip-6357).
+
+It is available through the dedicated deployment contracts:
+
+- `CMTATStandalonePermit`
+- `CMTATUpgradeablePermit`
+
+Compared with the standard deployment version:
+
+- it supports signature-based approvals through `permit`
+- it supports batching several calls in a single transaction through `multicall`
+- it does not include `ERC2771` support, in order to keep bytecode lean
+
+The same allowance authorization checks apply to both `approve` and `permit`:
+
+- the contract must not be paused
+- the owner must be allowed to transact
+- the spender must be allowed to transact
+
+#### How to use it ?
+
+1) Select the deployment version you want: `CMTATStandalonePermit` or `CMTATUpgradeablePermit`
+2) Use `permit(owner, spender, value, deadline, v, r, s)` to create or update an allowance from an off-chain signature
+3) Use `multicall(bytes[] calldata data)` to batch several operations in a single transaction
+
+This deployment version is useful when a workflow needs gas-sponsored approvals, signature-based UX, or atomic batching of several token operations.
+
 ### Allowlist
 
 The Allowlist deployment version allows to restrict transfer to token holders present inside an allowlist (whitelist) maintained inside the smart contract. 
@@ -2865,7 +2909,7 @@ A code coverage is available in [index.html](./doc/test/coverage/index.html).
 
 More details are available in the file [USAGE.md](./doc/USAGE.md)
 
-### **Use CMTAT in Your Project** 
+### Use CMTAT in Your Project
 
 f you want to use CMTAT, we recommend including it as a library via a [GitHub submodule](https://www.atlassian.com/git/tutorials/git-submodule) rather than creating a fork.
 

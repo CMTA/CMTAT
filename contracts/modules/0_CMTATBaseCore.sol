@@ -16,7 +16,8 @@ import {ERC20BaseModule, ERC20Upgradeable} from "./wrapper/core/ERC20BaseModule.
 import {VersionModule} from "./wrapper/core/VersionModule.sol";
 import {PauseModule}  from "./wrapper/core/PauseModule.sol";
 import {EnforcementModule} from "./wrapper/core/EnforcementModule.sol";
-import {ValidationModule, ValidationModuleCore} from "./wrapper/core/ValidationModuleCore.sol";
+import {ValidationModule} from "./wrapper/core/ValidationModuleCore.sol";
+import {ValidationModuleAllowance} from "./wrapper/extensions/ValidationModule/ValidationModuleAllowance.sol";
 
 // Security
 import {AccessControlModule, AccessControlUpgradeable} from "./wrapper/security/AccessControlModule.sol";
@@ -40,7 +41,7 @@ abstract contract CMTATBaseCore is
     // Core
     ERC20MintModule,
     ERC20BurnModule,
-    ValidationModuleCore,
+    ValidationModuleAllowance,
     ERC20BaseModule,
     AccessControlModule,
     IForcedBurnERC20,
@@ -178,6 +179,14 @@ abstract contract CMTATBaseCore is
         ValidationModule._canTransferGenericByModuleAndRevert(address(0), from, to);
         ERC20Upgradeable._transfer(from, to, value);
         return true;
+    }
+
+    /*
+    * @inheritdoc ERC20Upgradeable
+    */
+    function approve(address spender, uint256 value) public virtual override returns (bool) {
+        _canAuthorizeAllowanceByModuleAndRevert(_msgSender(), spender);
+        return ERC20Upgradeable.approve(spender, value);
     }
     /*
     * @inheritdoc ERC20BaseModule

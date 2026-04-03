@@ -6,6 +6,7 @@ pragma solidity ^0.8.20;
 /* ==== Engine === */
 import {IRuleEngine} from "../../../../interfaces/engine/IRuleEngine.sol";
 /* ==== ValidationModule === */
+import {ValidationModuleAllowance} from "./ValidationModuleAllowance.sol";
 import {ValidationModuleCore} from "../../core/ValidationModuleCore.sol";
 import {ValidationModuleRuleEngineInternal} from "../../../internal/ValidationModuleRuleEngineInternal.sol";
 /**
@@ -14,7 +15,7 @@ import {ValidationModuleRuleEngineInternal} from "../../../internal/ValidationMo
  * Useful for to restrict and validate transfers
  */
 abstract contract ValidationModuleRuleEngine is
-    ValidationModuleCore,
+    ValidationModuleAllowance,
     ValidationModuleRuleEngineInternal
 {
     /**

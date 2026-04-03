@@ -21,6 +21,7 @@ import {AllowlistModule} from "./wrapper/options/AllowlistModule.sol";
 // controller
 import {ValidationModuleAllowlist} from "./wrapper/controllers/ValidationModuleAllowlist.sol";
 import {ValidationModule, ValidationModuleCore} from "./wrapper/core/ValidationModuleCore.sol";
+import {ValidationModuleAllowance} from "./wrapper/extensions/ValidationModule/ValidationModuleAllowance.sol";
  /* ==== Interface and other library === */
 import {ICMTATConstructor} from "../interfaces/technical/ICMTATConstructor.sol";
 import {IERC7943FungibleTransferError}  from "../interfaces/tokenization/draft-IERC7943.sol";
@@ -31,7 +32,7 @@ abstract contract CMTATBaseAllowlist is
     // Core
     CMTATBaseAccessControl,
     ValidationModuleAllowlist,
-    ValidationModuleCore,
+    ValidationModuleAllowance,
     ERC2771Module,
     IERC7943FungibleTransferError
 {  
@@ -117,6 +118,7 @@ abstract contract CMTATBaseAllowlist is
     * if strict control over the total amount a spender can consume is required.
     */
     function approve(address spender, uint256 value) public virtual override(ERC20Upgradeable) whenNotPaused returns (bool) {
+        _canAuthorizeAllowanceByModuleAndRevert(_msgSender(), spender);
         return ERC20Upgradeable.approve(spender, value);
     }
 

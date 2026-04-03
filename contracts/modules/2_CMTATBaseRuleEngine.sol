@@ -126,6 +126,7 @@ abstract contract CMTATBaseRuleEngine is
     * @dev revert if the contract is in pause state
     */
     function approve(address spender, uint256 value) public virtual override(ERC20Upgradeable) whenNotPaused returns (bool) {
+        _canAuthorizeAllowanceByModuleAndRevert(_msgSender(), spender);
         return ERC20Upgradeable.approve(spender, value);
     }
     /**
