@@ -25,6 +25,8 @@ See [https://semver.org](https://semver.org)
 
 Reference: [keepachangelog.com/en/1.1.0/](https://keepachangelog.com/en/1.1.0/)
 
+Custom changelog tag: `Dependencies`, `Documentation`, `Testing`
+
 ## Checklist
 
 > Before a new release, perform the following tasks
@@ -43,9 +45,64 @@ Reference: [keepachangelog.com/en/1.1.0/](https://keepachangelog.com/en/1.1.0/)
 
 
 
+## 3.3.0
+
+> **Note:** This version has not been audited.
+
+### Smart contract
+
+#### Added
+
+- New base contract **`CMTATBaseERC2612`** (`contracts/modules/4_CMTATBaseERC2612.sol`) combining:
+  - [ERC-2612 Permit](https://eips.ethereum.org/EIPS/eip-2612): gasless approvals via EIP-712 signature (`permit`), gated by CMTAT pause and freeze validation.
+  - [ERC-6357 Multicall](https://eips.ethereum.org/EIPS/eip-6357): batch multiple contract calls into a single transaction (`multicall`).
+- New deployment variants: **`CMTATStandalonePermit`** and **`CMTATUpgradeablePermit`** (`contracts/deployment/permit/`), based on `CMTATBaseERC2612`.
+- New module **`ERC20EnforcementERC7551Module`** (`contracts/modules/wrapper/options/ERC20EnforcementERC7551Module.sol`):
+  - Splits ERC-7551 specific enforcement out of `ERC20EnforcementModule` (see *Changed*).
+  - Provides `bytes data` overloads for `forcedTransfer`, `freezePartialTokens`, `unfreezePartialTokens` (as required by `IERC7551ERC20Enforcement`).
+  - Provides `getActiveBalanceOf` and overrides `getFrozenTokens` to satisfy both `IERC7551ERC20Enforcement` and `IERC3643ERC20Enforcement`.
+- New validation contract **`ValidationModuleAllowance`** (`contracts/modules/wrapper/extensions/ValidationModule/ValidationModuleAllowance.sol`):
+  - Validates allowance authorization (`approve` and `permit`): reverts if the contract is paused or if `owner`/`spender` is frozen.
+  - Used in `CMTATBaseERC2612.permit` to enforce CMTAT compliance checks before setting the allowance.
+
+#### Changed
+
+- **`ERC20EnforcementModule`**: Removed `IERC7551ERC20Enforcement` interface inheritance and the ERC-7551 specific functions (`getActiveBalanceOf`, `forcedTransfer(address,address,uint256,bytes)`, `freezePartialTokens(address,uint256,bytes)`, `unfreezePartialTokens(address,uint256,bytes)`). These are now in `ERC20EnforcementERC7551Module`. The module now implements only `IERC3643ERC20Enforcement` and `IERC7943FungibleEnforcementSpecific`.
+- **`CMTATBaseERC7551`**: Updated to inherit from `ERC20EnforcementERC7551Module` (instead of relying on `ERC20EnforcementModule` alone) to expose ERC-7551 bytes-data enforcement functions and `getActiveBalanceOf`. Added explicit diamond-inheritance disambiguation overrides for `_msgSender`, `_msgData`, `_contextSuffixLength`, `_update`, `transfer`, `transferFrom`, `approve`, `name`, `symbol`, `decimals`, and `getFrozenTokens`.
+
+### Testing
+
+#### Added
+
+- New test files for the Permit deployment variants: `test/deployment/permit/deploymentPermitStandalone.test.js`, `test/deployment/permit/deploymentPermitUpgradeable.test.js`.
+- New common test modules: `test/common/PermitModuleCommon.js`, `test/common/MulticallModuleCommon.js`.
+
+#### Changed
+
+- `test/common/AllowlistModuleCommon.js`: updated to cover new allowance validation behavior.
+- `test/common/ERC20BaseModuleCommon.js`: updated to cover updated `approve` validation.
+
+### Documentation
+
+#### Added
+
+- ERC specification: `doc/ERCSpecification/erc-2612.md` (ERC-2612 Permit).
+- ERC specification: `doc/ERCSpecification/erc-6357-multicall.md` (ERC-6357 Multicall).
+- Module documentation: `doc/modules/options/erc2612/erc2612.md` (`CMTATBaseERC2612` API reference).
+- `ERC20EnforcementERC7551Module` section in `doc/modules/options/erc7551/erc7551.md`.
+
+#### Changed
+
+- `doc/summary.md`: added **Permit** deployment variant; updated inheritance hierarchy to show `CMTATBaseERC2612` branch.
+- `doc/modules/extensions/ERC20Enforcement/erc20enforcement.md`: added note about ERC-7551 enforcement functions moved to `ERC20EnforcementERC7551Module`.
+- `doc/modules/options/erc7551/erc7551.md`: added overview table distinguishing `ERC7551Module` from `ERC20EnforcementERC7551Module`.
+- Updated ERC specifications: `erc-1404-restricted.md`, `erc-3643.md`, `erc-7551-ewpg.md`, `erc-7943-uRWA.md`.
+
 ## 3.2.0
 
 > **Note:** This version has not been audited.
+
+Commit: `49544f4de1993008acfc9e848d0bf03bd31d8579`
 
 ### Smart contract
 

@@ -8,6 +8,7 @@
 - **DebtEngine** - Debt with external engine
 - **ERC-7551** - German eWpG compliance
 - **ERC-1363** - transferAndCall support
+- **Permit** - ERC-2612 gasless approvals + ERC-6357 multicall
 
 ---
 
@@ -33,10 +34,10 @@ CMTATBaseRuleEngine/Allowlist (2) - Transfer validation rules
 CMTATBaseERC1404 (3) - ERC-1404 compliance (restrictedTransfer)
     ↓
 CMTATBaseERC20CrossChain (4) - CCIP & ERC-7802 support
-    ↓
-CMTATBaseERC2771 (5) - Gasless meta-transactions
-    ↓
-CMTATBaseERC1363/ERC7551 (6) - Additional standards
+    ├── CMTATBaseERC2612 (4) - ERC-2612 Permit + ERC-6357 Multicall [Permit variant]
+    └── CMTATBaseERC2771 (5) - Gasless meta-transactions
+            ↓
+        CMTATBaseERC1363/ERC7551 (6) - Additional standards
 ```
 
 ---

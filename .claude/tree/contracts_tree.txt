@@ -136,8 +136,9 @@ contracts
 │       │   ├── DebtEngineModule.sol
 │       │   ├── DebtModule.sol
 │       │   ├── ERC20CrossChainModule.sol
+│       │   ├── ERC20EnforcementERC7551Module.sol
 │       │   ├── ERC2771Module.sol
 │       │   └── ERC7551Module.sol
 │       └── security
 │           └── AccessControlModule.sol
-32 directories, 105 files
+32 directories, 106 files

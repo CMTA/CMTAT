@@ -1,6 +1,8 @@
 # ERC20 Enforcement Module
 
-This document defines ERC20 Enforcement Module for the CMTA Token specification.
+This document defines the ERC20 Enforcement Module for the CMTA Token specification.
+
+> **Note:** ERC-7551 specific enforcement (bytes data overloads for `forcedTransfer`, `freezePartialTokens`, `unfreezePartialTokens`, and `getActiveBalanceOf`) is provided by `ERC20EnforcementERC7551Module`. See [ERC-7551 Module](../../options/erc7551/erc7551.md#erc20enforcementerc7551module).
 
 [TOC]
 
