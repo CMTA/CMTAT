@@ -556,6 +556,8 @@ Note: `canTransfer` is defined for the compliance contract in ERC-3643.
 >
 > Status: review
 
+See also [technical/erc-7943-uRWA-integration.md](./technical/erc-7943-uRWA-integration.md)
+
 #### ERC-7943 Implementation in CMTAT
 
 ERC-7943 is a standard  defining a set of interfaces for tokenized Real World Assets (RWAs) such as securities, real estate, commodities, or other physical/financial assets on the blockchain. The uRWA standard extends common token standards like [ERC-20](https://eips.ethereum.org/EIPS/eip-20), [ERC-721](https://eips.ethereum.org/EIPS/eip-721) or [ERC-1155](https://eips.ethereum.org/EIPS/eip-1155) by introducing essential compliance functions while remaining minimal and not opinionated about specific implementation details.
@@ -1035,6 +1037,8 @@ Generally, these modules are not required to be compliant with the CMTA specific
 
 
 ### Access Control (RBAC)
+
+See also [technical/access-control.md](./technical/access-control.md)
 
 CMTAT access control is also modular and flexible. 
 
@@ -1519,6 +1523,8 @@ Here are the list of rules in development:
 
 #### SnapshotEngine
 
+See also [technical/snapshot.md](./technical/snapshot.md)
+
 This Engine allows to perform snapshot on-chain. 
 
 - This engine is defined in the module `SnapshotModule`.
@@ -1605,6 +1611,8 @@ Here is the list of the different version available for each CMTAT version.
 | CMTAT v2.5.0 (unaudited) | [DebtEngine v0.2.0](https://github.com/CMTA/DebtEngine/releases/tag/v0.2.0) (unaudited) |
 
 #### DocumentEngine (IERC-1643)
+
+See also [technical/document.md](./technical/document.md)
 
 The `DocumentEngine` is an external contract to support [*ERC-1643*](https://github.com/ethereum/EIPs/issues/1643) inside CMTAT, a standard proposition to manage documents on-chain. This standard is notably used by [ERC-1400](https://github.com/ethereum/eips/issues/1411) from Polymath. 
 
@@ -2195,6 +2203,8 @@ For more information, see the section dedicated to the `DocumentEngine`
 
 ### Cross-chain transfers (ERC-7802, CCIP-CCT, LayerZero)
 
+See also [technical/cross-chain-bridge-integration.md](./technical/cross-chain-bridge-integration.md)
+
 #### Chainlink CCIP - CCT
 
 CMTAT implements the required function of the [Cross-Chain Token Standard](https://docs.chain.link/ccip/concepts/cross-chain-token) (CCT) which means:
@@ -2303,6 +2313,8 @@ To bridge tokens through LayerZero, you can use an adapter which implements one 
 
 ## Deployment model 
 
+See also [technical/deployment.md](./technical/deployment.md)
+
 Contracts for deployment are available in the directory [contracts/deployment](../contracts/deployment).
 A dedicated Permit deployment version is available: `CMTATStandalonePermit` and `CMTATUpgradeablePermit`.
 
@@ -2339,6 +2351,8 @@ Here is the surya inheritance schema:
 ![surya_inheritance_CMTAT_STANDALONE.sol](./schema/surya_inheritance/surya_inheritance_CMTATStandalone.sol.png)
 
 ### Upgradeable (with a proxy)
+
+See also [technical/upgradeable.md](./technical/upgradeable.md)
 
 The CMTAT supports deployment via a proxy contract.  Furthermore, using a proxy permits to upgrade the contract, using a standard proxy upgrade pattern.
 
@@ -2453,6 +2467,8 @@ If the address is not frozen, it is also possible to perform a burn-and-mint ato
 ![surya_inheritance_CMTAT_ERC1363_BASE.sol](./schema/surya_inheritance/surya_inheritance_0_CMTATBaseCore.sol.png)
 
 ### Debt version
+
+See also [technical/debt.md](./technical/debt.md)
 
 Two deployment version are available to represent Debt and Credit Events information on-chain: `Debt` and `DebtEngine`
 
@@ -2612,6 +2628,8 @@ Here are the different fields and functions to read and store the related debt i
 
 
 ### Permit + ERC-6357 Multicall
+
+See also [technical/permit-multicall.md](./technical/permit-multicall.md)
 
 The Permit deployment version adds support for [ERC-2612 Permit](https://eips.ethereum.org/EIPS/eip-2612) and [ERC-6357 single-contract Multicall](https://eips.ethereum.org/EIPS/eip-6357).
 
