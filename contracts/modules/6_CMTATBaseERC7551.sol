@@ -61,13 +61,6 @@ abstract contract CMTATBaseERC7551 is CMTATBaseERC2771, ERC7551Module, ERC20Enfo
     }
 
     /* ==== ERC-20 function disambiguation ==== */
-    function _update(address from, address to, uint256 value)
-        internal virtual
-        override(CMTATBaseERC20CrossChain, ERC20Upgradeable)
-    {
-        CMTATBaseERC20CrossChain._update(from, to, value);
-    }
-
     function transfer(address to, uint256 value)
         public virtual
         override(CMTATBaseERC20CrossChain, ERC20Upgradeable)

@@ -128,17 +128,4 @@ abstract contract CMTATBaseERC2612 is CMTATBaseERC20CrossChain, ERC20PermitUpgra
         return CMTATBaseERC20CrossChain.symbol();
     }
 
-    /*//////////////////////////////////////////////////////////////
-                            INTERNAL/PRIVATE FUNCTIONS
-    //////////////////////////////////////////////////////////////*/
-    /**
-    * @inheritdoc CMTATBaseERC20CrossChain
-    */
-    function _update(
-        address from,
-        address to,
-        uint256 amount
-    ) internal virtual override(ERC20Upgradeable, CMTATBaseERC20CrossChain) {
-        CMTATBaseERC20CrossChain._update(from, to, amount);
-    }
 }

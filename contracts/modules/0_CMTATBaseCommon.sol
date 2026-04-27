@@ -12,11 +12,9 @@ import {ERC20MintModule, ERC20MintModuleInternal} from "./wrapper/core/ERC20Mint
 import {ExtraInformationModule} from "./wrapper/extensions/ExtraInformationModule.sol";
 import {ERC20EnforcementModule, ERC20EnforcementModuleInternal} from "./wrapper/extensions/ERC20EnforcementModule.sol";
 import {DocumentEngineModule,  IERC1643} from "./wrapper/extensions/DocumentEngineModule.sol";
-import {SnapshotEngineModule} from "./wrapper/extensions/SnapshotEngineModule.sol";
 // options
 import {ERC20BaseModule, ERC20Upgradeable} from "./wrapper/core/ERC20BaseModule.sol";
  /* ==== Interface and other library === */
-import {ISnapshotEngine} from "../interfaces/engine/ISnapshotEngine.sol";
 import {IBurnMintERC20} from "../interfaces/technical/IMintBurnToken.sol";
 import {IERC5679} from "../interfaces/technical/IERC5679.sol";
 
@@ -27,7 +25,6 @@ abstract contract CMTATBaseCommon is
     ERC20BurnModule,
     ERC20BaseModule,
     // Extension
-    SnapshotEngineModule,
     ERC20EnforcementModule,
     DocumentEngineModule,
     ExtraInformationModule,
@@ -120,35 +117,6 @@ abstract contract CMTATBaseCommon is
     function _checkTransferred(address /*spender*/, address from, address /* to */, uint256 value) internal virtual {
         ERC20EnforcementModuleInternal._checkActiveBalanceAndRevert(from, value);
     } 
-    /**
-     * @dev we don't check the transfer validity here
-     * 
-     *
-     */
-    function _update(
-        address from,
-        address to,
-        uint256 amount
-    ) internal virtual override(ERC20Upgradeable) {
-        // We check here the address of the snapshotEngine here because we don't want to read balance/totalSupply if there is no Snapshot Engine
-        ISnapshotEngine snapshotEngineLocal = snapshotEngine();
-      
-        if(address(snapshotEngineLocal) != address(0)){
-          uint256 fromBalanceBefore = balanceOf(from);
-          uint256 toBalanceBefore = balanceOf(to);
-          uint256 totalSupplyBefore = totalSupply();
-        
-          // We perform the update here (CEI pattern)
-          ERC20Upgradeable._update(from, to, amount);
-
-          // Required to use the balance before the update
-          snapshotEngineLocal.operateOnTransfer(from, to, fromBalanceBefore, toBalanceBefore, totalSupplyBefore);
-        } else {
-            // Update without snapshot call
-            ERC20Upgradeable._update(from, to, amount);
-        }
-    }
-
     /* ==== Mint and Burn Operations ==== */
     
     /**

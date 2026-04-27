@@ -781,22 +781,24 @@ contracts/
 
 The base contracts are abstract contracts, so not directly deployable, which inherit from several different modules.
 
-Base contracts are used by the different deployable contracts (CMTATStandalone, CMTATUpgradeable,...) to inherit from the different modules
+Base contracts are used by the different deployable contracts (CMTATStandardStandalone, CMTATStandardUpgradeable,...) to inherit from the different modules
 
 | Name                                                         | Level | Description                                                  | Associated contracts deployments                             |
 | ------------------------------------------------------------ | ----- | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | [CMTATBaseCommon](../contracts/modules/0_CMTATBaseCommon.sol) | 0     | Inherits from all core and extension modules, except ValidationModule | No deployment contract directly inherits from this base contract (see next level) |
 | [CMTATBaseCore](../contracts/modules/0_CMTATBaseCore.sol)     | 0     | Inherits from all core modules                               | CMTAT Light (Upgradeable & Standalone                        |
 | [CMTATBaseGeneric](../contracts/modules/0_CMTATBaseGeneric.sol) | 0     | Inherits from non-ERC20 related modules                      | -<br />(Only mock available)                                 |
+| [CMTATBaseSnapshot](../contracts/modules/0_CMTATBaseSnapshot.sol) | 0     | Pure mixin: inherits from `ERC20Upgradeable` + `SnapshotEngineModule`. Overrides `_update` with snapshot logic. `_authorizeSnapshots()` is abstract. | -                                                            |
 | [CMTATBaseAccessControl](../contracts/modules/1_CMTATBaseAccessControl.sol) | 1     | Inherits from CMTATBaseCommon and OpenZeppelin Access Control | -                                                            |
-| [CMTATBaseAllowlist](../contracts/modules/2_CMTATBaseAllowlist.sol) | 2     | Inherits from CMTATBaseAccessControl, but also from ValidationModuleAllowlist | CMTAT Allowlist (upgradeable & Standalone)                   |
-| [CMTATBaseRuleEngine](../contracts/modules/2_CMTATBaseRuleEngine.sol) | 2     | Add RuleEngine support by inheriting from ValidationModuleRuleEngine | No deployment contract directly inherits from this base contract (see next level) |
+| [CMTATBaseAllowlist](../contracts/modules/2_CMTATBaseAllowlist.sol) | 2     | Inherits from CMTATBaseAccessControl and ValidationModuleAllowlist | CMTAT Allowlist (upgradeable & Standalone)                   |
+| [CMTATBaseRuleEngine](../contracts/modules/2_CMTATBaseRuleEngine.sol) | 2     | Add RuleEngine support by inheriting from CMTATBaseAccessControl and ValidationModuleRuleEngine | No deployment contract directly inherits from this base contract (see next level) |
 | [CMTATBaseDebt](../contracts/modules/3_CMTATBaseDebt.sol)     | 3     | Add debt support by inheriting from Debt module              | CMTAT Debt (Standalone & Upgradeable)                        |
 | [CMTATBaseERC1404](../contracts/modules/3_CMTATBaseERC1404.sol) | 3     | Add [ERC-1404](https://github.com/ethereum/EIPs/issues/1404) support | CMTAT Standalone / Upgradeable                               |
 | [CMTATBaseERC20CrossChain](../contracts/modules/4_CMTATBaseERC20CrossChain.sol) | 4     | Add cross-chain support, notably [ERC-7802](https://eips.ethereum.org/EIPS/eip-7802) | No deployment contract directly inherits from this base contract (see next level) |
 | [CMTATBaseERC2612](../contracts/modules/4_CMTATBaseERC2612.sol) | 4     | Add [ERC-2612 Permit](https://eips.ethereum.org/EIPS/eip-2612) + [ERC-6357 Multicall](https://eips.ethereum.org/EIPS/eip-6357) | CMTAT Permit (Standalone / Upgradeable)                      |
 | [CMTATBaseERC2771](../contracts/modules/5_CMTATBaseERC2771.sol) | 5     | Add [ERC-2771](https://eips.ethereum.org/EIPS/eip-2771) support by inheriting from ERC2771Module | CMTAT Standalone / Upgradeable<br />CMTAT Upgradeable UUPS   |
-| [CMTATBaseDebtEngine](../contracts/modules/5_CMTATBaseDebtEngine.sol) | 5     | Add DebtEngine support by inheriting from DebtEngine module  | CMTAT Standalone DebtEngine / Upgradeable                    |
+| [CMTATBaseERC2771Snapshot](../contracts/modules/5_CMTATBaseERC2771Snapshot.sol) | 5     | Extends CMTATBaseERC2771 with snapshot engine support by also inheriting CMTATBaseSnapshot. Disambiguates ERC-20 and Context functions. | CMTAT Standalone Snapshot / Upgradeable Snapshot             |
+| [CMTATBaseDebtEngine](../contracts/modules/5_CMTATBaseDebtEngine.sol) | 5     | Add DebtEngine support and snapshot engine support by inheriting from DebtEngine module and CMTATBaseSnapshot | CMTAT Standalone DebtEngine / Upgradeable                    |
 | [CMTATBaseERC1363](../contracts/modules/6_CMTATBaseERC1363.sol) | 6     | Add [ERC-1363](https://eips.ethereum.org/EIPS/eip-1363) support by inheriting directly from OpenZeppelin contract | CMTAT ERC1363 (Upgradeable & Standalone)                     |
 | [CMTATBaseERC7551](../contracts/modules/6_CMTATBaseERC7551.sol) | 6     | Add ERC-7551 support by inheriting from ERC7551 Module       | CMTAT ERC7551 (Upgradeable & Standalone)                     |
 
@@ -2304,8 +2306,8 @@ A dedicated Permit deployment version is available: `CMTATStandalonePermit` and 
 
 | CMTAT Model          | Description                                                  | Standalone/Proxy | Contract                                                     | Note                                                         |
 | -------------------- | ------------------------------------------------------------ | ---------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| CMTAT Standard       | Deployment without proxy <br />(immutable)                   | Standalone       | [CMTATStandalone](../contracts/deployment/CMTATStandalone.sol) | Core & extension module without Debt, Allowlist, ERC-3643 and UUPS<br />Include also the option module `ERC2771`, as well as `ERC20CrossChain`support |
-|                      | Deployment with a standard proxy (Transparent or Beacon Proxy) | Upgradeable      | [CMTATUpgradeable](../contracts/deployment/CMTATUpgradeable.sol) | -                                                            |
+| CMTAT Standard       | Deployment without proxy <br />(immutable)                   | Standalone       | [CMTATStandardStandalone](../contracts/deployment/CMTATStandalone.sol) | Core & extension module without Debt, Allowlist, ERC-3643, UUPS and snapshot engine<br />Include also the option module `ERC2771`, as well as `ERC20CrossChain` support |
+|                      | Deployment with a standard proxy (Transparent or Beacon Proxy) | Upgradeable      | [CMTATStandardUpgradeable](../contracts/deployment/CMTATUpgradeable.sol) | -                                                            |
 | Upgradeable UUPS     | Deployment with a UUPS proxy                                 | Only upgradeable | [CMTATUpgradeableUUPS](../contracts/deployment/CMTATUpgradeableUUPS.sol) | Same as standard version, but adds also the UUPS proxy support |
 | ERC-1363             | Implements [ERC-1363](https://eips.ethereum.org/EIPS/eip-1363) | Standalone       | [CMTATStandaloneERC1363](../contracts/deployment/ERC1363/CMTATStandaloneERC1363.sol) | Same as standard version, but adds also the support of `ERC-1363` |
 |                      | -                                                            | Upgradeable      | [CMTATUpgradeableERC1363](../contracts/deployment/ERC1363/CMTATUpgradeableERC1363.sol) | -                                                            |
@@ -2321,11 +2323,12 @@ A dedicated Permit deployment version is available: `CMTATStandalonePermit` and 
 |                      |                                                              | Upgradeable      | [CMTATUpgradeableAllowlist](../contracts/deployment/allowlist/CMTATUpgradeableAllowlist.sol) | -                                                            |
 | ERC7551              | Deployment specific for ERC-7551                             | Standalone       | [CMTATStandaloneERC7551](../contracts/deployment/ERC7551/CMTATStandaloneERC7551.sol) | Add  support of `ERC7551Module`                              |
 |                      |                                                              | Upgradeable      | [CMTATUpgradeableERC7551](../contracts/deployment/ERC7551/CMTATUpgradeableERC7551.sol) | -                                                            |
-| CMTAT with snapshots | Deployment version that performs time-based snapshots directly on-chain and without relying on the external contract `SnapshotEngine` | Upgradeable      | [CMTA - SnapshotEngine](https://github.com/CMTA/SnapshotEngine)<br />(external repository) | -                                                            |
+| Snapshot             | Same as standard version, but with snapshot engine support   | Standalone       | [CMTATStandaloneSnapshot](../contracts/deployment/snapshot/CMTATStandaloneSnapshot.sol) | Extends CMTATStandardStandalone with `SnapshotEngine` support via CMTATBaseERC2771Snapshot |
+|                      |                                                              | Upgradeable      | [CMTATUpgradeableSnapshot](../contracts/deployment/snapshot/CMTATUpgradeableSnapshot.sol) | -                                                            |
 
 ### Standard Standalone
 
-To deploy CMTAT without a proxy, in standalone mode, you need to use the contract version `CMTATStandalone`.
+To deploy CMTAT without a proxy, in standalone mode, you need to use the contract version `CMTATStandardStandalone`.
 
 Here is the surya inheritance schema:
 
@@ -2335,7 +2338,7 @@ Here is the surya inheritance schema:
 
 The CMTAT supports deployment via a proxy contract.  Furthermore, using a proxy permits to upgrade the contract, using a standard proxy upgrade pattern.
 
-- The  implementation contract to use with a TransparentProxy  is the `CMTATUpgradeable`.
+- The  implementation contract to use with a TransparentProxy  is the `CMTATStandardUpgradeable`.
 - The  implementation contract to use with a UUPSProxy  is the `CMTATUpgradeableUUPS`.
 
 Please see the OpenZeppelin [upgradeable contracts documentation](https://docs.openzeppelin.com/upgrades-plugins/1.x/writing-upgradeable) for more information about the proxy requirements applied to the contract.

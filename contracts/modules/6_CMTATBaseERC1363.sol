@@ -103,17 +103,6 @@ abstract contract CMTATBaseERC1363 is ERC1363Upgradeable,CMTATBaseERC2771{
      /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
-    /**
-    * @inheritdoc CMTATBaseERC20CrossChain
-    */
-    function _update(
-        address from,
-        address to,
-        uint256 amount
-    ) internal override(ERC20Upgradeable, CMTATBaseERC20CrossChain) {
-        CMTATBaseERC20CrossChain._update(from, to, amount);
-    }
-
     /*//////////////////////////////////////////////////////////////
                             ERC2771 MODULE
     //////////////////////////////////////////////////////////////*/

@@ -1,14 +1,15 @@
 ## Deployment Variants
 
-- **Standalone** - Immutable, no proxy
-- **Upgradeable** - Transparent/Beacon/UUPS proxy patterns
+- **Standard** (`CMTATStandardStandalone` / `CMTATStandardUpgradeable`) - Core features, no snapshot engine
+- **Snapshot** (`CMTATStandaloneSnapshot` / `CMTATUpgradeableSnapshot`) - Same as standard + SnapshotEngine support
 - **Light** - Minimal for stablecoins
 - **Allowlist** - Whitelist-based transfers (KYC)
 - **Debt** - Bond-specific fields (maturity, coupon)
-- **DebtEngine** - Debt with external engine
+- **DebtEngine** - Debt with external engine + SnapshotEngine support
 - **ERC-7551** - German eWpG compliance
 - **ERC-1363** - transferAndCall support
 - **Permit** - ERC-2612 gasless approvals + ERC-6357 multicall
+- **UUPS** - Same as standard with UUPS proxy support
 
 ---
 
@@ -25,19 +26,28 @@
 ## Contract Inheritance Hierarchy
 
 ```
-CMTATBaseCore (0) - Basic ERC20 + Mint + Burn + Validation + Access Control
-    ↓
-CMTATBaseAccessControl (1) - RBAC roles management
-    ↓
-CMTATBaseRuleEngine/Allowlist (2) - Transfer validation rules
-    ↓
-CMTATBaseERC1404 (3) - ERC-1404 compliance (restrictedTransfer)
-    ↓
-CMTATBaseERC20CrossChain (4) - CCIP & ERC-7802 support
-    ├── CMTATBaseERC2612 (4) - ERC-2612 Permit + ERC-6357 Multicall [Permit variant]
-    └── CMTATBaseERC2771 (5) - Gasless meta-transactions
-            ↓
-        CMTATBaseERC1363/ERC7551 (6) - Additional standards
+Level 0 (independent mixins):
+  CMTATBaseCommon  - Core ERC20 + Mint + Burn + Validation + Access Control
+  CMTATBaseCore    - Core modules only (light variant)
+  CMTATBaseGeneric - Non-ERC20 modules only
+  CMTATBaseSnapshot - Pure mixin: ERC20Upgradeable + SnapshotEngineModule (_update hook)
+
+Standard chain (no snapshot):
+  CMTATBaseCommon (0)
+      ↓
+  CMTATBaseAccessControl (1) - RBAC roles management
+      ↓
+  CMTATBaseRuleEngine / CMTATBaseAllowlist (2) - Transfer validation rules
+      ↓
+  CMTATBaseERC1404 (3) - ERC-1404 compliance (restrictedTransfer)
+      ↓
+  CMTATBaseERC20CrossChain (4) - CCIP & ERC-7802 support
+      ├── CMTATBaseERC2612 (4) - ERC-2612 Permit + ERC-6357 Multicall [Permit variant]
+      └── CMTATBaseERC2771 (5) - Gasless meta-transactions [Standard / UUPS]
+              ├── CMTATBaseERC2771Snapshot (5) - + CMTATBaseSnapshot [Snapshot variant]
+              ├── CMTATBaseDebtEngine (5) - + CMTATBaseSnapshot + DebtEngineModule [DebtEngine variant]
+              ├── CMTATBaseERC1363 (6) - ERC-1363 transferAndCall
+              └── CMTATBaseERC7551 (6) - ERC-7551 (eWpG)
 ```
 
 ---

@@ -2,17 +2,17 @@
 
 pragma solidity ^0.8.20;
 
-import {CMTATBaseERC2771} from "../modules/5_CMTATBaseERC2771.sol";
-import {ERC2771Module} from "../modules/wrapper/options/ERC2771Module.sol";
-import {ICMTATConstructor} from "../interfaces/technical/ICMTATConstructor.sol";
+import {CMTATBaseERC2771Snapshot} from "../../modules/5_CMTATBaseERC2771Snapshot.sol";
+import {ERC2771Module} from "../../modules/wrapper/options/ERC2771Module.sol";
+import {ICMTATConstructor} from "../../interfaces/technical/ICMTATConstructor.sol";
 
 
 /**
-* @title CMTAT standard version for a standalone deployment (without proxy) — no snapshot engine
+* @title CMTAT with snapshot engine — standalone deployment (without proxy)
 */
-contract CMTATStandardStandalone is CMTATBaseERC2771 {
+contract CMTATStandaloneSnapshot is CMTATBaseERC2771Snapshot {
     /**
-     * @notice Contract version for standalone deployment
+     * @notice Contract version for standalone deployment with snapshot engine
      * @param forwarderIrrevocable address of the forwarder, required for the gasless support
      * @param admin address of the admin of contract (Access Control)
      * @param ERC20Attributes_ ERC20 name, symbol and decimals
@@ -25,7 +25,7 @@ contract CMTATStandardStandalone is CMTATBaseERC2771 {
         address admin,
         ICMTATConstructor.ERC20Attributes memory ERC20Attributes_,
         ICMTATConstructor.ExtraInformationAttributes memory extraInformationAttributes_,
-        ICMTATConstructor.Engine memory engines_ 
+        ICMTATConstructor.Engine memory engines_
     ) ERC2771Module(forwarderIrrevocable) {
         // Initialize the contract to avoid front-running
         initialize(

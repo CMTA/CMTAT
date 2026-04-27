@@ -46,29 +46,29 @@ See `./claude/tree/contracts-upgradeables_tree.txt`
 
 ## Key Modules
 
-See `./doc/summary.md`
+See `./doc/SUMMARY.md`
 
 ## Deployment Variants
 
-See `./doc/summary.md`
+See `./doc/SUMMARY.md`
 
 ---
 
 ## Architecture Highlights
 
-See `./doc/summary.md`
+See `./doc/SUMMARY.md`
 
 ---
 
 ## Contract Inheritance Hierarchy
 
-See `./doc/summary.md`
+See `./doc/SUMMARY.md`
 
 ---
 
 ## Key Roles (Access Control)
 
-See `./doc/summary.md`
+See `./doc/SUMMARY.md`
 
 ---
 

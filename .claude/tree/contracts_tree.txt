@@ -21,6 +21,9 @@ contracts
 │   ├── permit
 │   │   ├── CMTATStandalonePermit.sol
 │   │   └── CMTATUpgradeablePermit.sol
+│   ├── snapshot
+│   │   ├── CMTATStandaloneSnapshot.sol
+│   │   └── CMTATUpgradeableSnapshot.sol
 │   └── light
 │       ├── CMTATStandaloneLight.sol
 │       └── CMTATUpgradeableLight.sol
@@ -89,6 +92,7 @@ contracts
 │   ├── 0_CMTATBaseCommon.sol
 │   ├── 0_CMTATBaseCore.sol
 │   ├── 0_CMTATBaseGeneric.sol
+│   ├── 0_CMTATBaseSnapshot.sol
 │   ├── 1_CMTATBaseAccessControl.sol
 │   ├── 2_CMTATBaseAllowlist.sol
 │   ├── 2_CMTATBaseRuleEngine.sol
@@ -98,6 +102,7 @@ contracts
 │   ├── 4_CMTATBaseERC2612.sol
 │   ├── 5_CMTATBaseDebtEngine.sol
 │   ├── 5_CMTATBaseERC2771.sol
+│   ├── 5_CMTATBaseERC2771Snapshot.sol
 │   ├── 6_CMTATBaseERC1363.sol
 │   ├── 6_CMTATBaseERC7551.sol
 │   ├── internal

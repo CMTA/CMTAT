@@ -14,7 +14,6 @@ import {ERC20MintModule} from "./wrapper/core/ERC20MintModule.sol";
 import {ExtraInformationModule} from "./wrapper/extensions/ExtraInformationModule.sol";
 import {ERC20EnforcementModule} from "./wrapper/extensions/ERC20EnforcementModule.sol";
 import {DocumentEngineModule,  IERC1643} from "./wrapper/extensions/DocumentEngineModule.sol";
-import {SnapshotEngineModule} from "./wrapper/extensions/SnapshotEngineModule.sol";
 // options
 import {ERC20BaseModule, ERC20Upgradeable} from "./wrapper/core/ERC20BaseModule.sol";
  /* ==== Interface and other library === */
@@ -98,9 +97,4 @@ abstract contract CMTATBaseAccessControl is
     */
     function _authorizeForcedTransfer() internal virtual override(ERC20EnforcementModule) onlyRole(DEFAULT_ADMIN_ROLE){}
 
-    /** 
-    * @custom:access-control
-    * - the caller must have the `SNAPSHOOTER_ROLE`.
-    */
-    function _authorizeSnapshots() internal virtual override(SnapshotEngineModule) onlyRole(SNAPSHOOTER_ROLE){}
 }
