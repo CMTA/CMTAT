@@ -85,24 +85,30 @@ interface IERC7943FungibleEnforcementEventAndError{
 }
 
 /**
-* @notice Transfer Error Interface for ERC-20, ERC-721 and ERC-1155 based implementations.
-* 
+* @notice Send/Receive Error Interface for ERC-20 based implementations.
+*
 */
-interface IERC7943TransactError{
+interface IERC7943FungibleSendReceiveError {
     /**
-    * @notice Error reverted when an account is not allowed to transact. 
-    * @param account The address of the account which is not allowed for transfers.
-    */ 
-    error ERC7943CannotTransact(address account);
+    * @notice Error reverted when an account is not allowed to send tokens.
+    * @param account The address of the account which is not allowed to send.
+    */
+    error ERC7943CannotSend(address account);
+
+    /**
+    * @notice Error reverted when an account is not allowed to receive tokens.
+    * @param account The address of the account which is not allowed to receive.
+    */
+    error ERC7943CannotReceive(address account);
 }
 
 /**
 * @notice Transfer Error Interface for ERC-20 based implementations.
-* 
+*
 */
 interface IERC7943FungibleTransferError {
-    /** 
-    * @notice Error reverted when a transfer is not allowed according to internal rules. 
+    /**
+    * @notice Error reverted when a transfer is not allowed according to internal rules.
     * @param from The address from which tokens are being sent.
     * @param to The address to which tokens are being sent.
     * @param amount The amount sent.
@@ -110,12 +116,18 @@ interface IERC7943FungibleTransferError {
     error ERC7943CannotTransfer(address from, address to, uint256 amount);
 }
 
-interface IERC7943TransactCheck{
-     /// @notice Checks if a specific account is allowed to transact according to token rules.
+interface IERC7943FungibleSendReceiveCheck {
+    /// @notice Checks if a specific account is allowed to send tokens according to token rules.
     /// @dev This is often used for allowlist/KYC/KYB/AML checks.
     /// @param account The address to check.
-    /// @return allowed True if the account is allowed, false otherwise.
-    function canTransact(address account) external view returns (bool allowed);
+    /// @return allowed True if the account is allowed to send, false otherwise.
+    function canSend(address account) external view returns (bool allowed);
+
+    /// @notice Checks if a specific account is allowed to receive tokens according to token rules.
+    /// @dev This is often used for allowlist/KYC/KYB/AML checks.
+    /// @param account The address to check.
+    /// @return allowed True if the account is allowed to receive, false otherwise.
+    function canReceive(address account) external view returns (bool allowed);
 }
 
 

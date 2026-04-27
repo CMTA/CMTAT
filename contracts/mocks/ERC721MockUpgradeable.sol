@@ -29,14 +29,14 @@ contract ERC721MockUpgradeable is ERC721Upgradeable, CMTATBaseGeneric {
    * @param tokenId NFT tokenId
    */
   function mint(address to, uint256 tokenId) public {
-    _canMintBurnByModuleAndRevert(to);
+    _canMintByModuleAndRevert(to);
     ERC721Upgradeable._mint(to, tokenId);
   }
 
   function burn(uint256 tokenId) external {
     address currentOwner = ownerOf(tokenId);
-    _canMintBurnByModuleAndRevert(currentOwner);
-    ERC721Upgradeable._burn( tokenId);
+    _canBurnByModuleAndRevert(currentOwner);
+    ERC721Upgradeable._burn(tokenId);
   }
 
   function safeTransferFrom(

@@ -64,11 +64,27 @@ Custom changelog tag: `Dependencies`, `Documentation`, `Testing`
 - New validation contract **`ValidationModuleAllowance`** (`contracts/modules/wrapper/extensions/ValidationModule/ValidationModuleAllowance.sol`):
   - Validates allowance authorization (`approve` and `permit`): reverts if the contract is paused or if `owner`/`spender` is frozen.
   - Used in `CMTATBaseERC2612.permit` to enforce CMTAT compliance checks before setting the allowance.
+- New mixin **`CMTATBaseSnapshot`** (`contracts/modules/0_CMTATBaseSnapshot.sol`):
+  - Pure ERC-20 + `SnapshotEngineModule` mixin providing the `_update` hook for historical balance tracking.
+  - Designed to be composed into deployment variants that require snapshot support.
+- New base contract **`CMTATBaseERC2771Snapshot`** (`contracts/modules/5_CMTATBaseERC2771Snapshot.sol`):
+  - Combines `CMTATBaseERC2771` with `CMTATBaseSnapshot`, resolving all ERC-20 / snapshot disambiguation overrides.
+  - Used as the foundation for snapshot-enabled standard deployment variants.
+- New deployment variants **`CMTATStandaloneSnapshot`** and **`CMTATUpgradeableSnapshot`** (`contracts/deployment/snapshot/`):
+  - Standard CMTAT feature set plus SnapshotEngine support for historical balance queries.
 
 #### Changed
 
 - **`ERC20EnforcementModule`**: Removed `IERC7551ERC20Enforcement` interface inheritance and the ERC-7551 specific functions (`getActiveBalanceOf`, `forcedTransfer(address,address,uint256,bytes)`, `freezePartialTokens(address,uint256,bytes)`, `unfreezePartialTokens(address,uint256,bytes)`). These are now in `ERC20EnforcementERC7551Module`. The module now implements only `IERC3643ERC20Enforcement` and `IERC7943FungibleEnforcementSpecific`.
 - **`CMTATBaseERC7551`**: Updated to inherit from `ERC20EnforcementERC7551Module` (instead of relying on `ERC20EnforcementModule` alone) to expose ERC-7551 bytes-data enforcement functions and `getActiveBalanceOf`. Added explicit diamond-inheritance disambiguation overrides for `_msgSender`, `_msgData`, `_contextSuffixLength`, `_update`, `transfer`, `transferFrom`, `approve`, `name`, `symbol`, `decimals`, and `getFrozenTokens`.
+- **`CMTATBaseDebtEngine`**: Now inherits from both `CMTATBaseERC20CrossChain` and `CMTATBaseSnapshot`, adding SnapshotEngine support to the Debt variant. Adds `_authorizeSnapshots` and disambiguation overrides for `_update`, `transfer`, `transferFrom`, `approve`, `name`, `symbol`, `decimals`.
+- **ERC-7943 interface update** — breaking changes aligned with the updated ERC-7943 specification:
+  - `canTransact(address)` removed; replaced by `canSend(address)` and `canReceive(address)` in `ValidationModule`, implementing the new `IERC7943FungibleSendReceiveCheck` interface. Both currently delegate to the same underlying eligibility check (frozen status + allowlist), but allow future asymmetric access policies.
+  - `ERC7943CannotTransact` error removed; replaced by directional errors `ERC7943CannotSend` (emitted when a sender, spender, or burn source is blocked) and `ERC7943CannotReceive` (emitted when a recipient or mint target is blocked), defined in `IERC7943FungibleSendReceiveError`.
+  - Internal `_canTransact` split into `_canSend` and `_canReceive` (both virtual, overridden in `ValidationModuleAllowlist`).
+  - `_canMintBurnByModuleAndRevert` split into `_canMintByModuleAndRevert` (reverts with `ERC7943CannotReceive`) and `_canBurnByModuleAndRevert` (reverts with `ERC7943CannotSend`).
+  - Interface names: `IERC7943TransactError` → `IERC7943FungibleSendReceiveError`; `IERC7943TransactCheck` → `IERC7943FungibleSendReceiveCheck`.
+  - ERC-7943 ERC-165 interface ID updated: `0x29388973` → `0x3edbb4c4`.
 
 ### Testing
 
@@ -79,8 +95,11 @@ Custom changelog tag: `Dependencies`, `Documentation`, `Testing`
 
 #### Changed
 
-- `test/common/AllowlistModuleCommon.js`: updated to cover new allowance validation behavior.
-- `test/common/ERC20BaseModuleCommon.js`: updated to cover updated `approve` validation.
+- `test/common/AllowlistModuleCommon.js`: updated to cover new allowance validation behavior and ERC-7943 directional errors.
+- `test/common/ERC20BaseModuleCommon.js`: updated to cover updated `approve` validation and ERC-7943 directional errors.
+- `test/common/EnforcementModuleCommon.js`, `test/common/PermitModuleCommon.js`, `test/common/ERC20BurnModuleCommon.js`, `test/common/ERC20MintModuleCommon.js`, `test/common/ERC20CrossChainModuleCommon.js`: replaced `canTransact` calls with `canSend`; replaced `ERC7943CannotTransact` revert expectations with the appropriate directional error (`ERC7943CannotSend` or `ERC7943CannotReceive`).
+- `test/utils.js`: updated `IERC7943_INTERFACEID` to `0x3edbb4c4`.
+- `test/deployment/erc721mock.test.js`: updated to `ERC7943CannotReceive`.
 
 ### Documentation
 
@@ -90,10 +109,12 @@ Custom changelog tag: `Dependencies`, `Documentation`, `Testing`
 - ERC specification: `doc/ERCSpecification/erc-6357-multicall.md` (ERC-6357 Multicall).
 - Module documentation: `doc/modules/options/erc2612/erc2612.md` (`CMTATBaseERC2612` API reference).
 - `ERC20EnforcementERC7551Module` section in `doc/modules/options/erc7551/erc7551.md`.
+- Old ERC-7943 specification archived as `doc/ERCSpecification/erc-7943-uRWA-old.md` for reference.
 
 #### Changed
 
-- `doc/summary.md`: added **Permit** deployment variant; updated inheritance hierarchy to show `CMTATBaseERC2612` branch.
+- `doc/SUMMARY.md`: added **Permit** and **Snapshot** deployment variants; updated inheritance hierarchy to show `CMTATBaseERC2612` and `CMTATBaseERC2771Snapshot` branches.
+- `doc/README.md`: updated ERC-7943 interface table, implementation mapping, transfer flow diagram, and pre-check functions table to reflect `canSend`/`canReceive` split and new error names.
 - `doc/modules/extensions/ERC20Enforcement/erc20enforcement.md`: added note about ERC-7551 enforcement functions moved to `ERC20EnforcementERC7551Module`.
 - `doc/modules/options/erc7551/erc7551.md`: added overview table distinguishing `ERC7551Module` from `ERC20EnforcementERC7551Module`.
 - Updated ERC specifications: `erc-1404-restricted.md`, `erc-3643.md`, `erc-7551-ewpg.md`, `erc-7943-uRWA.md`.

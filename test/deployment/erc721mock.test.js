@@ -98,7 +98,7 @@ describe('ERC721MockUpgradeable', function () {
     await this.cmtat.mint(this.admin, 1)
     await this.cmtat.connect(this.admin).setAddressFrozen(this.address1, true)
     await expect(this.cmtat.transferFrom(this.admin, this.address1, 1))
-      .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotTransact')
+      .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotReceive')
       .withArgs(this.address1)
   })
 

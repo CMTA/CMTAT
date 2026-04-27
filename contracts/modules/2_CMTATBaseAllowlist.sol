@@ -178,15 +178,25 @@ abstract contract CMTATBaseAllowlist is
         return ValidationModuleAllowlist._canMintBurnByModule(account);
     }
 
-    function _canMintBurnByModuleAndRevert(
-        address account
+    function _canMintByModuleAndRevert(
+        address to
     ) internal view virtual override(ValidationModuleAllowlist, ValidationModule) {
-        ValidationModuleAllowlist._canMintBurnByModuleAndRevert(account);
+        ValidationModuleAllowlist._canMintByModuleAndRevert(to);
     }
 
-  function _canTransact(address account) internal view virtual override(ValidationModuleAllowlist, ValidationModule) returns (bool allowed) {
-    return ValidationModuleAllowlist._canTransact(account);
-  }
+    function _canBurnByModuleAndRevert(
+        address from
+    ) internal view virtual override(ValidationModuleAllowlist, ValidationModule) {
+        ValidationModuleAllowlist._canBurnByModuleAndRevert(from);
+    }
+
+    function _canSend(address account) internal view virtual override(ValidationModuleAllowlist, ValidationModule) returns (bool allowed) {
+        return ValidationModuleAllowlist._canSend(account);
+    }
+
+    function _canReceive(address account) internal view virtual override(ValidationModuleAllowlist, ValidationModule) returns (bool allowed) {
+        return ValidationModuleAllowlist._canReceive(account);
+    }
 
     function _canTransferStandardByModule(
         address spender,

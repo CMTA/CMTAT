@@ -57,7 +57,7 @@ function ERC20BaseModuleCommon () {
       await expect(
         this.cmtat.connect(this.address1).approve(this.address3, 20n)
       )
-        .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotTransact')
+        .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotSend')
         .withArgs(this.address1.address)
     })
 
@@ -66,7 +66,7 @@ function ERC20BaseModuleCommon () {
       await expect(
         this.cmtat.connect(this.address1).approve(this.address3, 20n)
       )
-        .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotTransact')
+        .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotSend')
         .withArgs(this.address3.address)
     })
   })

@@ -190,7 +190,7 @@ function ERC20BurnModuleCommon () {
       await expect(
         this.cmtat.connect(this.admin).burn(this.address1, VALUE_TYPED)
       )
-        .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotTransact')
+        .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotSend')
         .withArgs(this.address1.address)
     })
   })
@@ -625,7 +625,7 @@ function ERC20BurnModuleCommon () {
           .connect(this.admin)
           .batchBurn(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS, REASON)
       )
-        .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotTransact')
+        .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotSend')
         .withArgs(this.address1)
     })
   })

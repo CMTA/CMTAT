@@ -17,19 +17,19 @@ abstract contract ValidationModuleAllowance is ValidationModuleCore {
      *
      * Requirements:
      * - contract must not be paused.
-     * - `owner` must be allowed to transact.
-     * - `spender` must be allowed to transact.
+     * - `owner` must be allowed to send (`canSend` returns true).
+     * - `spender` must be allowed to send (`canSend` returns true).
      */
     function _canAuthorizeAllowanceByModuleAndRevert(
         address owner,
         address spender
     ) internal view virtual {
         _requireNotPaused();
-        if (!_canTransact(owner)) {
-            revert ERC7943CannotTransact(owner);
+        if (!_canSend(owner)) {
+            revert ERC7943CannotSend(owner);
         }
-        if (!_canTransact(spender)) {
-            revert ERC7943CannotTransact(spender);
+        if (!_canSend(spender)) {
+            revert ERC7943CannotSend(spender);
         }
     }
 }

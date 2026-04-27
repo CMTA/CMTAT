@@ -136,7 +136,7 @@ function PermitModuleCommon () {
             permit.s
           )
       )
-        .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotTransact')
+        .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotSend')
         .withArgs(owner)
     })
 
@@ -160,7 +160,7 @@ function PermitModuleCommon () {
             permit.s
           )
       )
-        .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotTransact')
+        .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotSend')
         .withArgs(spender)
     })
   })

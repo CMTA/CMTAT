@@ -571,9 +571,9 @@ All related interfaces are defined in the interface file [draft-IERC7943.sol](..
 | `IERC7943FungibleEnforcement`              | `forcedTransfer`, `getFrozenTokens`                          |
 | `IERC7943FungibleEnforcementSpecific`      | `setFrozenTokens`                                            |
 | `IERC7943FungibleEnforcementEventAndError` | `Frozen`, `ForcedTransfer` events<br />`ERC7943InsufficientUnfrozenBalance` |
-| `IERC7943TransactError`                    | `ERC7943CannotTransact` error                                |
+| `IERC7943FungibleSendReceiveError`         | `ERC7943CannotSend`, `ERC7943CannotReceive` errors           |
 | `IERC7943FungibleTransferError`            | `ERC7943CannotTransfer` error                                |
-| `IERC7943TransactCheck`                    | `canTransact`                                                |
+| `IERC7943FungibleSendReceiveCheck`         | `canSend`, `canReceive`                                      |
 
 ##### Implementation Mapping
 
@@ -583,10 +583,12 @@ All related interfaces are defined in the interface file [draft-IERC7943.sol](..
 | `forcedTransfer(from, to, amount)`   | `ERC20EnforcementModule.sol`                                 |
 | `setFrozenTokens(account, amount)`   | `ERC20EnforcementModule.sol`                                 |
 | `getFrozenTokens(account)`           | `ERC20EnforcementModule.sol`                                 |
-| `canTransact(account)`               | `ValidationModule.sol`                                       |
+| `canSend(account)`                   | `ValidationModule.sol`                                       |
+| `canReceive(account)`                | `ValidationModule.sol`                                       |
 | `canTransfer(from, to, amount)`      | `ValidationModuleCore.sol`                                   |
 | **Error**                            |                                                              |
-| `ERC7943CannotTransact`              | `ValidationModule.sol`                                       |
+| `ERC7943CannotSend`                  | `ValidationModule.sol`                                       |
+| `ERC7943CannotReceive`               | `ValidationModule.sol`                                       |
 | `ERC7943CannotTransfer`              | `CMTATBaseCore.sol`, `CMTATBaseAllowlist`, `CMTATBaseRuleEngine` |
 | `ERC7943InsufficientUnfrozenBalance` | [ERC20EnforcementModuleInternal.sol](../contracts/modules/internal/ERC20EnforcementModuleInternal.sol) |
 | **Event**                            | [ERC20EnforcementModuleInternal.sol](../contracts/modules/internal/ERC20EnforcementModuleInternal.sol) |
@@ -604,7 +606,8 @@ transfer(to, 100)
 │
 ├─ Is contract paused? ──────────────→ revert EnforcedPause()
 │
-├─ Is sender/receiver frozen? ───────→ revert ERC7943CannotTransact(account)
+├─ Is sender/spender frozen? ────────→ revert ERC7943CannotSend(account)
+├─ Is receiver frozen? ──────────────→ revert ERC7943CannotReceive(account)
 │
 ├─ RuleEngine says no? ─────────────→ RuleEngine reverts with its own errors
 ├─ Other check (transferred) says no? ─────────────→ revert ERC7943CannotTransfer(...)
@@ -614,7 +617,7 @@ transfer(to, 100)
 └─ Transfer executes
 ```
 
-There are three ERC-7943 errors used in this workflow: `ERC7943CannotTransact`, `ERC7943CannotTransfer` and `ERC7943InsufficientUnfrozenBalance`
+There are four ERC-7943 errors used in this workflow: `ERC7943CannotSend`, `ERC7943CannotReceive`, `ERC7943CannotTransfer` and `ERC7943InsufficientUnfrozenBalance`
 
 
 
@@ -1679,7 +1682,8 @@ These functions are useful to avoid failed transactions due to compliance rules.
 | ------------------------------------------- | ------------------------------------------------------------ | ------------------------------------------- | -------------------- |
 | `canTransfer(from, to, value)`              | [ERC-7943](https://eips.ethereum.org/EIPS/eip-7943), [ERC-7551](https://github.com/ethereum/ERCs/blob/60a282eb3c867af2dbed8eff12e7549b548cf1bf/ERCS/erc-7551.md) | Check if a direct transfer is allowed       | ValidationModuleCore |
 | `canTransferFrom(spender, from, to, value)` | [ERC-7551](https://github.com/ethereum/ERCs/blob/60a282eb3c867af2dbed8eff12e7549b548cf1bf/ERCS/erc-7551.md) | Check if a delegated transfer is allowed    | ValidationModuleCore |
-| `canTransact(account)`                      | [ERC-7943](https://eips.ethereum.org/EIPS/eip-7943)          | Check if an account can transact (ERC-7943) | ValidationModule     |
+| `canSend(account)`                          | [ERC-7943](https://eips.ethereum.org/EIPS/eip-7943)          | Check if an account is allowed to send      | ValidationModule     |
+| `canReceive(account)`                       | [ERC-7943](https://eips.ethereum.org/EIPS/eip-7943)          | Check if an account is allowed to receive   | ValidationModule     |
 
 ### Enforcement Module
 

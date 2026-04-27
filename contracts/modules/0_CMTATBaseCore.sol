@@ -164,7 +164,7 @@ abstract contract CMTATBaseCore is
      * @dev 
      * We can not use type(IERC5679).interfaceId, we use instead of 0xd0017968
      * because IERC5679 inherits from two interfaces (IERC5679Burn and Mint)
-     * Core version does not implement in its integrality ERC-7943 (0x29388973)
+     * Core version does not implement in its integrality ERC-7943 (0x3edbb4c4)
      */
     function supportsInterface(bytes4 interfaceId) public view virtual override(AccessControlUpgradeable, IERC165) returns (bool) {
         return interfaceId == 0xd0017968 || AccessControlUpgradeable.supportsInterface(interfaceId);
@@ -245,13 +245,13 @@ abstract contract CMTATBaseCore is
 
     /* ==== Mint and Burn Operations ==== */
     function _mintOverride(address account, uint256 value) internal virtual override(ERC20MintModuleInternal) {
-        ValidationModule._canMintBurnByModuleAndRevert(account);
+        ValidationModule._canMintByModuleAndRevert(account);
         ERC20MintModuleInternal._mintOverride(account, value);
     }
 
 
     function _burnOverride(address account, uint256 value) internal virtual override(ERC20BurnModuleInternal) {
-        ValidationModule._canMintBurnByModuleAndRevert(account);
+        ValidationModule._canBurnByModuleAndRevert(account);
         ERC20BurnModuleInternal._burnOverride(account, value);
     }
 
