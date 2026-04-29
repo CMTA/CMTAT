@@ -169,6 +169,21 @@ interface IERC3643Enforcement {
  * @dev For event definitions, see {IERC7551ERC20Enforcement}.
  */
 interface IERC3643ERC20Enforcement is IERC7943FungibleEnforcement {
+    /**
+     * @dev Emitted when a certain amount of tokens is frozen on a wallet.
+     * This event is emitted by `freezePartialTokens` and `batchFreezePartialTokens`.
+     * @param account The wallet address impacted by the freezing status.
+     * @param value The amount of tokens that is frozen.
+     */
+    event TokensFrozen(address indexed account, uint256 value);
+
+    /**
+     * @dev Emitted when a certain amount of tokens is unfrozen on a wallet.
+     * This event is emitted by `unfreezePartialTokens` and `batchUnfreezePartialTokens`.
+     * @param account The wallet address impacted by the freezing status.
+     * @param value The amount of tokens that is unfrozen.
+     */
+    event TokensUnfrozen(address indexed account, uint256 value);
     /* ============ State Functions ============ */
     /**
      * @notice Freezes a specific amount of tokens for a given account.
@@ -283,4 +298,3 @@ interface IERC3643IComplianceContract {
      */
     function transferred(address from, address to, uint256 value) external;
 }
-

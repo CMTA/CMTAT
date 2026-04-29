@@ -3152,13 +3152,14 @@ This is what is done for the CMTAT light version which does not include `forcedT
 | ---------------------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | Mint while pause                               | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | Dedicated crosschain mint (e.g. `crosschainMint`) cannot be performed while the contract is in the pause state. |
 | Burn while pause                               | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | Dedicated crosschain burn (e.g.`crosschainBurn`) cannot be performed while the contract is in the pause state. |
-| Self Burn                                      | <strong><span style="color: #b00020;">&#x2718;</span></strong> | Token holder can not burn their own tokens.<br />Only authorised addresses are allowed to burn tokens. |
+| Self-Burn for everyone                         | <strong><span style="color: #b00020;">&#x2718;</span></strong> | Token holder can not burn their own tokens.<br />Only authorized addresses are allowed to burn tokens. |
+| Self-Burn for authorized addresses             | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> |                                                              |
 | Standard burn on a frozen address              | <strong><span style="color: #b00020;">&#x2718;</span></strong> | Required to use `forcedTransfer` or `forcedBurn`             |
 | Burn tokens with the function `forcedTransfer` | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | See note above                                               |
 
 **Self burn**
 
-It's deliberate that only the issuer (and not the tokenholder) can burn a token, and that this corresponds to a legal requirement in several countries.
+It's deliberate that only the issuer and authorized addresses (and not the tokenholder) can burn a token, and that this corresponds to a legal requirement in several countries.
 
 Indeed, once issued, a security can only be cancelled by its issuer, not by its holder. Since the token serves as a vehicle for the security, the same must apply to the token itself. An investor wishing to "get rid of" a token must transfer it to the issuer, who can then cancel it when the law allows.
 

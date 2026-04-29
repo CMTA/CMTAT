@@ -90,6 +90,17 @@ abstract contract ERC20EnforcementModule is ERC20EnforcementModuleInternal, IERC
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
+    /* ============ Events ============ */
+    function _freezeTokensEmitEvents(address account, uint256 difference, uint256 frozenTokens, bytes memory data) internal virtual override {
+        super._freezeTokensEmitEvents(account, difference, frozenTokens, data);
+        emit IERC3643ERC20Enforcement.TokensFrozen(account, difference);
+    }
+
+    function _unfreezeTokensEmitEvents(address account, uint256 difference, uint256 frozenTokens, bytes memory data) internal virtual override {
+        super._unfreezeTokensEmitEvents(account, difference, frozenTokens, data);
+        emit IERC3643ERC20Enforcement.TokensUnfrozen(account, difference);
+    }
+
     /* ============ Access Control ============ */
     function _authorizeERC20Enforcer() internal virtual;
     function _authorizeForcedTransfer() internal virtual;
