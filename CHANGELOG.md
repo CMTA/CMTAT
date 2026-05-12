@@ -81,6 +81,7 @@ Custom changelog tag: `Dependencies`, `Documentation`, `Testing`
   - ERC-7551 event emission was removed from `ERC20EnforcementModuleInternal` and is now emitted in ERC-7551 specific paths (`ERC20EnforcementERC7551Module`, and `CMTATBaseCore.forcedBurn`).
 - **`CMTATBaseERC7551`**: Updated to inherit from `ERC20EnforcementERC7551Module` (instead of relying on `ERC20EnforcementModule` alone) to expose ERC-7551 bytes-data enforcement functions and `getActiveBalanceOf`. Added explicit diamond-inheritance disambiguation overrides for `_msgSender`, `_msgData`, `_contextSuffixLength`, `_update`, `transfer`, `transferFrom`, `approve`, `name`, `symbol`, `decimals`, and `getFrozenTokens`.
 - **`CMTATBaseDebtEngine`**: Now inherits from both `CMTATBaseERC20CrossChain` and `CMTATBaseSnapshot`, adding SnapshotEngine support to the Debt variant. Adds `_authorizeSnapshots` and disambiguation overrides for `_update`, `transfer`, `transferFrom`, `approve`, `name`, `symbol`, `decimals`.
+- **`CMTATBaseDebt`**: Restored SnapshotEngine support by inheriting `CMTATBaseSnapshot` and adding the required disambiguation/authorization overrides (`approve`, `transfer`, `transferFrom`, `decimals`, `name`, `symbol`, `_update`, `_authorizeSnapshots`) so Debt deployments expose `snapshotEngine` / `setSnapshotEngine` again.
 - **ERC-7943 interface update** — breaking changes aligned with the updated ERC-7943 specification:
   - `canTransact(address)` removed; replaced by `canSend(address)` and `canReceive(address)` in `ValidationModule`, implementing the new `IERC7943FungibleSendReceiveCheck` interface. Both currently delegate to the same underlying eligibility check (frozen status + allowlist), but allow future asymmetric access policies.
   - `ERC7943CannotTransact` error removed; replaced by directional errors `ERC7943CannotSend` (emitted when a sender, spender, or burn source is blocked) and `ERC7943CannotReceive` (emitted when a recipient or mint target is blocked), defined in `IERC7943FungibleSendReceiveError`.
@@ -103,6 +104,12 @@ Custom changelog tag: `Dependencies`, `Documentation`, `Testing`
 - `test/common/EnforcementModuleCommon.js`, `test/common/PermitModuleCommon.js`, `test/common/ERC20BurnModuleCommon.js`, `test/common/ERC20MintModuleCommon.js`, `test/common/ERC20CrossChainModuleCommon.js`: replaced `canTransact` calls with `canSend`; replaced `ERC7943CannotTransact` revert expectations with the appropriate directional error (`ERC7943CannotSend` or `ERC7943CannotReceive`).
 - `test/utils.js`: updated `IERC7943_INTERFACEID` to `0x3edbb4c4`.
 - `test/deployment/erc721mock.test.js`: updated to `ERC7943CannotReceive`.
+- Deployment test wiring updated after snapshot-module extraction:
+  - Removed snapshot common test calls from non-snapshot deployment suites where `snapshotEngine()` is not exposed (ERC-7551 and ERC-1363 proxy deployment suites).
+  - Added dedicated ERC-7551 enforcement common tests (`test/common/ERC20EnforcementERC7551ModuleCommon.js`) and wired them to ERC-7551 deployment suites.
+- `package.json`:
+  - `test:snapshot` script path list fixed to remove stale/non-existent targets.
+  - Added `test:snapshot:module` to keep module-level snapshot suite invocation separate.
 
 ### Documentation
 
@@ -122,6 +129,10 @@ Custom changelog tag: `Dependencies`, `Documentation`, `Testing`
 - `doc/modules/extensions/ERC20Enforcement/erc20enforcement.md`: added note about ERC-7551 enforcement functions moved to `ERC20EnforcementERC7551Module`.
 - `doc/modules/options/erc7551/erc7551.md`: added overview table distinguishing `ERC7551Module` from `ERC20EnforcementERC7551Module`.
 - Updated ERC specifications: `erc-1404-restricted.md`, `erc-3643.md`, `erc-7551-ewpg.md`, `erc-7943-uRWA.md`.
+- `doc/README.md`:
+  - Fixed broken local links in audit references.
+  - Corrected deployment-functionality summary tables for snapshot/MetaTx coverage.
+  - Added a dedicated `CMTAT Snapshot` column in the functionality matrix to avoid ambiguity.
 
 ## 3.2.0
 
