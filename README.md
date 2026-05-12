@@ -40,6 +40,7 @@ CMTAT implements a wide set of Ethereum standards:
 
 - **ERC-20** — fungible token
 - **ERC-3643** — security token (without on-chain identity)
+- **ERC-7551** — crypto security token interface (eWpG profile)
 - **ERC-7943 (uRWA)** — universal RWA interface
 - **ERC-1404** — restricted token
 - **ERC-2612 Permit** — gasless approvals
