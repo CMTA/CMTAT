@@ -236,7 +236,7 @@ abstract contract CMTATBaseCore is
         require(EnforcementModule.isFrozen(account), CMTAT_BurnEnforcement_AddressIsNotFrozen());
         // Skip ERC20BurnModule
         ERC20Upgradeable._burn(account, value);
-        emit Enforcement(_msgSender(), account, value, data);
+        emit ForcedTransfer(_msgSender(), account, address(0), value, data);
     }
 
     /*//////////////////////////////////////////////////////////////

@@ -76,6 +76,9 @@ Custom changelog tag: `Dependencies`, `Documentation`, `Testing`
 #### Changed
 
 - **`ERC20EnforcementModule`**: Removed `IERC7551ERC20Enforcement` interface inheritance and the ERC-7551 specific functions (`getActiveBalanceOf`, `forcedTransfer(address,address,uint256,bytes)`, `freezePartialTokens(address,uint256,bytes)`, `unfreezePartialTokens(address,uint256,bytes)`). These are now in `ERC20EnforcementERC7551Module`. The module now implements only `IERC3643ERC20Enforcement` and `IERC7943FungibleEnforcementSpecific`.
+- **ERC-7551 event model alignment**:
+  - `IERC7551ERC20EnforcementEvent` now exposes `ForcedTransfer(address operator, address from, address to, uint256 value, bytes data)` (replacing the legacy `Enforcement(...)` event shape).
+  - ERC-7551 event emission was removed from `ERC20EnforcementModuleInternal` and is now emitted in ERC-7551 specific paths (`ERC20EnforcementERC7551Module`, and `CMTATBaseCore.forcedBurn`).
 - **`CMTATBaseERC7551`**: Updated to inherit from `ERC20EnforcementERC7551Module` (instead of relying on `ERC20EnforcementModule` alone) to expose ERC-7551 bytes-data enforcement functions and `getActiveBalanceOf`. Added explicit diamond-inheritance disambiguation overrides for `_msgSender`, `_msgData`, `_contextSuffixLength`, `_update`, `transfer`, `transferFrom`, `approve`, `name`, `symbol`, `decimals`, and `getFrozenTokens`.
 - **`CMTATBaseDebtEngine`**: Now inherits from both `CMTATBaseERC20CrossChain` and `CMTATBaseSnapshot`, adding SnapshotEngine support to the Debt variant. Adds `_authorizeSnapshots` and disambiguation overrides for `_update`, `transfer`, `transferFrom`, `approve`, `name`, `symbol`, `decimals`.
 - **ERC-7943 interface update** — breaking changes aligned with the updated ERC-7943 specification:
@@ -115,6 +118,7 @@ Custom changelog tag: `Dependencies`, `Documentation`, `Testing`
 
 - `doc/SUMMARY.md`: added **Permit** and **Snapshot** deployment variants; updated inheritance hierarchy to show `CMTATBaseERC2612` and `CMTATBaseERC2771Snapshot` branches.
 - `doc/README.md`: updated ERC-7943 interface table, implementation mapping, transfer flow diagram, and pre-check functions table to reflect `canSend`/`canReceive` split and new error names.
+- `doc/README.md` and `doc/modules/options/erc7551/erc7551.md`: updated ERC-7551 event references from legacy `Enforcement(...)` to `ForcedTransfer(operator,from,to,value,data)` and clarified that ERC-7551 event emission occurs in `ERC20EnforcementERC7551Module`.
 - `doc/modules/extensions/ERC20Enforcement/erc20enforcement.md`: added note about ERC-7551 enforcement functions moved to `ERC20EnforcementERC7551Module`.
 - `doc/modules/options/erc7551/erc7551.md`: added overview table distinguishing `ERC7551Module` from `ERC20EnforcementERC7551Module`.
 - Updated ERC specifications: `erc-1404-restricted.md`, `erc-3643.md`, `erc-7551-ewpg.md`, `erc-7943-uRWA.md`.

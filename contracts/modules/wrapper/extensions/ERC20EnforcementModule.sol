@@ -52,7 +52,7 @@ abstract contract ERC20EnforcementModule is ERC20EnforcementModuleInternal, IERC
      */
     function forcedTransfer(address from, address to, uint256 value)
     public virtual override(IERC7943FungibleEnforcement) onlyForcedTransferManager returns (bool) {
-        _forcedTransfer(from, to, value, "");
+        _forcedTransfer(from, to, value);
         return true;
     }
 
@@ -63,7 +63,7 @@ abstract contract ERC20EnforcementModule is ERC20EnforcementModuleInternal, IERC
      */
     function freezePartialTokens(address account, uint256 value)
     public virtual override(IERC3643ERC20Enforcement) onlyERC20Enforcer {
-        _freezePartialTokens(account, value, "");
+        _freezePartialTokens(account, value);
     }
 
     /**
@@ -73,7 +73,7 @@ abstract contract ERC20EnforcementModule is ERC20EnforcementModuleInternal, IERC
      */
     function unfreezePartialTokens(address account, uint256 value)
     public virtual override(IERC3643ERC20Enforcement) onlyERC20Enforcer {
-        _unfreezePartialTokens(account, value, "");
+        _unfreezePartialTokens(account, value);
     }
 
     /**
@@ -91,13 +91,13 @@ abstract contract ERC20EnforcementModule is ERC20EnforcementModuleInternal, IERC
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
     /* ============ Events ============ */
-    function _freezeTokensEmitEvents(address account, uint256 difference, uint256 frozenTokens, bytes memory data) internal virtual override {
-        super._freezeTokensEmitEvents(account, difference, frozenTokens, data);
+    function _freezeTokensEmitEvents(address account, uint256 difference, uint256 frozenTokens) internal virtual override {
+        super._freezeTokensEmitEvents(account, difference, frozenTokens);
         emit IERC3643ERC20Enforcement.TokensFrozen(account, difference);
     }
 
-    function _unfreezeTokensEmitEvents(address account, uint256 difference, uint256 frozenTokens, bytes memory data) internal virtual override {
-        super._unfreezeTokensEmitEvents(account, difference, frozenTokens, data);
+    function _unfreezeTokensEmitEvents(address account, uint256 difference, uint256 frozenTokens) internal virtual override {
+        super._unfreezeTokensEmitEvents(account, difference, frozenTokens);
         emit IERC3643ERC20Enforcement.TokensUnfrozen(account, difference);
     }
 

@@ -48,13 +48,14 @@ Only authorized users (*DEFAULT_ADMIN_ROLE*) are allowed to call this function.
 
 ##### Events
 
-###### `Enforcement (address,address, uint256, bytes)`
+###### `ForcedTransfer (address,address,address,uint256,bytes)`
 
 ```solidity
-event Enforcement (address indexed enforcer, address indexed account, uint256 amount, bytes data);
+event ForcedTransfer(address indexed operator, address indexed from, address indexed to, uint256 value, bytes data);
 ```
 
-Emitted when the specified `value` amount of tokens owned by `owner`are destroyed with the given `data`
+Emitted when the specified `value` amount of tokens are force-moved by `operator`.
+In `forcedBurn`, this is emitted with `to = address(0)` to represent a forced burn with `data`.
 
 ​    
 

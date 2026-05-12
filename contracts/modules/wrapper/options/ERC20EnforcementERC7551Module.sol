@@ -5,7 +5,7 @@ pragma solidity ^0.8.20;
 /* ==== Module === */
 import {ERC20EnforcementModule} from "../extensions/ERC20EnforcementModule.sol";
 /* ==== Tokenization === */
-import {IERC7551ERC20Enforcement} from "../../../interfaces/tokenization/draft-IERC7551.sol";
+import {IERC7551ERC20Enforcement, IERC7551ERC20EnforcementEvent, IERC7551ERC20EnforcementTokenFrozenEvent} from "../../../interfaces/tokenization/draft-IERC7551.sol";
 
 /**
  * @title ERC20EnforcementERC7551 module.
@@ -46,7 +46,13 @@ abstract contract ERC20EnforcementERC7551Module is ERC20EnforcementModule, IERC7
      */
     function forcedTransfer(address from, address to, uint256 value, bytes calldata data)
     public virtual override(IERC7551ERC20Enforcement) onlyForcedTransferManager returns (bool) {
-        _forcedTransfer(from, to, value, data);
+        uint256 frozenTokensBefore = _getFrozenTokens(from);
+        _forcedTransfer(from, to, value);
+        uint256 frozenTokensAfter = _getFrozenTokens(from);
+        if (frozenTokensAfter < frozenTokensBefore) {
+            emit IERC7551ERC20EnforcementTokenFrozenEvent.TokensUnfrozen(from, frozenTokensBefore - frozenTokensAfter, data);
+        }
+        emit IERC7551ERC20EnforcementEvent.ForcedTransfer(_msgSender(), from, to, value, data);
         return true;
     }
 
@@ -57,7 +63,8 @@ abstract contract ERC20EnforcementERC7551Module is ERC20EnforcementModule, IERC7
      */
     function freezePartialTokens(address account, uint256 value, bytes calldata data)
     public virtual override(IERC7551ERC20Enforcement) onlyERC20Enforcer {
-        _freezePartialTokens(account, value, data);
+        _freezePartialTokens(account, value);
+        emit IERC7551ERC20EnforcementTokenFrozenEvent.TokensFrozen(account, value, data);
     }
 
     /**
@@ -67,6 +74,7 @@ abstract contract ERC20EnforcementERC7551Module is ERC20EnforcementModule, IERC7
      */
     function unfreezePartialTokens(address account, uint256 value, bytes calldata data)
     public virtual override(IERC7551ERC20Enforcement) onlyERC20Enforcer {
-        _unfreezePartialTokens(account, value, data);
+        _unfreezePartialTokens(account, value);
+        emit IERC7551ERC20EnforcementTokenFrozenEvent.TokensUnfrozen(account, value, data);
     }
 }

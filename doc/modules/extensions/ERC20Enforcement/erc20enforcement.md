@@ -44,7 +44,8 @@ This module defines an interface for managing **token freezing** and **forced tr
 
 #### Events
 
-*For event definitions, refer to the `IERC7551ERC20Enforcement` interface.*
+*This module emits ERC-3643/ERC-7943 enforcement events.  
+ERC-7551 specific `ForcedTransfer(operator,from,to,value,data)` is emitted by `ERC20EnforcementERC7551Module`.*
 
 ------
 
@@ -207,6 +208,7 @@ If needed, frozen tokens are automatically unfrozen to fulfill the transfer.
 
 - `TokensFrozen(address account, uint256 amount, bytes data)`
 - `TokensUnfrozen(address account, uint256 amount, bytes data)`
+- `ForcedTransfer(address operator, address from, address to, uint256 value, bytes data)`
 - `Transfer(address from, address to, uint256 value)`
 
 ------

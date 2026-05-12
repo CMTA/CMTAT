@@ -5,7 +5,6 @@ pragma solidity ^0.8.20;
 /* ==== OpenZeppelin === */
 import {ERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 /* ==== Tokenization === */
-import {IERC7551ERC20EnforcementTokenFrozenEvent, IERC7551ERC20EnforcementEvent} from "../../interfaces/tokenization/draft-IERC7551.sol";
 import {IERC7943FungibleEnforcementEventAndError} from "../../interfaces/tokenization/draft-IERC7943.sol";
 
 /**
@@ -14,7 +13,7 @@ import {IERC7943FungibleEnforcementEventAndError} from "../../interfaces/tokeniz
  *
  * Contains specific ERC-20 enforcement actions
  */
-abstract contract ERC20EnforcementModuleInternal is ERC20Upgradeable,IERC7551ERC20EnforcementEvent,  IERC7551ERC20EnforcementTokenFrozenEvent, IERC7943FungibleEnforcementEventAndError {
+abstract contract ERC20EnforcementModuleInternal is ERC20Upgradeable, IERC7943FungibleEnforcementEventAndError {
     // no argument to reduce contract code size
     error CMTAT_ERC20EnforcementModule_ValueExceedsAvailableBalance();
     error CMTAT_ERC20EnforcementModule_ValueExceedsFrozenBalance(); 
@@ -37,19 +36,19 @@ abstract contract ERC20EnforcementModuleInternal is ERC20Upgradeable,IERC7551ERC
         if(value < frozenTokensLocal) {
              uint256 difference = frozenTokensLocal - value;
              $ ._frozenTokens[account] =  value ;
-             _unfreezeTokensEmitEvents(account,difference,  value,"");
+             _unfreezeTokensEmitEvents(account,difference,  value);
         } else if(value > frozenTokensLocal) {
             // No underflow possible due to previous check
             uint256 difference = value - frozenTokensLocal;
             $._frozenTokens[account] = value;
-            _freezeTokensEmitEvents(account, difference, value, "");
+            _freezeTokensEmitEvents(account, difference, value);
         } else { // Less probable path at the end
             revert CMTAT_ERC20EnforcementModule_ValueEqualCurrentFrozenTokens();
         }
         return true;
     }
 
-    function _freezePartialTokens(address account, uint256 value, bytes memory data) internal virtual{
+    function _freezePartialTokens(address account, uint256 value) internal virtual{
        ERC20EnforcementModuleStorage storage $ = _getEnforcementModuleStorage();
         // Retrieve current value
         uint256 balance = ERC20Upgradeable.balanceOf(account);
@@ -58,22 +57,22 @@ abstract contract ERC20EnforcementModuleInternal is ERC20Upgradeable,IERC7551ERC
         require(balance >= frozenTokensLocal, CMTAT_ERC20EnforcementModule_ValueExceedsAvailableBalance());
         // Update frozenTokens
         $._frozenTokens[account] = frozenTokensLocal;
-        _freezeTokensEmitEvents(account, value, frozenTokensLocal, data);
+        _freezeTokensEmitEvents(account, value, frozenTokensLocal);
     }
 
-    function _unfreezePartialTokens(address account, uint256 value, bytes memory data) internal virtual{
+    function _unfreezePartialTokens(address account, uint256 value) internal virtual{
         ERC20EnforcementModuleStorage storage $ = _getEnforcementModuleStorage();
         require($._frozenTokens[account] >= value, CMTAT_ERC20EnforcementModule_ValueExceedsFrozenBalance());
         // Update frozenBalance
         uint256 frozenTokensLocal  = $._frozenTokens[account] - value;
         $._frozenTokens[account] = frozenTokensLocal ;
-        _unfreezeTokensEmitEvents(account, value,  frozenTokensLocal,data);
+        _unfreezeTokensEmitEvents(account, value,  frozenTokensLocal);
     }
 
     /**
     * @dev unfreeze tokens during a forced transfer/burn
     */
-    function _unfreezeTokens(address account, uint256 value, bytes memory data) internal virtual{
+    function _unfreezeTokens(address account, uint256 value) internal virtual{
         uint256 balance = ERC20Upgradeable.balanceOf(account);
         if(value > balance){
            revert CMTAT_ERC20EnforcementModule_ValueExceedsAvailableBalance();
@@ -85,12 +84,12 @@ abstract contract ERC20EnforcementModuleInternal is ERC20Upgradeable,IERC7551ERC
             uint256 tokensToUnfreeze = value - activeBalance;
             uint256 frozenTokensLocal =  $._frozenTokens[account] - tokensToUnfreeze;
             $._frozenTokens[account] = frozenTokensLocal;
-            _unfreezeTokensEmitEvents(account, tokensToUnfreeze,  frozenTokensLocal,data);
+            _unfreezeTokensEmitEvents(account, tokensToUnfreeze,  frozenTokensLocal);
         }
     }
 
-    function _forcedTransfer(address from, address to, uint256 value, bytes memory data) internal virtual {
-        _unfreezeTokens(from, value, data);
+    function _forcedTransfer(address from, address to, uint256 value) internal virtual {
+        _unfreezeTokens(from, value);
         if(to == address(0)){
             ERC20Upgradeable._burn(from, value);
         } else{
@@ -111,17 +110,14 @@ abstract contract ERC20EnforcementModuleInternal is ERC20Upgradeable,IERC7551ERC
             }
             ERC20Upgradeable._transfer(from, to, value);
         }
-        emit Enforcement(_msgSender(), from, value, data);
         emit ForcedTransfer(from, to, value);
     }
 
-    function _freezeTokensEmitEvents(address account, uint256 difference, uint256 frozenTokens,  bytes memory data) internal virtual {
-        emit TokensFrozen(account, difference, data);
+    function _freezeTokensEmitEvents(address account, uint256 /* difference */, uint256 frozenTokens) internal virtual {
         emit IERC7943FungibleEnforcementEventAndError.Frozen(account, frozenTokens);
     }
 
-    function _unfreezeTokensEmitEvents(address account, uint256 difference, uint256 frozenTokens, bytes memory data) internal virtual {
-        emit TokensUnfrozen(account, difference, data);
+    function _unfreezeTokensEmitEvents(address account, uint256 /* difference */, uint256 frozenTokens) internal virtual {
         emit IERC7943FungibleEnforcementEventAndError.Frozen(account, frozenTokens );
     }
 

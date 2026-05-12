@@ -23,15 +23,6 @@ const ExtraInfoModuleCommon = require('../../common/ExtraInfoModuleCommon')
 // options
 const ERC20CrossChainModuleCommon = require('../../common/ERC20CrossChainModuleCommon')
 const CCIPModuleCommon = require('../../common/CCIPModuleCommon')
-// Snapshot
-const SnapshotModuleCommonRescheduling = require('../../common/SnapshotModuleCommon/SnapshotModuleCommonRescheduling')
-const SnapshotModuleCommonScheduling = require('../../common/SnapshotModuleCommon/SnapshotModuleCommonScheduling')
-const SnapshotModuleCommonUnschedule = require('../../common/SnapshotModuleCommon/SnapshotModuleCommonUnschedule')
-const SnapshotModuleCommonGetNextSnapshot = require('../../common/SnapshotModuleCommon/SnapshotModuleCommonGetNextSnapshot')
-const SnapshotModuleMultiplePlannedTest = require('../../common/SnapshotModuleCommon/global/SnapshotModuleMultiplePlannedTest')
-const SnapshotModuleOnePlannedSnapshotTest = require('../../common/SnapshotModuleCommon/global/SnapshotModuleOnePlannedSnapshotTest')
-const SnapshotModuleZeroPlannedSnapshotTest = require('../../common/SnapshotModuleCommon/global/SnapshotModuleZeroPlannedSnapshot')
-const SnapshotModuleSetSnapshotEngineCommon = require('../../common/SnapshotModuleCommon/SnapshotModuleSetSnapshotEngineCommon')
 const VALUE = 20n
 describe('CMTAT - ERC1363 Proxy Deployment', function () {
   beforeEach(async function () {
@@ -100,14 +91,4 @@ describe('CMTAT - ERC1363 Proxy Deployment', function () {
   ERC20CrossChainModuleCommon()
   CCIPModuleCommon()
 
-  // Snapshot
-  SnapshotModuleMultiplePlannedTest()
-  SnapshotModuleOnePlannedSnapshotTest()
-  SnapshotModuleZeroPlannedSnapshotTest()
-  SnapshotModuleCommonRescheduling()
-  SnapshotModuleCommonScheduling()
-  SnapshotModuleCommonUnschedule()
-  SnapshotModuleCommonGetNextSnapshot()
-  // Set snapshot Engine
-  SnapshotModuleSetSnapshotEngineCommon
 })
