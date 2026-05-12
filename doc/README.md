@@ -804,7 +804,7 @@ Base contracts are used by the different deployable contracts (CMTATStandardStan
 | [CMTATBaseERC2771](../contracts/modules/5_CMTATBaseERC2771.sol) | 5     | Add [ERC-2771](https://eips.ethereum.org/EIPS/eip-2771) support by inheriting from ERC2771Module | CMTAT Standalone / Upgradeable<br />CMTAT Upgradeable UUPS   |
 | [CMTATBaseERC2771Snapshot](../contracts/modules/6_CMTATBaseERC2771Snapshot.sol) | 6     | Extends CMTATBaseERC2771 with snapshot engine support by also inheriting CMTATBaseSnapshot. Disambiguates ERC-20 and Context functions. | CMTAT Standalone Snapshot / Upgradeable Snapshot             |
 | [CMTATBaseDebtEngine](../contracts/modules/5_CMTATBaseDebtEngine.sol) | 5     | Add DebtEngine support and snapshot engine support by inheriting from DebtEngine module and CMTATBaseSnapshot | CMTAT Standalone DebtEngine / Upgradeable                    |
-| [CMTATBaseERC1363](../contracts/modules/6_CMTATBaseERC1363.sol) | 6     | Add [ERC-1363](https://eips.ethereum.org/EIPS/eip-1363) support by inheriting directly from OpenZeppelin contract | CMTAT ERC1363 (Upgradeable & Standalone)                     |
+| [CMTATBaseERC1363](../contracts/modules/7_CMTATBaseERC1363.sol) | 7     | Add [ERC-1363](https://eips.ethereum.org/EIPS/eip-1363) support on top of `CMTATBaseERC7551Enforcement` | CMTAT ERC1363 (Upgradeable & Standalone)                     |
 | [CMTATBaseERC7551Enforcement](../contracts/modules/6_CMTATBaseERC7551Enforcement.sol) | 6     | Add ERC-7551 enforcement functions (`forcedTransfer/freezePartialTokens/unfreezePartialTokens` with `bytes` and `getActiveBalanceOf`) | CMTAT Standard (Upgradeable & Standalone)                    |
 | [CMTATBaseERC7551](../contracts/modules/6_CMTATBaseERC7551.sol) | 6     | Add ERC-7551 support by inheriting from ERC7551 Module       | CMTAT ERC7551 (Upgradeable & Standalone)                     |
 
@@ -875,7 +875,7 @@ CMTAT Base Core adds several functions:
 
 ![surya_inheritance_CMTATBaseOption.sol](./schema/surya_inheritance/surya_inheritance_5_CMTATBaseERC2771.sol.png)
 
-#### Level 5 (use case)
+#### Level 6 (use case)
 
 ##### CMTAT Base ERC1363  (payable token)
 
@@ -883,7 +883,7 @@ CMTAT Base Core adds several functions:
 
 
 
-![surya_inheritance_CMTATERC1363Base.sol](./schema/surya_inheritance/surya_inheritance_6_CMTATBaseERC1363.sol.png)
+![surya_inheritance_CMTATERC1363Base.sol](./schema/surya_inheritance/surya_inheritance_7_CMTATBaseERC1363.sol.png)
 
 
 
@@ -2429,7 +2429,7 @@ More information on this standard here: [erc1363.org](https://erc1363.org), [Rar
 
 - CMTAT ERC-1363 Base
 
-![surya_inheritance_CMTAT_ERC1363_BASE.sol](./schema/surya_inheritance/surya_inheritance_6_CMTATBaseERC1363.sol.png)
+![surya_inheritance_CMTAT_ERC1363_BASE.sol](./schema/surya_inheritance/surya_inheritance_7_CMTATBaseERC1363.sol.png)
 
 
 
