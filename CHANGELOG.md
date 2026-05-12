@@ -70,6 +70,9 @@ Custom changelog tag: `Dependencies`, `Documentation`, `Testing`
 - New base contract **`CMTATBaseERC2771Snapshot`** (`contracts/modules/5_CMTATBaseERC2771Snapshot.sol`):
   - Combines `CMTATBaseERC2771` with `CMTATBaseSnapshot`, resolving all ERC-20 / snapshot disambiguation overrides.
   - Used as the foundation for snapshot-enabled standard deployment variants.
+- New base contract **`CMTATBaseERC7551Enforcement`** (`contracts/modules/6_CMTATBaseERC7551Enforcement.sol`):
+  - Combines `CMTATBaseERC2771` with `ERC20EnforcementERC7551Module`.
+  - Exposes ERC-7551 enforcement functions (`forcedTransfer/freezePartialTokens/unfreezePartialTokens` with `bytes`) and `getActiveBalanceOf` in Standard deployments.
 - New deployment variants **`CMTATStandaloneSnapshot`** and **`CMTATUpgradeableSnapshot`** (`contracts/deployment/snapshot/`):
   - Standard CMTAT feature set plus SnapshotEngine support for historical balance queries.
 
@@ -80,6 +83,8 @@ Custom changelog tag: `Dependencies`, `Documentation`, `Testing`
   - `IERC7551ERC20EnforcementEvent` now exposes `ForcedTransfer(address operator, address from, address to, uint256 value, bytes data)` (replacing the legacy `Enforcement(...)` event shape).
   - ERC-7551 event emission was removed from `ERC20EnforcementModuleInternal` and is now emitted in ERC-7551 specific paths (`ERC20EnforcementERC7551Module`, and `CMTATBaseCore.forcedBurn`).
 - **`CMTATBaseERC7551`**: Updated to inherit from `ERC20EnforcementERC7551Module` (instead of relying on `ERC20EnforcementModule` alone) to expose ERC-7551 bytes-data enforcement functions and `getActiveBalanceOf`. Added explicit diamond-inheritance disambiguation overrides for `_msgSender`, `_msgData`, `_contextSuffixLength`, `_update`, `transfer`, `transferFrom`, `approve`, `name`, `symbol`, `decimals`, and `getFrozenTokens`.
+- **`CMTATStandardStandalone`** and **`CMTATStandardUpgradeable`** now inherit from `CMTATBaseERC7551Enforcement`, so Standard deployments expose ERC-7551 enforcement functions.
+- **`CMTATUpgradeableUUPS`** inheritance remains unchanged (no `CMTATBaseERC7551Enforcement`).
 - **`CMTATBaseDebtEngine`**: Now inherits from both `CMTATBaseERC20CrossChain` and `CMTATBaseSnapshot`, adding SnapshotEngine support to the Debt variant. Adds `_authorizeSnapshots` and disambiguation overrides for `_update`, `transfer`, `transferFrom`, `approve`, `name`, `symbol`, `decimals`.
 - **`CMTATBaseDebt`**: Restored SnapshotEngine support by inheriting `CMTATBaseSnapshot` and adding the required disambiguation/authorization overrides (`approve`, `transfer`, `transferFrom`, `decimals`, `name`, `symbol`, `_update`, `_authorizeSnapshots`) so Debt deployments expose `snapshotEngine` / `setSnapshotEngine` again.
 - **ERC-7943 interface update** — breaking changes aligned with the updated ERC-7943 specification:

@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.20;
 
-import {CMTATBaseERC2771} from "../modules/5_CMTATBaseERC2771.sol";
+import {CMTATBaseERC7551Enforcement} from "../modules/6_CMTATBaseERC7551Enforcement.sol";
 import {ERC2771Module} from "../modules/wrapper/options/ERC2771Module.sol";
 import {ICMTATConstructor} from "../interfaces/technical/ICMTATConstructor.sol";
 
@@ -10,7 +10,7 @@ import {ICMTATConstructor} from "../interfaces/technical/ICMTATConstructor.sol";
 /**
 * @title CMTAT standard version for a standalone deployment (without proxy) — no snapshot engine
 */
-contract CMTATStandardStandalone is CMTATBaseERC2771 {
+contract CMTATStandardStandalone is CMTATBaseERC7551Enforcement {
     /**
      * @notice Contract version for standalone deployment
      * @param forwarderIrrevocable address of the forwarder, required for the gasless support

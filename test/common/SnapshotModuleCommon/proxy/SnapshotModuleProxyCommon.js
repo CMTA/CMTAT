@@ -36,7 +36,7 @@ function SnapshotModuleProxyCommon () {
     SnapshotModuleCommonUnschedule()
     SnapshotModuleCommonGetNextSnapshot()
     // Set snapshot Engine
-    SnapshotModuleSetSnapshotEngineCommon
+    SnapshotModuleSetSnapshotEngineCommon()
   })
 }
 module.exports = SnapshotModuleProxyCommon
