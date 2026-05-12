@@ -104,8 +104,8 @@ contracts
 │   ├── 5_CMTATBaseERC2771.sol
 │   ├── 6_CMTATBaseERC2771Snapshot.sol
 │   ├── 6_CMTATBaseERC7551Enforcement.sol
-│   ├── 6_CMTATBaseERC7551.sol
 │   ├── 7_CMTATBaseERC1363.sol
+│   ├── 7_CMTATBaseERC7551.sol
 │   ├── internal
 │   │   ├── AllowlistModuleInternal.sol
 │   │   ├── common

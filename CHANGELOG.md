@@ -83,6 +83,7 @@ Custom changelog tag: `Dependencies`, `Documentation`, `Testing`
   - `IERC7551ERC20EnforcementEvent` now exposes `ForcedTransfer(address operator, address from, address to, uint256 value, bytes data)` (replacing the legacy `Enforcement(...)` event shape).
   - ERC-7551 event emission was removed from `ERC20EnforcementModuleInternal` and is now emitted in ERC-7551 specific paths (`ERC20EnforcementERC7551Module`, and `CMTATBaseCore.forcedBurn`).
 - **`CMTATBaseERC7551`**: Updated to inherit from `ERC20EnforcementERC7551Module` (instead of relying on `ERC20EnforcementModule` alone) to expose ERC-7551 bytes-data enforcement functions and `getActiveBalanceOf`. Added explicit diamond-inheritance disambiguation overrides for `_msgSender`, `_msgData`, `_contextSuffixLength`, `_update`, `transfer`, `transferFrom`, `approve`, `name`, `symbol`, `decimals`, and `getFrozenTokens`.
+- **`CMTATBaseERC7551`**: Promoted to level 7 (`contracts/modules/7_CMTATBaseERC7551.sol`) and now inherits from `CMTATBaseERC7551Enforcement`.
 - **`CMTATBaseERC1363`**: Promoted to level 7 (`contracts/modules/7_CMTATBaseERC1363.sol`) and now inherits from `CMTATBaseERC7551Enforcement` so ERC-1363 deployments keep the standard ERC-7551 enforcement path.
 - **`CMTATStandardStandalone`** and **`CMTATStandardUpgradeable`** now inherit from `CMTATBaseERC7551Enforcement`, so Standard deployments expose ERC-7551 enforcement functions.
 - **`CMTATUpgradeableUUPS`** inheritance remains unchanged (no `CMTATBaseERC7551Enforcement`).
