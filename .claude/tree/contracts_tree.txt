@@ -102,8 +102,9 @@ contracts
 │   ├── 4_CMTATBaseERC2612.sol
 │   ├── 5_CMTATBaseDebtEngine.sol
 │   ├── 5_CMTATBaseERC2771.sol
-│   ├── 5_CMTATBaseERC2771Snapshot.sol
 │   ├── 6_CMTATBaseERC1363.sol
+│   ├── 6_CMTATBaseERC2771Snapshot.sol
+│   ├── 6_CMTATBaseERC7551Enforcement.sol
 │   ├── 6_CMTATBaseERC7551.sol
 │   ├── internal
 │   │   ├── AllowlistModuleInternal.sol

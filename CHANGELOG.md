@@ -67,7 +67,7 @@ Custom changelog tag: `Dependencies`, `Documentation`, `Testing`
 - New mixin **`CMTATBaseSnapshot`** (`contracts/modules/0_CMTATBaseSnapshot.sol`):
   - Pure ERC-20 + `SnapshotEngineModule` mixin providing the `_update` hook for historical balance tracking.
   - Designed to be composed into deployment variants that require snapshot support.
-- New base contract **`CMTATBaseERC2771Snapshot`** (`contracts/modules/5_CMTATBaseERC2771Snapshot.sol`):
+- New base contract **`CMTATBaseERC2771Snapshot`** (`contracts/modules/6_CMTATBaseERC2771Snapshot.sol`):
   - Combines `CMTATBaseERC2771` with `CMTATBaseSnapshot`, resolving all ERC-20 / snapshot disambiguation overrides.
   - Used as the foundation for snapshot-enabled standard deployment variants.
 - New base contract **`CMTATBaseERC7551Enforcement`** (`contracts/modules/6_CMTATBaseERC7551Enforcement.sol`):
