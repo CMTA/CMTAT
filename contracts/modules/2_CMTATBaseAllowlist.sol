@@ -15,6 +15,7 @@ import {PauseModule}  from "./wrapper/core/PauseModule.sol";
 import {EnforcementModule} from "./wrapper/core/EnforcementModule.sol";
 // Extensions
 import {ERC20EnforcementModule, ERC20EnforcementModuleInternal} from "./wrapper/extensions/ERC20EnforcementModule.sol";
+import {ERC20EnforcementERC7551Module} from "./wrapper/options/ERC20EnforcementERC7551Module.sol";
 // options
 import {ERC2771Module, ERC2771ContextUpgradeable} from "./wrapper/options/ERC2771Module.sol";
 import {AllowlistModule} from "./wrapper/options/AllowlistModule.sol";
@@ -34,6 +35,7 @@ abstract contract CMTATBaseAllowlist is
     ValidationModuleAllowlist,
     ValidationModuleAllowance,
     ERC2771Module,
+    ERC20EnforcementERC7551Module,
     IERC7943FungibleTransferError
 {  
     /*//////////////////////////////////////////////////////////////
@@ -122,6 +124,54 @@ abstract contract CMTATBaseAllowlist is
         return ERC20Upgradeable.approve(spender, value);
     }
 
+    function transfer(address to, uint256 value)
+        public
+        virtual
+        override(ERC20Upgradeable, CMTATBaseCommon)
+        returns (bool)
+    {
+        return CMTATBaseCommon.transfer(to, value);
+    }
+
+    function transferFrom(address from, address to, uint256 value)
+        public
+        virtual
+        override(ERC20Upgradeable, CMTATBaseCommon)
+        returns (bool)
+    {
+        return CMTATBaseCommon.transferFrom(from, to, value);
+    }
+
+    function decimals()
+        public
+        view
+        virtual
+        override(ERC20Upgradeable, CMTATBaseCommon)
+        returns (uint8)
+    {
+        return CMTATBaseCommon.decimals();
+    }
+
+    function name()
+        public
+        view
+        virtual
+        override(ERC20Upgradeable, CMTATBaseCommon)
+        returns (string memory)
+    {
+        return CMTATBaseCommon.name();
+    }
+
+    function symbol()
+        public
+        view
+        virtual
+        override(ERC20Upgradeable, CMTATBaseCommon)
+        returns (string memory)
+    {
+        return CMTATBaseCommon.symbol();
+    }
+
     /**
     * @inheritdoc ValidationModuleCore
     */
@@ -167,6 +217,12 @@ abstract contract CMTATBaseAllowlist is
     function _authorizeFreeze() internal virtual override(EnforcementModule) onlyRole(ENFORCER_ROLE){}
 
     function _authorizeAllowlistManagement() internal virtual override(AllowlistModule) onlyRole(ALLOWLIST_ROLE) {}
+    function _authorizeERC20Enforcer() internal virtual override(CMTATBaseAccessControl, ERC20EnforcementModule) {
+        CMTATBaseAccessControl._authorizeERC20Enforcer();
+    }
+    function _authorizeForcedTransfer() internal virtual override(CMTATBaseAccessControl, ERC20EnforcementModule) {
+        CMTATBaseAccessControl._authorizeForcedTransfer();
+    }
 
     /* ==== Transfer/mint/burn restriction ==== */
     /**
@@ -218,6 +274,16 @@ abstract contract CMTATBaseAllowlist is
         CMTATBaseCommon._checkTransferred(spender, from, to, value);
         ValidationModule._canTransferGenericByModuleAndRevert(spender, from, to);
     } 
+
+    function getFrozenTokens(address account)
+        public
+        view
+        virtual
+        override(ERC20EnforcementModule, ERC20EnforcementERC7551Module)
+        returns (uint256 frozenBalance_)
+    {
+        return ERC20EnforcementERC7551Module.getFrozenTokens(account);
+    }
 
 
     /*//////////////////////////////////////////////////////////////
