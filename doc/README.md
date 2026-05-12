@@ -806,7 +806,7 @@ Base contracts are used by the different deployable contracts (CMTATStandardStan
 | [CMTATBaseDebtEngine](../contracts/modules/5_CMTATBaseDebtEngine.sol) | 5     | Add DebtEngine support and snapshot engine support by inheriting from DebtEngine module and CMTATBaseSnapshot | CMTAT Standalone DebtEngine / Upgradeable                    |
 | [CMTATBaseERC1363](../contracts/modules/7_CMTATBaseERC1363.sol) | 7     | Add [ERC-1363](https://eips.ethereum.org/EIPS/eip-1363) support on top of `CMTATBaseERC7551Enforcement` | CMTAT ERC1363 (Upgradeable & Standalone)                     |
 | [CMTATBaseERC7551Enforcement](../contracts/modules/6_CMTATBaseERC7551Enforcement.sol) | 6     | Add ERC-7551 enforcement functions (`forcedTransfer/freezePartialTokens/unfreezePartialTokens` with `bytes` and `getActiveBalanceOf`) | CMTAT Standard (Upgradeable & Standalone)                    |
-| [CMTATBaseERC7551](../contracts/modules/6_CMTATBaseERC7551.sol) | 6     | Add ERC-7551 support by inheriting from ERC7551 Module       | CMTAT ERC7551 (Upgradeable & Standalone)                     |
+| [CMTATBaseERC7551](../contracts/modules/7_CMTATBaseERC7551.sol) | 7     | Add ERC-7551 support on top of `CMTATBaseERC7551Enforcement` by inheriting from ERC7551 Module | CMTAT ERC7551 (Upgradeable & Standalone)                     |
 
 #### Level 0 (main modules)
 
@@ -895,7 +895,7 @@ CMTAT Base Core adds several functions:
 
 
 
-![surya_inheritance_CMTATERC1363Base.sol](./schema/surya_inheritance/surya_inheritance_6_CMTATBaseERC7551.sol.png)
+![surya_inheritance_CMTATERC1363Base.sol](./schema/surya_inheritance/surya_inheritance_7_CMTATBaseERC7551.sol.png)
 
 
 
