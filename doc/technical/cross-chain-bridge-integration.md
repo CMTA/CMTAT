@@ -85,3 +85,10 @@ Choose the adapter that matches the interface used by the LayerZero pool.
 | `burn(uint256)` | `BURNER_SELF_ROLE` | Grant to CCIP pool |
 | `mint(address, uint256)` | `MINTER_ROLE` | Grant to CCIP pool |
 | `setCCIPAdmin(address)` | `DEFAULT_ADMIN_ROLE` | Manage CCIP registration |
+
+## RuleEngine Operator Semantics
+
+- `burnFrom` uses allowance and now propagates `_msgSender()` into the compliance hook, so spender-aware RuleEngine checks are applied.
+- `crosschainBurn` also propagates `_msgSender()` to keep operator semantics consistent with `burnFrom`.
+- `crosschainMint` currently remains spender-less in the compliance path because it mints new tokens instead of moving existing holder tokens.
+- Future policy may extend `crosschainMint` to propagate the operator if bridge-operator-specific mint restrictions are needed.

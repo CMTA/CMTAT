@@ -1281,6 +1281,15 @@ function transferred(address spender, address from, address to, uint256 value) e
 
 This allows the `RuleEngine`to also apply restriction on the spender.
 
+###### BurnFrom / CrosschainBurn - Operator restriction
+
+The same spender-aware model now applies to delegated/operator burn flows:
+
+- `burnFrom(account, value)` (allowance-based) propagates the effective operator (`_msgSender()`) to the RuleEngine hook.
+- `crosschainBurn(from, value)` also propagates the bridge operator (`_msgSender()`) for consistency with `burnFrom`.
+
+`crosschainMint(to, value)` currently remains spender-less in the compliance path because mint creates new tokens and does not move tokens from an existing holder. This can be revisited later if operator-specific mint restrictions are required.
+
 ##### Interface
 
 ###### IRuleEngine

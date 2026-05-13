@@ -394,6 +394,24 @@ function ERC20CrossChainModuleCommon () {
         .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotSend')
         .withArgs(this.address1)
     })
+
+    it('testBurnFromPropagatesSpenderToRuleEngine', async function () {
+      if (!this.cmtat.setRuleEngine) {
+        return
+      }
+
+      this.ruleEngineMock = await ethers.deployContract('RuleEngineMock', [this.admin])
+      await this.cmtat.connect(this.admin).setRuleEngine(this.ruleEngineMock)
+      await this.cmtat.connect(this.admin).grantRole(BURNER_FROM_ROLE, this.address2)
+      await this.cmtat.connect(this.address1).approve(this.address2, 20n)
+
+      await expect(
+        this.cmtat.connect(this.address2).burnFrom(this.address1, 10n)
+      ).to.be.revertedWithCustomError(
+        this.ruleEngineMock,
+        'RuleEngine_InvalidTransfer'
+      ).withArgs(this.address1, ZERO_ADDRESS, 10n)
+    })
   })
   context('CrossChainMinting', function () {
     const VALUE1 = 20n
@@ -504,6 +522,29 @@ function ERC20CrossChainModuleCommon () {
       )
         .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotReceive')
         .withArgs(this.address1)
+    })
+  })
+
+  context('CrosschainBurn - RuleEngine spender propagation', function () {
+    beforeEach(async function () {
+      await this.cmtat.connect(this.admin).mint(this.address1, 50n)
+    })
+
+    it('testCrosschainBurnPropagatesSpenderToRuleEngine', async function () {
+      if (!this.cmtat.setRuleEngine) {
+        return
+      }
+
+      this.ruleEngineMock = await ethers.deployContract('RuleEngineMock', [this.admin])
+      await this.cmtat.connect(this.admin).setRuleEngine(this.ruleEngineMock)
+      await this.cmtat.connect(this.admin).grantRole(CROSS_CHAIN_ROLE, this.address2)
+
+      await expect(
+        this.cmtat.connect(this.address2).crosschainBurn(this.address1, 10n)
+      ).to.be.revertedWithCustomError(
+        this.ruleEngineMock,
+        'RuleEngine_InvalidTransfer'
+      ).withArgs(this.address1, ZERO_ADDRESS, 10n)
     })
   })
 }
