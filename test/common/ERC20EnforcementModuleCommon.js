@@ -1065,6 +1065,66 @@ function ERC20EnforcementModuleCommon () {
       )
     })
 
+    it('testCanSetFrozenTokensGreaterThanBalance', async function () {
+      const frozenTokens = INITIAL_BALANCE + 1
+
+      await this.cmtat
+        .connect(this.admin)
+        .setFrozenTokens(this.address1, frozenTokens)
+
+      expect(await this.cmtat.getFrozenTokens(this.address1)).to.equal(
+        frozenTokens
+      )
+      expect(await getActiveBalance(this, this.address1)).to.equal(0)
+      expect(
+        await this.cmtat.canTransfer(this.address1, this.address2, 1)
+      ).to.equal(false)
+
+      await expect(
+        this.cmtat.connect(this.address1).transfer(this.address2, 1)
+      ).to.be.revertedWithCustomError(
+        this.cmtat,
+        'ERC7943InsufficientUnfrozenBalance'
+      ).withArgs(this.address1, 1, 0)
+    })
+
+    it('testCanSetFrozenTokensToZeroFromNonZero', async function () {
+      await this.cmtat
+        .connect(this.admin)
+        .setFrozenTokens(this.address1, FREEZE_AMOUNT)
+
+      const logs = await this.cmtat
+        .connect(this.admin)
+        .setFrozenTokens(this.address1, 0)
+
+      expect(await this.cmtat.getFrozenTokens(this.address1)).to.equal(0)
+      expect(await getActiveBalance(this, this.address1)).to.equal(INITIAL_BALANCE)
+      expect(
+        await this.cmtat.canTransfer(this.address1, this.address2, INITIAL_BALANCE)
+      ).to.equal(true)
+
+      await expect(logs)
+        .to.emit(this.cmtat, 'TokensUnfrozen(address,uint256)')
+        .withArgs(this.address1, FREEZE_AMOUNT)
+      await expect(logs)
+        .to.emit(this.cmtat, 'Frozen')
+        .withArgs(this.address1, 0)
+    })
+
+    it('testCanForcedTransferWhenFrozenTokensGreaterThanBalance', async function () {
+      const frozenTokens = INITIAL_BALANCE + 1
+      const amount = 1
+
+      await this.cmtat
+        .connect(this.admin)
+        .setFrozenTokens(this.address1, frozenTokens)
+
+      await expect(
+        forcedTransferCompat(this, this.admin, this.address1, this.address2, amount, REASON)
+      ).to.not.be.reverted
+      expect(await this.cmtat.balanceOf(this.address2)).to.equal(amount)
+    })
+
     it('testCanTransferTokenIfActiveBalanceIsEnough', async function () {
       const AMOUNT_TO_TRANSFER = INITIAL_BALANCE - FREEZE_AMOUNT
       // Arrange

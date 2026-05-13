@@ -85,11 +85,15 @@ abstract contract ERC20EnforcementModuleInternal is ERC20Upgradeable, IERC7943Fu
            revert CMTAT_ERC20EnforcementModule_ValueExceedsAvailableBalance();
         } 
         ERC20EnforcementModuleStorage storage $ = _getEnforcementModuleStorage();
-        // Frozen tokens can not be > balance
-        uint256 activeBalance = balance - $._frozenTokens[account];
+        uint256 frozenTokensLocal = $._frozenTokens[account];
+        uint256 activeBalance;
+        // Frozen amounts can be > balance through setFrozenTokens.
+        if (frozenTokensLocal < balance) {
+            activeBalance = balance - frozenTokensLocal;
+        }
         if (value > activeBalance) {
             uint256 tokensToUnfreeze = value - activeBalance;
-            uint256 frozenTokensLocal =  $._frozenTokens[account] - tokensToUnfreeze;
+            frozenTokensLocal =  frozenTokensLocal - tokensToUnfreeze;
             $._frozenTokens[account] = frozenTokensLocal;
             _unfreezeTokensEmitEvents(account, tokensToUnfreeze,  frozenTokensLocal);
         }
@@ -142,8 +146,15 @@ abstract contract ERC20EnforcementModuleInternal is ERC20Upgradeable, IERC7943Fu
     function _checkActiveBalance(address from, uint256 value) internal virtual view returns(bool isValid, uint256 activeBalance){
         uint256 frozenTokensLocal = _getFrozenTokens(from);
         if(frozenTokensLocal > 0 ){
-            // Frozen amounts can not be > balance
-            activeBalance = ERC20Upgradeable.balanceOf(from) - frozenTokensLocal;
+            uint256 balance = ERC20Upgradeable.balanceOf(from);
+            // Frozen amounts can be > balance through setFrozenTokens.
+            if (frozenTokensLocal >= balance) {
+                if (value == 0) {
+                    return (true, 0);
+                }
+                return (false, 0);
+            }
+            activeBalance = balance - frozenTokensLocal;
             if(value > activeBalance) {
                    return (false, activeBalance);
             }
@@ -160,7 +171,13 @@ abstract contract ERC20EnforcementModuleInternal is ERC20Upgradeable, IERC7943Fu
 
     function _getActiveBalanceOf(address account) internal view  returns (uint256){
         ERC20EnforcementModuleStorage storage $ = _getEnforcementModuleStorage();
-        return ERC20Upgradeable.balanceOf(account) - $._frozenTokens[account];
+        uint256 balance = ERC20Upgradeable.balanceOf(account);
+        uint256 frozenTokens = $._frozenTokens[account];
+        // Frozen amounts can be > balance through setFrozenTokens.
+        if (frozenTokens >= balance) {
+            return 0;
+        }
+        return balance - frozenTokens;
      }
 
     /* ============ ERC-7201 ============ */
