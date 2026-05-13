@@ -92,6 +92,11 @@ Custom changelog tag: `Dependencies`, `Documentation`, `Testing`
 - **`ERC20EnforcementModuleInternal`**: Hardened partial freeze paths by rejecting `address(0)` in `_freezePartialTokens` and `_unfreezePartialTokens` (new `CMTAT_ERC20EnforcementModule_ZeroAddressNotAllowed` custom error).
 - **`CMTATBaseDebtEngine`**: Now inherits from both `CMTATBaseERC20CrossChain` and `CMTATBaseSnapshot`, adding SnapshotEngine support to the Debt variant. Adds `_authorizeSnapshots` and disambiguation overrides for `_update`, `transfer`, `transferFrom`, `approve`, `name`, `symbol`, `decimals`.
 - **`CMTATBaseDebt`**: Restored SnapshotEngine support by inheriting `CMTATBaseSnapshot` and adding the required disambiguation/authorization overrides (`approve`, `transfer`, `transferFrom`, `decimals`, `name`, `symbol`, `_update`, `_authorizeSnapshots`) so Debt deployments expose `snapshotEngine` / `setSnapshotEngine` again.
+- **RuleEngine operator propagation for cross-chain burn flows**:
+  - `burn` now preserves and propagates `_msgSender()` through the transfer-compliance hook so spender-aware RuleEngine checks are enforced for operator-initiated burns.
+  - `burnFrom` now preserves and propagates `_msgSender()` through the transfer-compliance hook so spender-aware RuleEngine checks are enforced for allowance-based delegated burns.
+  - `crosschainBurn` now follows the same operator propagation model for consistency with `burnFrom`.
+  - `mint` and `crosschainMint` now also propagate `_msgSender()` so spender-aware RuleEngine checks apply consistently to operator-initiated mint flows.
 - **ERC-7943 interface update** — breaking changes aligned with the updated ERC-7943 specification:
   - `canTransact(address)` removed; replaced by `canSend(address)` and `canReceive(address)` in `ValidationModule`, implementing the new `IERC7943FungibleSendReceiveCheck` interface. Both currently delegate to the same underlying eligibility check (frozen status + allowlist), but allow future asymmetric access policies.
   - `ERC7943CannotTransact` error removed; replaced by directional errors `ERC7943CannotSend` (emitted when a sender, spender, or burn source is blocked) and `ERC7943CannotReceive` (emitted when a recipient or mint target is blocked), defined in `IERC7943FungibleSendReceiveError`.
@@ -119,6 +124,8 @@ Custom changelog tag: `Dependencies`, `Documentation`, `Testing`
   - Added dedicated ERC-7551 enforcement common tests (`test/common/ERC20EnforcementERC7551ModuleCommon.js`) and wired them to ERC-7551 deployment suites.
   - Added zero-address rejection coverage for enforcement freeze entry points in `test/common/EnforcementModuleCommon.js` (`setAddressFrozen` overloads and `batchSetAddressFrozen`).
   - Added zero-address rejection coverage for partial freeze entry points in `test/common/ERC20EnforcementModuleCommon.js` (`freezePartialTokens` / `unfreezePartialTokens`, with and without reason).
+  - Added RuleEngine spender-propagation coverage for `burn` and `batchBurn` (`test/common/ERC20BurnModuleCommon.js`) to validate operator-aware checks.
+  - Added `batchBurn` exact-balance edge-case coverage (`testCanBatchBurnWithExactBalances`) in `test/common/ERC20BurnModuleCommon.js`.
 - `package.json`:
   - `test:snapshot` script path list fixed to remove stale/non-existent targets.
   - Added `test:snapshot:module` to keep module-level snapshot suite invocation separate.

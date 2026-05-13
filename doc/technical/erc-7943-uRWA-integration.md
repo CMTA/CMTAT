@@ -71,6 +71,16 @@ transfer(to, 100)
 └─ Transfer executes
 ```
 
+## Operator-as-Spender Semantics (RuleEngine)
+
+In CMTAT RuleEngine-integrated deployments, the effective operator is propagated as `spender` in spender-aware compliance hooks.
+
+- `transferFrom`: spender is the delegated caller.
+- `burnFrom` / `crosschainBurn`: spender is the operator (`_msgSender()`), with `to == address(0)`.
+- `mint` / `crosschainMint`: spender is the operator (`_msgSender()`), with `from == address(0)`.
+
+RuleEngine implementations should explicitly support these mint/burn operator cases where `operator == spender`.
+
 ## Error Semantics
 
 | Error | When emitted |

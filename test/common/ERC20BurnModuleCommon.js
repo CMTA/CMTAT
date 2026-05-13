@@ -193,6 +193,37 @@ function ERC20BurnModuleCommon () {
         .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotSend')
         .withArgs(this.address1.address)
     })
+
+    it('testBurnPropagatesSpenderToRuleEngine', async function () {
+      if (!this.cmtat.setRuleEngine) {
+        return
+      }
+
+      this.ruleEngineMock = await ethers.deployContract('RuleEngineMock', [this.admin])
+      await this.cmtat.connect(this.admin).setRuleEngine(this.ruleEngineMock)
+      await this.cmtat.connect(this.admin).grantRole(BURNER_ROLE, this.address2)
+
+      await expect(
+        this.cmtat.connect(this.address2).burn(this.address1, 10n)
+      ).to.be.revertedWithCustomError(
+        this.ruleEngineMock,
+        'RuleEngine_InvalidTransfer'
+      ).withArgs(this.address1, ZERO_ADDRESS, 10n)
+    })
+
+    it('testBurnWithRuleEngineAuthorizedSpenderCanBurn', async function () {
+      if (!this.cmtat.setRuleEngine) {
+        return
+      }
+
+      this.ruleEngineMock = await ethers.deployContract('RuleEngineMock', [this.admin])
+      await this.cmtat.connect(this.admin).setRuleEngine(this.ruleEngineMock)
+
+      await expect(
+        this.cmtat.connect(this.admin).burn(this.address1, 10n)
+      ).to.not.be.reverted
+      expect(await this.cmtat.balanceOf(this.address1)).to.equal(INITIAL_SUPPLY - 10n)
+    })
   })
 
   context('burnAndMint', function () {
@@ -627,6 +658,58 @@ function ERC20BurnModuleCommon () {
       )
         .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotSend')
         .withArgs(this.address1)
+    })
+
+    it('testCanBatchBurnWithExactBalances', async function () {
+      const TOKEN_HOLDER = [this.admin, this.address1, this.address2]
+      const FULL_BALANCES = [
+        await this.cmtat.balanceOf(this.admin),
+        await this.cmtat.balanceOf(this.address1),
+        await this.cmtat.balanceOf(this.address2)
+      ]
+
+      await expect(
+        this.cmtat.connect(this.admin).batchBurn(TOKEN_HOLDER, FULL_BALANCES, REASON_EMPTY)
+      ).to.not.be.reverted
+
+      expect(await this.cmtat.balanceOf(this.admin)).to.equal(0n)
+      expect(await this.cmtat.balanceOf(this.address1)).to.equal(0n)
+      expect(await this.cmtat.balanceOf(this.address2)).to.equal(0n)
+      expect(await this.cmtat.totalSupply()).to.equal(0n)
+    })
+
+    it('testBatchBurnPropagatesSpenderToRuleEngine', async function () {
+      if (!this.cmtat.setRuleEngine) {
+        return
+      }
+
+      const TOKEN_HOLDER = [this.admin, this.address1, this.address2]
+
+      this.ruleEngineMock = await ethers.deployContract('RuleEngineMock', [this.admin])
+      await this.cmtat.connect(this.admin).setRuleEngine(this.ruleEngineMock)
+      await this.cmtat.connect(this.admin).grantRole(BURNER_ROLE, this.address3)
+
+      await expect(
+        this.cmtat.connect(this.address3).batchBurn(TOKEN_HOLDER, TOKEN_BY_HOLDERS_TO_BURN, REASON_EMPTY)
+      ).to.be.revertedWithCustomError(
+        this.ruleEngineMock,
+        'RuleEngine_InvalidTransfer'
+      ).withArgs(this.admin, ZERO_ADDRESS, TOKEN_BY_HOLDERS_TO_BURN[0])
+    })
+
+    it('testBatchBurnWithRuleEngineAuthorizedSpenderCanBurn', async function () {
+      if (!this.cmtat.setRuleEngine) {
+        return
+      }
+
+      const TOKEN_HOLDER = [this.admin, this.address1, this.address2]
+
+      this.ruleEngineMock = await ethers.deployContract('RuleEngineMock', [this.admin])
+      await this.cmtat.connect(this.admin).setRuleEngine(this.ruleEngineMock)
+
+      await expect(
+        this.cmtat.connect(this.admin).batchBurn(TOKEN_HOLDER, TOKEN_BY_HOLDERS_TO_BURN, REASON_EMPTY)
+      ).to.not.be.reverted
     })
   })
 }

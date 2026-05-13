@@ -176,6 +176,37 @@ function ERC20MintModuleCommon () {
       await expect(this.cmtat.connect(this.admin).mint(this.address1, VALUE1))
         .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotReceive')
     })
+
+    it('testMintPropagatesSpenderToRuleEngine', async function () {
+      if (!this.cmtat.setRuleEngine) {
+        return
+      }
+
+      this.ruleEngineMock = await ethers.deployContract('RuleEngineMock', [this.admin])
+      await this.cmtat.connect(this.admin).setRuleEngine(this.ruleEngineMock)
+      await this.cmtat.connect(this.admin).grantRole(MINTER_ROLE, this.address2)
+
+      await expect(
+        this.cmtat.connect(this.address2).mint(this.address1, 10n)
+      ).to.be.revertedWithCustomError(
+        this.ruleEngineMock,
+        'RuleEngine_InvalidTransfer'
+      ).withArgs(ZERO_ADDRESS, this.address1, 10n)
+    })
+
+    it('testMintWithRuleEngineAuthorizedSpenderCanMint', async function () {
+      if (!this.cmtat.setRuleEngine) {
+        return
+      }
+
+      this.ruleEngineMock = await ethers.deployContract('RuleEngineMock', [this.admin])
+      await this.cmtat.connect(this.admin).setRuleEngine(this.ruleEngineMock)
+
+      await expect(
+        this.cmtat.connect(this.admin).mint(this.address1, 10n)
+      ).to.not.be.reverted
+      expect(await this.cmtat.balanceOf(this.address1)).to.equal(10n)
+    })
   })
 
   context('Batch Minting', function () {
@@ -239,6 +270,45 @@ function ERC20MintModuleCommon () {
         .grantRole(MINTER_ROLE, this.address1)
       const bindTest = testMintBatch.bind(this)
       await bindTest(this.address1)
+    })
+
+    it('testBatchMintPropagatesSpenderToRuleEngine', async function () {
+      if (!this.cmtat.setRuleEngine) {
+        return
+      }
+
+      const TOKEN_HOLDER = [this.admin, this.address1, this.address2]
+      const TOKEN_SUPPLY_BY_HOLDERS = [10n, 100n, 1000n]
+
+      this.ruleEngineMock = await ethers.deployContract('RuleEngineMock', [this.admin])
+      await this.cmtat.connect(this.admin).setRuleEngine(this.ruleEngineMock)
+      await this.cmtat.connect(this.admin).grantRole(MINTER_ROLE, this.address3)
+
+      await expect(
+        this.cmtat.connect(this.address3).batchMint(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS)
+      ).to.be.revertedWithCustomError(
+        this.ruleEngineMock,
+        'RuleEngine_InvalidTransfer'
+      ).withArgs(ZERO_ADDRESS, this.admin, TOKEN_SUPPLY_BY_HOLDERS[0])
+    })
+
+    it('testBatchMintWithRuleEngineAuthorizedSpenderCanMint', async function () {
+      if (!this.cmtat.setRuleEngine) {
+        return
+      }
+
+      const TOKEN_HOLDER = [this.admin, this.address1, this.address2]
+      const TOKEN_SUPPLY_BY_HOLDERS = [10n, 100n, 1000n]
+
+      this.ruleEngineMock = await ethers.deployContract('RuleEngineMock', [this.admin])
+      await this.cmtat.connect(this.admin).setRuleEngine(this.ruleEngineMock)
+
+      await expect(
+        this.cmtat.connect(this.admin).batchMint(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS)
+      ).to.not.be.reverted
+      expect(await this.cmtat.balanceOf(this.admin)).to.equal(TOKEN_SUPPLY_BY_HOLDERS[0])
+      expect(await this.cmtat.balanceOf(this.address1)).to.equal(TOKEN_SUPPLY_BY_HOLDERS[1])
+      expect(await this.cmtat.balanceOf(this.address2)).to.equal(TOKEN_SUPPLY_BY_HOLDERS[2])
     })
 
     it('testCannotBatchMintByNonMinter', async function () {

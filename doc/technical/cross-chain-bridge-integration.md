@@ -90,5 +90,4 @@ Choose the adapter that matches the interface used by the LayerZero pool.
 
 - `burnFrom` uses allowance and now propagates `_msgSender()` into the compliance hook, so spender-aware RuleEngine checks are applied.
 - `crosschainBurn` also propagates `_msgSender()` to keep operator semantics consistent with `burnFrom`.
-- `crosschainMint` currently remains spender-less in the compliance path because it mints new tokens instead of moving existing holder tokens.
-- Future policy may extend `crosschainMint` to propagate the operator if bridge-operator-specific mint restrictions are needed.
+- `crosschainMint` now also propagates `_msgSender()` to enable spender-aware RuleEngine checks for bridge-initiated mint flows.

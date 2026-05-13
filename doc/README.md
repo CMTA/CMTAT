@@ -1288,7 +1288,9 @@ The same spender-aware model now applies to delegated/operator burn flows:
 - `burnFrom(account, value)` (allowance-based) propagates the effective operator (`_msgSender()`) to the RuleEngine hook.
 - `crosschainBurn(from, value)` also propagates the bridge operator (`_msgSender()`) for consistency with `burnFrom`.
 
-`crosschainMint(to, value)` currently remains spender-less in the compliance path because mint creates new tokens and does not move tokens from an existing holder. This can be revisited later if operator-specific mint restrictions are required.
+`crosschainMint(to, value)` now also propagates the bridge operator (`_msgSender()`) in the compliance path, so RuleEngine spender-aware checks can be applied consistently across delegated/cross-chain burn and mint flows.
+
+For these flows, CMTAT treats the effective operator as the `spender` parameter in RuleEngine hooks.
 
 ##### Interface
 
@@ -1319,6 +1321,12 @@ external view returns (bool isValid);
  function supportsInterface(bytes4 interfaceId) 
  public view override returns (bool)
 ```
+
+For RuleEngine implementations, this also applies to mint/burn operator flows:
+- mint path: `from == address(0)`, `spender == operator`
+- burn path: `to == address(0)`, `spender == operator`
+
+RuleEngine policies should explicitly handle these cases when applying spender-based restrictions.
 
 The ERC-165 interface id for the `IRuleEngine` interface is `0x20c49ce7`
 

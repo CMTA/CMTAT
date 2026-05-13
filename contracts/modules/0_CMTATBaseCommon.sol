@@ -125,7 +125,7 @@ abstract contract CMTATBaseCommon is
     * Check if the mint is valid
     */
     function _mintOverride(address account, uint256 value) internal virtual override(ERC20MintModuleInternal) {
-        _checkTransferred(address(0), address(0), account, value);
+        _checkTransferred(_msgSender(), address(0), account, value);
         ERC20MintModuleInternal._mintOverride(account, value);
     }
 
@@ -135,7 +135,7 @@ abstract contract CMTATBaseCommon is
     * Check if the burn is valid
     */
     function _burnOverride(address account, uint256 value) internal virtual override(ERC20BurnModuleInternal) {
-        _checkTransferred(address(0),  account, address(0), value);
+        _checkTransferred(_msgSender(),  account, address(0), value);
         ERC20BurnModuleInternal._burnOverride(account, value);
     }
 
