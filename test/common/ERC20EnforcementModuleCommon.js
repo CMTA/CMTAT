@@ -45,6 +45,9 @@ async function getActiveBalance (ctx, account) {
 
   const balance = await ctx.cmtat.balanceOf(account)
   const frozen = await ctx.cmtat.getFrozenTokens(account)
+  if (frozen >= balance) {
+    return 0
+  }
   return balance - frozen
 }
 
@@ -1123,6 +1126,35 @@ function ERC20EnforcementModuleCommon () {
         forcedTransferCompat(this, this.admin, this.address1, this.address2, amount, REASON)
       ).to.not.be.reverted
       expect(await this.cmtat.balanceOf(this.address2)).to.equal(amount)
+    })
+
+    it('testCanMintToAccountAfterFrozenTokensGreaterThanBalance', async function () {
+      const frozenTokens = INITIAL_BALANCE + 1
+
+      await this.cmtat
+        .connect(this.admin)
+        .setFrozenTokens(this.address1, frozenTokens)
+
+      await expect(
+        this.cmtat.connect(this.admin).mint(this.address1, 2)
+      ).to.not.be.reverted
+
+      expect(await this.cmtat.balanceOf(this.address1)).to.equal(INITIAL_BALANCE + 2)
+      expect(await getActiveBalance(this, this.address1)).to.equal(1)
+      expect(
+        await this.cmtat.canTransfer(this.address1, this.address2, 1)
+      ).to.equal(true)
+    })
+
+    it('testSetFrozenTokensOnZeroAddressDoesNotBreakMintFlow', async function () {
+      await this.cmtat
+        .connect(this.admin)
+        .setFrozenTokens(ZERO_ADDRESS, 1)
+
+      await expect(
+        this.cmtat.connect(this.admin).mint(this.address2, 1)
+      ).to.not.be.reverted
+      expect(await this.cmtat.balanceOf(this.address2)).to.equal(1)
     })
 
     it('testCanTransferTokenIfActiveBalanceIsEnough', async function () {

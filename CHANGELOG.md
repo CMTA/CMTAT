@@ -38,7 +38,7 @@ Custom changelog tag: `Dependencies`, `Documentation`, `Testing`
 
 - Documentation
   - Perform a code coverage and update the files in the corresponding directory [./doc/general/test/coverage](./doc/general/test/coverage)
-  - Perform an audit with several audit tools (Aderyn and Slither), update the report in the corresponding directory  [./doc/audits/tools](./doc/audits/tools)
+  - Perform an audit with several audit tools (Aderyn and Slither), update the report in the corresponding directory  [./doc/security/tools](./doc/security/tools)
   - Update surya doc by running the 3 scripts in [./doc/script](./doc/script)
   
   - Update changelog
@@ -152,6 +152,8 @@ Custom changelog tag: `Dependencies`, `Documentation`, `Testing`
   - Fixed broken local links in audit references.
   - Corrected deployment-functionality summary tables for snapshot/MetaTx coverage.
   - Added a dedicated `CMTAT Snapshot` column in the functionality matrix to avoid ambiguity.
+  - Updated security documentation paths from `doc/audits/...` to `doc/security/...` after directory rename.
+  - Added Sequent pre-review references in both audit/pre-review and tooling sections.
 
 ## 3.2.0
 

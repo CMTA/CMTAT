@@ -412,6 +412,21 @@ function ERC20CrossChainModuleCommon () {
         'RuleEngine_InvalidTransfer'
       ).withArgs(this.address1, ZERO_ADDRESS, 10n)
     })
+
+    it('testBurnFromWithRuleEngineAuthorizedSpenderCanBurn', async function () {
+      if (!this.cmtat.setRuleEngine) {
+        return
+      }
+
+      this.ruleEngineMock = await ethers.deployContract('RuleEngineMock', [this.admin])
+      await this.cmtat.connect(this.admin).setRuleEngine(this.ruleEngineMock)
+      await this.cmtat.connect(this.address1).approve(this.admin, 20n)
+
+      await expect(
+        this.cmtat.connect(this.admin).burnFrom(this.address1, 10n)
+      ).to.not.be.reverted
+      expect(await this.cmtat.balanceOf(this.address1)).to.equal(40n)
+    })
   })
   context('CrossChainMinting', function () {
     const VALUE1 = 20n
