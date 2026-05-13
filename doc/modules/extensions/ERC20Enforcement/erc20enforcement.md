@@ -112,6 +112,7 @@ Freezes a specific amount of tokens for a given address, making them non-transfe
 **Requirements:**
 
 - Only authorized users (*ERC20ENFORCER_ROLE*) are allowed to call this function.
+- `account` cannot be the zero address (`address(0)`), otherwise reverts with `CMTAT_ERC20EnforcementModule_ZeroAddressNotAllowed`.
 
 ------
 
@@ -143,6 +144,7 @@ Unfreezes a specific amount of tokens for a given address, making them transfera
 **Requirements:**
 
 - Only authorized users (*ERC20ENFORCER_ROLE*) are allowed to call this function.
+- `account` cannot be the zero address (`address(0)`), otherwise reverts with `CMTAT_ERC20EnforcementModule_ZeroAddressNotAllowed`.
 
 ------
 

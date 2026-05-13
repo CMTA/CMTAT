@@ -15,6 +15,7 @@ import {IERC7943FungibleEnforcementEventAndError} from "../../interfaces/tokeniz
  */
 abstract contract ERC20EnforcementModuleInternal is ERC20Upgradeable, IERC7943FungibleEnforcementEventAndError {
     // no argument to reduce contract code size
+    error CMTAT_ERC20EnforcementModule_ZeroAddressNotAllowed();
     error CMTAT_ERC20EnforcementModule_ValueExceedsAvailableBalance();
     error CMTAT_ERC20EnforcementModule_ValueExceedsFrozenBalance(); 
     error CMTAT_ERC20EnforcementModule_ValueEqualCurrentFrozenTokens(); 
@@ -49,6 +50,9 @@ abstract contract ERC20EnforcementModuleInternal is ERC20Upgradeable, IERC7943Fu
     }
 
     function _freezePartialTokens(address account, uint256 value) internal virtual{
+       if (account == address(0)) {
+            revert CMTAT_ERC20EnforcementModule_ZeroAddressNotAllowed();
+        }
        ERC20EnforcementModuleStorage storage $ = _getEnforcementModuleStorage();
         // Retrieve current value
         uint256 balance = ERC20Upgradeable.balanceOf(account);
@@ -61,6 +65,9 @@ abstract contract ERC20EnforcementModuleInternal is ERC20Upgradeable, IERC7943Fu
     }
 
     function _unfreezePartialTokens(address account, uint256 value) internal virtual{
+        if (account == address(0)) {
+            revert CMTAT_ERC20EnforcementModule_ZeroAddressNotAllowed();
+        }
         ERC20EnforcementModuleStorage storage $ = _getEnforcementModuleStorage();
         require($._frozenTokens[account] >= value, CMTAT_ERC20EnforcementModule_ValueExceedsFrozenBalance());
         // Update frozenBalance

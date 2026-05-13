@@ -988,6 +988,48 @@ function ERC20EnforcementModuleCommon () {
       )
     })
 
+    it('testCannotFreezeZeroAddress', async function () {
+      await expect(
+        this.cmtat.connect(this.admin).freezePartialTokens(ZERO_ADDRESS, FREEZE_AMOUNT)
+      ).to.be.revertedWithCustomError(
+        this.cmtat,
+        'CMTAT_ERC20EnforcementModule_ZeroAddressNotAllowed'
+      )
+    })
+
+    it('testCannotUnfreezeZeroAddress', async function () {
+      await expect(
+        this.cmtat.connect(this.admin).unfreezePartialTokens(ZERO_ADDRESS, UNFREEZE_AMOUNT)
+      ).to.be.revertedWithCustomError(
+        this.cmtat,
+        'CMTAT_ERC20EnforcementModule_ZeroAddressNotAllowed'
+      )
+    })
+
+    it('testCannotFreezeZeroAddressWithReason', async function () {
+      if (!supportsReasonedEnforcement(this)) {
+        return
+      }
+      await expect(
+        freezePartialTokensCompat(this, this.admin, ZERO_ADDRESS, FREEZE_AMOUNT, REASON)
+      ).to.be.revertedWithCustomError(
+        this.cmtat,
+        'CMTAT_ERC20EnforcementModule_ZeroAddressNotAllowed'
+      )
+    })
+
+    it('testCannotUnfreezeZeroAddressWithReason', async function () {
+      if (!supportsReasonedEnforcement(this)) {
+        return
+      }
+      await expect(
+        unfreezePartialTokensCompat(this, this.admin, ZERO_ADDRESS, UNFREEZE_AMOUNT, REASON)
+      ).to.be.revertedWithCustomError(
+        this.cmtat,
+        'CMTAT_ERC20EnforcementModule_ZeroAddressNotAllowed'
+      )
+    })
+
     it('testCannotTransferMoreThanActiveBalance', async function () {
       const AMOUNT_TO_TRANSFER = INITIAL_BALANCE - FREEZE_AMOUNT + 1
       // Act

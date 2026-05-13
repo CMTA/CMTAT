@@ -19,7 +19,7 @@ Deployment contracts are in `contracts/deployment/`. Each feature set comes in b
 | | | Upgradeable | `CMTATUpgradeableDebt` |
 | **DebtEngine** | Standard + DebtEngineModule + ERC-1404 (no ERC-2771) | Standalone | `CMTATStandaloneDebtEngine` |
 | | | Upgradeable | `CMTATUpgradeableDebtEngine` |
-| **Allowlist** | Standard + AllowlistModule (no RuleEngine/ERC-1404, no ERC20CrossChain) | Standalone | `CMTATStandaloneAllowlist` |
+| **Allowlist** | Standard + AllowlistModule (no RuleEngine/ERC-1404, no ERC20CrossChain), with ERC-7551 enforcement functions | Standalone | `CMTATStandaloneAllowlist` |
 | | | Upgradeable | `CMTATUpgradeableAllowlist` |
 | **ERC-7551** | Standard + ERC7551Module | Standalone | `CMTATStandaloneERC7551` |
 | | | Upgradeable | `CMTATUpgradeableERC7551` |

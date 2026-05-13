@@ -66,6 +66,7 @@ Updates the frozen status of a specific account, either freezing or unfreezing i
 **Requirement**
 
 Only authorized users (`ENFORCEMENT_ROLE`) are allowed to call this function.
+`account` cannot be the zero address (`address(0)`).
 
 ### IERC3643EnforcementEvent
 
@@ -160,6 +161,7 @@ Emits an `AddressFrozen` event.
 **Requirement**
 
 Only authorized users (`ENFORCEMENT_ROLE`) are allowed to call this function.
+`account` cannot be the zero address (`address(0)`).
 
 ------
 
@@ -187,4 +189,4 @@ Enables bulk freezing or unfreezing in a single call.
 
 - `accounts.length` must match `freeze.length`. 
 - Only authorized users (`ENFORCEMENT_ROLE`) are allowed to call this function.
-
+- `account` entries cannot be the zero address (`address(0)`).

@@ -67,6 +67,11 @@ See also [docs.openzeppelin.com - AccessControl](https://docs.openzeppelin.com/c
 | **CCIPModule** | `setCCIPAdmin(address)` | `DEFAULT_ADMIN_ROLE` |
 | **BaseCommon** | `burnAndMint(address, address, uint256, uint256, bytes)` | `BURNER_ROLE` + `MINTER_ROLE` |
 
+## Input Guards
+
+- `EnforcementModule.setAddressFrozen(...)` and `batchSetAddressFrozen(...)` reject `address(0)` (`CMTAT_Enforcement_ZeroAddressNotAllowed`).
+- `ERC20EnforcementModule.freezePartialTokens(...)` and `unfreezePartialTokens(...)` reject `address(0)` (`CMTAT_ERC20EnforcementModule_ZeroAddressNotAllowed`).
+
 ## Key Management
 
 Access to the `DEFAULT_ADMIN_ROLE` key must be adequately restricted. Access to any proxy contract must be segregated from the token contract.

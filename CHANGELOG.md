@@ -88,6 +88,8 @@ Custom changelog tag: `Dependencies`, `Documentation`, `Testing`
 - **`CMTATStandardStandalone`** and **`CMTATStandardUpgradeable`** now inherit from `CMTATBaseERC7551Enforcement`, so Standard deployments expose ERC-7551 enforcement functions.
 - **`CMTATUpgradeableUUPS`** inheritance remains unchanged (no `CMTATBaseERC7551Enforcement`).
 - **`CMTATBaseAllowlist`**: Now composes `ERC20EnforcementERC7551Module`, so Allowlist deployments also expose ERC-7551 enforcement functions (`forcedTransfer/freezePartialTokens/unfreezePartialTokens` with `bytes`) and `getActiveBalanceOf`.
+- **`EnforcementModuleInternal`**: Hardened freeze-list writes by rejecting `address(0)` in `_addAddressToTheList` (new `CMTAT_Enforcement_ZeroAddressNotAllowed` custom error), preventing misuse of `setAddressFrozen` / `batchSetAddressFrozen` on the zero address.
+- **`ERC20EnforcementModuleInternal`**: Hardened partial freeze paths by rejecting `address(0)` in `_freezePartialTokens` and `_unfreezePartialTokens` (new `CMTAT_ERC20EnforcementModule_ZeroAddressNotAllowed` custom error).
 - **`CMTATBaseDebtEngine`**: Now inherits from both `CMTATBaseERC20CrossChain` and `CMTATBaseSnapshot`, adding SnapshotEngine support to the Debt variant. Adds `_authorizeSnapshots` and disambiguation overrides for `_update`, `transfer`, `transferFrom`, `approve`, `name`, `symbol`, `decimals`.
 - **`CMTATBaseDebt`**: Restored SnapshotEngine support by inheriting `CMTATBaseSnapshot` and adding the required disambiguation/authorization overrides (`approve`, `transfer`, `transferFrom`, `decimals`, `name`, `symbol`, `_update`, `_authorizeSnapshots`) so Debt deployments expose `snapshotEngine` / `setSnapshotEngine` again.
 - **ERC-7943 interface update** — breaking changes aligned with the updated ERC-7943 specification:
@@ -115,6 +117,8 @@ Custom changelog tag: `Dependencies`, `Documentation`, `Testing`
 - Deployment test wiring updated after snapshot-module extraction:
   - Removed snapshot common test calls from non-snapshot deployment suites where `snapshotEngine()` is not exposed (ERC-7551 and ERC-1363 proxy deployment suites).
   - Added dedicated ERC-7551 enforcement common tests (`test/common/ERC20EnforcementERC7551ModuleCommon.js`) and wired them to ERC-7551 deployment suites.
+  - Added zero-address rejection coverage for enforcement freeze entry points in `test/common/EnforcementModuleCommon.js` (`setAddressFrozen` overloads and `batchSetAddressFrozen`).
+  - Added zero-address rejection coverage for partial freeze entry points in `test/common/ERC20EnforcementModuleCommon.js` (`freezePartialTokens` / `unfreezePartialTokens`, with and without reason).
 - `package.json`:
   - `test:snapshot` script path list fixed to remove stale/non-existent targets.
   - Added `test:snapshot:module` to keep module-level snapshot suite invocation separate.

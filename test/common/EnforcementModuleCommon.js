@@ -1,5 +1,6 @@
 const {
   ENFORCER_ROLE,
+  ZERO_ADDRESS,
   REJECTED_CODE_BASE_TRANSFER_REJECTED_FROM_FROZEN,
   REJECTED_CODE_BASE_TRANSFER_REJECTED_TO_FROZEN,
   REJECTED_CODE_BASE_TRANSFER_REJECTED_SPENDER_FROZEN
@@ -244,6 +245,24 @@ function EnforcementModuleCommon () {
         .withArgs(this.address2.address, ENFORCER_ROLE)
       // Assert
       expect(await this.cmtat.isFrozen(this.address1)).to.equal(true)
+    })
+
+    it('testCannotFreezeZeroAddress', async function () {
+      await expect(
+        this.cmtat.connect(this.admin).setAddressFrozen(ZERO_ADDRESS, true, reasonFreeze)
+      ).to.be.revertedWithCustomError(this.cmtat, 'CMTAT_Enforcement_ZeroAddressNotAllowed')
+    })
+
+    it('testCannotFreezeZeroAddressWithoutReason', async function () {
+      await expect(
+        this.cmtat.connect(this.admin).setAddressFrozen(ZERO_ADDRESS, true)
+      ).to.be.revertedWithCustomError(this.cmtat, 'CMTAT_Enforcement_ZeroAddressNotAllowed')
+    })
+
+    it('testCannotBatchFreezeZeroAddress', async function () {
+      await expect(
+        this.cmtat.connect(this.admin).batchSetAddressFrozen([ZERO_ADDRESS], [true])
+      ).to.be.revertedWithCustomError(this.cmtat, 'CMTAT_Enforcement_ZeroAddressNotAllowed')
     })
 
     /* //////////////////////////////////////////////////////////////

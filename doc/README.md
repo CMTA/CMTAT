@@ -1713,6 +1713,7 @@ function setAddressFrozen(address account, bool freeze, bytes calldata data)
 ```
 
 Due to a limited contract size, there is no batch version with a data parameter available.
+`setAddressFrozen` and `batchSetAddressFrozen` reject `address(0)`.
 
 When an address is frozen, it is not possible to mint tokens to this address or burn its tokens. To move tokens from a frozen address, the issuer must use the function `forcedTransfer`.
 
@@ -1721,6 +1722,7 @@ When an address is frozen, it is not possible to mint tokens to this address or 
 - A part of the balance of a specific address can be frozen with the following ERC3643 function `freezePartialTokens` and `unfreezePartialTokens`
 - Transfer/burn can be forced by the admin  (ERC20EnforcementModule) with the following ERC3643 function `forcedTransfer`.
   - In this case, if a part of the balance is frozen, the tokens are unfrozen before being burnt or transferred.
+- `freezePartialTokens` and `unfreezePartialTokens` reject `address(0)`.
 
 ```solidity
 interface IERC3643ERC20Enforcement {
