@@ -2827,10 +2827,10 @@ They are only used for testing.
 
 Fixed version: [1.0](https://github.com/CMTA/CMTAT/releases/tag/1.0)
 
-Fixes of security issues discovered by the initial audit were reviewed by ABDK and confirmed to be effective, as certified by the [report released](./audits/ABDK-CMTAT-audit-20210910/ABDK-CMTAT-audit-20210910.pdf) on September 10, 2021, covering [version c3afd7b](https://github.com/CMTA/CMTAT/tree/c3afd7b4a2ade160c9b581adb7a44896bfc7aaea) of the contracts.
+Fixes of security issues discovered by the initial audit were reviewed by ABDK and confirmed to be effective, as certified by the [report released](./security/audit/ABDK-CMTAT-audit-20210910/ABDK-CMTAT-audit-20210910.pdf) on September 10, 2021, covering [version c3afd7b](https://github.com/CMTA/CMTAT/tree/c3afd7b4a2ade160c9b581adb7a44896bfc7aaea) of the contracts.
 Version [1.0](https://github.com/CMTA/CMTAT/releases/tag/1.0) includes additional fixes of minor issues, compared to the version retested.
 
-A summary of all fixes and decisions taken is available in the file [CMTAT-Audit-20210910-summary.pdf](./audits/ABDK-CMTAT-audit-20210910/CMTAT-Audit-20210910-summary.pdf) 
+A summary of all fixes and decisions taken is available in the file [CMTAT-Audit-20210910-summary.pdf](./security/audit/ABDK-CMTAT-audit-20210910/CMTAT-Audit-20210910-summary.pdf) 
 
 #### Second audit - March 2023 [ABDK]
 
@@ -2840,7 +2840,7 @@ The second audit covered version [2.2](https://github.com/CMTA/CMTAT/releases/ta
 
 Version v2.3.0 contains the different fixes and improvements related to this audit.
 
-The report is available in [ABDK_CMTA_CMTATRuleEngine_v_1_0.pdf](./audits/ABDK_CMTA_CMTATRuleEngine_v_1_0/ABDK_CMTA_CMTATRuleEngine_v_1_0.pdf). 
+The report is available in [ABDK_CMTA_CMTATRuleEngine_v_1_0.pdf](./security/audit/ABDK_CMTA_CMTATRuleEngine_v_1_0/ABDK_CMTA_CMTATRuleEngine_v_1_0.pdf). 
 
 #### Third audit - July 2025 [Halborn]
 
@@ -2852,9 +2852,15 @@ The third audit covered version [v3.0.0-rc5](https://github.com/CMTA/CMTAT/tree/
 
 Version v3.0.0 contains the different fixes and improvements related to this audit.
 
-The report is available in [Taurus_CMTAT_Smart_Contract_Security_Assessment_Report_Halborn.pdf](./audits/Halborn-CMTATv3.0.0-2025/Taurus_CMTAT_Smart_Contract_Security_Assessment_Report_Halborn.pdf).
+The report is available in [Taurus_CMTAT_Smart_Contract_Security_Assessment_Report_Halborn.pdf](./security/audit/Halborn-CMTATv3.0.0-2025/Taurus_CMTAT_Smart_Contract_Security_Assessment_Report_Halborn.pdf).
 
 > After the 1st audit phase, we made another fix to perform compliance check with all batch functions. See [commits - 198d0194a0eef526b0a33cb625f6227da07608d4](https://github.com/CMTA/CMTAT/pull/313/commits/198d0194a0eef526b0a33cb625f6227da07608d4). This fix was also reviewed by Halborn.
+
+#### Pre-review - April 2026 [Sequent]
+
+The pre-verification report is available in [sequent-report-CMTAT.pdf](./security/pre-review/sequent-report-CMTAT.pdf).
+
+A detailed maintainer feedback is available in [SequentReport-feedback.md](./security/pre-review/SequentReport-feedback.md).
 
 ### Tools
 
@@ -2866,9 +2872,9 @@ Here are the reports produced by [Aderyn](https://github.com/Cyfrin/aderyn):
 
 | Version | File                                                         |
 | ------- | ------------------------------------------------------------ |
-| v3.2.0  | [v3.2.0-aderyn-report.md](./audits/tools/aderyn/v3.2.0-aderyn-report.md) |
-| v3.1.0  | [v3.1.0-aderyn-report.md](./audits/tools/aderyn/v3.1.0-aderyn-report.md) |
-| v3.0.0  | [v3.0.0-aderyn-report.md](./audits/tools/aderyn/v3.0.0-aderyn-report.md) |
+| v3.2.0  | [v3.2.0-aderyn-report.md](./security/tools/aderyn/v3.2.0-aderyn-report.md) |
+| v3.1.0  | [v3.1.0-aderyn-report.md](./security/tools/aderyn/v3.1.0-aderyn-report.md) |
+| v3.0.0  | [v3.0.0-aderyn-report.md](./security/tools/aderyn/v3.0.0-aderyn-report.md) |
 
 #### [Slither](https://github.com/crytic/slither)
 
@@ -2876,11 +2882,11 @@ Here are the reports produced by [Slither](https://github.com/crytic/slither):
 
 | Version | File                                                         |
 | ------- | ------------------------------------------------------------ |
-| v3.2.0  | [v3.2.0-slither-report.md](./audits/tools/slither/v3.2.0-slither-report.md) |
-| v3.1.0  | [v3.1.0-slither-report.md](./audits/tools/slither/v3.1.0-slither-report.md) |
-| v3.0.0  | [v3.0.0-slither-report.md](./audits/tools/slither/v3.0.0-slither-report.md) |
-| v2.5.0  | [v2.5.0-slither-report.md](./audits/tools/slither/v2.5.0-slither-report.md) |
-| v2.3.0  | [v2.3.0-slither-report.md](./audits/tools/slither/v2.3.0-slither-report.md) |
+| v3.2.0  | [v3.2.0-slither-report.md](./security/tools/slither/v3.2.0-slither-report.md) |
+| v3.1.0  | [v3.1.0-slither-report.md](./security/tools/slither/v3.1.0-slither-report.md) |
+| v3.0.0  | [v3.0.0-slither-report.md](./security/tools/slither/v3.0.0-slither-report.md) |
+| v2.5.0  | [v2.5.0-slither-report.md](./security/tools/slither/v2.5.0-slither-report.md) |
+| v2.3.0  | [v2.3.0-slither-report.md](./security/tools/slither/v2.3.0-slither-report.md) |
 
 #### [Mythril](https://github.com/Consensys/mythril)
 
@@ -2889,7 +2895,7 @@ Here are the reports produced by Mythril
 | Version | File                                                         |
 | ------- | ------------------------------------------------------------ |
 | v3.0.0  | Mythril currently generates a fatal error, impossible to run the tool |
-| v2.5.0  | [mythril-report-standalone.md](./audits/tools/mythril/v2.5.0/myth_standalone_report.md)<br />[mythril-report-proxy.md](./audits/tools/mythril/v2.5.0/myth_proxy_report.md)<br /> |
+| v2.5.0  | [mythril-report-standalone.md](./security/tools/mythril/v2.5.0/myth_standalone_report.md)<br />[mythril-report-proxy.md](./security/tools/mythril/v2.5.0/myth_proxy_report.md)<br /> |
 
 #### [Nethermind Audit Agent](https://auditagent.nethermind.io)
 
@@ -2897,8 +2903,8 @@ Here are the reports produced by [Nethermind Audit Agent](https://auditagent.net
 
 | Version    | File                                                         |
 | ---------- | ------------------------------------------------------------ |
-| v3.1.0     | [nethermind-audit-agent/v3.1.0](./audits/tools/nethermind-audit-agent/v3.1.0) |
-| v3.0.0-rc5 | [nethermind-audit-agent/v3.0.0-rc5](./audits/tools/nethermind-audit-agent/v3.0.0-rc5) |
+| v3.1.0     | [nethermind-audit-agent/v3.1.0](./security/tools/nethermind-audit-agent/v3.1.0) |
+| v3.0.0-rc5 | [nethermind-audit-agent/v3.0.0-rc5](./security/tools/nethermind-audit-agent/v3.0.0-rc5) |
 
 The v3.1.0 report identified **14 findings** (2 high, 2 medium, 10 low). All findings were reviewed by CMTA maintainers; 7 were assessed as invalid and 7 were acknowledged as design choices. No finding required a code fix.
 
@@ -2919,7 +2925,7 @@ The v3.1.0 report identified **14 findings** (2 high, 2 medium, 10 low). All fin
 | 13 | `approve` not protected by pause modifier | Low | Design choice |
 | 14 | ERC2771 forwarder set via constructor in upgradeable deployments | Low | Invalid |
 
-A detailed response to each finding is available in [CMTAT_AuditAgent_Report_Comment_v3.1.0.md](./audits/tools/nethermind-audit-agent/v3.1.0/CMTAT_AuditAgent_Report_Comment_v3.1.0.md).
+A detailed response to each finding is available in [CMTAT_AuditAgent_Report_Comment_v3.1.0.md](./security/tools/nethermind-audit-agent/v3.1.0/CMTAT_AuditAgent_Report_Comment_v3.1.0.md).
 
 #### [Wake Arena](https://ackee.xyz) (Ackee Blockchain Security)
 
@@ -2927,7 +2933,7 @@ Here are the reports produced by [Wake Arena](https://ackee.xyz), an automated A
 
 | Version      | File                                                         |
 | ------------ | ------------------------------------------------------------ |
-| v3.2.0-rc2   | [Wake Arena Report - CMTA: CMTAT-v3.2.0-rc2](./audits/tools/ackee-wake-arena/Wake Arena Report - CMTA_ CMTAT-v3.2.0-rc2.pdf) |
+| v3.2.0-rc2   | [Wake Arena Report - CMTA: CMTAT-v3.2.0-rc2](./security/tools/ackee-wake-arena/Wake Arena Report - CMTA_ CMTAT-v3.2.0-rc2.pdf) |
 
 > Ackee Blockchain Security, Wake Arena AI Report \| CMTA: CMTAT, February 10, 2026 12:24 UTC.
 
@@ -2942,7 +2948,15 @@ The report (v3.2.0-rc2, February 10, 2026) identified **6 findings** (0 critical
 | L2 | Unmitigated ERC20 `approve` allowance change race condition | Low | Acknowledged – won't fix |
 | I1 | Documentation mismatch: `_authorizeSelfBurn` comment referenced wrong role | Info | Fixed |
 
-A detailed feedback and response to each finding is available in [CMTAT-wake-arena-feedback.md](./audits/tools/ackee-wake-arena/CMTAT-wake-arena-feedback.md).
+A detailed feedback and response to each finding is available in [CMTAT-wake-arena-feedback.md](./security/tools/ackee-wake-arena/CMTAT-wake-arena-feedback.md).
+
+#### [Sequent](https://www.sequent.inc) (Pre-verification Review)
+
+Here are the reports produced by Sequent:
+
+| Version | File |
+| ------- | ---- |
+| v3.3.0-pre | [sequent-report-CMTAT.pdf](./security/pre-review/sequent-report-CMTAT.pdf)<br />[SequentReport-feedback.md](./security/pre-review/SequentReport-feedback.md) |
 
 ### Test
 

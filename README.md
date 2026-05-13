@@ -83,6 +83,6 @@ Additional resources:
 - [Usage Guide](./doc/USAGE.md)
 - [Specification PDF (v3.0.0)](./doc/specification/CMTATSpecificationV3.0.0.pdf)
 - [Specification PDF (v3.1.0)](./doc/specification/CMTATSpecificationV3.1.0.pdf)
-- [Audit Reports](./doc/audits/)
+- [Security Reports](./doc/security/)
 - [CMTA Website](https://cmta.ch/)
 - [GitHub Releases](https://github.com/CMTA/CMTAT/releases)

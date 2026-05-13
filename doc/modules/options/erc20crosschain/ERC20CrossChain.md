@@ -93,6 +93,7 @@ Mints tokens as part of a crosschain transfer.
 - The contract must not be paused 
   - error: `EnforcedPause()`
 - Only authorized users (`CROSS_CHAIN_ROLE`) are allowed to call this function.
+- Compliance path note (CMTAT base integration): operator (`_msgSender()`) is propagated through transfer-compliance checks for spender-aware RuleEngine restriction support.
 
 **Emits:**
 
@@ -129,6 +130,7 @@ Burns tokens in preparation for a crosschain transfer.
 - The contract must not be paused 
   - error: `EnforcedPause()`
 - Only authorized users (`CROSS_CHAIN_ROLE`) are allowed to call this function.
+- Compliance path note (CMTAT base integration): operator (`_msgSender()`) is propagated through transfer-compliance checks for spender-aware RuleEngine restriction support.
 
  **Emits:**
 
@@ -164,6 +166,7 @@ Burns tokens from an account by using the caller’s allowance.
 - The contract must not be paused 
   - error: `EnforcedPause()`
 - Only authorized users (`BURNER_FROM_ROLE`) are allowed to call this function.
+- Compliance path note (CMTAT base integration): operator (`_msgSender()`) is propagated through transfer-compliance checks for spender-aware RuleEngine restriction support.
 
 **Emits:**
 
