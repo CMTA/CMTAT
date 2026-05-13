@@ -204,7 +204,7 @@ function ERC20BurnModuleCommon () {
       await this.cmtat.connect(this.admin).grantRole(BURNER_ROLE, this.address2)
 
       await expect(
-        this.cmtat.connect(this.address2).burn(this.address1, 10n)
+        this.cmtat.connect(this.address2)['burn(address,uint256)'](this.address1, 10n)
       ).to.be.revertedWithCustomError(
         this.ruleEngineMock,
         'RuleEngine_InvalidTransfer'
@@ -218,9 +218,10 @@ function ERC20BurnModuleCommon () {
 
       this.ruleEngineMock = await ethers.deployContract('RuleEngineMock', [this.admin])
       await this.cmtat.connect(this.admin).setRuleEngine(this.ruleEngineMock)
+      await this.cmtat.connect(this.admin).grantRole(BURNER_ROLE, this.admin)
 
       await expect(
-        this.cmtat.connect(this.admin).burn(this.address1, 10n)
+        this.cmtat.connect(this.admin)['burn(address,uint256)'](this.address1, 10n)
       ).to.not.be.reverted
       expect(await this.cmtat.balanceOf(this.address1)).to.equal(INITIAL_SUPPLY - 10n)
     })
@@ -706,6 +707,7 @@ function ERC20BurnModuleCommon () {
 
       this.ruleEngineMock = await ethers.deployContract('RuleEngineMock', [this.admin])
       await this.cmtat.connect(this.admin).setRuleEngine(this.ruleEngineMock)
+      await this.cmtat.connect(this.admin).grantRole(BURNER_ROLE, this.admin)
 
       await expect(
         this.cmtat.connect(this.admin).batchBurn(TOKEN_HOLDER, TOKEN_BY_HOLDERS_TO_BURN, REASON_EMPTY)

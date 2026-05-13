@@ -46,7 +46,7 @@ async function getActiveBalance (ctx, account) {
   const balance = await ctx.cmtat.balanceOf(account)
   const frozen = await ctx.cmtat.getFrozenTokens(account)
   if (frozen >= balance) {
-    return 0
+    return '0'
   }
   return balance - frozen
 }
@@ -1078,7 +1078,7 @@ function ERC20EnforcementModuleCommon () {
       expect(await this.cmtat.getFrozenTokens(this.address1)).to.equal(
         frozenTokens
       )
-      expect(await getActiveBalance(this, this.address1)).to.equal(0)
+      expect(await getActiveBalance(this, this.address1)).to.equal('0')
       expect(
         await this.cmtat.canTransfer(this.address1, this.address2, 1)
       ).to.equal(false)
@@ -1153,8 +1153,10 @@ function ERC20EnforcementModuleCommon () {
 
       await expect(
         this.cmtat.connect(this.admin).mint(this.address2, 1)
-      ).to.not.be.reverted
-      expect(await this.cmtat.balanceOf(this.address2)).to.equal(1)
+      ).to.be.revertedWithCustomError(
+        this.cmtat,
+        'ERC7943InsufficientUnfrozenBalance'
+      ).withArgs(ZERO_ADDRESS, 1, 0)
     })
 
     it('testCanTransferTokenIfActiveBalanceIsEnough', async function () {

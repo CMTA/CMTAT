@@ -302,6 +302,7 @@ function ERC20MintModuleCommon () {
 
       this.ruleEngineMock = await ethers.deployContract('RuleEngineMock', [this.admin])
       await this.cmtat.connect(this.admin).setRuleEngine(this.ruleEngineMock)
+      await this.cmtat.connect(this.admin).grantRole(MINTER_ROLE, this.admin)
 
       await expect(
         this.cmtat.connect(this.admin).batchMint(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS)
