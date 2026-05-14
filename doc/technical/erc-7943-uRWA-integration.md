@@ -81,6 +81,12 @@ In CMTAT RuleEngine-integrated deployments, the effective operator is propagated
 
 RuleEngine implementations should explicitly support these mint/burn operator cases where `operator == spender`.
 
+`burnFrom` remains an access-controlled operation (role-gated) and is not modeled as a classic `transferFrom` compliance case. At hook level, `burn` and `burnFrom` share burn semantics (`to == address(0)`) and cannot be distinguished solely from `(spender, from, to, value)`. If policy needs to differentiate `burnFrom`, it should target the operator addresses that hold the role allowing `burnFrom`.
+
+If a RuleEngine policy is meant to apply only to traditional `transferFrom` spender restrictions, it should explicitly exclude these operator mint/burn paths:
+- apply spender-only rule only when `from != address(0)` (exclude mint),
+- and `to != address(0)` (exclude burn).
+
 ## Error Semantics
 
 | Error | When emitted |

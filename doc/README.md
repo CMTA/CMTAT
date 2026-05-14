@@ -1074,6 +1074,12 @@ For the deployment version for **UUPS proxies**, unfortunately there is no segre
 
 Any compromise to the DEFAULT_ADMIN_ROLE account may allow a hacker to take advantage of this authority and change the implementation contract which is pointed by proxy and therefore execute potential malicious functionality in the implementation contract.
 
+##### Role interaction notes
+
+- `ENFORCER_ROLE` can block mint operations by freezing the minter/operator address via `setAddressFrozen(address, true)`.  
+  In spender-aware compliance paths, mint uses the effective operator as spender, so a frozen operator reverts with `ERC7943CannotSend`.
+- `SNAPSHOOTER_ROLE` can trigger a **transfer-liveness halt** (pause-like effect) if it configures a snapshot engine that always reverts, because snapshot hooks run inside `_update` on state-changing token operations.
+
 #### Role list
 
 Here is the list of roles and their 32 bytes identifier.
@@ -1292,6 +1298,8 @@ The same spender-aware model now applies to delegated/operator burn flows:
 
 For these flows, CMTAT treats the effective operator as the `spender` parameter in RuleEngine hooks.
 
+`burnFrom` is access-controlled (`BURNER_FROM_ROLE`) and is not treated as a classic `transferFrom` path in CMTAT policy modeling. In RuleEngine hooks, both `burn` and `burnFrom` resolve to a burn-like tuple (`to == address(0)`) with operator-as-spender semantics, so the hook itself cannot intrinsically distinguish between them. To enforce `burnFrom`-specific policies, RuleEngine rules must target the operator addresses authorized to execute `burnFrom` (addresses granted `BURNER_FROM_ROLE`).
+
 ##### Interface
 
 ###### IRuleEngine
@@ -1327,6 +1335,10 @@ For RuleEngine implementations, this also applies to mint/burn operator flows:
 - burn path: `to == address(0)`, `spender == operator`
 
 RuleEngine policies should explicitly handle these cases when applying spender-based restrictions.
+
+If a RuleEngine restriction is intended to target only classic `transferFrom` spender scenarios, it should explicitly exclude mint/burn operator flows:
+- exclude mint path with `from != address(0)`
+- exclude burn path with `to != address(0)`
 
 The ERC-165 interface id for the `IRuleEngine` interface is `0x20c49ce7`
 

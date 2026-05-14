@@ -36,6 +36,10 @@ An address with `SNAPSHOOTER_ROLE` configures the engine:
 function setSnapshotEngine(address snapshotEngine_) external;
 ```
 
+## Security / Liveness Note
+
+`setSnapshotEngine` is a privileged operation. If `SNAPSHOOTER_ROLE` sets an engine that always reverts, token state-changing flows that call `_update` can fail, creating a **transfer-liveness halt** (pause-like behavior).
+
 ## Deployment Versions
 
 The Snapshot deployment version (`CMTATStandaloneSnapshot` / `CMTATUpgradeableSnapshot`) extends the standard CMTAT with `SnapshotEngine` support via `CMTATBaseERC2771Snapshot`.

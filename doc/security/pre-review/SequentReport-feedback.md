@@ -38,6 +38,7 @@ Status: **Accepted (snapshot-enabled deployments)**
 
 #### CMTAT Maintainer Position
 - Accepted as an expected risk in snapshot-enabled variants unless additional governance controls are applied.
+- This risk is now explicitly documented in CMTAT documentation (`doc/technical/snapshot.md` and access-control notes) as a transfer-liveness halt scenario if a reverting snapshot engine is configured.
 
 #### Planned Action
 - Clarify trust assumptions in docs and evaluate stronger governance constraints for `setSnapshotEngine` (allowlist/timelock/process controls).
@@ -119,6 +120,8 @@ Status: **Fixed**
 #### CMTAT Maintainer Position
 - This was a policy-consistency issue, not a role-check bypass.
 - The issue is remediated with operator-as-spender propagation and dedicated regression tests.
+- Mint operator semantics are now explicitly documented: mint/crosschainMint propagate the effective operator as spender in compliance/RuleEngine paths.
+- Side effect: `ENFORCER_ROLE` can block mint operations by freezing the minter/operator address (`setAddressFrozen`), since the minter is evaluated as spender in these paths.
 
 #### Implementation Update (Current State)
 - Initial behavior (no spender/operator propagation on some mint/burn/cross-chain paths) was a deliberate design choice focused on simple transfer semantics and role-gated module calls.
@@ -132,6 +135,8 @@ Status: **Fixed**
 6. `crosschainBurn`
 7. `crosschainMint`
 - Practical effect: RuleEngine policies can now differentiate and restrict operations based on the acting operator (treated as spender), not only on `from`/`to`/`amount`.
+- `burnFrom` is treated as an access-controlled operator burn path (not as a classic `transferFrom` policy path). In hook-level parameters, `burn` and `burnFrom` both appear as burn semantics (`to == address(0)`), so RuleEngine cannot distinguish them from `(spender, from, to, value)` alone.
+- Therefore, `burnFrom`-specific restrictions must be implemented by targeting the operator addresses authorized for `burnFrom` (role-scoped policy at RuleEngine level).
 
 ---
 

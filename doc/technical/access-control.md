@@ -72,6 +72,12 @@ See also [docs.openzeppelin.com - AccessControl](https://docs.openzeppelin.com/c
 - `EnforcementModule.setAddressFrozen(...)` and `batchSetAddressFrozen(...)` reject `address(0)` (`CMTAT_Enforcement_ZeroAddressNotAllowed`).
 - `ERC20EnforcementModule.freezePartialTokens(...)` and `unfreezePartialTokens(...)` reject `address(0)` (`CMTAT_ERC20EnforcementModule_ZeroAddressNotAllowed`).
 
+## Role Interaction Notes
+
+- `ENFORCER_ROLE` can effectively block mint operations by freezing the minter/operator address with `setAddressFrozen(address, true)`.  
+  In spender-aware compliance paths, mint uses the effective operator as spender, so a frozen operator reverts with `ERC7943CannotSend`.
+- `SNAPSHOOTER_ROLE` controls `setSnapshotEngine(address)`. Setting a snapshot engine that always reverts can create a **transfer-liveness halt** (a pause-like effect) for state-changing token flows that execute through `_update`.
+
 ## Key Management
 
 Access to the `DEFAULT_ADMIN_ROLE` key must be adequately restricted. Access to any proxy contract must be segregated from the token contract.

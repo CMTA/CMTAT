@@ -34,7 +34,8 @@ function setCCIPAdmin(address newAdmin) public virtual  // DEFAULT_ADMIN_ROLE
 
 The CCIP pool must be granted the required `MINTER_ROLE` and `BURNER_FROM_ROLE` (or `BURNER_SELF_ROLE`) to operate.
 
-**Note**: Pausing the contract via `PauseModule` does **not** block `MintModule.mint()`, so CCIP minting still works while paused. However, `burnFrom`, `crosschainMint`, and `crosschainBurn` all have `whenNotPaused` checks and are blocked while paused. To block minting during a pause, revoke `MINTER_ROLE` from the CCIP pool.
+**Note**: Pausing the contract via `PauseModule` does **not** block `MintModule.mint()`, so CCIP minting still works while paused. However, `burnFrom`, `crosschainMint`, and `crosschainBurn` all have `whenNotPaused` checks and are blocked while paused. To block minting during a pause, revoke `MINTER_ROLE` from the CCIP pool.  
+With spender-aware compliance enabled, freezing the minter/operator address (`setAddressFrozen`) also blocks mint because the operator is checked as spender in RuleEngine/compliance hooks.
 
 `Lock and Mint` / `Burn and Unlock` models are also compatible through the `Burn and Mint` requirement set. `Lock and Unlock` needs no special token contract support.
 
@@ -91,3 +92,9 @@ Choose the adapter that matches the interface used by the LayerZero pool.
 - `burnFrom` uses allowance and now propagates `_msgSender()` into the compliance hook, so spender-aware RuleEngine checks are applied.
 - `crosschainBurn` also propagates `_msgSender()` to keep operator semantics consistent with `burnFrom`.
 - `crosschainMint` now also propagates `_msgSender()` to enable spender-aware RuleEngine checks for bridge-initiated mint flows.
+
+`burnFrom` is role-gated (`BURNER_FROM_ROLE`) and is not treated as a classic `transferFrom` policy path. In RuleEngine hook calls, `burn` and `burnFrom` both map to burn semantics (`to == address(0)`) and cannot be differentiated from hook parameters alone. To apply controls specific to `burnFrom`, define RuleEngine rules on the operator addresses that are authorized to execute `burnFrom`.
+
+If a RuleEngine restriction should apply only to classic `transferFrom` spender behavior, add guards to exclude mint/burn operator flows:
+- require `from != address(0)` to exclude mint paths,
+- require `to != address(0)` to exclude burn paths.
