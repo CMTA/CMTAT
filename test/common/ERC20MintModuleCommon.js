@@ -298,7 +298,9 @@ function ERC20MintModuleCommon () {
       }
 
       const TOKEN_HOLDER = [this.admin, this.address1, this.address2]
-      const TOKEN_SUPPLY_BY_HOLDERS = [10n, 100n, 1000n]
+      // Keep values below RuleMockMint threshold (< 25) so this test
+      // validates authorized spender propagation, not mock rule limits.
+      const TOKEN_SUPPLY_BY_HOLDERS = [10n, 11n, 12n]
 
       this.ruleEngineMock = await ethers.deployContract('RuleEngineMock', [this.admin])
       await this.cmtat.connect(this.admin).setRuleEngine(this.ruleEngineMock)

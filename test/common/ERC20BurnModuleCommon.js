@@ -704,13 +704,16 @@ function ERC20BurnModuleCommon () {
       }
 
       const TOKEN_HOLDER = [this.admin, this.address1, this.address2]
+      // Keep values below RuleMock threshold (< 20) so this test
+      // validates authorized spender propagation, not mock rule limits.
+      const TOKEN_BY_HOLDERS_TO_BURN_SAFE = [5n, 6n, 7n]
 
       this.ruleEngineMock = await ethers.deployContract('RuleEngineMock', [this.admin])
       await this.cmtat.connect(this.admin).setRuleEngine(this.ruleEngineMock)
       await this.cmtat.connect(this.admin).grantRole(BURNER_ROLE, this.admin)
 
       await expect(
-        this.cmtat.connect(this.admin).batchBurn(TOKEN_HOLDER, TOKEN_BY_HOLDERS_TO_BURN, REASON_EMPTY)
+        this.cmtat.connect(this.admin).batchBurn(TOKEN_HOLDER, TOKEN_BY_HOLDERS_TO_BURN_SAFE, REASON_EMPTY)
       ).to.not.be.reverted
     })
   })
