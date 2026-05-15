@@ -7,8 +7,8 @@ import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/acce
 import {CMTATBaseERC1404, CMTATBaseRuleEngine, ERC20Upgradeable} from "./3_CMTATBaseERC1404.sol";
 import {CMTATBaseAccessControl} from "./1_CMTATBaseAccessControl.sol";
 import {CMTATBaseCommon} from "./0_CMTATBaseCommon.sol";
-import {ERC20BurnModule, ERC20BurnModuleInternal} from "./wrapper/core/ERC20BurnModule.sol";
-import {ERC20MintModule, ERC20MintModuleInternal} from "./wrapper/core/ERC20MintModule.sol";
+import {ERC20BurnModuleInternal} from "./wrapper/core/ERC20BurnModule.sol";
+import {ERC20MintModuleInternal} from "./wrapper/core/ERC20MintModule.sol";
 import {ERC20CrossChainModule} from "./wrapper/options/ERC20CrossChainModule.sol";
 import {CCIPModule} from "./wrapper/options/CCIPModule.sol";
 import {IBurnFromERC20} from "../interfaces/technical/IMintBurnToken.sol";

@@ -5,7 +5,7 @@ pragma solidity ^0.8.20;
 /* ==== Openzeppelin === */
 import {Initializable} from "@openzeppelin/contracts/proxy/utils/Initializable.sol";
 /* ==== Tokenization === */
-import {IERC1643CMTAT, IERC1643} from "../../../interfaces/tokenization/draft-IERC1643CMTAT.sol";
+import {IERC1643CMTAT} from "../../../interfaces/tokenization/draft-IERC1643CMTAT.sol";
 import {ICMTATBase} from "../../../interfaces/tokenization/ICMTAT.sol";
 
 /**

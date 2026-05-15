@@ -6,7 +6,6 @@ pragma solidity ^0.8.20;
 import {ERC20PermitUpgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/ERC20PermitUpgradeable.sol";
 import {ERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 import {MulticallUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/MulticallUpgradeable.sol";
-import {EIP712Upgradeable} from "@openzeppelin/contracts-upgradeable/utils/cryptography/EIP712Upgradeable.sol";
 /* ==== Module === */
 import {CMTATBaseERC20CrossChain, CMTATBaseRuleEngine} from "./4_CMTATBaseERC20CrossChain.sol";
 /* ==== Interface and other library === */

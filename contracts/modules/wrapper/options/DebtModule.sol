@@ -3,7 +3,7 @@
 pragma solidity ^0.8.20;
 
 /* ==== Engine === */
-import {IDebtEngine, ICMTATDebt, ICMTATCreditEvents} from "../../../interfaces/engine/IDebtEngine.sol";
+import {ICMTATDebt, ICMTATCreditEvents} from "../../../interfaces/engine/IDebtEngine.sol";
 import {IDebtModule} from "../../../interfaces/modules/IDebtModule.sol";
 
 /**

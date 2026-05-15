@@ -9,12 +9,12 @@ import {ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/Cont
 import {ValidationModule} from "./wrapper/controllers/ValidationModule.sol";
 /* ==== Wrapper === */
 // Security
-import {AccessControlModule, AccessControlUpgradeable} from "./wrapper/security/AccessControlModule.sol";
+import {AccessControlModule} from "./wrapper/security/AccessControlModule.sol";
 // Core
 import {VersionModule} from "./wrapper/core/VersionModule.sol";
 // Extensions
 import {ExtraInformationModule} from "./wrapper/extensions/ExtraInformationModule.sol";
-import {DocumentEngineModule, IERC1643} from "./wrapper/extensions/DocumentEngineModule.sol";
+import {DocumentEngineModule} from "./wrapper/extensions/DocumentEngineModule.sol";
  /* ==== Interface and other library === */
 import {ICMTATConstructor} from "../interfaces/technical/ICMTATConstructor.sol";
 

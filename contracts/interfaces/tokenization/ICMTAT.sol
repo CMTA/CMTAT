@@ -2,7 +2,8 @@
 
 pragma solidity ^0.8.20;
 
-import {IERC1643CMTAT, IERC1643} from "./draft-IERC1643CMTAT.sol";
+import {IERC1643CMTAT} from "./draft-IERC1643CMTAT.sol";
+import {IERC1643} from "./draft-IERC1643.sol";
 
 /**
 * The issuer must be able to “deactivate” the smart contract, to prevent execution of transactions on
@@ -193,5 +194,4 @@ interface ICMTATDebt {
      */
     function debt() external view returns(DebtInformation memory debtInformation_);
 }
-
 

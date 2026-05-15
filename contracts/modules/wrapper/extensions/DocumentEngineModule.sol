@@ -5,7 +5,7 @@ pragma solidity ^0.8.20;
 /* ==== OpenZeppelin=== */
 import {Initializable} from "@openzeppelin/contracts/proxy/utils/Initializable.sol";
 /* ==== Engine === */
-import {IERC1643, IDocumentEngine} from "../../../interfaces/engine/IDocumentEngine.sol";
+import {IERC1643} from "../../../interfaces/engine/IDocumentEngine.sol";
 import {IDocumentEngineModule} from "../../../interfaces/modules/IDocumentEngineModule.sol";
 
 /**

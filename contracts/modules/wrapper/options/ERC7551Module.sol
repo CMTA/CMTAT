@@ -5,7 +5,7 @@ pragma solidity ^0.8.20;
 /* ==== Module === */
 import {ExtraInformationModule} from "../extensions/ExtraInformationModule.sol";
 /* ==== Tokenization === */
-import {IERC1643CMTAT, IERC1643} from "../../../interfaces/tokenization/draft-IERC1643CMTAT.sol";
+import {IERC1643CMTAT} from "../../../interfaces/tokenization/draft-IERC1643CMTAT.sol";
 import {IERC7551Document} from "../../../interfaces/tokenization/draft-IERC7551.sol";
 
 /**

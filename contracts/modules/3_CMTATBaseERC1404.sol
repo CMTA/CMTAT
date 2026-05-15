@@ -5,11 +5,11 @@ pragma solidity ^0.8.20;
 import {CMTATBaseRuleEngine} from "./2_CMTATBaseRuleEngine.sol";
 /* ==== Wrapper === */
 // Use by detectTransferRestriction
-import {ERC20BaseModule, ERC20Upgradeable} from "./wrapper/core/ERC20BaseModule.sol";
+import {ERC20Upgradeable} from "./wrapper/core/ERC20BaseModule.sol";
 // Extensions
-import {ERC20EnforcementModule, ERC20EnforcementModuleInternal} from "./wrapper/extensions/ERC20EnforcementModule.sol";
+import {ERC20EnforcementModule} from "./wrapper/extensions/ERC20EnforcementModule.sol";
 // Controllers
-import {ValidationModuleERC1404, IERC1404, IERC1404Extend} from "./wrapper/extensions/ValidationModule/ValidationModuleERC1404.sol";
+import {ValidationModuleERC1404, IERC1404Extend} from "./wrapper/extensions/ValidationModule/ValidationModuleERC1404.sol";
 import {ValidationModuleRuleEngine} from "./wrapper/extensions/ValidationModule/ValidationModuleRuleEngine.sol";
 
 abstract contract CMTATBaseERC1404 is

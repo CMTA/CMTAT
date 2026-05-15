@@ -11,7 +11,7 @@ import {CMTATBaseAccessControl} from "./1_CMTATBaseAccessControl.sol";
 import {PauseModule}  from "./wrapper/core/PauseModule.sol";
 import {EnforcementModule} from "./wrapper/core/EnforcementModule.sol";
 // Extensions
-import {ERC20EnforcementModule, ERC20EnforcementModuleInternal} from "./wrapper/extensions/ERC20EnforcementModule.sol";
+import {ERC20EnforcementModuleInternal} from "./wrapper/extensions/ERC20EnforcementModule.sol";
 // Controllers
 import {ValidationModuleRuleEngine} from "./wrapper/extensions/ValidationModule/ValidationModuleRuleEngine.sol";
 

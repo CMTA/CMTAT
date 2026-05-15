@@ -13,9 +13,9 @@ import {ERC20MintModule} from "./wrapper/core/ERC20MintModule.sol";
 // Extensions
 import {ExtraInformationModule} from "./wrapper/extensions/ExtraInformationModule.sol";
 import {ERC20EnforcementModule} from "./wrapper/extensions/ERC20EnforcementModule.sol";
-import {DocumentEngineModule,  IERC1643} from "./wrapper/extensions/DocumentEngineModule.sol";
+import {DocumentEngineModule} from "./wrapper/extensions/DocumentEngineModule.sol";
 // options
-import {ERC20BaseModule, ERC20Upgradeable} from "./wrapper/core/ERC20BaseModule.sol";
+import {ERC20BaseModule} from "./wrapper/core/ERC20BaseModule.sol";
  /* ==== Interface and other library === */
 import {ICMTATConstructor} from "../interfaces/technical/ICMTATConstructor.sol";
 import {CMTATBaseCommon} from "./0_CMTATBaseCommon.sol";

@@ -9,8 +9,8 @@ import {ERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/
 import {IERC7802} from "../../../interfaces/technical/IERC7802.sol";
 import {IBurnFromERC20} from "../../../interfaces/technical/IMintBurnToken.sol";
 import {IERC20Allowance} from "../../../interfaces/technical/IERC20Allowance.sol";
-import {ERC20BurnModule, ERC20BurnModuleInternal} from "../core/ERC20BurnModule.sol";
-import {ERC20MintModule, ERC20MintModuleInternal} from "../core/ERC20MintModule.sol";
+import {ERC20BurnModule} from "../core/ERC20BurnModule.sol";
+import {ERC20MintModule} from "../core/ERC20MintModule.sol";
 /**
  * @title ERC20CrossChainModule (ERC-7802)
  * @dev 

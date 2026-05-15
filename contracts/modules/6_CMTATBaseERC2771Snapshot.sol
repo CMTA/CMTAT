@@ -4,7 +4,7 @@ pragma solidity ^0.8.20;
 
 import {ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
 import {ERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
-import {CMTATBaseERC2771, ERC2771ContextUpgradeable} from "./5_CMTATBaseERC2771.sol";
+import {CMTATBaseERC2771} from "./5_CMTATBaseERC2771.sol";
 import {CMTATBaseERC20CrossChain} from "./4_CMTATBaseERC20CrossChain.sol";
 import {CMTATBaseSnapshot} from "./0_CMTATBaseSnapshot.sol";
 import {SnapshotEngineModule} from "./wrapper/extensions/SnapshotEngineModule.sol";
