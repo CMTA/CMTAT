@@ -595,7 +595,7 @@ All related interfaces are defined in the interface file [draft-IERC7943.sol](..
 | **Error**                            |                                                              |
 | `ERC7943CannotSend`                  | `ValidationModule.sol`                                       |
 | `ERC7943CannotReceive`               | `ValidationModule.sol`                                       |
-| `ERC7943CannotTransfer`              | `CMTATBaseCore.sol`, `CMTATBaseAllowlist`, `CMTATBaseRuleEngine` |
+| `ERC7943CannotTransfer`              | Defined in `draft-IERC7943.sol` (interface-level; currently not reverted directly by CMTAT runtime paths) |
 | `ERC7943InsufficientUnfrozenBalance` | [ERC20EnforcementModuleInternal.sol](../contracts/modules/internal/ERC20EnforcementModuleInternal.sol) |
 | **Event**                            | [ERC20EnforcementModuleInternal.sol](../contracts/modules/internal/ERC20EnforcementModuleInternal.sol) |
 | `Frozen`                             |                                                              |
@@ -616,14 +616,15 @@ transfer(to, 100)
 ├─ Is receiver frozen? ──────────────→ revert ERC7943CannotReceive(account)
 │
 ├─ RuleEngine says no? ─────────────→ RuleEngine reverts with its own errors
-├─ Other check (transferred) says no? ─────────────→ revert ERC7943CannotTransfer(...)
+├─ Other check (transferred) says no? ─────────────→ RuleEngine/custom validation errors
 │
 ├─ Not enough active balance? ───────→ revert ERC7943InsufficientUnfrozenBalance(...)
 │
 └─ Transfer executes
 ```
 
-There are four ERC-7943 errors used in this workflow: `ERC7943CannotSend`, `ERC7943CannotReceive`, `ERC7943CannotTransfer` and `ERC7943InsufficientUnfrozenBalance`
+There are three ERC-7943 errors currently used in this workflow: `ERC7943CannotSend`, `ERC7943CannotReceive` and `ERC7943InsufficientUnfrozenBalance`.  
+`ERC7943CannotTransfer` is kept in the interface for specification completeness and potential future use.
 
 
 
@@ -2888,9 +2889,15 @@ Here are the reports produced by [Aderyn](https://github.com/Cyfrin/aderyn):
 
 | Version | File                                                         |
 | ------- | ------------------------------------------------------------ |
-| v3.2.0  | [v3.2.0-aderyn-report.md](./security/tools/aderyn/v3.2.0-aderyn-report.md) |
-| v3.1.0  | [v3.1.0-aderyn-report.md](./security/tools/aderyn/v3.1.0-aderyn-report.md) |
-| v3.0.0  | [v3.0.0-aderyn-report.md](./security/tools/aderyn/v3.0.0-aderyn-report.md) |
+| v3.3.0  | [v3.3.0-aderyn-report.md](./security/tools/aderyn/v3.3.0-aderyn-report.md)<br />[v3.3.0-aderyn-feedback.md](./security/tools/aderyn/v3.3.0-aderyn-feedback.md) |
+| v3.0.0  | [v3.0.0-aderyn-report.md](./security/tools/aderyn/archive/3.0.0-aderyn-report.md) |
+
+Summary (v3.3.0):
+
+| Category | Tool Severity | Count | CMTAT Maintainer Assessment | Status |
+| ------- | ------------- | ----- | --------------------------- | ------ |
+| H-1..H-2 | High | 2 | Mixed (false positives + design choice) | Reviewed |
+| L-1..L-10 | Low | 10 | Mixed (valid, design choices, style/tooling) | Reviewed |
 
 #### [Slither](https://github.com/crytic/slither)
 
@@ -2898,11 +2905,20 @@ Here are the reports produced by [Slither](https://github.com/crytic/slither):
 
 | Version | File                                                         |
 | ------- | ------------------------------------------------------------ |
-| v3.2.0  | [v3.2.0-slither-report.md](./security/tools/slither/v3.2.0-slither-report.md) |
-| v3.1.0  | [v3.1.0-slither-report.md](./security/tools/slither/v3.1.0-slither-report.md) |
-| v3.0.0  | [v3.0.0-slither-report.md](./security/tools/slither/v3.0.0-slither-report.md) |
-| v2.5.0  | [v2.5.0-slither-report.md](./security/tools/slither/v2.5.0-slither-report.md) |
-| v2.3.0  | [v2.3.0-slither-report.md](./security/tools/slither/v2.3.0-slither-report.md) |
+| v3.3.0  | [v3.3.0-slither-report.md](./security/tools/slither/v3.3.0-slither-report.md)<br />[v3.3.0-slither-feedback.md](./security/tools/slither/v3.3.0-slither-feedback.md) |
+| v3.0.0  | [v3.0.0-slither-report.md](./security/tools/slither/archive/v3.0.0-slither-report.md) |
+| v2.3.0  | [v2.3.0-slither-report.md](./security/tools/slither/archive/v2.3.0-slither-report.md) |
+
+Summary (v3.3.0):
+
+| Detector | Tool Severity | Count | CMTAT Maintainer Assessment | Status |
+| ------- | ------------- | ----- | --------------------------- | ------ |
+| `uninitialized-local` | Medium | 1 | Under review (potential correctness) | Open |
+| `calls-loop` | Low | 28 | Design choice / context dependent | Accepted |
+| `assembly` | Informational | 13 | Expected pattern (ERC-7201-style slots) | Accepted |
+| `dead-code` | Informational | 2 | Cleanup candidate, no direct security impact | Open |
+| `naming-convention` | Informational | 56 | Style-only | Closed |
+| `unindexed-event-address` | Informational | 1 | Minor optimization item | Accepted |
 
 #### [Mythril](https://github.com/Consensys/mythril)
 

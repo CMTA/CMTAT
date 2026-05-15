@@ -1,161 +1,66 @@
-# CMTA Token (CMTAT)
+## Foundry
 
-> Latest audited release: [v3.0.0](https://github.com/CMTA/CMTAT/releases/tag/v3.0.0)
->
-> Latest release: [v3.2.0](https://github.com/CMTA/CMTAT/releases/tag/v3.2.0)
+**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
 
-CMTAT is a blockchain-agnostic open-source **security token framework**. This repository provides the Solidity reference implementation for EVM-compatible blockchains such as Ethereum, Optimism, Arbitrum, and Polygon PoS. It is developed and maintained by the [Capital Markets and Technology Association](https://www.cmta.ch/) (CMTA).  
-It provides a modular implementation focused on regulated issuance and lifecycle management (transfer restrictions, enforcement, pause/deactivation, supply controls, documentation, and optional cross-chain features), with multiple deployment variants (standalone and upgradeable) to fit different product and jurisdiction requirements.
+Foundry consists of:
 
-## What is CMTAT?
-
-CMTAT extends the standard [ERC-20](https://eips.ethereum.org/EIPS/eip-20) token with compliance features required for regulated financial instruments:
-
-| Feature | Purpose | Standards | Module Scope |
-|---|---|---|---|
-| **Pause** | Freeze all transfers globally (e.g., during corporate actions) | ERC-3643, ERC-7551 (eWpG profile) | Core |
-| **Deactivate** | Permanently disable token operations when required by lifecycle/governance decisions | CMTAT-specific | Core |
-| **Account Freeze** | Block specific addresses from transferring | ERC-3643 enforcement model, ERC-7943 send/receive checks | Core |
-| **Mint / Burn** | Controlled issuance and redemption of tokens | ERC-3643, ERC-7551 (eWpG profile) | Core |
-| **Batch Mint / Batch Burn** | Process multiple mint or burn operations in a single transaction | ERC-3643 | Core |
-| **Configurable Decimals** | Define token decimals at deployment time | ERC-20-compatible behavior | Core |
-| **Forced Transfer** | Admins can move tokens from frozen accounts | ERC-3643, ERC-7551 (eWpG profile), ERC-7943 | Core/Extension |
-| **Set Name / Symbol** | Update token name and symbol after deployment (supported deployment versions) | ERC-3643 | Core |
-| **Freeze Partial Tokens** | Freeze a specific amount of tokens on an address | ERC-3643, ERC-7551 (eWpG profile), ERC-7943 equivalent (`setFrozenTokens`/`getFrozenTokens`) | Extension |
-| **Transfer Validation** | Plug-in rule engine to restrict transfers by origin, receiver, or amount | ERC-3643, ERC-7551, ERC-7943 | Extension/Option |
-| **Snapshots** | Record balances at a specific point in time (e.g., for dividends) | CMTAT SnapshotEngine integration | Extension/Option |
-| **Documents** | Attach legal documents to the token on-chain | ERC-1643-compatible document model | Extension/Option |
-| **Cross-Chain Mint/Burn** | Cross-chain bridge-oriented mint/burn interface | ERC-7802 | Extension |
-| **Permit** | Signature-based approvals without on-chain approve transaction | ERC-2612 | Deployment-version specific |
-| **Multicall** | Execute multiple calls in one transaction | ERC-6357 | Deployment-version specific |
-| **UUPS Upgradeability** | Upgradeable proxy pattern support | ERC-1822 | Deployment-version specific |
-| **Debt Features** | Debt lifecycle and credit-event related capabilities | CMTAT Debt modules | Deployment-version specific |
-| **ERC-1363 Payable Token Hooks** | Token callbacks (`transferAndCall` / `approveAndCall`) | ERC-1363 | Deployment-version specific |
-
-## Who uses CMTAT?
-
-CMTAT is used in production by major financial institutions including **UBS**, **Taurus SA**, **Daura**, **Fireblocks**, and **Syz Group** to tokenize equities, bonds, structured products, money market funds, and stablecoins.
-
-### One Example Per Use Case
-
-- **Equities**: [Magic Tomato SA (2022)](https://www.taurushq.com/blog/magictomato-1st-foodtech-to-tokenise-its-shares-and-raise-equity/), [Qoqa Brew (2022)](https://www.taurushq.com/blog/qoqa-brew-brasserie-du-futur-tokenisation-et-financement-by-taurus/), [Cité Gestion SA (2023)](https://cmta.ch/news-articles/cite-gestion-becomes-cmta-certified-issuer-of-tokenized-shares), [CODE41 (2023)](https://www.taurushq.com/blog/code41-tokenises-its-shares-for-a-capital-increase-amongst-its-community-through-taurus-technology/).
-- **Debt / Bonds**: [UBS Project Guardian digital bond (2024)](https://www.linkedin.com/posts/cmta-ch_shareubs-activity-7137735139438002177-oDUL), [SCCF tokenized trade-finance notes (2023)](https://www.taurushq.com/blog/sccf-and-horizon-capital-leverage-taurus-technology-to-execute-landmark-tokenized-trade-finance-debt-transaction/).
-- **Structured Products**: [UBS tokenized warrant on Ethereum (2024)](https://www.ubs.com/global/en/media/display-page-ndp/en-20240207-tokenized-warrant.html), [UBS China AMC (2024)](https://www.ubs.com/global/en/media/display-page-ndp/en-20241114-ubs-asset-management-launches-tokenized-money-market-fund-and-tokenized-variable-capital-company-in-hong-kong.html).
-- **Stablecoins**: **Zand Trust** (wholly-owned subsidiary of Zand Bank) issued an AED stablecoin using CMTAT v3.0.0 via Taurus infrastructure; [Taurus private stablecoin deployment note](https://www.taurushq.com/blog/taurus-deploys-the-first-private-stablecoin-contract/).
-- **Tokenized Market Funds**: [UBS uMINT (2024)](https://www.ubs.com/global/en/media/display-page-ndp/en-20241101-first-tokenized-investment-fund.html), [Franklin Templeton BENJI on Avalanche](https://www.avax.network/about/blog/franklin-templeton-launches-tokenized-money-market-fund-benji-avalanche) (comparison reference in CMTAT docs).
-- **Tokenized Artwork**: [Syz Art tokenization](https://www.syzgroup.com/en/tokenization-syzart).
-
-## Supported Financial Instruments
-
-| Product | Deployment Version |
-|---|---|
-| Equities | CMTAT Standard |
-| Equities (Germany / eWpG) | CMTAT ERC-7551 |
-| Debt / Bonds | CMTAT Debt |
-| Stablecoins | CMTAT Light |
-| Allowlist / Whitelist | CMTAT Allowlist |
-| Permit + Multicall | CMTAT Permit |
-
-Each product comes in a **standalone** (immutable) or **upgradeable** (proxy) variant.
-
-## Key Standards
-
-CMTAT implements a wide set of Ethereum standards:
-
-- **[ERC-20](https://eips.ethereum.org/EIPS/eip-20)** — fungible token
-- **[ERC-3643](https://eips.ethereum.org/EIPS/eip-3643)** — security token (without on-chain identity)
-- **[ERC-7551](https://ethereum-magicians.org/t/erc-7551-crypto-security-token-smart-contract-interface-ewpg-reworked/25477)** — crypto security token interface (Germany eWpG profile)
-- **[ERC-7943 (uRWA)](https://eips.ethereum.org/EIPS/eip-7943)** — universal RWA interface
-- **[ERC-1404](https://github.com/ethereum/EIPs/issues/1404)** — restricted token
-- **[ERC-2612 Permit](https://eips.ethereum.org/EIPS/eip-2612)** — gasless approvals (specific deployment versions only)
-- **[ERC-1363](https://eips.ethereum.org/EIPS/eip-1363)** — payable token hooks (specific deployment versions only)
-- **[ERC-6357 Multicall](https://eips.ethereum.org/EIPS/eip-6357)** — batched calls in one transaction (specific deployment versions only)
-- **[ERC-2771](https://eips.ethereum.org/EIPS/eip-2771)** — meta-transactions (gas sponsorship / gasless)
-- **[ERC-7802](https://eips.ethereum.org/EIPS/eip-7802)** — cross-chain transfers
-- **[ERC-7201](https://eips.ethereum.org/EIPS/eip-7201)** — storage namespaces for upgradeability
-- **[UUPS Proxy (ERC-1822 pattern)](https://eips.ethereum.org/EIPS/eip-1822)** — upgradeability pattern (specific deployment versions only)
-
-## Cross-Chain Compatibility
-
-CMTAT provides cross-chain compatibility through `ERC20CrossChain` and related deployment options:
-
-- **ERC-7802**: native `crosschainMint` / `crosschainBurn` support for bridge-style interoperability.
-- **Chainlink CCIP (CCT)**: compatible burn/mint token flow, including `getCCIPAdmin()` support through the `CCIPModule`.
-- **LayerZero**: supported through external OFT adapters (ERC-3643 and ERC-7802 variants) in [CMTAT-LayerZero](https://github.com/CMTA/CMTAT-LayerZero).
-
-For full architecture, permissions, and operational notes, see:
-- [Cross-chain bridge integration](./doc/technical/cross-chain-bridge-integration.md)
-- [Main documentation](./doc/README.md)
-
-## Other Blockchain Implementations
-
-CMTAT is blockchain-agnostic and also has implementations/adaptations beyond this Solidity EVM repository:
-
-- **Solana**: [CMTAT-Solana](https://github.com/CMTA/CMTAT-Solana)
-- **Tezos**:
-  - Official SmartPy implementation: [CMTAT-Tezos-FA2](https://github.com/CMTA/CMTAT-Tezos-FA2)
-  - LIGO implementation: [CMTAT-Ligo](https://github.com/CMTA/CMTAT-Ligo)
-- **Aztec (privacy-focused variant)**: [private-CMTAT-aztec](https://github.com/CMTA/private-CMTAT-aztec)
-- **Zama Confidential variant**: [CMTAT-Confidential](https://github.com/CMTA/CMTAT-Confidential)
-  -  A confidential security token implementation combining CMTAT compliance features with the Zama Confidential Blockchain Protocol for private balances.
-
-
-## Security
-
-CMTAT has been audited by [ABDK](https://abdk.consulting) (v1.0, v2.3.0) and [Halborn](https://www.halborn.com) (v3.0.0), with ~99% test coverage across 3,078 automated tests.
-
-In addition to external audits and test coverage, CMTAT security reviews also include static analysis tools such as [Aderyn](https://github.com/Cyfrin/aderyn) and [Slither](https://github.com/crytic/slither), as well as AI-assisted auditing tools such as [Nethermind Audit Agent](https://auditagent.nethermind.io).
-
-See [SECURITY.md](./SECURITY.md) for the responsible disclosure policy.
-
-## License
-
-[MPL-2.0](./LICENSE.md) — weak copyleft, allows commercial use.
-
-### License Comparison
-
-| Topic | MPL-2.0 | MIT | GNU GPL (v3) | Apache-2.0 |
-|---|---|---|---|---|
-| Open source | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> |
-| Commercial use | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> |
-| Copyleft level | Weak (file-level) | None (permissive) | Strong (project-level) | None (permissive) |
-| If you modify licensed code | Must publish modified MPL files | No obligation to publish | Must publish derivative source under GPL | No obligation to publish |
-| Proprietary code mixing | Allowed (keep MPL files under MPL) | Allowed | Restricted by GPL copyleft | Allowed |
-| Patent license | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> (explicit) | <strong><span style="color: #b00020;">&#x2718;</span></strong> (not explicit) | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> (via GPLv3 terms) | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> (explicit) |
-| Notice / attribution | Required | Required | Required | Required (+ NOTICE handling) |
-
-`Similarity`: all four licenses allow commercial use and redistribution.  
-`Key difference`: MPL-2.0 is a middle ground between permissive licenses (MIT/Apache-2.0) and strong copyleft (GPL): only modified MPL-covered files must remain open.
-
-**What is the patent license?**  
-A patent license in an open-source license means contributors grant users permission to use any patents that would otherwise be needed to use their contributed code. This reduces patent-risk for adopters. `Apache-2.0`, `MPL-2.0`, and `GPLv3` include explicit patent protections (with termination clauses if someone starts a patent lawsuit over the covered software), while `MIT` does not include an explicit patent grant.
-
-## Getting Started
-
-```bash
-# Install dependencies
-npm install
-
-# Compile contracts
-npm run hardhat:compile
-
-# Run all tests
-npm run test
-
-# Generate coverage report
-npm run coverage
-```
+- **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
+- **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
+- **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
+- **Chisel**: Fast, utilitarian, and verbose solidity REPL.
 
 ## Documentation
 
-Full specification, architecture details, module descriptions, and ERC compatibility tables are in **[doc/README.md](./doc/README.md)**.
+https://book.getfoundry.sh/
 
-Additional resources:
+## Usage
 
-- [Usage Guide](./doc/USAGE.md)
-- Specification
-  - [Specification PDF (v3.0.0)](./doc/specification/CMTATSpecificationV3.0.0.pdf)
-  - [Specification PDF (v3.2.0)](./doc/specification/CMTATSpecificationV3.2.0.pdf)
-- [Security Reports](./doc/security/)
-- [CMTA Website](https://cmta.ch/)
-- [GitHub Releases](https://github.com/CMTA/CMTAT/releases)
+### Build
+
+```shell
+$ forge build
+```
+
+### Test
+
+```shell
+$ forge test
+```
+
+### Format
+
+```shell
+$ forge fmt
+```
+
+### Gas Snapshots
+
+```shell
+$ forge snapshot
+```
+
+### Anvil
+
+```shell
+$ anvil
+```
+
+### Deploy
+
+```shell
+$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
+```
+
+### Cast
+
+```shell
+$ cast <subcommand>
+```
+
+### Help
+
+```shell
+$ forge --help
+$ anvil --help
+$ cast --help
+```

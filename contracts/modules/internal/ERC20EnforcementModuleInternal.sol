@@ -86,6 +86,7 @@ abstract contract ERC20EnforcementModuleInternal is ERC20Upgradeable, IERC7943Fu
         } 
         ERC20EnforcementModuleStorage storage $ = _getEnforcementModuleStorage();
         uint256 frozenTokensLocal = $._frozenTokens[account];
+        // default value is 0 for uninitialized variable
         uint256 activeBalance;
         // Frozen amounts can be > balance through setFrozenTokens.
         if (frozenTokensLocal < balance) {
