@@ -18,6 +18,12 @@ contracts
 │   ├── ERC7551
 │   │   ├── CMTATStandaloneERC7551.sol
 │   │   └── CMTATUpgradeableERC7551.sol
+│   ├── permit
+│   │   ├── CMTATStandalonePermit.sol
+│   │   └── CMTATUpgradeablePermit.sol
+│   ├── snapshot
+│   │   ├── CMTATStandaloneSnapshot.sol
+│   │   └── CMTATUpgradeableSnapshot.sol
 │   └── light
 │       ├── CMTATStandaloneLight.sol
 │       └── CMTATUpgradeableLight.sol
@@ -86,16 +92,20 @@ contracts
 │   ├── 0_CMTATBaseCommon.sol
 │   ├── 0_CMTATBaseCore.sol
 │   ├── 0_CMTATBaseGeneric.sol
+│   ├── 0_CMTATBaseSnapshot.sol
 │   ├── 1_CMTATBaseAccessControl.sol
 │   ├── 2_CMTATBaseAllowlist.sol
 │   ├── 2_CMTATBaseRuleEngine.sol
 │   ├── 3_CMTATBaseDebt.sol
 │   ├── 3_CMTATBaseERC1404.sol
 │   ├── 4_CMTATBaseERC20CrossChain.sol
+│   ├── 4_CMTATBaseERC2612.sol
 │   ├── 5_CMTATBaseDebtEngine.sol
 │   ├── 5_CMTATBaseERC2771.sol
-│   ├── 6_CMTATBaseERC1363.sol
-│   ├── 6_CMTATBaseERC7551.sol
+│   ├── 6_CMTATBaseERC2771Snapshot.sol
+│   ├── 6_CMTATBaseERC7551Enforcement.sol
+│   ├── 7_CMTATBaseERC1363.sol
+│   ├── 7_CMTATBaseERC7551.sol
 │   ├── internal
 │   │   ├── AllowlistModuleInternal.sol
 │   │   ├── common
@@ -123,6 +133,7 @@ contracts
 │       │   ├── ExtraInformationModule.sol
 │       │   ├── SnapshotEngineModule.sol
 │       │   └── ValidationModule
+│       │       ├── ValidationModuleAllowance.sol
 │       │       ├── ValidationModuleERC1404.sol
 │       │       └── ValidationModuleRuleEngine.sol
 │       ├── options
@@ -131,8 +142,9 @@ contracts
 │       │   ├── DebtEngineModule.sol
 │       │   ├── DebtModule.sol
 │       │   ├── ERC20CrossChainModule.sol
+│       │   ├── ERC20EnforcementERC7551Module.sol
 │       │   ├── ERC2771Module.sol
 │       │   └── ERC7551Module.sol
 │       └── security
 │           └── AccessControlModule.sol
-32 directories, 105 files
+32 directories, 106 files

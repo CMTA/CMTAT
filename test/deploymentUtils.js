@@ -33,7 +33,7 @@ async function fixture () {
   }
 }
 async function deployCMTATStandalone (forwarder, admin, deployerAddress) {
-  const cmtat = await ethers.deployContract('CMTATStandalone', [
+  const cmtat = await ethers.deployContract('CMTATStandardStandalone', [
     forwarder,
     admin,
     ['CMTA Token', 'CMTAT', DEPLOYMENT_DECIMAL],
@@ -85,6 +85,27 @@ async function deployCMTATERC1363Standalone (forwarder, admin, deployerAddress) 
   return cmtat
 }
 
+async function deployCMTATPermitStandalone (admin, deployerAddress) {
+  const cmtat = await ethers.deployContract('CMTATStandalonePermit', [
+    admin,
+    ['CMTA Token', 'CMTAT', DEPLOYMENT_DECIMAL],
+    ['CMTAT_ISIN', TERMS, 'CMTAT_info'],
+    [ZERO_ADDRESS]
+  ])
+  return cmtat
+}
+
+async function deployCMTATSnapshotStandalone (forwarder, admin, deployerAddress) {
+  const cmtat = await ethers.deployContract('CMTATStandaloneSnapshot', [
+    forwarder,
+    admin,
+    ['CMTA Token', 'CMTAT', DEPLOYMENT_DECIMAL],
+    ['CMTAT_ISIN', TERMS, 'CMTAT_info'],
+    [ZERO_ADDRESS]
+  ])
+  return cmtat
+}
+
 async function deployCMTATLightStandalone (admin, deployerAddress) {
   const cmtat = await ethers.deployContract('CMTATStandaloneLight', [
     admin,
@@ -111,7 +132,7 @@ async function deployCMTATProxyImplementation (
   deployerAddress,
   forwarderIrrevocable
 ) {
-  const cmtat = await ethers.deployContract('CMTATUpgradeable', [
+  const cmtat = await ethers.deployContract('CMTATStandardUpgradeable', [
     forwarderIrrevocable
   ])
   return cmtat
@@ -139,7 +160,7 @@ async function deployCMTATStandaloneWithParameter (
   information_,
   engines
 ) {
-  const cmtat = await ethers.deployContract('CMTATStandalone', [
+  const cmtat = await ethers.deployContract('CMTATStandardStandalone', [
     forwarderIrrevocable,
     admin,
     [nameIrrevocable, symbolIrrevocable, decimalsIrrevocable],
@@ -235,10 +256,54 @@ async function deployCMTATERC7551Proxy (forwarder, admin, deployerAddress) {
   return ETHERS_CMTAT_PROXY
 }
 
+async function deployCMTATPermitProxy (admin, deployerAddress) {
+  const ETHERS_CMTAT_PROXY_FACTORY = await ethers.getContractFactory(
+    'CMTATUpgradeablePermit'
+  )
+  const ETHERS_CMTAT_PROXY = await upgrades.deployProxy(
+    ETHERS_CMTAT_PROXY_FACTORY,
+    [
+      admin,
+      ['CMTA Token', 'CMTAT', DEPLOYMENT_DECIMAL],
+      ['CMTAT_ISIN', TERMS, 'CMTAT_info'],
+      [ZERO_ADDRESS]
+    ],
+    {
+      initializer: 'initialize',
+      constructorArgs: [],
+      from: deployerAddress,
+      unsafeAllow: ['missing-initializer']
+    }
+  )
+  return ETHERS_CMTAT_PROXY
+}
+
 async function deployCMTATProxy (forwarder, admin, deployerAddress) {
   // Ref: https://forum.openzeppelin.com/t/upgrades-hardhat-truffle5/30883/3
   const ETHERS_CMTAT_PROXY_FACTORY = await ethers.getContractFactory(
-    'CMTATUpgradeable'
+    'CMTATStandardUpgradeable'
+  )
+  const ETHERS_CMTAT_PROXY = await upgrades.deployProxy(
+    ETHERS_CMTAT_PROXY_FACTORY,
+    [
+      admin,
+      ['CMTA Token', 'CMTAT', DEPLOYMENT_DECIMAL],
+      ['CMTAT_ISIN', TERMS, 'CMTAT_info'],
+      [ZERO_ADDRESS]
+    ],
+    {
+      initializer: 'initialize',
+      constructorArgs: [forwarder],
+      from: deployerAddress,
+      unsafeAllow: ['missing-initializer']
+    }
+  )
+  return ETHERS_CMTAT_PROXY
+}
+
+async function deployCMTATSnapshotProxy (forwarder, admin, deployerAddress) {
+  const ETHERS_CMTAT_PROXY_FACTORY = await ethers.getContractFactory(
+    'CMTATUpgradeableSnapshot'
   )
   const ETHERS_CMTAT_PROXY = await upgrades.deployProxy(
     ETHERS_CMTAT_PROXY_FACTORY,
@@ -364,7 +429,7 @@ async function deployCMTATProxyWithParameter (
 ) {
   // Ref: https://forum.openzeppelin.com/t/upgrades-hardhat-truffle5/30883/3
   const ETHERS_CMTAT_PROXY_FACTORY = await ethers.getContractFactory(
-    'CMTATUpgradeable'
+    'CMTATStandardUpgradeable'
   )
   const ETHERS_CMTAT_PROXY = await upgrades.deployProxy(
     ETHERS_CMTAT_PROXY_FACTORY,
@@ -398,8 +463,12 @@ module.exports = {
   deployCMTATDebtEngineProxy,
   deployCMTATERC1363Proxy,
   deployCMTATERC1363Standalone,
+  deployCMTATPermitStandalone,
+  deployCMTATSnapshotStandalone,
   deployCMTATERC7551Proxy,
   deployCMTATERC7551Standalone,
+  deployCMTATPermitProxy,
+  deployCMTATSnapshotProxy,
   deployCMTATProxyWithParameter,
   deployCMTATStandaloneWithParameter,
   DEPLOYMENT_DECIMAL,

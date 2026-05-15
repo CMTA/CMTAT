@@ -1,4 +1,5 @@
 const ERC20EnforcementModuleCommon = require('../../common/ERC20EnforcementModuleCommon')
+const ERC20EnforcementERC7551ModuleCommon = require('../../common/ERC20EnforcementERC7551ModuleCommon')
 const {
   deployCMTATProxy,
   fixture,
@@ -13,7 +14,9 @@ describe('Proxy - ERC20EnforcementModule', function () {
       this.admin.address,
       this.deployerAddress.address
     )
+    this.erc7551 = true
   })
 
   ERC20EnforcementModuleCommon()
+  ERC20EnforcementERC7551ModuleCommon()
 })

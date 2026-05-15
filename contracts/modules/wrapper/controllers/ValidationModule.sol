@@ -5,8 +5,7 @@ pragma solidity ^0.8.20;
 /* ==== Module === */
 import {PauseModule}  from "../core/PauseModule.sol";
 import {EnforcementModule} from "../core/EnforcementModule.sol";
-import {IERC7943TransactError} from "../../../interfaces/tokenization/draft-IERC7943.sol";
-import {IERC7943TransactCheck} from "../../../interfaces/tokenization/draft-IERC7943.sol";
+import {IERC7943FungibleSendReceiveError, IERC7943FungibleSendReceiveCheck} from "../../../interfaces/tokenization/draft-IERC7943.sol";
 /**
  * @title Validation module
  * @dev 
@@ -16,15 +15,21 @@ import {IERC7943TransactCheck} from "../../../interfaces/tokenization/draft-IERC
 abstract contract ValidationModule is
     PauseModule,
     EnforcementModule,
-    IERC7943TransactError,
-    IERC7943TransactCheck
+    IERC7943FungibleSendReceiveError,
+    IERC7943FungibleSendReceiveCheck
 {
 
     /*//////////////////////////////////////////////////////////////
                             PUBLIC FUNCTIONS
     //////////////////////////////////////////////////////////////*/
-    function canTransact(address account) public view virtual override(IERC7943TransactCheck) returns (bool allowed) {
-        return _canTransact(account);
+    /// @inheritdoc IERC7943FungibleSendReceiveCheck
+    function canSend(address account) public view virtual override(IERC7943FungibleSendReceiveCheck) returns (bool allowed) {
+        return _canSend(account);
+    }
+
+    /// @inheritdoc IERC7943FungibleSendReceiveCheck
+    function canReceive(address account) public view virtual override(IERC7943FungibleSendReceiveCheck) returns (bool allowed) {
+        return _canReceive(account);
     }
     /*//////////////////////////////////////////////////////////////
                             INTERNAL/PRIVATE FUNCTIONS
@@ -58,10 +63,10 @@ abstract contract ValidationModule is
     ) internal view virtual {
         // Mint
         if(from == address(0)){
-             _canMintBurnByModuleAndRevert(to);
+             _canMintByModuleAndRevert(to);
         } // burn
         else if(to == address(0)){
-            _canMintBurnByModuleAndRevert(from);
+            _canBurnByModuleAndRevert(from);
         } // Standard transfer
         else {
              _canTransferStandardByModuleAndRevert(spender, from, to);
@@ -86,19 +91,28 @@ abstract contract ValidationModule is
     }
 
     /**
-    * @dev check if the contract is deactivated or the address is frozen
-    * check relevant for mint and burn operations
-    * Use forcedTransfer (or forcedBurn) to burn tokens from a frozen address
-    */ 
-    function _canMintBurnByModuleAndRevert(
-        address target
+    * @dev Reverts if mint is not allowed for `to`.
+    * Checks deactivation and frozen status of the recipient.
+    */
+    function _canMintByModuleAndRevert(
+        address to
     ) internal view virtual {
-        // can not mint or burn if the contract is deactivated
         _requireNotDeactivated();
-        // cannot burn if target is frozen (used forcedTransfer instead if available)
-        // cannot mint if target is frozen
-        if(EnforcementModule.isFrozen(target)){
-            revert ERC7943CannotTransact(target);
+        if(EnforcementModule.isFrozen(to)){
+            revert ERC7943CannotReceive(to);
+        }
+    }
+
+    /**
+    * @dev Reverts if burn is not allowed for `from`.
+    * Checks deactivation and frozen status of the token holder.
+    */
+    function _canBurnByModuleAndRevert(
+        address from
+    ) internal view virtual {
+        _requireNotDeactivated();
+        if(EnforcementModule.isFrozen(from)){
+            revert ERC7943CannotSend(from);
         }
     }
 
@@ -126,17 +140,13 @@ abstract contract ValidationModule is
         address from,
         address to
     ) internal view virtual {
-        address target;
         if (EnforcementModule.isFrozen(spender)){
-            target = spender;
+            revert ERC7943CannotSend(spender);
         } else if (EnforcementModule.isFrozen(from)) {
-            target = from;
+            revert ERC7943CannotSend(from);
         } else if(EnforcementModule.isFrozen(to) ){
-            target = to;
-        } else {
-            return;
+            revert ERC7943CannotReceive(to);
         }
-        revert ERC7943CannotTransact(target);
     }
 
   function _canTransferStandardByModule(
@@ -167,17 +177,21 @@ abstract contract ValidationModule is
     }
 
 
-    /** 
-    * @notice Checks if a specific account is allowed to transact according to token rules.
-    * @dev This is often used for allowlist/KYC/KYB/AML checks.
-    * @param account The address to check.
-    * @return allowed True if the account is allowed, false otherwise.
+    /**
+    * @dev Returns true if `account` is allowed to send tokens.
+    * Base check: account must not be frozen.
+    * Override in subclasses to add allowlist or other checks.
     */
-    function _canTransact(address account) internal view virtual returns (bool allowed) {
-        if(EnforcementModule.isFrozen(account)) {
-            return false;
-        } else {
-            return true;
-        }
+    function _canSend(address account) internal view virtual returns (bool allowed) {
+        return !EnforcementModule.isFrozen(account);
+    }
+
+    /**
+    * @dev Returns true if `account` is allowed to receive tokens.
+    * Base check: account must not be frozen.
+    * Override in subclasses to add allowlist or other checks.
+    */
+    function _canReceive(address account) internal view virtual returns (bool allowed) {
+        return !EnforcementModule.isFrozen(account);
     }
 }

@@ -8,20 +8,16 @@ const SnapshotModuleZeroPlannedSnapshotTest = require('../global/SnapshotModuleZ
 const SnapshotModuleSetSnapshotEngineCommon = require('../SnapshotModuleSetSnapshotEngineCommon')
 
 const {
-  deployCMTATProxy,
-  deployCMTATProxyWithParameter,
+  deployCMTATSnapshotProxy,
   fixture,
-  loadFixture,
-  DEPLOYMENT_DECIMAL,
-  TERMS
+  loadFixture
 } = require('../../../deploymentUtils')
-const { ZERO_ADDRESS } = require('../../../utils')
 function SnapshotModuleProxyCommon () {
   context('Proxy - SnapshotModule', function () {
     beforeEach(async function () {
       Object.assign(this, await loadFixture(fixture))
       if (!this.CMTATAlreadyDeployed) {
-        this.cmtat = await deployCMTATProxy(
+        this.cmtat = await deployCMTATSnapshotProxy(
           this._.address,
           this.admin.address,
           this.deployerAddress.address
@@ -40,7 +36,7 @@ function SnapshotModuleProxyCommon () {
     SnapshotModuleCommonUnschedule()
     SnapshotModuleCommonGetNextSnapshot()
     // Set snapshot Engine
-    SnapshotModuleSetSnapshotEngineCommon
+    SnapshotModuleSetSnapshotEngineCommon()
   })
 }
 module.exports = SnapshotModuleProxyCommon

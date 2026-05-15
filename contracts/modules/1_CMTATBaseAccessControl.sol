@@ -14,7 +14,6 @@ import {ERC20MintModule} from "./wrapper/core/ERC20MintModule.sol";
 import {ExtraInformationModule} from "./wrapper/extensions/ExtraInformationModule.sol";
 import {ERC20EnforcementModule} from "./wrapper/extensions/ERC20EnforcementModule.sol";
 import {DocumentEngineModule,  IERC1643} from "./wrapper/extensions/DocumentEngineModule.sol";
-import {SnapshotEngineModule} from "./wrapper/extensions/SnapshotEngineModule.sol";
 // options
 import {ERC20BaseModule, ERC20Upgradeable} from "./wrapper/core/ERC20BaseModule.sol";
  /* ==== Interface and other library === */
@@ -44,10 +43,10 @@ abstract contract CMTATBaseAccessControl is
      * @dev 
      * We can not use type(IERC5679).interfaceId instead of 0xd0017968
      * because IERC5679 inherits from two interfaces (IERC5679Burn and Mint)
-     * 0x29388973 is the interfaceId of ERC-7943
+     * 0x3edbb4c4 is the interfaceId of ERC-7943
      */
     function supportsInterface(bytes4 interfaceId) public view virtual override(AccessControlUpgradeable, IERC165) returns (bool) {
-        return interfaceId == 0xd0017968 || interfaceId == 0x29388973 || AccessControlUpgradeable.supportsInterface(interfaceId);
+        return interfaceId == 0xd0017968 || interfaceId == 0x3edbb4c4 || AccessControlUpgradeable.supportsInterface(interfaceId);
     }
 
 
@@ -98,9 +97,4 @@ abstract contract CMTATBaseAccessControl is
     */
     function _authorizeForcedTransfer() internal virtual override(ERC20EnforcementModule) onlyRole(DEFAULT_ADMIN_ROLE){}
 
-    /** 
-    * @custom:access-control
-    * - the caller must have the `SNAPSHOOTER_ROLE`.
-    */
-    function _authorizeSnapshots() internal virtual override(SnapshotEngineModule) onlyRole(SNAPSHOOTER_ROLE){}
 }

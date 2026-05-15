@@ -21,6 +21,7 @@ const ERC20CrossChainModuleCommon = require('../../common/ERC20CrossChainModuleC
 const CCIPModuleCommon = require('../../common/CCIPModuleCommon')
 // Extensions
 const ERC20EnforcementModuleCommon = require('../../common/ERC20EnforcementModuleCommon')
+const ERC20EnforcementERC7551ModuleCommon = require('../../common/ERC20EnforcementERC7551ModuleCommon')
 const DocumentModuleCommon = require('../../common/DocumentModule/DocumentModuleCommon')
 const ExtraInfoModuleCommon = require('../../common/ExtraInfoModuleCommon')
 const VALUE = 20n
@@ -32,6 +33,7 @@ describe('CMTAT ERC1363 - Standalone', function () {
       this.admin.address,
       this.deployerAddress.address
     )
+    this.erc7551 = true
     this.dontCheckTimestamp = true
     const ReceiverMockFactory = await ethers.getContractFactory(
       'ERC1363ReceiverMock'
@@ -89,6 +91,7 @@ describe('CMTAT ERC1363 - Standalone', function () {
   CCIPModuleCommon()
   // Extensions
   ERC20EnforcementModuleCommon()
+  ERC20EnforcementERC7551ModuleCommon()
   DocumentModuleCommon()
   ExtraInfoModuleCommon()
 })

@@ -156,7 +156,7 @@ function ERC20CrossChainModuleCommon () {
       await expect(
         this.cmtat.connect(this.admin).crosschainBurn(this.address1, VALUE)
       )
-        .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotTransact')
+        .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotSend')
         .withArgs(this.address1.address)
     })
   })
@@ -290,7 +290,7 @@ function ERC20CrossChainModuleCommon () {
       const VALUE = 20
       const VALUE_TYPED = ethers.Typed.uint256(20)
       await expect(this.cmtat.connect(this.address1).burn(VALUE_TYPED))
-        .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotTransact')
+        .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotSend')
         .withArgs(this.address1.address)
     })
   })
@@ -391,8 +391,41 @@ function ERC20CrossChainModuleCommon () {
         .setAddressFrozen(this.address1, true)
       // Act
       await expect(this.cmtat.connect(this.admin).burnFrom(this.address1, 20n))
-        .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotTransact')
+        .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotSend')
         .withArgs(this.address1)
+    })
+
+    it('testBurnFromPropagatesSpenderToRuleEngine', async function () {
+      if (!this.cmtat.setRuleEngine) {
+        return
+      }
+
+      this.ruleEngineMock = await ethers.deployContract('RuleEngineMock', [this.admin])
+      await this.cmtat.connect(this.admin).setRuleEngine(this.ruleEngineMock)
+      await this.cmtat.connect(this.admin).grantRole(BURNER_FROM_ROLE, this.address2)
+      await this.cmtat.connect(this.address1).approve(this.address2, 20n)
+
+      await expect(
+        this.cmtat.connect(this.address2).burnFrom(this.address1, 10n)
+      ).to.be.revertedWithCustomError(
+        this.ruleEngineMock,
+        'RuleEngine_InvalidTransfer'
+      ).withArgs(this.address1, ZERO_ADDRESS, 10n)
+    })
+
+    it('testBurnFromWithRuleEngineAuthorizedSpenderCanBurn', async function () {
+      if (!this.cmtat.setRuleEngine) {
+        return
+      }
+
+      this.ruleEngineMock = await ethers.deployContract('RuleEngineMock', [this.admin])
+      await this.cmtat.connect(this.admin).setRuleEngine(this.ruleEngineMock)
+      await this.cmtat.connect(this.address1).approve(this.admin, 20n)
+
+      await expect(
+        this.cmtat.connect(this.admin).burnFrom(this.address1, 10n)
+      ).to.not.be.reverted
+      expect(await this.cmtat.balanceOf(this.address1)).to.equal(40n)
     })
   })
   context('CrossChainMinting', function () {
@@ -502,8 +535,62 @@ function ERC20CrossChainModuleCommon () {
       await expect(
         this.cmtat.connect(this.admin).crosschainMint(this.address1, VALUE1)
       )
-        .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotTransact')
+        .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotReceive')
         .withArgs(this.address1)
+    })
+
+    it('testCrosschainMintPropagatesSpenderToRuleEngine', async function () {
+      if (!this.cmtat.setRuleEngine) {
+        return
+      }
+
+      this.ruleEngineMock = await ethers.deployContract('RuleEngineMock', [this.admin])
+      await this.cmtat.connect(this.admin).setRuleEngine(this.ruleEngineMock)
+      await this.cmtat.connect(this.admin).grantRole(CROSS_CHAIN_ROLE, this.address2)
+
+      await expect(
+        this.cmtat.connect(this.address2).crosschainMint(this.address1, 10n)
+      ).to.be.revertedWithCustomError(
+        this.ruleEngineMock,
+        'RuleEngine_InvalidTransfer'
+      ).withArgs(ZERO_ADDRESS, this.address1, 10n)
+    })
+
+    it('testCrosschainMintWithRuleEngineAuthorizedSpenderCanMint', async function () {
+      if (!this.cmtat.setRuleEngine) {
+        return
+      }
+
+      this.ruleEngineMock = await ethers.deployContract('RuleEngineMock', [this.admin])
+      await this.cmtat.connect(this.admin).setRuleEngine(this.ruleEngineMock)
+
+      await expect(
+        this.cmtat.connect(this.admin).crosschainMint(this.address1, 10n)
+      ).to.not.be.reverted
+      expect(await this.cmtat.balanceOf(this.address1)).to.equal(10n)
+    })
+  })
+
+  context('CrosschainBurn - RuleEngine spender propagation', function () {
+    beforeEach(async function () {
+      await this.cmtat.connect(this.admin).mint(this.address1, 50n)
+    })
+
+    it('testCrosschainBurnPropagatesSpenderToRuleEngine', async function () {
+      if (!this.cmtat.setRuleEngine) {
+        return
+      }
+
+      this.ruleEngineMock = await ethers.deployContract('RuleEngineMock', [this.admin])
+      await this.cmtat.connect(this.admin).setRuleEngine(this.ruleEngineMock)
+      await this.cmtat.connect(this.admin).grantRole(CROSS_CHAIN_ROLE, this.address2)
+
+      await expect(
+        this.cmtat.connect(this.address2).crosschainBurn(this.address1, 10n)
+      ).to.be.revertedWithCustomError(
+        this.ruleEngineMock,
+        'RuleEngine_InvalidTransfer'
+      ).withArgs(this.address1, ZERO_ADDRESS, 10n)
     })
   })
 }

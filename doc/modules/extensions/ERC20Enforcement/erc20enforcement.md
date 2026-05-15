@@ -1,6 +1,8 @@
 # ERC20 Enforcement Module
 
-This document defines ERC20 Enforcement Module for the CMTA Token specification.
+This document defines the ERC20 Enforcement Module for the CMTA Token specification.
+
+> **Note:** ERC-7551 specific enforcement (bytes data overloads for `forcedTransfer`, `freezePartialTokens`, `unfreezePartialTokens`, and `getActiveBalanceOf`) is provided by `ERC20EnforcementERC7551Module`. See [ERC-7551 Module](../../options/erc7551/erc7551.md#erc20enforcementerc7551module).
 
 [TOC]
 
@@ -42,7 +44,8 @@ This module defines an interface for managing **token freezing** and **forced tr
 
 #### Events
 
-*For event definitions, refer to the `IERC7551ERC20Enforcement` interface.*
+*This module emits ERC-3643/ERC-7943 enforcement events.  
+ERC-7551 specific `ForcedTransfer(operator,from,to,value,data)` is emitted by `ERC20EnforcementERC7551Module`.*
 
 ------
 
@@ -109,6 +112,7 @@ Freezes a specific amount of tokens for a given address, making them non-transfe
 **Requirements:**
 
 - Only authorized users (*ERC20ENFORCER_ROLE*) are allowed to call this function.
+- `account` cannot be the zero address (`address(0)`), otherwise reverts with `CMTAT_ERC20EnforcementModule_ZeroAddressNotAllowed`.
 
 ------
 
@@ -140,6 +144,7 @@ Unfreezes a specific amount of tokens for a given address, making them transfera
 **Requirements:**
 
 - Only authorized users (*ERC20ENFORCER_ROLE*) are allowed to call this function.
+- `account` cannot be the zero address (`address(0)`), otherwise reverts with `CMTAT_ERC20EnforcementModule_ZeroAddressNotAllowed`.
 
 ------
 
@@ -205,6 +210,7 @@ If needed, frozen tokens are automatically unfrozen to fulfill the transfer.
 
 - `TokensFrozen(address account, uint256 amount, bytes data)`
 - `TokensUnfrozen(address account, uint256 amount, bytes data)`
+- `ForcedTransfer(address operator, address from, address to, uint256 value, bytes data)`
 - `Transfer(address from, address to, uint256 value)`
 
 ------

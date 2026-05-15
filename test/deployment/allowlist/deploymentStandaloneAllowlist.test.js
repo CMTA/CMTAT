@@ -18,6 +18,7 @@ const ExtraInfoModuleCommon = require('../../common/ExtraInfoModuleCommon')
 const DocumentModuleCommon = require('../../common/DocumentModule/DocumentModuleCommon')
 const AllowlistModuleCommon = require('../../common/AllowlistModuleCommon')
 const ERC20EnforcementModuleCommon = require('../../common/ERC20EnforcementModuleCommon')
+const ERC20EnforcementERC7551ModuleCommon = require('../../common/ERC20EnforcementERC7551ModuleCommon')
 describe('CMTAT Allowlist- Standalone', function () {
   beforeEach(async function () {
     Object.assign(this, await loadFixture(fixture))
@@ -32,6 +33,7 @@ describe('CMTAT Allowlist- Standalone', function () {
       .connect(this.admin)
       .batchSetAddressAllowlist(accounts, Allowlist)
     this.erc1404 = true
+    this.erc7551 = true
     this.dontCheckTimestamp = true
   })
   // core
@@ -44,6 +46,7 @@ describe('CMTAT Allowlist- Standalone', function () {
   ValidationModuleCommonCore()
   // Extensions
   ERC20EnforcementModuleCommon()
+  ERC20EnforcementERC7551ModuleCommon()
   DocumentModuleCommon()
   ExtraInfoModuleCommon()
   // Options

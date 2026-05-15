@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.20;
 
-import {CMTATUpgradeable} from "../../deployment/CMTATUpgradeable.sol";
+import {CMTATUpgradeableSnapshot} from "../../deployment/snapshot/CMTATUpgradeableSnapshot.sol";
 import {IERC1643} from "../../interfaces/engine/IDocumentEngine.sol";
 import {ISnapshotEngine} from "../../interfaces/engine/ISnapshotEngine.sol";
 
@@ -15,7 +15,7 @@ import {ISnapshotEngine} from "../../interfaces/engine/ISnapshotEngine.sol";
  * - __SnapshotEngineModule_init_unchained() - sets SnapshotEngine during initialization
  * - __DocumentEngineModule_init_unchained() - sets DocumentEngine during initialization
  */
-contract CMTATEngineInitializerMock is CMTATUpgradeable {
+contract CMTATEngineInitializerMock is CMTATUpgradeableSnapshot {
     /**
      * @notice Contract version for the deployment with a proxy
      * @param forwarderIrrevocable address of the forwarder, required for the gasless support
@@ -23,7 +23,7 @@ contract CMTATEngineInitializerMock is CMTATUpgradeable {
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor(
         address forwarderIrrevocable
-    ) CMTATUpgradeable(forwarderIrrevocable) {
+    ) CMTATUpgradeableSnapshot(forwarderIrrevocable) {
         // Nothing to do
     }
 

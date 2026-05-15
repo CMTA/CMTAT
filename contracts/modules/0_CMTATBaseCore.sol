@@ -16,7 +16,8 @@ import {ERC20BaseModule, ERC20Upgradeable} from "./wrapper/core/ERC20BaseModule.
 import {VersionModule} from "./wrapper/core/VersionModule.sol";
 import {PauseModule}  from "./wrapper/core/PauseModule.sol";
 import {EnforcementModule} from "./wrapper/core/EnforcementModule.sol";
-import {ValidationModule, ValidationModuleCore} from "./wrapper/core/ValidationModuleCore.sol";
+import {ValidationModule} from "./wrapper/core/ValidationModuleCore.sol";
+import {ValidationModuleAllowance} from "./wrapper/extensions/ValidationModule/ValidationModuleAllowance.sol";
 
 // Security
 import {AccessControlModule, AccessControlUpgradeable} from "./wrapper/security/AccessControlModule.sol";
@@ -40,7 +41,7 @@ abstract contract CMTATBaseCore is
     // Core
     ERC20MintModule,
     ERC20BurnModule,
-    ValidationModuleCore,
+    ValidationModuleAllowance,
     ERC20BaseModule,
     AccessControlModule,
     IForcedBurnERC20,
@@ -163,7 +164,7 @@ abstract contract CMTATBaseCore is
      * @dev 
      * We can not use type(IERC5679).interfaceId, we use instead of 0xd0017968
      * because IERC5679 inherits from two interfaces (IERC5679Burn and Mint)
-     * Core version does not implement in its integrality ERC-7943 (0x29388973)
+     * Core version does not implement in its integrality ERC-7943 (0x3edbb4c4)
      */
     function supportsInterface(bytes4 interfaceId) public view virtual override(AccessControlUpgradeable, IERC165) returns (bool) {
         return interfaceId == 0xd0017968 || AccessControlUpgradeable.supportsInterface(interfaceId);
@@ -178,6 +179,14 @@ abstract contract CMTATBaseCore is
         ValidationModule._canTransferGenericByModuleAndRevert(address(0), from, to);
         ERC20Upgradeable._transfer(from, to, value);
         return true;
+    }
+
+    /*
+    * @inheritdoc ERC20Upgradeable
+    */
+    function approve(address spender, uint256 value) public virtual override returns (bool) {
+        _canAuthorizeAllowanceByModuleAndRevert(_msgSender(), spender);
+        return ERC20Upgradeable.approve(spender, value);
     }
     /*
     * @inheritdoc ERC20BaseModule
@@ -227,7 +236,7 @@ abstract contract CMTATBaseCore is
         require(EnforcementModule.isFrozen(account), CMTAT_BurnEnforcement_AddressIsNotFrozen());
         // Skip ERC20BurnModule
         ERC20Upgradeable._burn(account, value);
-        emit Enforcement(_msgSender(), account, value, data);
+        emit ForcedTransfer(_msgSender(), account, address(0), value, data);
     }
 
     /*//////////////////////////////////////////////////////////////
@@ -236,13 +245,13 @@ abstract contract CMTATBaseCore is
 
     /* ==== Mint and Burn Operations ==== */
     function _mintOverride(address account, uint256 value) internal virtual override(ERC20MintModuleInternal) {
-        ValidationModule._canMintBurnByModuleAndRevert(account);
+        ValidationModule._canMintByModuleAndRevert(account);
         ERC20MintModuleInternal._mintOverride(account, value);
     }
 
 
     function _burnOverride(address account, uint256 value) internal virtual override(ERC20BurnModuleInternal) {
-        ValidationModule._canMintBurnByModuleAndRevert(account);
+        ValidationModule._canBurnByModuleAndRevert(account);
         ERC20BurnModuleInternal._burnOverride(account, value);
     }
 
