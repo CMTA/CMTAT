@@ -86,6 +86,10 @@ The CMTAT was initially designed for the digitalization of company shares. For S
 
 - [Syz Group](https://www.syzgroup.com/en), a Swiss private bank, has successfully digitized two pieces of art using CMTAT in 2023 and 2024. See [Syz Art Tokenisation](https://www.syzgroup.com/en/tokenization-syzart)
 
+#### Stablecoins
+
+- Zand: CMTAT v3.0.0 was used by [Zand Trust](https://zandtrust.com/en) (a wholly-owned subsidiary of Zand Bank) to issue a stablecoin representing the UAE Dirham via [Taurus](https://www.taurushq.com)' infrastructure. See the stablecoin [smart contract here](https://etherscan.io/token/0xfc347c996bd66c1d92e2045c80b413ef3fc84a90).
+
 #### Tokenized market funds
 
 - In 2024, [UBS](https://www.ubs.com/global/en/investment-bank/tokenize.html) launched UBS USD Money Market Investment Fund Token (uMINT), a Money Market investment built on Ethereum distributed ledger technology. The tokenization arrangement for this fund utilizes CMTAT codebase to represent the fund smart contract, which forms part of the fund’s tokenized register of members. See [ubs.com - UBS Asset Management launches its first tokenized investment fund [ubs.com]](https://www.ubs.com/global/en/media/display-page-ndp/en-20241101-first-tokenized-investment-fund.html)
@@ -101,7 +105,7 @@ The CMTAT was initially designed for the digitalization of company shares. For S
 
 #### Private DvP settlement
 
-- In 2026, [Seturion](https://group.boerse-stuttgart.com/en/seturion/) successfully achieved private DvP settlement of tokenized assets on a public blockchain stack while keeping all sensitive data confidential using the implementation of [CMTAT on Aztec](https://github.com/taurushq-io/private-CMTAT-aztec), an Ethereum Layer-2 network that employs zero-knowledge cryptography on protocol level to ensure fully programmable privacy. Read more [here](https://www.linkedin.com/posts/seturion_achieving-private-dvp-settlement-on-public-activity-7424387919538450433-OItI/). 
+- In 2026, [Seturion](https://group.boerse-stuttgart.com/en/seturion/) successfully achieved private DvP settlement of tokenized assets on a public blockchain stack while keeping all sensitive data confidential using the implementation of [CMTAT on Aztec](https://github.com/CMTA/private-CMTAT-aztec), an Ethereum Layer-2 network that employs zero-knowledge cryptography on protocol level to ensure fully programmable privacy. Read more [here](https://www.linkedin.com/posts/seturion_achieving-private-dvp-settlement-on-public-activity-7424387919538450433-OItI/). 
 
 ### Where CMTAT is mentioned?
 
@@ -3110,7 +3114,7 @@ A second unofficial version is available in the community section.
 
 #### Aztec (Noir)
 
-A specific version is available for [Aztec](https://aztec.network/): [Aztec Private CMTAT](https://github.com/taurushq-io/private-CMTAT-aztec), developed by [Taurus](https://www.taurushq.com) in collaboration with CMTA.
+A specific version is available for [Aztec](https://aztec.network/): [Aztec Private CMTAT](https://github.com/CMTA/private-CMTAT-aztec), developed by [Taurus](https://www.taurushq.com) in collaboration with CMTA.
 
 - This version is **not officially approved** by CMTA.
 - See also [Taurus - Addressing the Privacy and Compliance Challenge](https://www.taurushq.com/blog/enhancing-token-transaction-privacy-on-public-blockchains-while-ensuring-compliance/)
