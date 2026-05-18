@@ -132,6 +132,9 @@ A patent license in an open-source license means contributors grant users permis
 
 ## Getting Started
 
+[Hardhat](https://v2.hardhat.org) is the main development toolchain for this repository and for CMTAT.
+[Forge (Foundry)](https://www.getfoundry.sh) is also installed and can compile the contracts, but Foundry-specific deployment scripts and Foundry-native test suites are maintained in a dedicated repository: [CMTAT-Foundry](https://github.com/CMTA/CMTAT-Foundry).
+
 ```bash
 # Install dependencies
 npm install

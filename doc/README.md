@@ -6,9 +6,15 @@
 
 ## Introduction
 
-The CMTA token (CMTAT) is a security token framework that includes various compliance features such as conditional transfer, account freeze, and token pause, as well as several technical features such as [ERC-7802](https://eips.ethereum.org/EIPS/eip-7802) for cross-chain transfer and [ERC-7201](https://eips.ethereum.org/EIPS/eip-7201) for upgradeadibility.
+The CMTA token (CMTAT) is a blockchain-agnostic security token framework for regulated real-world financial assets.  
+This repository provides CMTA's reference Solidity implementation for EVM-compatible blockchains such as Ethereum, Optimism, Arbitrum, and Polygon PoS.
 
-This repository provides CMTA's reference Solidity implementation of CMTAT, suitable for EVM chains such as Ethereum.
+The framework focuses on regulated issuance and lifecycle management, including:
+- transfer validation and compliance checks
+- account and partial-token freezing
+- pause and contract deactivation controls
+- controlled mint/burn and forced-transfer capabilities
+- optional modules for snapshot/document engines, cross-chain, and product-specific deployments
 
 [TOC]
 
@@ -36,6 +42,25 @@ CMTAT has been built with five main goals:
    - RBAC Access Control to clearly separates the different roles and permissions
    
 5. Freedom of use through an open-source weak copyleft license ([MPL-2.0](https://www.mozilla.org/en-US/MPL/2.0/FAQ/))
+
+### License explanation
+
+CMTAT is released under **MPL-2.0** (weak copyleft).  
+In practice, this means:
+- commercial use is allowed,
+- proprietary modules can coexist with CMTAT,
+- but modifications to MPL-covered files must remain available under MPL-2.0.
+
+#### Quick comparison
+
+| Topic | MPL-2.0 | MIT | GNU GPL v3 | Apache-2.0 |
+|---|---|---|---|---|
+| Open source | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> |
+| Commercial use | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> |
+| Copyleft level | Weak (file-level) | None (permissive) | Strong (project-level) | None (permissive) |
+| Patent license | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> (explicit) | <strong><span style="color: #b00020;">&#x2718;</span></strong> (not explicit) | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> (via GPLv3 terms) | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> (explicit) |
+
+The explicit patent grant in MPL-2.0 helps reduce patent risk for adopters and integrators.
 
 
 
@@ -3059,7 +3084,9 @@ Inside each contract, library or interface, use the following order:
 
 #### Details
 
-The project is built with [Hardhat](https://hardhat.org) and uses [OpenZeppelin](https://www.openzeppelin.com/solidity-contracts)
+The project is built with [Hardhat](https://v2.hardhat.org) and uses [OpenZeppelin](https://www.openzeppelin.com/solidity-contracts)
+
+[Hardhat](https://v2.hardhat.org) is the main development toolchain for this repository and for CMTAT. [Forge (Foundry)](https://www.getfoundry.sh) is also installed and can compile contracts here, but Foundry-specific deployment scripts and Foundry-native tests are maintained in a dedicated repository: [CMTAT-Foundry](https://github.com/CMTA/CMTAT-Foundry).
 
 - hardhat.config.js
   - Solidity [v0.8.34](https://docs.soliditylang.org/en/v0.8.34/)
@@ -3088,14 +3115,14 @@ Clone the git repository, with the option `--recurse-submodules` to fetch the su
 
 ### Hardhat
 
-> Since the [sunset of Truffle](https://consensys.io/blog/consensys-announces-the-sunset-of-truffle-and-ganache-and-new-hardhat) by Consensys, [Hardhat](https://hardhat.org) is our main development environment.
+> Since the [sunset of Truffle](https://consensys.io/blog/consensys-announces-the-sunset-of-truffle-and-ganache-and-new-hardhat) by Consensys, [Hardhat](https://v2.hardhat.org) is our main development environment.
 
 To use Hardhat, the recommended way is to use the version installed as
 part of the node modules, via the `npx` command:
 
 `npx hardhat`
 
-Alternatively, you can install Hardhat [globally](https://hardhat.org/hardhat-runner/docs/getting-started):
+Alternatively, you can install Hardhat [globally](https://v2.hardhat.org/hardhat-runner/docs/getting-started):
 
 `npm install -g hardhat` 
 
