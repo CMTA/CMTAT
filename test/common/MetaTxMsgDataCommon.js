@@ -1,7 +1,7 @@
 const helpers = require('@nomicfoundation/hardhat-network-helpers')
 const {
   getDomain
-} = require('../../openzeppelin-contracts-upgradeable/test/helpers/eip712')
+} = require('../../lib/openzeppelin-contracts-upgradeable/test/helpers/eip712')
 const { expect } = require('chai')
 
 function MetaTxMsgDataCommon () {

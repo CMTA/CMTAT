@@ -16,15 +16,15 @@ are the latest ones that we tested:
   - EVM version: Prague (Pectra upgrade)
 
 - Package.json
-  - OpenZeppelin Contracts (Node.js module): [v5.5.0](https://github.com/OpenZeppelin/openzeppelin-contracts/releases/tag/v5.5.0) 
-  - OpenZeppelin Contracts Upgradeable (Node.js module): [v5.5.0](https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/releases/tag/v5.5.0)
+  - OpenZeppelin Contracts (Node.js module): [v5.6.1](https://github.com/OpenZeppelin/openzeppelin-contracts/releases/tag/v5.6.1) 
+  - OpenZeppelin Contracts Upgradeable (Node.js module): [v5.6.1](https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/releases/tag/v5.6.1)
 
 
 ### Tools
 
 - Node v24.12.0
 
-- npm 10.2.5
+- npm 11.11.0
 - Nomiclabs - Hardhat: ^2.24.0
   - **[hardhat-ethers](https://www.npmjs.com/package/@nomicfoundation/hardhat-ethers)**
   - [Hardhat](https://hardhat.org/) plugin for integration with [ethers.js](https://github.com/ethers-io/ethers.js/)
@@ -35,11 +35,13 @@ are the latest ones that we tested:
 
 #### Submodule
 
-Use inside Javascript tests
+Used inside JavaScript Hardhat tests (test helper imports).
 
-OpenZeppelin Contracts Upgradeable (submodule) [v5.2.0](https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/releases/tag/v5.2.0)
+OpenZeppelin Contracts Upgradeable (submodule in `lib/openzeppelin-contracts-upgradeable`) [v5.6.1](https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/releases/tag/v5.6.1)
 Upgradeable variant of OpenZeppelin Contracts, meant for use in upgradeable contracts.
 The version of the library used is available in the file [USAGE.md](./USAGE.md)
+
+Current explicit usage in this repository is for Hardhat test helpers (e.g. EIP-712 helpers in `test/common`).
 
 Warning: 
 
@@ -57,7 +59,7 @@ Clone the git repository, with the option `--recurse-submodules` to fetch the su
 
 - Node.js version
 
-We recommend to install the [Node Version Manager `nvm`](https://github.com/nvm-sh/nvm) to manage multiple versions of Node.js on your machine. You can then, for example, install the version 20.5.0 of Node.js with the following command: `nvm install 20.5.0`
+We recommend to install the [Node Version Manager `nvm`](https://github.com/nvm-sh/nvm) to manage multiple versions of Node.js on your machine. You can then, for example, install the version 24.12.0 of Node.js with the following command: `nvm install 24.12.0`
 
 The file [.nvmrc](../.nvmrc) at the root of the project set the Node.js version. `nvm use`will automatically use this version if no version is supplied on the command line.
 
@@ -229,7 +231,7 @@ npm run-script coverage
 Slither is a Solidity static analysis framework written in Python3
 
 ```bash
-slither .  --checklist --filter-paths "mocks|openzeppelin-contracts-upgradeable|openzeppelin-contracts|@openzeppelin|test" > slither-report.md
+slither .  --checklist --filter-paths "mocks|lib/openzeppelin-contracts-upgradeable|openzeppelin-contracts|@openzeppelin|test" > slither-report.md
 ```
 
 ### [Mythril](https://github.com/Consensys/mythril)

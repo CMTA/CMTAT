@@ -2,7 +2,7 @@ const helpers = require('@nomicfoundation/hardhat-network-helpers')
 const {
   getDomain,
   ForwardRequest
-} = require('../../openzeppelin-contracts-upgradeable/test/helpers/eip712')
+} = require('../../lib/openzeppelin-contracts-upgradeable/test/helpers/eip712')
 const { expect } = require('chai')
 const { waffle } = require('hardhat')
 function MetaTxModuleCommon () {

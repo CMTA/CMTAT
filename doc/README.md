@@ -3094,8 +3094,8 @@ The project is built with [Hardhat](https://v2.hardhat.org) and uses [OpenZeppel
   - Optimizer: true, 200 runs
 
 - Package.json
-  - OpenZeppelin Contracts (Node.js module): [v5.5.0](https://github.com/OpenZeppelin/openzeppelin-contracts/releases/tag/v5.5.0) 
-  - OpenZeppelin Contracts Upgradeable (Node.js module): [v5.5.0](https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/releases/tag/v5.3.0)
+  - OpenZeppelin Contracts (Node.js module): [v5.6.1](https://github.com/OpenZeppelin/openzeppelin-contracts/releases/tag/v5.6.1) 
+  - OpenZeppelin Contracts Upgradeable (Node.js module): [v5.6.1](https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/releases/tag/v5.6.1)
 
 #### Installation & Compilation
 

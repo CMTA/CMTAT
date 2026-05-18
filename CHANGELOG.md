@@ -154,6 +154,24 @@ Custom changelog tag: `Dependencies`, `Documentation`, `Testing`
   - Added a dedicated `CMTAT Snapshot` column in the functionality matrix to avoid ambiguity.
   - Updated security documentation paths from `doc/audits/...` to `doc/security/...` after directory rename.
   - Added Sequent pre-review references in both audit/pre-review and tooling sections.
+- `README.md` and `doc/README.md`:
+  - Clarified that **Hardhat** is the main development toolchain for CMTAT/repository.
+  - Added note that **Forge/Foundry** is installed for compilation, while Foundry-specific scripts/tests are maintained in [CMTAT-Foundry](https://github.com/CMTA/CMTAT-Foundry).
+  - Updated Hardhat links to `https://v2.hardhat.org` and Foundry link to `https://www.getfoundry.sh`.
+- `doc/USAGE.md`:
+  - Updated OpenZeppelin dependency references to `v5.6.1`.
+  - Updated OpenZeppelin upgradeable submodule location to `lib/openzeppelin-contracts-upgradeable` and clarified its use for Hardhat test helpers.
+  - Updated Node.js reference to `v24.12.0`.
+
+### Dependencies
+
+#### Changed
+
+- Upgraded OpenZeppelin npm packages to `v5.6.1`:
+  - `@openzeppelin/contracts`
+  - `@openzeppelin/contracts-upgradeable`
+- Moved OpenZeppelin upgradeable git submodule from `openzeppelin-contracts-upgradeable` to `lib/openzeppelin-contracts-upgradeable`, and updated test helper imports accordingly.
+- Updated `.nvmrc` to `v24.12.0`.
 
 ## 3.2.0
 
