@@ -1050,8 +1050,10 @@ Generally, these modules are not required to be compliant with the CMTA specific
 | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | [ExtraInformation](./modules/extensions/ExtraInformation/extraInformation.md) | Set extra information (tokenId, terms, metadata)             | [ExtraInformationModule.sol](../contracts/modules/wrapper/extensions/ExtraInformationModule.sol) | <strong><span style="color: #1e7e34;">&#x2714;</span></strong><br />(BaseModule) | <strong><span style="color: #1e7e34;">&#x2714;</span></strong><br />(BaseModule) | <strong><span style="color: #1e7e34;">&#x2714;</span></strong><br /> |
 | [SnapshotEngineModule](./modules/extensions/snapshotEngine/Snapshot.md)<br />(Prev. SnapshotModule) | Set snapshotEngine                                           | [SnapshotEngineModule.sol](../contracts/modules/wrapper/extensions/SnapshotEngineModule.sol) | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | Partial<br />(Not included by default because unaudited)     | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> <br />(require an external SnapshotEngine) |
-| [DocumentEngineModule](./modules/extensions/documentEngine/document.md) | Set additional document (ERC1643) through a DocumentEngine   | [DocumentEngineModule.sol](../contracts/modules/wrapper/extensions/DocumentEngineModule.sol) | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> |
+| [DocumentEngineModule](./modules/extensions/documentEngine/document.md) | Set additional document (ERC1643) through a DocumentEngine   | [DocumentEngineModule.sol](../contracts/modules/wrapper/options/DocumentEngineModule.sol) | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> |
 | [ERC20EnforcementModule](./modules/extensions/ERC20Enforcement/erc20enforcement.md) | The admin (or a third party appointed by it) can partially freeze a part of the balance of a token holder. | [ERC20EnforcementModule.sol](../contracts/modules/wrapper/extensions/ERC20EnforcementModule.sol) | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> |
+
+> Note: `DocumentEngineModule` exists as an optional module but is currently not included in any deployment version. It is validated through dedicated test mocks.
 
 ##### Option modules
 
@@ -1706,7 +1708,7 @@ interface IERC1643 {
     /**
      * @notice return a document identified by its name
      */
-    function getDocument(bytes32 name) external view returns (string memory uri, bytes32 documentHash);
+    function getDocument(bytes32 name) external view returns (Document memory document);
     /**
      * @notice return all documents
      */
@@ -1854,7 +1856,7 @@ The pause function does not affect burn and mint operations implemented in the c
 
 By separating burn/mint from standard transfer, the admin can re-adjust the supply while the standard transfers are paused. The alternative in this case to block mint and burn operations is to remove the MINTER and BURNER roles from the addresses concerned.
 
-On the other hand, specific function for cross-chain bridge (`3_CMTATBaseERC20CrossChain.sol`) will revert if contract is paused because they are not intended to be used by the issuer to manage the supply.
+On the other hand, specific function for cross-chain bridge (`5_CMTATBaseERC20CrossChain.sol`) will revert if contract is paused because they are not intended to be used by the issuer to manage the supply.
 
 #### Future possible improvement
 
