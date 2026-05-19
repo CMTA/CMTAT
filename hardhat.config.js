@@ -20,6 +20,7 @@ module.exports = {
     disambiguatePaths: false,
     runOnCompile: true,
     strict: true,
+    except: [':.*Mock$'],
     //only: [':ERC20$'],
   }
 }

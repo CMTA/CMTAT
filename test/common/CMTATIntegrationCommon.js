@@ -1,7 +1,7 @@
 const { expect } = require('chai')
 const { ZERO_ADDRESS,
   IERC165_INTERFACEID, IERC721_INTERFACEID,IACCESSCONTROL_INTERFACEID,
-  IERC5679_INTERFACEID, IERC7943_INTERFACEID } = require('../utils')
+  IERC5679_INTERFACEID, IERC7943_INTERFACEID, ICMTATDEACTIVATE_INTERFACEID } = require('../utils')
 const VALUE1 = 20n
 const VALUE2 = 50n
 function CMTATIntegrationCommon () {
@@ -15,6 +15,7 @@ function CMTATIntegrationCommon () {
           false)
       expect(await this.cmtat.supportsInterface(IERC5679_INTERFACEID)).to.equal(true)
       expect(await this.cmtat.supportsInterface(IERC7943_INTERFACEID)).to.equal(true)
+      expect(await this.cmtat.supportsInterface(ICMTATDEACTIVATE_INTERFACEID)).to.equal(true)
 
 
     })

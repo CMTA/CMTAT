@@ -1,5 +1,5 @@
 const { expect } = require('chai')
-const { ZERO_ADDRESS } = require('../../utils')
+const { ZERO_ADDRESS, DOCUMENT_ROLE } = require('../../utils')
 
 function DocumentModuleCommon () {
   context('Document Module Test', function () {
@@ -36,6 +36,21 @@ function DocumentModuleCommon () {
       expect(doc.uri).to.equal(uri)
       expect(doc.documentHash).to.equal(documentHash)
       expect(doc.lastModified).to.be.gt(0)
+    })
+
+    it('testCannotSetDocumentByNonDocumentRole', async function () {
+      const name = ethers.encodeBytes32String('doc1')
+      const uri = 'https://github.com/CMTA/CMTAT'
+      const documentHash = ethers.encodeBytes32String('hash1')
+
+      await expect(
+        this.cmtat.connect(this.address1).setDocument(name, uri, documentHash)
+      )
+        .to.be.revertedWithCustomError(
+          this.cmtat,
+          'AccessControlUnauthorizedAccount'
+        )
+        .withArgs(this.address1.address, DOCUMENT_ROLE)
     })
 
     it('testCanUpdateADocument', async function () {
@@ -75,6 +90,22 @@ function DocumentModuleCommon () {
       expect(doc.uri).to.equal('')
       expect(doc.documentHash).to.equal(ethers.encodeBytes32String(''))
       expect(doc.lastModified).to.equal(0)
+    })
+
+    it('testCannotRemoveDocumentByNonDocumentRole', async function () {
+      const name = ethers.encodeBytes32String('doc1')
+      const uri = 'https://github.com/CMTA/CMTAT'
+      const documentHash = ethers.encodeBytes32String('hash1')
+      await this.cmtat.connect(this.admin).setDocument(name, uri, documentHash)
+
+      await expect(
+        this.cmtat.connect(this.address1).removeDocument(name)
+      )
+        .to.be.revertedWithCustomError(
+          this.cmtat,
+          'AccessControlUnauthorizedAccount'
+        )
+        .withArgs(this.address1.address, DOCUMENT_ROLE)
     })
 
     it('testCanReturnAllDocumentNames', async function () {
