@@ -76,6 +76,10 @@ Custom changelog tag: `Dependencies`, `Documentation`, `Testing`
 - **`CMTATBaseCommon`** no longer inherits `DocumentERC1643Module`.
 - **`CMTATBaseAccessControl`** now defines `_authorizeDocumentManagement` and enforces `DOCUMENT_ROLE`.
 - Updated impacted imports and deployment references to match the new module numbering/layout.
+- **ERC20CrossChain burn-path cleanup (no external API change):**
+  - Removed redundant `crosschainBurn` override from `CMTATBaseERC20CrossChain`; level-5 now uses `ERC20CrossChainModule.crosschainBurn` directly.
+  - Removed redundant sender-aware burn override from `CMTATBaseERC20CrossChain`; burn/burnFrom sender-aware flow now relies on the module implementation.
+  - In `ERC20CrossChainModule`, simplified internal self-burn routing and renamed helper `_burnWithSender` to `_burnFromOperator` for clearer intent.
 
 #### Fixed
 

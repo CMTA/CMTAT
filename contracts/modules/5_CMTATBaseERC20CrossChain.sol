@@ -11,7 +11,6 @@ import {ERC20BurnModuleInternal} from "./wrapper/core/ERC20BurnModule.sol";
 import {ERC20MintModuleInternal} from "./wrapper/core/ERC20MintModule.sol";
 import {ERC20CrossChainModule} from "./wrapper/options/ERC20CrossChainModule.sol";
 import {CCIPModule} from "./wrapper/options/CCIPModule.sol";
-import {IBurnFromERC20} from "../interfaces/technical/IMintBurnToken.sol";
 import {IERC7802} from "../interfaces/technical/IERC7802.sol";
 
 /**
@@ -19,16 +18,6 @@ import {IERC7802} from "../interfaces/technical/IERC7802.sol";
  */
 abstract contract CMTATBaseERC20CrossChain is ERC20CrossChainModule, CCIPModule, CMTATBaseERC1404  {
      /* ============  State Functions ============ */
-    /**
-    * @inheritdoc IERC7802
-    * @dev Keep spender-aware compliance checks for bridge-initiated burns.
-    */
-    function crosschainBurn(address from, uint256 value) public virtual override(ERC20CrossChainModule) onlyTokenBridge {
-        _checkTransferred(_msgSender(), from, address(0), value);
-        ERC20BurnModuleInternal._burnOverride(from, value);
-        emit CrosschainBurn(from, value, _msgSender());
-    }
-
         /**
     * @dev revert if the contract is in pause state
     */
@@ -106,16 +95,6 @@ abstract contract CMTATBaseERC20CrossChain is ERC20CrossChainModule, CCIPModule,
     function _burnOverride(address account, uint256 value) internal virtual override(CMTATBaseCommon, ERC20BurnModuleInternal) {
         // _checkTransferred is called by _burnOverride
         CMTATBaseCommon._burnOverride(account, value);
-    }
-
-    /**
-    * @dev Preserve the effective spender for burnFrom/self-burn flows so rule-engine
-    * spender-aware hooks are executed with the real operator instead of address(0).
-    */
-    function _burn(address sender, address account, uint256 value) internal virtual override(ERC20CrossChainModule) {
-        _checkTransferred(sender, account, address(0), value);
-        ERC20BurnModuleInternal._burnOverride(account, value);
-        emit IBurnFromERC20.BurnFrom(sender, account, sender, value);
     }
 
     /**

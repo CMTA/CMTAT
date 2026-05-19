@@ -95,10 +95,8 @@ abstract contract ERC20CrossChainModule is ERC20MintModule, ERC20BurnModule, ERC
     function burn(
         uint256 value
     ) public virtual override(IBurnFromERC20) onlySelfBurn{
-        // Don't emit Spend event because allowance is not used here
         address sender = _msgSender();
-        // burn from itself
-        _burn(sender, sender, value);
+        _burnFromOperator(sender, sender, value);
     }
 
     /* ============ View functions ============ */
@@ -115,16 +113,11 @@ abstract contract ERC20CrossChainModule is ERC20MintModule, ERC20BurnModule, ERC
         // Specific event for the spend operation, same as transferFrom (ERC20BaseModule)
         // Importing the event through inheritance will result in the following error: "Linearization of inheritance graph impossible"
         emit IERC20Allowance.Spend(account, sender, value);
-        _burn(sender, account, value);
+        _burnFromOperator(sender, account, value);
     }
 
-    function _burn(
-       address sender, address account, uint256 value
-    ) internal virtual{
-        // burn
+    function _burnFromOperator(address sender, address account, uint256 value) internal virtual {
         _burnOverride(account, value);
-        // Specific event to burnFrom and self-burn (burn)
-        // Don't emit CrossChainBurn because this function burn is not part of the IERC7802 interface
         emit BurnFrom(sender, account, sender, value);
     }
 
