@@ -4,8 +4,8 @@ pragma solidity ^0.8.20;
 
 /* ==== OpenZeppelin === */
 /* ==== Module === */
-import {CMTATBaseAccessControl} from "./1_CMTATBaseAccessControl.sol";
-import {CMTATBaseERC7551Enforcement} from "./6_CMTATBaseERC7551Enforcement.sol";
+import {CMTATBaseAccessControl} from "./2_CMTATBaseAccessControl.sol";
+import {CMTATBaseERC7551Enforcement} from "./7_CMTATBaseERC7551Enforcement.sol";
 import {ExtraInformationModule, ERC7551Module} from "./wrapper/options/ERC7551Module.sol";
 
 /**

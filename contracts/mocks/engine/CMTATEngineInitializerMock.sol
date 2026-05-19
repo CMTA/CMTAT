@@ -3,7 +3,6 @@
 pragma solidity ^0.8.20;
 
 import {CMTATUpgradeableSnapshot} from "../../deployment/snapshot/CMTATUpgradeableSnapshot.sol";
-import {IERC1643} from "../../interfaces/engine/IDocumentEngine.sol";
 import {ISnapshotEngine} from "../../interfaces/engine/ISnapshotEngine.sol";
 
 /**
@@ -13,7 +12,6 @@ import {ISnapshotEngine} from "../../interfaces/engine/ISnapshotEngine.sol";
  *
  * This contract exposes:
  * - __SnapshotEngineModule_init_unchained() - sets SnapshotEngine during initialization
- * - __DocumentEngineModule_init_unchained() - sets DocumentEngine during initialization
  */
 contract CMTATEngineInitializerMock is CMTATUpgradeableSnapshot {
     /**
@@ -32,15 +30,12 @@ contract CMTATEngineInitializerMock is CMTATUpgradeableSnapshot {
      * This allows testing the uncovered initializer branches.
      * Uses reinitializer(2) to allow calling after initial initialize().
      * @param snapshotEngine_ The snapshot engine address (can be zero)
-     * @param documentEngine_ The document engine address (can be zero)
      */
     function initializeWithEngines(
-        ISnapshotEngine snapshotEngine_,
-        IERC1643 documentEngine_
+        ISnapshotEngine snapshotEngine_
     ) public reinitializer(2) {
         // Call the uncovered initializers
         // These functions check for non-zero address internally
         __SnapshotEngineModule_init_unchained(snapshotEngine_);
-        __DocumentEngineModule_init_unchained(documentEngine_);
     }
 }

@@ -4,19 +4,23 @@ const { ZERO_ADDRESS } = require('../../utils')
 function DocumentModuleCommon () {
   context('Document Module Test', function () {
     beforeEach(async function () {
-      if (!this.definedAtDeployment) {
+      const hasDocumentEngine = this.cmtat.interface.hasFunction('documentEngine()')
+      if (hasDocumentEngine && !this.definedAtDeployment) {
         this.documentEngineMock = await ethers.deployContract(
           'DocumentEngineMock'
         )
       }
-      if ((await this.cmtat.documentEngine()) === ZERO_ADDRESS) {
+      if (
+        hasDocumentEngine &&
+        (await this.cmtat.documentEngine()) === ZERO_ADDRESS
+      ) {
         await this.cmtat
           .connect(this.admin)
           .setDocumentEngine(this.documentEngineMock.target)
       }
     })
     it('testCanReturnTheRightAddressIfSet', async function () {
-      if (this.definedAtDeployment) {
+      if (this.cmtat.interface.hasFunction('documentEngine()') && this.definedAtDeployment) {
         const documentEngine = await this.cmtat.documentEngine()
         expect(this.documentEngineMock.target).to.equal(documentEngine)
       }
@@ -26,7 +30,7 @@ function DocumentModuleCommon () {
       const uri = 'https://github.com/CMTA/CMTAT'
       const documentHash = ethers.encodeBytes32String('hash1')
 
-      await this.documentEngineMock.setDocument({ name, uri, documentHash })
+      await this.cmtat.connect(this.admin).setDocument(name, uri, documentHash)
 
       const doc = await this.cmtat.getDocument(name)
       expect(doc.uri).to.equal(uri)
@@ -42,8 +46,8 @@ function DocumentModuleCommon () {
       const uri2 = 'https://github.com/CMTA/CMTAT/V2'
       const documentHash2 = ethers.encodeBytes32String('hash2')
 
-      await this.documentEngineMock.setDocument([name, uri1, documentHash1])
-      await this.documentEngineMock.setDocument([name, uri2, documentHash2])
+      await this.cmtat.connect(this.admin).setDocument(name, uri1, documentHash1)
+      await this.cmtat.connect(this.admin).setDocument(name, uri2, documentHash2)
 
       const doc = await this.cmtat.getDocument(name)
       expect(doc.uri).to.equal(uri2)
@@ -64,8 +68,8 @@ function DocumentModuleCommon () {
       const uri = 'https://github.com/CMTA/CMTAT'
       const documentHash = ethers.encodeBytes32String('hash1')
 
-      await this.documentEngineMock.setDocument([name, uri, documentHash])
-      await this.documentEngineMock.removeDocument(name)
+      await this.cmtat.connect(this.admin).setDocument(name, uri, documentHash)
+      await this.cmtat.connect(this.admin).removeDocument(name)
 
       const doc = await this.cmtat.getDocument(name)
       expect(doc.uri).to.equal('')
@@ -82,8 +86,8 @@ function DocumentModuleCommon () {
       const uri2 = 'https://github.com/CMTA/CMTAT/V2'
       const documentHash2 = ethers.encodeBytes32String('hash2')
 
-      await this.documentEngineMock.setDocument([name1, uri1, documentHash1])
-      await this.documentEngineMock.setDocument([name2, uri2, documentHash2])
+      await this.cmtat.connect(this.admin).setDocument(name1, uri1, documentHash1)
+      await this.cmtat.connect(this.admin).setDocument(name2, uri2, documentHash2)
 
       const documentNames = await this.cmtat.getAllDocuments()
       expect(documentNames.length).to.equal(2)

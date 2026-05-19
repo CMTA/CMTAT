@@ -32,6 +32,10 @@ CMTAT extends the standard [ERC-20](https://eips.ethereum.org/EIPS/eip-20) token
 | **Debt Features** | Debt lifecycle and credit-event related capabilities | CMTAT Debt modules | Deployment-version specific |
 | **ERC-1363 Payable Token Hooks** | Token callbacks (`transferAndCall` / `approveAndCall`) | ERC-1363 | Deployment-version specific |
 
+Document model note:
+- ERC-1643 document identifiers in CMTAT use `bytes32` names.
+- CMTAT tokenization terms keep the modified CMTAT document structure (`IERC1643CMTAT.DocumentInfo`) with `string name`.
+
 ## Who uses CMTAT?
 
 CMTAT is used in production by major financial institutions including **UBS**, **Taurus SA**, **Daura**, **Fireblocks**, and **Syz Group** to tokenize equities, bonds, structured products, money market funds, and stablecoins.

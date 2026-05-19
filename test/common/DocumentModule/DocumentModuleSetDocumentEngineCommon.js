@@ -12,6 +12,9 @@ const TERMS = [
 function DocumentModuleSetDocumentEngineCommon () {
   context('DocumentEngineInitializerTest', function () {
     it('testCanInitializeWithDocumentEngine', async function () {
+      if (!this.cmtat.interface.hasFunction('setDocumentEngine(address)')) {
+        this.skip()
+      }
       // Deploy a document engine mock
       const documentEngineMock = await ethers.deployContract('DocumentEngineMock')
 
@@ -52,6 +55,9 @@ function DocumentModuleSetDocumentEngineCommon () {
 
   context('DocumentEngineSetTest', function () {
     beforeEach(async function () {
+      if (!this.cmtat.interface.hasFunction('setDocumentEngine(address)')) {
+        this.skip()
+      }
       this.documentEngineMock = await ethers.deployContract(
         'DocumentEngineMock'
       )
@@ -95,6 +101,9 @@ function DocumentModuleSetDocumentEngineCommon () {
     })
 
     it('testGetEmptyDocumentsIfNoDocumentEngine', async function () {
+      if (!this.cmtat.interface.hasFunction('setDocumentEngine(address)')) {
+        this.skip()
+      }
       const name = ethers.encodeBytes32String('doc1')
       // act
       const doc = await this.cmtat.getDocument(name)

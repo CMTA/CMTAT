@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.20;
 
-import {CMTATBaseERC2612} from "../../modules/4_CMTATBaseERC2612.sol";
+import {CMTATBaseERC2612} from "../../modules/6_CMTATBaseERC2612.sol";
 import {ICMTATConstructor} from "../../interfaces/technical/ICMTATConstructor.sol";
 
 /**

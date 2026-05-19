@@ -24,10 +24,18 @@ interface IERC1643 {
      * @param name The unique name used to identify the document.
      * @return document The associated document's metadata (URI, hash, timestamp).
      */
-    function getDocument(string memory name) external view returns (Document memory document);
+    function getDocument(bytes32 name) external view returns (Document memory document);
     /**
      * @notice Returns the list of all document names registered in the contract.
      * @return documentNames_ An array of strings representing all document identifiers.
      */
-    function getAllDocuments() external view returns (string[] memory documentNames_);
+    function getAllDocuments() external view returns (bytes32[] memory documentNames_);
+
+    function setDocument(bytes32 name, string calldata uri, bytes32 documentHash) external;
+
+    function removeDocument(bytes32 name) external;
+
+    event DocumentUpdated(bytes32 indexed name, string uri, bytes32 documentHash);
+
+    event DocumentRemoved(bytes32 indexed name, string uri, bytes32 documentHash);
 }

@@ -2,18 +2,17 @@
 
 pragma solidity ^0.8.20;
 
-/* ==== OpenZeppelin === */
+import {ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
 import {ERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
-/* ==== Module === */
-import {DebtEngineModule} from "./wrapper/options/DebtEngineModule.sol";
-import {CMTATBaseERC20CrossChain} from "./4_CMTATBaseERC20CrossChain.sol";
+import {CMTATBaseERC2771} from "./6_CMTATBaseERC2771.sol";
+import {CMTATBaseERC20CrossChain} from "./5_CMTATBaseERC20CrossChain.sol";
 import {CMTATBaseSnapshot} from "./0_CMTATBaseSnapshot.sol";
 import {SnapshotEngineModule} from "./wrapper/extensions/SnapshotEngineModule.sol";
 
 /**
-* @title Extend CMTAT Base with DebtEngine module and snapshot engine support
+* @title Extend CMTATBaseERC2771 with snapshot engine support
 */
-abstract contract CMTATBaseDebtEngine is DebtEngineModule, CMTATBaseERC20CrossChain, CMTATBaseSnapshot {
+abstract contract CMTATBaseERC2771Snapshot is CMTATBaseERC2771, CMTATBaseSnapshot {
 
     /*//////////////////////////////////////////////////////////////
                   ERC-20 / CMTATBaseSnapshot disambiguation
@@ -62,10 +61,30 @@ abstract contract CMTATBaseDebtEngine is DebtEngineModule, CMTATBaseERC20CrossCh
     }
 
     /*//////////////////////////////////////////////////////////////
-                        Access Control
+                  ERC2771 / Context disambiguation
     //////////////////////////////////////////////////////////////*/
 
-    function _authorizeDebtEngineManagement() internal virtual override(DebtEngineModule) onlyRole(DEBT_ENGINE_ROLE) {}
+    function _msgSender()
+        internal virtual view override(CMTATBaseERC2771, ContextUpgradeable) returns (address sender)
+    {
+        return CMTATBaseERC2771._msgSender();
+    }
+
+    function _msgData()
+        internal virtual view override(CMTATBaseERC2771, ContextUpgradeable) returns (bytes calldata)
+    {
+        return CMTATBaseERC2771._msgData();
+    }
+
+    function _contextSuffixLength()
+        internal virtual view override(CMTATBaseERC2771, ContextUpgradeable) returns (uint256)
+    {
+        return CMTATBaseERC2771._contextSuffixLength();
+    }
+
+    /*//////////////////////////////////////////////////////////////
+                        Access Control
+    //////////////////////////////////////////////////////////////*/
 
     function _authorizeSnapshots() internal virtual override(SnapshotEngineModule) onlyRole(SNAPSHOOTER_ROLE) {}
 }

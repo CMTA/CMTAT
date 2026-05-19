@@ -13,16 +13,19 @@ import {ERC20MintModule} from "./wrapper/core/ERC20MintModule.sol";
 // Extensions
 import {ExtraInformationModule} from "./wrapper/extensions/ExtraInformationModule.sol";
 import {ERC20EnforcementModule} from "./wrapper/extensions/ERC20EnforcementModule.sol";
-import {DocumentEngineModule} from "./wrapper/extensions/DocumentEngineModule.sol";
+import {DocumentERC1643Module} from "./wrapper/extensions/DocumentERC1643Module.sol";
 // options
 import {ERC20BaseModule} from "./wrapper/core/ERC20BaseModule.sol";
  /* ==== Interface and other library === */
 import {ICMTATConstructor} from "../interfaces/technical/ICMTATConstructor.sol";
 import {CMTATBaseCommon} from "./0_CMTATBaseCommon.sol";
+import {CMTATBaseDocument} from "./1_CMTATBaseDocument.sol";
 abstract contract CMTATBaseAccessControl is
     AccessControlModule,
-    CMTATBaseCommon
+    CMTATBaseCommon,
+    CMTATBaseDocument
 {  
+
     /*//////////////////////////////////////////////////////////////
                          INITIALIZER FUNCTION
     //////////////////////////////////////////////////////////////*/
@@ -77,7 +80,7 @@ abstract contract CMTATBaseAccessControl is
     * @custom:access-control
     * - the caller must have the `DOCUMENT_ROLE`.
     */
-    function  _authorizeDocumentManagement() internal virtual override(DocumentEngineModule) onlyRole(DOCUMENT_ROLE){}
+    function _authorizeDocumentManagement() internal virtual override(DocumentERC1643Module) onlyRole(DOCUMENT_ROLE){}
 
     /** 
     * @custom:access-control

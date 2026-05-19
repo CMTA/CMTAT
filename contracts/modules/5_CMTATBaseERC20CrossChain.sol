@@ -4,8 +4,8 @@ pragma solidity ^0.8.20;
 /* ==== OpenZeppelin === */
 import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 /* ==== Module === */
-import {CMTATBaseERC1404, CMTATBaseRuleEngine, ERC20Upgradeable} from "./3_CMTATBaseERC1404.sol";
-import {CMTATBaseAccessControl} from "./1_CMTATBaseAccessControl.sol";
+import {CMTATBaseERC1404, CMTATBaseRuleEngine, ERC20Upgradeable} from "./4_CMTATBaseERC1404.sol";
+import {CMTATBaseAccessControl} from "./2_CMTATBaseAccessControl.sol";
 import {CMTATBaseCommon} from "./0_CMTATBaseCommon.sol";
 import {ERC20BurnModuleInternal} from "./wrapper/core/ERC20BurnModule.sol";
 import {ERC20MintModuleInternal} from "./wrapper/core/ERC20MintModule.sol";

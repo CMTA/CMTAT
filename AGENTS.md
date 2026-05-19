@@ -3,6 +3,7 @@
 **CMTAT** (CMTA Token) is a **security token framework** for tokenizing real-world financial assets on EVM-compatible blockchains. It's developed by the Capital Markets and Technology Association (CMTA).
 
 AGENTS.md and CLAUDE.md files must always be identical
+Module numbering must strictly match dependency order (a lower-level module must not depend on a higher-level module).
 
 **Solidity** | **Hardhat**
 

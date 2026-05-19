@@ -45,9 +45,72 @@ Custom changelog tag: `Dependencies`, `Documentation`, `Testing`
 
 
 
+## 3.3.0 - rc1
+
+> **Note:** This version has not been audited.
+
+### Smart contract
+
+#### Added
+
+- New base contract **`CMTATBaseDocument`**:
+  - Introduced as `contracts/modules/1_CMTATBaseDocument.sol`.
+  - Isolates document-management authorization (`_authorizeDocumentManagement`) from `CMTATBaseAccessControl`.
+  - Composes `DocumentERC1643Module` on top of the rule-engine base path.
+
+#### Changed
+
+- **ERC-1643 document identifier format aligned to `bytes32`** (breaking API change for document functions):
+  - Previous CMTAT variant (e.g. `v3.2.0`) used `string` for document names in `IERC1643` (`getDocument(string)`, `getAllDocuments() -> string[]`).
+  - Current implementation uses `bytes32` document names (`getDocument(bytes32)`, `getAllDocuments() -> bytes32[]`) and exposes `setDocument(bytes32,string,bytes32)` / `removeDocument(bytes32)` with associated events.
+  - **CMTAT terms remain on the modified CMTAT structure**: `IERC1643CMTAT.DocumentInfo` still uses `string name` for tokenization terms metadata (`setTerms` path).
+- **Base hierarchy refactor (strict dependency-order levels):**
+  - `CMTATBaseDocument` at **level 1** (`contracts/modules/1_CMTATBaseDocument.sol`).
+  - `CMTATBaseAccessControl` at **level 2** (`contracts/modules/2_CMTATBaseAccessControl.sol`) and now inherits `CMTATBaseDocument`.
+  - `CMTATBaseAllowlist` and `CMTATBaseRuleEngine` at **level 3**.
+  - `CMTATBaseDebt` and `CMTATBaseERC1404` at **level 4**.
+  - `CMTATBaseERC20CrossChain` at **level 5**.
+  - `CMTATBaseERC2612`, `CMTATBaseERC2771`, `CMTATBaseDebtEngine` at **level 6**.
+  - `CMTATBaseERC2771Snapshot`, `CMTATBaseERC7551Enforcement` at **level 7**.
+  - `CMTATBaseERC1363`, `CMTATBaseERC7551` at **level 8**.
+- **`CMTATBaseCommon`** no longer inherits `DocumentERC1643Module`.
+- **`CMTATBaseAccessControl`** now defines `_authorizeDocumentManagement` and enforces `DOCUMENT_ROLE`.
+- Updated impacted imports and deployment references to match the new module numbering/layout.
+
+#### Fixed
+
+- Fixed compile-path inconsistencies caused by stale numbered imports after base-level refactor.
+- Restored full compilation after engine/mock alignment:
+  - `CMTATEngineInitializerMock` no longer calls unavailable document-engine initializer on snapshot path.
+  - `DocumentEngineMock` now implements IERC1643-compatible `setDocument(bytes32,string,bytes32)`.
+
+### Documentation
+
+#### Changed
+
+- Updated base-module hierarchy and file references in `doc/README.md` to reflect:
+  - `1_CMTATBaseDocument.sol`
+  - `2_CMTATBaseAccessControl.sol`
+  - `3_CMTATBaseAllowlist.sol`
+  - `3_CMTATBaseRuleEngine.sol`
+  - `4_CMTATBaseDebt.sol`
+  - `4_CMTATBaseERC1404.sol`
+  - `5_CMTATBaseERC20CrossChain.sol`
+  - `6_CMTATBaseERC2612.sol`
+  - `6_CMTATBaseERC2771.sol`
+  - `6_CMTATBaseDebtEngine.sol`
+  - `7_CMTATBaseERC2771Snapshot.sol`
+  - `7_CMTATBaseERC7551Enforcement.sol`
+  - `8_CMTATBaseERC1363.sol`
+  - `8_CMTATBaseERC7551.sol`
+- Updated `doc/README.md` ERC-1643 section to use current `bytes32` API signatures (`getDocument(bytes32)`, `getAllDocuments() returns (bytes32[])`) with compatibility note for `IERC1643CMTAT.DocumentInfo.name` (`string`).
+- Updated contracts tree file `.claude/tree/contracts_tree.txt`.
+
 ## 3.3.0 - rc0
 
 > **Note:** This version has not been audited.
+
+Commit: `49544f4de1993008acfc9e848d0bf03bd31d8579`
 
 ### Smart contract
 

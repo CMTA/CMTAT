@@ -6,9 +6,9 @@ import {ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/Cont
 import {ERC1363Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/ERC1363Upgradeable.sol";
 import {ERC20Upgradeable, IERC20} from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 /* ==== Module === */
-import {CMTATBaseRuleEngine} from "./2_CMTATBaseRuleEngine.sol";
-import {CMTATBaseERC20CrossChain} from "./4_CMTATBaseERC20CrossChain.sol";
-import {CMTATBaseERC7551Enforcement} from "./6_CMTATBaseERC7551Enforcement.sol";
+import {CMTATBaseRuleEngine} from "./3_CMTATBaseRuleEngine.sol";
+import {CMTATBaseERC20CrossChain} from "./5_CMTATBaseERC20CrossChain.sol";
+import {CMTATBaseERC7551Enforcement} from "./7_CMTATBaseERC7551Enforcement.sol";
 
 /* ==== Interface and other library === */
 import {ICMTATConstructor} from "../interfaces/technical/ICMTATConstructor.sol";

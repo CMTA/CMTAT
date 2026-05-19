@@ -11,33 +11,33 @@ interface IERC1643Whole is IDocumentEngine{
     * lastModified The timestamp of the last modification
     */ 
     struct DocumentInfo {
-        string name;
+        bytes32 name;
         string uri;
         bytes32 documentHash;
     }
     // Document Management
     function setDocument(DocumentInfo calldata doc) external;
-    function removeDocument(string memory name) external;
+    function removeDocument(bytes32 name) external;
 
     // Document Events
-    event DocumentRemoved(string indexed name, Document doc);
-    event DocumentUpdated(string indexed name, Document doc);
+    event DocumentRemoved(bytes32 indexed name, Document doc);
+    event DocumentUpdated(bytes32 indexed name, Document doc);
 
 }
 /*
 * @title a DocumentEngine mock for testing, not suitable for production
 */
 contract DocumentEngineMock is IERC1643Whole {
-    mapping(string => Document) private documents;
-    mapping(string => uint256) private documentKey;
-    string[] private documentNames;
+    mapping(bytes32 => Document) private documents;
+    mapping(bytes32 => uint256) private documentKey;
+    bytes32[] private documentNames;
 
     /// @dev Error thrown when a document does not exist
     error DocumentDoesNotExist();
 
     /// @notice Retrieves the document details by name
     /// @param name The name of the document
-    function getDocument(string memory name)
+    function getDocument(bytes32 name)
         external
         view
         override
@@ -62,9 +62,28 @@ contract DocumentEngineMock is IERC1643Whole {
         emit DocumentUpdated(doc_.name, doc);
     }
 
+    /// @notice IERC1643-compatible setter
+    function setDocument(
+        bytes32 name,
+        string calldata uri,
+        bytes32 documentHash
+    ) external override {
+        Document storage doc = documents[name];
+        doc.uri = uri;
+        doc.documentHash = documentHash;
+        doc.lastModified = block.timestamp;
+        if (documentKey[name] == 0) {
+            // To avoid key == 0
+            uint256 key = documentNames.length + 1;
+            documentKey[name] = key;
+            documentNames.push(name);
+        }
+        emit DocumentUpdated(name, doc);
+    }
+
     /// @notice Removes a document
     /// @param name The name of the document
-    function removeDocument(string calldata name) external override {
+    function removeDocument(bytes32 name) external override {
         if (documentKey[name] == 0) {
             revert DocumentDoesNotExist();
         }
@@ -78,7 +97,7 @@ contract DocumentEngineMock is IERC1643Whole {
 
     /// @notice Retrieves all document names
     /// @return An array of document names
-    function getAllDocuments() external view override returns (string[] memory) {
+    function getAllDocuments() external view override returns (bytes32[] memory) {
         return documentNames;
     }
 }

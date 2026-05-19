@@ -93,11 +93,12 @@ contracts
 │   ├── 0_CMTATBaseCore.sol
 │   ├── 0_CMTATBaseGeneric.sol
 │   ├── 0_CMTATBaseSnapshot.sol
-│   ├── 1_CMTATBaseAccessControl.sol
-│   ├── 2_CMTATBaseAllowlist.sol
-│   ├── 2_CMTATBaseRuleEngine.sol
-│   ├── 3_CMTATBaseDebt.sol
-│   ├── 3_CMTATBaseERC1404.sol
+│   ├── 2_CMTATBaseAccessControl.sol
+│   ├── 3_CMTATBaseAllowlist.sol
+│   ├── 3_CMTATBaseRuleEngine.sol
+│   ├── 1_CMTATBaseDocument.sol
+│   ├── 4_CMTATBaseDebt.sol
+│   ├── 4_CMTATBaseERC1404.sol
 │   ├── 4_CMTATBaseERC20CrossChain.sol
 │   ├── 4_CMTATBaseERC2612.sol
 │   ├── 5_CMTATBaseDebtEngine.sol

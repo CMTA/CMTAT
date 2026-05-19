@@ -824,19 +824,22 @@ Base contracts are used by the different deployable contracts (CMTATStandardStan
 | [CMTATBaseCore](../contracts/modules/0_CMTATBaseCore.sol)     | 0     | Inherits from all core modules                               | CMTAT Light (Upgradeable & Standalone                        |
 | [CMTATBaseGeneric](../contracts/modules/0_CMTATBaseGeneric.sol) | 0     | Inherits from non-ERC20 related modules                      | -<br />(Only mock available)                                 |
 | [CMTATBaseSnapshot](../contracts/modules/0_CMTATBaseSnapshot.sol) | 0     | Pure mixin: inherits from `ERC20Upgradeable` + `SnapshotEngineModule`. Overrides `_update` with snapshot logic. `_authorizeSnapshots()` is abstract. | -                                                            |
-| [CMTATBaseAccessControl](../contracts/modules/1_CMTATBaseAccessControl.sol) | 1     | Inherits from CMTATBaseCommon and OpenZeppelin Access Control | -                                                            |
-| [CMTATBaseAllowlist](../contracts/modules/2_CMTATBaseAllowlist.sol) | 2     | Inherits from CMTATBaseAccessControl and ValidationModuleAllowlist | CMTAT Allowlist (upgradeable & Standalone)                   |
-| [CMTATBaseRuleEngine](../contracts/modules/2_CMTATBaseRuleEngine.sol) | 2     | Add RuleEngine support by inheriting from CMTATBaseAccessControl and ValidationModuleRuleEngine | No deployment contract directly inherits from this base contract (see next level) |
-| [CMTATBaseDebt](../contracts/modules/3_CMTATBaseDebt.sol)     | 3     | Add debt support by inheriting from Debt module              | CMTAT Debt (Standalone & Upgradeable)                        |
-| [CMTATBaseERC1404](../contracts/modules/3_CMTATBaseERC1404.sol) | 3     | Add [ERC-1404](https://github.com/ethereum/EIPs/issues/1404) support | CMTAT Standalone / Upgradeable                               |
-| [CMTATBaseERC20CrossChain](../contracts/modules/4_CMTATBaseERC20CrossChain.sol) | 4     | Add cross-chain support, notably [ERC-7802](https://eips.ethereum.org/EIPS/eip-7802) | No deployment contract directly inherits from this base contract (see next level) |
-| [CMTATBaseERC2612](../contracts/modules/4_CMTATBaseERC2612.sol) | 4     | Add [ERC-2612 Permit](https://eips.ethereum.org/EIPS/eip-2612) + [ERC-6357 Multicall](https://eips.ethereum.org/EIPS/eip-6357) | CMTAT Permit (Standalone / Upgradeable)                      |
-| [CMTATBaseERC2771](../contracts/modules/5_CMTATBaseERC2771.sol) | 5     | Add [ERC-2771](https://eips.ethereum.org/EIPS/eip-2771) support by inheriting from ERC2771Module | CMTAT Standalone / Upgradeable<br />CMTAT Upgradeable UUPS   |
-| [CMTATBaseERC2771Snapshot](../contracts/modules/6_CMTATBaseERC2771Snapshot.sol) | 6     | Extends CMTATBaseERC2771 with snapshot engine support by also inheriting CMTATBaseSnapshot. Disambiguates ERC-20 and Context functions. | CMTAT Standalone Snapshot / Upgradeable Snapshot             |
-| [CMTATBaseDebtEngine](../contracts/modules/5_CMTATBaseDebtEngine.sol) | 5     | Add DebtEngine support and snapshot engine support by inheriting from DebtEngine module and CMTATBaseSnapshot | CMTAT Standalone DebtEngine / Upgradeable                    |
-| [CMTATBaseERC1363](../contracts/modules/7_CMTATBaseERC1363.sol) | 7     | Add [ERC-1363](https://eips.ethereum.org/EIPS/eip-1363) support on top of `CMTATBaseERC7551Enforcement` | CMTAT ERC1363 (Upgradeable & Standalone)                     |
-| [CMTATBaseERC7551Enforcement](../contracts/modules/6_CMTATBaseERC7551Enforcement.sol) | 6     | Add ERC-7551 enforcement functions (`forcedTransfer/freezePartialTokens/unfreezePartialTokens` with `bytes` and `getActiveBalanceOf`) | CMTAT Standard (Upgradeable & Standalone)                    |
-| [CMTATBaseERC7551](../contracts/modules/7_CMTATBaseERC7551.sol) | 7     | Add ERC-7551 support on top of `CMTATBaseERC7551Enforcement` by inheriting from ERC7551 Module | CMTAT ERC7551 (Upgradeable & Standalone)                     |
+| [CMTATBaseDocument](../contracts/modules/1_CMTATBaseDocument.sol) | 1     | Pure mixin: adds ERC-1643 document management primitives (`DocumentERC1643Module`) | No deployment contract directly inherits from this base contract (see next level) |
+| [CMTATBaseAccessControl](../contracts/modules/2_CMTATBaseAccessControl.sol) | 2     | Inherits from CMTATBaseCommon and OpenZeppelin Access Control | -                                                            |
+| [CMTATBaseAllowlist](../contracts/modules/3_CMTATBaseAllowlist.sol) | 3     | Inherits from CMTATBaseAccessControl and ValidationModuleAllowlist | CMTAT Allowlist (upgradeable & Standalone)                   |
+| [CMTATBaseRuleEngine](../contracts/modules/3_CMTATBaseRuleEngine.sol) | 3     | Add RuleEngine support by inheriting from CMTATBaseAccessControl and ValidationModuleRuleEngine | No deployment contract directly inherits from this base contract (see next level) |
+| [CMTATBaseDebt](../contracts/modules/4_CMTATBaseDebt.sol)     | 4     | Add debt support by inheriting from Debt module              | CMTAT Debt (Standalone & Upgradeable)                        |
+| [CMTATBaseERC1404](../contracts/modules/4_CMTATBaseERC1404.sol) | 4     | Add [ERC-1404](https://github.com/ethereum/EIPs/issues/1404) support | CMTAT Standalone / Upgradeable                               |
+| [CMTATBaseERC20CrossChain](../contracts/modules/5_CMTATBaseERC20CrossChain.sol) | 5     | Add cross-chain support, notably [ERC-7802](https://eips.ethereum.org/EIPS/eip-7802) | No deployment contract directly inherits from this base contract (see next level) |
+| [CMTATBaseERC2612](../contracts/modules/6_CMTATBaseERC2612.sol) | 6     | Add [ERC-2612 Permit](https://eips.ethereum.org/EIPS/eip-2612) + [ERC-6357 Multicall](https://eips.ethereum.org/EIPS/eip-6357) | CMTAT Permit (Standalone / Upgradeable)                      |
+| [CMTATBaseERC2771](../contracts/modules/6_CMTATBaseERC2771.sol) | 6     | Add [ERC-2771](https://eips.ethereum.org/EIPS/eip-2771) support by inheriting from ERC2771Module | CMTAT Standalone / Upgradeable<br />CMTAT Upgradeable UUPS   |
+| [CMTATBaseERC2771Snapshot](../contracts/modules/7_CMTATBaseERC2771Snapshot.sol) | 7     | Extends CMTATBaseERC2771 with snapshot engine support by also inheriting CMTATBaseSnapshot. Disambiguates ERC-20 and Context functions. | CMTAT Standalone Snapshot / Upgradeable Snapshot             |
+| [CMTATBaseDebtEngine](../contracts/modules/6_CMTATBaseDebtEngine.sol) | 6     | Add DebtEngine support and snapshot engine support by inheriting from DebtEngine module and CMTATBaseSnapshot | CMTAT Standalone DebtEngine / Upgradeable                    |
+| [CMTATBaseERC1363](../contracts/modules/8_CMTATBaseERC1363.sol) | 8     | Add [ERC-1363](https://eips.ethereum.org/EIPS/eip-1363) support on top of `CMTATBaseERC7551Enforcement` | CMTAT ERC1363 (Upgradeable & Standalone)                     |
+| [CMTATBaseERC7551Enforcement](../contracts/modules/7_CMTATBaseERC7551Enforcement.sol) | 7     | Add ERC-7551 enforcement functions (`forcedTransfer/freezePartialTokens/unfreezePartialTokens` with `bytes` and `getActiveBalanceOf`) | CMTAT Standard (Upgradeable & Standalone)                    |
+| [CMTATBaseERC7551](../contracts/modules/8_CMTATBaseERC7551.sol) | 8     | Add ERC-7551 support on top of `CMTATBaseERC7551Enforcement` by inheriting from ERC7551 Module | CMTAT ERC7551 (Upgradeable & Standalone)                     |
+
+Note: some Surya image filenames keep legacy numeric labels from older generations; rely on module filenames and headings above for current layering.
 
 #### Level 0 (main modules)
 
@@ -871,7 +874,13 @@ CMTAT Base Core adds several functions:
 
 
 
-#### Level 1 (ERC-20 Transfer restriction)
+#### Level 1 (document management)
+
+##### CMTAT Base Document
+
+Document management is introduced at this level through `CMTATBaseDocument`.
+
+#### Level 3 (ERC-20 transfer restriction)
 
 ##### CMTAT Base RuleEngine
 
@@ -883,7 +892,7 @@ CMTAT Base Core adds several functions:
 
 
 
-#### Level 2 (add heavy modules)
+#### Level 4 (heavy modules)
 
 ##### CMTATBaseDebt
 
@@ -895,17 +904,17 @@ CMTAT Base Core adds several functions:
 
 
 
-#### Level 3 (cross-chain transfer)
+#### Level 5 (cross-chain transfer)
 
-![surya_inheritance_CMTATBase.sol](./schema/surya_inheritance/surya_inheritance_4_CMTATBaseERC20CrossChain.sol.png)
+![surya_inheritance_CMTATBase.sol](./schema/surya_inheritance/surya_inheritance_5_CMTATBaseERC20CrossChain.sol.png)
 
-#### Level 4 (metaTx)
+#### Level 6 (metaTx)
 
 ##### CMTAT Base ERC2771
 
-![surya_inheritance_CMTATBaseOption.sol](./schema/surya_inheritance/surya_inheritance_5_CMTATBaseERC2771.sol.png)
+![surya_inheritance_CMTATBaseOption.sol](./schema/surya_inheritance/surya_inheritance_6_CMTATBaseERC2771.sol.png)
 
-#### Level 6 (use case)
+#### Level 8 (use case)
 
 ##### CMTAT Base ERC1363  (payable token)
 
@@ -913,7 +922,7 @@ CMTAT Base Core adds several functions:
 
 
 
-![surya_inheritance_CMTATERC1363Base.sol](./schema/surya_inheritance/surya_inheritance_7_CMTATBaseERC1363.sol.png)
+![surya_inheritance_CMTATERC1363Base.sol](./schema/surya_inheritance/surya_inheritance_8_CMTATBaseERC1363.sol.png)
 
 
 
@@ -925,7 +934,7 @@ CMTAT Base Core adds several functions:
 
 
 
-![surya_inheritance_CMTATERC1363Base.sol](./schema/surya_inheritance/surya_inheritance_7_CMTATBaseERC7551.sol.png)
+![surya_inheritance_CMTATERC1363Base.sol](./schema/surya_inheritance/surya_inheritance_8_CMTATBaseERC7551.sol.png)
 
 
 
@@ -1285,7 +1294,7 @@ Before each transfer (standard transfer/mint/burn), the CMTAT calls the ERC-3643
 function transferred(address from, address to, uint256 value) external;
 ```
 
-CMTAT defines the interaction with the RuleEngine inside a specific module, [ValidationModuleRuleEngine](../contracts/modules/wrapper/extensions/ValidationModule/ValidationModuleRuleEngine.sol) and [CMTATBaseRuleEngine](../contracts/modules/2_CMTATBaseRuleEngine.sol).
+CMTAT defines the interaction with the RuleEngine inside a specific module, [ValidationModuleRuleEngine](../contracts/modules/wrapper/extensions/ValidationModule/ValidationModuleRuleEngine.sol) and [CMTATBaseRuleEngine](../contracts/modules/3_CMTATBaseRuleEngine.sol).
 
 - ValidationModuleRuleEngine
 
@@ -1681,12 +1690,11 @@ This engine is defined in the module `DocumentModule`
 This EIP defines a document with three attributes:
 
 - A short name (represented as a `bytes32`)
-  - In CMTAT, since this EIP is not official, we decided to use the type `string` instead of `bytes32`to allow `name` with more than 32 characters as suggested in this [comment](https://github.com/ethereum/EIPs/issues/1643#issuecomment-453970278).
 
 - A generic URI (represented as a `string`) that could point to a website or other document portal.
 - The hash of the document contents associated with it on-chain.
 
-CMTAT only implements two functions from this standard, available in the interface [IERC1643](../contracts/interfaces/tokenization/draft-IERC1643.sol) to get the documents from the documentEngine.
+CMTAT only implements two functions from this standard, available in the interface [IERC1643](../contracts/interfaces/tokenization/draft-IERC1643.sol) to get the documents from the DocumentEngine.
 
 ```solidity
 interface IERC1643 {
@@ -1698,13 +1706,17 @@ interface IERC1643 {
     /**
      * @notice return a document identified by its name
      */
-    function getDocument(string memory name) external view returns (Document memory doc);
+    function getDocument(bytes32 name) external view returns (string memory uri, bytes32 documentHash);
     /**
      * @notice return all documents
      */
-    function getAllDocuments() external view returns (string[] memory);
+    function getAllDocuments() external view returns (bytes32[] memory);
 }
 ```
+
+Compatibility note:
+- ERC-1643 identifiers are `bytes32` in `IERC1643`.
+- CMTAT terms metadata `IERC1643CMTAT.DocumentInfo.name` remains a `string`.
 
 The `DocumentEngine` has to import and implement this interface. To manage the documents, the engine is completely free on how to do it.
 
@@ -2490,7 +2502,7 @@ More information on this standard here: [erc1363.org](https://erc1363.org), [Rar
 
 - CMTAT ERC-1363 Base
 
-![surya_inheritance_CMTAT_ERC1363_BASE.sol](./schema/surya_inheritance/surya_inheritance_7_CMTATBaseERC1363.sol.png)
+![surya_inheritance_CMTAT_ERC1363_BASE.sol](./schema/surya_inheritance/surya_inheritance_8_CMTATBaseERC1363.sol.png)
 
 
 
@@ -2685,7 +2697,7 @@ Here are the different fields and functions to read and store the related debt i
 
 
 
-![surya_inheritance_CMTATBaseDebtEngine.sol](./schema/surya_inheritance/surya_inheritance_5_CMTATBaseDebtEngine.sol.png)
+![surya_inheritance_CMTATBaseDebtEngine.sol](./schema/surya_inheritance/surya_inheritance_6_CMTATBaseDebtEngine.sol.png)
 
 
 

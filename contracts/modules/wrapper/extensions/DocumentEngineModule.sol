@@ -61,7 +61,7 @@ abstract contract DocumentEngineModule is Initializable, IDocumentEngineModule {
     /**
     * @inheritdoc IERC1643
     */
-    function getDocument(string memory name) public view  virtual override(IERC1643) returns (Document memory document){
+    function getDocument(bytes32 name) public view  virtual override(IERC1643) returns (Document memory document){
         DocumentEngineModuleStorage storage $ = _getDocumentEngineModuleStorage();
         if(address($._documentEngine) != address(0)){
             return $._documentEngine.getDocument(name);
@@ -73,11 +73,21 @@ abstract contract DocumentEngineModule is Initializable, IDocumentEngineModule {
     /**
     * @inheritdoc IERC1643
     */
-    function getAllDocuments() public view virtual override(IERC1643) returns (string[] memory documentNames_){
+    function getAllDocuments() public view virtual override(IERC1643) returns (bytes32[] memory documentNames_){
         DocumentEngineModuleStorage storage $ = _getDocumentEngineModuleStorage();
         if(address($._documentEngine) != address(0)){
             documentNames_ =  $._documentEngine.getAllDocuments();
         }
+    }
+
+    function setDocument(bytes32 name, string calldata uri, bytes32 documentHash) public virtual override(IERC1643) onlyDocumentManager {
+        DocumentEngineModuleStorage storage $ = _getDocumentEngineModuleStorage();
+        $._documentEngine.setDocument(name, uri, documentHash);
+    }
+
+    function removeDocument(bytes32 name) public virtual override(IERC1643) onlyDocumentManager {
+        DocumentEngineModuleStorage storage $ = _getDocumentEngineModuleStorage();
+        $._documentEngine.removeDocument(name);
     }
 
     /* ============  Restricted Functions ============ */

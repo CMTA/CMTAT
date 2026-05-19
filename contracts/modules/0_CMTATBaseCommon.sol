@@ -11,7 +11,6 @@ import {ERC20MintModule, ERC20MintModuleInternal} from "./wrapper/core/ERC20Mint
 // Extensions
 import {ExtraInformationModule} from "./wrapper/extensions/ExtraInformationModule.sol";
 import {ERC20EnforcementModule, ERC20EnforcementModuleInternal} from "./wrapper/extensions/ERC20EnforcementModule.sol";
-import {DocumentEngineModule} from "./wrapper/extensions/DocumentEngineModule.sol";
 // options
 import {ERC20BaseModule, ERC20Upgradeable} from "./wrapper/core/ERC20BaseModule.sol";
  /* ==== Interface and other library === */
@@ -26,7 +25,6 @@ abstract contract CMTATBaseCommon is
     ERC20BaseModule,
     // Extension
     ERC20EnforcementModule,
-    DocumentEngineModule,
     ExtraInformationModule,
     // Interfaces
     IBurnMintERC20,
