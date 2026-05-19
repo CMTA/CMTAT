@@ -1866,7 +1866,8 @@ Consideration will be given to how this can be achieved in a future release.
 
 ```solidity
 interface ICMTATDeactivate {
-    event Deactivated(address account);
+    event Deactivated(address indexed account);
+    error AlreadyDeactivated();
     /**
     * @notice deactivate the contract
     * Warning: the operation is irreversible, be careful
@@ -1894,6 +1895,7 @@ From then on, the `kill` function no longer worked as expected, and we have repl
 ##### How it works
 
 Firstly, the contract must be in `pause`state, by calling the function `pause`, otherwise the function reverts.
+If `deactivateContract()` is called again after deactivation, it reverts with `AlreadyDeactivated()`.
 
 This function sets a boolean state variable `isDeactivated` to true.
 The function `unpause `is updated to revert if the previous variable is set to true, thus the contract is in the pause state "forever".
@@ -1902,6 +1904,15 @@ The consequences are the following:
 
 - In standalone deployment, this operation is irreversible, it is not possible to rollback.
 - In upgradeable deployment (with a proxy), it is still possible to rollback by deploying a new implementation which sets the variable `isDeactivated`to false.
+
+##### Post-deactivation privileged operations
+
+After deactivation, holder-initiated operations remain blocked by permanent pause/deactivation checks.
+The following privileged operations are intentionally post-deactivation-enabled:
+
+- `setAddressFrozen` / `batchSetAddressFrozen` (`EnforcementModule`)
+- `freezePartialTokens` / `unfreezePartialTokens` (`ERC20EnforcementModule`)
+- `forcedTransfer` and related privileged enforcement paths (`ERC20EnforcementModule` / `ERC20EnforcementERC7551Module`)
 
 ### Supply management (burn & mint)
 

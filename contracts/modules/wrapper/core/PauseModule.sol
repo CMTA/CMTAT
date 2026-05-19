@@ -85,6 +85,9 @@ abstract contract PauseModule is PausableUpgradeable, IERC3643Pause, IERC7551Pau
         // Contract must be in pause state
         PausableUpgradeable._requirePaused();
         PauseModuleStorage storage $ = _getPauseModuleStorage();
+        if ($._isDeactivated) {
+            revert AlreadyDeactivated();
+        }
         $._isDeactivated = true;
        emit Deactivated(_msgSender());
     }
