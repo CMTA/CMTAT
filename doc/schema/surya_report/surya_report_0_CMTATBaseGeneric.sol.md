@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/0_CMTATBaseGeneric.sol | e8e6861bf8be3034cd7e46099eea88c806efda69 |
+| ./modules/0_CMTATBaseGeneric.sol | 2db1ecb2c69ee4f60e17917ff565907e44da1daf |
 
 
 ### Contracts Description Table
@@ -15,7 +15,7 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **CMTATBaseGeneric** | Implementation | Initializable, ContextUpgradeable, ValidationModule, VersionModule, DocumentEngineModule, ExtraInformationModule, AccessControlModule |||
+| **CMTATBaseGeneric** | Implementation | Initializable, ContextUpgradeable, ValidationModule, VersionModule, DocumentERC1643Module, ExtraInformationModule, AccessControlModule |||
 | └ | __CMTAT_init | Internal 🔒 | 🛑  | onlyInitializing |
 | └ | __CMTAT_openzeppelin_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |
 | └ | __CMTAT_modules_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |

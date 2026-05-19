@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./interfaces/tokenization/IERC3643Partial.sol | 7a6285d133815b6a9a828f10f837b3c6b6c9dd69 |
+| ./interfaces/tokenization/IERC3643Partial.sol | a37900ea71692f4520d1c92f3dad50e5a732d68d |
 
 
 ### Contracts Description Table
@@ -37,7 +37,7 @@
 | └ | setAddressFrozen | External ❗️ | 🛑  |NO❗️ |
 | └ | batchSetAddressFrozen | External ❗️ | 🛑  |NO❗️ |
 ||||||
-| **IERC3643ERC20Enforcement** | Interface | IERC7943ERC20Enforcement |||
+| **IERC3643ERC20Enforcement** | Interface | IERC7943FungibleEnforcement |||
 | └ | freezePartialTokens | External ❗️ | 🛑  |NO❗️ |
 | └ | unfreezePartialTokens | External ❗️ | 🛑  |NO❗️ |
 ||||||

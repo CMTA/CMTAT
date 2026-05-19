@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/0_CMTATBaseCommon.sol | e9342a8ffa60ec57e4d636ee52e4abab937d3dfa |
+| ./modules/0_CMTATBaseCommon.sol | 16db6ba701066bd277784e998bf705c80da29372 |
 
 
 ### Contracts Description Table
@@ -15,7 +15,7 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **CMTATBaseCommon** | Implementation | VersionModule, ERC20MintModule, ERC20BurnModule, ERC20BaseModule, SnapshotEngineModule, ERC20EnforcementModule, DocumentEngineModule, ExtraInformationModule, IBurnMintERC20, IERC5679 |||
+| **CMTATBaseCommon** | Implementation | VersionModule, ERC20MintModule, ERC20BurnModule, ERC20BaseModule, ERC20EnforcementModule, ExtraInformationModule, IBurnMintERC20, IERC5679 |||
 | └ | decimals | Public ❗️ |   |NO❗️ |
 | └ | name | Public ❗️ |   |NO❗️ |
 | └ | symbol | Public ❗️ |   |NO❗️ |
@@ -23,7 +23,6 @@
 | └ | transferFrom | Public ❗️ | 🛑  |NO❗️ |
 | └ | burnAndMint | Public ❗️ | 🛑  |NO❗️ |
 | └ | _checkTransferred | Internal 🔒 | 🛑  | |
-| └ | _update | Internal 🔒 | 🛑  | |
 | └ | _mintOverride | Internal 🔒 | 🛑  | |
 | └ | _burnOverride | Internal 🔒 | 🛑  | |
 | └ | _minterTransferOverride | Internal 🔒 | 🛑  | |

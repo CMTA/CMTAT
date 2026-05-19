@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/wrapper/options/ERC20CrossChainModule.sol | 629309df46b4679f71c59c2585cd64e1afe6d7b0 |
+| ./modules/wrapper/options/ERC20CrossChainModule.sol | 0382436b6ae5192b92b91b07a42f28829267e6dc |
 
 
 ### Contracts Description Table

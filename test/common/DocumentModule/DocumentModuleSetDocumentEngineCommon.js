@@ -18,7 +18,7 @@ function DocumentModuleSetDocumentEngineCommon () {
         {
           initializer: 'initialize',
           from: this.deployerAddress.address,
-          unsafeAllow: ['missing-initializer']
+          unsafeAllow: ['missing-initializer', 'missing-initializer-call']
         }
       )
 
@@ -43,7 +43,7 @@ function DocumentModuleSetDocumentEngineCommon () {
         {
           initializer: 'initialize',
           from: this.deployerAddress.address,
-          unsafeAllow: ['missing-initializer']
+          unsafeAllow: ['missing-initializer', 'missing-initializer-call']
         }
       )
     })

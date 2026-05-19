@@ -4,6 +4,7 @@ pragma solidity ^0.8.20;
 
 import {CMTATUpgradeableSnapshot} from "../../deployment/snapshot/CMTATUpgradeableSnapshot.sol";
 import {ISnapshotEngine} from "../../interfaces/engine/ISnapshotEngine.sol";
+import {IERC1643} from "../../interfaces/engine/IDocumentEngine.sol";
 
 /**
  * @title CMTATEngineInitializerMock
@@ -32,7 +33,8 @@ contract CMTATEngineInitializerMock is CMTATUpgradeableSnapshot {
      * @param snapshotEngine_ The snapshot engine address (can be zero)
      */
     function initializeWithEngines(
-        ISnapshotEngine snapshotEngine_
+        ISnapshotEngine snapshotEngine_,
+        IERC1643 /* documentEngine_ */
     ) public reinitializer(2) {
         // Call the uncovered initializers
         // These functions check for non-zero address internally
