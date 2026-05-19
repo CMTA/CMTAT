@@ -12,9 +12,9 @@ describe('Standard - DocumentEngineModule', function () {
       factory,
       [this.admin.address, ['CMTA Token', 'CMTAT', 0], ZERO_ADDRESS],
       {
-        initializer: 'initialize',
+        initializer: 'initialize(address,(string,string,uint8),address)',
         from: this.deployerAddress.address,
-        unsafeAllow: ['missing-initializer']
+        unsafeAllow: ['missing-initializer', 'missing-initializer-call']
       }
     )
   })

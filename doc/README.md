@@ -2973,11 +2973,11 @@ Summary (v3.3.0):
 
 | Detector | Tool Severity | Count | CMTAT Maintainer Assessment | Status |
 | ------- | ------------- | ----- | --------------------------- | ------ |
-| `uninitialized-local` | Medium | 1 | Under review (potential correctness) | Open |
+| `uninitialized-local` | Medium | 1 | False positive (Solidity default initialization behavior) | Closed |
 | `calls-loop` | Low | 28 | Design choice / context dependent | Accepted |
-| `assembly` | Informational | 13 | Expected pattern (ERC-7201-style slots) | Accepted |
+| `assembly` | Informational | 14 | Expected pattern (ERC-7201-style slots) | Accepted |
 | `dead-code` | Informational | 2 | Cleanup candidate, no direct security impact | Open |
-| `naming-convention` | Informational | 56 | Style-only | Closed |
+| `naming-convention` | Informational | 57 | Style-only | Closed |
 | `unindexed-event-address` | Informational | 1 | Minor optimization item | Accepted |
 
 #### [Mythril](https://github.com/Consensys/mythril)

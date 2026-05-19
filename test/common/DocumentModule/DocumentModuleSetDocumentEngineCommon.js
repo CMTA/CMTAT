@@ -16,7 +16,7 @@ function DocumentModuleSetDocumentEngineCommon () {
         ETHERS_CMTAT_PROXY_FACTORY,
         [this.admin.address, ['CMTA Token', 'CMTAT', 0], documentEngineMock.target],
         {
-          initializer: 'initialize',
+          initializer: 'initialize(address,(string,string,uint8),address)',
           from: this.deployerAddress.address,
           unsafeAllow: ['missing-initializer', 'missing-initializer-call']
         }
@@ -41,7 +41,7 @@ function DocumentModuleSetDocumentEngineCommon () {
         ETHERS_CMTAT_PROXY_FACTORY,
         [this.admin.address, ['CMTA Token', 'CMTAT', 0], ZERO_ADDRESS],
         {
-          initializer: 'initialize',
+          initializer: 'initialize(address,(string,string,uint8),address)',
           from: this.deployerAddress.address,
           unsafeAllow: ['missing-initializer', 'missing-initializer-call']
         }
