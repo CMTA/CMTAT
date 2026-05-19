@@ -442,6 +442,8 @@ If you want to use CMTAT to create a version implementing all functions from ERC
 
 The implemented interface is available in [IERC3643Partial](../contracts/interfaces/tokenization/IERC3643Partial.sol).
 
+See also [technical/erc-3643-implementation.md](./technical/erc-3643-implementation.md) for a full mapping of interface coverage, module/deployment composition, and differences versus T-REX.
+
 The main reason the argument names change is because CMTAT relies on OpenZeppelin to name the arguments.
 
 Required modules: 
@@ -1277,6 +1279,8 @@ The `RuleEngine` is an external contract used to apply transfer restrictions to 
 
 This contract is defined in the module `ValidationModuleRuleEngine` with the following interface `IRuleEngine`.
 
+See also [technical/ruleengine-integration.md](./technical/ruleengine-integration.md) for the complete integration guide (interfaces, hooks, operator semantics, deployment coverage).
+
 ##### Requirement
 
 Since the version v3.2.0, the requirements to use a RuleEngine are the following:
@@ -1350,6 +1354,10 @@ The same spender-aware model now applies to delegated/operator burn flows:
 For these flows, CMTAT treats the effective operator as the `spender` parameter in RuleEngine hooks.
 
 `burnFrom` is access-controlled (`BURNER_FROM_ROLE`) and is not treated as a classic `transferFrom` path in CMTAT policy modeling. In RuleEngine hooks, both `burn` and `burnFrom` resolve to a burn-like tuple (`to == address(0)`) with operator-as-spender semantics, so the hook itself cannot intrinsically distinguish between them. To enforce `burnFrom`-specific policies, RuleEngine rules must target the operator addresses authorized to execute `burnFrom` (addresses granted `BURNER_FROM_ROLE`).
+
+###### Minter Transfer - Operator restriction
+
+For `minterTransfer` (ERC-3643 `batchTransfer` path), CMTAT now propagates `_msgSender()` as `spender` in the RuleEngine hook. This means spender restrictions apply similarly to a standard `transferFrom`-style operator path. The RuleEngine cannot use `from == address(0)` to classify this call as mint, because `minterTransfer` is a transfer path (`from != address(0)`).
 
 ##### Interface
 
