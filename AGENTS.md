@@ -81,6 +81,14 @@ npm run coverage              # Generate coverage report
 npm run hardhat:compile       # Compile contracts
 ```
 
+## Test Troubleshooting
+
+If tests fail with gas reporter / Mocha reporter errors (for example `ERR_MOCHA_INVALID_REPORTER` with `eth-gas-reporter`), run tests with gas reporting disabled:
+
+```bash
+DeactivateReportGas=true npx hardhat test
+```
+
 ---
 
 ## Key Files to Understand

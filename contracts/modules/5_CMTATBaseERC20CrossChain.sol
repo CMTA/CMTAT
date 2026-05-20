@@ -11,7 +11,6 @@ import {ERC20BurnModuleInternal} from "./wrapper/core/ERC20BurnModule.sol";
 import {ERC20MintModuleInternal} from "./wrapper/core/ERC20MintModule.sol";
 import {ERC20CrossChainModule} from "./wrapper/options/ERC20CrossChainModule.sol";
 import {CCIPModule} from "./wrapper/options/CCIPModule.sol";
-import {IERC7802} from "../interfaces/technical/IERC7802.sol";
 
 /**
  * @title Add support of ERC20CrossChainModule

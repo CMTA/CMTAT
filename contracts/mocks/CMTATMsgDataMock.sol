@@ -6,6 +6,7 @@ import {CMTATStandardStandalone} from "../deployment/CMTATStandardStandalone.sol
 import {CMTATStandaloneAllowlist} from "../deployment/allowlist/CMTATStandaloneAllowlist.sol";
 import {CMTATStandaloneERC1363} from "../deployment/ERC1363/CMTATStandaloneERC1363.sol";
 import {CMTATUpgradeableERC1363} from "../deployment/ERC1363/CMTATUpgradeableERC1363.sol";
+import {CMTATStandaloneSnapshot} from "../deployment/snapshot/CMTATStandaloneSnapshot.sol";
 import {ICMTATConstructor} from "../interfaces/technical/ICMTATConstructor.sol";
 
 /*
@@ -72,6 +73,25 @@ contract CMTATUpgradeableERC1363MsgDataMock is CMTATUpgradeableERC1363 {
 
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor(address forwarderIrrevocable) CMTATUpgradeableERC1363(forwarderIrrevocable) {}
+
+    function getMsgData() external returns (bytes memory) {
+        bytes memory data = _msgData();
+        emit MsgDataReturned(data);
+        return data;
+    }
+}
+
+contract CMTATStandaloneSnapshotMsgDataMock is CMTATStandaloneSnapshot {
+    event MsgDataReturned(bytes data);
+
+    /// @custom:oz-upgrades-unsafe-allow constructor
+    constructor(
+        address forwarderIrrevocable,
+        address admin,
+        ICMTATConstructor.ERC20Attributes memory ERC20Attributes_,
+        ICMTATConstructor.ExtraInformationAttributes memory extraInformationAttributes_,
+        ICMTATConstructor.Engine memory engines_
+    ) CMTATStandaloneSnapshot(forwarderIrrevocable, admin, ERC20Attributes_, extraInformationAttributes_, engines_) {}
 
     function getMsgData() external returns (bytes memory) {
         bytes memory data = _msgData();

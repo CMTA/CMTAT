@@ -608,11 +608,12 @@ function ERC20MintModuleCommon () {
       }
 
       const TOKEN_ADDRESS_TOS = [this.address1, this.address2, this.address3]
+      const TOKEN_AMOUNTS_AUTHORIZED = [10n, 11n, 12n]
       this.ruleEngineMock = await ethers.deployContract('RuleEngineMock', [this.admin])
       await this.cmtat.connect(this.admin).setRuleEngine(this.ruleEngineMock)
 
       await expect(
-        this.cmtat.connect(this.admin).batchTransfer(TOKEN_ADDRESS_TOS, TOKEN_AMOUNTS)
+        this.cmtat.connect(this.admin).batchTransfer(TOKEN_ADDRESS_TOS, TOKEN_AMOUNTS_AUTHORIZED)
       ).to.not.be.reverted
     })
   })
