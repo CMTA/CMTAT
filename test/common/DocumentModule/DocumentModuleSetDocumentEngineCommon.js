@@ -27,6 +27,47 @@ function DocumentModuleSetDocumentEngineCommon () {
         documentEngineMock.target
       )
     })
+
+    it('testCanInitializeWithoutDocumentEngine', async function () {
+      const ETHERS_CMTAT_PROXY_FACTORY = await ethers.getContractFactory(
+        'CMTATDocumentEngineModuleMock'
+      )
+      const engineMock = await upgrades.deployProxy(
+        ETHERS_CMTAT_PROXY_FACTORY,
+        [this.admin.address, ['CMTA Token', 'CMTAT', 0], ZERO_ADDRESS],
+        {
+          initializer: 'initialize(address,(string,string,uint8),address)',
+          from: this.deployerAddress.address,
+          unsafeAllow: ['missing-initializer', 'missing-initializer-call']
+        }
+      )
+
+      expect(await engineMock.documentEngine()).to.equal(ZERO_ADDRESS)
+    })
+
+    it('testCannotInitializeTwice', async function () {
+      const documentEngineMock = await ethers.deployContract('DocumentEngineMock')
+      const ETHERS_CMTAT_PROXY_FACTORY = await ethers.getContractFactory(
+        'CMTATDocumentEngineModuleMock'
+      )
+      const engineMock = await upgrades.deployProxy(
+        ETHERS_CMTAT_PROXY_FACTORY,
+        [this.admin.address, ['CMTA Token', 'CMTAT', 0], documentEngineMock.target],
+        {
+          initializer: 'initialize(address,(string,string,uint8),address)',
+          from: this.deployerAddress.address,
+          unsafeAllow: ['missing-initializer', 'missing-initializer-call']
+        }
+      )
+
+      await expect(
+        engineMock['initialize(address,(string,string,uint8),address)'](
+          this.admin.address,
+          ['CMTA Token', 'CMTAT', 0],
+          documentEngineMock.target
+        )
+      ).to.be.revertedWithCustomError(engineMock, 'InvalidInitialization')
+    })
   })
 
   context('DocumentEngineSetTest', function () {

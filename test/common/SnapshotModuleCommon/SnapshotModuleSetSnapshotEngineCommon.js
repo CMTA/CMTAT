@@ -51,6 +51,72 @@ function SnapshotModuleSetSnapshotEngineCommon () {
         snapshotEngineMock.target
       )
     })
+
+    it('testCanInitializeWithZeroSnapshotEngine', async function () {
+      const ETHERS_CMTAT_PROXY_FACTORY = await ethers.getContractFactory(
+        'CMTATEngineInitializerMock'
+      )
+      const engineMock = await upgrades.deployProxy(
+        ETHERS_CMTAT_PROXY_FACTORY,
+        [
+          this.admin.address,
+          ['CMTA Token', 'CMTAT', 0],
+          ['CMTAT_ISIN', TERMS, 'CMTAT_info'],
+          [ZERO_ADDRESS]
+        ],
+        {
+          initializer: 'initialize',
+          constructorArgs: [ZERO_ADDRESS],
+          from: this.deployerAddress.address,
+          unsafeAllow: ['missing-initializer']
+        }
+      )
+
+      await engineMock
+        .connect(this.admin)
+        .initializeWithEngines(
+          ZERO_ADDRESS,
+          ZERO_ADDRESS
+        )
+
+      expect(await engineMock.snapshotEngine()).to.equal(ZERO_ADDRESS)
+    })
+
+    it('testCannotCallInitializeWithEnginesTwice', async function () {
+      const snapshotEngineMock = await ethers.deployContract(
+        'SnapshotEngineMock',
+        [ZERO_ADDRESS, this.admin]
+      )
+
+      const ETHERS_CMTAT_PROXY_FACTORY = await ethers.getContractFactory(
+        'CMTATEngineInitializerMock'
+      )
+      const engineMock = await upgrades.deployProxy(
+        ETHERS_CMTAT_PROXY_FACTORY,
+        [
+          this.admin.address,
+          ['CMTA Token', 'CMTAT', 0],
+          ['CMTAT_ISIN', TERMS, 'CMTAT_info'],
+          [ZERO_ADDRESS]
+        ],
+        {
+          initializer: 'initialize',
+          constructorArgs: [ZERO_ADDRESS],
+          from: this.deployerAddress.address,
+          unsafeAllow: ['missing-initializer']
+        }
+      )
+
+      await engineMock
+        .connect(this.admin)
+        .initializeWithEngines(snapshotEngineMock.target, ZERO_ADDRESS)
+
+      await expect(
+        engineMock
+          .connect(this.admin)
+          .initializeWithEngines(snapshotEngineMock.target, ZERO_ADDRESS)
+      ).to.be.revertedWithCustomError(engineMock, 'InvalidInitialization')
+    })
   })
 
   context('SnapshotEngineSetTest', function () {
