@@ -1078,6 +1078,27 @@ function ERC20EnforcementModuleCommon () {
       expect(await this.cmtat.getFrozenTokens(this.address1)).to.equal(
         frozenTokens
       )
+      if (!this.erc1404) {
+        expect(
+          await this.cmtat.detectTransferRestriction(
+            this.address1,
+            this.address2,
+            1
+          )
+        ).to.equal(
+          REJECTED_CODE_BASE_TRANSFER_REJECTED_FROM_INSUFFICIENT_ACTIVE_BALANCE
+        )
+        expect(
+          await this.cmtat.detectTransferRestrictionFrom(
+            this.admin,
+            this.address1,
+            this.address2,
+            1
+          )
+        ).to.equal(
+          REJECTED_CODE_BASE_TRANSFER_REJECTED_FROM_INSUFFICIENT_ACTIVE_BALANCE
+        )
+      }
       expect(await getActiveBalance(this, this.address1)).to.equal('0')
       expect(
         await this.cmtat.canTransfer(this.address1, this.address2, 1)
