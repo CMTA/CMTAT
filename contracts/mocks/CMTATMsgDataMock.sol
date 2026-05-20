@@ -69,15 +69,11 @@ contract CMTATStandaloneERC1363MsgDataMock is CMTATStandaloneERC1363 {
 }
 
 contract CMTATUpgradeableERC1363MsgDataMock is CMTATUpgradeableERC1363 {
-    event MsgDataReturned(bytes data);
-
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor(address forwarderIrrevocable) CMTATUpgradeableERC1363(forwarderIrrevocable) {}
 
-    function getMsgData() external returns (bytes memory) {
-        bytes memory data = _msgData();
-        emit MsgDataReturned(data);
-        return data;
+    function getMsgData() external view returns (bytes memory) {
+        return _msgData();
     }
 }
 
