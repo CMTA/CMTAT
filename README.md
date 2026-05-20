@@ -38,15 +38,15 @@ Document model note:
 
 ## Who uses CMTAT?
 
-CMTAT is used in production by major financial institutions including **UBS**, **Taurus SA**, **Daura**, **Fireblocks**, and **Syz Group** to tokenize equities, bonds, structured products, money market funds, and stablecoins.
+CMTAT is used in production by major financial institutions including **UBS**, **Taurus SA**, **Zand Trust **, **Daura**, **Obligate**, and **Syz Group** to tokenize equities, artwork, bonds, structured products, money market funds, and stablecoins.
 
-### One Example Per Use Case
+### Example Per Use Case
 
 - **Equities**: [Magic Tomato SA (2022)](https://www.taurushq.com/blog/magictomato-1st-foodtech-to-tokenise-its-shares-and-raise-equity/), [Qoqa Brew (2022)](https://www.taurushq.com/blog/qoqa-brew-brasserie-du-futur-tokenisation-et-financement-by-taurus/), [Cité Gestion SA (2023)](https://cmta.ch/news-articles/cite-gestion-becomes-cmta-certified-issuer-of-tokenized-shares), [CODE41 (2023)](https://www.taurushq.com/blog/code41-tokenises-its-shares-for-a-capital-increase-amongst-its-community-through-taurus-technology/).
-- **Debt / Bonds**: [UBS Project Guardian digital bond (2024)](https://www.linkedin.com/posts/cmta-ch_shareubs-activity-7137735139438002177-oDUL), [SCCF tokenized trade-finance notes (2023)](https://www.taurushq.com/blog/sccf-and-horizon-capital-leverage-taurus-technology-to-execute-landmark-tokenized-trade-finance-debt-transaction/).
-- **Structured Products**: [UBS tokenized warrant on Ethereum (2024)](https://www.ubs.com/global/en/media/display-page-ndp/en-20240207-tokenized-warrant.html), [UBS China AMC (2024)](https://www.ubs.com/global/en/media/display-page-ndp/en-20241114-ubs-asset-management-launches-tokenized-money-market-fund-and-tokenized-variable-capital-company-in-hong-kong.html).
-- **Stablecoins**: **Zand Trust** (wholly-owned subsidiary of Zand Bank) issued an AED stablecoin using CMTAT v3.0.0 via Taurus infrastructure; [Taurus private stablecoin deployment note](https://www.taurushq.com/blog/taurus-deploys-the-first-private-stablecoin-contract/).
-- **Tokenized Market Funds**: [UBS uMINT (2024)](https://www.ubs.com/global/en/media/display-page-ndp/en-20241101-first-tokenized-investment-fund.html), [Franklin Templeton BENJI on Avalanche](https://www.avax.network/about/blog/franklin-templeton-launches-tokenized-money-market-fund-benji-avalanche) (comparison reference in CMTAT docs).
+- **Debt / Bonds**: [UBS Project Guardian digital bond (2024)](https://www.linkedin.com/posts/cmta-ch_shareubs-activity-7137735139438002177-oDUL), [SCCF tokenized trade-finance notes (2023)](https://www.taurushq.com/blog/sccf-and-horizon-capital-leverage-taurus-technology-to-execute-landmark-tokenized-trade-finance-debt-transaction/), [Obligate](https://www.obligate.com)
+- **Structured Products**: [UBS tokenized warrant on Ethereum (2024)](https://www.ubs.com/global/en/media/display-page-ndp/en-20240207-tokenized-warrant.html)
+- **Stablecoins**: Zand Trust (2025) issued an AED stablecoin using CMTAT v3.0.0 via Taurus infrastructure; [Zand Trust](https://zandtrust.com/).
+- **Tokenized Market Funds**: [UBS uMINT (2024)](https://www.ubs.com/global/en/media/display-page-ndp/en-20241101-first-tokenized-investment-fund.html)
 - **Tokenized Artwork**: [Syz Art tokenization](https://www.syzgroup.com/en/tokenization-syzart).
 
 ## Supported Financial Instruments

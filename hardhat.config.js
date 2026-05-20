@@ -10,6 +10,11 @@ if (reportGas) {
   require("hardhat-gas-reporter");
 }
 module.exports = {
+  networks: {
+    hardhat: {
+      blockGasLimit: 30000000
+    }
+  },
   solidity: {
     version: '0.8.34',
     settings: {

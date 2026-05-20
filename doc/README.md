@@ -109,7 +109,7 @@ The CMTAT was initially designed for the digitalization of company shares. For S
 
 #### Digitalization of artwork
 
-- [Syz Group](https://www.syzgroup.com/en), a Swiss private bank, has successfully digitized two pieces of art using CMTAT in 2023 and 2024. See [Syz Art Tokenisation](https://www.syzgroup.com/en/tokenization-syzart)
+- [Syz Group](https://www.syzgroup.com/en), a Swiss private bank, has successfully digitized two pieces of art using CMTAT in 2023, 2024 and 2025. See [Syz Art Tokenisation](https://www.syzgroup.com/en/tokenization-syzart)
 
 #### Stablecoins
 
@@ -136,6 +136,8 @@ The CMTAT was initially designed for the digitalization of company shares. For S
 
 CMTAT is referenced in several reports. Although these reports do not reflect the most recent version, they already provide a good indication of potential use cases. The insights from these reports have also contributed to numerous improvements in CMTAT.
 
+- [Guardian - Fixed Income Framework (2025)](https://www.mas.gov.sg/-/media/mas-media-library/development/fintech/guardian/guardian-fixed-income-framework-v1_1.pdf)
+- [IRJEMS International Research Journal of Economics and Management Studies - Security Token Standards for Institutional Adoption of Tokenized Funds (2025)](https://irjems.org/irjems-v4i8p104.html)
 - [University of Toronto - Blockchain Meets Securities: A Scalable Tokenization Framework](https://dl.acm.org/doi/10.1145/3777461) / [pdf](https://www.eecg.utoronto.ca/~veneris/DLTACM25.pdf) (2025), page 22
 - [Forum - Asset Tokenization in Financial Markets: The Next Generation of Value Exchange (2025)](https://reports.weforum.org/docs/WEF_Asset_Tokenization_in_Financial_Markets_2025.pdf), page 38
 - [King's Business School/Rhys Bidder - What Is The Future Of Stablecoins, And How Do We Get There? (2025)](https://www.kcl.ac.uk/business/assets/PDF/qcgbf-working-papers/taking-the-next-step-v5.pdf), page 33
@@ -441,8 +443,6 @@ While CMTAT does not include directly the identity management system, it shares 
 If you want to use CMTAT to create a version implementing all functions from ERC-3643, you can create it through a dedicated deployment version (like what has been done for UUPS and ERC-1363).
 
 The implemented interface is available in [IERC3643Partial](../contracts/interfaces/tokenization/IERC3643Partial.sol).
-
-See also [technical/erc-3643-implementation.md](./technical/erc-3643-implementation.md) for a full mapping of interface coverage, module/deployment composition, and differences versus T-REX.
 
 The main reason the argument names change is because CMTAT relies on OpenZeppelin to name the arguments.
 
@@ -1279,8 +1279,6 @@ The `RuleEngine` is an external contract used to apply transfer restrictions to 
 
 This contract is defined in the module `ValidationModuleRuleEngine` with the following interface `IRuleEngine`.
 
-See also [technical/ruleengine-integration.md](./technical/ruleengine-integration.md) for the complete integration guide (interfaces, hooks, operator semantics, deployment coverage).
-
 ##### Requirement
 
 Since the version v3.2.0, the requirements to use a RuleEngine are the following:
@@ -1355,10 +1353,6 @@ For these flows, CMTAT treats the effective operator as the `spender` parameter 
 
 `burnFrom` is access-controlled (`BURNER_FROM_ROLE`) and is not treated as a classic `transferFrom` path in CMTAT policy modeling. In RuleEngine hooks, both `burn` and `burnFrom` resolve to a burn-like tuple (`to == address(0)`) with operator-as-spender semantics, so the hook itself cannot intrinsically distinguish between them. To enforce `burnFrom`-specific policies, RuleEngine rules must target the operator addresses authorized to execute `burnFrom` (addresses granted `BURNER_FROM_ROLE`).
 
-###### Minter Transfer - Operator restriction
-
-For `minterTransfer` (ERC-3643 `batchTransfer` path), CMTAT now propagates `_msgSender()` as `spender` in the RuleEngine hook. This means spender restrictions apply similarly to a standard `transferFrom`-style operator path. The RuleEngine cannot use `from == address(0)` to classify this call as mint, because `minterTransfer` is a transfer path (`from != address(0)`).
-
 ##### Interface
 
 ###### IRuleEngine
@@ -1388,10 +1382,6 @@ external view returns (bool isValid);
  function supportsInterface(bytes4 interfaceId) 
  public view override returns (bool)
 ```
-
-Important:
-- `canTransfer(from, to, value)` does not contain a spender/operator argument and therefore cannot enforce spender/operator-specific restrictions.
-- Use `canTransferFrom(spender, from, to, value)` (or `detectTransferRestrictionFrom` for ERC-1404-style checks) when validating spender/operator policies.
 
 For RuleEngine implementations, this also applies to mint/burn operator flows:
 - mint path: `from == address(0)`, `spender == operator`
@@ -2457,7 +2447,7 @@ To deploy CMTAT without a proxy, in standalone mode, you need to use the contrac
 
 Here is the surya inheritance schema:
 
-![surya_inheritance_CMTAT_STANDALONE.sol](./schema/surya_inheritance/surya_inheritance_CMTATStandardStandalone.sol.png)
+![surya_inheritance_CMTAT_STANDALONE.sol](./schema/surya_inheritance/surya_inheritance_CMTATStandalone.sol.png)
 
 ### Upgradeable (with a proxy)
 
@@ -2482,7 +2472,7 @@ See the OpenZeppelin [Upgrades plugins](https://docs.openzeppelin.com/upgrades-p
 
 
 
-![surya_inheritance_CMTAT_PROXY.sol](./schema/surya_inheritance/surya_inheritance_CMTATStandardUpgradeable.sol.png)
+![surya_inheritance_CMTAT_PROXY.sol](./schema/surya_inheritance/surya_inheritance_CMTATUpgradeable.sol.png)
 
 #### Implementation details
 
@@ -2985,11 +2975,11 @@ Summary (v3.3.0):
 
 | Detector | Tool Severity | Count | CMTAT Maintainer Assessment | Status |
 | ------- | ------------- | ----- | --------------------------- | ------ |
-| `uninitialized-local` | Medium | 1 | False positive (Solidity default initialization behavior) | Closed |
+| `uninitialized-local` | Medium | 1 | Under review (potential correctness) | Open |
 | `calls-loop` | Low | 28 | Design choice / context dependent | Accepted |
-| `assembly` | Informational | 14 | Expected pattern (ERC-7201-style slots) | Accepted |
-| `dead-code` | Informational | 1 | False positive (`_msgData()` override required by inheritance disambiguation) | Closed |
-| `naming-convention` | Informational | 57 | Style-only | Closed |
+| `assembly` | Informational | 13 | Expected pattern (ERC-7201-style slots) | Accepted |
+| `dead-code` | Informational | 2 | Cleanup candidate, no direct security impact | Open |
+| `naming-convention` | Informational | 56 | Style-only | Closed |
 | `unindexed-event-address` | Informational | 1 | Minor optimization item | Accepted |
 
 #### [Mythril](https://github.com/Consensys/mythril)
