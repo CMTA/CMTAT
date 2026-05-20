@@ -170,7 +170,7 @@ abstract contract ValidationModule is
         /**
          * We don't check the deactivate status because
          * the contract will be in the pause state if deactivated
-         * This remove a supplementary check and reduce runtime gas sot
+         * This removes a supplementary check and reduces runtime gas cost
          */
         _requireNotPaused();
         _canTransferisFrozenAndRevert(spender, from, to);

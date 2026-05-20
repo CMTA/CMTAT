@@ -1389,6 +1389,10 @@ external view returns (bool isValid);
  public view override returns (bool)
 ```
 
+Important:
+- `canTransfer(from, to, value)` does not contain a spender/operator argument and therefore cannot enforce spender/operator-specific restrictions.
+- Use `canTransferFrom(spender, from, to, value)` (or `detectTransferRestrictionFrom` for ERC-1404-style checks) when validating spender/operator policies.
+
 For RuleEngine implementations, this also applies to mint/burn operator flows:
 - mint path: `from == address(0)`, `spender == operator`
 - burn path: `to == address(0)`, `spender == operator`

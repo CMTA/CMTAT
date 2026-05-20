@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/wrapper/options/ERC20CrossChainModule.sol | 0382436b6ae5192b92b91b07a42f28829267e6dc |
+| ./modules/wrapper/options/ERC20CrossChainModule.sol | 6c08dc2d19539886ef2dce29828dda6393da3af0 |
 
 
 ### Contracts Description Table
@@ -22,7 +22,7 @@
 | └ | burn | Public ❗️ | 🛑  | onlySelfBurn |
 | └ | supportsInterface | Public ❗️ |   |NO❗️ |
 | └ | _burnFrom | Internal 🔒 | 🛑  | |
-| └ | _burn | Internal 🔒 | 🛑  | |
+| └ | _burnFromOperator | Internal 🔒 | 🛑  | |
 | └ | _checkTokenBridge | Internal 🔒 | 🛑  | |
 | └ | _authorizeBurnFrom | Internal 🔒 | 🛑  | |
 | └ | _authorizeSelfBurn | Internal 🔒 | 🛑  | |

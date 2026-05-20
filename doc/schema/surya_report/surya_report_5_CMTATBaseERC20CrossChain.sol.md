@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/5_CMTATBaseERC20CrossChain.sol | 39f9dc24c67539fa7f9eafbd6d2bdbc639ef1fb2 |
+| ./modules/5_CMTATBaseERC20CrossChain.sol | 5900451fe62bc9ac7ae8d5ba8b03c8851206fb60 |
 
 
 ### Contracts Description Table
@@ -16,7 +16,6 @@
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
 | **CMTATBaseERC20CrossChain** | Implementation | ERC20CrossChainModule, CCIPModule, CMTATBaseERC1404 |||
-| └ | crosschainBurn | Public ❗️ | 🛑  | onlyTokenBridge |
 | └ | approve | Public ❗️ | 🛑  |NO❗️ |
 | └ | transfer | Public ❗️ | 🛑  |NO❗️ |
 | └ | transferFrom | Public ❗️ | 🛑  |NO❗️ |
@@ -26,7 +25,6 @@
 | └ | supportsInterface | Public ❗️ |   |NO❗️ |
 | └ | _mintOverride | Internal 🔒 | 🛑  | |
 | └ | _burnOverride | Internal 🔒 | 🛑  | |
-| └ | _burn | Internal 🔒 | 🛑  | |
 | └ | _minterTransferOverride | Internal 🔒 | 🛑  | |
 | └ | _authorizeCCIPSetAdmin | Internal 🔒 | 🛑  | onlyRole |
 | └ | _checkTokenBridge | Internal 🔒 | 🛑  | whenNotPaused |

@@ -74,7 +74,7 @@ abstract contract CMTATBaseCommon is
         ERC20Upgradeable._transfer(from, to, value);
         return true;
     }
-    /*
+    /**
     * @inheritdoc ERC20BaseModule
     */
     function transferFrom(

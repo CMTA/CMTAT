@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./library/ERC1404ExtendInterfaceId.sol | d800730a47d9f56318fd0345826318a533448308 |
+| ./mocks/RuleEngine/RuleSpenderAuthorized.sol | 498f27e9d42bb5ecb81647c185055ee085376c3b |
 
 
 ### Contracts Description Table
@@ -15,7 +15,13 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **ERC1404ExtendInterfaceId** | Library |  |||
+| **RuleSpenderAuthorized** | Implementation | IRule, CodeList |||
+| └ | <Constructor> | Public ❗️ | 🛑  |NO❗️ |
+| └ | canTransfer | Public ❗️ |   |NO❗️ |
+| └ | detectTransferRestriction | Public ❗️ |   |NO❗️ |
+| └ | detectTransferRestrictionFrom | Public ❗️ |   |NO❗️ |
+| └ | canReturnTransferRestrictionCode | Public ❗️ |   |NO❗️ |
+| └ | messageForTransferRestriction | External ❗️ |   |NO❗️ |
 
 
 ### Legend

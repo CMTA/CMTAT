@@ -46,10 +46,10 @@ Standard chain (no snapshot):
   CMTATBaseERC20CrossChain (5) - CCIP & ERC-7802 support
       ├── CMTATBaseERC2612 (6) - ERC-2612 Permit + ERC-6357 Multicall [Permit variant]
       └── CMTATBaseERC2771 (6) - Gasless meta-transactions [Standard / UUPS]
-              ├── CMTATBaseERC2771Snapshot (7) - + CMTATBaseSnapshot [Snapshot variant]
-              ├── CMTATBaseDebtEngine (6) - + CMTATBaseSnapshot + DebtEngineModule [DebtEngine variant]
-              ├── CMTATBaseERC1363 (8) - ERC-1363 transferAndCall
-              └── CMTATBaseERC7551 (8) - ERC-7551 (eWpG)
+      ├── CMTATBaseDebtEngine (6) - + CMTATBaseSnapshot + DebtEngineModule [DebtEngine variant]
+      ├── CMTATBaseERC2771Snapshot (7) - + CMTATBaseSnapshot [Snapshot variant]
+      │   ├── CMTATBaseERC1363 (8) - ERC-1363 transferAndCall
+      │   └── CMTATBaseERC7551 (8) - ERC-7551 (eWpG)
 ```
 
 ---

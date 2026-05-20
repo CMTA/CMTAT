@@ -145,14 +145,14 @@ abstract contract CMTATBaseCore is
     }
 
 
-    /*
+    /**
     * @inheritdoc ERC20BaseModule
     */
     function name() public virtual override(ERC20Upgradeable, ERC20BaseModule) view returns (string memory) {
         return ERC20BaseModule.name();
     }
 
-    /*
+    /**
     * @inheritdoc ERC20BaseModule
     */
     function symbol() public virtual override(ERC20Upgradeable, ERC20BaseModule) view returns (string memory) {

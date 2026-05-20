@@ -59,6 +59,10 @@ RuleEngine is optional and can be zero-address.
 - `ruleEngine.canTransferFrom(...)`.
 4. If no RuleEngine is configured, RuleEngine layer returns `true`.
 
+Important:
+- `canTransfer(from, to, value)` does not include a spender/operator argument, so it cannot enforce spender/operator-specific policies.
+- Use `canTransferFrom(spender, from, to, value)` when the policy must validate a delegated caller/operator.
+
 ### B) State-changing token operations
 
 For transfer/mint/burn and related flows, CMTAT ultimately calls `_checkTransferred(...)`.

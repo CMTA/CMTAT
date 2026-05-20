@@ -72,7 +72,11 @@ abstract contract CMTATBaseERC1404 is
     ) internal virtual override( ValidationModuleERC1404) view  returns (uint8 code) {
         uint256 frozenTokensLocal = ERC20EnforcementModule.getFrozenTokens(from);
         if(frozenTokensLocal > 0 ){
-            uint256 activeBalance = ERC20Upgradeable.balanceOf(from) - frozenTokensLocal;
+            uint256 balance = ERC20Upgradeable.balanceOf(from);
+            if (frozenTokensLocal >= balance) {
+                return uint8(IERC1404Extend.REJECTED_CODE_BASE.TRANSFER_REJECTED_FROM_INSUFFICIENT_ACTIVE_BALANCE);
+            }
+            uint256 activeBalance = balance - frozenTokensLocal;
             if(value > activeBalance) {
                 return uint8(IERC1404Extend.REJECTED_CODE_BASE.TRANSFER_REJECTED_FROM_INSUFFICIENT_ACTIVE_BALANCE);
             }
