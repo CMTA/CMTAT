@@ -57,6 +57,10 @@ Custom changelog tag: `Dependencies`, `Documentation`, `Testing`
   - Introduced as `contracts/modules/1_CMTATBaseDocument.sol`.
   - Isolates document-management authorization (`_authorizeDocumentManagement`) from `CMTATBaseAccessControl`.
   - Composes `DocumentERC1643Module` on top of the rule-engine base path.
+- **Stateful RuleEngine transfer hook support (testing/mocks):**
+  - Added `IRuleTransferHook` (`contracts/mocks/RuleEngine/interfaces/IRuleTransferHook.sol`) to allow rules to update rule-local state on transfer callbacks.
+  - Added `RuleTokenHolderTracker` (`contracts/mocks/RuleEngine/RuleTokenHolderTracker.sol`) to track holder balances/list in rule storage.
+  - `RuleEngineMock` now wires the holder-tracker rule and executes transfer hooks in `transferred(...)` paths.
 
 #### Changed
 
@@ -80,6 +84,9 @@ Custom changelog tag: `Dependencies`, `Documentation`, `Testing`
   - Removed redundant `crosschainBurn` override from `CMTATBaseERC20CrossChain`; level-5 now uses `ERC20CrossChainModule.crosschainBurn` directly.
   - Removed redundant sender-aware burn override from `CMTATBaseERC20CrossChain`; burn/burnFrom sender-aware flow now relies on the module implementation.
   - In `ERC20CrossChainModule`, simplified internal self-burn routing and renamed helper `_burnWithSender` to `_burnFromOperator` for clearer intent.
+- **Meta-tx `_msgData` ERC1363 test path adjusted to avoid bytecode-size deployment failures:**
+  - Slimmed `CMTATUpgradeableERC1363MsgDataMock.getMsgData()` by removing event emission and using a `view` return path.
+  - Reworked `test/standard/modules/MetaTxMsgDataERC1363.test.js` to validate trusted-forwarder calldata shape directly instead of relying on event parsing.
 
 #### Fixed
 
@@ -109,6 +116,16 @@ Custom changelog tag: `Dependencies`, `Documentation`, `Testing`
   - `8_CMTATBaseERC7551.sol`
 - Updated `doc/README.md` ERC-1643 section to use current `bytes32` API signatures (`getDocument(bytes32)`, `getAllDocuments() returns (bytes32[])`) with compatibility note for `IERC1643CMTAT.DocumentInfo.name` (`string`).
 - Updated contracts tree file `.claude/tree/contracts_tree.txt`.
+- Added technical clarification for freeze-event semantics across standards:
+  - `doc/technical/erc-7943-uRWA-integration.md` now explicitly documents that base `Frozen(account, amount)` is a normalized frozen-state update event (including unfreeze updates), while direction should be derived from ERC-3643/7551 directional events.
+  - `doc/technical/erc-3643-implementation.md` now documents the event-layering model (`Frozen` base state update + `TokensFrozen`/`TokensUnfrozen` directional wrappers).
+
+### Testing
+
+#### Added
+
+- Added dedicated stateful RuleEngine rule test coverage in `test/standard/modules/RuleEngineMockStatefulRule.test.js`:
+  - verifies holder-balance tracking and holder-list transitions through transfer hook callbacks.
 
 ## 3.3.0 - rc0
 
