@@ -60,6 +60,8 @@ abstract contract ERC20BurnModule is ERC20BurnModuleInternal, IBurnBatchERC20, I
     /**
      *
      * @inheritdoc IBurnBatchERC20
+     * @dev `data` is batch-level metadata emitted in {BatchBurn} only.
+     * It is not forwarded to each internal burn item.
      * @custom:access-control
      * - the caller must have the `BURNER_ROLE`.
      */

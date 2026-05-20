@@ -7,6 +7,8 @@ import {IRuleEngineMock} from "./interfaces/IRuleEngineMock.sol";
 import {RuleMock} from "./RuleMock.sol";
 import {RuleMockMint} from "./RuleMockMint.sol";
 import {RuleSpenderAuthorized} from "./RuleSpenderAuthorized.sol";
+import {RuleTokenHolderTracker} from "./RuleTokenHolderTracker.sol";
+import {IRuleTransferHook} from "./interfaces/IRuleTransferHook.sol";
 import {ERC165, IERC165} from "@openzeppelin/contracts/utils/introspection/ERC165.sol";
 import {RuleEngineInterfaceId} from "../../library/RuleEngineInterfaceId.sol";
 import {ERC1404ExtendInterfaceId} from "../../library/ERC1404ExtendInterfaceId.sol";
@@ -15,12 +17,16 @@ import {ERC1404ExtendInterfaceId} from "../../library/ERC1404ExtendInterfaceId.s
 */
 contract RuleEngineMock is ERC165, IRuleEngineMock {
     IRule[] internal _rules;
+    address private _holderTrackerRule;
     error RuleEngine_InvalidTransfer(address from, address to, uint256 value);
 
     constructor(address spender) {
         _rules.push(new RuleMock());
         _rules.push(new RuleMockMint());
         _rules.push(new RuleSpenderAuthorized(spender));
+        RuleTokenHolderTracker holderTrackerRuleInstance = new RuleTokenHolderTracker();
+        _rules.push(holderTrackerRuleInstance);
+        _holderTrackerRule = address(holderTrackerRuleInstance);
     }
 
     /*
@@ -29,6 +35,16 @@ contract RuleEngineMock is ERC165, IRuleEngineMock {
     */
     function setRules(IRule[] calldata rules_) external override {
         _rules = rules_;
+        _holderTrackerRule = address(0);
+        uint256 rulesLength = _rules.length;
+        for (uint256 i = 0; i < rulesLength; ++i) {
+            try IRuleTransferHook(address(_rules[i])).transferred(address(0), address(0), address(0), 0) {
+                _holderTrackerRule = address(_rules[i]);
+                break;
+            } catch {
+                continue;
+            }
+        }
     }
 
     function rulesCount() external view override returns (uint256) {
@@ -106,19 +122,25 @@ contract RuleEngineMock is ERC165, IRuleEngineMock {
     * @dev 
     * Warning: if you want to use this mock, you have to restrict the access to this function through an an access control
     */
-    function transferred( 
+    function transferred(
         address spender,
         address from,
         address to,
-        uint256 value) view public override{
+        uint256 value) public override{
         require(canTransferFrom(spender, from, to, value), RuleEngine_InvalidTransfer(from, to, value));
+        _callRuleHooks(spender, from, to, value);
     }
 
-    function transferred( 
+    function transferred(
         address from,
         address to,
-        uint256 value) view public override {
+        uint256 value) public override {
         require(canTransfer(from, to, value), RuleEngine_InvalidTransfer(from, to, value));
+        _callRuleHooks(address(0), from, to, value);
+    }
+
+    function holderTrackerRule() external view returns (address) {
+        return _holderTrackerRule;
     }
 
     /**
@@ -147,5 +169,12 @@ contract RuleEngineMock is ERC165, IRuleEngineMock {
 
     function returnInterfaceId() public pure returns (bytes4) {
         return RuleEngineInterfaceId.RULE_ENGINE_INTERFACE_ID;
+    }
+
+    function _callRuleHooks(address spender, address from, address to, uint256 value) internal {
+        uint256 ruleArrayLength = _rules.length;
+        for (uint256 i = 0; i < ruleArrayLength; ++i) {
+            try IRuleTransferHook(address(_rules[i])).transferred(spender, from, to, value) {} catch {}
+        }
     }
 }
