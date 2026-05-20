@@ -1,10 +1,14 @@
 const { expect } = require('chai')
 const {
   deployCMTATERC1363Proxy,
+  DEPLOYMENT_DECIMAL,
+  TERMS,
   fixture,
   loadFixture
 } = require('../../deploymentUtils')
+const { upgrades } = require('hardhat')
 const {
+  ZERO_ADDRESS,
   IERC165_INTERFACEID, IERC721_INTERFACEID,IACCESSCONTROL_INTERFACEID,
   IERC1363_INTERFACEID, IERC5679_INTERFACEID
 } = require('../../utils')
@@ -93,5 +97,74 @@ describe('CMTAT - ERC1363 Proxy Deployment', function () {
   // options
   ERC20CrossChainModuleCommon()
   CCIPModuleCommon()
+
+  context('Initializer', function () {
+    it('testCanInitializeERC1363ProxyManually', async function () {
+      const factory = await ethers.getContractFactory('CMTATUpgradeableERC1363')
+      const cmtat = await upgrades.deployProxy(factory, [], {
+        initializer: false,
+        constructorArgs: [this._.address],
+        from: this.deployerAddress.address,
+        unsafeAllow: ['missing-initializer']
+      })
+
+      await cmtat.initialize(
+        this.admin.address,
+        ['CMTA Token', 'CMTAT', DEPLOYMENT_DECIMAL],
+        ['CMTAT_ISIN', TERMS, 'CMTAT_info'],
+        [ZERO_ADDRESS]
+      )
+
+      expect(await cmtat.ruleEngine()).to.equal(ZERO_ADDRESS)
+    })
+
+    it('testCanInitializeERC1363ProxyWithRuleEngine', async function () {
+      const ruleEngineMock = await ethers.deployContract('RuleEngineMock', [
+        this.admin.address
+      ])
+      const factory = await ethers.getContractFactory('CMTATUpgradeableERC1363')
+      const cmtat = await upgrades.deployProxy(factory, [], {
+        initializer: false,
+        constructorArgs: [this._.address],
+        from: this.deployerAddress.address,
+        unsafeAllow: ['missing-initializer']
+      })
+
+      await cmtat.initialize(
+        this.admin.address,
+        ['CMTA Token', 'CMTAT', DEPLOYMENT_DECIMAL],
+        ['CMTAT_ISIN', TERMS, 'CMTAT_info'],
+        [ruleEngineMock.target]
+      )
+
+      expect(await cmtat.ruleEngine()).to.equal(ruleEngineMock.target)
+    })
+
+    it('testCannotInitializeERC1363ProxyTwice', async function () {
+      const factory = await ethers.getContractFactory('CMTATUpgradeableERC1363')
+      const cmtat = await upgrades.deployProxy(factory, [], {
+        initializer: false,
+        constructorArgs: [this._.address],
+        from: this.deployerAddress.address,
+        unsafeAllow: ['missing-initializer']
+      })
+
+      await cmtat.initialize(
+        this.admin.address,
+        ['CMTA Token', 'CMTAT', DEPLOYMENT_DECIMAL],
+        ['CMTAT_ISIN', TERMS, 'CMTAT_info'],
+        [ZERO_ADDRESS]
+      )
+
+      await expect(
+        cmtat.initialize(
+          this.admin.address,
+          ['CMTA Token', 'CMTAT', DEPLOYMENT_DECIMAL],
+          ['CMTAT_ISIN', TERMS, 'CMTAT_info'],
+          [ZERO_ADDRESS]
+        )
+      ).to.be.revertedWithCustomError(cmtat, 'InvalidInitialization')
+    })
+  })
 
 })

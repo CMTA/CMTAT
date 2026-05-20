@@ -1,8 +1,13 @@
 const {
   deployCMTATPermitProxy,
+  DEPLOYMENT_DECIMAL,
+  TERMS,
   fixture,
   loadFixture
 } = require('../../deploymentUtils')
+const { expect } = require('chai')
+const { ethers, upgrades } = require('hardhat')
+const { ZERO_ADDRESS } = require('../../utils')
 // Core
 const ERC20BaseModuleCommon = require('../../common/ERC20BaseModuleCommon')
 const VersionModuleCommon = require('../../common/VersionModuleCommon')
@@ -49,4 +54,51 @@ describe('CMTAT Permit - Upgradeable', function () {
   // Permit + Multicall
   PermitModuleCommon()
   MulticallModuleCommon()
+
+  context('Initializer', function () {
+    it('testCanInitializePermitProxyManually', async function () {
+      const factory = await ethers.getContractFactory('CMTATUpgradeablePermit')
+      const cmtat = await upgrades.deployProxy(factory, [], {
+        initializer: false,
+        constructorArgs: [],
+        from: this.deployerAddress.address,
+        unsafeAllow: ['missing-initializer']
+      })
+
+      await cmtat.initialize(
+        this.admin.address,
+        ['CMTA Token', 'CMTAT', DEPLOYMENT_DECIMAL],
+        ['CMTAT_ISIN', TERMS, 'CMTAT_info'],
+        [ZERO_ADDRESS]
+      )
+
+      expect(await cmtat.ruleEngine()).to.equal(ZERO_ADDRESS)
+    })
+
+    it('testCannotInitializePermitProxyTwice', async function () {
+      const factory = await ethers.getContractFactory('CMTATUpgradeablePermit')
+      const cmtat = await upgrades.deployProxy(factory, [], {
+        initializer: false,
+        constructorArgs: [],
+        from: this.deployerAddress.address,
+        unsafeAllow: ['missing-initializer']
+      })
+
+      await cmtat.initialize(
+        this.admin.address,
+        ['CMTA Token', 'CMTAT', DEPLOYMENT_DECIMAL],
+        ['CMTAT_ISIN', TERMS, 'CMTAT_info'],
+        [ZERO_ADDRESS]
+      )
+
+      await expect(
+        cmtat.initialize(
+          this.admin.address,
+          ['CMTA Token', 'CMTAT', DEPLOYMENT_DECIMAL],
+          ['CMTAT_ISIN', TERMS, 'CMTAT_info'],
+          [ZERO_ADDRESS]
+        )
+      ).to.be.revertedWithCustomError(cmtat, 'InvalidInitialization')
+    })
+  })
 })

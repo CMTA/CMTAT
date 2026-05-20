@@ -16,6 +16,7 @@ function CMTATIntegrationCommon () {
       expect(await this.cmtat.supportsInterface(IERC5679_INTERFACEID)).to.equal(true)
       expect(await this.cmtat.supportsInterface(IERC7943_INTERFACEID)).to.equal(true)
       expect(await this.cmtat.supportsInterface(ICMTATDEACTIVATE_INTERFACEID)).to.equal(true)
+      expect(await this.cmtat.supportsInterface('0xffffffff')).to.equal(false)
 
 
     })
