@@ -43,6 +43,22 @@ All related interfaces are defined in [`draft-IERC7943.sol`](../../contracts/int
 | `Frozen` | `ERC20EnforcementModuleInternal.sol` |
 | `ForcedTransfer` | `ERC20EnforcementModuleInternal.sol` |
 
+## Event Semantics Across ERC-7943 / ERC-3643 / ERC-7551
+
+At the base enforcement layer, CMTAT emits the ERC-7943 `Frozen(account, amount)` event as a normalized "frozen amount changed" signal. This applies to both freeze and unfreeze transitions, and `amount` is the resulting frozen amount after the operation.
+
+This is aligned with ERC-7943, which defines a single `Frozen` event and does not define a distinct `Unfrozen` event.
+
+For direction-aware integrations, CMTAT emits dedicated events at wrapper level:
+
+- ERC-3643 path: `TokensFrozen(account, value)` and `TokensUnfrozen(account, value)`.
+- ERC-7551 path: `TokensFrozen(account, value, data)` and `TokensUnfrozen(account, value, data)`.
+
+Indexer guidance:
+
+- If you need the current frozen-state trajectory only, indexing `Frozen` is sufficient.
+- If you need action direction (freeze vs unfreeze), index `TokensFrozen` and `TokensUnfrozen` (ERC-3643/ERC-7551 events) instead of relying on event name from `Frozen`.
+
 ## `canSend` / `canReceive`
 
 These are account-level eligibility checks independent of transfer parameters.

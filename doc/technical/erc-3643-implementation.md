@@ -104,6 +104,9 @@ CMTAT emits additional events and supports extra overloads (for example `bytes d
 5. `batchTransfer` semantics.
 CMTAT models ERC-3643 `batchTransfer` through minter-controlled transfer logic; this is not identical to every T-REX token implementation assumption and should be treated as CMTAT policy design.
 
+6. Freeze event layering.
+At base level (ERC-7943 enforcement core), CMTAT uses `Frozen(account, amount)` as a normalized frozen-state update event for both increase and decrease of frozen balances. For ERC-3643 direction semantics, wrapper modules emit `TokensFrozen` and `TokensUnfrozen`. Integrations requiring freeze/unfreeze direction should consume ERC-3643 (or ERC-7551) directional events.
+
 ## Practical Integration Notes
 
 If strict T-REX parity is required, a dedicated deployment variant should add:
