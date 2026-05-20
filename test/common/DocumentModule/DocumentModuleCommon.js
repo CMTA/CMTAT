@@ -125,6 +125,37 @@ function DocumentModuleCommon () {
       expect(documentNames).to.include(name1)
       expect(documentNames).to.include(name2)
     })
+
+    it('testCanRemoveDocumentAndCompactArrayWhenNotLast', async function () {
+      const name1 = ethers.encodeBytes32String('doc1')
+      const uri1 = 'https://github.com/CMTA/CMTAT'
+      const documentHash1 = ethers.encodeBytes32String('hash1')
+
+      const name2 = ethers.encodeBytes32String('doc2')
+      const uri2 = 'https://github.com/CMTA/CMTAT/V2'
+      const documentHash2 = ethers.encodeBytes32String('hash2')
+
+      await this.cmtat.connect(this.admin).setDocument(name1, uri1, documentHash1)
+      await this.cmtat.connect(this.admin).setDocument(name2, uri2, documentHash2)
+
+      // Remove the first inserted document to execute the internal swap path
+      // in removeDocument (index != lastIndex).
+      await this.cmtat.connect(this.admin).removeDocument(name1)
+
+      const names = await this.cmtat.getAllDocuments()
+      expect(names.length).to.equal(1)
+      expect(names[0]).to.equal(name2)
+
+      const removedDoc = await this.cmtat.getDocument(name1)
+      expect(removedDoc.uri).to.equal('')
+      expect(removedDoc.documentHash).to.equal(ethers.encodeBytes32String(''))
+      expect(removedDoc.lastModified).to.equal(0)
+
+      const remainingDoc = await this.cmtat.getDocument(name2)
+      expect(remainingDoc.uri).to.equal(uri2)
+      expect(remainingDoc.documentHash).to.equal(documentHash2)
+      expect(remainingDoc.lastModified).to.be.gt(0)
+    })
   })
 }
 module.exports = DocumentModuleCommon

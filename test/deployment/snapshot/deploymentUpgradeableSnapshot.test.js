@@ -1,24 +1,26 @@
-const { expect } = require('chai')
 const {
-  deployCMTATDebtEngineStandalone,
+  deployCMTATSnapshotProxy,
   fixture,
   loadFixture
 } = require('../../deploymentUtils')
-const { ZERO_ADDRESS } = require('../../utils')
+
 // Core
+const VersionModuleCommon = require('../../common/VersionModuleCommon')
+const PauseModuleCommon = require('../../common/PauseModuleCommon')
 const ERC20BaseModuleCommon = require('../../common/ERC20BaseModuleCommon')
 const ERC20MintModuleCommon = require('../../common/ERC20MintModuleCommon')
 const ERC20BurnModuleCommon = require('../../common/ERC20BurnModuleCommon')
 const EnforcementModuleCommon = require('../../common/EnforcementModuleCommon')
-const VersionModuleCommon = require('../../common/VersionModuleCommon')
-const PauseModuleCommon = require('../../common/PauseModuleCommon')
-const ValidationModuleCommonCore = require('../../common/ValidationModule/ValidationModuleCommonCore')
+
 // Extensions
 const ERC20EnforcementModuleCommon = require('../../common/ERC20EnforcementModuleCommon')
 const DocumentModuleCommon = require('../../common/DocumentModule/DocumentModuleCommon')
 const ExtraInfoModuleCommon = require('../../common/ExtraInfoModuleCommon')
-const DebtModuleSetDebtEngineCommon = require('../../common/DebtModule/DebtModuleSetDebtEngineCommon')
-const DebtEngineModuleCommon = require('../../common/DebtModule/DebtEngineModuleCommon')
+
+// Options
+const ERC20CrossChainModuleCommon = require('../../common/ERC20CrossChainModuleCommon')
+const CCIPModuleCommon = require('../../common/CCIPModuleCommon')
+
 // Snapshot
 const SnapshotModuleCommonRescheduling = require('../../common/SnapshotModuleCommon/SnapshotModuleCommonRescheduling')
 const SnapshotModuleCommonScheduling = require('../../common/SnapshotModuleCommon/SnapshotModuleCommonScheduling')
@@ -28,33 +30,39 @@ const SnapshotModuleMultiplePlannedTest = require('../../common/SnapshotModuleCo
 const SnapshotModuleOnePlannedSnapshotTest = require('../../common/SnapshotModuleCommon/global/SnapshotModuleOnePlannedSnapshotTest')
 const SnapshotModuleZeroPlannedSnapshotTest = require('../../common/SnapshotModuleCommon/global/SnapshotModuleZeroPlannedSnapshot')
 const SnapshotModuleSetSnapshotEngineCommon = require('../../common/SnapshotModuleCommon/SnapshotModuleSetSnapshotEngineCommon')
-describe('CMTAT DebtEngine - Standalone Snapshot', function () {
+
+describe('CMTAT Snapshot - Proxy Deployment', function () {
   beforeEach(async function () {
     Object.assign(this, await loadFixture(fixture))
-    this.cmtat = await deployCMTATDebtEngineStandalone(
+    this.cmtat = await deployCMTATSnapshotProxy(
       this._.address,
       this.admin.address,
       this.deployerAddress.address
     )
-    // this.debtEngineMock = await ethers.deployContract('DebtEngineMock')
-    this.erc1404 = true
     this.dontCheckTimestamp = true
-    this.transferEngineMock = await ethers.deployContract(
-      'SnapshotEngineMock',
-      [this.cmtat.target, this.admin]
-    )
+    this.transferEngineMock = await ethers.deployContract('SnapshotEngineMock', [
+      this.cmtat.target,
+      this.admin
+    ])
   })
+
+  // Core
   VersionModuleCommon()
   PauseModuleCommon()
   ERC20BaseModuleCommon()
   ERC20BurnModuleCommon()
   ERC20MintModuleCommon()
   EnforcementModuleCommon()
-  ValidationModuleCommonCore()
+
   // Extensions
   ERC20EnforcementModuleCommon()
-  ExtraInfoModuleCommon()
   DocumentModuleCommon()
+  ExtraInfoModuleCommon()
+
+  // Options
+  ERC20CrossChainModuleCommon()
+  CCIPModuleCommon()
+
   // Snapshot
   SnapshotModuleMultiplePlannedTest()
   SnapshotModuleOnePlannedSnapshotTest()
@@ -63,9 +71,5 @@ describe('CMTAT DebtEngine - Standalone Snapshot', function () {
   SnapshotModuleCommonScheduling()
   SnapshotModuleCommonUnschedule()
   SnapshotModuleCommonGetNextSnapshot()
-  // Set snapshot Engine
   SnapshotModuleSetSnapshotEngineCommon()
-  // options
-  DebtEngineModuleCommon()
-  DebtModuleSetDebtEngineCommon()
 })

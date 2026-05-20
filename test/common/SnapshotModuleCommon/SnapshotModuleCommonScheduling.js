@@ -131,9 +131,10 @@ function SnapshotModuleCommonScheduling () {
       }
     })
     it('can schedule a snapshot in the first place with the snapshoter role', async function () {
-      const FIRST_SNAPSHOT = this.currentTime + time.duration.seconds(100)
-      const SECOND_SNAPSHOT = this.currentTime + time.duration.seconds(200)
-      const THIRD_SNAPSHOT = this.currentTime + time.duration.seconds(15)
+      const baseTime = await time.latest()
+      const FIRST_SNAPSHOT = baseTime + time.duration.seconds(3600)
+      const SECOND_SNAPSHOT = baseTime + time.duration.seconds(7200)
+      const THIRD_SNAPSHOT = baseTime + time.duration.seconds(1800)
       // Arrange
       this.logs = await this.transferEngineMock
         .connect(this.admin)
@@ -143,7 +144,7 @@ function SnapshotModuleCommonScheduling () {
         .scheduleSnapshot(SECOND_SNAPSHOT)
       // Act
       // We schedule the snapshot at the first place
-      this.snapshotTime = this.currentTime + time.duration.seconds(10)
+      this.snapshotTime = baseTime + time.duration.seconds(1200)
       this.logs = await this.transferEngineMock
         .connect(this.admin)
         .scheduleSnapshotNotOptimized(THIRD_SNAPSHOT)
@@ -154,14 +155,15 @@ function SnapshotModuleCommonScheduling () {
     })
 
     it('can schedule a snaphot in a random place', async function () {
+      const baseTime = await time.latest()
       // Arrange
-      const FIRST_SNAPSHOT = this.currentTime + time.duration.seconds(10)
-      const SECOND_SNAPSHOT = this.currentTime + time.duration.seconds(15)
-      const THIRD_SNAPSHOT = this.currentTime + time.duration.seconds(20)
-      const FOUR_SNAPSHOT = this.currentTime + time.duration.seconds(25)
-      const FIVE_SNAPSHOT = this.currentTime + time.duration.seconds(30)
+      const FIRST_SNAPSHOT = baseTime + time.duration.seconds(3600)
+      const SECOND_SNAPSHOT = baseTime + time.duration.seconds(4200)
+      const THIRD_SNAPSHOT = baseTime + time.duration.seconds(4800)
+      const FOUR_SNAPSHOT = baseTime + time.duration.seconds(5400)
+      const FIVE_SNAPSHOT = baseTime + time.duration.seconds(6000)
       // Third position
-      const RANDOM_SNAPSHOT = this.currentTime + time.duration.seconds(17)
+      const RANDOM_SNAPSHOT = baseTime + time.duration.seconds(4500)
       await this.transferEngineMock
         .connect(this.admin)
         .scheduleSnapshot(FIRST_SNAPSHOT)
@@ -196,7 +198,7 @@ function SnapshotModuleCommonScheduling () {
     })
 
     it('schedule a snapshot, which will be in the last position', async function () {
-      const SNAPSHOT_TIME = this.currentTime + time.duration.seconds(60)
+      const SNAPSHOT_TIME = (await time.latest()) + time.duration.seconds(3600)
       this.logs = await this.transferEngineMock
         .connect(this.admin)
         .scheduleSnapshotNotOptimized(SNAPSHOT_TIME)

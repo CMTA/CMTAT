@@ -569,5 +569,25 @@ function ValidationModuleCommon () {
       ).to.equal(false)
     })
   })
+
+  context('ValidationModuleSendReceiveCheckTest', function () {
+    it('testCanSendReturnsTrueForUnfrozenAddress', async function () {
+      expect(await this.cmtat.canSend(this.address1)).to.equal(true)
+    })
+
+    it('testCanSendReturnsFalseForFrozenAddress', async function () {
+      await this.cmtat.connect(this.admin).setAddressFrozen(this.address1, true)
+      expect(await this.cmtat.canSend(this.address1)).to.equal(false)
+    })
+
+    it('testCanReceiveReturnsTrueForUnfrozenAddress', async function () {
+      expect(await this.cmtat.canReceive(this.address2)).to.equal(true)
+    })
+
+    it('testCanReceiveReturnsFalseForFrozenAddress', async function () {
+      await this.cmtat.connect(this.admin).setAddressFrozen(this.address2, true)
+      expect(await this.cmtat.canReceive(this.address2)).to.equal(false)
+    })
+  })
 }
 module.exports = ValidationModuleCommon
