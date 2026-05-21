@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/0_CMTATBaseCore.sol | 76a71cd2d0417f27504138e42e9f74d94058ff6a |
+| ./modules/0_CMTATBaseCore.sol | 6e879243185b8c9f76fcedb367b2aee8b27ba60e |
 
 
 ### Contracts Description Table

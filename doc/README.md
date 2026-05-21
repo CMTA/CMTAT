@@ -197,6 +197,27 @@ CMTAT comes with several different deployment versions to meet specific use case
 | MetaTx/Gasless with ERC-2771                                 | All deployment version, except Debt, DebtEngine, Permit & Light version  |
 | ERC-2612 Permit + [ERC-6357 Multicall](https://eips.ethereum.org/EIPS/eip-6357)<br />(gas sponsorship approval & batch transaction) | CMTAT Permit (Standalone / Upgradeable)                      |
 
+##### Contract sizes
+
+Measured with `solc 0.8.34`, optimizer enabled (200 runs). EVM deployed bytecode limit: **24.576 KiB**.
+
+The deployed size is identical between standalone and upgradeable for the same variant; the initcode is larger for standalone contracts since it embeds the full constructor logic rather than a proxy initializer.
+
+| Deployment version | Deployed (KiB) | Initcode standalone (KiB) | Initcode upgradeable (KiB) |
+| ------------------ | -------------- | ------------------------- | -------------------------- |
+| CMTAT Standard     | 22.243         | 25.635                    | 22.569                     |
+| CMTAT Snapshot     | 22.067         | 25.459                    | 22.394                     |
+| CMTAT Light        | 11.298         | 13.048                    | 11.507                     |
+| CMTAT Allowlist    | 19.879         | 23.056                    | 20.205                     |
+| CMTAT Debt         | 23.187         | 26.301                    | 23.396                     |
+| CMTAT DebtEngine   | 23.791         | 26.905                    | 24.000                     |
+| CMTAT ERC-7551     | 22.807         | 26.198                    | 23.133                     |
+| CMTAT ERC-1363     | 23.805         | 27.238                    | 24.131                     |
+| CMTAT Permit       | 23.268         | 26.557                    | 23.477                     |
+| CMTAT UUPS         | 23.544         | —                         | 23.896                     |
+
+All variants are within the deployed bytecode limit.
+
 #### CMTAT for stablecoins
 
 Here is a comparison between the features present in major custodian stablecoin and the library CMTAT.
@@ -840,8 +861,6 @@ Base contracts are used by the different deployable contracts (CMTATStandardStan
 | [CMTATBaseERC1363](../contracts/modules/8_CMTATBaseERC1363.sol) | 8     | Add [ERC-1363](https://eips.ethereum.org/EIPS/eip-1363) support on top of `CMTATBaseERC7551Enforcement` | CMTAT ERC1363 (Upgradeable & Standalone)                     |
 | [CMTATBaseERC7551Enforcement](../contracts/modules/7_CMTATBaseERC7551Enforcement.sol) | 7     | Add ERC-7551 enforcement functions (`forcedTransfer/freezePartialTokens/unfreezePartialTokens` with `bytes` and `getActiveBalanceOf`) | CMTAT Standard (Upgradeable & Standalone)                    |
 | [CMTATBaseERC7551](../contracts/modules/8_CMTATBaseERC7551.sol) | 8     | Add ERC-7551 support on top of `CMTATBaseERC7551Enforcement` by inheriting from ERC7551 Module | CMTAT ERC7551 (Upgradeable & Standalone)                     |
-
-Note: some Surya image filenames keep legacy numeric labels from older generations; rely on module filenames and headings above for current layering.
 
 #### Level 0 (main modules)
 

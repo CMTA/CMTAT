@@ -81,9 +81,7 @@ async function deployCMTATERC1363Standalone (forwarder, admin, deployerAddress) 
     ['CMTA Token', 'CMTAT', DEPLOYMENT_DECIMAL],
     ['CMTAT_ISIN', TERMS, 'CMTAT_info'],
     [ZERO_ADDRESS]
-  ], {
-    gasLimit: 30_000_000
-  })
+  ])
   return cmtat
 }
 

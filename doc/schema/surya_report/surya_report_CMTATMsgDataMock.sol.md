@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./mocks/CMTATMsgDataMock.sol | dae651fff690230ccf3d7cd4899db34709ec8122 |
+| ./mocks/CMTATMsgDataMock.sol | 717bd7b3aaa6b7b348909cefaca7a40bbb75e8aa |
 
 
 ### Contracts Description Table
@@ -29,7 +29,7 @@
 ||||||
 | **CMTATUpgradeableERC1363MsgDataMock** | Implementation | CMTATUpgradeableERC1363 |||
 | └ | <Constructor> | Public ❗️ | 🛑  | CMTATUpgradeableERC1363 |
-| └ | getMsgData | External ❗️ | 🛑  |NO❗️ |
+| └ | getMsgData | External ❗️ |   |NO❗️ |
 ||||||
 | **CMTATStandaloneSnapshotMsgDataMock** | Implementation | CMTATStandaloneSnapshot |||
 | └ | <Constructor> | Public ❗️ | 🛑  | CMTATStandaloneSnapshot |

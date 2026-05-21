@@ -32,7 +32,7 @@ Level 0 (independent mixins):
   CMTATBaseGeneric - Non-ERC20 modules only
   CMTATBaseSnapshot - Pure mixin: ERC20Upgradeable + SnapshotEngineModule (_update hook)
 
-Standard chain (no snapshot):
+Standard chain:
   CMTATBaseCommon (0)
       ↓
   CMTATBaseDocument (1) - ERC-1643 document primitives
@@ -40,16 +40,18 @@ Standard chain (no snapshot):
   CMTATBaseAccessControl (2) - RBAC roles management
       ↓
   CMTATBaseRuleEngine / CMTATBaseAllowlist (3) - Transfer validation rules
+      ├── CMTATBaseDebt (4) - DebtModule + CMTATBaseSnapshot  [Debt variant — terminal]
       ↓
   CMTATBaseERC1404 (4) - ERC-1404 compliance (restrictedTransfer)
       ↓
   CMTATBaseERC20CrossChain (5) - CCIP & ERC-7802 support
-      ├── CMTATBaseERC2612 (6) - ERC-2612 Permit + ERC-6357 Multicall [Permit variant]
-      └── CMTATBaseERC2771 (6) - Gasless meta-transactions [Standard / UUPS]
-      ├── CMTATBaseDebtEngine (6) - + CMTATBaseSnapshot + DebtEngineModule [DebtEngine variant]
-      ├── CMTATBaseERC2771Snapshot (7) - + CMTATBaseSnapshot [Snapshot variant]
-      │   ├── CMTATBaseERC1363 (8) - ERC-1363 transferAndCall
-      │   └── CMTATBaseERC7551 (8) - ERC-7551 (eWpG)
+      ├── CMTATBaseERC2612 (6) - ERC-2612 Permit + ERC-6357 Multicall  [Permit variant]
+      ├── CMTATBaseDebtEngine (6) - + CMTATBaseSnapshot + DebtEngineModule  [DebtEngine variant]
+      └── CMTATBaseERC2771 (6) - Gasless meta-transactions  [Standard / UUPS]
+              ├── CMTATBaseERC2771Snapshot (7) - + CMTATBaseSnapshot  [Snapshot variant]
+              └── CMTATBaseERC7551Enforcement (7) - ERC-7551 enforcement overrides
+                      ├── CMTATBaseERC1363 (8) - ERC-1363 transferAndCall  [ERC-1363 variant]
+                      └── CMTATBaseERC7551 (8) - ERC-7551 (eWpG)  [ERC-7551 variant]
 ```
 
 ---
