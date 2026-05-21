@@ -126,6 +126,33 @@ Custom changelog tag: `Dependencies`, `Documentation`, `Testing`
 
 - Added dedicated stateful RuleEngine rule test coverage in `test/standard/modules/RuleEngineMockStatefulRule.test.js`:
   - verifies holder-balance tracking and holder-list transitions through transfer hook callbacks.
+- Added initializer edge-case tests for `DocumentEngineModule` and `SnapshotEngineModule`:
+  - `test/common/DocumentModule/DocumentModuleSetDocumentEngineCommon.js`: covers zero-engine assignment and re-initialization revert paths.
+  - `test/common/SnapshotModuleCommon/SnapshotModuleSetSnapshotEngineCommon.js`: covers zero-engine assignment and re-initialization revert paths.
+- Added standard initializer branch tests in `test/deployment/deployment.test.js`:
+  - manual initialization path, initialization with rule engine, and double-initialize revert.
+- Added interface and initializer coverage across deployment test suites:
+  - `test/common/CMTATIntegrationCommon.js`: extended integration paths.
+  - `test/deployment/erc721mock.test.js`: ERC-721 generic initializer and interface paths.
+  - Light/core, standard, permit, ERC-1363, snapshot, and document deployment suites.
+- Added edge-case coverage for core transfer and approve paths:
+  - `test/common/ERC20BaseModuleCommon.js`: zero-value transfers and explicit approve coverage.
+  - `test/common/AllowlistModuleCommon.js`: explicit `canSend`/`canReceive` matrix including zero-value transfers.
+- Extended `test/common/AllowlistModuleCommon.js`, `test/common/DocumentModule/DocumentModuleCommon.js`, and `test/common/ERC20EnforcementModuleCommon.js` with additional edge-case tests.
+
+#### Fixed
+
+- Removed hardcoded `gasLimit: 30_000_000` override from `deployCMTATERC1363Standalone` in `test/deploymentUtils.js`. The explicit override exceeded the Prague/Fusaka per-transaction gas cap (`FUSAKA_TRANSACTION_GAS_LIMIT = 16,777,216`) enforced by Hardhat ≥ 2.28, causing a `ProviderError` on every ERC-1363 standalone test run. Auto-estimated gas is well within the cap for this contract.
+
+### Documentation
+
+#### Changed
+
+- Updated test count references in `README.md` and `doc/README.md`: 3,078 → 5,630 automated tests.
+- `README.md`: added hyperlinks to all ERC standard references in the features table; expanded the Supported Financial Instruments table (added Snapshot, DebtEngine, ERC-1363, and UUPS variants; clarified Allowlist entry); added Contract Sizes section with deployed/initcode sizes for all deployment variants; corrected UUPS standalone note.
+- `SECURITY.md`: expanded responsible disclosure policy.
+- `doc/README.md` and `doc/SUMMARY.md`: updated module-level documentation and surya reports to reflect current hierarchy and coverage results.
+- Updated code coverage reports in `doc/test/coverage/` after full test run.
 
 ## 3.3.0 - rc0
 

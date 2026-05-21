@@ -129,7 +129,7 @@ CMTAT is blockchain-agnostic and also has implementations/adaptations beyond thi
 
 ## Security
 
-CMTAT has been audited by [ABDK](https://abdk.consulting) (v1.0, v2.3.0) and [Halborn](https://www.halborn.com) (v3.0.0), with ~99% test coverage across 3,078 automated tests.
+CMTAT has been audited by [ABDK](https://abdk.consulting) (v1.0, v2.3.0) and [Halborn](https://www.halborn.com) (v3.0.0), with ~99% test coverage across 5,630 automated tests.
 
 In addition to external audits and test coverage, CMTAT security reviews also include static analysis tools such as [Aderyn](https://github.com/Cyfrin/aderyn) and [Slither](https://github.com/crytic/slither), as well as AI-assisted auditing tools such as [Nethermind Audit Agent](https://auditagent.nethermind.io).
 

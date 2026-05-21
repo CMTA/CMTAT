@@ -29,7 +29,7 @@ contracts/
 ├── deployment/              # Pre-composed contract variants
 ├── interfaces/              # ERC standards & custom interfaces
 └── mocks/                   # Test helpers
-test/                        # 3,078 tests (~99% coverage)
+test/                        # 5,630 tests (~99% coverage)
 doc/                         # Specs & audit reports
 ```
 
