@@ -101,8 +101,18 @@ The `DebtEngine` must implement `debt()` and `creditEvents()`. The CMTAT token c
 | `CMTATStandaloneDebtEngine` | Standalone with external DebtEngine |
 | `CMTATUpgradeableDebtEngine` | Upgradeable with external DebtEngine |
 
-The `Debt` version includes `DebtModule` but does not include `ERC2771Module` or `ERC20CrossChain`.  
-The `DebtEngine` version includes `DebtEngineModule`, `ERC20CrossChain`, and ERC-1404 functionality, but does not include `ERC2771Module`.
+### Feature Matrix
+
+| Feature | `Debt` | `DebtEngine` |
+|---|---|---|
+| `DebtModule` (on-chain debt data) | ✓ | — |
+| `DebtEngineModule` (external engine) | — | ✓ |
+| `ERC20CrossChainModule` + `CCIPModule` | — | ✓ |
+| ERC-1404 (`restrictedTransferOf`) | — | ✓ (via `CMTATBaseERC20CrossChain`) |
+| `ERC2771Module` (meta-transactions) | — | — |
+| `CMTATBaseSnapshot` (SnapshotEngine support) | ✓ | ✓ |
+
+Both `Debt` and `DebtEngine` variants include `CMTATBaseSnapshot`, which wires the ERC-20 `_update` hook into an optional external `SnapshotEngine`. This means snapshot functionality is available on these variants without deploying the dedicated `Snapshot` deployment variant. Set the engine with `setSnapshotEngine(address)` (requires `SNAPSHOOTER_ROLE`).
 
 ## Compatible DebtEngine Releases
 

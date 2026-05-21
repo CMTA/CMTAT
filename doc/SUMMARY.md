@@ -4,7 +4,7 @@
 - **Snapshot** (`CMTATStandaloneSnapshot` / `CMTATUpgradeableSnapshot`) - Same as standard + SnapshotEngine support
 - **Light** - Minimal for stablecoins
 - **Allowlist** - Whitelist-based transfers (KYC)
-- **Debt** - Bond-specific fields (maturity, coupon)
+- **Debt** - Bond-specific fields (maturity, coupon) + SnapshotEngine support
 - **DebtEngine** - Debt with external engine + SnapshotEngine support
 - **ERC-7551** - German eWpG compliance
 - **ERC-1363** - transferAndCall support
@@ -27,7 +27,7 @@
 
 ```
 Level 0 (independent mixins):
-  CMTATBaseCommon  - Core ERC20 + Mint + Burn + Validation + Access Control
+  CMTATBaseCommon  - Core ERC20 + Mint + Burn + ERC20Enforcement (partial freeze) + ExtraInformation (no RBAC, no pause, no address freeze, no transfer validation)
   CMTATBaseCore    - Core modules only (light variant)
   CMTATBaseGeneric - Non-ERC20 modules only
   CMTATBaseSnapshot - Pure mixin: ERC20Upgradeable + SnapshotEngineModule (_update hook)

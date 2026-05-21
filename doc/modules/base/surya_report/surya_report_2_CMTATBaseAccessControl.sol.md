@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/0_CMTATBaseGeneric.sol | 2db1ecb2c69ee4f60e17917ff565907e44da1daf |
+| ./modules/2_CMTATBaseAccessControl.sol | cf934aa8b26c9bdc2aeb336391b3c4098da70c18 |
 
 
 ### Contracts Description Table
@@ -15,12 +15,16 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **CMTATBaseGeneric** | Implementation | Initializable, ContextUpgradeable, ValidationModule, VersionModule, DocumentERC1643Module, ExtraInformationModule, AccessControlModule |||
-| └ | __CMTAT_init | Internal 🔒 | 🛑  | onlyInitializing |
-| └ | __CMTAT_openzeppelin_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |
-| └ | __CMTAT_modules_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |
+| **CMTATBaseAccessControl** | Implementation | AccessControlModule, CMTATBaseCommon, CMTATBaseDocument |||
+| └ | __CMTAT_commonModules_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |
+| └ | supportsInterface | Public ❗️ |   |NO❗️ |
+| └ | _authorizeERC20AttributeManagement | Internal 🔒 | 🛑  | onlyRole |
+| └ | _authorizeMint | Internal 🔒 | 🛑  | onlyRole |
+| └ | _authorizeBurn | Internal 🔒 | 🛑  | onlyRole |
 | └ | _authorizeDocumentManagement | Internal 🔒 | 🛑  | onlyRole |
 | └ | _authorizeExtraInfoManagement | Internal 🔒 | 🛑  | onlyRole |
+| └ | _authorizeERC20Enforcer | Internal 🔒 | 🛑  | onlyRole |
+| └ | _authorizeForcedTransfer | Internal 🔒 | 🛑  | onlyRole |
 
 
 ### Legend

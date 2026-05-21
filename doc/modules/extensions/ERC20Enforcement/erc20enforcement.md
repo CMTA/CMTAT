@@ -59,7 +59,7 @@ function getFrozenTokens(address account) external view returns (uint256 frozenB
 
 ```solidity
 function getFrozenTokens(address account) 
-public override(IERC7551ERC20Enforcement, IERC3643ERC20Enforcement) 
+public override(IERC3643ERC20Enforcement) 
 view virtual 
 returns (uint256)
 ```
@@ -148,6 +148,44 @@ Unfreezes a specific amount of tokens for a given address, making them transfera
 
 ------
 
+##### `setFrozenTokens(address,uint256)`
+
+```solidity
+function setFrozenTokens(address account, uint256 value) external returns (bool result)
+```
+
+```solidity
+function setFrozenTokens(address account, uint256 value) 
+public virtual override(IERC7943FungibleEnforcementSpecific) 
+onlyERC20Enforcer 
+returns (bool result)
+```
+
+Sets the frozen token balance for a given address to exactly `value`. Unlike `freezePartialTokens` / `unfreezePartialTokens` (which add or subtract), this function replaces the current frozen amount directly.
+
+The frozen amount may exceed the account's current token balance (over-freezing is allowed). The effective non-transferable amount is `min(frozenTokens, balance)`.
+
+**Parameters**
+
+| Name      | Type    | Description                                               |
+| --------- | ------- | --------------------------------------------------------- |
+| `account` | address | Address whose frozen token balance will be set.           |
+| `value`   | uint256 | The new absolute frozen token amount for the account.     |
+
+**Returns**
+
+| Name      | Type | Description       |
+| --------- | ---- | ----------------- |
+| `result`  | bool | Always `true`.    |
+
+**Emits:** `Frozen` (ERC-7943 event — amount is the new frozen balance)
+
+**Requirements:**
+
+- Only authorized users (*ERC20ENFORCER_ROLE*) are allowed to call this function.
+
+------
+
 ##### `forcedTransfer(address, address,uint256)`
 
 ```solidity
@@ -192,9 +230,13 @@ If needed, frozen tokens are automatically unfrozen to fulfill the transfer.
 
 - Only authorized users (*DEFAULT_ADMIN_ROLE*) are allowed to call this function.
 
-### Interface:`IERC7551ERC20Enforcement`
+---
 
-> Defines token enforcement rules, including freezing/unfreezing tokens, tracking active balances, and allowing forced transfers.
+> **The functions below are defined in `ERC20EnforcementERC7551Module`, not in `ERC20EnforcementModule`.** They are documented here for reference. See [ERC-7551 Module](../../options/erc7551/erc7551.md#ERC20EnforcementERC7551Module) for full details.
+
+### Interface:`IERC7551ERC20Enforcement` (via `ERC20EnforcementERC7551Module`)
+
+> Defines ERC-7551 token enforcement rules: freezing/unfreezing tokens with `bytes data`, tracking active balances, and forced transfers with audit data.
 
 ------
 

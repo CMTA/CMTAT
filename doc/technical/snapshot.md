@@ -42,7 +42,15 @@ function setSnapshotEngine(address snapshotEngine_) external;
 
 ## Deployment Versions
 
-The Snapshot deployment version (`CMTATStandaloneSnapshot` / `CMTATUpgradeableSnapshot`) extends the standard CMTAT with `SnapshotEngine` support via `CMTATBaseERC2771Snapshot`.
+`CMTATBaseSnapshot` (level 0) is the core mixin that wires the ERC-20 `_update` hook into an optional external `SnapshotEngine`. It is included in several deployment variants:
+
+| Deployment variant | Base | Snapshot support |
+|---|---|---|
+| `CMTATStandaloneSnapshot` / `CMTATUpgradeableSnapshot` | `CMTATBaseERC2771Snapshot` (level 7) | ✓ dedicated variant |
+| `CMTATStandaloneDebt` / `CMTATUpgradeableDebt` | `CMTATBaseDebt` (level 4, inherits `CMTATBaseSnapshot`) | ✓ built-in |
+| `CMTATStandaloneDebtEngine` / `CMTATUpgradeableDebtEngine` | `CMTATBaseDebtEngine` (level 6, inherits `CMTATBaseSnapshot`) | ✓ built-in |
+
+Issuers using the `Debt` or `DebtEngine` deployment variants can configure a `SnapshotEngine` directly on those contracts — there is no need to deploy the dedicated `Snapshot` variant to access this functionality.
 
 It is also possible to extend CMTAT directly to include snapshot logic without an external contract. The [SnapshotEngine](https://github.com/CMTA/SnapshotEngine) repository provides such a deployment variant.
 
@@ -50,6 +58,7 @@ It is also possible to extend CMTAT directly to include snapshot logic without a
 
 | CMTAT version | SnapshotEngine |
 |---|---|
+| CMTAT v3.3.0 | Testing against v0.3.0-compatible engines in progress |
 | CMTAT v3.0.0 | [v0.3.0](https://github.com/CMTA/SnapshotEngine/releases/tag/v0.3.0) (unaudited) |
 | CMTAT v2.3.0 | SnapshotEngine v0.1.0 (unaudited) |
 | CMTAT v2.4.0, v2.5.0 | Included inside SnapshotModule (unaudited) |

@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/5_CMTATBaseERC1363.sol | dcff19612eb00bcdf0f95c3d310c597a74b41ef9 |
+| ./modules/6_CMTATBaseDebtEngine.sol | bfeb152012d9b39da44296cc36fa90eb0f2b8035 |
 
 
 ### Contracts Description Table
@@ -15,18 +15,16 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **CMTATBaseERC1363** | Implementation | ERC1363Upgradeable, CMTATBaseERC2771 |||
-| └ | __CMTAT_openzeppelin_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |
+| **CMTATBaseDebtEngine** | Implementation | DebtEngineModule, CMTATBaseERC20CrossChain, CMTATBaseSnapshot |||
+| └ | _update | Internal 🔒 | 🛑  | |
 | └ | transfer | Public ❗️ | 🛑  |NO❗️ |
 | └ | transferFrom | Public ❗️ | 🛑  |NO❗️ |
-| └ | supportsInterface | Public ❗️ |   |NO❗️ |
+| └ | approve | Public ❗️ | 🛑  |NO❗️ |
 | └ | decimals | Public ❗️ |   |NO❗️ |
 | └ | name | Public ❗️ |   |NO❗️ |
 | └ | symbol | Public ❗️ |   |NO❗️ |
-| └ | _update | Internal 🔒 | 🛑  | |
-| └ | _msgSender | Internal 🔒 |   | |
-| └ | _contextSuffixLength | Internal 🔒 |   | |
-| └ | _msgData | Internal 🔒 |   | |
+| └ | _authorizeDebtEngineManagement | Internal 🔒 | 🛑  | onlyRole |
+| └ | _authorizeSnapshots | Internal 🔒 | 🛑  | onlyRole |
 
 
 ### Legend

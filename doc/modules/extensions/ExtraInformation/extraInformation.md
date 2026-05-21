@@ -23,9 +23,10 @@ The ExtraInformation Module set the basic properties common to the different CMT
 | Field name    | Type                                                         | Setter           | Description                                                  |
 | ------------- | ------------------------------------------------------------ | ---------------- | ------------------------------------------------------------ |
 | `tokenId`     | string                                                       | `setTokenId`     | ISIN or other identifier                                     |
-| `terms`       | IERC1643Document<br /> (string name, string URI, bytes32 documentHash, uint256 lastModified) | `setTerms`       | Reference to any legally required documentation about the distributed ledger or the smart contract, such as the tokenization terms, the terms of the instrument and other relevant documents (e.g. prospectus or key information document) |
-| `metaData`    | string                                                       | `setMetaData`    | Use case: a link towards a JSON file to describes metadata. See [ERC-7551](https://ethereum-magicians.org/t/erc-7551-crypto-security-token-smart-contract-interface-ewpg/16416) |
+| `terms`       | `CMTATTerms` (`string name`, `IERC1643.Document doc`) — setter takes `IERC1643CMTAT.DocumentInfo` (`string name`, `string uri`, `bytes32 documentHash`) | `setTerms`       | Reference to any legally required documentation about the distributed ledger or the smart contract, such as the tokenization terms, the terms of the instrument and other relevant documents (e.g. prospectus or key information document) |
 | `information` | string                                                       | `setInformation` | Supplementary information related to the token               |
+
+> **Note:** `metaData` / `setMetaData` are **not** part of `ExtraInformationModule`. They are defined in `ERC7551Module` and are only available in the ERC-7551 deployment variant.
 
 
 
@@ -47,7 +48,7 @@ The ExtraInformation Module set the basic properties common to the different CMT
 
 ### Structs
 
-#### `Terms`
+#### `CMTATTerms`
 
 Represents the tokenization terms, including a name and an associated document reference.
 
@@ -74,17 +75,17 @@ Emitted when the information field is updated (typically containing free-form me
 | ---------------- | -------- | --------------------------------------- |
 | `newInformation` | `string` | The new metadata or description string. |
 
-#### `Term(string,(string,bytes32,uint256))`
+#### `Terms(CMTATTerms)`
 
 ```solidity
-event Term(Terms newTerm)
+event Terms(CMTATTerms newTerm)
 ```
 
 Emitted when new tokenization terms are set.
 
-| Name      | Type    | Description                            |
-| --------- | ------- | -------------------------------------- |
-| `newTerm` | `Terms` | The new terms structure being applied. |
+| Name      | Type          | Description                            |
+| --------- | ------------- | -------------------------------------- |
+| `newTerm` | `CMTATTerms`  | The new terms structure being applied. |
 
 
 

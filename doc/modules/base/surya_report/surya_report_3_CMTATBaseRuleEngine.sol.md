@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/1_CMTATBaseRuleEngine.sol | a8f439a039694270eba59e58d219a64f094a02ca |
+| ./modules/3_CMTATBaseRuleEngine.sol | b9bc5276aceceae7c6224027123f31f4ed47c61b |
 
 
 ### Contracts Description Table
@@ -15,12 +15,14 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **CMTATBaseRuleEngine** | Implementation | CMTATBaseCommon, ValidationModuleRuleEngine |||
+| **CMTATBaseRuleEngine** | Implementation | CMTATBaseAccessControl, ValidationModuleRuleEngine, IERC7943FungibleTransferError |||
 | └ | initialize | Public ❗️ | 🛑  | initializer |
+| └ | _initialize | Internal 🔒 | 🛑  | onlyInitializing |
 | └ | __CMTAT_init | Internal 🔒 | 🛑  | onlyInitializing |
 | └ | __CMTAT_openzeppelin_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |
 | └ | __CMTAT_internal_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |
 | └ | __CMTAT_modules_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |
+| └ | approve | Public ❗️ | 🛑  | whenNotPaused |
 | └ | canTransfer | Public ❗️ |   |NO❗️ |
 | └ | canTransferFrom | Public ❗️ |   |NO❗️ |
 | └ | _authorizePause | Internal 🔒 | 🛑  | onlyRole |

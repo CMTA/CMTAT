@@ -4,6 +4,23 @@ This document defines the CMTAT Base Core Module for the CMTA Token specificatio
 
 [TOC]
 
+## Hierarchy Context
+
+`CMTATBaseCore` sits at **level 0** in the CMTAT inheritance hierarchy. It is the self-contained base used exclusively by the **Light** deployment variants (`CMTATStandaloneLight`, `CMTATUpgradeableLight`).
+
+Unlike `CMTATBaseCommon` (also level 0), `CMTATBaseCore` bundles access control, pause, full validation (`ValidationModule`, `ValidationModuleAllowance`), and enforcement into a single compact base:
+
+| Feature | `CMTATBaseCore` | `CMTATBaseCommon` |
+|---|---|---|
+| ERC-20 (mint, burn, base) | ✓ | ✓ |
+| `AccessControlModule` (RBAC, concrete `_authorize*` overrides) | ✓ | — |
+| `PauseModule` + `EnforcementModule` + `ValidationModule` | ✓ | — |
+| `ValidationModuleAllowance` (approve/permit checks) | ✓ | — |
+| `ERC20EnforcementModule` (partial freeze, forced transfer) | — | ✓ |
+| `ExtraInformationModule` | — | ✓ |
+
+`CMTATBaseCommon` is intended to be composed further up the hierarchy (through `CMTATBaseAccessControl` at level 2), where RBAC, enforcement, and extension modules are layered on separately. `CMTATBaseCore` collapses that into one level for the Light case, where only core operations (mint, burn, pause, freeze, `forcedBurn`) are needed.
+
 ## Schema
 
 ![CMTATBaseCore](../../schema/uml/CMTATBaseCoreUML.png)

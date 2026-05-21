@@ -31,8 +31,8 @@ function permit(
 The same checks apply to both `approve` and `permit`:
 
 - The contract must not be paused.
-- The `owner` must be allowed to send (`canSend` returns true).
-- The `spender` must be allowed to send (`canSend` returns true).
+- The `owner` must not be frozen (checked via `canSend`).
+- The `spender` must not be frozen (checked via `canSend`). In the Allowlist deployment variant, both must also be allowlisted.
 
 These checks are enforced in `ValidationModuleAllowance._canAuthorizeAllowanceByModuleAndRevert`.
 

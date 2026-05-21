@@ -86,11 +86,16 @@ CMTAT implements [ERC-7201](https://eips.ethereum.org/EIPS/eip-7201) for namespa
 | ERC20BaseModule | `ERC20BaseModuleStorageLocation` | `0x9bd8d607565c0370ae5f91651ca67fd26d4438022bf72037316600e29e6a3a00` |
 | PauseModule | - | `0xab1527b6135145d8da1edcbd6b7b270624e17f2b41c74a8c746ff388ad454700` |
 | DocumentEngineModule | `DocumentEngineModuleStorageLocation` | `0xbd0905600c85d707dc53eba2e146c1c2527cd32ac3ff6b86846155151b3e2700` |
+| DocumentERC1643Module | `DocumentERC1643ModuleStorageLocation` | `0x24fbb1cf6345ced60d5278ef6f68f4f7576fd9068704b4c8f1eec8f0bbd8a200` |
 | ExtraInformationModule | `ExtraInformationModuleStorageLocation` | `0xd2d5d34c4a4dea00599692d3257c0aebc5e0359176118cd2364ab9b008c2d100` |
 | SnapshotEngineModule | `SnapshotEngineModuleStorageLocation` | `0x1387b97dfab601d3023cb57858a6be29329babb05c85597ddbe4926c1193a900` |
 | CCIPModule | `CCIPModuleStorageLocation` | `0x364fbfd89c0eee55bbc8dd10b1a9bf3e04fba9f3ee606f4c79a82f9941ad7a00` |
 | DebtModule | `DebtModuleStorageLocation` | `0xf8a315cc5f2213f6481729acd86e55db7ccc930120ccf9fb78b53dcce75f7c00` |
 | ERC7551Module | `ERC7551ModuleStorageLocation` | `0x2727314c926b592b6f70e7d6d2e4677ebcac070f293306927f71fe77858eec00` |
+| OZ `EIP712Upgradeable` | `EIP712StorageLocation` | `0xa16a46d94261c7517cc8ff89f61c0ce93598e3c849801011dee649a6a557d100` |
+| OZ `NoncesUpgradeable` | `NoncesStorageLocation` | `0x5ab42ced628888259c08ac98db1eb0cf702fc1501344311d8b100cd1bfe4bb00` |
+
+`EIP712Upgradeable` and `NoncesUpgradeable` slots are present in the Permit deployment variants (`CMTATStandalonePermit`, `CMTATUpgradeablePermit`) which inherit `ERC20PermitUpgradeable`. `DocumentERC1643Module` is present in all deployment variants that extend `CMTATBaseDocument` (level 1) — which is every variant except the mock/generic base. `ValidationModuleAllowance` has no dedicated ERC-7201 slot; it is stateless.
 
 ## Initialize Functions
 

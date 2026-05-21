@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/0_CMTATBaseCommon.sol | ef3159d406b8c61dbc2520fb37c0c29c5827d2bc |
+| ./modules/4_CMTATBaseDebt.sol | 593ad8bf57d7bbd52a5ee426a3e0f11d2e2d49c6 |
 
 
 ### Contracts Description Table
@@ -15,17 +15,16 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **CMTATBaseCommon** | Implementation | VersionModule, ERC20MintModule, ERC20BurnModule, ERC20BaseModule, ERC20EnforcementModule, ExtraInformationModule, IBurnMintERC20, IERC5679 |||
+| **CMTATBaseDebt** | Implementation | CMTATBaseRuleEngine, DebtModule, CMTATBaseSnapshot |||
+| └ | approve | Public ❗️ | 🛑  |NO❗️ |
+| └ | transfer | Public ❗️ | 🛑  |NO❗️ |
+| └ | transferFrom | Public ❗️ | 🛑  |NO❗️ |
 | └ | decimals | Public ❗️ |   |NO❗️ |
 | └ | name | Public ❗️ |   |NO❗️ |
 | └ | symbol | Public ❗️ |   |NO❗️ |
-| └ | transfer | Public ❗️ | 🛑  |NO❗️ |
-| └ | transferFrom | Public ❗️ | 🛑  |NO❗️ |
-| └ | burnAndMint | Public ❗️ | 🛑  |NO❗️ |
-| └ | _checkTransferred | Internal 🔒 | 🛑  | |
-| └ | _mintOverride | Internal 🔒 | 🛑  | |
-| └ | _burnOverride | Internal 🔒 | 🛑  | |
-| └ | _minterTransferOverride | Internal 🔒 | 🛑  | |
+| └ | _update | Internal 🔒 | 🛑  | |
+| └ | _authorizeDebtManagement | Internal 🔒 | 🛑  | onlyRole |
+| └ | _authorizeSnapshots | Internal 🔒 | 🛑  | onlyRole |
 
 
 ### Legend
