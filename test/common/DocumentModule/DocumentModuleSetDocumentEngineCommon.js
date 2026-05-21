@@ -1,5 +1,5 @@
 const { expect } = require('chai')
-const { DOCUMENT_ROLE, ZERO_ADDRESS } = require('../../utils.js')
+const { DOCUMENT_ENGINE_ROLE, ZERO_ADDRESS } = require('../../utils.js')
 const { ethers, upgrades } = require('hardhat')
 
 function DocumentModuleSetDocumentEngineCommon () {
@@ -129,7 +129,7 @@ function DocumentModuleSetDocumentEngineCommon () {
           this.cmtat,
           'AccessControlUnauthorizedAccount'
         )
-        .withArgs(this.address1.address, DOCUMENT_ROLE)
+        .withArgs(this.address1.address, DOCUMENT_ENGINE_ROLE)
     })
 
     it('testGetEmptyDocumentsIfNoDocumentEngine', async function () {

@@ -1,10 +1,11 @@
 const { expect } = require('chai')
-const { ZERO_ADDRESS, DOCUMENT_ROLE } = require('../../utils')
+const { ZERO_ADDRESS, DOCUMENT_ROLE, DOCUMENT_ENGINE_ROLE } = require('../../utils')
 
 function DocumentModuleCommon () {
   context('Document Module Test', function () {
     beforeEach(async function () {
       const hasDocumentEngine = this.cmtat.interface.hasFunction('documentEngine()')
+      this.documentRole = hasDocumentEngine ? DOCUMENT_ENGINE_ROLE : DOCUMENT_ROLE
       if (hasDocumentEngine && !this.definedAtDeployment) {
         this.documentEngineMock = await ethers.deployContract(
           'DocumentEngineMock'
@@ -50,7 +51,7 @@ function DocumentModuleCommon () {
           this.cmtat,
           'AccessControlUnauthorizedAccount'
         )
-        .withArgs(this.address1.address, DOCUMENT_ROLE)
+        .withArgs(this.address1.address, this.documentRole)
     })
 
     it('testCanUpdateADocument', async function () {
@@ -105,7 +106,7 @@ function DocumentModuleCommon () {
           this.cmtat,
           'AccessControlUnauthorizedAccount'
         )
-        .withArgs(this.address1.address, DOCUMENT_ROLE)
+        .withArgs(this.address1.address, this.documentRole)
     })
 
     it('testCanReturnAllDocumentNames', async function () {

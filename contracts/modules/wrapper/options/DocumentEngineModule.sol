@@ -16,7 +16,7 @@ import {IDocumentEngineModule} from "../../../interfaces/modules/IDocumentEngine
  */
 abstract contract DocumentEngineModule is Initializable, IDocumentEngineModule {
     /* ============ ERC-7201 ============ */
-    bytes32 public constant DOCUMENT_ROLE = keccak256("DOCUMENT_ROLE");
+    bytes32 public constant DOCUMENT_ENGINE_ROLE = keccak256("DOCUMENT_ENGINE_ROLE");
     // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.DocumentEngineModule")) - 1)) & ~bytes32(uint256(0xff))
     bytes32 private constant DocumentEngineModuleStorageLocation = 0xbd0905600c85d707dc53eba2e146c1c2527cd32ac3ff6b86846155151b3e2700;
     /* ==== ERC-7201 State Variables === */

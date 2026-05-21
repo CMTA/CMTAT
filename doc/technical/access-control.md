@@ -24,7 +24,8 @@ See also [docs.openzeppelin.com - AccessControl](https://docs.openzeppelin.com/c
 | `ENFORCER_ROLE` | EnforcementModule | `0x973ef39d76cc2c6090feab1c030bec6ab5db557f64df047a4c4f9b5953cf1df3` |
 | `PAUSER_ROLE` | PauseModule | `0x65d7a28e3265b37a6474929f336521b332c1681b933f6cb9f3376673440d862a` |
 | `SNAPSHOOTER_ROLE` | SnapshotEngineModule | `0x809a0fc49fc0600540f1d39e23454e1f6f215bc7505fa22b17c154616570ddef` |
-| `DOCUMENT_ROLE` | DocumentEngineModule | `0xdd7c9aafbb91d54fb2041db1d5b172ea665309b32f5fffdbddf452802a1e3b20` |
+| `DOCUMENT_ROLE` | DocumentERC1643Module | `0xdd7c9aafbb91d54fb2041db1d5b172ea665309b32f5fffdbddf452802a1e3b20` |
+| `DOCUMENT_ENGINE_ROLE` | DocumentEngineModule | `0x2d6f031e2eef5fafe7386c46356b86b5ed6513f04e6bcb34d4e0ff161e332117` |
 | `EXTRA_INFORMATION_ROLE` | ExtraInformationModule | `0x921df7a58eb4ea112afa962b8186161404ecda2e8fe97f8246026d02ad1a74b7` |
 | `ERC20ENFORCER_ROLE` | ERC20EnforcementModule | `0xd62f75bf68b069bc8e2abd495a949fafec67a4e5a5b7cb36aedf0dd51eec7e72` |
 | `ALLOWLIST_ROLE` | AllowlistModule | `0x26a560d834a19637eccba4611bbc09fb32970bb627da0a70f14f83fdc9822cbc` |
@@ -53,8 +54,11 @@ See also [docs.openzeppelin.com - AccessControl](https://docs.openzeppelin.com/c
 | **ERC20EnforcementModule** | `forcedTransfer(address, address, uint256)` | `DEFAULT_ADMIN_ROLE` |
 | | `freezePartialTokens(address, uint256)` | `ERC20ENFORCER_ROLE` |
 | | `unfreezePartialTokens(address, uint256)` | `ERC20ENFORCER_ROLE` |
+| **ERC20EnforcementERC7551Module** | `forcedTransfer(address, address, uint256, bytes)` | `DEFAULT_ADMIN_ROLE` |
+| | `freezePartialTokens(address, uint256, bytes)` | `ERC20ENFORCER_ROLE` |
+| | `unfreezePartialTokens(address, uint256, bytes)` | `ERC20ENFORCER_ROLE` |
 | **SnapshotEngineModule** | `setSnapshotEngine(address)` | `SNAPSHOOTER_ROLE` |
-| **DocumentEngineModule** | `setDocumentEngine(address)` | `DOCUMENT_ROLE` |
+| **DocumentEngineModule** | `setDocumentEngine(address)` | `DOCUMENT_ENGINE_ROLE` |
 | **AllowlistModule** | `setAddressAllowlist(address, bool)` | `ALLOWLIST_ROLE` |
 | | `batchSetAddressAllowlist(address[], bool[])` | `ALLOWLIST_ROLE` |
 | **DebtModule** | `setDebt(...)` | `DEBT_ROLE` |

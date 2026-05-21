@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/0_CMTATBaseGeneric.sol | 2db1ecb2c69ee4f60e17917ff565907e44da1daf |
+| ./modules/8_CMTATBaseERC1363.sol | 55f464bf7e8bc8fb2ed679b564f13727f61bbf96 |
 
 
 ### Contracts Description Table
@@ -15,12 +15,18 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **CMTATBaseGeneric** | Implementation | Initializable, ContextUpgradeable, ValidationModule, VersionModule, DocumentERC1643Module, ExtraInformationModule, AccessControlModule |||
-| └ | __CMTAT_init | Internal 🔒 | 🛑  | onlyInitializing |
+| **CMTATBaseERC1363** | Implementation | ERC1363Upgradeable, CMTATBaseERC7551Enforcement |||
 | └ | __CMTAT_openzeppelin_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |
-| └ | __CMTAT_modules_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |
-| └ | _authorizeDocumentManagement | Internal 🔒 | 🛑  | onlyRole |
-| └ | _authorizeExtraInfoManagement | Internal 🔒 | 🛑  | onlyRole |
+| └ | approve | Public ❗️ | 🛑  |NO❗️ |
+| └ | transfer | Public ❗️ | 🛑  |NO❗️ |
+| └ | transferFrom | Public ❗️ | 🛑  |NO❗️ |
+| └ | supportsInterface | Public ❗️ |   |NO❗️ |
+| └ | decimals | Public ❗️ |   |NO❗️ |
+| └ | name | Public ❗️ |   |NO❗️ |
+| └ | symbol | Public ❗️ |   |NO❗️ |
+| └ | _msgSender | Internal 🔒 |   | |
+| └ | _contextSuffixLength | Internal 🔒 |   | |
+| └ | _msgData | Internal 🔒 |   | |
 
 
 ### Legend

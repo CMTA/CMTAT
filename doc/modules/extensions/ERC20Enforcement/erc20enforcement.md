@@ -59,7 +59,7 @@ function getFrozenTokens(address account) external view returns (uint256 frozenB
 
 ```solidity
 function getFrozenTokens(address account) 
-public override(IERC7551ERC20Enforcement, IERC3643ERC20Enforcement) 
+public override(IERC3643ERC20Enforcement) 
 view virtual 
 returns (uint256)
 ```
@@ -192,9 +192,13 @@ If needed, frozen tokens are automatically unfrozen to fulfill the transfer.
 
 - Only authorized users (*DEFAULT_ADMIN_ROLE*) are allowed to call this function.
 
-### Interface:`IERC7551ERC20Enforcement`
+---
 
-> Defines token enforcement rules, including freezing/unfreezing tokens, tracking active balances, and allowing forced transfers.
+> **The functions below are defined in `ERC20EnforcementERC7551Module`, not in `ERC20EnforcementModule`.** They are documented here for reference. See [ERC-7551 Module](../../options/erc7551/erc7551.md#ERC20EnforcementERC7551Module) for full details.
+
+### Interface:`IERC7551ERC20Enforcement` (via `ERC20EnforcementERC7551Module`)
+
+> Defines ERC-7551 token enforcement rules: freezing/unfreezing tokens with `bytes data`, tracking active balances, and forced transfers with audit data.
 
 ------
 

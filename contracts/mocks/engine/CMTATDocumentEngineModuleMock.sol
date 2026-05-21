@@ -26,5 +26,5 @@ contract CMTATDocumentEngineModuleMock is CMTATBaseCore, DocumentEngineModule {
         __DocumentEngineModule_init_unchained(documentEngine_);
     }
 
-    function _authorizeDocumentManagement() internal virtual override(DocumentEngineModule) onlyRole(DOCUMENT_ROLE) {}
+    function _authorizeDocumentManagement() internal virtual override(DocumentEngineModule) onlyRole(DOCUMENT_ENGINE_ROLE) {}
 }

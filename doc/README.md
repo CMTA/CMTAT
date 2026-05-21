@@ -2,7 +2,7 @@
 
 > To use the CMTAT, we recommend the latest audited version, from the [Releases](https://github.com/CMTA/CMTAT/releases) page. Currently, it is the version [v3.0.0](https://github.com/CMTA/CMTAT/releases/tag/v3.0.0).
 >
-> PDF files of README are available here: [CMTATSpecificationV3.0.0.pdf](./specification/CMTATSpecificationV3.0.0.pdf), [CMTATSpecificationV3.1.0.pdf](./specification/CMTATSpecificationV3.1.0.pdf)
+> PDF files of README are available here: [CMTATSpecificationV3.0.0.pdf](./specification/CMTATSpecificationV3.0.0.pdf), [CMTATSpecificationV3.2.0.pdf](./specification/CMTATSpecificationV3.2.0.pdf)
 
 ## Introduction
 
@@ -37,7 +37,7 @@ CMTAT has been built with five main goals:
    - Technicals: [ERC-2771](https://eips.ethereum.org/EIPS/eip-2771) (MetaTx/Gasless), [ERC-7201](https://eips.ethereum.org/EIPS/eip-7201), [ERC-7802](https://eips.ethereum.org/EIPS/eip-7802),...
 
 4. Security by undergoing audits from trusted firms like [ADBK](https://abdk.consulting) and [Halborn](https://www.halborn.com), and by implementing a range of industry best practices.
-   - Strong code statements coverage(~99.43%) with 3078 automated tests executed
+   - Strong code statements coverage(~99.43%) with 5630 automated tests executed
    - Run static analyzer ([Aderyn](https://github.com/Cyfrin/aderyn), [Slither](https://github.com/crytic/slither/tree/master)), as well as AI Auditing tools ([Nethermind Audit Agent](https://auditagent.nethermind.io), [Wake Arena](https://ackee.xyz)), before and after the audits
    - RBAC Access Control to clearly separates the different roles and permissions
    
@@ -196,27 +196,6 @@ CMTAT comes with several different deployment versions to meet specific use case
 | Deployment through proxy (Upgradeable)<br />Deployment immutable (standalone / without proxy) | Each deployment version comes with a standalone (immutable) or upgradeable mode.<br />A specific deployment version exists for UUPS Proxy |
 | MetaTx/Gasless with ERC-2771                                 | All deployment version, except Debt, DebtEngine, Permit & Light version  |
 | ERC-2612 Permit + [ERC-6357 Multicall](https://eips.ethereum.org/EIPS/eip-6357)<br />(gas sponsorship approval & batch transaction) | CMTAT Permit (Standalone / Upgradeable)                      |
-
-##### Contract sizes
-
-Measured with `solc 0.8.34`, optimizer enabled (200 runs). EVM deployed bytecode limit: **24.576 KiB**.
-
-The deployed size is identical between standalone and upgradeable for the same variant; the initcode is larger for standalone contracts since it embeds the full constructor logic rather than a proxy initializer.
-
-| Deployment version | Deployed (KiB) | Initcode standalone (KiB) | Initcode upgradeable (KiB) |
-| ------------------ | -------------- | ------------------------- | -------------------------- |
-| CMTAT Standard     | 22.243         | 25.635                    | 22.569                     |
-| CMTAT Snapshot     | 22.067         | 25.459                    | 22.394                     |
-| CMTAT Light        | 11.298         | 13.048                    | 11.507                     |
-| CMTAT Allowlist    | 19.879         | 23.056                    | 20.205                     |
-| CMTAT Debt         | 23.187         | 26.301                    | 23.396                     |
-| CMTAT DebtEngine   | 23.791         | 26.905                    | 24.000                     |
-| CMTAT ERC-7551     | 22.807         | 26.198                    | 23.133                     |
-| CMTAT ERC-1363     | 23.805         | 27.238                    | 24.131                     |
-| CMTAT Permit       | 23.268         | 26.557                    | 23.477                     |
-| CMTAT UUPS         | 23.544         | —                         | 23.896                     |
-
-All variants are within the deployed bytecode limit.
 
 #### CMTAT for stablecoins
 
@@ -2466,7 +2445,7 @@ To deploy CMTAT without a proxy, in standalone mode, you need to use the contrac
 
 Here is the surya inheritance schema:
 
-![surya_inheritance_CMTAT_STANDALONE.sol](./schema/surya_inheritance/surya_inheritance_CMTATStandalone.sol.png)
+![surya_inheritance_CMTAT_STANDALONE.sol](./schema/surya_inheritance/surya_inheritance_CMTATStandardStandalone.sol.png)
 
 ### Upgradeable (with a proxy)
 
@@ -2491,7 +2470,7 @@ See the OpenZeppelin [Upgrades plugins](https://docs.openzeppelin.com/upgrades-p
 
 
 
-![surya_inheritance_CMTAT_PROXY.sol](./schema/surya_inheritance/surya_inheritance_CMTATUpgradeable.sol.png)
+![surya_inheritance_CMTAT_PROXY.sol](./schema/surya_inheritance/surya_inheritance_CMTATStandardUpgradeable.sol.png)
 
 #### Implementation details
 
@@ -3188,8 +3167,24 @@ Alternatively, you can install Hardhat [globally](https://v2.hardhat.org/hardhat
 npm run-script size
 ```
 
+Measured with `solc 0.8.34`, optimizer enabled (200 runs). EVM deployed bytecode limit: **24.576 KiB**.
 
-![contract-size](./general/contract-size.png)
+The deployed size is identical between standalone and upgradeable for the same variant; the initcode is larger for standalone contracts since it embeds the full constructor logic rather than a proxy initializer.
+
+| Deployment version | Deployed (KiB) | Initcode standalone (KiB) | Initcode upgradeable (KiB) |
+| ------------------ | -------------- | ------------------------- | -------------------------- |
+| CMTAT Standard     | 22.243         | 25.635                    | 22.569                     |
+| CMTAT Snapshot     | 22.067         | 25.459                    | 22.394                     |
+| CMTAT Light        | 11.298         | 13.048                    | 11.507                     |
+| CMTAT Allowlist    | 19.879         | 23.056                    | 20.205                     |
+| CMTAT Debt         | 23.187         | 26.301                    | 23.396                     |
+| CMTAT DebtEngine   | 23.791         | 26.905                    | 24.000                     |
+| CMTAT ERC-7551     | 22.807         | 26.198                    | 23.133                     |
+| CMTAT ERC-1363     | 23.805         | 27.238                    | 24.131                     |
+| CMTAT Permit       | 23.268         | 26.557                    | 23.477                     |
+| CMTAT UUPS         | 23.544         | —                         | 23.896                     |
+
+All variants are within the deployed bytecode limit.
 
 ---
 
