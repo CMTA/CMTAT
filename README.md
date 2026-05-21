@@ -38,7 +38,7 @@ Document model note:
 
 ## Who uses CMTAT?
 
-CMTAT is used in production by major financial institutions including **UBS**, **Taurus SA**, **Zand Trust **, **Daura**, **Obligate**, and **Syz Group** to tokenize equities, artwork, bonds, structured products, money market funds, and stablecoins.
+CMTAT is used in production by major financial institutions including **UBS**, **Taurus SA**, **Zand Trust**, **Daura**, **Obligate**, and **Syz Group** to tokenize equities, artwork, bonds, structured products, money market funds, and stablecoins.
 
 ### Example Per Use Case
 

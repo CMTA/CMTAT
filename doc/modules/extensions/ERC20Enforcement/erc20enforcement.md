@@ -148,6 +148,44 @@ Unfreezes a specific amount of tokens for a given address, making them transfera
 
 ------
 
+##### `setFrozenTokens(address,uint256)`
+
+```solidity
+function setFrozenTokens(address account, uint256 value) external returns (bool result)
+```
+
+```solidity
+function setFrozenTokens(address account, uint256 value) 
+public virtual override(IERC7943FungibleEnforcementSpecific) 
+onlyERC20Enforcer 
+returns (bool result)
+```
+
+Sets the frozen token balance for a given address to exactly `value`. Unlike `freezePartialTokens` / `unfreezePartialTokens` (which add or subtract), this function replaces the current frozen amount directly.
+
+The frozen amount may exceed the account's current token balance (over-freezing is allowed). The effective non-transferable amount is `min(frozenTokens, balance)`.
+
+**Parameters**
+
+| Name      | Type    | Description                                               |
+| --------- | ------- | --------------------------------------------------------- |
+| `account` | address | Address whose frozen token balance will be set.           |
+| `value`   | uint256 | The new absolute frozen token amount for the account.     |
+
+**Returns**
+
+| Name      | Type | Description       |
+| --------- | ---- | ----------------- |
+| `result`  | bool | Always `true`.    |
+
+**Emits:** `Frozen` (ERC-7943 event — amount is the new frozen balance)
+
+**Requirements:**
+
+- Only authorized users (*ERC20ENFORCER_ROLE*) are allowed to call this function.
+
+------
+
 ##### `forcedTransfer(address, address,uint256)`
 
 ```solidity

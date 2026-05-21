@@ -54,13 +54,26 @@ See also [docs.openzeppelin.com - AccessControl](https://docs.openzeppelin.com/c
 | **ERC20EnforcementModule** | `forcedTransfer(address, address, uint256)` | `DEFAULT_ADMIN_ROLE` |
 | | `freezePartialTokens(address, uint256)` | `ERC20ENFORCER_ROLE` |
 | | `unfreezePartialTokens(address, uint256)` | `ERC20ENFORCER_ROLE` |
+| | `setFrozenTokens(address, uint256)` | `ERC20ENFORCER_ROLE` |
 | **ERC20EnforcementERC7551Module** | `forcedTransfer(address, address, uint256, bytes)` | `DEFAULT_ADMIN_ROLE` |
 | | `freezePartialTokens(address, uint256, bytes)` | `ERC20ENFORCER_ROLE` |
 | | `unfreezePartialTokens(address, uint256, bytes)` | `ERC20ENFORCER_ROLE` |
+| **ExtraInformationModule** | `setTokenId(string)` | `EXTRA_INFORMATION_ROLE` |
+| | `setTerms(DocumentInfo)` | `EXTRA_INFORMATION_ROLE` |
+| | `setInformation(string)` | `EXTRA_INFORMATION_ROLE` |
+| **ERC7551Module** | `setMetaData(string)` | `EXTRA_INFORMATION_ROLE` |
+| | `setTerms(bytes32, string)` | `EXTRA_INFORMATION_ROLE` |
 | **SnapshotEngineModule** | `setSnapshotEngine(address)` | `SNAPSHOOTER_ROLE` |
+| **DocumentERC1643Module** | `setDocument(bytes32, string, bytes32)` | `DOCUMENT_ROLE` |
+| | `removeDocument(bytes32)` | `DOCUMENT_ROLE` |
 | **DocumentEngineModule** | `setDocumentEngine(address)` | `DOCUMENT_ENGINE_ROLE` |
+| | `setDocument(bytes32, string, bytes32)` | `DOCUMENT_ENGINE_ROLE` |
+| | `removeDocument(bytes32)` | `DOCUMENT_ENGINE_ROLE` |
 | **AllowlistModule** | `setAddressAllowlist(address, bool)` | `ALLOWLIST_ROLE` |
+| | `setAddressAllowlist(address, bool, bytes)` | `ALLOWLIST_ROLE` |
 | | `batchSetAddressAllowlist(address[], bool[])` | `ALLOWLIST_ROLE` |
+| | `enableAllowlist(bool)` | `ALLOWLIST_ROLE` |
+| **ValidationModuleRuleEngine** | `setRuleEngine(address)` | `DEFAULT_ADMIN_ROLE` |
 | **DebtModule** | `setDebt(...)` | `DEBT_ROLE` |
 | | `setCreditEvents(...)` | `DEBT_ROLE` |
 | **DebtEngineModule** | `setDebtEngine(address)` | `DEBT_ENGINE_ROLE` |

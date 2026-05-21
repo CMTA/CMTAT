@@ -9,17 +9,17 @@ CMTAT supports two layers of on-chain document management:
 
 ## Terms
 
-The tokenization terms are a single `Terms` struct stored in the token contract. They can be read by anyone and set by an address with `EXTRA_INFORMATION_ROLE`.
+The tokenization terms are a single `CMTATTerms` struct stored in the token contract. They can be read by anyone and set by an address with `EXTRA_INFORMATION_ROLE`.
 
 ```solidity
 interface ICMTATBase {
-    struct Terms {
+    struct CMTATTerms {
         string name;
         IERC1643.Document doc;
     }
-    event Term(Terms newTerm);
+    event Terms(CMTATTerms newTerm);
 
-    function terms() external view returns (Terms memory);
+    function terms() external view returns (CMTATTerms memory);
     function setTerms(IERC1643CMTAT.DocumentInfo calldata terms_) external;
 }
 ```
