@@ -13,24 +13,24 @@ CMTAT extends the standard [ERC-20](https://eips.ethereum.org/EIPS/eip-20) token
 
 | Feature | Purpose | Standards | Module Scope |
 |---|---|---|---|
-| **Pause** | Freeze all transfers globally (e.g., during corporate actions) | ERC-3643, ERC-7551 (eWpG profile) | Core |
+| **Pause** | Freeze all transfers globally (e.g., during corporate actions) | [ERC-3643](https://eips.ethereum.org/EIPS/eip-3643), [ERC-7551](https://ethereum-magicians.org/t/erc-7551-crypto-security-token-smart-contract-interface-ewpg-reworked/25477) (eWpG profile) | Core |
 | **Deactivate** | Permanently disable token operations when required by lifecycle/governance decisions | CMTAT-specific | Core |
-| **Account Freeze** | Block specific addresses from transferring | ERC-3643 enforcement model, ERC-7943 send/receive checks | Core |
-| **Mint / Burn** | Controlled issuance and redemption of tokens | ERC-3643, ERC-7551 (eWpG profile) | Core |
-| **Batch Mint / Batch Burn** | Process multiple mint or burn operations in a single transaction | ERC-3643 | Core |
-| **Configurable Decimals** | Define token decimals at deployment time | ERC-20-compatible behavior | Core |
-| **Forced Transfer** | Admins can move tokens from frozen accounts | ERC-3643, ERC-7551 (eWpG profile), ERC-7943 | Core/Extension |
-| **Set Name / Symbol** | Update token name and symbol after deployment (supported deployment versions) | ERC-3643 | Core |
-| **Freeze Partial Tokens** | Freeze a specific amount of tokens on an address | ERC-3643, ERC-7551 (eWpG profile), ERC-7943 equivalent (`setFrozenTokens`/`getFrozenTokens`) | Extension |
-| **Transfer Validation** | Plug-in rule engine to restrict transfers by origin, receiver, or amount | ERC-3643, ERC-7551, ERC-7943 | Extension/Option |
+| **Account Freeze** | Block specific addresses from transferring | [ERC-3643](https://eips.ethereum.org/EIPS/eip-3643) enforcement model, [ERC-7943](https://eips.ethereum.org/EIPS/eip-7943) send/receive checks | Core |
+| **Mint / Burn** | Controlled issuance and redemption of tokens | [ERC-3643](https://eips.ethereum.org/EIPS/eip-3643), [ERC-7551](https://ethereum-magicians.org/t/erc-7551-crypto-security-token-smart-contract-interface-ewpg-reworked/25477) (eWpG profile) | Core |
+| **Batch Mint / Batch Burn** | Process multiple mint or burn operations in a single transaction | [ERC-3643](https://eips.ethereum.org/EIPS/eip-3643) | Core |
+| **Configurable Decimals** | Define token decimals at deployment time | [ERC-20](https://eips.ethereum.org/EIPS/eip-20)-compatible behavior | Core |
+| **Forced Transfer** | Admins can move tokens from frozen accounts | [ERC-3643](https://eips.ethereum.org/EIPS/eip-3643), [ERC-7551](https://ethereum-magicians.org/t/erc-7551-crypto-security-token-smart-contract-interface-ewpg-reworked/25477) (eWpG profile), [ERC-7943](https://eips.ethereum.org/EIPS/eip-7943) | Core/Extension |
+| **Set Name / Symbol** | Update token name and symbol after deployment (supported deployment versions) | [ERC-3643](https://eips.ethereum.org/EIPS/eip-3643) | Core |
+| **Freeze Partial Tokens** | Freeze a specific amount of tokens on an address | [ERC-3643](https://eips.ethereum.org/EIPS/eip-3643), [ERC-7551](https://ethereum-magicians.org/t/erc-7551-crypto-security-token-smart-contract-interface-ewpg-reworked/25477) (eWpG profile), [ERC-7943](https://eips.ethereum.org/EIPS/eip-7943) equivalent (`setFrozenTokens`/`getFrozenTokens`) | Extension |
+| **Transfer Validation** | Plug-in rule engine to restrict transfers by origin, receiver, or amount | [ERC-3643](https://eips.ethereum.org/EIPS/eip-3643), [ERC-7551](https://ethereum-magicians.org/t/erc-7551-crypto-security-token-smart-contract-interface-ewpg-reworked/25477), [ERC-7943](https://eips.ethereum.org/EIPS/eip-7943) | Extension/Option |
 | **Snapshots** | Record balances at a specific point in time (e.g., for dividends) | CMTAT SnapshotEngine integration | Extension/Option |
-| **Documents** | Attach legal documents to the token on-chain | ERC-1643-compatible document model | Extension/Option |
-| **Cross-Chain Mint/Burn** | Cross-chain bridge-oriented mint/burn interface | ERC-7802 | Extension |
-| **Permit** | Signature-based approvals without on-chain approve transaction | ERC-2612 | Deployment-version specific |
-| **Multicall** | Execute multiple calls in one transaction | ERC-6357 | Deployment-version specific |
-| **UUPS Upgradeability** | Upgradeable proxy pattern support | ERC-1822 | Deployment-version specific |
+| **Documents** | Attach legal documents to the token on-chain | [ERC-1643](https://github.com/ethereum/EIPs/issues/1643)-compatible document model | Extension/Option |
+| **Cross-Chain Mint/Burn** | Cross-chain bridge-oriented mint/burn interface | [ERC-7802](https://eips.ethereum.org/EIPS/eip-7802) | Extension |
+| **Permit** | Signature-based approvals without on-chain approve transaction | [ERC-2612](https://eips.ethereum.org/EIPS/eip-2612) | Deployment-version specific |
+| **Multicall** | Execute multiple calls in one transaction | [ERC-6357](https://eips.ethereum.org/EIPS/eip-6357) | Deployment-version specific |
+| **UUPS Upgradeability** | Upgradeable proxy pattern support | [ERC-1822](https://eips.ethereum.org/EIPS/eip-1822) | Deployment-version specific |
 | **Debt Features** | Debt lifecycle and credit-event related capabilities | CMTAT Debt modules | Deployment-version specific |
-| **ERC-1363 Payable Token Hooks** | Token callbacks (`transferAndCall` / `approveAndCall`) | ERC-1363 | Deployment-version specific |
+| **ERC-1363 Payable Token Hooks** | Token callbacks (`transferAndCall` / `approveAndCall`) | [ERC-1363](https://eips.ethereum.org/EIPS/eip-1363) | Deployment-version specific |
 
 Document model note:
 - ERC-1643 document identifiers in CMTAT use `bytes32` names.
@@ -54,13 +54,36 @@ CMTAT is used in production by major financial institutions including **UBS**, *
 | Product | Deployment Version |
 |---|---|
 | Equities | CMTAT Standard |
+| Equities / Bonds with balance snapshots (dividends, corporate actions) | CMTAT Snapshot, CMTAT Debt, CMTAT DebtEngine |
 | Equities (Germany / eWpG) | CMTAT ERC-7551 |
 | Debt / Bonds | CMTAT Debt |
+| Debt / Bonds (external debt engine) | CMTAT DebtEngine |
 | Stablecoins | CMTAT Light |
-| Allowlist / Whitelist | CMTAT Allowlist |
+| Allowlist / Whitelist | CMTAT Allowlist or CMTAT Standard with RuleEngine |
 | Permit + Multicall | CMTAT Permit |
+| Payable token / DeFi callbacks | CMTAT ERC-1363 |
+| Any (UUPS upgradeable proxy) | CMTAT UUPS |
 
-Each product comes in a **standalone** (immutable) or **upgradeable** (proxy) variant.
+Most products come in a **standalone** (immutable) or **upgradeable** (proxy) variant. The UUPS variant (`CMTATUpgradeableUUPS`) is upgradeable only — no standalone counterpart exists.
+
+## Contract Sizes
+
+Measured with `solc 0.8.34`, optimizer enabled (200 runs). EVM deployed bytecode limit: **24.576 KiB**.
+
+| Deployment Version | Deployed (KiB) | Initcode standalone (KiB) | Initcode upgradeable (KiB) |
+|---|---|---|---|
+| CMTAT Standard | 22.243 | 25.635 | 22.569 |
+| CMTAT Snapshot | 22.067 | 25.459 | 22.394 |
+| CMTAT Light | 11.298 | 13.048 | 11.507 |
+| CMTAT Allowlist | 19.879 | 23.056 | 20.205 |
+| CMTAT Debt | 23.187 | 26.301 | 23.396 |
+| CMTAT DebtEngine | 23.791 | 26.905 | 24.000 |
+| CMTAT ERC-7551 | 22.807 | 26.198 | 23.133 |
+| CMTAT ERC-1363 | 23.805 | 27.238 | 24.131 |
+| CMTAT Permit | 23.268 | 26.557 | 23.477 |
+| CMTAT UUPS | 23.544 | — | 23.896 |
+
+All variants are within the deployed bytecode limit. The deployed size is identical between standalone and upgradeable for the same variant; the initcode is larger for standalone contracts since it includes the full constructor logic rather than an initializer.
 
 ## Key Standards
 
@@ -162,6 +185,7 @@ Additional resources:
 - [Usage Guide](./doc/USAGE.md)
 - Specification
   - [Specification PDF (v3.0.0)](./doc/specification/CMTATSpecificationV3.0.0.pdf)
+  - [Specification PDF (v3.1.0)](./doc/specification/CMTATSpecificationV3.1.0.pdf)
   - [Specification PDF (v3.2.0)](./doc/specification/CMTATSpecificationV3.2.0.pdf)
 - [Security Reports](./doc/security/)
 - [CMTA Website](https://cmta.ch/)
