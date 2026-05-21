@@ -390,6 +390,17 @@ function PauseModuleCommon () {
       // Assert
       expect(await this.cmtat.deactivated()).to.equal(false)
     })
+
+    it('testCannotBeDeactivatedTwice', async function () {
+      // Arrange
+      await this.cmtat.connect(this.admin).pause()
+      await this.cmtat.connect(this.admin).deactivateContract()
+
+      // Act + Assert
+      await expect(
+        this.cmtat.connect(this.admin).deactivateContract()
+      ).to.be.revertedWithCustomError(this.cmtat, 'AlreadyDeactivated')
+    })
   })
 }
 module.exports = PauseModuleCommon

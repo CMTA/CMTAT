@@ -53,7 +53,7 @@ describe('CMTAT Debt - Upgradeable Snapshot', function () {
   ValidationModuleCommonCore()
 
   // Extensions
-  ERC20EnforcementModuleCommon
+  ERC20EnforcementModuleCommon()
   DocumentModuleCommon()
   ExtraInfoModuleCommon()
   // Snapshot

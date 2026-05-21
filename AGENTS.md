@@ -3,6 +3,7 @@
 **CMTAT** (CMTA Token) is a **security token framework** for tokenizing real-world financial assets on EVM-compatible blockchains. It's developed by the Capital Markets and Technology Association (CMTA).
 
 AGENTS.md and CLAUDE.md files must always be identical
+Module numbering must strictly match dependency order (a lower-level module must not depend on a higher-level module).
 
 **Solidity** | **Hardhat**
 
@@ -28,7 +29,7 @@ contracts/
 ├── deployment/              # Pre-composed contract variants
 ├── interfaces/              # ERC standards & custom interfaces
 └── mocks/                   # Test helpers
-test/                        # 3,078 tests (~99% coverage)
+test/                        # 5,630 tests (~99% coverage)
 doc/                         # Specs & audit reports
 ```
 
@@ -78,6 +79,14 @@ See `./doc/SUMMARY.md`
 npm run test                  # Run all tests
 npm run coverage              # Generate coverage report
 npm run hardhat:compile       # Compile contracts
+```
+
+## Test Troubleshooting
+
+If tests fail with gas reporter / Mocha reporter errors (for example `ERR_MOCHA_INVALID_REPORTER` with `eth-gas-reporter`), run tests with gas reporting disabled:
+
+```bash
+DeactivateReportGas=true npx hardhat test
 ```
 
 ---

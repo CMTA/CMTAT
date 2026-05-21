@@ -5,6 +5,9 @@ This document defines  Document Module for the CMTA Token specification.
 > Interface for managing documents via delegation to an external document engine contract.
 >  Extends `IERC1643`, the standard for document management.
 
+> Current status (v3.x): `DocumentEngineModule` is available in the codebase but is not integrated in any shipped deployment contract (`CMTATStandard*`, `Permit`, `Snapshot`, `Debt`, `DebtEngine`, `Allowlist`, `ERC1363`, `ERC7551`, `Light`, `UUPS`).
+> It is currently covered through dedicated test mocks only.
+
 [TOC]
 
 ## Schema

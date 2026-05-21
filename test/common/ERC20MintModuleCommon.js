@@ -584,6 +584,38 @@ function ERC20MintModuleCommon () {
         .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotReceive')
         .withArgs(TOKEN_HOLDER[1])
     })
+
+    it('testBatchTransferPropagatesSpenderToRuleEngine', async function () {
+      if (!this.cmtat.setRuleEngine) {
+        return
+      }
+
+      const TOKEN_ADDRESS_TOS = [this.address1, this.address2, this.address3]
+      this.ruleEngineMock = await ethers.deployContract('RuleEngineMock', [this.address3])
+      await this.cmtat.connect(this.admin).setRuleEngine(this.ruleEngineMock)
+
+      await expect(
+        this.cmtat.connect(this.admin).batchTransfer(TOKEN_ADDRESS_TOS, TOKEN_AMOUNTS)
+      ).to.be.revertedWithCustomError(
+        this.ruleEngineMock,
+        'RuleEngine_InvalidTransfer'
+      ).withArgs(this.admin, this.address1, TOKEN_AMOUNTS[0])
+    })
+
+    it('testBatchTransferWithRuleEngineAuthorizedSpenderCanTransfer', async function () {
+      if (!this.cmtat.setRuleEngine) {
+        return
+      }
+
+      const TOKEN_ADDRESS_TOS = [this.address1, this.address2, this.address3]
+      const TOKEN_AMOUNTS_AUTHORIZED = [10n, 11n, 12n]
+      this.ruleEngineMock = await ethers.deployContract('RuleEngineMock', [this.admin])
+      await this.cmtat.connect(this.admin).setRuleEngine(this.ruleEngineMock)
+
+      await expect(
+        this.cmtat.connect(this.admin).batchTransfer(TOKEN_ADDRESS_TOS, TOKEN_AMOUNTS_AUTHORIZED)
+      ).to.not.be.reverted
+    })
   })
 }
 module.exports = ERC20MintModuleCommon

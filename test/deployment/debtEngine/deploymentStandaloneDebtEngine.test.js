@@ -49,7 +49,7 @@ describe('CMTAT DebtEngine - Standalone', function () {
   ExtraInfoModuleCommon()
   DocumentModuleCommon()
   // Set snapshot Engine
-  SnapshotModuleSetSnapshotEngineCommon
+  SnapshotModuleSetSnapshotEngineCommon()
   // options
   DebtEngineModuleCommon()
   DebtModuleSetDebtEngineCommon()

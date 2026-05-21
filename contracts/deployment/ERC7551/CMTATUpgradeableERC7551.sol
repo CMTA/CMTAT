@@ -3,7 +3,7 @@
 pragma solidity ^0.8.20;
 
 import {ERC2771Module} from "../../modules/wrapper/options/ERC2771Module.sol";
-import {CMTATBaseERC7551} from "../../modules/7_CMTATBaseERC7551.sol";
+import {CMTATBaseERC7551} from "../../modules/8_CMTATBaseERC7551.sol";
 
 /**
 * @title CMTAT version for a proxy deployment (Transparent or Beacon proxy)

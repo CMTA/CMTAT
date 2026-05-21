@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/internal/ERC20EnforcementModuleInternal.sol | 27f44eaac70af6fac87e5ccd29917d399cb6289a |
+| ./modules/internal/ERC20EnforcementModuleInternal.sol | 7b41c597240a14e1121f4484607f9aa1f570c155 |
 
 
 ### Contracts Description Table
@@ -15,7 +15,7 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **ERC20EnforcementModuleInternal** | Implementation | ERC20Upgradeable, IERC7551ERC20EnforcementEvent, IERC7551ERC20EnforcementTokenFrozenEvent, IERC7943FungibleEnforcementEvent |||
+| **ERC20EnforcementModuleInternal** | Implementation | ERC20Upgradeable, IERC7943FungibleEnforcementEventAndError |||
 | └ | _setFrozenTokens | Internal 🔒 | 🛑  | |
 | └ | _freezePartialTokens | Internal 🔒 | 🛑  | |
 | └ | _unfreezePartialTokens | Internal 🔒 | 🛑  | |

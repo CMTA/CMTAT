@@ -43,6 +43,22 @@ All related interfaces are defined in [`draft-IERC7943.sol`](../../contracts/int
 | `Frozen` | `ERC20EnforcementModuleInternal.sol` |
 | `ForcedTransfer` | `ERC20EnforcementModuleInternal.sol` |
 
+## Event Semantics Across ERC-7943 / ERC-3643 / ERC-7551
+
+At the base enforcement layer, CMTAT emits the ERC-7943 `Frozen(account, amount)` event as a normalized "frozen amount changed" signal. This applies to both freeze and unfreeze transitions, and `amount` is the resulting frozen amount after the operation.
+
+This is aligned with ERC-7943, which defines a single `Frozen` event and does not define a distinct `Unfrozen` event.
+
+For direction-aware integrations, CMTAT emits dedicated events at wrapper level:
+
+- ERC-3643 path: `TokensFrozen(account, value)` and `TokensUnfrozen(account, value)`.
+- ERC-7551 path: `TokensFrozen(account, value, data)` and `TokensUnfrozen(account, value, data)`.
+
+Indexer guidance:
+
+- If you need the current frozen-state trajectory only, indexing `Frozen` is sufficient.
+- If you need action direction (freeze vs unfreeze), index `TokensFrozen` and `TokensUnfrozen` (ERC-3643/ERC-7551 events) instead of relying on event name from `Frozen`.
+
 ## `canSend` / `canReceive`
 
 These are account-level eligibility checks independent of transfer parameters.
@@ -78,8 +94,11 @@ In CMTAT RuleEngine-integrated deployments, the effective operator is propagated
 - `transferFrom`: spender is the delegated caller.
 - `burnFrom` / `crosschainBurn`: spender is the operator (`_msgSender()`), with `to == address(0)`.
 - `mint` / `crosschainMint`: spender is the operator (`_msgSender()`), with `from == address(0)`.
+- `minterTransfer` (ERC-3643 `batchTransfer` path): spender is the operator (`_msgSender()`), with `from != address(0)` and `to != address(0)`.
 
 RuleEngine implementations should explicitly support these mint/burn operator cases where `operator == spender`.
+
+For `minterTransfer`, spender restrictions apply in the same way as standard operator transfer checks. RuleEngine logic must not classify this path as mint based on `from == address(0)`, because `minterTransfer` is a transfer path.
 
 `burnFrom` remains an access-controlled operation (role-gated) and is not modeled as a classic `transferFrom` compliance case. At hook level, `burn` and `burnFrom` share burn semantics (`to == address(0)`) and cannot be distinguished solely from `(spender, from, to, value)`. If policy needs to differentiate `burnFrom`, it should target the operator addresses that hold the role allowing `burnFrom`.
 

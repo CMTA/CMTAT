@@ -255,13 +255,13 @@ Note: Candidate: function require(bool, string memory)
 - Standalone
 
 ```bash
-myth analyze contracts/deployment/CMTATStandalone.sol --solc-json solc_setting.json > myth_standalone_report.md
+myth analyze contracts/deployment/CMTATStandardStandalone.sol --solc-json solc_setting.json > myth_standalone_report.md
 ```
 
 - With proxy
 
 ```bash
-myth analyze contracts/deployment/CMTATUpgradeable.sol --solc-json solc_setting.json > myth_proxy_report.md
+myth analyze contracts/deployment/CMTATStandardUpgradeable.sol --solc-json solc_setting.json > myth_proxy_report.md
 ```
 
 File path for `solc` is configured in `solc_setting.json`

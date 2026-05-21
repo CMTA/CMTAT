@@ -1,10 +1,20 @@
 /** @type import('hardhat/config').HardhatUserConfig */
 require('@openzeppelin/hardhat-upgrades')
 require('solidity-coverage')
-require("hardhat-gas-reporter");
 require("hardhat-contract-sizer");
 require("@nomicfoundation/hardhat-chai-matchers")
+
+const deactivateReportGas = process.env.DeactivateReportGas === "true" || process.env.DeactivateReportGas === "1";
+const reportGas = !deactivateReportGas;
+if (reportGas) {
+  require("hardhat-gas-reporter");
+}
 module.exports = {
+  networks: {
+    hardhat: {
+      blockGasLimit: 30000000
+    }
+  },
   solidity: {
     version: '0.8.34',
     settings: {
@@ -20,6 +30,10 @@ module.exports = {
     disambiguatePaths: false,
     runOnCompile: true,
     strict: true,
+    except: [':.*Mock$'],
     //only: [':ERC20$'],
-  }
+  },
+  gasReporter: {
+    enabled: reportGas
+  },
 }

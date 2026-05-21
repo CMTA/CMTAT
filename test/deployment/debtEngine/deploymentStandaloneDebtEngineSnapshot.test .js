@@ -64,7 +64,7 @@ describe('CMTAT DebtEngine - Standalone Snapshot', function () {
   SnapshotModuleCommonUnschedule()
   SnapshotModuleCommonGetNextSnapshot()
   // Set snapshot Engine
-  SnapshotModuleSetSnapshotEngineCommon
+  SnapshotModuleSetSnapshotEngineCommon()
   // options
   DebtEngineModuleCommon()
   DebtModuleSetDebtEngineCommon()

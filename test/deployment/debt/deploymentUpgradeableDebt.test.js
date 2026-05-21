@@ -40,7 +40,7 @@ describe('CMTAT Debt - Upgradeable', function () {
   ValidationModuleCommonCore()
 
   // Extensions
-  ERC20EnforcementModuleCommon
+  ERC20EnforcementModuleCommon()
   DocumentModuleCommon()
   ExtraInfoModuleCommon()
 

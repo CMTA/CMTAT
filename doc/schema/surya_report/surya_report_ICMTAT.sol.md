@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./interfaces/tokenization/ICMTAT.sol | 1027687f80e8c7e30e8025eb6426aec2b4c1769c |
+| ./interfaces/tokenization/ICMTAT.sol | 442cb59b9909e14766f0912248c7e3839884ced8 |
 
 
 ### Contracts Description Table

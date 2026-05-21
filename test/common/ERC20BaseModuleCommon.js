@@ -177,6 +177,17 @@ function ERC20BaseModuleCommon () {
         .to.emit(this.cmtat, 'Approval')
         .withArgs(this.address1, this.address3, AMOUNT_TO_APPROVE)
     })
+
+    it('testApproveZeroValue', async function () {
+      this.logs = await this.cmtat
+        .connect(this.address1)
+        .approve(this.address3, 0)
+
+      expect(await this.cmtat.allowance(this.address1, this.address3)).to.equal(0)
+      await expect(this.logs)
+        .to.emit(this.cmtat, 'Approval')
+        .withArgs(this.address1, this.address3, 0)
+    })
   })
 
   context('Transfer', function () {
@@ -231,6 +242,34 @@ function ERC20BaseModuleCommon () {
       )
         .to.be.revertedWithCustomError(this.cmtat, 'ERC20InsufficientBalance')
         .withArgs(this.address1.address, ADDRESS1_BALANCE, AMOUNT_TO_TRANSFER)
+    })
+
+    it('testCanTransferZeroValue', async function () {
+      const beforeBalance1 = await this.cmtat.balanceOf(this.address1)
+      const beforeBalance2 = await this.cmtat.balanceOf(this.address2)
+
+      this.logs = await this.cmtat
+        .connect(this.address1)
+        .transfer(this.address2, 0)
+
+      expect(await this.cmtat.balanceOf(this.address1)).to.equal(beforeBalance1)
+      expect(await this.cmtat.balanceOf(this.address2)).to.equal(beforeBalance2)
+      await expect(this.logs)
+        .to.emit(this.cmtat, 'Transfer')
+        .withArgs(this.address1, this.address2, 0)
+    })
+
+    it('testCanTransferToSelf', async function () {
+      const beforeBalance = await this.cmtat.balanceOf(this.address1)
+
+      this.logs = await this.cmtat
+        .connect(this.address1)
+        .transfer(this.address1, 1)
+
+      expect(await this.cmtat.balanceOf(this.address1)).to.equal(beforeBalance)
+      await expect(this.logs)
+        .to.emit(this.cmtat, 'Transfer')
+        .withArgs(this.address1, this.address1, 1)
     })
 
     // allows address3 to transfer tokens from address1 to address2 with the right allowance
@@ -369,6 +408,37 @@ function ERC20BaseModuleCommon () {
       )
         .to.be.revertedWithCustomError(this.cmtat, 'ERC20InsufficientBalance')
         .withArgs(this.address1.address, ADDRESS1_BALANCE, AMOUNT_TO_TRANSFER)
+    })
+
+    it('testCanTransferFromZeroValue', async function () {
+      const beforeBalance1 = await this.cmtat.balanceOf(this.address1)
+      const beforeBalance2 = await this.cmtat.balanceOf(this.address2)
+
+      this.logs = await this.cmtat
+        .connect(this.address3)
+        .transferFrom(this.address1, this.address2, 0)
+
+      expect(await this.cmtat.balanceOf(this.address1)).to.equal(beforeBalance1)
+      expect(await this.cmtat.balanceOf(this.address2)).to.equal(beforeBalance2)
+      await expect(this.logs)
+        .to.emit(this.cmtat, 'Transfer')
+        .withArgs(this.address1, this.address2, 0)
+    })
+
+    it('testCanTransferFromToSelf', async function () {
+      await this.cmtat.connect(this.address1).approve(this.address3, 1)
+      const beforeBalance = await this.cmtat.balanceOf(this.address1)
+      const beforeAllowance = await this.cmtat.allowance(this.address1, this.address3)
+
+      this.logs = await this.cmtat
+        .connect(this.address3)
+        .transferFrom(this.address1, this.address1, 1)
+
+      expect(await this.cmtat.balanceOf(this.address1)).to.equal(beforeBalance)
+      expect(await this.cmtat.allowance(this.address1, this.address3)).to.equal(beforeAllowance - 1n)
+      await expect(this.logs)
+        .to.emit(this.cmtat, 'Transfer')
+        .withArgs(this.address1, this.address1, 1)
     })
   })
 }

@@ -29,7 +29,12 @@ interface ICMTATDeactivate {
      * @notice Emitted when the contract is permanently deactivated.
      * @param account The address that performed the deactivation.
      */
-    event Deactivated(address account);
+    event Deactivated(address indexed account);
+
+    /**
+     * @notice Error raised when deactivation is attempted after deactivation is already final.
+     */
+    error AlreadyDeactivated();
 
      /* 
      * @notice Permanently deactivates the contract.
@@ -194,4 +199,3 @@ interface ICMTATDebt {
      */
     function debt() external view returns(DebtInformation memory debtInformation_);
 }
-

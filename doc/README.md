@@ -109,7 +109,7 @@ The CMTAT was initially designed for the digitalization of company shares. For S
 
 #### Digitalization of artwork
 
-- [Syz Group](https://www.syzgroup.com/en), a Swiss private bank, has successfully digitized two pieces of art using CMTAT in 2023 and 2024. See [Syz Art Tokenisation](https://www.syzgroup.com/en/tokenization-syzart)
+- [Syz Group](https://www.syzgroup.com/en), a Swiss private bank, has successfully digitized two pieces of art using CMTAT in 2023, 2024 and 2025. See [Syz Art Tokenisation](https://www.syzgroup.com/en/tokenization-syzart)
 
 #### Stablecoins
 
@@ -136,6 +136,8 @@ The CMTAT was initially designed for the digitalization of company shares. For S
 
 CMTAT is referenced in several reports. Although these reports do not reflect the most recent version, they already provide a good indication of potential use cases. The insights from these reports have also contributed to numerous improvements in CMTAT.
 
+- [Guardian - Fixed Income Framework (2025)](https://www.mas.gov.sg/-/media/mas-media-library/development/fintech/guardian/guardian-fixed-income-framework-v1_1.pdf)
+- [IRJEMS International Research Journal of Economics and Management Studies - Security Token Standards for Institutional Adoption of Tokenized Funds (2025)](https://irjems.org/irjems-v4i8p104.html)
 - [University of Toronto - Blockchain Meets Securities: A Scalable Tokenization Framework](https://dl.acm.org/doi/10.1145/3777461) / [pdf](https://www.eecg.utoronto.ca/~veneris/DLTACM25.pdf) (2025), page 22
 - [Forum - Asset Tokenization in Financial Markets: The Next Generation of Value Exchange (2025)](https://reports.weforum.org/docs/WEF_Asset_Tokenization_in_Financial_Markets_2025.pdf), page 38
 - [King's Business School/Rhys Bidder - What Is The Future Of Stablecoins, And How Do We Get There? (2025)](https://www.kcl.ac.uk/business/assets/PDF/qcgbf-working-papers/taking-the-next-step-v5.pdf), page 33
@@ -194,6 +196,27 @@ CMTAT comes with several different deployment versions to meet specific use case
 | Deployment through proxy (Upgradeable)<br />Deployment immutable (standalone / without proxy) | Each deployment version comes with a standalone (immutable) or upgradeable mode.<br />A specific deployment version exists for UUPS Proxy |
 | MetaTx/Gasless with ERC-2771                                 | All deployment version, except Debt, DebtEngine, Permit & Light version  |
 | ERC-2612 Permit + [ERC-6357 Multicall](https://eips.ethereum.org/EIPS/eip-6357)<br />(gas sponsorship approval & batch transaction) | CMTAT Permit (Standalone / Upgradeable)                      |
+
+##### Contract sizes
+
+Measured with `solc 0.8.34`, optimizer enabled (200 runs). EVM deployed bytecode limit: **24.576 KiB**.
+
+The deployed size is identical between standalone and upgradeable for the same variant; the initcode is larger for standalone contracts since it embeds the full constructor logic rather than a proxy initializer.
+
+| Deployment version | Deployed (KiB) | Initcode standalone (KiB) | Initcode upgradeable (KiB) |
+| ------------------ | -------------- | ------------------------- | -------------------------- |
+| CMTAT Standard     | 22.243         | 25.635                    | 22.569                     |
+| CMTAT Snapshot     | 22.067         | 25.459                    | 22.394                     |
+| CMTAT Light        | 11.298         | 13.048                    | 11.507                     |
+| CMTAT Allowlist    | 19.879         | 23.056                    | 20.205                     |
+| CMTAT Debt         | 23.187         | 26.301                    | 23.396                     |
+| CMTAT DebtEngine   | 23.791         | 26.905                    | 24.000                     |
+| CMTAT ERC-7551     | 22.807         | 26.198                    | 23.133                     |
+| CMTAT ERC-1363     | 23.805         | 27.238                    | 24.131                     |
+| CMTAT Permit       | 23.268         | 26.557                    | 23.477                     |
+| CMTAT UUPS         | 23.544         | —                         | 23.896                     |
+
+All variants are within the deployed bytecode limit.
 
 #### CMTAT for stablecoins
 
@@ -406,7 +429,7 @@ Here the list of ERC supported between different version:
 
 |                                                              | Associated contracts/modules                 | ERC status               | CMTAT v1.0.0                                                 | CMTAT v2.3.0                                                 | CMTAT v3.0.0                                                 | CMTAT v3.2.0                                                 |                                                              |                                                              |                                                              |                                                              |                                                              |
 | ------------------------------------------------------------ | -------------------------------------------- | ------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| Deployment version                                           |                                              |                          |                                                              |                                                              | (Standalone & Proxy)                                         |                                                              | Light                                                        | UUPS                                                         | ERC1363                                                      | Allowlist<br />(whitelist)                                   | Debt                                                         |
+| Deployment version                                           |                                              |                          |                                                              |                                                              | (Standalone & Proxy, including Snapshot)                     |                                                              | Light                                                        | UUPS                                                         | ERC1363                                                      | Allowlist<br />(whitelist)                                   | Debt                                                         |
 | **Fungible tokens**                                          |                                              |                          |                                                              |                                                              |                                                              |                                                              |                                                              |                                                              |                                                              |                                                              |                                                              |
 | [ERC-20](https://eips.ethereum.org/EIPS/eip-20)              | ERC20BaseModule                              | Standard Track (final)   | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> |
 | [ERC-1363](https://eips.ethereum.org/EIPS/eip-1363)          | CMTATBaseERC1363                             | Standard Track (final)   | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #b00020;">&#x2718;</span></strong> |
@@ -824,19 +847,20 @@ Base contracts are used by the different deployable contracts (CMTATStandardStan
 | [CMTATBaseCore](../contracts/modules/0_CMTATBaseCore.sol)     | 0     | Inherits from all core modules                               | CMTAT Light (Upgradeable & Standalone                        |
 | [CMTATBaseGeneric](../contracts/modules/0_CMTATBaseGeneric.sol) | 0     | Inherits from non-ERC20 related modules                      | -<br />(Only mock available)                                 |
 | [CMTATBaseSnapshot](../contracts/modules/0_CMTATBaseSnapshot.sol) | 0     | Pure mixin: inherits from `ERC20Upgradeable` + `SnapshotEngineModule`. Overrides `_update` with snapshot logic. `_authorizeSnapshots()` is abstract. | -                                                            |
-| [CMTATBaseAccessControl](../contracts/modules/1_CMTATBaseAccessControl.sol) | 1     | Inherits from CMTATBaseCommon and OpenZeppelin Access Control | -                                                            |
-| [CMTATBaseAllowlist](../contracts/modules/2_CMTATBaseAllowlist.sol) | 2     | Inherits from CMTATBaseAccessControl and ValidationModuleAllowlist | CMTAT Allowlist (upgradeable & Standalone)                   |
-| [CMTATBaseRuleEngine](../contracts/modules/2_CMTATBaseRuleEngine.sol) | 2     | Add RuleEngine support by inheriting from CMTATBaseAccessControl and ValidationModuleRuleEngine | No deployment contract directly inherits from this base contract (see next level) |
-| [CMTATBaseDebt](../contracts/modules/3_CMTATBaseDebt.sol)     | 3     | Add debt support by inheriting from Debt module              | CMTAT Debt (Standalone & Upgradeable)                        |
-| [CMTATBaseERC1404](../contracts/modules/3_CMTATBaseERC1404.sol) | 3     | Add [ERC-1404](https://github.com/ethereum/EIPs/issues/1404) support | CMTAT Standalone / Upgradeable                               |
-| [CMTATBaseERC20CrossChain](../contracts/modules/4_CMTATBaseERC20CrossChain.sol) | 4     | Add cross-chain support, notably [ERC-7802](https://eips.ethereum.org/EIPS/eip-7802) | No deployment contract directly inherits from this base contract (see next level) |
-| [CMTATBaseERC2612](../contracts/modules/4_CMTATBaseERC2612.sol) | 4     | Add [ERC-2612 Permit](https://eips.ethereum.org/EIPS/eip-2612) + [ERC-6357 Multicall](https://eips.ethereum.org/EIPS/eip-6357) | CMTAT Permit (Standalone / Upgradeable)                      |
-| [CMTATBaseERC2771](../contracts/modules/5_CMTATBaseERC2771.sol) | 5     | Add [ERC-2771](https://eips.ethereum.org/EIPS/eip-2771) support by inheriting from ERC2771Module | CMTAT Standalone / Upgradeable<br />CMTAT Upgradeable UUPS   |
-| [CMTATBaseERC2771Snapshot](../contracts/modules/6_CMTATBaseERC2771Snapshot.sol) | 6     | Extends CMTATBaseERC2771 with snapshot engine support by also inheriting CMTATBaseSnapshot. Disambiguates ERC-20 and Context functions. | CMTAT Standalone Snapshot / Upgradeable Snapshot             |
-| [CMTATBaseDebtEngine](../contracts/modules/5_CMTATBaseDebtEngine.sol) | 5     | Add DebtEngine support and snapshot engine support by inheriting from DebtEngine module and CMTATBaseSnapshot | CMTAT Standalone DebtEngine / Upgradeable                    |
-| [CMTATBaseERC1363](../contracts/modules/7_CMTATBaseERC1363.sol) | 7     | Add [ERC-1363](https://eips.ethereum.org/EIPS/eip-1363) support on top of `CMTATBaseERC7551Enforcement` | CMTAT ERC1363 (Upgradeable & Standalone)                     |
-| [CMTATBaseERC7551Enforcement](../contracts/modules/6_CMTATBaseERC7551Enforcement.sol) | 6     | Add ERC-7551 enforcement functions (`forcedTransfer/freezePartialTokens/unfreezePartialTokens` with `bytes` and `getActiveBalanceOf`) | CMTAT Standard (Upgradeable & Standalone)                    |
-| [CMTATBaseERC7551](../contracts/modules/7_CMTATBaseERC7551.sol) | 7     | Add ERC-7551 support on top of `CMTATBaseERC7551Enforcement` by inheriting from ERC7551 Module | CMTAT ERC7551 (Upgradeable & Standalone)                     |
+| [CMTATBaseDocument](../contracts/modules/1_CMTATBaseDocument.sol) | 1     | Pure mixin: adds ERC-1643 document management primitives (`DocumentERC1643Module`) | No deployment contract directly inherits from this base contract (see next level) |
+| [CMTATBaseAccessControl](../contracts/modules/2_CMTATBaseAccessControl.sol) | 2     | Inherits from CMTATBaseCommon and OpenZeppelin Access Control | -                                                            |
+| [CMTATBaseAllowlist](../contracts/modules/3_CMTATBaseAllowlist.sol) | 3     | Inherits from CMTATBaseAccessControl and ValidationModuleAllowlist | CMTAT Allowlist (upgradeable & Standalone)                   |
+| [CMTATBaseRuleEngine](../contracts/modules/3_CMTATBaseRuleEngine.sol) | 3     | Add RuleEngine support by inheriting from CMTATBaseAccessControl and ValidationModuleRuleEngine | No deployment contract directly inherits from this base contract (see next level) |
+| [CMTATBaseDebt](../contracts/modules/4_CMTATBaseDebt.sol)     | 4     | Add debt support by inheriting from Debt module              | CMTAT Debt (Standalone & Upgradeable)                        |
+| [CMTATBaseERC1404](../contracts/modules/4_CMTATBaseERC1404.sol) | 4     | Add [ERC-1404](https://github.com/ethereum/EIPs/issues/1404) support | CMTAT Standalone / Upgradeable                               |
+| [CMTATBaseERC20CrossChain](../contracts/modules/5_CMTATBaseERC20CrossChain.sol) | 5     | Add cross-chain support, notably [ERC-7802](https://eips.ethereum.org/EIPS/eip-7802) | No deployment contract directly inherits from this base contract (see next level) |
+| [CMTATBaseERC2612](../contracts/modules/6_CMTATBaseERC2612.sol) | 6     | Add [ERC-2612 Permit](https://eips.ethereum.org/EIPS/eip-2612) + [ERC-6357 Multicall](https://eips.ethereum.org/EIPS/eip-6357) | CMTAT Permit (Standalone / Upgradeable)                      |
+| [CMTATBaseERC2771](../contracts/modules/6_CMTATBaseERC2771.sol) | 6     | Add [ERC-2771](https://eips.ethereum.org/EIPS/eip-2771) support by inheriting from ERC2771Module | CMTAT Standalone / Upgradeable<br />CMTAT Upgradeable UUPS   |
+| [CMTATBaseERC2771Snapshot](../contracts/modules/7_CMTATBaseERC2771Snapshot.sol) | 7     | Extends CMTATBaseERC2771 with snapshot engine support by also inheriting CMTATBaseSnapshot. Disambiguates ERC-20 and Context functions. | CMTAT Standalone Snapshot / Upgradeable Snapshot             |
+| [CMTATBaseDebtEngine](../contracts/modules/6_CMTATBaseDebtEngine.sol) | 6     | Add DebtEngine support and snapshot engine support by inheriting from DebtEngine module and CMTATBaseSnapshot | CMTAT Standalone DebtEngine / Upgradeable                    |
+| [CMTATBaseERC1363](../contracts/modules/8_CMTATBaseERC1363.sol) | 8     | Add [ERC-1363](https://eips.ethereum.org/EIPS/eip-1363) support on top of `CMTATBaseERC7551Enforcement` | CMTAT ERC1363 (Upgradeable & Standalone)                     |
+| [CMTATBaseERC7551Enforcement](../contracts/modules/7_CMTATBaseERC7551Enforcement.sol) | 7     | Add ERC-7551 enforcement functions (`forcedTransfer/freezePartialTokens/unfreezePartialTokens` with `bytes` and `getActiveBalanceOf`) | CMTAT Standard (Upgradeable & Standalone)                    |
+| [CMTATBaseERC7551](../contracts/modules/8_CMTATBaseERC7551.sol) | 8     | Add ERC-7551 support on top of `CMTATBaseERC7551Enforcement` by inheriting from ERC7551 Module | CMTAT ERC7551 (Upgradeable & Standalone)                     |
 
 #### Level 0 (main modules)
 
@@ -871,41 +895,57 @@ CMTAT Base Core adds several functions:
 
 
 
-#### Level 1 (ERC-20 Transfer restriction)
+#### Level 1 (document management)
+
+##### CMTAT Base Document
+
+Document management is introduced at this level through `CMTATBaseDocument`.
+
+#### Level 3 (ERC-20 transfer restriction)
 
 ##### CMTAT Base RuleEngine
 
-![surya_inheritance_CMTATBaseRuleEngine.sol](./schema/surya_inheritance/surya_inheritance_2_CMTATBaseRuleEngine.sol.png)
+![surya_inheritance_CMTATBaseRuleEngine.sol](./schema/surya_inheritance/surya_inheritance_3_CMTATBaseRuleEngine.sol.png)
 
 ##### CMTAT Base Allowlist
 
-![surya_inheritance_CMTATBaseAllowlist.sol](./schema/surya_inheritance/surya_inheritance_2_CMTATBaseAllowlist.sol.png)
+![surya_inheritance_CMTATBaseAllowlist.sol](./schema/surya_inheritance/surya_inheritance_3_CMTATBaseAllowlist.sol.png)
 
 
 
-#### Level 2 (add heavy modules)
+#### Level 4 (heavy modules)
 
 ##### CMTATBaseDebt
 
-![surya_inheritance_CMTATBase.sol](./schema/surya_inheritance/surya_inheritance_3_CMTATBaseDebt.sol.png)
+![surya_inheritance_CMTATBase.sol](./schema/surya_inheritance/surya_inheritance_4_CMTATBaseDebt.sol.png)
 
 ##### CMTATBaseERC1404
 
-![surya_inheritance_CMTATBase.sol](./schema/surya_inheritance/surya_inheritance_3_CMTATBaseERC1404.sol.png)
+![surya_inheritance_CMTATBase.sol](./schema/surya_inheritance/surya_inheritance_4_CMTATBaseERC1404.sol.png)
 
 
 
-#### Level 3 (cross-chain transfer)
+#### Level 5 (cross-chain transfer)
 
-![surya_inheritance_CMTATBase.sol](./schema/surya_inheritance/surya_inheritance_4_CMTATBaseERC20CrossChain.sol.png)
+![surya_inheritance_CMTATBase.sol](./schema/surya_inheritance/surya_inheritance_5_CMTATBaseERC20CrossChain.sol.png)
 
-#### Level 4 (metaTx)
+#### Level 6 (metaTx)
 
 ##### CMTAT Base ERC2771
 
-![surya_inheritance_CMTATBaseOption.sol](./schema/surya_inheritance/surya_inheritance_5_CMTATBaseERC2771.sol.png)
+![surya_inheritance_CMTATBaseOption.sol](./schema/surya_inheritance/surya_inheritance_6_CMTATBaseERC2771.sol.png)
 
-#### Level 6 (use case)
+#### Level 7 (snapshot + ERC-7551 enforcement)
+
+##### CMTAT Base ERC2771 Snapshot
+
+![surya_inheritance_CMTATBaseERC2771Snapshot.sol](./schema/surya_inheritance/surya_inheritance_7_CMTATBaseERC2771Snapshot.sol.png)
+
+##### CMTAT Base ERC7551 Enforcement
+
+![surya_inheritance_CMTATBaseERC7551Enforcement.sol](./schema/surya_inheritance/surya_inheritance_7_CMTATBaseERC7551Enforcement.sol.png)
+
+#### Level 8 (use case)
 
 ##### CMTAT Base ERC1363  (payable token)
 
@@ -913,7 +953,7 @@ CMTAT Base Core adds several functions:
 
 
 
-![surya_inheritance_CMTATERC1363Base.sol](./schema/surya_inheritance/surya_inheritance_7_CMTATBaseERC1363.sol.png)
+![surya_inheritance_CMTATERC1363Base.sol](./schema/surya_inheritance/surya_inheritance_8_CMTATBaseERC1363.sol.png)
 
 
 
@@ -925,7 +965,7 @@ CMTAT Base Core adds several functions:
 
 
 
-![surya_inheritance_CMTATERC1363Base.sol](./schema/surya_inheritance/surya_inheritance_7_CMTATBaseERC7551.sol.png)
+![surya_inheritance_CMTATERC1363Base.sol](./schema/surya_inheritance/surya_inheritance_8_CMTATBaseERC7551.sol.png)
 
 
 
@@ -968,7 +1008,7 @@ For simplicity, the module names and function locations are those of version 3.0
 
 | Modules                            | Type        | Description                                                  | File                                                         | CMTAT 1.0                                                    | CMTAT 2.30                                                   | CMTAT >= 3.0.0                                               |                                                              |                                                              |                                                              |
 | ---------------------------------- | ----------- | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| Deployment version                 |             |                                                              |                                                              |                                                              |                                                              | Standalone, Upgradeable, UUPS, Debt, ERC1363, ERC7551        | CMTAT Debt                                                   | CMTAT Allowlist                                              | CMTAT Light                                                  |
+| Deployment version                 |             |                                                              |                                                              |                                                              |                                                              | Standalone, Upgradeable, Snapshot, UUPS, Debt, ERC1363, ERC7551 | CMTAT Debt                                                   | CMTAT Allowlist                                              | CMTAT Light                                                  |
 | ValidationModule                   | Controllers | Check transfer validity by calling the Pause and Enforcement modules | [ValidationModule.sol](../contracts/modules/wrapper/controllers/ValidationModule.sol) | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> |
 | ValidationModuleAllowlist          | Controllers | Check transfer validity by calling Allowlist module          | [ValidationModuleAllowlist.sol](../contracts/modules/wrapper/controllers/ValidationModuleAllowlist.sol) | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #b00020;">&#x2718;</span></strong> |
 | ValidationModuleRuleEngineInternal | Internal    | Configure a `RuleEngine`                                     | [ValidationModuleRuleEngineInternal.sol](../contracts/modules/internal/ValidationModuleRuleEngineInternal.sol) | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #b00020;">&#x2718;</span></strong> |
@@ -1041,14 +1081,16 @@ Generally, these modules are not required to be compliant with the CMTA specific
 | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | [ExtraInformation](./modules/extensions/ExtraInformation/extraInformation.md) | Set extra information (tokenId, terms, metadata)             | [ExtraInformationModule.sol](../contracts/modules/wrapper/extensions/ExtraInformationModule.sol) | <strong><span style="color: #1e7e34;">&#x2714;</span></strong><br />(BaseModule) | <strong><span style="color: #1e7e34;">&#x2714;</span></strong><br />(BaseModule) | <strong><span style="color: #1e7e34;">&#x2714;</span></strong><br /> |
 | [SnapshotEngineModule](./modules/extensions/snapshotEngine/Snapshot.md)<br />(Prev. SnapshotModule) | Set snapshotEngine                                           | [SnapshotEngineModule.sol](../contracts/modules/wrapper/extensions/SnapshotEngineModule.sol) | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | Partial<br />(Not included by default because unaudited)     | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> <br />(require an external SnapshotEngine) |
-| [DocumentEngineModule](./modules/extensions/documentEngine/document.md) | Set additional document (ERC1643) through a DocumentEngine   | [DocumentEngineModule.sol](../contracts/modules/wrapper/extensions/DocumentEngineModule.sol) | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> |
+| [DocumentEngineModule](./modules/extensions/documentEngine/document.md) | Set additional document (ERC1643) through a DocumentEngine   | [DocumentEngineModule.sol](../contracts/modules/wrapper/options/DocumentEngineModule.sol) | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> |
 | [ERC20EnforcementModule](./modules/extensions/ERC20Enforcement/erc20enforcement.md) | The admin (or a third party appointed by it) can partially freeze a part of the balance of a token holder. | [ERC20EnforcementModule.sol](../contracts/modules/wrapper/extensions/ERC20EnforcementModule.sol) | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> |
+
+> Note: `DocumentEngineModule` exists as an optional module but is currently not included in any deployment version. It is validated through dedicated test mocks.
 
 ##### Option modules
 
 | Modules                                                      | Description                                                | File                                                         | CMTAT 1.0                                                    | CMTAT 2.3.0                                                  | CMTAT >= 3.2.0                                               |                                                              |                                                              |                                                              |
 | ------------------------------------------------------------ | ---------------------------------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| Deployment version                                           |                                                            |                                                              |                                                              |                                                              | Standalone & Upgradeable                                     | Allowlist                                                    | Debt                                                         | ERC7551                                                      |
+| Deployment version                                           |                                                            |                                                              |                                                              |                                                              | Standalone & Upgradeable (including Snapshot)                | Allowlist                                                    | Debt                                                         | ERC7551                                                      |
 | [DebtModule](./modules/options/debt/debt.md)               | Set Debt and CreditEvent Info                              | [DebtModule.sol](../contracts/modules/wrapper/options/DebtModule.sol) | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #b00020;">&#x2718;</span></strong> |
 | [DebtEngineModule](./modules/options/debtEngine/debtEngine.md) | Add a DebtEngine module                                    | [DebtEngineModule.sol](../contracts/modules/wrapper/options/DebtEngineModule.sol) | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #b00020;">&#x2718;</span></strong><br /> | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #b00020;">&#x2718;</span></strong> |
 | [ERC2771Module](./modules/options/erc2771/erc2771.md)      | ERC-2771 support                                           | [ERC2771Module.sol](../contracts/modules/wrapper/options/ERC2771Module.sol) | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong><br />(forwarder immutable) | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> |
@@ -1285,7 +1327,7 @@ Before each transfer (standard transfer/mint/burn), the CMTAT calls the ERC-3643
 function transferred(address from, address to, uint256 value) external;
 ```
 
-CMTAT defines the interaction with the RuleEngine inside a specific module, [ValidationModuleRuleEngine](../contracts/modules/wrapper/extensions/ValidationModule/ValidationModuleRuleEngine.sol) and [CMTATBaseRuleEngine](../contracts/modules/2_CMTATBaseRuleEngine.sol).
+CMTAT defines the interaction with the RuleEngine inside a specific module, [ValidationModuleRuleEngine](../contracts/modules/wrapper/extensions/ValidationModule/ValidationModuleRuleEngine.sol) and [CMTATBaseRuleEngine](../contracts/modules/3_CMTATBaseRuleEngine.sol).
 
 - ValidationModuleRuleEngine
 
@@ -1681,12 +1723,11 @@ This engine is defined in the module `DocumentModule`
 This EIP defines a document with three attributes:
 
 - A short name (represented as a `bytes32`)
-  - In CMTAT, since this EIP is not official, we decided to use the type `string` instead of `bytes32`to allow `name` with more than 32 characters as suggested in this [comment](https://github.com/ethereum/EIPs/issues/1643#issuecomment-453970278).
 
 - A generic URI (represented as a `string`) that could point to a website or other document portal.
 - The hash of the document contents associated with it on-chain.
 
-CMTAT only implements two functions from this standard, available in the interface [IERC1643](../contracts/interfaces/tokenization/draft-IERC1643.sol) to get the documents from the documentEngine.
+CMTAT only implements two functions from this standard, available in the interface [IERC1643](../contracts/interfaces/tokenization/draft-IERC1643.sol) to get the documents from the DocumentEngine.
 
 ```solidity
 interface IERC1643 {
@@ -1698,13 +1739,17 @@ interface IERC1643 {
     /**
      * @notice return a document identified by its name
      */
-    function getDocument(string memory name) external view returns (Document memory doc);
+    function getDocument(bytes32 name) external view returns (Document memory document);
     /**
      * @notice return all documents
      */
-    function getAllDocuments() external view returns (string[] memory);
+    function getAllDocuments() external view returns (bytes32[] memory);
 }
 ```
+
+Compatibility note:
+- ERC-1643 identifiers are `bytes32` in `IERC1643`.
+- CMTAT terms metadata `IERC1643CMTAT.DocumentInfo.name` remains a `string`.
 
 The `DocumentEngine` has to import and implement this interface. To manage the documents, the engine is completely free on how to do it.
 
@@ -1842,7 +1887,7 @@ The pause function does not affect burn and mint operations implemented in the c
 
 By separating burn/mint from standard transfer, the admin can re-adjust the supply while the standard transfers are paused. The alternative in this case to block mint and burn operations is to remove the MINTER and BURNER roles from the addresses concerned.
 
-On the other hand, specific function for cross-chain bridge (`3_CMTATBaseERC20CrossChain.sol`) will revert if contract is paused because they are not intended to be used by the issuer to manage the supply.
+On the other hand, specific function for cross-chain bridge (`5_CMTATBaseERC20CrossChain.sol`) will revert if contract is paused because they are not intended to be used by the issuer to manage the supply.
 
 #### Future possible improvement
 
@@ -1854,7 +1899,8 @@ Consideration will be given to how this can be achieved in a future release.
 
 ```solidity
 interface ICMTATDeactivate {
-    event Deactivated(address account);
+    event Deactivated(address indexed account);
+    error AlreadyDeactivated();
     /**
     * @notice deactivate the contract
     * Warning: the operation is irreversible, be careful
@@ -1882,6 +1928,7 @@ From then on, the `kill` function no longer worked as expected, and we have repl
 ##### How it works
 
 Firstly, the contract must be in `pause`state, by calling the function `pause`, otherwise the function reverts.
+If `deactivateContract()` is called again after deactivation, it reverts with `AlreadyDeactivated()`.
 
 This function sets a boolean state variable `isDeactivated` to true.
 The function `unpause `is updated to revert if the previous variable is set to true, thus the contract is in the pause state "forever".
@@ -1890,6 +1937,15 @@ The consequences are the following:
 
 - In standalone deployment, this operation is irreversible, it is not possible to rollback.
 - In upgradeable deployment (with a proxy), it is still possible to rollback by deploying a new implementation which sets the variable `isDeactivated`to false.
+
+##### Post-deactivation privileged operations
+
+After deactivation, holder-initiated operations remain blocked by permanent pause/deactivation checks.
+The following privileged operations are intentionally post-deactivation-enabled:
+
+- `setAddressFrozen` / `batchSetAddressFrozen` (`EnforcementModule`)
+- `freezePartialTokens` / `unfreezePartialTokens` (`ERC20EnforcementModule`)
+- `forcedTransfer` and related privileged enforcement paths (`ERC20EnforcementModule` / `ERC20EnforcementERC7551Module`)
 
 ### Supply management (burn & mint)
 
@@ -2384,8 +2440,8 @@ A dedicated Permit deployment version is available: `CMTATStandalonePermit` and 
 
 | CMTAT Model          | Description                                                  | Standalone/Proxy | Contract                                                     | Note                                                         |
 | -------------------- | ------------------------------------------------------------ | ---------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| CMTAT Standard       | Deployment without proxy <br />(immutable)                   | Standalone       | [CMTATStandardStandalone](../contracts/deployment/CMTATStandalone.sol) | Core & extension module without Debt, Allowlist, ERC-3643, UUPS and snapshot engine<br />Include also the option module `ERC2771`, `ERC20CrossChain` support, and ERC-7551 enforcement functions (`ERC20EnforcementERC7551Module`) |
-|                      | Deployment with a standard proxy (Transparent or Beacon Proxy) | Upgradeable      | [CMTATStandardUpgradeable](../contracts/deployment/CMTATUpgradeable.sol) | -                                                            |
+| CMTAT Standard       | Deployment without proxy <br />(immutable)                   | Standalone       | [CMTATStandardStandalone](../contracts/deployment/CMTATStandardStandalone.sol) | Core & extension module without Debt, Allowlist, ERC-3643, UUPS and snapshot engine<br />Include also the option module `ERC2771`, `ERC20CrossChain` support, and ERC-7551 enforcement functions (`ERC20EnforcementERC7551Module`) |
+|                      | Deployment with a standard proxy (Transparent or Beacon Proxy) | Upgradeable      | [CMTATStandardUpgradeable](../contracts/deployment/CMTATStandardUpgradeable.sol) | -                                                            |
 | Upgradeable UUPS     | Deployment with a UUPS proxy                                 | Only upgradeable | [CMTATUpgradeableUUPS](../contracts/deployment/CMTATUpgradeableUUPS.sol) | Same as standard version, but adds UUPS proxy support and does not include the Standard-only ERC-7551 enforcement base (`CMTATBaseERC7551Enforcement`) |
 | ERC-1363             | Implements [ERC-1363](https://eips.ethereum.org/EIPS/eip-1363) | Standalone       | [CMTATStandaloneERC1363](../contracts/deployment/ERC1363/CMTATStandaloneERC1363.sol) | Same as standard version, but adds also the support of `ERC-1363` |
 |                      | -                                                            | Upgradeable      | [CMTATUpgradeableERC1363](../contracts/deployment/ERC1363/CMTATUpgradeableERC1363.sol) | -                                                            |
@@ -2490,7 +2546,7 @@ More information on this standard here: [erc1363.org](https://erc1363.org), [Rar
 
 - CMTAT ERC-1363 Base
 
-![surya_inheritance_CMTAT_ERC1363_BASE.sol](./schema/surya_inheritance/surya_inheritance_7_CMTATBaseERC1363.sol.png)
+![surya_inheritance_CMTAT_ERC1363_BASE.sol](./schema/surya_inheritance/surya_inheritance_8_CMTATBaseERC1363.sol.png)
 
 
 
@@ -2669,7 +2725,7 @@ Here are the different fields and functions to read and store the related debt i
 
 
 
-![surya_inheritance_CMTATBaseDebt.sol](./schema/surya_inheritance/surya_inheritance_3_CMTATBaseDebt.sol.png)
+![surya_inheritance_CMTATBaseDebt.sol](./schema/surya_inheritance/surya_inheritance_4_CMTATBaseDebt.sol.png)
 
 ##### DebtEngine
 
@@ -2685,7 +2741,7 @@ Here are the different fields and functions to read and store the related debt i
 
 
 
-![surya_inheritance_CMTATBaseDebtEngine.sol](./schema/surya_inheritance/surya_inheritance_5_CMTATBaseDebtEngine.sol.png)
+![surya_inheritance_CMTATBaseDebtEngine.sol](./schema/surya_inheritance/surya_inheritance_6_CMTATBaseDebtEngine.sol.png)
 
 
 
@@ -2756,7 +2812,7 @@ More information regarding the Ethereum API available in the [Allowlist module d
 
 
 
-![surya_inheritance_CMTATBaseAllowlist.sol](./schema/surya_inheritance/surya_inheritance_2_CMTATBaseAllowlist.sol.png)
+![surya_inheritance_CMTATBaseAllowlist.sol](./schema/surya_inheritance/surya_inheritance_3_CMTATBaseAllowlist.sol.png)
 
 ### Factory
 
@@ -2915,7 +2971,7 @@ Here are the reports produced by [Aderyn](https://github.com/Cyfrin/aderyn):
 | Version | File                                                         |
 | ------- | ------------------------------------------------------------ |
 | v3.3.0  | [v3.3.0-aderyn-report.md](./security/tools/aderyn/v3.3.0-aderyn-report.md)<br />[v3.3.0-aderyn-feedback.md](./security/tools/aderyn/v3.3.0-aderyn-feedback.md) |
-| v3.0.0  | [v3.0.0-aderyn-report.md](./security/tools/aderyn/archive/3.0.0-aderyn-report.md) |
+| v3.0.0  | [v3.0.0-aderyn-report.md](./security/tools/aderyn/archive/v3.0.0-aderyn-report.md) |
 
 Summary (v3.3.0):
 

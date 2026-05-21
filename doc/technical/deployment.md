@@ -28,11 +28,11 @@ Deployment contracts are in `contracts/deployment/`. Each feature set comes in b
 
 ## Standard Standalone
 
-Use `CMTATStandardStandalone` (file: `CMTATStandalone.sol`) for a fully immutable deployment. Includes all core and extension modules (except Debt, Allowlist, UUPS), plus `ERC2771Module` and `ERC20CrossChain`.
+Use `CMTATStandardStandalone` (file: `CMTATStandardStandalone.sol`) for a fully immutable deployment. Includes all core and extension modules (except Debt, Allowlist, UUPS), plus `ERC2771Module` and `ERC20CrossChain`.
 
 ## Upgradeable (Transparent / Beacon Proxy)
 
-Use `CMTATStandardUpgradeable` (file: `CMTATUpgradeable.sol`) as the implementation contract behind a Transparent or Beacon proxy.
+Use `CMTATStandardUpgradeable` (file: `CMTATStandardUpgradeable.sol`) as the implementation contract behind a Transparent or Beacon proxy.
 
 See [OpenZeppelin Upgrades Plugins](https://docs.openzeppelin.com/upgrades-plugins/1.x/) for proxy deployment tooling.
 

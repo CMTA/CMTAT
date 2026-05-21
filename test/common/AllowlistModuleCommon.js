@@ -35,6 +35,7 @@ function AllowlistModuleCommon () {
       // Arrange - Assert
       expect(await this.cmtat.isAllowlisted(this.address1)).to.equal(false)
       expect(await this.cmtat.canSend(this.address1)).to.equal(false)
+      expect(await this.cmtat.canReceive(this.address1)).to.equal(false)
       // Act
       this.logs = await this.cmtat
         .connect(sender)
@@ -52,6 +53,8 @@ function AllowlistModuleCommon () {
       expect(await this.cmtat.isAllowlisted(this.address2)).to.equal(true)
       expect(await this.cmtat.canSend(this.address1)).to.equal(true)
       expect(await this.cmtat.canSend(this.address2)).to.equal(true)
+      expect(await this.cmtat.canReceive(this.address1)).to.equal(true)
+      expect(await this.cmtat.canReceive(this.address2)).to.equal(true)
 
       // emits a Freeze event
       await expect(this.logs)
@@ -74,6 +77,8 @@ function AllowlistModuleCommon () {
       expect(await this.cmtat.isAllowlisted(this.address2)).to.equal(false)
       expect(await this.cmtat.canSend(this.address1)).to.equal(false)
       expect(await this.cmtat.canSend(this.address2)).to.equal(false)
+      expect(await this.cmtat.canReceive(this.address1)).to.equal(false)
+      expect(await this.cmtat.canReceive(this.address2)).to.equal(false)
 
       // Assert - canTransfer
       expect(
@@ -139,6 +144,8 @@ function AllowlistModuleCommon () {
       expect(await this.cmtat.isAllowlisted(this.address2)).to.equal(true)
       expect(await this.cmtat.canSend(this.address1)).to.equal(true)
       expect(await this.cmtat.canSend(this.address2)).to.equal(true)
+      expect(await this.cmtat.canReceive(this.address1)).to.equal(true)
+      expect(await this.cmtat.canReceive(this.address2)).to.equal(true)
 
       // emits a Allowlist event
       await expect(this.logs)
@@ -174,6 +181,7 @@ function AllowlistModuleCommon () {
       // Assert
       expect(await this.cmtat.isAllowlisted(this.address1)).to.equal(false)
       expect(await this.cmtat.canSend(this.address1)).to.equal(false)
+      expect(await this.cmtat.canReceive(this.address1)).to.equal(false)
       expect(
         await this.cmtat.canTransfer(this.address1, this.address2, 10)
       ).to.equal(false)
@@ -211,6 +219,7 @@ function AllowlistModuleCommon () {
         .setAddressAllowlist(this.address1, false)
       expect(await this.cmtat.isAllowlisted(this.address1)).to.equal(false)
       expect(await this.cmtat.canSend(this.address1)).to.equal(false)
+      expect(await this.cmtat.canReceive(this.address1)).to.equal(false)
     })
 
     it('testAdminCanBatchAllowlistAddress', async function () {
@@ -381,6 +390,82 @@ function AllowlistModuleCommon () {
         .withArgs(
           this.address1.address
         )
+    })
+
+    it('testCanTransferMatrixSenderListedReceiverListed', async function () {
+      await this.cmtat
+        .connect(this.admin)
+        .setAddressAllowlist(this.address1, true, reasonFreeze)
+      await this.cmtat
+        .connect(this.admin)
+        .setAddressAllowlist(this.address2, true, reasonFreeze)
+
+      expect(await this.cmtat.canSend(this.address1)).to.equal(true)
+      expect(await this.cmtat.canReceive(this.address2)).to.equal(true)
+      expect(await this.cmtat.canTransfer(this.address1, this.address2, 1)).to.equal(true)
+    })
+
+    it('testCanTransferMatrixSenderListedReceiverNotListed', async function () {
+      await this.cmtat
+        .connect(this.admin)
+        .setAddressAllowlist(this.address1, true, reasonFreeze)
+      await this.cmtat
+        .connect(this.admin)
+        .setAddressAllowlist(this.address2, false, reasonFreeze)
+
+      expect(await this.cmtat.canSend(this.address1)).to.equal(true)
+      expect(await this.cmtat.canReceive(this.address2)).to.equal(false)
+      expect(await this.cmtat.canTransfer(this.address1, this.address2, 1)).to.equal(false)
+    })
+
+    it('testCanTransferMatrixSenderNotListedReceiverListed', async function () {
+      await this.cmtat
+        .connect(this.admin)
+        .setAddressAllowlist(this.address1, false, reasonFreeze)
+      await this.cmtat
+        .connect(this.admin)
+        .setAddressAllowlist(this.address2, true, reasonFreeze)
+
+      expect(await this.cmtat.canSend(this.address1)).to.equal(false)
+      expect(await this.cmtat.canReceive(this.address2)).to.equal(true)
+      expect(await this.cmtat.canTransfer(this.address1, this.address2, 1)).to.equal(false)
+    })
+
+    it('testCanTransferMatrixSenderNotListedReceiverNotListed', async function () {
+      await this.cmtat
+        .connect(this.admin)
+        .setAddressAllowlist(this.address1, false, reasonFreeze)
+      await this.cmtat
+        .connect(this.admin)
+        .setAddressAllowlist(this.address2, false, reasonFreeze)
+
+      expect(await this.cmtat.canSend(this.address1)).to.equal(false)
+      expect(await this.cmtat.canReceive(this.address2)).to.equal(false)
+      expect(await this.cmtat.canTransfer(this.address1, this.address2, 1)).to.equal(false)
+    })
+
+    it('testZeroValueTransferRequiresSenderAndReceiverAllowlisted', async function () {
+      await this.cmtat
+        .connect(this.admin)
+        .setAddressAllowlist(this.address1, true, reasonFreeze)
+      await this.cmtat
+        .connect(this.admin)
+        .setAddressAllowlist(this.address2, false, reasonFreeze)
+
+      expect(await this.cmtat.canTransfer(this.address1, this.address2, 0)).to.equal(false)
+      await expect(
+        this.cmtat.connect(this.address1).transfer(this.address2, 0)
+      ).to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotReceive')
+        .withArgs(this.address2.address)
+
+      await this.cmtat
+        .connect(this.admin)
+        .setAddressAllowlist(this.address2, true, reasonFreeze)
+
+      expect(await this.cmtat.canTransfer(this.address1, this.address2, 0)).to.equal(true)
+      await expect(
+        this.cmtat.connect(this.address1).transfer(this.address2, 0)
+      ).to.not.be.reverted
     })
 
     it('testCannotApproveWhenOwnerIsNotAllowlisted', async function () {

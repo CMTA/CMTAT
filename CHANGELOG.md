@@ -45,9 +45,120 @@ Custom changelog tag: `Dependencies`, `Documentation`, `Testing`
 
 
 
+## 3.3.0 - rc1
+
+> **Note:** This version has not been audited.
+
+### Smart contract
+
+#### Added
+
+- New base contract **`CMTATBaseDocument`**:
+  - Introduced as `contracts/modules/1_CMTATBaseDocument.sol`.
+  - Isolates document-management authorization (`_authorizeDocumentManagement`) from `CMTATBaseAccessControl`.
+  - Composes `DocumentERC1643Module` on top of the rule-engine base path.
+- **Stateful RuleEngine transfer hook support (testing/mocks):**
+  - Added `IRuleTransferHook` (`contracts/mocks/RuleEngine/interfaces/IRuleTransferHook.sol`) to allow rules to update rule-local state on transfer callbacks.
+  - Added `RuleTokenHolderTracker` (`contracts/mocks/RuleEngine/RuleTokenHolderTracker.sol`) to track holder balances/list in rule storage.
+  - `RuleEngineMock` now wires the holder-tracker rule and executes transfer hooks in `transferred(...)` paths.
+
+#### Changed
+
+- **ERC-1643 document identifier format aligned to `bytes32`** (breaking API change for document functions):
+  - Previous CMTAT variant (e.g. `v3.2.0`) used `string` for document names in `IERC1643` (`getDocument(string)`, `getAllDocuments() -> string[]`).
+  - Current implementation uses `bytes32` document names (`getDocument(bytes32)`, `getAllDocuments() -> bytes32[]`) and exposes `setDocument(bytes32,string,bytes32)` / `removeDocument(bytes32)` with associated events.
+  - **CMTAT terms remain on the modified CMTAT structure**: `IERC1643CMTAT.DocumentInfo` still uses `string name` for tokenization terms metadata (`setTerms` path).
+- **Base hierarchy refactor (strict dependency-order levels):**
+  - `CMTATBaseDocument` at **level 1** (`contracts/modules/1_CMTATBaseDocument.sol`).
+  - `CMTATBaseAccessControl` at **level 2** (`contracts/modules/2_CMTATBaseAccessControl.sol`) and now inherits `CMTATBaseDocument`.
+  - `CMTATBaseAllowlist` and `CMTATBaseRuleEngine` at **level 3**.
+  - `CMTATBaseDebt` and `CMTATBaseERC1404` at **level 4**.
+  - `CMTATBaseERC20CrossChain` at **level 5**.
+  - `CMTATBaseERC2612`, `CMTATBaseERC2771`, `CMTATBaseDebtEngine` at **level 6**.
+  - `CMTATBaseERC2771Snapshot`, `CMTATBaseERC7551Enforcement` at **level 7**.
+  - `CMTATBaseERC1363`, `CMTATBaseERC7551` at **level 8**.
+- **`CMTATBaseCommon`** no longer inherits `DocumentERC1643Module`.
+- **`CMTATBaseAccessControl`** now defines `_authorizeDocumentManagement` and enforces `DOCUMENT_ROLE`.
+- Updated impacted imports and deployment references to match the new module numbering/layout.
+- **ERC20CrossChain burn-path cleanup (no external API change):**
+  - Removed redundant `crosschainBurn` override from `CMTATBaseERC20CrossChain`; level-5 now uses `ERC20CrossChainModule.crosschainBurn` directly.
+  - Removed redundant sender-aware burn override from `CMTATBaseERC20CrossChain`; burn/burnFrom sender-aware flow now relies on the module implementation.
+  - In `ERC20CrossChainModule`, simplified internal self-burn routing and renamed helper `_burnWithSender` to `_burnFromOperator` for clearer intent.
+- **Meta-tx `_msgData` ERC1363 test path adjusted to avoid bytecode-size deployment failures:**
+  - Slimmed `CMTATUpgradeableERC1363MsgDataMock.getMsgData()` by removing event emission and using a `view` return path.
+  - Reworked `test/standard/modules/MetaTxMsgDataERC1363.test.js` to validate trusted-forwarder calldata shape directly instead of relying on event parsing.
+
+#### Fixed
+
+- Fixed compile-path inconsistencies caused by stale numbered imports after base-level refactor.
+- Restored full compilation after engine/mock alignment:
+  - `CMTATEngineInitializerMock` no longer calls unavailable document-engine initializer on snapshot path.
+  - `DocumentEngineMock` now implements IERC1643-compatible `setDocument(bytes32,string,bytes32)`.
+
+### Documentation
+
+#### Changed
+
+- Updated base-module hierarchy and file references in `doc/README.md` to reflect:
+  - `1_CMTATBaseDocument.sol`
+  - `2_CMTATBaseAccessControl.sol`
+  - `3_CMTATBaseAllowlist.sol`
+  - `3_CMTATBaseRuleEngine.sol`
+  - `4_CMTATBaseDebt.sol`
+  - `4_CMTATBaseERC1404.sol`
+  - `5_CMTATBaseERC20CrossChain.sol`
+  - `6_CMTATBaseERC2612.sol`
+  - `6_CMTATBaseERC2771.sol`
+  - `6_CMTATBaseDebtEngine.sol`
+  - `7_CMTATBaseERC2771Snapshot.sol`
+  - `7_CMTATBaseERC7551Enforcement.sol`
+  - `8_CMTATBaseERC1363.sol`
+  - `8_CMTATBaseERC7551.sol`
+- Updated `doc/README.md` ERC-1643 section to use current `bytes32` API signatures (`getDocument(bytes32)`, `getAllDocuments() returns (bytes32[])`) with compatibility note for `IERC1643CMTAT.DocumentInfo.name` (`string`).
+- Updated contracts tree file `.claude/tree/contracts_tree.txt`.
+- Added technical clarification for freeze-event semantics across standards:
+  - `doc/technical/erc-7943-uRWA-integration.md` now explicitly documents that base `Frozen(account, amount)` is a normalized frozen-state update event (including unfreeze updates), while direction should be derived from ERC-3643/7551 directional events.
+  - `doc/technical/erc-3643-implementation.md` now documents the event-layering model (`Frozen` base state update + `TokensFrozen`/`TokensUnfrozen` directional wrappers).
+
+### Testing
+
+#### Added
+
+- Added dedicated stateful RuleEngine rule test coverage in `test/standard/modules/RuleEngineMockStatefulRule.test.js`:
+  - verifies holder-balance tracking and holder-list transitions through transfer hook callbacks.
+- Added initializer edge-case tests for `DocumentEngineModule` and `SnapshotEngineModule`:
+  - `test/common/DocumentModule/DocumentModuleSetDocumentEngineCommon.js`: covers zero-engine assignment and re-initialization revert paths.
+  - `test/common/SnapshotModuleCommon/SnapshotModuleSetSnapshotEngineCommon.js`: covers zero-engine assignment and re-initialization revert paths.
+- Added standard initializer branch tests in `test/deployment/deployment.test.js`:
+  - manual initialization path, initialization with rule engine, and double-initialize revert.
+- Added interface and initializer coverage across deployment test suites:
+  - `test/common/CMTATIntegrationCommon.js`: extended integration paths.
+  - `test/deployment/erc721mock.test.js`: ERC-721 generic initializer and interface paths.
+  - Light/core, standard, permit, ERC-1363, snapshot, and document deployment suites.
+- Added edge-case coverage for core transfer and approve paths:
+  - `test/common/ERC20BaseModuleCommon.js`: zero-value transfers and explicit approve coverage.
+  - `test/common/AllowlistModuleCommon.js`: explicit `canSend`/`canReceive` matrix including zero-value transfers.
+- Extended `test/common/AllowlistModuleCommon.js`, `test/common/DocumentModule/DocumentModuleCommon.js`, and `test/common/ERC20EnforcementModuleCommon.js` with additional edge-case tests.
+
+#### Fixed
+
+- Removed hardcoded `gasLimit: 30_000_000` override from `deployCMTATERC1363Standalone` in `test/deploymentUtils.js`. The explicit override exceeded the Prague/Fusaka per-transaction gas cap (`FUSAKA_TRANSACTION_GAS_LIMIT = 16,777,216`) enforced by Hardhat ≥ 2.28, causing a `ProviderError` on every ERC-1363 standalone test run. Auto-estimated gas is well within the cap for this contract.
+
+### Documentation
+
+#### Changed
+
+- Updated test count references in `README.md` and `doc/README.md`: 3,078 → 5,630 automated tests.
+- `README.md`: added hyperlinks to all ERC standard references in the features table; expanded the Supported Financial Instruments table (added Snapshot, DebtEngine, ERC-1363, and UUPS variants; clarified Allowlist entry); added Contract Sizes section with deployed/initcode sizes for all deployment variants; corrected UUPS standalone note.
+- `SECURITY.md`: expanded responsible disclosure policy.
+- `doc/README.md` and `doc/SUMMARY.md`: updated module-level documentation and surya reports to reflect current hierarchy and coverage results.
+- Updated code coverage reports in `doc/test/coverage/` after full test run.
+
 ## 3.3.0 - rc0
 
 > **Note:** This version has not been audited.
+
+Commit: `49544f4de1993008acfc9e848d0bf03bd31d8579`
 
 ### Smart contract
 

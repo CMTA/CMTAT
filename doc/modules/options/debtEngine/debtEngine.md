@@ -8,7 +8,7 @@ This module allows to set an external engine called `DebtEngine`to configure Deb
 
 ## Interface
 
-The interface and struct to represent Debt is available in [ICMTAT.sol](/contracts/interfaces/tokenization/ICMTAT.sol)
+The interface and struct to represent Debt is available in [ICMTAT.sol](../../../../contracts/interfaces/tokenization/ICMTAT.sol)
 
 ## Schema
 

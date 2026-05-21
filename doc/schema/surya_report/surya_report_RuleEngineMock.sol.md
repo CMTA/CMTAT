@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./mocks/RuleEngine/RuleEngineMock.sol | e2ab7dc1d6e3884a8d66203f6a512111f4f6e429 |
+| ./mocks/RuleEngine/RuleEngineMock.sol | 45d26d4227e2759175a6a7a969b6e3d11797cf2c |
 
 
 ### Contracts Description Table
@@ -25,11 +25,13 @@
 | └ | detectTransferRestrictionFrom | Public ❗️ |   |NO❗️ |
 | └ | canTransfer | Public ❗️ |   |NO❗️ |
 | └ | canTransferFrom | Public ❗️ |   |NO❗️ |
-| └ | transferred | Public ❗️ |   |NO❗️ |
-| └ | transferred | Public ❗️ |   |NO❗️ |
+| └ | transferred | Public ❗️ | 🛑  |NO❗️ |
+| └ | transferred | Public ❗️ | 🛑  |NO❗️ |
+| └ | holderTrackerRule | External ❗️ |   |NO❗️ |
 | └ | messageForTransferRestriction | Public ❗️ |   |NO❗️ |
 | └ | supportsInterface | Public ❗️ |   |NO❗️ |
 | └ | returnInterfaceId | Public ❗️ |   |NO❗️ |
+| └ | _callRuleHooks | Internal 🔒 | 🛑  | |
 
 
 ### Legend

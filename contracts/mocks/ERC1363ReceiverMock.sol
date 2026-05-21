@@ -3,7 +3,6 @@
 pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/interfaces/IERC1363Receiver.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 
 contract ERC1363ReceiverMock is IERC1363Receiver {

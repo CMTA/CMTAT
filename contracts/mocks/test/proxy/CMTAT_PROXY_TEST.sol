@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.20;
 
-import {CMTATStandardUpgradeable} from "../../../deployment/CMTATUpgradeable.sol";
+import {CMTATStandardUpgradeable} from "../../../deployment/CMTATStandardUpgradeable.sol";
 
 
 /**

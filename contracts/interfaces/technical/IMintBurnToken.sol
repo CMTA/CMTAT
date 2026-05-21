@@ -78,7 +78,8 @@ interface IBurnBatchERC20 {
      *  Batch version of {burn}.
      * - For each burn, emits a `Transfer` event to the zero address.
      * - Emits a `burnBatch` event
-     * - The `data` parameter applies uniformly to all burn operations in this batch.
+     * - The `data` parameter is batch-level metadata for the `BatchBurn` event.
+     * - It is not forwarded to each individual burn item.
      * - Requirements:
      *   - `accounts.length` must equal `values.length`.
      * @param accounts The list of addresses whose tokens will be burned.
