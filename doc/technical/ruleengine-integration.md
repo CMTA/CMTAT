@@ -130,5 +130,5 @@ Use deployment summary in [doc/SUMMARY.md](../SUMMARY.md) and deployment tables 
 ## Cross-References
 
 - Main RuleEngine section: [doc/README.md](../README.md)
-- ERC-7943 operator semantics: [erc-7943-uRWA-integration.md](./erc-7943-uRWA-integration.md)
+- ERC-7943 integration: [erc-7943-uRWA-integration.md](./erc-7943-uRWA-integration.md)
 - ERC-3643 mapping: [erc-3643-implementation.md](./erc-3643-implementation.md)

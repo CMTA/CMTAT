@@ -58,8 +58,7 @@ It is also possible to extend CMTAT directly to include snapshot logic without a
 
 | CMTAT version | SnapshotEngine |
 |---|---|
-| CMTAT v3.3.0 | Testing against v0.3.0-compatible engines in progress |
-| CMTAT v3.0.0 | [v0.3.0](https://github.com/CMTA/SnapshotEngine/releases/tag/v0.3.0) (unaudited) |
+| CMTAT v3.0.0+ | [v0.5.0](https://github.com/CMTA/SnapshotEngine/releases/tag/v0.5.0)  (unaudited) |
 | CMTAT v2.3.0 | SnapshotEngine v0.1.0 (unaudited) |
 | CMTAT v2.4.0, v2.5.0 | Included inside SnapshotModule (unaudited) |
 | CMTAT v1.0.0 | Included inside SnapshotModule (audited) |

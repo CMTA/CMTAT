@@ -105,7 +105,7 @@ The CMTAT was initially designed for the digitalization of company shares. For S
 #### Digitalization of structured products
 
 - In early 2024, [UBS](https://www.ubs.com/global/en/investment-bank/tokenize.html) executed a pilot transaction with OSL, a licensed professional investor in Hong Kong, to issue a tokenized warrant on Ethereum using the CMTAT smart contract framework. The tokenization arrangement for this warrant utilizes the CMTAT codebase to represent the warrant smart contract, which forms part of the tokenized register of holders. See [ubs.com - UBS expands its digital asset capabilities by launching Hong Kong’s first-ever tokenized warrant on the Ethereum network [ubs.com]](https://www.ubs.com/global/en/media/display-page-ndp/en-20240207-tokenized-warrant.html).
-- [Credit Suisse, Pictet and Vontobel (2022)](https://cmta.ch/news-articles/trading-and-settlement-in-digital-securities) issued tokenized investment products that were traded on [BX Swiss](https://www.bxswiss.com/news/20221213-BX-Swiss-legt-das-technische-Fundament-fuer-die-Zukunft-des-regulierten-Handels-mit-tokenisierten-Wertpapieren) as part of a proof-of-concept leveraging the CMTAT.
+- [Credit Suisse, Pictet and Vontobel (2022)](https://cmta.ch/news-articles/trading-and-settlement-in-digital-securities) issued tokenized investment products that were traded on [BX Swiss](https://www.bxswiss.com/news/20221213-BX-Swiss-legt-das-technische-Fundament-fuer-die-Zukunft-des-regulierten-Handels-mit-tokenisierten-Wertpapieren) as part of a proof-of-concept leveraging the CMTAT and another smart contract called [DvP contract](https://github.com/CMTA/DVP) that replicates the delivery-vs-payment functionality of traditional settlement systems.
 
 #### Digitalization of artwork
 
@@ -1578,7 +1578,8 @@ Here is the list of the different versions available for each CMTAT version.
 
 | CMTAT version           | RuleEngine                                                   |
 | ----------------------- | ------------------------------------------------------------ |
-| CMTAT v3.0.0            | [RuleEngine v3.0.0-rc0](https://github.com/CMTA/RuleEngine/releases/tag/v3.0.0-rc0)<br /> (unaudited) |
+| CMTAT v3.3.0*           | [RuleEngine v3.0.0-rc4](https://github.com/CMTA/RuleEngine/releases/tag/v3.0.0-rc4) (unaudited) |
+| CMTAT v3.0.+            | [RuleEngine v3.0.0-rc0](https://github.com/CMTA/RuleEngine/releases/tag/v3.0.0-rc0)<br /> (unaudited) |
 | CMTAT 2.5.0 (unaudited) | RuleEngine >= [v2.0.3](https://github.com/CMTA/RuleEngine/releases/tag/v2.0.3) (unaudited) |
 | CMTAT 2.4.0 (unaudited) | RuleEngine >=v2.0.0<br />Last version: [v2.0.2](https://github.com/CMTA/RuleEngine/releases/tag/v2.0.2)(unaudited) |
 | CMTAT 2.3.0             | [RuleEngine v1.0.2](https://github.com/CMTA/RuleEngine/releases/tag/v1.0.2) |
@@ -1586,6 +1587,8 @@ Here is the list of the different versions available for each CMTAT version.
 | CMTAT 1.0               | No ruleEngine available                                      |
 
 This contract acts as a controller and can call different contract rules to apply rules on each transfer.
+
+*CMTAT v3.3.0 transmits the minter and burn operators to the RuleEngine through the spender parameter.
 
 ###### Rules
 
@@ -1640,7 +1643,7 @@ CMTA provides an implementation of a [SnapshotEngine](https://github.com/CMTA/Sn
 
 | CMTAT                            | SnapshotEngine                                               |
 | -------------------------------- | ------------------------------------------------------------ |
-| CMTAT v3.0.0                     | [v0.3.0](https://github.com/CMTA/SnapshotEngine/releases/tag/v0.3.0)<br />(unaudited) |
+| CMTAT v3.0.0+                    | [v0.5.0](https://github.com/CMTA/SnapshotEngine/releases/tag/v0.5.0)<br />(unaudited) |
 | CMTAT v2.3.0                     | SnapshotEngine v0.1.0 (unaudited)                            |
 | CMTAT v2.4.0, v2.5.0 (unaudited) | Include inside SnapshotModule (unaudited)                    |
 | CMTAT v2.3.0                     | Include inside SnapshotModule (unaudited)                    |
@@ -2801,6 +2804,7 @@ These contracts have now their own GitHub project: [CMTAT Factory](https://githu
 
 | CMTAT version                     | CMTAT Factory                                                |
 | --------------------------------- | ------------------------------------------------------------ |
+| CMTAT v3.3.0                      | [CMTAT Factory v0.4.0](https://github.com/CMTA/CMTAT-Factory/releases/tag/v0.4.0) |
 | CMTAT v3.0.0                      | CMTAT Factory [v0.2.0](https://github.com/CMTA/CMTATFactory/releases/tag/v0.2.0) (unaudited) |
 | CMTAT v2.5.0 / v2.5.1 (unaudited) | Available within CMTAT <br />see contracts/deployment<br />(unaudited) |
 | CMTAT 2.3.0 (audited)             | Not available                                                |
@@ -2941,114 +2945,7 @@ A detailed maintainer feedback is available in [SequentReport-feedback.md](./sec
 
 ### Tools
 
-> More details are available in the file [USAGE.md](./USAGE.md)
-
-#### [Aderyn](https://github.com/Cyfrin/aderyn)
-
-Here are the reports produced by [Aderyn](https://github.com/Cyfrin/aderyn):
-
-| Version | File                                                         |
-| ------- | ------------------------------------------------------------ |
-| v3.3.0  | [v3.3.0-aderyn-report.md](./security/tools/aderyn/v3.3.0-aderyn-report.md)<br />[v3.3.0-aderyn-feedback.md](./security/tools/aderyn/v3.3.0-aderyn-feedback.md) |
-| v3.0.0  | [v3.0.0-aderyn-report.md](./security/tools/aderyn/archive/v3.0.0-aderyn-report.md) |
-
-Summary (v3.3.0):
-
-| Category | Tool Severity | Count | CMTAT Maintainer Assessment | Status |
-| ------- | ------------- | ----- | --------------------------- | ------ |
-| H-1..H-2 | High | 2 | Mixed (false positives + design choice) | Reviewed |
-| L-1..L-10 | Low | 10 | Mixed (valid, design choices, style/tooling) | Reviewed |
-
-#### [Slither](https://github.com/crytic/slither)
-
-Here are the reports produced by [Slither](https://github.com/crytic/slither):
-
-| Version | File                                                         |
-| ------- | ------------------------------------------------------------ |
-| v3.3.0  | [v3.3.0-slither-report.md](./security/tools/slither/v3.3.0-slither-report.md)<br />[v3.3.0-slither-feedback.md](./security/tools/slither/v3.3.0-slither-feedback.md) |
-| v3.0.0  | [v3.0.0-slither-report.md](./security/tools/slither/archive/v3.0.0-slither-report.md) |
-| v2.3.0  | [v2.3.0-slither-report.md](./security/tools/slither/archive/v2.3.0-slither-report.md) |
-
-Summary (v3.3.0):
-
-| Detector | Tool Severity | Count | CMTAT Maintainer Assessment | Status |
-| ------- | ------------- | ----- | --------------------------- | ------ |
-| `uninitialized-local` | Medium | 1 | Under review (potential correctness) | Open |
-| `calls-loop` | Low | 28 | Design choice / context dependent | Accepted |
-| `assembly` | Informational | 13 | Expected pattern (ERC-7201-style slots) | Accepted |
-| `dead-code` | Informational | 2 | Cleanup candidate, no direct security impact | Open |
-| `naming-convention` | Informational | 56 | Style-only | Closed |
-| `unindexed-event-address` | Informational | 1 | Minor optimization item | Accepted |
-
-#### [Mythril](https://github.com/Consensys/mythril)
-
-Here are the reports produced by Mythril
-
-| Version | File                                                         |
-| ------- | ------------------------------------------------------------ |
-| v3.0.0  | Mythril currently generates a fatal error, impossible to run the tool |
-| v2.5.0  | [mythril-report-standalone.md](./security/tools/mythril/v2.5.0/myth_standalone_report.md)<br />[mythril-report-proxy.md](./security/tools/mythril/v2.5.0/myth_proxy_report.md)<br /> |
-
-#### [Nethermind Audit Agent](https://auditagent.nethermind.io)
-
-Here are the reports produced by [Nethermind Audit Agent](https://auditagent.nethermind.io):
-
-| Version    | File                                                         |
-| ---------- | ------------------------------------------------------------ |
-| v3.1.0     | [nethermind-audit-agent/v3.1.0](./security/tools/nethermind-audit-agent/v3.1.0) |
-| v3.0.0-rc5 | [nethermind-audit-agent/v3.0.0-rc5](./security/tools/nethermind-audit-agent/v3.0.0-rc5) |
-
-The v3.1.0 report identified **14 findings** (2 high, 2 medium, 10 low). All findings were reviewed by CMTA maintainers; 7 were assessed as invalid and 7 were acknowledged as design choices. No finding required a code fix.
-
-| N° | Title | Severity | Validity |
-|----|-------|----------|----------|
-| 1 | Partial-freeze not enforced on transfer path | High | Invalid |
-| 2 | Unprotected `initialize()` allows front-running of proxy initialization | High | Invalid |
-| 3 | Missing spender validation in transfer check function | Medium | Design choice |
-| 4 | Missing contract validation for RuleEngine address | Medium | Design choice |
-| 5 | Transfers ignore pause/deactivation in `CMTATBaseCommon` | Low | Design choice |
-| 6 | Transfers to frozen recipients possible in `CMTATBaseCommon.transfer()` | Low | Design choice |
-| 7 | Reentrancy window between unfreeze and balance update | Low | Invalid |
-| 8 | `canTransfer`/`canTransferFrom` can return `true` when transfer would revert | Low | Design choice |
-| 9 | SnapshotEngine hook bypassed in `_update` | Low | Design choice |
-| 10 | RuleEngine spender hardcoded to `address(0)` for minter-initiated transfers | Low | Invalid |
-| 11 | Forced transfers still enforced by standard validation | Low | Invalid |
-| 12 | Inconsistent deactivation handling between `canTransfer()` and `detectTransferRestriction()` | Low | Invalid |
-| 13 | `approve` not protected by pause modifier | Low | Design choice |
-| 14 | ERC2771 forwarder set via constructor in upgradeable deployments | Low | Invalid |
-
-A detailed response to each finding is available in [CMTAT_AuditAgent_Report_Comment_v3.1.0.md](./security/tools/nethermind-audit-agent/v3.1.0/CMTAT_AuditAgent_Report_Comment_v3.1.0.md).
-
-#### [Wake Arena](https://ackee.xyz) (Ackee Blockchain Security)
-
-Here are the reports produced by [Wake Arena](https://ackee.xyz), an automated AI vulnerability analysis tool developed by Ackee Blockchain Security:
-
-| Version      | File                                                         |
-| ------------ | ------------------------------------------------------------ |
-| v3.2.0-rc2   | [Wake Arena Report - CMTA: CMTAT-v3.2.0-rc2](./security/tools/ackee-wake-arena/Wake Arena Report - CMTA_ CMTAT-v3.2.0-rc2.pdf) |
-
-> Ackee Blockchain Security, Wake Arena AI Report \| CMTA: CMTAT, February 10, 2026 12:24 UTC.
-
-The report (v3.2.0-rc2, February 10, 2026) identified **6 findings** (0 critical, 0 high, 3 medium, 2 low, 1 info):
-
-| ID | Title | Impact | Status |
-|----|-------|--------|--------|
-| M1 | Double invocation of compliance hook in `_minterTransferOverride` | Medium | Fixed |
-| M2 | Double invocation of compliance hook in `_burnOverride` | Medium | Fixed |
-| M3 | Double invocation of compliance hook in `_mintOverride` | Medium | Fixed |
-| L1 | Misleading `Spend` event emitted on `transferFrom` when allowance is infinite | Low | Acknowledged (comment added) |
-| L2 | Unmitigated ERC20 `approve` allowance change race condition | Low | Acknowledged – won't fix |
-| I1 | Documentation mismatch: `_authorizeSelfBurn` comment referenced wrong role | Info | Fixed |
-
-A detailed feedback and response to each finding is available in [CMTAT-wake-arena-feedback.md](./security/tools/ackee-wake-arena/CMTAT-wake-arena-feedback.md).
-
-#### [Sequent](https://www.sequent.inc) (Pre-verification Review)
-
-Here are the reports produced by Sequent:
-
-| Version | File |
-| ------- | ---- |
-| v3.3.0-pre | [sequent-report-CMTAT.pdf](./security/pre-review/sequent-report-CMTAT.pdf)<br />[SequentReport-feedback.md](./security/pre-review/SequentReport-feedback.md) |
+Reports and summaries for all static analysis and automated review tools ([Aderyn](https://github.com/Cyfrin/aderyn), [Slither](https://github.com/crytic/slither), Mythril, [Nethermind Audit Agent](https://auditagent.nethermind.io), Wake Arena) are collected in [security/AUDIT.md](./security/AUDIT.md).
 
 ### Test
 
@@ -3204,6 +3101,10 @@ Specifications to deploy CMTAT-compliant tokens on Solana are available in the r
 
 A second unofficial version is available in the community section.
 
+- [CMTAT-FIX](https://github.com/CMTA/CMTAT-FIX)
+
+Add FIX Asset Descriptors to CMTAT. See also [ERC-FIX](https://www.erc-fix.com/spec)
+
 ### Unofficial Implementations
 
 #### Aztec (Noir)
@@ -3224,19 +3125,17 @@ A version for [Starknet](https://www.starknet.io/) written in Cairo is under dev
 
 ### Community projects
 
-- [swapnilraj - fix-engine](https://github.com/swapnilraj/CMTAT/tree/swp/fix-engine)
-
-Add FIX Asset Descriptors to CMTAT. See also [ERC-FIX](https://www.erc-fix.com/spec)
-
 - [siva-sub - cmtat-icma-tokenized-bonds](https://github.com/siva-sub/cmtat-icma-tokenized-bonds)
 
  Integration of CMTATv3.0 framework with ICMA Bond Data Taxonomy v1.2
 
 ### Guideline
 
-If you create a version for another blockchain, feel free to use this summary tab to build a correspondence table between CMTAT framework, CMTAT Solidity version and your implementation.
+If you create a version for another blockchain, you can find more details here: [CMTAT-equivalency-assessment](https://github.com/CMTA/CMTAT-equivalency-assessment)
 
-#### CMTAT framework
+### CMTAT framework
+
+This section presents the implementation details between CMTAT framework and the present implementation.
 
 In the below table, the CMTAT framework required features are mapped to Solidity features.
 
