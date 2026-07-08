@@ -62,9 +62,9 @@ function ValidationModuleCommonCore () {
       )
     })
 
-    // reverts if this.address1 transfers more tokens than rule allows
+    // this.address1 transfers an allowed amount to this.address2
     it('testCanTransfer', async function () {
-      const AMOUNT_TO_TRANSFER = 5
+      const AMOUNT_TO_TRANSFER = 5n
       // Act
       expect(
         await this.cmtat.canTransfer(
@@ -77,6 +77,17 @@ function ValidationModuleCommonCore () {
       await this.cmtat
         .connect(this.address1)
         .transfer(this.address2, AMOUNT_TO_TRANSFER)
+
+      // Assert - balances moved by exactly AMOUNT_TO_TRANSFER
+      expect(await this.cmtat.balanceOf(this.address1)).to.equal(
+        this.ADDRESS1_INITIAL_BALANCE - AMOUNT_TO_TRANSFER
+      )
+      expect(await this.cmtat.balanceOf(this.address2)).to.equal(
+        this.ADDRESS2_INITIAL_BALANCE + AMOUNT_TO_TRANSFER
+      )
+      expect(await this.cmtat.balanceOf(this.address3)).to.equal(
+        this.ADDRESS3_INITIAL_BALANCE
+      )
     })
   })
 }

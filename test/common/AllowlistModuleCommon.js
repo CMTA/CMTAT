@@ -601,6 +601,14 @@ function AllowlistModuleCommon () {
         .connect(this.admin)
         .setAddressAllowlist(this.address2, true, reasonFreeze)
 
+      // Balances/supply before the mint+burn round-trip (asserting the delta
+      // rather than absolute 0 keeps this robust to any pre-existing balance)
+      const balancesBefore = []
+      for (const holder of TOKEN_HOLDER) {
+        balancesBefore.push(await this.cmtat.balanceOf(holder))
+      }
+      const supplyBefore = await this.cmtat.totalSupply()
+
       await this.cmtat
         .connect(this.admin)
         .batchMint(TOKEN_HOLDER, TOKEN_BY_HOLDERS_TO_BURN)
@@ -609,6 +617,15 @@ function AllowlistModuleCommon () {
       await this.cmtat
         .connect(this.admin)
         .batchBurn(TOKEN_HOLDER, TOKEN_BY_HOLDERS_TO_BURN)
+
+      // Assert - burning the same amounts just minted returns every holder and
+      // the total supply to their starting values
+      for (let i = 0; i < TOKEN_HOLDER.length; ++i) {
+        expect(await this.cmtat.balanceOf(TOKEN_HOLDER[i])).to.equal(
+          balancesBefore[i]
+        )
+      }
+      expect(await this.cmtat.totalSupply()).to.equal(supplyBefore)
     })
     it('testCannotBatchBurnFromNoWhitelistedAddress', async function () {
       const TOKEN_BY_HOLDERS_TO_BURN = [10, 100, 1000]
