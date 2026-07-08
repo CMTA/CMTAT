@@ -37,12 +37,17 @@ describe('CMTAT Core - Upgradeable', function () {
     const IERC721Interface = '0x80ac58cd'
     const IERC5679 = '0xd0017968'
     const ICMTATDeactivate = '0xe9cd80b0'
+    const IERC1404 = '0xab84a5c8'
+    const IERC1404Extend = '0x78a8de7d'
 
     expect(await this.cmtat.supportsInterface(erc1363Interface)).to.equal(false)
     expect(await this.cmtat.supportsInterface(IERC165Interface)).to.equal(true)
     expect(await this.cmtat.supportsInterface(IERC721Interface)).to.equal(false)
     expect(await this.cmtat.supportsInterface(IERC5679)).to.equal(true)
     expect(await this.cmtat.supportsInterface(ICMTATDeactivate)).to.equal(true)
+    // The light deployment (CMTATBaseCore) does not include the ERC-1404 module
+    expect(await this.cmtat.supportsInterface(IERC1404)).to.equal(false)
+    expect(await this.cmtat.supportsInterface(IERC1404Extend)).to.equal(false)
     expect(await this.cmtat.supportsInterface('0xffffffff')).to.equal(false)
   })
 })

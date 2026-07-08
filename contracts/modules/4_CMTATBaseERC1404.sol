@@ -3,14 +3,16 @@
 pragma solidity ^0.8.20;
 
 import {CMTATBaseRuleEngine} from "./3_CMTATBaseRuleEngine.sol";
+import {CMTATBaseAccessControl} from "./2_CMTATBaseAccessControl.sol";
 /* ==== Wrapper === */
 // Use by detectTransferRestriction
 import {ERC20Upgradeable} from "./wrapper/core/ERC20BaseModule.sol";
 // Extensions
 import {ERC20EnforcementModule} from "./wrapper/extensions/ERC20EnforcementModule.sol";
 // Controllers
-import {ValidationModuleERC1404, IERC1404Extend} from "./wrapper/extensions/ValidationModule/ValidationModuleERC1404.sol";
+import {ValidationModuleERC1404, IERC1404, IERC1404Extend} from "./wrapper/extensions/ValidationModule/ValidationModuleERC1404.sol";
 import {ValidationModuleRuleEngine} from "./wrapper/extensions/ValidationModule/ValidationModuleRuleEngine.sol";
+import {ERC1404ExtendInterfaceId} from "../library/ERC1404ExtendInterfaceId.sol";
 
 abstract contract CMTATBaseERC1404 is
     CMTATBaseRuleEngine,
@@ -60,6 +62,25 @@ abstract contract CMTATBaseERC1404 is
         uint256 value
     ) public virtual override (CMTATBaseRuleEngine, ValidationModuleRuleEngine) view returns (bool) {
         return CMTATBaseRuleEngine.canTransferFrom(spender, from, to, value);
+    }
+
+    /**
+    * @notice ERC-165 interface detection
+    * @dev advertises support for both the canonical ERC-1404 interface
+    * (`IERC1404`, id `0xab84a5c8`) and its CMTAT extension
+    * (`IERC1404Extend`, id `0x78a8de7d`).
+    * @dev The extension id is taken from {ERC1404ExtendInterfaceId} because
+    * Solidity's `type(IERC1404Extend).interfaceId` excludes inherited
+    * functions and would therefore only cover `detectTransferRestrictionFrom`.
+    * @inheritdoc CMTATBaseAccessControl
+    */
+    function supportsInterface(
+        bytes4 interfaceId
+    ) public view virtual override(CMTATBaseAccessControl) returns (bool) {
+        return
+            interfaceId == type(IERC1404).interfaceId ||
+            interfaceId == ERC1404ExtendInterfaceId.ERC1404EXTEND_INTERFACE_ID ||
+            super.supportsInterface(interfaceId);
     }
 
     /*//////////////////////////////////////////////////////////////
