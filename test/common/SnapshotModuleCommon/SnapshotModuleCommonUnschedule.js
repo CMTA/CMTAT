@@ -62,11 +62,13 @@ function SnapshotModuleCommonUnschedule () {
         .connect(this.admin)
         .unscheduleSnapshotNotOptimized(this.snapshotTime3)
       snapshots = await this.transferEngineMock.getNextSnapshots()
+      // snapshotTime3 was just unscheduled, so it must be gone and
+      // snapshotTime4/5 remain (previously masked by a swallowed assertion)
       checkArraySnapshot(snapshots, [
         this.snapshotTime1,
         this.snapshotTime2,
-        this.snapshotTime3,
-        this.snapshotTime4
+        this.snapshotTime4,
+        this.snapshotTime5
       ])
       expect(snapshots.length).to.equal(4)
     })
@@ -122,7 +124,7 @@ function SnapshotModuleCommonUnschedule () {
       checkArraySnapshot(snapshots, [
         this.snapshotTime1,
         this.snapshotTime2,
-        this.RANDOM_SNAPSHOT,
+        RANDOM_SNAPSHOT,
         this.snapshotTime3,
         this.snapshotTime4,
         this.snapshotTime5

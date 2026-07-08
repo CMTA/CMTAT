@@ -5,7 +5,6 @@ const { ZERO_ADDRESS } = require('../../../utils')
 function SnapshotModuleMultiplePlannedTest () {
   // With multiple planned snapshot
   context('SnapshotMultiplePlannedTest', function () {
-    const ADDRESSES = [this.address1, this.address2, this.address3]
     const ADDRESS1_INITIAL_MINT = 31n
     const ADDRESS2_INITIAL_MINT = 32n
     const ADDRESS3_INITIAL_MINT = 33n
@@ -63,7 +62,6 @@ function SnapshotModuleMultiplePlannedTest () {
         this,
         await time.latest(),
         TOTAL_SUPPLY_INITIAL_MINT,
-        ADDRESSES,
         [ADDRESS1_INITIAL_MINT, ADDRESS2_INITIAL_MINT, ADDRESS3_INITIAL_MINT]
       )
 
@@ -80,7 +78,6 @@ function SnapshotModuleMultiplePlannedTest () {
         this,
         this.beforeSnapshotTime,
         TOTAL_SUPPLY_INITIAL_MINT,
-        ADDRESSES,
         [ADDRESS1_INITIAL_MINT, ADDRESS2_INITIAL_MINT, ADDRESS3_INITIAL_MINT]
       )
       // values at the time of the first snapshot
@@ -88,7 +85,6 @@ function SnapshotModuleMultiplePlannedTest () {
         this,
         this.snapshotTime1,
         TOTAL_SUPPLY_INITIAL_MINT,
-        ADDRESSES,
         [ADDRESS1_INITIAL_MINT, ADDRESS2_INITIAL_MINT, ADDRESS3_INITIAL_MINT]
       )
       // values now
@@ -100,7 +96,6 @@ function SnapshotModuleMultiplePlannedTest () {
         this,
         await time.latest(),
         TOTAL_SUPPLY_INITIAL_MINT,
-        ADDRESSES,
         [
           address1NewTokensBalance,
           address2NewTokensBalance,
@@ -118,7 +113,6 @@ function SnapshotModuleMultiplePlannedTest () {
         this,
         await time.latest(),
         TOTAL_SUPPLY_INITIAL_MINT,
-        ADDRESSES,
         [ADDRESS1_INITIAL_MINT, ADDRESS2_INITIAL_MINT, ADDRESS3_INITIAL_MINT]
       )
 
@@ -135,7 +129,6 @@ function SnapshotModuleMultiplePlannedTest () {
         this,
         this.beforeSnapshotTime,
         TOTAL_SUPPLY_INITIAL_MINT,
-        ADDRESSES,
         [ADDRESS1_INITIAL_MINT, ADDRESS2_INITIAL_MINT, ADDRESS3_INITIAL_MINT]
       )
       // Values at the time of the first snapshot
@@ -143,7 +136,6 @@ function SnapshotModuleMultiplePlannedTest () {
         this,
         this.snapshotTime1,
         TOTAL_SUPPLY_INITIAL_MINT,
-        ADDRESSES,
         [ADDRESS1_INITIAL_MINT, ADDRESS2_INITIAL_MINT, ADDRESS3_INITIAL_MINT]
       )
       // Values at the time of the second snapshot
@@ -151,7 +143,6 @@ function SnapshotModuleMultiplePlannedTest () {
         this,
         this.snapshotTime2,
         TOTAL_SUPPLY_INITIAL_MINT,
-        ADDRESSES,
         [ADDRESS1_INITIAL_MINT, ADDRESS2_INITIAL_MINT, ADDRESS3_INITIAL_MINT]
       )
       // values now
@@ -163,7 +154,6 @@ function SnapshotModuleMultiplePlannedTest () {
         this,
         await time.latest(),
         TOTAL_SUPPLY_INITIAL_MINT,
-        ADDRESSES,
         [
           address1NewTokensBalance,
           address2NewTokensBalance,
@@ -182,7 +172,6 @@ function SnapshotModuleMultiplePlannedTest () {
         this,
         await time.latest(),
         TOTAL_SUPPLY_INITIAL_MINT,
-        ADDRESSES,
         [ADDRESS1_INITIAL_MINT, ADDRESS2_INITIAL_MINT, ADDRESS3_INITIAL_MINT]
       )
       // Act
@@ -198,7 +187,6 @@ function SnapshotModuleMultiplePlannedTest () {
         this,
         this.beforeSnapshotTime,
         TOTAL_SUPPLY_INITIAL_MINT,
-        ADDRESSES,
         [ADDRESS1_INITIAL_MINT, ADDRESS2_INITIAL_MINT, ADDRESS3_INITIAL_MINT]
       )
       // Values at the time of the first snapshot
@@ -206,7 +194,6 @@ function SnapshotModuleMultiplePlannedTest () {
         this,
         this.snapshotTime1,
         TOTAL_SUPPLY_INITIAL_MINT,
-        ADDRESSES,
         [ADDRESS1_INITIAL_MINT, ADDRESS2_INITIAL_MINT, ADDRESS3_INITIAL_MINT]
       )
       // Values at the time of the second snapshot
@@ -214,7 +201,6 @@ function SnapshotModuleMultiplePlannedTest () {
         this,
         this.snapshotTime2,
         TOTAL_SUPPLY_INITIAL_MINT,
-        ADDRESSES,
         [ADDRESS1_INITIAL_MINT, ADDRESS2_INITIAL_MINT, ADDRESS3_INITIAL_MINT]
       )
       // Values at the time of the third snapshot
@@ -222,7 +208,6 @@ function SnapshotModuleMultiplePlannedTest () {
         this,
         this.snapshotTime3,
         TOTAL_SUPPLY_INITIAL_MINT,
-        ADDRESSES,
         [ADDRESS1_INITIAL_MINT, ADDRESS2_INITIAL_MINT, ADDRESS3_INITIAL_MINT]
       )
       // Values now
@@ -234,7 +219,6 @@ function SnapshotModuleMultiplePlannedTest () {
         this,
         await time.latest(),
         TOTAL_SUPPLY_INITIAL_MINT,
-        ADDRESSES,
         [
           address1NewTokensBalance,
           address2NewTokensBalance,
@@ -251,7 +235,6 @@ function SnapshotModuleMultiplePlannedTest () {
         this,
         await time.latest(),
         TOTAL_SUPPLY_INITIAL_MINT,
-        ADDRESSES,
         [ADDRESS1_INITIAL_MINT, ADDRESS2_INITIAL_MINT, ADDRESS3_INITIAL_MINT]
       )
 
@@ -268,7 +251,6 @@ function SnapshotModuleMultiplePlannedTest () {
         this,
         this.beforeSnapshotTime,
         TOTAL_SUPPLY_INITIAL_MINT,
-        ADDRESSES,
         [ADDRESS1_INITIAL_MINT, ADDRESS2_INITIAL_MINT, ADDRESS3_INITIAL_MINT]
       )
       // Values at the time of the first snapshot
@@ -276,7 +258,6 @@ function SnapshotModuleMultiplePlannedTest () {
         this,
         this.snapshotTime1,
         TOTAL_SUPPLY_INITIAL_MINT,
-        ADDRESSES,
         [ADDRESS1_INITIAL_MINT, ADDRESS2_INITIAL_MINT, ADDRESS3_INITIAL_MINT]
       )
       const ADDRESS1_BALANCE_AFTER_ONE_TRANSFER =
@@ -288,7 +269,6 @@ function SnapshotModuleMultiplePlannedTest () {
         this,
         this.snapshotTime2,
         TOTAL_SUPPLY_INITIAL_MINT,
-        ADDRESSES,
         [
           ADDRESS1_BALANCE_AFTER_ONE_TRANSFER,
           ADDRESS2_BALANCE_AFTER_TONE_TRANSFER,
@@ -300,7 +280,6 @@ function SnapshotModuleMultiplePlannedTest () {
         this,
         this.snapshotTime3,
         TOTAL_SUPPLY_INITIAL_MINT,
-        ADDRESSES,
         [
           ADDRESS1_BALANCE_AFTER_ONE_TRANSFER,
           ADDRESS2_BALANCE_AFTER_TONE_TRANSFER,
@@ -312,7 +291,6 @@ function SnapshotModuleMultiplePlannedTest () {
         this,
         await time.latest(),
         TOTAL_SUPPLY_INITIAL_MINT,
-        ADDRESSES,
         [
           ADDRESS1_BALANCE_AFTER_ONE_TRANSFER,
           ADDRESS2_BALANCE_AFTER_TONE_TRANSFER,
@@ -338,7 +316,6 @@ function SnapshotModuleMultiplePlannedTest () {
         this,
         this.beforeSnapshotTime,
         TOTAL_SUPPLY_INITIAL_MINT,
-        ADDRESSES,
         [ADDRESS1_INITIAL_MINT, ADDRESS2_INITIAL_MINT, ADDRESS3_INITIAL_MINT]
       )
       // Values at the time of the first snapshot
@@ -346,7 +323,6 @@ function SnapshotModuleMultiplePlannedTest () {
         this,
         this.snapshotTime1,
         TOTAL_SUPPLY_INITIAL_MINT,
-        ADDRESSES,
         [ADDRESS1_INITIAL_MINT, ADDRESS2_INITIAL_MINT, ADDRESS3_INITIAL_MINT]
       )
       // Values at the time of the second snapshot
@@ -354,7 +330,6 @@ function SnapshotModuleMultiplePlannedTest () {
         this,
         this.snapshotTime2,
         TOTAL_SUPPLY_INITIAL_MINT,
-        ADDRESSES,
         [
           ADDRESS1_BALANCE_AFTER_ONE_TRANSFER,
           ADDRESS2_BALANCE_AFTER_TONE_TRANSFER,
@@ -370,7 +345,6 @@ function SnapshotModuleMultiplePlannedTest () {
         this,
         await time.latest(),
         TOTAL_SUPPLY_INITIAL_MINT,
-        ADDRESSES,
         [
           ADDRESS1_BALANCE_AFTER_TWO_TRANSFER,
           ADDRESS2_BALANCE_AFTER_TWO_TRANSFER,
@@ -397,15 +371,13 @@ function SnapshotModuleMultiplePlannedTest () {
         this,
         this.beforeSnapshotTime,
         TOTAL_SUPPLY_INITIAL_MINT,
-        ADDRESSES,
         [ADDRESS1_INITIAL_MINT, ADDRESS2_INITIAL_MINT, ADDRESS3_INITIAL_MINT]
       )
       // Values at the time of the first snapshot
-      checkSnapshot.call(
+      await checkSnapshot.call(
         this,
         this.snapshotTime1,
         TOTAL_SUPPLY_INITIAL_MINT,
-        ADDRESSES,
         [ADDRESS1_INITIAL_MINT, ADDRESS2_INITIAL_MINT, ADDRESS3_INITIAL_MINT]
       )
       // Values at the time of the second snapshot
@@ -413,7 +385,6 @@ function SnapshotModuleMultiplePlannedTest () {
         this,
         this.snapshotTime2,
         TOTAL_SUPPLY_INITIAL_MINT,
-        ADDRESSES,
         [
           ADDRESS1_BALANCE_AFTER_ONE_TRANSFER,
           ADDRESS2_BALANCE_AFTER_TONE_TRANSFER,
@@ -425,7 +396,6 @@ function SnapshotModuleMultiplePlannedTest () {
         this,
         this.snapshotTime3,
         TOTAL_SUPPLY_INITIAL_MINT,
-        ADDRESSES,
         [
           ADDRESS1_BALANCE_AFTER_TWO_TRANSFER,
           ADDRESS2_BALANCE_AFTER_TWO_TRANSFER,
@@ -441,7 +411,6 @@ function SnapshotModuleMultiplePlannedTest () {
         this,
         await time.latest(),
         TOTAL_SUPPLY_INITIAL_MINT,
-        ADDRESSES,
         [
           ADDRESS1_BALANCE_AFTER_THREE_TRANSFER,
           ADDRESS2_BALANCE_AFTER_THREE_TRANSFER,

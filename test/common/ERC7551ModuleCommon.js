@@ -44,7 +44,7 @@ function ERC7551ModuleCommon () {
     })
     it('testCannotNonAdminUpdateTerms', async function () {
       // Arrange - Assert
-      checkTerms(TERMS)
+      await checkTerms(this, TERMS)
       // Act
       await expect(
         this.cmtat

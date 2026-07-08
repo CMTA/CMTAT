@@ -83,7 +83,7 @@ function EnforcementModuleCommon () {
       const freeze = [false, false, true]
 
       // Arrange
-      testFreezeBatch(sender)
+      await testFreezeBatch.bind(this)(sender)
 
       // Act
       this.logs = await this.cmtat

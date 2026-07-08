@@ -123,7 +123,7 @@ function AllowlistModuleCommon () {
       const freeze = [true, true, false]
 
       // Arrange
-      testAllowlistBatch(sender)
+      await testAllowlistBatch.bind(this)(sender)
 
       // Act
       this.logs = await this.cmtat

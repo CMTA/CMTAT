@@ -8,7 +8,6 @@ const REASON = ethers.Typed.bytes(REASON_EVENT)
 const REASON_EMPTY = ethers.Typed.bytes(ethers.toUtf8Bytes(''))
 
 function SnapshotModuleOnePlannedSnapshotTest () {
-  const ADDRESSES = [this.address1, this.address2, this.address3]
   const ADDRESS1_INITIAL_MINT = '31'
   const ADDRESS2_INITIAL_MINT = '32'
   const ADDRESS3_INITIAL_MINT = '33'
@@ -50,7 +49,6 @@ function SnapshotModuleOnePlannedSnapshotTest () {
         this,
         await time.latest(),
         TOTAL_SUPPLY_INITIAL_MINT,
-        ADDRESSES,
         [ADDRESS1_INITIAL_MINT, ADDRESS2_INITIAL_MINT, ADDRESS3_INITIAL_MINT]
       );
       // Act
@@ -67,7 +65,6 @@ function SnapshotModuleOnePlannedSnapshotTest () {
         this,
         this.snapshotTime,
         TOTAL_SUPPLY_INITIAL_MINT,
-        ADDRESSES,
         [ADDRESS1_INITIAL_MINT, ADDRESS2_INITIAL_MINT, ADDRESS3_INITIAL_MINT]
       )
       // Values now
@@ -81,7 +78,6 @@ function SnapshotModuleOnePlannedSnapshotTest () {
         this,
         await time.latest(),
         newTotalSupply,
-        ADDRESSES,
         [address1NewTokensBalance, ADDRESS2_INITIAL_MINT, ADDRESS3_INITIAL_MINT]
       )
       const snapshots = await this.transferEngineMock.getNextSnapshots()
@@ -95,7 +91,6 @@ function SnapshotModuleOnePlannedSnapshotTest () {
         this,
         await time.latest(),
         TOTAL_SUPPLY_INITIAL_MINT,
-        ADDRESSES,
         [ADDRESS1_INITIAL_MINT, ADDRESS2_INITIAL_MINT, ADDRESS3_INITIAL_MINT]
       )
 
@@ -115,7 +110,6 @@ function SnapshotModuleOnePlannedSnapshotTest () {
         this,
         this.snapshotTime,
         TOTAL_SUPPLY_INITIAL_MINT,
-        ADDRESSES,
         [ADDRESS1_INITIAL_MINT, ADDRESS2_INITIAL_MINT, ADDRESS3_INITIAL_MINT]
       )
       // Values now
@@ -129,7 +123,6 @@ function SnapshotModuleOnePlannedSnapshotTest () {
         this,
         await time.latest(),
         newTotalSupply,
-        ADDRESSES,
         [address1NewTokensBalance, ADDRESS2_INITIAL_MINT, ADDRESS3_INITIAL_MINT]
       )
       const snapshots = await this.transferEngineMock.getNextSnapshots()
@@ -143,7 +136,6 @@ function SnapshotModuleOnePlannedSnapshotTest () {
         this,
         await time.latest(),
         TOTAL_SUPPLY_INITIAL_MINT,
-        ADDRESSES,
         [ADDRESS1_INITIAL_MINT, ADDRESS2_INITIAL_MINT, ADDRESS3_INITIAL_MINT]
       )
 
@@ -164,7 +156,6 @@ function SnapshotModuleOnePlannedSnapshotTest () {
         this,
         this.snapshotTime,
         TOTAL_SUPPLY_INITIAL_MINT,
-        ADDRESSES,
         [ADDRESS1_INITIAL_MINT, ADDRESS2_INITIAL_MINT, ADDRESS3_INITIAL_MINT]
       )
       // Values now
@@ -178,7 +169,6 @@ function SnapshotModuleOnePlannedSnapshotTest () {
         this,
         await time.latest(),
         TOTAL_SUPPLY_INITIAL_MINT,
-        ADDRESSES,
         [
           address1NewTokensBalance,
           address2NewTokensBalance,

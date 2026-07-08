@@ -4,7 +4,6 @@ const { checkSnapshot } = require('../SnapshotModuleUtils/SnapshotModuleUtils')
 const { ZERO_ADDRESS } = require('../../../utils')
 function SnapshotModuleCommonGlobal () {
   context('zeroPlannedSnapshotTest', function () {
-    const ADDRESSES = [this.address1, this.address2, this.address3]
     const ADDRESS1_INITIAL_MINT = '31'
     const ADDRESS2_INITIAL_MINT = '32'
     const ADDRESS3_INITIAL_MINT = '33'
@@ -37,7 +36,6 @@ function SnapshotModuleCommonGlobal () {
           this,
           await time.latest(),
           TOTAL_SUPPLY_INITIAL_MINT,
-          ADDRESSES,
           [ADDRESS1_INITIAL_MINT, ADDRESS2_INITIAL_MINT, ADDRESS3_INITIAL_MINT]
         )
       })
