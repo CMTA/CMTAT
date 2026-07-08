@@ -38,5 +38,5 @@ describe('CMTAT Disable Allowlist- Standalone', function () {
   // Extensions
   DocumentModuleCommon()
   ExtraInfoModuleCommon()
-  ERC20EnforcementModuleCommon
+  ERC20EnforcementModuleCommon()
 })
