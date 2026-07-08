@@ -191,7 +191,9 @@ function ERC20CrossChainModuleCommon () {
 
       // Assert
       // Emits a Transfer event
-      await expect(this.logs).to.emit(this.cmtat, 'Transfer')
+      await expect(this.logs)
+        .to.emit(this.cmtat, 'Transfer')
+        .withArgs(sender, ZERO_ADDRESS, DIFFERENCE)
       // Emits a Burn event
       await expect(this.logs)
         .to.emit(this.cmtat, 'BurnFrom')

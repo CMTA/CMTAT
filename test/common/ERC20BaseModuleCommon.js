@@ -116,8 +116,10 @@ function ERC20BaseModuleCommon () {
       // Assert
       const ADDRESSES = [this.address1, this.address2, this.address3]
       let result = await this.cmtat.batchBalanceOf(ADDRESSES)
+      expect(result[0].length).to.equal(ADDRESSES.length)
       expect(result[0][0]).to.equal(TOKEN_AMOUNTS[0])
       expect(result[0][1]).to.equal(TOKEN_AMOUNTS[1])
+      expect(result[0][2]).to.equal(TOKEN_AMOUNTS[2])
       expect(result[1]).to.equal(TOKEN_INITIAL_SUPPLY)
 
       const ADDRESSES2 = []

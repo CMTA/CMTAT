@@ -130,10 +130,14 @@ function SnapshotModuleSetSnapshotEngineCommon () {
         .connect(this.admin)
         .setSnapshotEngine(this.transferEngineMock.target)
       // Assert
-      // emits a SnapshotEngineSet event
+      // emits a SnapshotEngine event
       await expect(this.logs)
         .to.emit(this.cmtat, 'SnapshotEngine')
         .withArgs(this.transferEngineMock.target)
+      // the engine is effectively stored
+      expect(await this.cmtat.snapshotEngine()).to.equal(
+        this.transferEngineMock.target
+      )
     })
 
     it('testCannotBeSetByAdminWithTheSameValue', async function () {
