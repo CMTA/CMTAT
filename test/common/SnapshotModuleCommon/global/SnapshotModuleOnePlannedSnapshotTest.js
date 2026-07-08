@@ -58,7 +58,12 @@ function SnapshotModuleOnePlannedSnapshotTest () {
 
       // Assert
       // Values before the snapshot
-      // await checkSnapshot.call(this, this.beforeSnapshotTime, TOTAL_SUPPLY_INITIAL_MINT, ADDRESSES, [ADDRESS1_INITIAL_MINT, ADDRESS2_INITIAL_MINT, ADDRESS3_INITIAL_MINT])
+      await checkSnapshot.call(
+        this,
+        this.beforeSnapshotTime,
+        TOTAL_SUPPLY_INITIAL_MINT,
+        [ADDRESS1_INITIAL_MINT, ADDRESS2_INITIAL_MINT, ADDRESS3_INITIAL_MINT]
+      )
       // Value at the time of the snapshot
       await checkSnapshot.call(
         this,
@@ -103,7 +108,12 @@ function SnapshotModuleOnePlannedSnapshotTest () {
 
       // Assert
       // Values before the snapshot
-      // await checkSnapshot.call(this, this.beforeSnapshotTime, TOTAL_SUPPLY_INITIAL_MINT, ADDRESSES, [ADDRESS1_INITIAL_MINT, ADDRESS2_INITIAL_MINT, ADDRESS3_INITIAL_MINT])
+      await checkSnapshot.call(
+        this,
+        this.beforeSnapshotTime,
+        TOTAL_SUPPLY_INITIAL_MINT,
+        [ADDRESS1_INITIAL_MINT, ADDRESS2_INITIAL_MINT, ADDRESS3_INITIAL_MINT]
+      )
       // Value at the time of the snapshot
       await checkSnapshot.call(
         this,
@@ -149,7 +159,12 @@ function SnapshotModuleOnePlannedSnapshotTest () {
 
       // Assert
       // Values before the snapshot
-      // await checkSnapshot.call(this, this.beforeSnapshotTime, TOTAL_SUPPLY_INITIAL_MINT, ADDRESSES, [ADDRESS1_INITIAL_MINT, ADDRESS2_INITIAL_MINT, ADDRESS3_INITIAL_MINT])
+      await checkSnapshot.call(
+        this,
+        this.beforeSnapshotTime,
+        TOTAL_SUPPLY_INITIAL_MINT,
+        [ADDRESS1_INITIAL_MINT, ADDRESS2_INITIAL_MINT, ADDRESS3_INITIAL_MINT]
+      )
       // Value at the time of the snapshot
       await checkSnapshot.call(
         this,

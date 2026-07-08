@@ -85,8 +85,9 @@ function SnapshotModuleCommonGetNextSnapshot () {
       await this.transferEngineMock
         .connect(this.admin)
         .scheduleSnapshot(this.snapshotTime3)
-      // We jump into the future
-      await time.increase(4)
+      // Jump deterministically past the latest snapshot (avoids relying on the
+      // 1s-per-tx auto-mine drift to push the snapshots into the past)
+      await time.increaseTo(this.snapshotTime3 + 1)
       // Act
       const snapshots = await this.transferEngineMock.getNextSnapshots()
       // Assert
@@ -101,8 +102,8 @@ function SnapshotModuleCommonGetNextSnapshot () {
       await this.transferEngineMock
         .connect(this.admin)
         .scheduleSnapshot(this.snapshotTime1)
-      // We jump into the future
-      await time.increase(3)
+      // Jump deterministically just past snapshotTime1 (but before snapshotTime2)
+      await time.increaseTo(this.snapshotTime1 + 1)
       await this.transferEngineMock
         .connect(this.admin)
         .scheduleSnapshot(this.snapshotTime2)
