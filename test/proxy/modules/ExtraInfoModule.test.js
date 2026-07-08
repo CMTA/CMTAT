@@ -5,7 +5,7 @@ const {
   loadFixture
 } = require('../../deploymentUtils')
 
-describe('Proxy - BaseModule', function () {
+describe('Proxy - ExtraInfoModule', function () {
   beforeEach(async function () {
     Object.assign(this, await loadFixture(fixture))
     this.cmtat = await deployCMTATProxy(

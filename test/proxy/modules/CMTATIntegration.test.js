@@ -4,8 +4,7 @@ const {
   fixture,
   loadFixture
 } = require('../../deploymentUtils')
-const VALUE1 = 20n
-describe('Proxy - ERC20BurnModule', function () {
+describe('Proxy - CMTATIntegration', function () {
   beforeEach(async function () {
     Object.assign(this, await loadFixture(fixture))
     this.cmtat = await deployCMTATProxy(

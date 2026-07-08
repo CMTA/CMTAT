@@ -27,7 +27,7 @@ const SnapshotModuleMultiplePlannedTest = require('../../common/SnapshotModuleCo
 const SnapshotModuleOnePlannedSnapshotTest = require('../../common/SnapshotModuleCommon/global/SnapshotModuleOnePlannedSnapshotTest')
 const SnapshotModuleZeroPlannedSnapshotTest = require('../../common/SnapshotModuleCommon/global/SnapshotModuleZeroPlannedSnapshot')
 const SnapshotModuleSetSnapshotEngineCommon = require('../../common/SnapshotModuleCommon/SnapshotModuleSetSnapshotEngineCommon')
-describe('CMTAT Debt - Standalone', function () {
+describe('CMTAT Debt - Standalone Snapshot', function () {
   beforeEach(async function () {
     Object.assign(this, await loadFixture(fixture))
     this.cmtat = await deployCMTATDebtStandalone(
