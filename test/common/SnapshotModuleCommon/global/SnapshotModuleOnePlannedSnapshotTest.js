@@ -5,7 +5,6 @@ const { ZERO_ADDRESS } = require('../../../utils')
 const REASON_STRING = 'BURN_TEST'
 const REASON_EVENT = ethers.toUtf8Bytes(REASON_STRING)
 const REASON = ethers.Typed.bytes(REASON_EVENT)
-const REASON_EMPTY = ethers.Typed.bytes(ethers.toUtf8Bytes(''))
 
 function SnapshotModuleOnePlannedSnapshotTest () {
   const ADDRESS1_INITIAL_MINT = '31'

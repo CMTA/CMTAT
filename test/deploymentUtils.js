@@ -446,7 +446,6 @@ async function deployCMTATProxyWithParameter (
       unsafeAllow: ['missing-initializer']
     }
   )
-  // return ETHERS_CMTAT_PROXY.getAddress()
   return ETHERS_CMTAT_PROXY
 }
 

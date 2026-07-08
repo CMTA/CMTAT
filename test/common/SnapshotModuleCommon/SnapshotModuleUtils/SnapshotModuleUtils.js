@@ -1,11 +1,4 @@
 const { expect } = require('chai')
-const getUnixTimestamp = () => {
-  return Math.round(new Date().getTime() / 1000)
-}
-
-const timeout = function (ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms))
-}
 
 async function checkSnapshot (time, totalSupply, balances) {
   const addresses = [this.address1, this.address2, this.address3]
@@ -47,8 +40,6 @@ function checkArraySnapshot (snapshots, snapshotsValue) {
   }
 }
 module.exports = {
-  getUnixTimestamp,
-  timeout,
   checkSnapshot,
   checkArraySnapshot
 }

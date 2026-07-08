@@ -30,7 +30,7 @@ function ValidationModuleCommon () {
         )
       }
     })
-    it('testCanCanTransferWithoutRuleEngine', async function () {
+    it('testCanTransferWithoutRuleEngine', async function () {
       if (!this.erc1404) {
         // Arrange
         await this.cmtat.connect(this.admin).setRuleEngine(ZERO_ADDRESS)
@@ -248,7 +248,7 @@ function ValidationModuleCommon () {
       ).to.equal(false)
     })
 
-    it('testCanCanTransferFromWithoutRuleEngine', async function () {
+    it('testCanTransferFromWithoutRuleEngine', async function () {
       // Arrange
       if (!this.erc1404) {
         await this.cmtat.connect(this.admin).setRuleEngine(ZERO_ADDRESS)
@@ -367,7 +367,7 @@ function ValidationModuleCommon () {
       }
     })
 
-    it('testCanCanMintWithoutRuleEngine', async function () {
+    it('testCanMintWithoutRuleEngine', async function () {
       if (!this.erc1404) {
         // Arrange
         await this.cmtat.connect(this.admin).setRuleEngine(ZERO_ADDRESS)
@@ -388,7 +388,7 @@ function ValidationModuleCommon () {
             this.address2,
             11
           )
-        ).to.equal(0)
+        ).to.equal(REJECTED_CODE_BASE_TRANSFER_OK)
         expect(
           await this.cmtat.connect(this.admin).detectTransferRestrictionFrom(
             this.admin,
@@ -396,7 +396,7 @@ function ValidationModuleCommon () {
             this.address2,
             11
           )
-        ).to.equal(0)
+        ).to.equal(REJECTED_CODE_BASE_TRANSFER_OK)
       }
 
       expect(

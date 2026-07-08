@@ -1,4 +1,3 @@
-const { expect } = require('chai')
 const { ZERO_ADDRESS } = require('../../utils')
 const UpgradeProxyCommon = require('./UpgradeProxyCommon')
 const {

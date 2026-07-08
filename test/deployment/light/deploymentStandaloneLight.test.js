@@ -112,7 +112,6 @@ describe('CMTAT Core - Standalone', function () {
   /* ============ ERC165 ============ */
   it('testSupportRightInterface', async function () {
     const erc1363Interface = '0xb0202a11'
-    // don't really know how to compute this easily
     //  type(IAccessControl).interfaceId
     const IERC165Interface = '0x01ffc9a7'
     const IERC721Interface = '0x80ac58cd'

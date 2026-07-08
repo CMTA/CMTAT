@@ -1,10 +1,8 @@
-const { expect } = require('chai')
 const {
   deployCMTATAllowlistProxy,
   fixture,
   loadFixture
 } = require('../../deploymentUtils')
-const { ZERO_ADDRESS } = require('../../utils')
 const ERC20BaseModuleCommon = require('../../common/ERC20BaseModuleCommon')
 const ERC20MintModuleCommon = require('../../common/ERC20MintModuleCommon')
 const ERC20BurnModuleCommon = require('../../common/ERC20BurnModuleCommon')

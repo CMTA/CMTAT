@@ -61,7 +61,7 @@ function ValidationModuleSetRuleEngineCommon () {
         .withArgs(this.address1.address, DEFAULT_ADMIN_ROLE)
     })
 
-    it('testCanReturnMessageWithNoRuleEngine&UnknownRestrictionCode', async function () {
+    it('testCanReturnMessageWithNoRuleEngineAndUnknownRestrictionCode', async function () {
       // Act + Assert
       expect(await this.cmtat.messageForTransferRestriction(254)).to.equal(
         'UnknownCode'

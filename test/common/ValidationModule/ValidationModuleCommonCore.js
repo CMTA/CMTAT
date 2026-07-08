@@ -1,5 +1,4 @@
 const { expect } = require('chai')
-const { RULE_MOCK_AMOUNT_MAX, ZERO_ADDRESS } = require('../../utils')
 
 function ValidationModuleCommonCore () {
   // Transferring with Rule Engine set
@@ -21,7 +20,7 @@ function ValidationModuleCommonCore () {
       }
     })
 
-    it('testCanCanTransferWithoutRuleEngine', async function () {
+    it('testCanTransferWithoutRuleEngine', async function () {
       // Act + Assert
       expect(
         await this.cmtat.canTransfer(this.address1, this.address2, 10)

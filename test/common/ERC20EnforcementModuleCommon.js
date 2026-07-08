@@ -6,16 +6,8 @@ const {
 } = require('../utils')
 const { expect } = require('chai')
 
-const REASON_FREEZE_STRING = 'testFreeze'
-const REASON_FREEZE_EVENT = ethers.toUtf8Bytes(REASON_FREEZE_STRING)
-const reasonFreeze = ethers.Typed.bytes(REASON_FREEZE_EVENT)
-const REASON_FREEZE_EMPTY = ethers.Typed.bytes(ethers.toUtf8Bytes(''))
 
 const REASON_STRING = 'testUnfreeze'
-const REASON_UNFREEZE_EVENT = ethers.toUtf8Bytes(REASON_STRING)
-const reasonUnfreeze = ethers.Typed.bytes(REASON_UNFREEZE_EVENT)
-const REASON_EMPTY = ethers.Typed.bytes(ethers.toUtf8Bytes(''))
-const REASON_EMPTY_EVENT = ethers.toUtf8Bytes('')
 
 const REASON_EVENT = ethers.toUtf8Bytes(REASON_STRING)
 const REASON = ethers.Typed.bytes(REASON_EVENT)
@@ -24,15 +16,6 @@ const FREEZE_AMOUNT = 20
 const UNFREEZE_AMOUNT = 10
 const INITIAL_BALANCE = 50
 
-
-function hasFunction (contract, signature) {
-  try {
-    contract.interface.getFunction(signature)
-    return true
-  } catch {
-    return false
-  }
-}
 
 function supportsReasonedEnforcement (ctx) {
   return !!ctx.erc7551

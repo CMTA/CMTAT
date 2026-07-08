@@ -6,7 +6,6 @@ const VALUE2 = 50n
 const REASON_STRING = 'MINT_TEST'
 const REASON_EVENT = ethers.toUtf8Bytes(REASON_STRING)
 const REASON = ethers.Typed.bytes(REASON_EVENT)
-const REASON_EMPTY = ethers.Typed.bytes(ethers.toUtf8Bytes(''))
 function ERC20MintModuleCommon () {
   context('Minting', function () {
     async function testMint (sender) {
@@ -263,7 +262,7 @@ function ERC20MintModuleCommon () {
       await bindTest(this.admin)
     })
 
-    it('testCanBeMintBatchdByANewMinter', async function () {
+    it('testCanBeMintBatchedByANewMinter', async function () {
       // Arrange
       await this.cmtat
         .connect(this.admin)
@@ -366,7 +365,7 @@ function ERC20MintModuleCommon () {
       )
     })
 
-    it('testCannotbatchMintIfTOSIsEmpty', async function () {
+    it('testCannotBatchMintIfTOSIsEmpty', async function () {
       const TOKEN_HOLDER_INVALID = []
       const TOKEN_SUPPLY_BY_HOLDERS = []
       await expect(
@@ -454,7 +453,7 @@ function ERC20MintModuleCommon () {
     })
 
     // ADDRESS1 -> ADDRESS2
-    it('testCannotbatchTransferMoreTokensThanOwn', async function () {
+    it('testCannotBatchTransferMoreTokensThanOwn', async function () {
       const TOKEN_ADDRESS_TOS = [this.address1, this.address2, this.address3]
       const BALANCE_AFTER_FIRST_TRANSFER =
         (await this.cmtat.balanceOf(this.admin)) - TOKEN_AMOUNTS[0]
@@ -514,7 +513,7 @@ function ERC20MintModuleCommon () {
       )
     })
 
-    it('testCannotbatchTransferIfTOSIsEmpty', async function () {
+    it('testCannotBatchTransferIfTOSIsEmpty', async function () {
       const TOKEN_ADDRESS_TOS_INVALID = []
       await expect(
         this.cmtat

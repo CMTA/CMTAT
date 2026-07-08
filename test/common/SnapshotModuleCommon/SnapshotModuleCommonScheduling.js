@@ -154,7 +154,7 @@ function SnapshotModuleCommonScheduling () {
       expect(snapshots[0]).to.equal(THIRD_SNAPSHOT)
     })
 
-    it('can schedule a snaphot in a random place', async function () {
+    it('can schedule a snapshot in a random place', async function () {
       const baseTime = await time.latest()
       // Arrange
       const FIRST_SNAPSHOT = baseTime + time.duration.seconds(3600)
@@ -235,19 +235,6 @@ function SnapshotModuleCommonScheduling () {
         this.transferEngineMock,
         'CMTAT_SnapshotModule_SnapshotScheduledInThePast'
       )
-      /* await expect(
-        this.transferEngineMock
-          .connect(this.admin)
-          .scheduleSnapshotNotOptimized(SNAPSHOT_TIME)
-      )
-        .to.be.revertedWithCustomError(
-          this.transferEngineMock,
-          'CMTAT_SnapshotModule_SnapshotScheduledInThePast'
-        )
-        .withArgs(
-          SNAPSHOT_TIME,
-          (await time.latest()) + time.duration.seconds(1)
-        ) */
     })
 
     it('reverts when trying to schedule a snapshot with the same time twice', async function () {

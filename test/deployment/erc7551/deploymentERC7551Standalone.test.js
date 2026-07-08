@@ -1,4 +1,3 @@
-const { expect } = require('chai')
 const {
   deployCMTATERC7551Standalone,
   fixture,

@@ -11,7 +11,6 @@ const EnforcementModuleCommon = require('../../common/EnforcementModuleCommon')
 const VersionModuleCommon = require('../../common/VersionModuleCommon')
 const PauseModuleCommon = require('../../common/PauseModuleCommon')
 const ValidationModuleCommonCore = require('../../common/ValidationModule/ValidationModuleCommonCore')
-const VALUE = 20n
 describe('CMTAT Core - Upgradeable', function () {
   beforeEach(async function () {
     Object.assign(this, await loadFixture(fixture))

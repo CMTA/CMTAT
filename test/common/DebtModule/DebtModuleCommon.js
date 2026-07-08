@@ -1,5 +1,5 @@
 const { expect } = require('chai')
-const { ZERO_ADDRESS, DEBT_ROLE } = require('../../utils')
+const { DEBT_ROLE } = require('../../utils')
 function DebtModuleCommon () {
   context('Debt Module test', function () {
     let debtBase, creditEvents

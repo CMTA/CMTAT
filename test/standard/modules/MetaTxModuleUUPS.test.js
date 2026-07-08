@@ -4,7 +4,7 @@ const {
   fixture,
   loadFixture
 } = require('../../deploymentUtils.js')
-const { ZERO_ADDRESS, ERC2771ForwarderDomain } = require('../../utils.js')
+const { ERC2771ForwarderDomain } = require('../../utils.js')
 describe('Standard - MetaTxModule UUPS', function () {
   beforeEach(async function () {
     Object.assign(this, await loadFixture(fixture))

@@ -100,7 +100,7 @@ function SnapshotModuleCommonUnschedule () {
       )
     })
 
-    it('can unschedule a snaphot in a random place', async function () {
+    it('can unschedule a snapshot in a random place', async function () {
       const RANDOM_SNAPSHOT = this.currentTime + time.duration.seconds(17)
       await this.transferEngineMock
         .connect(this.admin)
@@ -145,7 +145,7 @@ function SnapshotModuleCommonUnschedule () {
       ])
     })
 
-    it('can schedule a snaphot after an unschedule', async function () {
+    it('can schedule a snapshot after an unschedule', async function () {
       await this.transferEngineMock
         .connect(this.admin)
         .scheduleSnapshot(this.snapshotTime1)
@@ -182,7 +182,7 @@ function SnapshotModuleCommonUnschedule () {
       ])
     })
 
-    it('reverts when calling from non-admin', async function () {
+    it('reverts when calling from non-snapshooter', async function () {
       // Arrange
       const SNAPSHOT_TIME = this.currentTime + time.duration.seconds(60)
       this.logs = await this.transferEngineMock
@@ -237,7 +237,7 @@ function SnapshotModuleCommonUnschedule () {
       expect(snapshots.length).to.equal(0)
     })
 
-    it('reverts when calling from non-admin', async function () {
+    it('reverts when calling from non-snapshooter', async function () {
       await expect(
         this.transferEngineMock
           .connect(this.address1)

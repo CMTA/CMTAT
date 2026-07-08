@@ -1,5 +1,5 @@
 const { expect } = require('chai')
-const { DEFAULT_ADMIN_ROLE, EXTRA_INFORMATION_ROLE } = require('../utils')
+const { EXTRA_INFORMATION_ROLE } = require('../utils')
 const { TERMS } = require('../deploymentUtils')
 
 function ERC7551ModuleCommon () {

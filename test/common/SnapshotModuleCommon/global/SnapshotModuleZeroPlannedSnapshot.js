@@ -1,8 +1,7 @@
 const { time } = require('@nomicfoundation/hardhat-network-helpers')
-const { expect } = require('chai')
 const { checkSnapshot } = require('../SnapshotModuleUtils/SnapshotModuleUtils')
 const { ZERO_ADDRESS } = require('../../../utils')
-function SnapshotModuleCommonGlobal () {
+function SnapshotModuleZeroPlannedSnapshot () {
   context('zeroPlannedSnapshotTest', function () {
     const ADDRESS1_INITIAL_MINT = '31'
     const ADDRESS2_INITIAL_MINT = '32'
@@ -30,7 +29,7 @@ function SnapshotModuleCommonGlobal () {
     })
 
     context('Before any snapshot', function () {
-      it('testCanGetBalanceAddress&TotalSupply', async function () {
+      it('testCanGetBalanceAddressAndTotalSupply', async function () {
         // Act + Assert
         await checkSnapshot.call(
           this,
@@ -42,4 +41,4 @@ function SnapshotModuleCommonGlobal () {
     })
   })
 }
-module.exports = SnapshotModuleCommonGlobal
+module.exports = SnapshotModuleZeroPlannedSnapshot

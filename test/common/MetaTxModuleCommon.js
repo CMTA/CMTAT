@@ -1,10 +1,8 @@
 const helpers = require('@nomicfoundation/hardhat-network-helpers')
 const {
   getDomain,
-  ForwardRequest
 } = require('../../lib/openzeppelin-contracts-upgradeable/test/helpers/eip712')
 const { expect } = require('chai')
-const { waffle } = require('hardhat')
 function MetaTxModuleCommon () {
   context('Transferring without paying gas', function () {
     const AMOUNT_TO_TRANSFER = 11n
@@ -66,8 +64,6 @@ function MetaTxModuleCommon () {
     })
 
     it('can send a transfer transaction without paying gas', async function () {
-      // const provider = await ethers.getDefaultProvider()
-      // getDefaultProvider uses Infura and Alchemy instead of Hardhat
       const [signer] = await ethers.getSigners()
       const provider = signer.provider
       const balanceEtherBefore = await provider.getBalance(this.address1)

@@ -1,8 +1,6 @@
-const { expect } = require('chai')
 const {
   DEPLOYMENT_DECIMAL,
   TERMS,
-  deployCMTATUUPSProxy,
   fixture,
   loadFixture
 } = require('../deploymentUtils')
@@ -22,7 +20,6 @@ const ExtraInfoModuleCommon = require('../common/ExtraInfoModuleCommon')
 const ERC20CrossChainModuleCommon = require('../common/ERC20CrossChainModuleCommon')
 const CCIPModuleCommon = require('../common/CCIPModuleCommon')
 
-const VALUE = 20n
 describe('CMTAT UUPS - Manual Deployment', function () {
   beforeEach(async function () {
     Object.assign(this, await loadFixture(fixture))

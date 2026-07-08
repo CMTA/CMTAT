@@ -1,6 +1,5 @@
 const { expect } = require('chai')
 const { DEFAULT_ADMIN_ROLE, ZERO_ADDRESS } = require('../utils')
-const { TERMS } = require('../deploymentUtils')
 
 function CCIPModuleCommon () {
   context('Set CCIP Admin', function () {
@@ -40,7 +39,7 @@ function CCIPModuleCommon () {
         .withArgs(this.address1.address, DEFAULT_ADMIN_ROLE)
     })
 
-    it('testCannotSetAdinWithSameValue>', async function () {
+    it('testCannotSetAdminWithSameValue', async function () {
       // Act
       await expect(
         this.cmtat.connect(this.admin).setCCIPAdmin(ZERO_ADDRESS)

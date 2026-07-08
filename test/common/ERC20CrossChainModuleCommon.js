@@ -5,13 +5,6 @@ const {
   ZERO_ADDRESS
 } = require('../utils')
 const { expect } = require('chai')
-// const REASON = 'BURN_TEST'
-const REASON_STRING = 'CrosschainBurn'
-const REASON_EVENT = ethers.toUtf8Bytes(REASON_STRING)
-const REASON_MINT_EVENT = ethers.toUtf8Bytes('CrosschainMint')
-const REASON = ethers.Typed.bytes(REASON_EVENT)
-const REASON_EMPTY = ethers.Typed.bytes(ethers.toUtf8Bytes(''))
-const REASON_EMPTY_EVENT = ethers.toUtf8Bytes('')
 function ERC20CrossChainModuleCommon () {
   context('CrosschainBurn', function () {
     const INITIAL_SUPPLY = 50
@@ -163,11 +156,9 @@ function ERC20CrossChainModuleCommon () {
 
   context('burn sender tokens', function () {
     const INITIAL_SUPPLY = 50n
-    const INITIAL_SUPPLY_TYPED = ethers.Typed.uint256(50)
     const VALUE1 = 20n
     const VALUE_TYPED = ethers.Typed.uint256(20)
     const DIFFERENCE = INITIAL_SUPPLY - VALUE1
-    const DIFFERENCE_TYPED = ethers.Typed.uint256(30)
     async function testBurn (sender) {
       // Act
       // Burn 20
@@ -260,7 +251,7 @@ function ERC20CrossChainModuleCommon () {
           COMPLIANCE
     ////////////////////////////////////////////////////////////// */
 
-    it('testCannotBeMBurnIfContractIsDeactivated', async function () {
+    it('testCannotBeBurnIfContractIsDeactivated', async function () {
       // Arrange
       await this.cmtat.connect(this.admin).pause()
       await this.cmtat.connect(this.admin).deactivateContract()
@@ -289,7 +280,6 @@ function ERC20CrossChainModuleCommon () {
         .connect(this.admin)
         .grantRole(BURNER_SELF_ROLE, this.address1)
       // Act
-      const VALUE = 20
       const VALUE_TYPED = ethers.Typed.uint256(20)
       await expect(this.cmtat.connect(this.address1).burn(VALUE_TYPED))
         .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotSend')
@@ -299,7 +289,6 @@ function ERC20CrossChainModuleCommon () {
 
   context('burnFrom', function () {
     const INITIAL_SUPPLY = 50n
-    const VALUE1 = 20n
 
     beforeEach(async function () {
       await this.cmtat.connect(this.admin).mint(this.address1, INITIAL_SUPPLY)

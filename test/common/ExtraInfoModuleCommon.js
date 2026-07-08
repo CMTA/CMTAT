@@ -1,5 +1,5 @@
 const { expect } = require('chai')
-const { DEFAULT_ADMIN_ROLE, EXTRA_INFORMATION_ROLE } = require('../utils')
+const { EXTRA_INFORMATION_ROLE } = require('../utils')
 const { TERMS } = require('../deploymentUtils')
 
 function ExtraInfoModuleCommon () {
@@ -61,7 +61,6 @@ function ExtraInfoModuleCommon () {
       this.logs = await this.cmtat.connect(this.admin).setTerms(NEW_TERMS)
       // Assert
 
-      // let blockTimestamp = (await ethers.provider.getBlock('latest')).timestamp;
       await checkTerms(this, NEW_TERMS)
       const blockTimestamp = (
         await ethers.provider.getBlock(this.logs.blockNumber)

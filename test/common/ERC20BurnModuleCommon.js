@@ -1,11 +1,9 @@
 const {
   BURNER_ROLE,
-  BURNER_FROM_ROLE,
   MINTER_ROLE,
   ZERO_ADDRESS
 } = require('../utils')
 const { expect } = require('chai')
-// const REASON = 'BURN_TEST'
 const REASON_STRING = 'BURN_TEST'
 const REASON_EVENT = ethers.toUtf8Bytes(REASON_STRING)
 const REASON = ethers.Typed.bytes(REASON_EVENT)
@@ -13,7 +11,6 @@ const REASON_EMPTY = ethers.Typed.bytes(ethers.toUtf8Bytes(''))
 function ERC20BurnModuleCommon () {
   context('burn', function () {
     const INITIAL_SUPPLY = 50n
-    const INITIAL_SUPPLY_TYPED = ethers.Typed.uint256(50)
     const VALUE1 = 20n
     const VALUE_TYPED = ethers.Typed.uint256(20)
     const DIFFERENCE = INITIAL_SUPPLY - VALUE1
@@ -185,7 +182,6 @@ function ERC20BurnModuleCommon () {
         .setAddressFrozen(this.address1, true)
 
       // Act
-      const VALUE = 20
       const VALUE_TYPED = ethers.Typed.uint256(20)
       await expect(
         this.cmtat.connect(this.admin).burn(this.address1, VALUE_TYPED)
@@ -229,7 +225,6 @@ function ERC20BurnModuleCommon () {
 
   context('burnAndMint', function () {
     const INITIAL_SUPPLY = 50n
-    const VALUE1 = 20n
     const REASON_STRING_LOCAL = 'recovery'
     const REASON_EVENT_LOCAL = ethers.toUtf8Bytes(REASON_STRING_LOCAL)
     const REASON = ethers.Typed.bytes(REASON_EVENT_LOCAL)
@@ -470,10 +465,10 @@ function ERC20BurnModuleCommon () {
     }
 
     beforeEach(async function () {
-      const TOKEN_HOLDER = [this.admin, this.address1, this.address2];
-      ({ logs: this.logs1 } = await this.cmtat
+      const TOKEN_HOLDER = [this.admin, this.address1, this.address2]
+      await this.cmtat
         .connect(this.admin)
-        .batchMint(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS))
+        .batchMint(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS)
       expect(await this.cmtat.totalSupply()).to.equal(INITIAL_SUPPLY)
     })
 
@@ -492,7 +487,6 @@ function ERC20BurnModuleCommon () {
     })
 
     it('testCanBeBurntBatchByBurnerRoleWithoutReason', async function () {
-      const TOKEN_HOLDER = [this.admin, this.address1, this.address2]
       // Arrange
       await this.cmtat
         .connect(this.admin)
@@ -504,7 +498,6 @@ function ERC20BurnModuleCommon () {
     })
 
     it('testCanBeBurntBatchByBurnerRole', async function () {
-      const TOKEN_HOLDER = [this.admin, this.address1, this.address2]
       // Arrange
       await this.cmtat
         .connect(this.admin)

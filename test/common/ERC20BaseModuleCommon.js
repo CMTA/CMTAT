@@ -1,9 +1,5 @@
 const { expect } = require('chai')
-const { ERC20ENFORCER_ROLE, DEFAULT_ADMIN_ROLE } = require('../utils')
-const REASON_STRING = 'Bad guy'
-const REASON_EVENT = ethers.toUtf8Bytes(REASON_STRING)
-const REASON = ethers.Typed.bytes(REASON_EVENT)
-const REASON_EMPTY = ethers.Typed.bytes(ethers.toUtf8Bytes(''))
+const { DEFAULT_ADMIN_ROLE } = require('../utils')
 function ERC20BaseModuleCommon () {
   context('Token structure', function () {
     it('testHasTheDefinedName', async function () {
@@ -82,7 +78,7 @@ function ERC20BaseModuleCommon () {
         .to.emit(this.cmtat, 'Symbol')
         .withArgs(NEW_SYMBOL, NEW_SYMBOL)
     })
-    it('testCannotNonAdminUpdateName', async function () {
+    it('testCannotNonAdminUpdateSymbol', async function () {
       // Act
       await expect(this.cmtat.connect(this.address1).setSymbol('New Symbol'))
         .to.be.revertedWithCustomError(
