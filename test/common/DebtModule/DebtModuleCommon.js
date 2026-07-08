@@ -5,13 +5,13 @@ function DebtModuleCommon () {
     let debtBase, creditEvents
 
     beforeEach(async function () {
-      debtIdentifier = {
+      const debtIdentifier = {
         issuerName: 'CMTA',
         issuerDescription: 'Capital Market',
         guarantor: 'Guarantor A',
         debtHolder: 'debtHolder A'
       }
-      debtInstrument = {
+      const debtInstrument = {
         interestRate: 500, // Example: 5.00%
         parValue: 1000000, // Example: 1,000,000
         minimumDenomination: 200,

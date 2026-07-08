@@ -14,7 +14,7 @@ function SnapshotModuleCommonGetNextSnapshot () {
           'SnapshotEngineMock',
           [this.cmtat.target, this.admin]
         )
-        this.cmtat
+        await this.cmtat
           .connect(this.admin)
           .setSnapshotEngine(this.transferEngineMock)
       }

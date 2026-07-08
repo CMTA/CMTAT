@@ -64,7 +64,7 @@ function ValidationModuleCommonCore () {
 
     // reverts if this.address1 transfers more tokens than rule allows
     it('testCanTransfer', async function () {
-      AMOUNT_TO_TRANSFER = 5
+      const AMOUNT_TO_TRANSFER = 5
       // Act
       expect(
         await this.cmtat.canTransfer(

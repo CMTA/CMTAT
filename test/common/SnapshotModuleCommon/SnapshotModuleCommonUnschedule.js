@@ -20,7 +20,7 @@ function SnapshotModuleCommonUnschedule () {
           'SnapshotEngineMock',
           [this.cmtat.target, this.admin]
         )
-        this.cmtat
+        await this.cmtat
           .connect(this.admin)
           .setSnapshotEngine(this.transferEngineMock)
       }
@@ -215,7 +215,7 @@ function SnapshotModuleCommonUnschedule () {
           'SnapshotEngineMock',
           [this.cmtat.target, this.admin]
         )
-        this.cmtat
+        await this.cmtat
           .connect(this.admin)
           .setSnapshotEngine(this.transferEngineMock)
       }

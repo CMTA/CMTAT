@@ -556,7 +556,7 @@ function AllowlistModuleCommon () {
       await this.cmtat
         .connect(this.admin)
         .setAddressAllowlist(this.address1, true, reasonFreeze)
-      this.cmtat.connect(this.admin).mint(this.address1, AMOUNT_TO_FREEZE)
+      await this.cmtat.connect(this.admin).mint(this.address1, AMOUNT_TO_FREEZE)
       this.logs = await this.cmtat
         .connect(this.admin)
         .freezePartialTokens(this.address1, AMOUNT_TO_FREEZE)
@@ -601,12 +601,12 @@ function AllowlistModuleCommon () {
         .connect(this.admin)
         .setAddressAllowlist(this.address2, true, reasonFreeze)
 
-      this.cmtat
+      await this.cmtat
         .connect(this.admin)
         .batchMint(TOKEN_HOLDER, TOKEN_BY_HOLDERS_TO_BURN)
 
       // Act
-      this.cmtat
+      await this.cmtat
         .connect(this.admin)
         .batchBurn(TOKEN_HOLDER, TOKEN_BY_HOLDERS_TO_BURN)
     })
@@ -624,7 +624,7 @@ function AllowlistModuleCommon () {
         .connect(this.admin)
         .setAddressAllowlist(this.address2, true, reasonFreeze)
 
-      this.cmtat
+      await this.cmtat
         .connect(this.admin)
         .batchMint(TOKEN_HOLDER, TOKEN_BY_HOLDERS_TO_BURN)
 
@@ -650,7 +650,7 @@ function AllowlistModuleCommon () {
       await this.cmtat
         .connect(this.admin)
         .setAddressAllowlist(this.address1, true, reasonFreeze)
-      this.cmtat.connect(this.admin).mint(this.address1, AMOUNT_TO_TRANSFER)
+      await this.cmtat.connect(this.admin).mint(this.address1, AMOUNT_TO_TRANSFER)
       expect(
         await this.cmtat.canTransfer(
           this.address1,
@@ -678,7 +678,7 @@ function AllowlistModuleCommon () {
       await this.cmtat
         .connect(this.admin)
         .setAddressAllowlist(this.address1, true, reasonFreeze)
-      this.cmtat.connect(this.admin).mint(this.address1, AMOUNT_TO_TRANSFER)
+      await this.cmtat.connect(this.admin).mint(this.address1, AMOUNT_TO_TRANSFER)
       expect(
         await this.cmtat.canTransfer(
           this.address1,

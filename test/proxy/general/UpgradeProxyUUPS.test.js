@@ -14,7 +14,7 @@ describe('CMTAT with UUPS Proxy', function () {
     Object.assign(this, await loadFixture(fixture))
 
     // Deploy the implementation contract
-    CMTAT_PROXY_FACTORY = await ethers.getContractFactory(
+    const CMTAT_PROXY_FACTORY = await ethers.getContractFactory(
       'CMTATUpgradeableUUPS'
     )
     this.CMTAT_PROXY_TestFactory = await ethers.getContractFactory(

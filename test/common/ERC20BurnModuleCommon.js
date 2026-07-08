@@ -624,7 +624,7 @@ function ERC20BurnModuleCommon () {
       const TOKEN_HOLDER = [this.admin, this.address1, this.address2]
       const TOKEN_SUPPLY_BY_HOLDERS = [10n, 100n, 1000n]
 
-      this.cmtat
+      await this.cmtat
         .connect(this.admin)
         .batchMint(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS)
       // Arrange
@@ -643,7 +643,7 @@ function ERC20BurnModuleCommon () {
       const TOKEN_HOLDER = [this.address1, this.admin, this.address2]
       const TOKEN_SUPPLY_BY_HOLDERS = [10n, 100n, 1000n]
 
-      this.cmtat
+      await this.cmtat
         .connect(this.admin)
         .batchMint(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS)
 

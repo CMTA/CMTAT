@@ -28,13 +28,13 @@ function ValidationModuleSetRuleEngineCommon () {
       // Act
       this.logs = await this.cmtat
         .connect(this.admin)
-        .setRuleEngine(this.ruleEngine)
+        .setRuleEngine(this.ruleEngineMock.target)
       // Assert
-      // emits a RuleEngineSet event
+      // emits a RuleEngine event
       await expect(this.logs)
         .to.emit(this.cmtat, 'RuleEngine')
-        .withArgs(this.ruleEngine)
-      expect(await this.cmtat.ruleEngine()).to.equal(this.ruleEngine)
+        .withArgs(this.ruleEngineMock.target)
+      expect(await this.cmtat.ruleEngine()).to.equal(this.ruleEngineMock.target)
     })
 
     it('testCanNotBeSetByAdminWithTheSameValue', async function () {
@@ -52,7 +52,7 @@ function ValidationModuleSetRuleEngineCommon () {
     it('testCannotBeSetByNonAdmin', async function () {
       // Act
       await expect(
-        this.cmtat.connect(this.address1).setRuleEngine(this.ruleEngine)
+        this.cmtat.connect(this.address1).setRuleEngine(this.ruleEngineMock.target)
       )
         .to.be.revertedWithCustomError(
           this.cmtat,
