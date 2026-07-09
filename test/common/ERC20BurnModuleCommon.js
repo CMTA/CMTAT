@@ -192,7 +192,7 @@ function ERC20BurnModuleCommon () {
 
     it('testBurnPropagatesSpenderToRuleEngine', async function () {
       if (!this.cmtat.setRuleEngine) {
-        return
+        this.skip()
       }
 
       this.ruleEngineMock = await ethers.deployContract('RuleEngineMock', [this.admin])
@@ -209,7 +209,7 @@ function ERC20BurnModuleCommon () {
 
     it('testBurnWithRuleEngineAuthorizedSpenderCanBurn', async function () {
       if (!this.cmtat.setRuleEngine) {
-        return
+        this.skip()
       }
 
       this.ruleEngineMock = await ethers.deployContract('RuleEngineMock', [this.admin])
@@ -674,7 +674,7 @@ function ERC20BurnModuleCommon () {
 
     it('testBatchBurnPropagatesSpenderToRuleEngine', async function () {
       if (!this.cmtat.setRuleEngine) {
-        return
+        this.skip()
       }
 
       const TOKEN_HOLDER = [this.admin, this.address1, this.address2]
@@ -693,7 +693,7 @@ function ERC20BurnModuleCommon () {
 
     it('testBatchBurnWithRuleEngineAuthorizedSpenderCanBurn', async function () {
       if (!this.cmtat.setRuleEngine) {
-        return
+        this.skip()
       }
 
       const TOKEN_HOLDER = [this.admin, this.address1, this.address2]

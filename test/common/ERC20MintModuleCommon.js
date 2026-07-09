@@ -178,7 +178,7 @@ function ERC20MintModuleCommon () {
 
     it('testMintPropagatesSpenderToRuleEngine', async function () {
       if (!this.cmtat.setRuleEngine) {
-        return
+        this.skip()
       }
 
       this.ruleEngineMock = await ethers.deployContract('RuleEngineMock', [this.admin])
@@ -195,7 +195,7 @@ function ERC20MintModuleCommon () {
 
     it('testMintWithRuleEngineAuthorizedSpenderCanMint', async function () {
       if (!this.cmtat.setRuleEngine) {
-        return
+        this.skip()
       }
 
       this.ruleEngineMock = await ethers.deployContract('RuleEngineMock', [this.admin])
@@ -273,7 +273,7 @@ function ERC20MintModuleCommon () {
 
     it('testBatchMintPropagatesSpenderToRuleEngine', async function () {
       if (!this.cmtat.setRuleEngine) {
-        return
+        this.skip()
       }
 
       const TOKEN_HOLDER = [this.admin, this.address1, this.address2]
@@ -293,7 +293,7 @@ function ERC20MintModuleCommon () {
 
     it('testBatchMintWithRuleEngineAuthorizedSpenderCanMint', async function () {
       if (!this.cmtat.setRuleEngine) {
-        return
+        this.skip()
       }
 
       const TOKEN_HOLDER = [this.admin, this.address1, this.address2]
@@ -586,7 +586,7 @@ function ERC20MintModuleCommon () {
 
     it('testBatchTransferPropagatesSpenderToRuleEngine', async function () {
       if (!this.cmtat.setRuleEngine) {
-        return
+        this.skip()
       }
 
       const TOKEN_ADDRESS_TOS = [this.address1, this.address2, this.address3]
@@ -603,7 +603,7 @@ function ERC20MintModuleCommon () {
 
     it('testBatchTransferWithRuleEngineAuthorizedSpenderCanTransfer', async function () {
       if (!this.cmtat.setRuleEngine) {
-        return
+        this.skip()
       }
 
       const TOKEN_ADDRESS_TOS = [this.address1, this.address2, this.address3]

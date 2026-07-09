@@ -20,10 +20,12 @@ function SnapshotModuleCommonGetNextSnapshot () {
       }
     })
     it('testCanReturnTheRightAddressIfSet', async function () {
-      if (this.definedAtDeployment) {
-        const transferEngine = await this.cmtat.snapshotEngine()
-        expect(this.transferEngineMock.target).to.equal(transferEngine)
+      // Only meaningful when the snapshot engine is wired at deployment
+      if (!this.definedAtDeployment) {
+        this.skip()
       }
+      const transferEngine = await this.cmtat.snapshotEngine()
+      expect(this.transferEngineMock.target).to.equal(transferEngine)
     })
     it('testCanGetAllNextSnapshots', async function () {
       // Arrange

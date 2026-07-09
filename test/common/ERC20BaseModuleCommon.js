@@ -373,10 +373,14 @@ function ERC20BaseModuleCommon () {
 
     it('testTransferFromOneAccountToAnother', async function () {
       const AMOUNT_TO_TRANSFER = 11n
-      // Act
-      this.logs = await this.cmtat
+      // Arrange - address1 approves address3 to spend on its behalf
+      await this.cmtat
         .connect(this.address1)
-        .transfer(this.address2, AMOUNT_TO_TRANSFER)
+        .approve(this.address3, AMOUNT_TO_TRANSFER)
+      // Act - address3 moves address1's tokens to address2 via transferFrom
+      this.logs = await this.cmtat
+        .connect(this.address3)
+        .transferFrom(this.address1, this.address2, AMOUNT_TO_TRANSFER)
       // Assert
       expect(await this.cmtat.balanceOf(this.address1)).to.equal(
         TOKEN_AMOUNTS[0] - AMOUNT_TO_TRANSFER
@@ -388,21 +392,29 @@ function ERC20BaseModuleCommon () {
         TOKEN_AMOUNTS[2]
       )
       expect(await this.cmtat.totalSupply()).to.equal(TOKEN_INITIAL_SUPPLY)
+      // the spender's allowance is consumed
+      expect(
+        await this.cmtat.allowance(this.address1, this.address3)
+      ).to.equal(0n)
       // emits a Transfer event
       await expect(this.logs)
         .to.emit(this.cmtat, 'Transfer')
         .withArgs(this.address1, this.address2, AMOUNT_TO_TRANSFER)
     })
 
-    // ADDRESS1 -> ADDRESS2
+    // ADDRESS1 -> ADDRESS2 (via ADDRESS3 as spender)
     it('testCannotTransferMoreTokensThanOwn', async function () {
       const ADDRESS1_BALANCE = await this.cmtat.balanceOf(this.address1)
       const AMOUNT_TO_TRANSFER = 50n
+      // Arrange - approve enough so the balance check (not the allowance) is hit
+      await this.cmtat
+        .connect(this.address1)
+        .approve(this.address3, AMOUNT_TO_TRANSFER)
       // Act
       await expect(
         this.cmtat
-          .connect(this.address1)
-          .transfer(this.address2, AMOUNT_TO_TRANSFER)
+          .connect(this.address3)
+          .transferFrom(this.address1, this.address2, AMOUNT_TO_TRANSFER)
       )
         .to.be.revertedWithCustomError(this.cmtat, 'ERC20InsufficientBalance')
         .withArgs(this.address1.address, ADDRESS1_BALANCE, AMOUNT_TO_TRANSFER)
