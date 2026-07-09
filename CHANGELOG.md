@@ -61,8 +61,16 @@ Custom changelog tag: `Dependencies`, `Documentation`, `Testing`
   - Added `IRuleTransferHook` (`contracts/mocks/RuleEngine/interfaces/IRuleTransferHook.sol`) to allow rules to update rule-local state on transfer callbacks.
   - Added `RuleTokenHolderTracker` (`contracts/mocks/RuleEngine/RuleTokenHolderTracker.sol`) to track holder balances/list in rule storage.
   - `RuleEngineMock` now wires the holder-tracker rule and executes transfer hooks in `transferred(...)` paths.
+- New core module **`TokenAttributeModule`** (`contracts/modules/wrapper/core/TokenAttributeModule.sol`):
+  - Manages the mutable token attributes `name`/`symbol` (with `setName`/`setSymbol` and the `Name`/`Symbol` events) independently of the ERC-20 interface, in its own ERC-7201 storage (`CMTAT.storage.TokenAttributeModule`).
+  - Decoupled from ERC-20 so the metadata management can be reused by non ERC-20 token bases (e.g. a confidential ERC-7984 variant): a token standard only overrides its `name()`/`symbol()` to delegate here.
+  - Authorization via the `_authorizeTokenAttributeManagement()` hook (enforces `DEFAULT_ADMIN_ROLE`).
 
 #### Changed
+
+- **`ERC20BaseModule` slimmed to ERC-20 concerns only** — `name`/`symbol`/`setName`/`setSymbol`/`Name`/`Symbol` events moved to the new `TokenAttributeModule`; `ERC20BaseModule` now stores only `decimals`. `__ERC20BaseModule_init_unchained` takes only `decimals`; name/symbol are initialized via `__TokenAttributeModule_init_unchained`.
+- **`CMTATBaseCore` and `CMTATBaseCommon` now inherit `TokenAttributeModule`** and override `name()`/`symbol()` to delegate to it (`CMTATBaseAccessControl` gets it transitively via `CMTATBaseCommon`). Higher-level bases are unaffected. No external ABI/selector change (`setName`/`setSymbol` keep the `IERC3643ERC20Base` selectors).
+- **Storage layout:** `name`/`symbol` moved from the `CMTAT.storage.ERC20BaseModule` slot to the new `CMTAT.storage.TokenAttributeModule` slot; `decimals` is preserved in place. Transparent for fresh deployments — see **Security** for the upgrade‑migration requirement on existing proxies.
 
 - **ERC-1643 document identifier format aligned to `bytes32`** (breaking API change for document functions):
   - Previous CMTAT variant (e.g. `v3.2.0`) used `string` for document names in `IERC1643` (`getDocument(string)`, `getAllDocuments() -> string[]`).
@@ -94,6 +102,10 @@ Custom changelog tag: `Dependencies`, `Documentation`, `Testing`
 - Restored full compilation after engine/mock alignment:
   - `CMTATEngineInitializerMock` no longer calls unavailable document-engine initializer on snapshot path.
   - `DocumentEngineMock` now implements IERC1643-compatible `setDocument(bytes32,string,bytes32)`.
+
+#### Security
+
+- ⚠️ **Upgrade migration required for existing proxies (`name`/`symbol` storage move).** Because `name`/`symbol` were moved to a new ERC-7201 slot (`CMTAT.storage.TokenAttributeModule`), upgrading an **already-deployed** CMTAT proxy from a pre-3.3 layout to this version leaves that new slot empty — `name()` / `symbol()` return empty strings until re-set. Any such upgrade MUST run a one-time `reinitializer` that copies the previous `name` / `symbol` into the new slot. Fresh deployments are unaffected (`decimals` stays in place either way).
 
 ### Documentation
 

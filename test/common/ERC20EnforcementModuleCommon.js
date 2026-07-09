@@ -295,6 +295,21 @@ function ERC20EnforcementModuleCommon () {
       )
     })
 
+    it('testCannotForceTransferToTheSameAddress', async function () {
+      // Arrange - freeze the whole balance of address1
+      await freezePartialTokensCompat(this, this.admin, this.address1, 50, REASON)
+      // Act
+      await expect(
+        forcedTransferCompat(this, this.admin, this.address1, this.address1, 50, REASON)
+      ).to.be.revertedWithCustomError(
+        this.cmtat,
+        'CMTAT_ERC20EnforcementModule_SelfTransferNotAllowed'
+      )
+      // Assert - the frozen tokens have not been released
+      expect(await this.cmtat.getFrozenTokens(this.address1)).to.equal('50')
+      expect(await this.cmtat.balanceOf(this.address1)).to.equal('50')
+    })
+
     it('testCannotNonAdminTransferFunds', async function () {
       // Act
       await expect(

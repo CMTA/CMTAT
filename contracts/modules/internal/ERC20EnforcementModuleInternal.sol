@@ -18,7 +18,8 @@ abstract contract ERC20EnforcementModuleInternal is ERC20Upgradeable, IERC7943Fu
     error CMTAT_ERC20EnforcementModule_ZeroAddressNotAllowed();
     error CMTAT_ERC20EnforcementModule_ValueExceedsAvailableBalance();
     error CMTAT_ERC20EnforcementModule_ValueExceedsFrozenBalance(); 
-    error CMTAT_ERC20EnforcementModule_ValueEqualCurrentFrozenTokens(); 
+    error CMTAT_ERC20EnforcementModule_ValueEqualCurrentFrozenTokens();
+    error CMTAT_ERC20EnforcementModule_SelfTransferNotAllowed();
     /* ============ ERC-7201 ============ */
     // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.ERC20EnforcementModule")) - 1)) & ~bytes32(uint256(0xff))
     bytes32 private constant ERC20EnforcementModuleStorageLocation = 0x9d8059a24cb596f1948a937c2c163cf14465c2a24abfd3cd009eec4ac4c39800;
@@ -101,6 +102,8 @@ abstract contract ERC20EnforcementModuleInternal is ERC20Upgradeable, IERC7943Fu
     }
 
     function _forcedTransfer(address from, address to, uint256 value) internal virtual {
+        // A self forced transfer moves no token, but _unfreezeTokens would still release the frozen ones
+        require(from != to, CMTAT_ERC20EnforcementModule_SelfTransferNotAllowed());
         _unfreezeTokens(from, value);
         if(to == address(0)){
             ERC20Upgradeable._burn(from, value);
