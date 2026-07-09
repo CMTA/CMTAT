@@ -13,6 +13,7 @@ import {ExtraInformationModule} from "./wrapper/extensions/ExtraInformationModul
 import {ERC20EnforcementModule, ERC20EnforcementModuleInternal} from "./wrapper/extensions/ERC20EnforcementModule.sol";
 // options
 import {ERC20BaseModule, ERC20Upgradeable} from "./wrapper/core/ERC20BaseModule.sol";
+import {TokenAttributeModule} from "./wrapper/core/TokenAttributeModule.sol";
  /* ==== Interface and other library === */
 import {IBurnMintERC20} from "../interfaces/technical/IMintBurnToken.sol";
 import {IERC5679} from "../interfaces/technical/IERC5679.sol";
@@ -23,6 +24,7 @@ abstract contract CMTATBaseCommon is
     ERC20MintModule,
     ERC20BurnModule,
     ERC20BaseModule,
+    TokenAttributeModule,
     // Extension
     ERC20EnforcementModule,
     ExtraInformationModule,
@@ -53,17 +55,17 @@ abstract contract CMTATBaseCommon is
 
 
     /**
-    * @inheritdoc ERC20BaseModule
+    * @inheritdoc TokenAttributeModule
     */
-    function name() public view virtual override(ERC20Upgradeable, ERC20BaseModule)  returns (string memory) {
-        return ERC20BaseModule.name();
+    function name() public view virtual override(ERC20Upgradeable, TokenAttributeModule)  returns (string memory) {
+        return TokenAttributeModule.name();
     }
 
     /**
-    * @inheritdoc ERC20BaseModule
+    * @inheritdoc TokenAttributeModule
     */
-    function symbol() public view virtual override(ERC20Upgradeable, ERC20BaseModule) returns (string memory) {
-        return ERC20BaseModule.symbol();
+    function symbol() public view virtual override(ERC20Upgradeable, TokenAttributeModule) returns (string memory) {
+        return TokenAttributeModule.symbol();
     }
 
 

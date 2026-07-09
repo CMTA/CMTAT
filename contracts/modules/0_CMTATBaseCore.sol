@@ -11,6 +11,7 @@ import { IERC165 } from "@openzeppelin/contracts/interfaces/IERC165.sol";
 import {ERC20BurnModule, ERC20BurnModuleInternal} from "./wrapper/core/ERC20BurnModule.sol";
 import {ERC20MintModule, ERC20MintModuleInternal} from "./wrapper/core/ERC20MintModule.sol";
 import {ERC20BaseModule, ERC20Upgradeable} from "./wrapper/core/ERC20BaseModule.sol";
+import {TokenAttributeModule} from "./wrapper/core/TokenAttributeModule.sol";
 
 // Other
 import {VersionModule} from "./wrapper/core/VersionModule.sol";
@@ -43,6 +44,7 @@ abstract contract CMTATBaseCore is
     ERC20BurnModule,
     ValidationModuleAllowance,
     ERC20BaseModule,
+    TokenAttributeModule,
     AccessControlModule,
     IForcedBurnERC20,
     IBurnMintERC20,
@@ -116,7 +118,8 @@ abstract contract CMTATBaseCore is
     function __CMTAT_modules_init_unchained(address admin, ICMTATConstructor.ERC20Attributes memory ERC20Attributes_ ) internal virtual onlyInitializing {
         // AccessControlModule_init_unchained is called firstly due to inheritance
         __AccessControlModule_init_unchained(admin);
-        __ERC20BaseModule_init_unchained(ERC20Attributes_.decimalsIrrevocable, ERC20Attributes_.name, ERC20Attributes_.symbol);
+        __ERC20BaseModule_init_unchained(ERC20Attributes_.decimalsIrrevocable);
+        __TokenAttributeModule_init_unchained(ERC20Attributes_.name, ERC20Attributes_.symbol);
     }
 
 
@@ -146,17 +149,17 @@ abstract contract CMTATBaseCore is
 
 
     /**
-    * @inheritdoc ERC20BaseModule
+    * @inheritdoc TokenAttributeModule
     */
-    function name() public virtual override(ERC20Upgradeable, ERC20BaseModule) view returns (string memory) {
-        return ERC20BaseModule.name();
+    function name() public virtual override(ERC20Upgradeable, TokenAttributeModule) view returns (string memory) {
+        return TokenAttributeModule.name();
     }
 
     /**
-    * @inheritdoc ERC20BaseModule
+    * @inheritdoc TokenAttributeModule
     */
-    function symbol() public virtual override(ERC20Upgradeable, ERC20BaseModule) view returns (string memory) {
-        return ERC20BaseModule.symbol();
+    function symbol() public virtual override(ERC20Upgradeable, TokenAttributeModule) view returns (string memory) {
+        return TokenAttributeModule.symbol();
     }
 
     /**
@@ -276,5 +279,5 @@ abstract contract CMTATBaseCore is
 
     function _authorizeFreeze() internal virtual override(EnforcementModule) onlyRole(ENFORCER_ROLE){}
 
-    function _authorizeERC20AttributeManagement() internal virtual override(ERC20BaseModule) onlyRole(DEFAULT_ADMIN_ROLE){}
+    function _authorizeTokenAttributeManagement() internal virtual override(TokenAttributeModule) onlyRole(DEFAULT_ADMIN_ROLE){}
 }
