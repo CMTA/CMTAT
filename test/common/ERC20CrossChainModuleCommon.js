@@ -253,7 +253,7 @@ function ERC20CrossChainModuleCommon () {
       ).to.be.revertedWithCustomError(this.cmtat, 'EnforcedPause')
     })
 
-    it('testCanBeBurnEvenIfContractIsPaused', async function () {
+    it('testCannotBeBurnIfContractIsPaused', async function () {
       await this.cmtat
         .connect(this.admin)
         .grantRole(BURNER_SELF_ROLE, this.address1)
