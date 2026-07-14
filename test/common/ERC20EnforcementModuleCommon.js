@@ -312,6 +312,28 @@ function ERC20EnforcementModuleCommon () {
       )
     })
 
+    // Regression test for CMTA/CMTAT#380: a self forced-transfer must not
+    // silently unfreeze tokens. address1 already holds 50 from the beforeEach.
+    it('testCannotSelfForcedTransferToUnfreezeTokens', async function () {
+      await freezePartialTokensCompat(this, this.admin, this.address1, INITIAL_BALANCE, REASON)
+      expect(await this.cmtat.getFrozenTokens(this.address1)).to.equal(INITIAL_BALANCE.toString())
+
+      // A self forced-transfer of the full balance moves nothing. Before the fix
+      // it still ran the excess-frozen update and released every frozen token.
+      await expect(
+        this.cmtat
+          .connect(this.admin)
+          .forcedTransfer(this.address1, this.address1, INITIAL_BALANCE)
+      ).to.be.revertedWithCustomError(
+        this.cmtat,
+        'CMTAT_ERC20EnforcementModule_SelfForcedTransferNotAllowed'
+      )
+
+      // The rejected call leaves frozen amount and balance untouched.
+      expect(await this.cmtat.getFrozenTokens(this.address1)).to.equal(INITIAL_BALANCE.toString())
+      expect(await this.cmtat.balanceOf(this.address1)).to.equal(INITIAL_BALANCE.toString())
+    })
+
     it('testCannotNonAdminTransferFunds', async function () {
       // Act
       await expect(

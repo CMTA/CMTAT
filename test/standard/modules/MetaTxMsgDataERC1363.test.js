@@ -33,7 +33,7 @@ describe('Standard - MetaTxModule - _msgData (CMTATBaseERC1363)', function () {
   it('returns correct msgData for direct call', async function () {
     const expectedData = this.cmtat.interface.encodeFunctionData('getMsgData')
     const result = await this.cmtat.getMsgData.staticCall()
-    expect(result).to.equal(expectedData)
+    expect(result).to.equal(ethers.keccak256(expectedData))
   })
 
   it('returns correct msgData for trusted forwarder calldata shape', async function () {
@@ -44,7 +44,6 @@ describe('Standard - MetaTxModule - _msgData (CMTATBaseERC1363)', function () {
       from: this.forwarder.target,
       data: appendedData
     })
-    const [decoded] = ethers.AbiCoder.defaultAbiCoder().decode(['bytes'], returnData)
-    expect(decoded).to.equal(data)
+    expect(returnData).to.equal(ethers.keccak256(data))
   })
 })

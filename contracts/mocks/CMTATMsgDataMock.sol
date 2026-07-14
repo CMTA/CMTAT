@@ -72,8 +72,11 @@ contract CMTATUpgradeableERC1363MsgDataMock is CMTATUpgradeableERC1363 {
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor(address forwarderIrrevocable) CMTATUpgradeableERC1363(forwarderIrrevocable) {}
 
-    function getMsgData() external view returns (bytes memory) {
-        return _msgData();
+    // Returns a fixed-size digest of _msgData() rather than the dynamically encoded
+    // bytes, so this ERC-1363 mock stays within the EIP-170 code size limit. keccak256
+    // still distinguishes stripped from unstripped calldata, which is the behavior under test.
+    function getMsgData() external view returns (bytes32) {
+        return keccak256(_msgData());
     }
 }
 
