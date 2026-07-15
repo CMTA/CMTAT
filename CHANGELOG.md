@@ -85,6 +85,9 @@ Custom changelog tag: `Dependencies`, `Documentation`, `Testing`
   - Previous CMTAT variant (e.g. `v3.2.0`) used `string` for document names in `IERC1643` (`getDocument(string)`, `getAllDocuments() -> string[]`).
   - Current implementation uses `bytes32` document names (`getDocument(bytes32)`, `getAllDocuments() -> bytes32[]`) and exposes `setDocument(bytes32,string,bytes32)` / `removeDocument(bytes32)` with associated events.
   - **CMTAT terms remain on the modified CMTAT structure**: `IERC1643CMTAT.DocumentInfo` still uses `string name` for tokenization terms metadata (`setTerms` path).
+- **`IERC1643.getDocument` returns flat values (ERC-1643 ABI conformance, breaking API change):**
+  - `getDocument(bytes32)` now returns `(string uri, bytes32 documentHash, uint256 lastModified)` instead of a `Document` struct, so the returndata decodes exactly per the ERC-1643 signature rather than prepending a struct offset word.
+  - The `Document` struct is retained for internal storage and for `ICMTAT.CMTATTerms`; only the `getDocument` return is affected. Applies to `DocumentERC1643Module`, `DocumentEngineModule`, and `DocumentEngineMock`.
 - **Base hierarchy refactor (strict dependency-order levels):**
   - `CMTATBaseDocument` at **level 1** (`contracts/modules/1_CMTATBaseDocument.sol`).
   - `CMTATBaseAccessControl` at **level 2** (`contracts/modules/2_CMTATBaseAccessControl.sol`) and now inherits `CMTATBaseDocument`.
@@ -111,6 +114,8 @@ Custom changelog tag: `Dependencies`, `Documentation`, `Testing`
 - Restored full compilation after engine/mock alignment:
   - `CMTATEngineInitializerMock` no longer calls unavailable document-engine initializer on snapshot path.
   - `DocumentEngineMock` now implements IERC1643-compatible `setDocument(bytes32,string,bytes32)`.
+- **ERC-1404 predictor/enforcement agreement on zero-value transfers.** `CMTATBaseERC1404._detectTransferRestriction` now delegates its frozen-balance branch to `_checkActiveBalance`, the same predicate the transfer path enforces. A zero-value transfer whose sender is fully frozen is no longer reported as restricted (code `6`) while the transfer itself succeeds; `detectTransferRestriction`, `canTransfer`, and the actual transfer now agree.
+- **ERC-1643 typed errors and input validation.** `DocumentERC1643Module.removeDocument` reverts with `ERC1643MissingDocument()` instead of a string, and `setDocument` now rejects `name == bytes32(0)` with `ERC1643InvalidName()`.
 
 #### Security
 

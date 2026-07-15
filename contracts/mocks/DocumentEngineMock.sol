@@ -41,9 +41,10 @@ contract DocumentEngineMock is IERC1643Whole {
         external
         view
         override
-        returns (Document memory doc)
+        returns (string memory uri, bytes32 documentHash, uint256 lastModified)
     {
-        return documents[name];
+        Document storage doc = documents[name];
+        return (doc.uri, doc.documentHash, doc.lastModified);
     }
 
     /// @notice Sets or updates a document

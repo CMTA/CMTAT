@@ -61,12 +61,12 @@ abstract contract DocumentEngineModule is Initializable, IDocumentEngineModule {
     /**
     * @inheritdoc IERC1643
     */
-    function getDocument(bytes32 name) public view  virtual override(IERC1643) returns (Document memory document){
+    function getDocument(bytes32 name) public view  virtual override(IERC1643) returns (string memory uri, bytes32 documentHash, uint256 lastModified){
         DocumentEngineModuleStorage storage $ = _getDocumentEngineModuleStorage();
         if(address($._documentEngine) != address(0)){
             return $._documentEngine.getDocument(name);
         } else{
-            return Document("", 0x0, 0);
+            return ("", 0x0, 0);
         }
     }
 

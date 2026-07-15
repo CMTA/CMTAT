@@ -26,10 +26,14 @@ interface IERC1643 {
     // Document Management
     /**
      * @notice Retrieves a document by its registered name.
+     * @dev Returns the three fields as flat values, matching the ERC-1643 ABI. A missing
+     * document yields empty values and does not revert.
      * @param name The unique name used to identify the document.
-     * @return document The associated document's metadata (URI, hash, timestamp).
+     * @return uri The URI of the off-chain document.
+     * @return documentHash The hash of the document content.
+     * @return lastModified The timestamp of the last on-chain modification.
      */
-    function getDocument(bytes32 name) external view returns (Document memory document);
+    function getDocument(bytes32 name) external view returns (string memory uri, bytes32 documentHash, uint256 lastModified);
     /**
      * @notice Returns the list of all document names registered in the contract.
      * @return documentNames_ An array of strings representing all document identifiers.

@@ -25,8 +25,9 @@ abstract contract DocumentERC1643Module is Initializable, IERC1643 {
         _;
     }
 
-    function getDocument(bytes32 name) public view virtual override returns (Document memory document) {
-        return _getDocumentERC1643ModuleStorage()._documents[name];
+    function getDocument(bytes32 name) public view virtual override returns (string memory uri, bytes32 documentHash, uint256 lastModified) {
+        Document storage document = _getDocumentERC1643ModuleStorage()._documents[name];
+        return (document.uri, document.documentHash, document.lastModified);
     }
 
     function getAllDocuments() public view virtual override returns (bytes32[] memory documentNames_) {
