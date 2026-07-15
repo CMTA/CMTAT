@@ -116,6 +116,7 @@ Custom changelog tag: `Dependencies`, `Documentation`, `Testing`
   - `DocumentEngineMock` now implements IERC1643-compatible `setDocument(bytes32,string,bytes32)`.
 - **ERC-1404 predictor/enforcement agreement on zero-value transfers.** `CMTATBaseERC1404._detectTransferRestriction` now delegates its frozen-balance branch to `_checkActiveBalance`, the same predicate the transfer path enforces. A zero-value transfer whose sender is fully frozen is no longer reported as restricted (code `6`) while the transfer itself succeeds; `detectTransferRestriction`, `canTransfer`, and the actual transfer now agree.
 - **ERC-1643 typed errors and input validation.** `DocumentERC1643Module.removeDocument` reverts with `ERC1643MissingDocument()` instead of a string, and `setDocument` now rejects `name == bytes32(0)` with `ERC1643InvalidName()`.
+- **ERC-1643 ERC-165 detection.** `CMTATBaseAccessControl.supportsInterface` now returns `true` for `type(IERC1643).interfaceId` (`0xecfecec8`), so the ERC-1643 document interface is discoverable. This is honest only because `getDocument` now matches the ERC-1643 ABI (see the flat-return change under **Changed**).
 
 #### Security
 
