@@ -51,7 +51,7 @@ abstract contract DocumentERC1643Module is Initializable, IERC1643 {
     function removeDocument(bytes32 name) public virtual override onlyDocumentManager {
         DocumentERC1643ModuleStorage storage $ = _getDocumentERC1643ModuleStorage();
         uint256 key = $._documentKey[name];
-        require(key != 0, "CMTAT: document does not exist");
+        require(key != 0, ERC1643MissingDocument());
 
         Document memory document = $._documents[name];
         uint256 index = key - 1;

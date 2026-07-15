@@ -1,3 +1,4 @@
+const { expect } = require('chai')
 const DocumentModuleSetDocumentEngineCommon = require('../../../common/DocumentModule/DocumentModuleSetDocumentEngineCommon')
 const DocumentModuleCommon = require('../../../common/DocumentModule/DocumentModuleCommon')
 const {
@@ -16,4 +17,11 @@ describe('Standard - DocumentModule', function () {
   })
   DocumentModuleCommon()
   DocumentModuleSetDocumentEngineCommon()
+
+  it('testCannotRemoveAMissingDocumentWithATypedError', async function () {
+    const name = ethers.encodeBytes32String('missing')
+    await expect(
+      this.cmtat.connect(this.admin).removeDocument(name)
+    ).to.be.revertedWithCustomError(this.cmtat, 'ERC1643MissingDocument')
+  })
 })

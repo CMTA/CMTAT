@@ -8,6 +8,9 @@ pragma solidity ^0.8.20;
 * Contrary to the original specification, use a struct Document to represent a Document
 */
 interface IERC1643 {
+    /// @dev Reverted when removing a document whose name is not registered.
+    error ERC1643MissingDocument();
+
      /// @dev Struct used to represent a document and its metadata.
     struct Document {
          // URI of the off-chain document (e.g., IPFS, HTTPS)
