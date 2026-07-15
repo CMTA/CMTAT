@@ -75,16 +75,17 @@ abstract contract HolderListModule is ERC20Upgradeable, IHolderListModule {
 
     /**
     * @inheritdoc IHolderListModule
+    * @dev The malformed-range check is evaluated before the upper-bound check, so an inverted
+    * range reverts with {CMTAT_HolderListModule_InvalidRange} regardless of where the bounds fall.
     */
-    function holdersByPage(uint256 offset, uint256 limit) public view virtual returns (address[] memory holdersPage) {
+    function holdersInRange(uint256 fromIndex, uint256 toIndex) public view virtual returns (address[] memory window) {
+        require(fromIndex <= toIndex, CMTAT_HolderListModule_InvalidRange(fromIndex, toIndex));
         HolderListModuleStorage storage $ = _getHolderListModuleStorage();
         uint256 holderCountLocal = $._holders.length();
-        require(offset <= holderCountLocal, CMTAT_HolderListModule_OffsetOutOfBounds(offset, holderCountLocal));
-        uint256 remaining = holderCountLocal - offset;
-        uint256 pageSize = limit < remaining ? limit : remaining;
-        holdersPage = new address[](pageSize);
-        for (uint256 i = 0; i < pageSize; ++i) {
-            holdersPage[i] = $._holders.at(offset + i);
+        require(toIndex <= holderCountLocal, CMTAT_HolderListModule_IndexOutOfBounds(toIndex, holderCountLocal));
+        window = new address[](toIndex - fromIndex);
+        for (uint256 i = 0; i < window.length; ++i) {
+            window[i] = $._holders.at(fromIndex + i);
         }
     }
 

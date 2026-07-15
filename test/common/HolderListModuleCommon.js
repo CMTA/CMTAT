@@ -20,7 +20,7 @@ function HolderListModuleCommon () {
     it('testHasNoHolderBeforeAnyMint', async function () {
       expect(await this.cmtat.holderCount()).to.equal('0')
       expect(await this.cmtat.holders()).to.deep.equal([])
-      expect(await this.cmtat.holdersByPage(0, 10)).to.deep.equal([])
+      expect(await this.cmtat.holdersInRange(0, 0)).to.deep.equal([])
       expect(await this.cmtat.isHolder(this.address1)).to.equal(false)
     })
 
@@ -152,7 +152,7 @@ function HolderListModuleCommon () {
         .withArgs(this.address1.address)
     })
 
-    context('Pagination', function () {
+    context('Range reads', function () {
       beforeEach(async function () {
         await this.cmtat.connect(this.admin).mint(this.address1, 50)
         await this.cmtat.connect(this.admin).mint(this.address2, 50)
@@ -164,8 +164,8 @@ function HolderListModuleCommon () {
         ]
       })
 
-      it('testCanReturnTheWholeListInOnePage', async function () {
-        const holders = await this.cmtat.holdersByPage(0, 3)
+      it('testCanReturnTheWholeListInOneWindow', async function () {
+        const holders = await this.cmtat.holdersInRange(0, 3)
         expect(holders.length).to.equal(3)
         expectHolders(
           new Set(holders.map((holder) => holder.toLowerCase())),
@@ -173,12 +173,15 @@ function HolderListModuleCommon () {
         )
       })
 
-      it('testCanWalkTheListPageByPage', async function () {
+      it('testCanWalkTheListWindowByWindow', async function () {
         const holderCount = await this.cmtat.holderCount()
+        const stride = 2n
         const collected = []
-        for (let offset = 0n; offset < holderCount; offset += 2n) {
-          const page = await this.cmtat.holdersByPage(offset, 2)
-          collected.push(...page)
+        for (let from = 0n; from < holderCount; from += stride) {
+          // holdersInRange reverts past the end, so clamp the upper bound of the last window
+          const to = from + stride < holderCount ? from + stride : holderCount
+          const window = await this.cmtat.holdersInRange(from, to)
+          collected.push(...window)
         }
         expect(collected.length).to.equal(3)
         expectHolders(
@@ -187,27 +190,46 @@ function HolderListModuleCommon () {
         )
       })
 
-      it('testTruncatesTheLastPageToTheRemainingHolders', async function () {
-        const page = await this.cmtat.holdersByPage(2, 10)
-        expect(page.length).to.equal(1)
+      it('testReturnsExactlyTheRequestedWindowLength', async function () {
+        expect((await this.cmtat.holdersInRange(2, 3)).length).to.equal(1)
       })
 
-      it('testReturnsAnEmptyPageWhenOffsetEqualsHolderCount', async function () {
-        // The terminating page of a paging loop, not an error
-        expect(await this.cmtat.holdersByPage(3, 10)).to.deep.equal([])
+      it('testReturnsAnEmptyWindowWhenFromEqualsToAtHolderCount', async function () {
+        // The terminating window of a paging loop, not an error
+        expect(await this.cmtat.holdersInRange(3, 3)).to.deep.equal([])
       })
 
-      it('testReturnsAnEmptyPageWhenLimitIsZero', async function () {
-        expect(await this.cmtat.holdersByPage(0, 0)).to.deep.equal([])
+      it('testReturnsAnEmptyWindowWhenFromEqualsTo', async function () {
+        expect(await this.cmtat.holdersInRange(1, 1)).to.deep.equal([])
       })
 
-      it('testCannotReadAPageBeyondTheHolderCount', async function () {
-        await expect(this.cmtat.holdersByPage(4, 10))
+      it('testCannotReadAWindowBeyondTheHolderCount', async function () {
+        await expect(this.cmtat.holdersInRange(0, 4))
           .to.be.revertedWithCustomError(
             this.cmtat,
-            'CMTAT_HolderListModule_OffsetOutOfBounds'
+            'CMTAT_HolderListModule_IndexOutOfBounds'
           )
           .withArgs(4, 3)
+      })
+
+      it('testRevertsOnAnInvalidRange', async function () {
+        await expect(this.cmtat.holdersInRange(3, 1))
+          .to.be.revertedWithCustomError(
+            this.cmtat,
+            'CMTAT_HolderListModule_InvalidRange'
+          )
+          .withArgs(3, 1)
+      })
+
+      it('testInvalidRangeTakesPrecedenceOverOutOfBounds', async function () {
+        // fromIndex > toIndex is checked first, so an inverted range whose bounds
+        // also exceed holderCount still reports InvalidRange, not IndexOutOfBounds
+        await expect(this.cmtat.holdersInRange(5, 4))
+          .to.be.revertedWithCustomError(
+            this.cmtat,
+            'CMTAT_HolderListModule_InvalidRange'
+          )
+          .withArgs(5, 4)
       })
 
       it('testCannotReadAnIndexBeyondTheHolderCount', async function () {
@@ -221,8 +243,16 @@ function HolderListModuleCommon () {
           .withArgs(3, 3)
       })
 
-      it('testHoldersMatchesThePaginatedListing', async function () {
+      it('testHoldersMatchesTheRangeListing', async function () {
         expectHolders(await holderSet(this.cmtat), this.expectedHolders)
+      })
+
+      it('testHoldersEqualsHoldersInRangeOverTheWholeSet', async function () {
+        // holders() is exactly holdersInRange(0, holderCount())
+        const count = await this.cmtat.holderCount()
+        expect(await this.cmtat.holdersInRange(0, count)).to.deep.equal(
+          await this.cmtat.holders()
+        )
       })
 
       it('testHoldersAgreesWithHolderByIndexOnOrdering', async function () {
