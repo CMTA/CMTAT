@@ -2,6 +2,7 @@ const {
   ERC20ENFORCER_ROLE,
   DEFAULT_ADMIN_ROLE,
   ZERO_ADDRESS,
+  REJECTED_CODE_BASE_TRANSFER_OK,
   REJECTED_CODE_BASE_TRANSFER_REJECTED_FROM_INSUFFICIENT_ACTIVE_BALANCE
 } = require('../utils')
 const { expect } = require('chai')
@@ -1154,6 +1155,22 @@ function ERC20EnforcementModuleCommon () {
       expect(
         await this.cmtat.canTransfer(this.address1, this.address2, 0)
       ).to.equal(true)
+
+      // detectTransferRestriction must agree with the enforcement path: a zero-value
+      // transfer succeeds, so the predictor must report it as unrestricted, not code 6
+      if (!this.erc1404) {
+        expect(
+          await this.cmtat.detectTransferRestriction(this.address1, this.address2, 0)
+        ).to.equal(REJECTED_CODE_BASE_TRANSFER_OK)
+        expect(
+          await this.cmtat.detectTransferRestrictionFrom(
+            this.admin,
+            this.address1,
+            this.address2,
+            0
+          )
+        ).to.equal(REJECTED_CODE_BASE_TRANSFER_OK)
+      }
 
       await expect(
         this.cmtat.connect(this.address1).transfer(this.address2, 0)
