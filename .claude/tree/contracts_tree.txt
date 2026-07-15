@@ -18,6 +18,9 @@ contracts
 │   ├── ERC7551
 │   │   ├── CMTATStandaloneERC7551.sol
 │   │   └── CMTATUpgradeableERC7551.sol
+│   ├── holderList
+│   │   ├── CMTATStandaloneHolderList.sol
+│   │   └── CMTATUpgradeableHolderList.sol
 │   ├── permit
 │   │   ├── CMTATStandalonePermit.sol
 │   │   └── CMTATUpgradeablePermit.sol
@@ -107,6 +110,7 @@ contracts
 │   ├── 6_CMTATBaseERC7551Enforcement.sol
 │   ├── 7_CMTATBaseERC1363.sol
 │   ├── 7_CMTATBaseERC7551.sol
+│   ├── 8_CMTATBaseHolderList.sol
 │   ├── internal
 │   │   ├── AllowlistModuleInternal.sol
 │   │   ├── common
@@ -126,6 +130,7 @@ contracts
 │       │   ├── ERC20BurnModule.sol
 │       │   ├── ERC20MintModule.sol
 │       │   ├── PauseModule.sol
+│       │   ├── TokenAttributeModule.sol
 │       │   ├── ValidationModuleCore.sol
 │       │   └── VersionModule.sol
 │       ├── extensions
@@ -145,7 +150,8 @@ contracts
 │       │   ├── ERC20CrossChainModule.sol
 │       │   ├── ERC20EnforcementERC7551Module.sol
 │       │   ├── ERC2771Module.sol
-│       │   └── ERC7551Module.sol
+│       │   ├── ERC7551Module.sol
+│       │   └── HolderListModule.sol
 │       └── security
 │           └── AccessControlModule.sol
-32 directories, 106 files
+33 directories, 110 files

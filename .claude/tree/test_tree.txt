@@ -20,6 +20,7 @@ test
 │   ├── ERC20MintModuleCommon.js
 │   ├── ERC7551ModuleCommon.js
 │   ├── ExtraInfoModuleCommon.js
+│   ├── HolderListModuleCommon.js
 │   ├── MulticallModuleCommon.js
 │   ├── MetaTxModuleCommon.js
 │   ├── PauseModuleCommon.js
@@ -97,6 +98,7 @@ test
 │       ├── ERC20EnforcementModule.test.js
 │       ├── ERC20MintModule.test.js
 │       ├── ExtraInfoModule.test.js
+│       ├── HolderListModule.test.js
 │       ├── MetaTxModule.test.js
 │       ├── PauseModule.test.js
 │       ├── SnapshotModule
@@ -119,6 +121,7 @@ test
 │       ├── ERC20EnforcementModule.test.js
 │       ├── ERC20MintModule.test.js
 │       ├── ExtraInfoModule.test.js
+│       ├── HolderListModule.test.js
 │       ├── MetaTxModuleAllowlist.test.js
 │       ├── MetaTxModuleERC1363.test.js
 │       ├── MetaTxModule.test.js
@@ -133,4 +136,4 @@ test
 │       └── VersionModule.test.js
 └── utils.js
 
-30 directories, 98 files
+30 directories, 101 files

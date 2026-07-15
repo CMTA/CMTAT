@@ -65,6 +65,15 @@ Custom changelog tag: `Dependencies`, `Documentation`, `Testing`
   - Manages the mutable token attributes `name`/`symbol` (with `setName`/`setSymbol` and the `Name`/`Symbol` events) independently of the ERC-20 interface, in its own ERC-7201 storage (`CMTAT.storage.TokenAttributeModule`).
   - Decoupled from ERC-20 so the metadata management can be reused by non ERC-20 token bases (e.g. a confidential ERC-7984 variant): a token standard only overrides its `name()`/`symbol()` to delegate here.
   - Authorization via the `_authorizeTokenAttributeManagement()` hook (enforces `DEFAULT_ADMIN_ROLE`).
+- New option module **`HolderListModule`** (`contracts/modules/wrapper/options/HolderListModule.sol`):
+  - Maintains on-chain the set of addresses holding a non-zero balance, in its own ERC-7201 storage (`CMTAT.storage.HolderListModule`), backed by an OpenZeppelin `EnumerableSet.AddressSet`.
+  - Reads: `holderCount()`, `isHolder(address)`, `holderByIndex(uint256)`, the unbounded listing `holders()` and the paginated `holdersByPage(uint256 offset, uint256 limit)`. The first four follow the naming of the fungible holder-enumeration specification; `holdersByPage` is a CMTAT-specific extension. `holders()[i] == holderByIndex(i)` within a single block.
+  - `holderByIndex` reverts with `CMTAT_HolderListModule_IndexOutOfBounds` when `index >= holderCount()`, and `holdersByPage` with `CMTAT_HolderListModule_OffsetOutOfBounds` when `offset > holderCount()`; an `offset` equal to `holderCount()` returns an empty page so a paging loop terminates without a special case.
+  - Emits `HolderAdded(address)` / `HolderRemoved(address)` on the zero ↔ non-zero balance transitions.
+  - The set is kept in sync in `_update`, so mint, burn, transfer, transferFrom, forced transfer and cross-chain mint/burn are all covered. `address(0)` is never a holder and a zero-value transfer never creates one.
+  - Reads are unrestricted (no role): the holder set is derivable from the transfer log anyway.
+- New base contract **`CMTATBaseHolderList`** (`contracts/modules/8_CMTATBaseHolderList.sol`): the CMTAT standard module set plus `HolderListModule`. Declares `type(IHolderListModule).interfaceId` in `supportsInterface`.
+- New deployment variants **`CMTATStandaloneHolderList`** and **`CMTATUpgradeableHolderList`** (`contracts/deployment/holderList/`), with the same constructor and `initialize` signatures as the standard variants.
 
 #### Changed
 
@@ -106,6 +115,8 @@ Custom changelog tag: `Dependencies`, `Documentation`, `Testing`
 #### Security
 
 - ⚠️ **Upgrade migration required for existing proxies (`name`/`symbol` storage move).** Because `name`/`symbol` were moved to a new ERC-7201 slot (`CMTAT.storage.TokenAttributeModule`), upgrading an **already-deployed** CMTAT proxy from a pre-3.3 layout to this version leaves that new slot empty — `name()` / `symbol()` return empty strings until re-set. Any such upgrade MUST run a one-time `reinitializer` that copies the previous `name` / `symbol` into the new slot. Fresh deployments are unaffected (`decimals` stays in place either way).
+- ⚠️ **`HolderListModule` — the holder set grows without bound and `holders()` is unbounded.** On a token whose transfers are not gated by an allowlist or a rule engine, anyone can inflate `holderCount()` by dusting fresh addresses; the spammer pays the two storage writes, but `holders()` eventually runs out of gas and becomes unusable. It is an off-chain (`eth_call`) getter: on-chain callers, and any caller that cannot bound the holder count, MUST use `holdersByPage(offset, limit)`. Deployments expecting a large or adversarial holder set should pair the module with an allowlist.
+- ℹ️ **`HolderListModule` — `holdersByPage` pages are not a consistent snapshot.** The underlying `EnumerableSet` is unordered and a removal moves the last holder into the freed slot, so a page read across several blocks may miss a holder or return one twice. Read the whole list at a fixed block if a consistent view is required.
 
 ### Documentation
 
