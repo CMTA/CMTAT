@@ -10,6 +10,8 @@ pragma solidity ^0.8.20;
 interface IERC1643 {
     /// @dev Reverted when removing a document whose name is not registered.
     error ERC1643MissingDocument();
+    /// @dev Reverted when setting a document with the zero name.
+    error ERC1643InvalidName();
 
      /// @dev Struct used to represent a document and its metadata.
     struct Document {

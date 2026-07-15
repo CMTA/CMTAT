@@ -34,6 +34,7 @@ abstract contract DocumentERC1643Module is Initializable, IERC1643 {
     }
 
     function setDocument(bytes32 name, string calldata uri, bytes32 documentHash) public virtual override onlyDocumentManager {
+        require(name != bytes32(0), ERC1643InvalidName());
         DocumentERC1643ModuleStorage storage $ = _getDocumentERC1643ModuleStorage();
         Document storage document = $._documents[name];
         document.uri = uri;

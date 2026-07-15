@@ -24,4 +24,13 @@ describe('Standard - DocumentModule', function () {
       this.cmtat.connect(this.admin).removeDocument(name)
     ).to.be.revertedWithCustomError(this.cmtat, 'ERC1643MissingDocument')
   })
+
+  it('testCannotSetADocumentWithTheZeroName', async function () {
+    const zeroName = ethers.encodeBytes32String('')
+    const uri = 'https://github.com/CMTA/CMTAT'
+    const documentHash = ethers.encodeBytes32String('hash1')
+    await expect(
+      this.cmtat.connect(this.admin).setDocument(zeroName, uri, documentHash)
+    ).to.be.revertedWithCustomError(this.cmtat, 'ERC1643InvalidName')
+  })
 })
