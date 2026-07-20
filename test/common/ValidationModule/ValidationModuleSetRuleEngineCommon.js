@@ -1,7 +1,7 @@
 const { expect } = require('chai')
 const { DEFAULT_ADMIN_ROLE, ZERO_ADDRESS,
-  IERC165_INTERFACEID, IERC721_INTERFACEID, 
-  IRULEENGINE_INTERFACEID, IERC1404EXTEND_INTERFACEID  } = require('../../utils')
+  IERC165_INTERFACEID, IERC721_INTERFACEID,
+  IRULEENGINE_INTERFACEID, IERC1404_INTERFACEID, IERC1404EXTEND_INTERFACEID  } = require('../../utils')
 
 function ValidationModuleSetRuleEngineCommon () {
   context('RuleEngineSetTest', function () {
@@ -16,6 +16,7 @@ function ValidationModuleSetRuleEngineCommon () {
       // Assert
       expect(ruleEngineInterfaceId).to.equal(IRULEENGINE_INTERFACEID);
       expect(await this.ruleEngineMock.supportsInterface(IRULEENGINE_INTERFACEID)).to.equal(true)
+      expect(await this.ruleEngineMock.supportsInterface(IERC1404_INTERFACEID)).to.equal(true)
       expect(await this.ruleEngineMock.supportsInterface(IERC1404EXTEND_INTERFACEID)).to.equal(true)
       expect(await this.ruleEngineMock.supportsInterface(IERC165_INTERFACEID)).to.equal(true)
       expect(await this.ruleEngineMock.supportsInterface(IERC721_INTERFACEID)).to.equal(false)
