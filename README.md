@@ -14,7 +14,7 @@ CMTAT extends the standard [ERC-20](https://eips.ethereum.org/EIPS/eip-20) token
 | Feature | Purpose | Standards | Module Scope |
 |---|---|---|---|
 | **Pause** | Freeze all transfers globally (e.g., during corporate actions) | [ERC-3643](https://eips.ethereum.org/EIPS/eip-3643), [ERC-7551](https://ethereum-magicians.org/t/erc-7551-crypto-security-token-smart-contract-interface-ewpg-reworked/25477) (eWpG profile) | Core |
-| **Deactivate** | Permanently disable token operations when required by lifecycle/governance decisions | CMTAT-specific | Core |
+| **Deactivate** | Permanently disable token operations when required by lifecycle/governance decisions | [ERC-8343](./doc/ERCSpecification/draft-erc-8343-deactivation.md) | Core |
 | **Account Freeze** | Block specific addresses from transferring | [ERC-3643](https://eips.ethereum.org/EIPS/eip-3643) enforcement model, [ERC-7943](https://eips.ethereum.org/EIPS/eip-7943) send/receive checks | Core |
 | **Mint / Burn** | Controlled issuance and redemption of tokens | [ERC-3643](https://eips.ethereum.org/EIPS/eip-3643), [ERC-7551](https://ethereum-magicians.org/t/erc-7551-crypto-security-token-smart-contract-interface-ewpg-reworked/25477) (eWpG profile) | Core |
 | **Batch Mint / Batch Burn** | Process multiple mint or burn operations in a single transaction | [ERC-3643](https://eips.ethereum.org/EIPS/eip-3643) | Core |
@@ -24,6 +24,7 @@ CMTAT extends the standard [ERC-20](https://eips.ethereum.org/EIPS/eip-20) token
 | **Freeze Partial Tokens** | Freeze a specific amount of tokens on an address | [ERC-3643](https://eips.ethereum.org/EIPS/eip-3643), [ERC-7551](https://ethereum-magicians.org/t/erc-7551-crypto-security-token-smart-contract-interface-ewpg-reworked/25477) (eWpG profile), [ERC-7943](https://eips.ethereum.org/EIPS/eip-7943) equivalent (`setFrozenTokens`/`getFrozenTokens`) | Extension |
 | **Transfer Validation** | Plug-in rule engine to restrict transfers by origin, receiver, or amount | [ERC-3643](https://eips.ethereum.org/EIPS/eip-3643), [ERC-7551](https://ethereum-magicians.org/t/erc-7551-crypto-security-token-smart-contract-interface-ewpg-reworked/25477), [ERC-7943](https://eips.ethereum.org/EIPS/eip-7943) | Extension/Option |
 | **Snapshots** | Record balances at a specific point in time (e.g., for dividends) | CMTAT SnapshotEngine integration | Extension/Option |
+| **Holder List** | Maintain on-chain the set of addresses holding a non-zero balance (issuer reporting, corporate actions) | [ERC-8300](./doc/ERCSpecification/draft-erc-token-holder.md) (fungible holder enumeration) | Option |
 | **Documents** | Attach legal documents to the token on-chain | [ERC-1643](https://github.com/ethereum/EIPs/issues/1643)-compatible document model | Extension/Option |
 | **Cross-Chain Mint/Burn** | Cross-chain bridge-oriented mint/burn interface | [ERC-7802](https://eips.ethereum.org/EIPS/eip-7802) | Extension |
 | **Permit** | Signature-based approvals without on-chain approve transaction | [ERC-2612](https://eips.ethereum.org/EIPS/eip-2612) | Deployment-version specific |
@@ -55,6 +56,7 @@ CMTAT is used in production by major financial institutions including **UBS**, *
 |---|---|
 | Equities | CMTAT Standard |
 | Equities / Bonds with balance snapshots (dividends, corporate actions) | CMTAT Snapshot, CMTAT Debt, CMTAT DebtEngine |
+| On-chain shareholder registry / holder enumeration | CMTAT HolderList |
 | Equities (Germany / eWpG) | CMTAT ERC-7551 |
 | Debt / Bonds | CMTAT Debt |
 | Debt / Bonds (external debt engine) | CMTAT DebtEngine |
@@ -124,7 +126,7 @@ This section regroups projects which implements new CMTAT deployment version for
 
 - [SnapshotEngine](https://github.com/CMTA/SnapshotEngine)
 
-The SnapshotEngine is a smart contract system designed to perform ERC-20 on-chain snapshots, making it easier to distribute dividends or other token-based rewards directly on-chain The Snapshone engine can be external or integrated directly in the main token contract.
+The SnapshotEngine is a smart contract system designed to perform ERC-20 on-chain snapshots, making it easier to distribute dividends or other token-based rewards directly on-chain. The SnapshotEngine can be external or integrated directly in the main token contract.
 
 - [CMTAT-FIX](https://github.com/CMTA/CMTAT-FIX) ([Nethermind](https://www.nethermind.io))
 
@@ -147,7 +149,7 @@ CMTAT is blockchain-agnostic and also has implementations/adaptations beyond thi
 
 ### Utility contract
 
-- [RulEngine](https://github.com/CMTA/RuleEnginehttps://github.com/CMTA/RuleEngine: ) 
+- [RuleEngine](https://github.com/CMTA/RuleEngine)
 
 The RuleEngine is an external contract used to apply transfer restrictions to another contract, such as CMTAT and ERC-3643 tokens. Acting as a controller, it can call different contract rules and apply these rules on each transfer.
 
@@ -165,7 +167,7 @@ The `IncomeVault` is a prototype to perform coupon-payment dividend with a CMTAT
 
 - [CMTAT-Factory](https://github.com/CMTA/CMTAT-Factory)
 
-Factory to deploy CMTAT with Transparent, UUPS and Beacon proxy  using **deterministic addresses (via CREATE2**
+Factory to deploy CMTAT with Transparent, UUPS and Beacon proxy using **deterministic addresses (via CREATE2)**
 
 - [Delivery vs. payment protocol](https://github.com/CMTA/DVP)
 
