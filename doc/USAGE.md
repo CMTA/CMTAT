@@ -13,7 +13,7 @@ are the latest ones that we tested:
 
 - hardhat.config.js
   - Solidity [0.8.34](https://www.soliditylang.org/blog/2026/02/18/solidity-0.8.34-release-announcement) (via solc-js)
-  - EVM version: Prague (Pectra upgrade)
+  - EVM version: Osaka (Fusaka upgrade)
 
 - Package.json
   - OpenZeppelin Contracts (Node.js module): [v5.6.1](https://github.com/OpenZeppelin/openzeppelin-contracts/releases/tag/v5.6.1) 

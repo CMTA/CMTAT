@@ -3024,7 +3024,7 @@ The project is built with [Hardhat](https://v2.hardhat.org) and uses [OpenZeppel
 
 - hardhat.config.js
   - Solidity [v0.8.34](https://docs.soliditylang.org/en/v0.8.34/)
-  - EVM version: Prague (Pectra upgrade)
+  - EVM version: Osaka (Fusaka upgrade)
   - Optimizer: true, 200 runs
 
 - Package.json
