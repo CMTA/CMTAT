@@ -3089,16 +3089,17 @@ The deployed size is identical between standalone and upgradeable for the same v
 
 | Deployment version | Deployed (KiB) | Initcode standalone (KiB) | Initcode upgradeable (KiB) |
 | ------------------ | -------------- | ------------------------- | -------------------------- |
-| CMTAT Standard     | 22.243         | 25.635                    | 22.569                     |
-| CMTAT Snapshot     | 22.067         | 25.459                    | 22.394                     |
-| CMTAT Light        | 11.298         | 13.048                    | 11.507                     |
-| CMTAT Allowlist    | 19.879         | 23.056                    | 20.205                     |
-| CMTAT Debt         | 23.187         | 26.301                    | 23.396                     |
-| CMTAT DebtEngine   | 23.791         | 26.905                    | 24.000                     |
-| CMTAT ERC-7551     | 22.807         | 26.198                    | 23.133                     |
-| CMTAT ERC-1363     | 23.805         | 27.238                    | 24.131                     |
-| CMTAT Permit       | 23.268         | 26.557                    | 23.477                     |
-| CMTAT UUPS         | 23.544         | —                         | 23.896                     |
+| CMTAT Standard     | 22.251         | 25.663                    | 22.577                     |
+| CMTAT Snapshot     | 22.075         | 25.487                    | 22.401                     |
+| CMTAT HolderList   | 23.825         | 27.255                    | 24.151                     |
+| CMTAT Light        | 11.278         | 13.055                    | 11.487                     |
+| CMTAT Allowlist    | 19.882         | 23.079                    | 20.208                     |
+| CMTAT Debt         | 23.189         | 26.324                    | 23.398                     |
+| CMTAT DebtEngine   | 23.799         | 26.934                    | 24.008                     |
+| CMTAT ERC-7551     | 22.812         | 26.224                    | 23.138                     |
+| CMTAT ERC-1363     | 23.813         | 27.267                    | 24.139                     |
+| CMTAT Permit       | 23.341         | 26.650                    | 23.550                     |
+| CMTAT UUPS         | 23.552         | —                         | 23.904                     |
 
 All variants are within the deployed bytecode limit.
 
