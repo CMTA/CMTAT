@@ -24,7 +24,7 @@ CMTAT extends the standard [ERC-20](https://eips.ethereum.org/EIPS/eip-20) token
 | **Freeze Partial Tokens** | Freeze a specific amount of tokens on an address | [ERC-3643](https://eips.ethereum.org/EIPS/eip-3643), [ERC-7551](https://ethereum-magicians.org/t/erc-7551-crypto-security-token-smart-contract-interface-ewpg-reworked/25477) (eWpG profile), [ERC-7943](https://eips.ethereum.org/EIPS/eip-7943) equivalent (`setFrozenTokens`/`getFrozenTokens`) | Extension |
 | **Transfer Validation** | Plug-in rule engine to restrict transfers by origin, receiver, or amount | [ERC-3643](https://eips.ethereum.org/EIPS/eip-3643), [ERC-7551](https://ethereum-magicians.org/t/erc-7551-crypto-security-token-smart-contract-interface-ewpg-reworked/25477), [ERC-7943](https://eips.ethereum.org/EIPS/eip-7943) | Extension/Option |
 | **Snapshots** | Record balances at a specific point in time (e.g., for dividends) | CMTAT SnapshotEngine integration | Extension/Option |
-| **Holder List** | Maintain on-chain the set of addresses holding a non-zero balance (issuer reporting, corporate actions) | [ERC-8300](./doc/ERCSpecification/draft-erc-token-holder.md) (fungible holder enumeration) | Option |
+| **Holder List** | Maintain on-chain the set of addresses holding a non-zero balance (issuer reporting, corporate actions) | [Fungible holder enumeration](./doc/ERCSpecification/draft-erc-token-holder.md) (draft) | Option |
 | **Documents** | Attach legal documents to the token on-chain | [ERC-1643](https://github.com/ethereum/EIPs/issues/1643)-compatible document model | Extension/Option |
 | **Cross-Chain Mint/Burn** | Cross-chain bridge-oriented mint/burn interface | [ERC-7802](https://eips.ethereum.org/EIPS/eip-7802) | Extension |
 | **Permit** | Signature-based approvals without on-chain approve transaction | [ERC-2612](https://eips.ethereum.org/EIPS/eip-2612) | Deployment-version specific |
@@ -134,6 +134,10 @@ The SnapshotEngine is a smart contract system designed to perform ERC-20 on-chai
 Integration of FIX descriptor support for CMTAT.
 
 This project provides a modular engine system that enables CMTAT tokens to store, manage, and verify FIX (Financial Information eXchange) protocol descriptors on-chain.
+
+- [CMTAT-ACE](https://github.com/CMTA/CMTAT-ACE)
+
+Integration of CMTAT with Chainlink's Automated Compliance Engine (ACE), keeping compliance rules in a separate policy engine so updating compliance becomes a configuration change rather than a contract redeployment. Two deployment variants are provided: Lite (transfer validation only) and Standard (policy-authoritative authorization).
 
 ### Blockchain Implementations
 

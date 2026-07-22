@@ -3107,6 +3107,10 @@ A second unofficial version is available in the community section.
 
 Add FIX Asset Descriptors to CMTAT. See also [ERC-FIX](https://www.erc-fix.com/spec)
 
+- [CMTAT-ACE](https://github.com/CMTA/CMTAT-ACE)
+
+Integration of CMTAT with Chainlink's Automated Compliance Engine (ACE), keeping compliance rules in a separate policy engine so updating compliance becomes a configuration change rather than a contract redeployment. Two deployment variants are provided: Lite (transfer validation only) and Standard (policy-authoritative authorization).
+
 ### Unofficial Implementations
 
 #### Aztec (Noir)
