@@ -43,4 +43,13 @@ module.exports = {
   gasReporter: {
     enabled: reportGas
   },
+  mocha: {
+    // The upgradeable (proxy) suites redeploy a full CMTAT implementation through
+    // `upgrades.deployProxy` (implementation validation + storage-layout analysis
+    // + deploy) in a per-test `beforeEach`. That is legitimately slow and can spike
+    // past Mocha's 40s default on a loaded CI runner, producing flaky "before each"
+    // timeouts (e.g. the UUPS suite). Raise the ceiling so CI variance on a valid,
+    // non-hung deploy does not fail the run; genuine hangs are still caught.
+    timeout: 120000
+  },
 }
