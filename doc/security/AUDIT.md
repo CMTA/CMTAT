@@ -11,12 +11,14 @@ Here are the reports produced by [Aderyn](https://github.com/Cyfrin/aderyn):
 | v3.3.0  | [v3.3.0-aderyn-report.md](./tools/aderyn/v3.3.0-aderyn-report.md)<br />[v3.3.0-aderyn-feedback.md](./tools/aderyn/v3.3.0-aderyn-feedback.md) |
 | v3.0.0  | [v3.0.0-aderyn-report.md](./tools/aderyn/archive/v3.0.0-aderyn-report.md) |
 
-Summary (v3.3.0):
+Summary (v3.3.0 — refreshed 2026-07-22, `aderyn 0.6.5`, mocks excluded, 101 files / 3736 nSLOC):
 
 | Category | Tool Severity | Count | CMTAT Maintainer Assessment | Status |
 | ------- | ------------- | ----- | --------------------------- | ------ |
-| H-1..H-2 | High | 2 | Mixed (false positives + design choice) | Reviewed |
-| L-1..L-10 | Low | 10 | Mixed (valid, design choices, style/tooling) | Reviewed |
+| H-1..H-2 | High | 2 | Mixed (false positive H-1 + design choice H-2) | Reviewed |
+| L-1..L-10 | Low | 10 | Mixed (valid, design choices, environment, style/optimization) | Reviewed |
+
+**Nothing to fix** — no exploitable finding; the only valid, accept-and-mitigate item is L-1 Centralization (governance mitigation at deployment). See [feedback](./tools/aderyn/v3.3.0-aderyn-feedback.md).
 
 ## [Slither](https://github.com/crytic/slither)
 
@@ -28,16 +30,19 @@ Here are the reports produced by [Slither](https://github.com/crytic/slither):
 | v3.0.0  | [v3.0.0-slither-report.md](./tools/slither/archive/v3.0.0-slither-report.md) |
 | v2.3.0  | [v2.3.0-slither-report.md](./tools/slither/archive/v2.3.0-slither-report.md) |
 
-Summary (v3.3.0):
+Summary (v3.3.0 — refreshed 2026-07-22, `slither 0.11.5`, mocks excluded, 110 results):
 
 | Detector | Tool Severity | Count | CMTAT Maintainer Assessment | Status |
 | ------- | ------------- | ----- | --------------------------- | ------ |
-| `uninitialized-local` | Medium | 1 | Under review (potential correctness) | Open |
-| `calls-loop` | Low | 28 | Design choice / context dependent | Accepted |
-| `assembly` | Informational | 13 | Expected pattern (ERC-7201-style slots) | Accepted |
-| `dead-code` | Informational | 2 | Cleanup candidate, no direct security impact | Open |
-| `naming-convention` | Informational | 56 | Style-only | Closed |
-| `unindexed-event-address` | Informational | 1 | Minor optimization item | Accepted |
+| `uninitialized-local` | Medium | 1 | False positive (local defaults to `0`, intentional) | Closed |
+| `unused-return` | Medium | 2 | False positive (DocumentEngine forwards / intentionally discards `lastModified`) | Closed |
+| `calls-loop` | Low | 28 | Design choice (batch/hook external calls) | Accepted |
+| `reentrancy-events` | Low | 2 | Design choice (ERC-1643 dual-emit after trusted engine call) | Accepted |
+| `assembly` | Informational | 16 | Expected pattern (ERC-7201 slots) | Accepted |
+| `dead-code` | Informational | 1 | False positive (mandatory `_msgData` override) | Closed |
+| `naming-convention` | Informational | 60 | Style-only | Closed |
+
+**Nothing to fix** — 0 High; both Medium and both Low categories are false positives or documented design choices. The two new detectors vs the prior snapshot (`unused-return`, `reentrancy-events`) both stem from the intentional ERC-1643 document-engine dual-emission. See [feedback](./tools/slither/v3.3.0-slither-feedback.md).
 
 ## [Mythril](https://github.com/Consensys/mythril)
 

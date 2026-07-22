@@ -180,6 +180,8 @@ CMTAT has been audited by [ABDK](https://abdk.consulting) (v1.0, v2.3.0) and [Ha
 
 In addition to external audits and test coverage, CMTAT security reviews also include static analysis tools such as [Aderyn](https://github.com/Cyfrin/aderyn) and [Slither](https://github.com/crytic/slither), as well as AI-assisted auditing tools such as [Nethermind Audit Agent](https://auditagent.nethermind.io).
 
+Per-tool reports, maintainer feedback, and dispositions are collected in **[doc/security/AUDIT.md](./doc/security/AUDIT.md)**. The v3.3.0 static-analysis run (Slither 0.11.5 — 110 results; Aderyn 0.6.5 — 2 High, 10 Low) surfaced **no exploitable finding requiring a code fix**: every result is a false positive, a documented design choice, an environment note, or a style/optimization item.
+
 See [SECURITY.md](./SECURITY.md) for the responsible disclosure policy.
 
 ## License
