@@ -241,7 +241,6 @@ Additional resources:
 - [Usage Guide](./doc/USAGE.md)
 - [FAQ](./doc/general/FAQ.md)
 - Specification
-  - [Specification PDF (v3.0.0)](./doc/specification/CMTATSpecificationV3.0.0.pdf)
   - [Specification PDF (v3.1.0)](./doc/specification/CMTATSpecificationV3.1.0.pdf)
   - [Specification PDF (v3.2.0)](./doc/specification/CMTATSpecificationV3.2.0.pdf)
 - [Security Reports](./doc/security/) · [Audit overview](./doc/security/AUDIT.md)
