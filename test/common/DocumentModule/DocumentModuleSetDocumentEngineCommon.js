@@ -1,5 +1,5 @@
 const { expect } = require('chai')
-const { DOCUMENT_ENGINE_ROLE, ZERO_ADDRESS } = require('../../utils.js')
+const { DOCUMENT_ENGINE_ROLE, ZERO_ADDRESS, IERC1643_INTERFACEID, IERC165_INTERFACEID } = require('../../utils.js')
 const { ethers, upgrades } = require('hardhat')
 
 function DocumentModuleSetDocumentEngineCommon () {
@@ -145,6 +145,13 @@ function DocumentModuleSetDocumentEngineCommon () {
       const documentNames = await this.cmtat.getAllDocuments()
       // Assert
       expect(documentNames.length).to.equal(0)
+    })
+
+    it('testAdvertisesERC1643Interface', async function () {
+      // The engine variant must advertise ERC-1643 (0xecfecec8), matching the
+      // in-contract variant, per the ERC-1643 ERC-165 SHOULD.
+      expect(await this.cmtat.supportsInterface(IERC1643_INTERFACEID)).to.equal(true)
+      expect(await this.cmtat.supportsInterface(IERC165_INTERFACEID)).to.equal(true)
     })
   })
 }
