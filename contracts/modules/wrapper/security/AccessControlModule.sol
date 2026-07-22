@@ -34,8 +34,9 @@ abstract contract AccessControlModule is AccessControlUpgradeable {
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
-    /** 
+    /**
      * @dev Returns `true` if `account` has been granted `role`.
+     * @return True if `account` holds `role` (the default admin implicitly holds every role).
      */
     function hasRole(
         bytes32 role,

@@ -88,6 +88,7 @@ interface ICMTATBase {
 interface ICMTATCreditEvents {
      /**
      * @notice Returns credit events
+     * @return creditEvents_ The current credit-event flags for the token.
      */
     function creditEvents() external view returns(CreditEvents memory creditEvents_);
 
@@ -148,6 +149,7 @@ interface ICMTATDebt {
     }
     /**
      * @notice Returns debt information
+     * @return debtInformation_ The current debt information for the token.
      */
     function debt() external view returns(DebtInformation memory debtInformation_);
 }

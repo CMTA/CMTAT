@@ -53,6 +53,7 @@ abstract contract CMTATBaseERC2612 is CMTATBaseERC20CrossChain, ERC20PermitUpgra
     /* ============ State functions ============ */
     /**
     * @dev revert if the contract is in pause state
+    * @inheritdoc ERC20Upgradeable
     */
     function approve(
         address spender,

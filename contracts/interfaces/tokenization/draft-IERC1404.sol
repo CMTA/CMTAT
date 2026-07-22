@@ -30,9 +30,9 @@ interface IERC1404 {
 
     /**
      * @dev See {ERC-1404}
-     * This function is effectively an accessor for the "message", 
-     * a human-readable explanation as to why a transaction is restricted. 
-     *
+     * This function is effectively an accessor for the "message",
+     * a human-readable explanation as to why a transaction is restricted.
+     * @return The human-readable message corresponding to `restrictionCode`.
      */
     function messageForTransferRestriction(
         uint8 restrictionCode

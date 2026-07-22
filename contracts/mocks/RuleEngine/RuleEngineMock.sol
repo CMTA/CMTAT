@@ -147,6 +147,7 @@ contract RuleEngineMock is ERC165, IRuleEngineMock {
     /**
     * @dev
     * For all the rules, each restriction code has to be unique.
+    * @return The human-readable message for `_restrictionCode`, or "UnknownRestrictionCode".
     */
     function messageForTransferRestriction(
         uint8 _restrictionCode
@@ -173,6 +174,7 @@ contract RuleEngineMock is ERC165, IRuleEngineMock {
     * @dev The extension id is taken from {ERC1404ExtendInterfaceId} because
     * Solidity's `type(IERC1404Extend).interfaceId` excludes inherited functions
     * and would therefore only cover `detectTransferRestrictionFrom`.
+    * @return True if `interfaceId` is ERC-1404, its extension, the rule-engine id, or ERC-165.
     */
     function supportsInterface(bytes4 interfaceId) public view virtual override(ERC165, IERC165) returns (bool) {
         return interfaceId == type(IERC1404).interfaceId || interfaceId == RuleEngineInterfaceId.RULE_ENGINE_INTERFACE_ID || interfaceId == ERC1404ExtendInterfaceId.ERC1404EXTEND_INTERFACE_ID || super.supportsInterface(interfaceId);

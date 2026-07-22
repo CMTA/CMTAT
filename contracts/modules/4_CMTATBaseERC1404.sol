@@ -89,6 +89,7 @@ abstract contract CMTATBaseERC1404 is
     * the same predicate the transfer path enforces, so the predicted restriction and the actual
     * transfer outcome cannot drift. In particular a zero-value transfer, which `_checkActiveBalance`
     * treats as always valid, is reported as unrestricted here as well.
+    * @return code The restriction code (0 = no restriction).
     */
     function _detectTransferRestriction(
         address from,

@@ -32,9 +32,9 @@ interface IERC1404ExtendERC165 {
 
     /**
      * @dev See {ERC-1404}
-     * This function is effectively an accessor for the "message", 
-     * a human-readable explanation as to why a transaction is restricted. 
-     *
+     * This function is effectively an accessor for the "message",
+     * a human-readable explanation as to why a transaction is restricted.
+     * @return The human-readable message corresponding to `restrictionCode`.
      */
     function messageForTransferRestriction(
         uint8 restrictionCode
@@ -43,6 +43,7 @@ interface IERC1404ExtendERC165 {
 
 contract ExampleERC1404ExtendERC165  {
     /// @notice ERC-165 interface detection
+    /// @return True if `interfaceId` is the IERC1404ExtendERC165 interface id.
     function supportsInterface(bytes4 interfaceId)
         public
         pure
@@ -53,6 +54,7 @@ contract ExampleERC1404ExtendERC165  {
     }
 
     /// @notice Helper function to expose interface IDs (optional)
+    /// @return The ERC-165 interface id of IERC1404ExtendERC165.
     function getInterfaceId() external pure returns (bytes4) {
         return type(IERC1404ExtendERC165).interfaceId;
     }

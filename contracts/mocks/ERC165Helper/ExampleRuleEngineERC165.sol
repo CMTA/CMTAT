@@ -20,6 +20,7 @@ interface IRuleEngineERC165 {
 
 contract ExampleRuleEngineERC165  {
     /// @notice ERC-165 interface detection
+    /// @return True if `interfaceId` is the IRuleEngineERC165 interface id.
     function supportsInterface(bytes4 interfaceId)
         public
         pure
@@ -30,6 +31,7 @@ contract ExampleRuleEngineERC165  {
     }
 
     /// @notice Helper function to expose interface IDs (optional)
+    /// @return The ERC-165 interface id of IRuleEngineERC165.
     function getInterfaceId() external pure returns (bytes4) {
         return type(IRuleEngineERC165).interfaceId;
     }

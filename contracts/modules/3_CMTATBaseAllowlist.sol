@@ -118,6 +118,7 @@ abstract contract CMTATBaseAllowlist is
     * front-run it and spend the old allowance before the new value takes effect.
     * To avoid this, callers should set the allowance to zero before assigning a new value
     * if strict control over the total amount a spender can consume is required.
+    * @inheritdoc ERC20Upgradeable
     */
     function approve(address spender, uint256 value) public virtual override(ERC20Upgradeable) whenNotPaused returns (bool) {
         _canAuthorizeAllowanceByModuleAndRevert(_msgSender(), spender);
@@ -291,6 +292,7 @@ abstract contract CMTATBaseAllowlist is
     //////////////////////////////////////////////////////////////*/
        /**
      * @dev This surcharge is not necessary if you do not use the ERC2771Module
+     * @inheritdoc ERC2771ContextUpgradeable
      */
     function _msgSender()
         internal virtual
@@ -303,8 +305,9 @@ abstract contract CMTATBaseAllowlist is
 
     /**
      * @dev This surcharge is not necessary if you do not use the ERC2771Module
+     * @inheritdoc ERC2771ContextUpgradeable
      */
-    function _contextSuffixLength() internal virtual view 
+    function _contextSuffixLength() internal virtual view
     override(ContextUpgradeable, ERC2771ContextUpgradeable)
     returns (uint256) {
          return ERC2771ContextUpgradeable._contextSuffixLength();
@@ -312,6 +315,7 @@ abstract contract CMTATBaseAllowlist is
 
     /**
      * @dev This surcharge is not necessary if you do not use the ERC2771Module
+     * @inheritdoc ERC2771ContextUpgradeable
      */
     function _msgData()
         internal virtual

@@ -20,6 +20,7 @@ abstract contract ValidationModuleAllowlist is
     /* ============ View functions ============ */
     /**
     * @dev Use forcedTransfer (or forcedBurn) to burn tokens from an non-allowlist address
+    * @return True if the mint/burn is allowed (allowlist check plus the base checks).
     */
     function _canMintBurnByModule(
         address account
@@ -33,6 +34,7 @@ abstract contract ValidationModuleAllowlist is
 
     /**
     * @dev Add allowlist check for standard transfer
+    * @return True if the allowlist blocks the transfer (allowlist enabled and a party is not allowlisted).
     */
     function _canTransferStandardByModuleAllowlist(
         address spender,
@@ -50,6 +52,7 @@ abstract contract ValidationModuleAllowlist is
 
     /**
     * @dev Add allowlist check for standard transfer
+    * @return True if the standard transfer is allowed (passes the allowlist and base checks).
     */
     function _canTransferStandardByModule(
         address spender,

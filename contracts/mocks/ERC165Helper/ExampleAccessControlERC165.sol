@@ -5,11 +5,13 @@ pragma solidity ^0.8.20;
 interface IAccessControlUpgradeable165 {
     /**
      * @dev Returns `true` if `account` has been granted `role`.
+     * @return True if `account` holds `role`.
      */
     function hasRole(bytes32 role, address account) external view returns (bool);
 
     /**
      * @dev Returns the admin role that controls `role`.
+     * @return The admin role that controls `role`.
      */
     function getRoleAdmin(bytes32 role) external view returns (bytes32);
 
@@ -32,6 +34,7 @@ interface IAccessControlUpgradeable165 {
 
 contract ExampleAccessControlUpgradeable165  {
     /// @notice ERC-165 interface detection
+    /// @return True if `interfaceId` is the AccessControl ERC-165 interface id.
     function supportsInterface(bytes4 interfaceId)
         public
         pure
@@ -42,6 +45,7 @@ contract ExampleAccessControlUpgradeable165  {
     }
 
     /// @notice Helper function to expose interface IDs (optional)
+    /// @return The ERC-165 interface id of IAccessControlUpgradeable165.
     function getInterfaceId() external pure returns (bytes4) {
         return type(IAccessControlUpgradeable165).interfaceId;
     }

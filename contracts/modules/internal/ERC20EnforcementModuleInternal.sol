@@ -146,6 +146,8 @@ abstract contract ERC20EnforcementModuleInternal is ERC20Upgradeable, IERC7943Fu
 
     /**
     * @dev we only check the balance if frozenTokens > 0
+    * @return isValid True if `from` has enough unfrozen balance to move `value`.
+    * @return activeBalance The unfrozen (active) balance available for `from`.
     */
     function _checkActiveBalance(address from, uint256 value) internal virtual view returns(bool isValid, uint256 activeBalance){
         uint256 frozenTokensLocal = _getFrozenTokens(from);

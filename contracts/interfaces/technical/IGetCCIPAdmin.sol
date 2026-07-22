@@ -7,6 +7,7 @@ interface IGetCCIPAdmin {
   /**
   * @notice Returns the admin of the token.
   * @dev This method is named to never conflict with existing methods.
+  * @return The address of the token's CCIP admin.
   */
   function getCCIPAdmin() external view returns (address);
 }

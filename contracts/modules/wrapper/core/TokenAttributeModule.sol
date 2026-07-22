@@ -59,6 +59,7 @@ abstract contract TokenAttributeModule is Initializable, IERC3643ERC20Base {
     /* ======== View functions ======= */
     /**
      * @notice Returns the name of the token.
+     * @return The token name.
      */
     function name() public view virtual returns (string memory) {
         TokenAttributeModuleStorage storage $ = _getTokenAttributeModuleStorage();
@@ -67,6 +68,7 @@ abstract contract TokenAttributeModule is Initializable, IERC3643ERC20Base {
 
     /**
      * @notice Returns the symbol of the token, usually a shorter version of the name.
+     * @return The token symbol.
      */
     function symbol() public view virtual returns (string memory) {
         TokenAttributeModuleStorage storage $ = _getTokenAttributeModuleStorage();

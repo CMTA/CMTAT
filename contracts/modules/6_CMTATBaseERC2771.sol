@@ -16,6 +16,7 @@ abstract contract CMTATBaseERC2771 is CMTATBaseERC20CrossChain, ERC2771Module {
     //////////////////////////////////////////////////////////////*/
        /**
      * @dev This surcharge is not necessary if you do not use the 2771Module
+     * @inheritdoc ERC2771ContextUpgradeable
      */
     function _msgSender()
         internal virtual
@@ -28,8 +29,9 @@ abstract contract CMTATBaseERC2771 is CMTATBaseERC20CrossChain, ERC2771Module {
 
     /**
      * @dev This surcharge is not necessary if you do not use the 2771Module
+     * @inheritdoc ERC2771ContextUpgradeable
      */
-    function _contextSuffixLength() internal virtual view 
+    function _contextSuffixLength() internal virtual view
     override(ContextUpgradeable, ERC2771ContextUpgradeable)
     returns (uint256) {
          return ERC2771ContextUpgradeable._contextSuffixLength();
@@ -37,6 +39,7 @@ abstract contract CMTATBaseERC2771 is CMTATBaseERC20CrossChain, ERC2771Module {
 
     /**
      * @dev This surcharge is not necessary if you do not use the 2771Module
+     * @inheritdoc ERC2771ContextUpgradeable
      */
     function _msgData()
         internal virtual

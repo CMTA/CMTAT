@@ -36,8 +36,9 @@ abstract contract ValidationModule is
     //////////////////////////////////////////////////////////////*/
     /* ============ View functions ============ */
     /**
-    * @dev 
+    * @dev
     * Entrypoint to check mint/burn/standard transfer
+    * @return True if the mint/burn/transfer is allowed by the pause and enforcement modules.
     */
     function _canTransferGenericByModule(
         address spender,
@@ -77,7 +78,8 @@ abstract contract ValidationModule is
     * @dev check if the contract is deactivated or the address is frozen
     * check relevant for mint and burn operations
     * Use forcedTransfer (or forcedBurn) to burn tokens from a frozen address
-    */ 
+    * @return True if the mint/burn is allowed (contract not deactivated and `target` not frozen).
+    */
     function _canMintBurnByModule(
         address target
     ) internal view virtual returns (bool) {
@@ -120,6 +122,7 @@ abstract contract ValidationModule is
     * @dev calls Pause and Enforcement module
     * check relevant for standard transfer
     * We don't check deactivated() because the contract must be in the pause state to be deactivated
+    * @return True if any of `spender`, `from` or `to` is frozen.
     */
     function _canTransferisFrozen(
         address spender,
@@ -181,6 +184,7 @@ abstract contract ValidationModule is
     * @dev Returns true if `account` is allowed to send tokens.
     * Base check: account must not be frozen.
     * Override in subclasses to add allowlist or other checks.
+    * @return allowed True if `account` is allowed to send tokens.
     */
     function _canSend(address account) internal view virtual returns (bool allowed) {
         return !EnforcementModule.isFrozen(account);
@@ -190,6 +194,7 @@ abstract contract ValidationModule is
     * @dev Returns true if `account` is allowed to receive tokens.
     * Base check: account must not be frozen.
     * Override in subclasses to add allowlist or other checks.
+    * @return allowed True if `account` is allowed to receive tokens.
     */
     function _canReceive(address account) internal view virtual returns (bool allowed) {
         return !EnforcementModule.isFrozen(account);

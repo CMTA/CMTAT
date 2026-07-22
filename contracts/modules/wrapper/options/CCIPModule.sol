@@ -50,6 +50,7 @@ abstract contract CCIPModule is IGetCCIPAdmin {
 
   /**
   * Returns the current CCIPAdmin
+  * @return The current CCIP admin address.
   */
   function getCCIPAdmin() public view virtual returns (address) {
     CCIPModuleStorage storage $ = _getCCIPModuleStorage();

@@ -276,6 +276,7 @@ interface IERC3643ComplianceRead {
     /**
      * @notice Returns true if the transfer is valid, and false otherwise.
      * @dev Don't check the balance and the user's right (access control)
+     * @return isValid True if the transfer is valid, false otherwise.
      */
     function canTransfer(
         address from,

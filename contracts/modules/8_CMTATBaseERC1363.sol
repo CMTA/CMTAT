@@ -34,6 +34,7 @@ abstract contract CMTATBaseERC1363 is ERC1363Upgradeable, CMTATBaseERC7551Enforc
     /* ============ State functions ============ */
     /**
     * @dev revert if the contract is in pause state
+    * @inheritdoc ERC20Upgradeable
     */
     function approve(address spender, uint256 value) public virtual override(ERC20Upgradeable, CMTATBaseERC7551Enforcement, IERC20) returns (bool) {
         return CMTATBaseERC7551Enforcement.approve(spender, value);
@@ -64,7 +65,9 @@ abstract contract CMTATBaseERC1363 is ERC1363Upgradeable, CMTATBaseERC7551Enforc
 
     /* ============ View functions ============ */
     /**
-     * 
+     * @notice Returns true if this contract implements the interface defined by `interfaceId`.
+     * @param interfaceId The ERC-165 interface identifier to query.
+     * @return True if `interfaceId` is supported by ERC-1363 or any inherited module.
      */
     function supportsInterface(bytes4 interfaceId) public view virtual override(ERC1363Upgradeable, CMTATBaseERC20CrossChain) returns (bool) {
         return ERC1363Upgradeable.supportsInterface(interfaceId) || CMTATBaseERC20CrossChain.supportsInterface(interfaceId);

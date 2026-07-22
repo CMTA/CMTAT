@@ -75,18 +75,20 @@ abstract contract SnapshotModuleBase is Initializable {
     /*//////////////////////////////////////////////////////////////
                             PUBLIC/EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
-    /** 
-    *  
+    /**
+    *
     * @notice Get all snapshots
+    * @return The list of all scheduled snapshot timestamps.
     */
     function getAllSnapshots() public view returns (uint256[] memory) {
         SnapshotModuleBaseStorage storage $ = _getSnapshotModuleBaseStorage();
         return $._scheduledSnapshots;
     }
 
-    /** 
-    * @dev 
+    /**
+    * @dev
     * Get the next scheduled snapshots
+    * @return The list of upcoming (not-yet-taken) scheduled snapshot timestamps.
     */
     function getNextSnapshots() public view returns (uint256[] memory) {
         SnapshotModuleBaseStorage storage $ = _getSnapshotModuleBaseStorage();
@@ -258,8 +260,8 @@ abstract contract SnapshotModuleBase is Initializable {
     * @dev See {OpenZeppelin - ERC20Snapshot}
     * @param time where we want a snapshot
     * @param snapshots the struct where are stored the snapshots
-    * @return  snapshotExist true if a snapshot is found, false otherwise
-    * value 0 if no snapshot, balance value if a snapshot exists
+    * @return snapshotExist true if a snapshot is found, false otherwise
+    * @return value 0 if no snapshot, balance value if a snapshot exists
     */
     function _valueAt(
         uint256 time,
@@ -338,7 +340,8 @@ abstract contract SnapshotModuleBase is Initializable {
 
     /** 
     * @dev Find the snapshot index at the specified time
-    * @return (true, index) if the snapshot exists, (false, 0) otherwise
+    * @return True if an exact snapshot exists at `time`, false otherwise.
+    * @return The index of the matching or upper-bound snapshot (array length if none).
     */
     function _findScheduledSnapshotIndex(
         uint256 time
@@ -366,6 +369,8 @@ abstract contract SnapshotModuleBase is Initializable {
     /** 
     * @dev find the most recent past snapshot
     * The complexity of this function is O(N) because we go through the whole list
+    * @return time The timestamp of the most recent past scheduled snapshot.
+    * @return index The index of that snapshot in the scheduled-snapshots array.
     */
     function _findScheduledMostRecentPastSnapshot()
         private

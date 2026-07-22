@@ -18,6 +18,7 @@ abstract contract CMTATBaseERC20CrossChain is ERC20CrossChainModule, CCIPModule,
      /* ============  State Functions ============ */
         /**
     * @dev revert if the contract is in pause state
+    * @inheritdoc ERC20Upgradeable
     */
     function approve(address spender, uint256 value) public virtual override(ERC20Upgradeable, CMTATBaseRuleEngine) returns (bool) {
         return CMTATBaseRuleEngine.approve(spender, value);
