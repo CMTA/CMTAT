@@ -184,7 +184,10 @@ CMTAT comes with several different deployment versions to meet specific use case
 | -------------------------- | ------------------ | ------------------------------------------------------------ |
 | Equities                   | CMTAT Standard     | All features, without those directly to Debt                 |
 | Equities in Germany        | CMTAT ERC-7551     | The standard version with a few supplementary functions to meet the standard [ERC-7551](https://ethereum-magicians.org/t/erc-7551-crypto-security-token-smart-contract-interface-ewpg-reworked/25477), tailored for the Germany and eWpg. |
+| Equities / bonds with balance snapshots (dividends, corporate actions) | CMTAT Snapshot | Standard features plus balances recorded at a given block through a configured `SnapshotEngine`, for dividend or corporate-action computation. |
 | Debt/bond                  | CMTAT Debt<br />   | CMTAT Standard is also suitable but this version adds the possibility to put several on-chain information related to debt and bond product |
+| Debt/bond (external debt engine) | CMTAT DebtEngine | Same as CMTAT Debt, but the debt and credit-event data is delegated to an external `DebtEngine` contract instead of being stored in the token. |
+| Shareholder registry / on-chain holder list | CMTAT HolderList | Standard features plus an on-chain, paginated list of the addresses currently holding a non-zero balance (issuer reporting, corporate actions). |
 | Stablecoin (e.g USDC/USDT) | CMTAT Light        | The core features (i.e., minting, burning,address freeze / blacklisting, pause) without additional functions required by equities and debt instruments (e.g., document management, snapshot, partial freeze of balances). |
 
 ##### Technical use case (whitelist, upgradeable/proxy)
@@ -196,6 +199,8 @@ CMTAT comes with several different deployment versions to meet specific use case
 | Deployment through proxy (Upgradeable)<br />Deployment immutable (standalone / without proxy) | Each deployment version comes with a standalone (immutable) or upgradeable mode.<br />A specific deployment version exists for UUPS Proxy |
 | MetaTx/Gasless with ERC-2771                                 | All deployment version, except Debt, DebtEngine, Permit & Light version  |
 | ERC-2612 Permit + [ERC-6357 Multicall](https://eips.ethereum.org/EIPS/eip-6357)<br />(gas sponsorship approval & batch transaction) | CMTAT Permit (Standalone / Upgradeable)                      |
+| On-chain holder list / shareholder enumeration | CMTAT HolderList (Standalone / Upgradeable) |
+| Payable token callbacks (`transferAndCall` / `approveAndCall`, [ERC-1363](https://eips.ethereum.org/EIPS/eip-1363)) | CMTAT ERC-1363 (Standalone / Upgradeable) |
 
 #### CMTAT for stablecoins
 
