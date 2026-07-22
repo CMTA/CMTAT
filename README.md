@@ -34,6 +34,7 @@ CMTAT extends the standard [ERC-20](https://eips.ethereum.org/EIPS/eip-20) token
 | **ERC-1363 Payable Token Hooks** | Token callbacks (`transferAndCall` / `approveAndCall`) | [ERC-1363](https://eips.ethereum.org/EIPS/eip-1363) | Deployment-version specific |
 
 Document model note:
+- CMTAT implements **both** the *original* [ERC-1643](https://github.com/ethereum/EIPs/issues/1643) — only ever a GitHub issue (2018 draft), never a merged EIP — and its *current rework*, the draft proposal ["Document Management for Security Tokens" (ethereum/ERCs PR #1754, open/draft)](https://github.com/ethereum/ERCs/pull/1754).
 - ERC-1643 document identifiers in CMTAT use `bytes32` names.
 - CMTAT tokenization terms keep the modified CMTAT document structure (`IERC1643CMTAT.DocumentInfo`) with `string name`.
 

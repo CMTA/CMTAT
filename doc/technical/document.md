@@ -7,6 +7,13 @@ CMTAT supports two layers of on-chain document management:
    - **Native storage** (`DocumentERC1643Module`) — documents are stored directly in the token contract (available in all shipped deployment variants).
    - **External engine delegation** (`DocumentEngineModule`) — documents are managed by a separate `DocumentEngine` contract (not integrated in any shipped deployment variant; available as an optional module).
 
+> **ERC-1643 — two versions, both supported.** CMTAT implements **both** ERC-1643 variants:
+>
+> - the **original** ERC-1643, a 2018 draft published only as a [GitHub issue](https://github.com/ethereum/EIPs/issues/1643) — never a merged EIP;
+> - its **current rework**, the draft proposal ["Document Management for Security Tokens" (ethereum/ERCs PR #1754)](https://github.com/ethereum/ERCs/pull/1754), still **open/draft**, which modernizes the Solidity syntax, broadens scope beyond security tokens to ERC-721/ERC-1155, and adds backwards-compatibility, testing, and security sections.
+>
+> Both share the same core document model (`getDocument` / `getAllDocuments` / `setDocument` / `removeDocument`, with `bytes32` document names), which is what CMTAT's `IERC1643` implements.
+
 ## Terms
 
 The tokenization terms are a single `CMTATTerms` struct stored in the token contract. They can be read by anyone and set by an address with `EXTRA_INFORMATION_ROLE`.

@@ -1705,6 +1705,8 @@ See also [technical/document.md](./technical/document.md)
 
 The `DocumentEngine` is an external contract to support [*ERC-1643*](https://github.com/ethereum/EIPs/issues/1643) inside CMTAT, a standard proposition to manage documents on-chain. This standard is notably used by [ERC-1400](https://github.com/ethereum/eips/issues/1411) from Polymath. 
 
+> **ERC-1643 — two versions, both supported.** CMTAT implements **both** the *original* ERC-1643, published only as a [GitHub issue](https://github.com/ethereum/EIPs/issues/1643) (2018 draft, never a merged EIP), and its *current rework* — the draft proposal ["Document Management for Security Tokens" (ethereum/ERCs PR #1754)](https://github.com/ethereum/ERCs/pull/1754), still **open/draft**, which modernizes the syntax, broadens scope to ERC-721/ERC-1155, and adds backwards-compatibility, testing, and security sections. Both share the same `bytes32`-named document model that `IERC1643` implements.
+
 This engine is defined in the module `DocumentModule`
 
 This EIP defines a document with three attributes:
