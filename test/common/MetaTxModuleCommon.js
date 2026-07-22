@@ -1,6 +1,6 @@
 const helpers = require('@nomicfoundation/hardhat-network-helpers')
 const {
-  getDomain,
+  getDomain
 } = require('../../lib/openzeppelin-contracts-upgradeable/test/helpers/eip712')
 const { expect } = require('chai')
 function MetaTxModuleCommon () {

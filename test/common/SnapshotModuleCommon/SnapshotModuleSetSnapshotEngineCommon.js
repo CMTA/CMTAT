@@ -39,12 +39,10 @@ function SnapshotModuleSetSnapshotEngineCommon () {
       )
 
       // Call initializeWithEngines to cover __SnapshotEngineModule_init_unchained
-      await engineMock
-        .connect(this.admin)
-        .initializeWithEngines(
-          snapshotEngineMock.target,
-          ZERO_ADDRESS // No document engine
-        )
+      await engineMock.connect(this.admin).initializeWithEngines(
+        snapshotEngineMock.target,
+        ZERO_ADDRESS // No document engine
+      )
 
       // Verify snapshot engine was set
       expect(await engineMock.snapshotEngine()).to.equal(
@@ -74,10 +72,7 @@ function SnapshotModuleSetSnapshotEngineCommon () {
 
       await engineMock
         .connect(this.admin)
-        .initializeWithEngines(
-          ZERO_ADDRESS,
-          ZERO_ADDRESS
-        )
+        .initializeWithEngines(ZERO_ADDRESS, ZERO_ADDRESS)
 
       expect(await engineMock.snapshotEngine()).to.equal(ZERO_ADDRESS)
     })

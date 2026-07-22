@@ -1,24 +1,43 @@
 const { expect } = require('chai')
-const { ZERO_ADDRESS,
-  IERC165_INTERFACEID, IERC721_INTERFACEID,IACCESSCONTROL_INTERFACEID,
-  IERC5679_INTERFACEID, IERC7943_INTERFACEID, IERC8343_INTERFACEID,
+const {
+  ZERO_ADDRESS,
+  IERC165_INTERFACEID,
+  IERC721_INTERFACEID,
+  IACCESSCONTROL_INTERFACEID,
+  IERC5679_INTERFACEID,
+  IERC7943_INTERFACEID,
+  IERC8343_INTERFACEID,
   IERC1643_INTERFACEID,
-  REJECTED_CODE_BASE_TRANSFER_REJECTED_DEACTIVATED } = require('../utils')
+  REJECTED_CODE_BASE_TRANSFER_REJECTED_DEACTIVATED
+} = require('../utils')
 const VALUE1 = 20n
 const VALUE2 = 50n
 function CMTATIntegrationCommon () {
   context('CMTAT integration test', function () {
-      /* ============ ERC165 ============ */
+    /* ============ ERC165 ============ */
     it('testSupportRightInterface', async function () {
       // Assert
-      expect(await this.cmtat.supportsInterface(IACCESSCONTROL_INTERFACEID)).to.equal(true)
-      expect(await this.cmtat.supportsInterface(IERC165_INTERFACEID)).to.equal(true)
+      expect(
+        await this.cmtat.supportsInterface(IACCESSCONTROL_INTERFACEID)
+      ).to.equal(true)
+      expect(await this.cmtat.supportsInterface(IERC165_INTERFACEID)).to.equal(
+        true
+      )
       expect(await this.cmtat.supportsInterface(IERC721_INTERFACEID)).to.equal(
-          false)
-      expect(await this.cmtat.supportsInterface(IERC5679_INTERFACEID)).to.equal(true)
-      expect(await this.cmtat.supportsInterface(IERC7943_INTERFACEID)).to.equal(true)
-      expect(await this.cmtat.supportsInterface(IERC8343_INTERFACEID)).to.equal(true)
-      expect(await this.cmtat.supportsInterface(IERC1643_INTERFACEID)).to.equal(true)
+        false
+      )
+      expect(await this.cmtat.supportsInterface(IERC5679_INTERFACEID)).to.equal(
+        true
+      )
+      expect(await this.cmtat.supportsInterface(IERC7943_INTERFACEID)).to.equal(
+        true
+      )
+      expect(await this.cmtat.supportsInterface(IERC8343_INTERFACEID)).to.equal(
+        true
+      )
+      expect(await this.cmtat.supportsInterface(IERC1643_INTERFACEID)).to.equal(
+        true
+      )
       expect(await this.cmtat.supportsInterface('0xffffffff')).to.equal(false)
     })
 
@@ -127,8 +146,7 @@ function CMTATIntegrationCommon () {
           this.cmtat
             .connect(this.address1)
             .transfer(this.address2, AMOUNT_TO_TRANSFER)
-        )
-          .to.be.revertedWithCustomError(this.cmtat, 'EnforcedPause')
+        ).to.be.revertedWithCustomError(this.cmtat, 'EnforcedPause')
       }
 
       if (!this.generic) {
@@ -185,8 +203,7 @@ function CMTATIntegrationCommon () {
           this.cmtat
             .connect(this.address3)
             .transferFrom(this.address1, this.address2, AMOUNT_TO_TRANSFER)
-        )
-          .to.be.revertedWithCustomError(this.cmtat, 'EnforcedPause')
+        ).to.be.revertedWithCustomError(this.cmtat, 'EnforcedPause')
       }
 
       // Unpause is reverted

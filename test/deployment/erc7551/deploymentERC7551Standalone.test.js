@@ -47,5 +47,4 @@ describe('CMTAT ERC7551 - Standalone', function () {
   ERC20EnforcementERC7551ModuleCommon()
   DocumentModuleCommon()
   ExtraInfoModuleCommon()
-
 })

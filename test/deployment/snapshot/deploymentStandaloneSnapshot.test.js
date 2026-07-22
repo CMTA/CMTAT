@@ -40,10 +40,10 @@ describe('CMTAT Snapshot - Standalone Deployment', function () {
       this.deployerAddress.address
     )
     this.dontCheckTimestamp = true
-    this.transferEngineMock = await ethers.deployContract('SnapshotEngineMock', [
-      this.cmtat.target,
-      this.admin
-    ])
+    this.transferEngineMock = await ethers.deployContract(
+      'SnapshotEngineMock',
+      [this.cmtat.target, this.admin]
+    )
   })
 
   // Core

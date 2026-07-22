@@ -38,7 +38,9 @@ function HolderListModuleCommon () {
 
     it('testDoesNotAddTheZeroAddressAsHolder', async function () {
       await this.cmtat.connect(this.admin).mint(this.address1, 50)
-      await this.cmtat.connect(this.admin)['burn(address,uint256)'](this.address1, 50)
+      await this.cmtat
+        .connect(this.admin)
+        ['burn(address,uint256)'](this.address1, 50)
       // Assert - neither the mint source nor the burn sink is a holder
       expect(await this.cmtat.isHolder(ZERO_ADDRESS)).to.equal(false)
       expect(await this.cmtat.holderCount()).to.equal('0')
@@ -99,9 +101,9 @@ function HolderListModuleCommon () {
     it('testRemovesAHolderOnAFullBurn', async function () {
       await this.cmtat.connect(this.admin).mint(this.address1, 50)
       // Act
-      this.logs = await this.cmtat.connect(this.admin)[
-        'burn(address,uint256)'
-      ](this.address1, 50)
+      this.logs = await this.cmtat
+        .connect(this.admin)
+        ['burn(address,uint256)'](this.address1, 50)
       // Assert
       expect(await this.cmtat.holderCount()).to.equal('0')
       expect(await this.cmtat.isHolder(this.address1)).to.equal(false)
@@ -113,7 +115,9 @@ function HolderListModuleCommon () {
     it('testKeepsAHolderOnAPartialBurn', async function () {
       await this.cmtat.connect(this.admin).mint(this.address1, 50)
       // Act
-      await this.cmtat.connect(this.admin)['burn(address,uint256)'](this.address1, 20)
+      await this.cmtat
+        .connect(this.admin)
+        ['burn(address,uint256)'](this.address1, 20)
       // Assert
       expect(await this.cmtat.holderCount()).to.equal('1')
       expect(await this.cmtat.isHolder(this.address1)).to.equal(true)
@@ -134,7 +138,9 @@ function HolderListModuleCommon () {
     it('testTracksAHolderWhoseTokensAreFrozen', async function () {
       await this.cmtat.connect(this.admin).mint(this.address1, 50)
       // Act - frozen tokens are still part of the balance
-      await this.cmtat.connect(this.admin).freezePartialTokens(this.address1, 50)
+      await this.cmtat
+        .connect(this.admin)
+        .freezePartialTokens(this.address1, 50)
       // Assert
       expect(await this.cmtat.isHolder(this.address1)).to.equal(true)
       expect(await this.cmtat.holderCount()).to.equal('1')
@@ -258,7 +264,9 @@ function HolderListModuleCommon () {
       it('testHoldersAgreesWithHolderByIndexOnOrdering', async function () {
         const holders = await this.cmtat.holders()
         for (let index = 0; index < holders.length; ++index) {
-          expect(await this.cmtat.holderByIndex(index)).to.equal(holders[index])
+          expect(await this.cmtat.holderByIndex(index)).to.equal(
+            holders[index]
+          )
         }
       })
     })

@@ -78,12 +78,11 @@ function SnapshotModuleOnePlannedSnapshotTest () {
       const newTotalSupply = (
         Number(TOTAL_SUPPLY_INITIAL_MINT) + Number(MINT_AMOUNT)
       ).toString()
-      await checkSnapshot.call(
-        this,
-        await time.latest(),
-        newTotalSupply,
-        [address1NewTokensBalance, ADDRESS2_INITIAL_MINT, ADDRESS3_INITIAL_MINT]
-      )
+      await checkSnapshot.call(this, await time.latest(), newTotalSupply, [
+        address1NewTokensBalance,
+        ADDRESS2_INITIAL_MINT,
+        ADDRESS3_INITIAL_MINT
+      ])
       const snapshots = await this.transferEngineMock.getNextSnapshots()
       expect(snapshots.length).to.equal(0)
     })
@@ -128,12 +127,11 @@ function SnapshotModuleOnePlannedSnapshotTest () {
       const newTotalSupply = (
         Number(TOTAL_SUPPLY_INITIAL_MINT) - Number(BURN_AMOUNT)
       ).toString()
-      await checkSnapshot.call(
-        this,
-        await time.latest(),
-        newTotalSupply,
-        [address1NewTokensBalance, ADDRESS2_INITIAL_MINT, ADDRESS3_INITIAL_MINT]
-      )
+      await checkSnapshot.call(this, await time.latest(), newTotalSupply, [
+        address1NewTokensBalance,
+        ADDRESS2_INITIAL_MINT,
+        ADDRESS3_INITIAL_MINT
+      ])
       const snapshots = await this.transferEngineMock.getNextSnapshots()
       expect(snapshots.length).to.equal(0)
     })

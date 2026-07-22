@@ -1,4 +1,4 @@
-const { ZERO_ADDRESS} = require('../utils')
+const { ZERO_ADDRESS } = require('../utils')
 const { expect } = require('chai')
 const { ethers, upgrades } = require('hardhat')
 const {
@@ -62,7 +62,9 @@ describe('CMTAT - Deployment', function () {
   })
 
   it('testCanInitializeStandardProxyManually', async function () {
-    const CMTATFactory = await ethers.getContractFactory('CMTATStandardUpgradeable')
+    const CMTATFactory = await ethers.getContractFactory(
+      'CMTATStandardUpgradeable'
+    )
     const cmtat = await upgrades.deployProxy(CMTATFactory, [], {
       initializer: false,
       constructorArgs: [this._.address],
@@ -84,7 +86,9 @@ describe('CMTAT - Deployment', function () {
     const ruleEngineMock = await ethers.deployContract('RuleEngineMock', [
       this.admin.address
     ])
-    const CMTATFactory = await ethers.getContractFactory('CMTATStandardUpgradeable')
+    const CMTATFactory = await ethers.getContractFactory(
+      'CMTATStandardUpgradeable'
+    )
     const cmtat = await upgrades.deployProxy(CMTATFactory, [], {
       initializer: false,
       constructorArgs: [this._.address],
@@ -103,7 +107,9 @@ describe('CMTAT - Deployment', function () {
   })
 
   it('testCannotInitializeStandardProxyTwice', async function () {
-    const CMTATFactory = await ethers.getContractFactory('CMTATStandardUpgradeable')
+    const CMTATFactory = await ethers.getContractFactory(
+      'CMTATStandardUpgradeable'
+    )
     const cmtat = await upgrades.deployProxy(CMTATFactory, [], {
       initializer: false,
       constructorArgs: [this._.address],

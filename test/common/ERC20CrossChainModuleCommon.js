@@ -383,17 +383,23 @@ function ERC20CrossChainModuleCommon () {
         this.skip()
       }
 
-      this.ruleEngineMock = await ethers.deployContract('RuleEngineMock', [this.admin])
+      this.ruleEngineMock = await ethers.deployContract('RuleEngineMock', [
+        this.admin
+      ])
       await this.cmtat.connect(this.admin).setRuleEngine(this.ruleEngineMock)
-      await this.cmtat.connect(this.admin).grantRole(BURNER_FROM_ROLE, this.address2)
+      await this.cmtat
+        .connect(this.admin)
+        .grantRole(BURNER_FROM_ROLE, this.address2)
       await this.cmtat.connect(this.address1).approve(this.address2, 20n)
 
       await expect(
         this.cmtat.connect(this.address2).burnFrom(this.address1, 10n)
-      ).to.be.revertedWithCustomError(
-        this.ruleEngineMock,
-        'RuleEngine_InvalidTransfer'
-      ).withArgs(this.address1, ZERO_ADDRESS, 10n)
+      )
+        .to.be.revertedWithCustomError(
+          this.ruleEngineMock,
+          'RuleEngine_InvalidTransfer'
+        )
+        .withArgs(this.address1, ZERO_ADDRESS, 10n)
     })
 
     it('testBurnFromWithRuleEngineAuthorizedSpenderCanBurn', async function () {
@@ -401,7 +407,9 @@ function ERC20CrossChainModuleCommon () {
         this.skip()
       }
 
-      this.ruleEngineMock = await ethers.deployContract('RuleEngineMock', [this.admin])
+      this.ruleEngineMock = await ethers.deployContract('RuleEngineMock', [
+        this.admin
+      ])
       await this.cmtat.connect(this.admin).setRuleEngine(this.ruleEngineMock)
       await this.cmtat.connect(this.address1).approve(this.admin, 20n)
 
@@ -527,16 +535,22 @@ function ERC20CrossChainModuleCommon () {
         this.skip()
       }
 
-      this.ruleEngineMock = await ethers.deployContract('RuleEngineMock', [this.admin])
+      this.ruleEngineMock = await ethers.deployContract('RuleEngineMock', [
+        this.admin
+      ])
       await this.cmtat.connect(this.admin).setRuleEngine(this.ruleEngineMock)
-      await this.cmtat.connect(this.admin).grantRole(CROSS_CHAIN_ROLE, this.address2)
+      await this.cmtat
+        .connect(this.admin)
+        .grantRole(CROSS_CHAIN_ROLE, this.address2)
 
       await expect(
         this.cmtat.connect(this.address2).crosschainMint(this.address1, 10n)
-      ).to.be.revertedWithCustomError(
-        this.ruleEngineMock,
-        'RuleEngine_InvalidTransfer'
-      ).withArgs(ZERO_ADDRESS, this.address1, 10n)
+      )
+        .to.be.revertedWithCustomError(
+          this.ruleEngineMock,
+          'RuleEngine_InvalidTransfer'
+        )
+        .withArgs(ZERO_ADDRESS, this.address1, 10n)
     })
 
     it('testCrosschainMintWithRuleEngineAuthorizedSpenderCanMint', async function () {
@@ -544,7 +558,9 @@ function ERC20CrossChainModuleCommon () {
         this.skip()
       }
 
-      this.ruleEngineMock = await ethers.deployContract('RuleEngineMock', [this.admin])
+      this.ruleEngineMock = await ethers.deployContract('RuleEngineMock', [
+        this.admin
+      ])
       await this.cmtat.connect(this.admin).setRuleEngine(this.ruleEngineMock)
 
       await expect(
@@ -564,16 +580,22 @@ function ERC20CrossChainModuleCommon () {
         this.skip()
       }
 
-      this.ruleEngineMock = await ethers.deployContract('RuleEngineMock', [this.admin])
+      this.ruleEngineMock = await ethers.deployContract('RuleEngineMock', [
+        this.admin
+      ])
       await this.cmtat.connect(this.admin).setRuleEngine(this.ruleEngineMock)
-      await this.cmtat.connect(this.admin).grantRole(CROSS_CHAIN_ROLE, this.address2)
+      await this.cmtat
+        .connect(this.admin)
+        .grantRole(CROSS_CHAIN_ROLE, this.address2)
 
       await expect(
         this.cmtat.connect(this.address2).crosschainBurn(this.address1, 10n)
-      ).to.be.revertedWithCustomError(
-        this.ruleEngineMock,
-        'RuleEngine_InvalidTransfer'
-      ).withArgs(this.address1, ZERO_ADDRESS, 10n)
+      )
+        .to.be.revertedWithCustomError(
+          this.ruleEngineMock,
+          'RuleEngine_InvalidTransfer'
+        )
+        .withArgs(this.address1, ZERO_ADDRESS, 10n)
     })
 
     it('testCrosschainBurnWithRuleEngineAuthorizedSpenderCanBurn', async function () {
@@ -581,7 +603,9 @@ function ERC20CrossChainModuleCommon () {
         this.skip()
       }
 
-      this.ruleEngineMock = await ethers.deployContract('RuleEngineMock', [this.admin])
+      this.ruleEngineMock = await ethers.deployContract('RuleEngineMock', [
+        this.admin
+      ])
       await this.cmtat.connect(this.admin).setRuleEngine(this.ruleEngineMock)
 
       await expect(

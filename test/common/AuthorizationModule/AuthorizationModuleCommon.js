@@ -1,8 +1,5 @@
 const { expect } = require('chai')
-const {
-  PAUSER_ROLE,
-  DEFAULT_ADMIN_ROLE,
-} = require('../../utils')
+const { PAUSER_ROLE, DEFAULT_ADMIN_ROLE } = require('../../utils')
 function AuthorizationModuleCommon () {
   context('Authorization', function () {
     it('testAdminCanTransmitAdminship', async function () {

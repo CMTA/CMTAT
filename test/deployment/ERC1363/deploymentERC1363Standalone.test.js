@@ -5,9 +5,13 @@ const {
   loadFixture
 } = require('../../deploymentUtils')
 const {
-  IERC165_INTERFACEID, IERC721_INTERFACEID,IACCESSCONTROL_INTERFACEID,
-  IERC5679_INTERFACEID, IERC1363_INTERFACEID,
-  IERC1404_INTERFACEID, IERC1404EXTEND_INTERFACEID
+  IERC165_INTERFACEID,
+  IERC721_INTERFACEID,
+  IACCESSCONTROL_INTERFACEID,
+  IERC5679_INTERFACEID,
+  IERC1363_INTERFACEID,
+  IERC1404_INTERFACEID,
+  IERC1404EXTEND_INTERFACEID
 } = require('../../utils')
 
 // Core
@@ -44,14 +48,27 @@ describe('CMTAT ERC1363 - Standalone', function () {
 
   /* ============ ERC165 ============ */
   it('testSupportRightInterface', async function () {
-    expect(await this.cmtat.supportsInterface(IACCESSCONTROL_INTERFACEID)).to.equal(true)
-    expect(await this.cmtat.supportsInterface(IERC165_INTERFACEID)).to.equal(true)
+    expect(
+      await this.cmtat.supportsInterface(IACCESSCONTROL_INTERFACEID)
+    ).to.equal(true)
+    expect(await this.cmtat.supportsInterface(IERC165_INTERFACEID)).to.equal(
+      true
+    )
     expect(await this.cmtat.supportsInterface(IERC721_INTERFACEID)).to.equal(
-         false)
-    expect(await this.cmtat.supportsInterface(IERC5679_INTERFACEID)).to.equal(true)
-    expect(await this.cmtat.supportsInterface(IERC1363_INTERFACEID)).to.equal(true)
-    expect(await this.cmtat.supportsInterface(IERC1404_INTERFACEID)).to.equal(true)
-    expect(await this.cmtat.supportsInterface(IERC1404EXTEND_INTERFACEID)).to.equal(true)
+      false
+    )
+    expect(await this.cmtat.supportsInterface(IERC5679_INTERFACEID)).to.equal(
+      true
+    )
+    expect(await this.cmtat.supportsInterface(IERC1363_INTERFACEID)).to.equal(
+      true
+    )
+    expect(await this.cmtat.supportsInterface(IERC1404_INTERFACEID)).to.equal(
+      true
+    )
+    expect(
+      await this.cmtat.supportsInterface(IERC1404EXTEND_INTERFACEID)
+    ).to.equal(true)
   })
   it('testCanSendTokenToReceiverContract', async function () {
     // Arrange

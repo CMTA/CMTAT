@@ -12,7 +12,9 @@ describe('Standard - MetaTxModule - _msgData (CMTATBaseERC1363)', function () {
     Object.assign(this, await loadFixture(fixture))
     this.forwarder = await ethers.deployContract('MinimalForwarderMock')
     await this.forwarder.initialize(ERC2771ForwarderDomain)
-    const factory = await ethers.getContractFactory('CMTATUpgradeableERC1363MsgDataMock')
+    const factory = await ethers.getContractFactory(
+      'CMTATUpgradeableERC1363MsgDataMock'
+    )
     this.cmtat = await upgrades.deployProxy(
       factory,
       [
@@ -38,13 +40,19 @@ describe('Standard - MetaTxModule - _msgData (CMTATBaseERC1363)', function () {
 
   it('returns correct msgData for trusted forwarder calldata shape', async function () {
     const data = this.cmtat.interface.encodeFunctionData('getMsgData')
-    const appendedData = ethers.concat([data, ethers.zeroPadValue(this.address1.address, 20)])
+    const appendedData = ethers.concat([
+      data,
+      ethers.zeroPadValue(this.address1.address, 20)
+    ])
     const returnData = await ethers.provider.call({
       to: this.cmtat.target,
       from: this.forwarder.target,
       data: appendedData
     })
-    const [decoded] = ethers.AbiCoder.defaultAbiCoder().decode(['bytes'], returnData)
+    const [decoded] = ethers.AbiCoder.defaultAbiCoder().decode(
+      ['bytes'],
+      returnData
+    )
     expect(decoded).to.equal(data)
   })
 })

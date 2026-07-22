@@ -386,9 +386,7 @@ function AllowlistModuleCommon () {
           .transfer(this.address2, AMOUNT_TO_TRANSFER)
       )
         .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotSend')
-        .withArgs(
-          this.address1.address
-        )
+        .withArgs(this.address1.address)
     })
 
     it('testCanTransferMatrixSenderListedReceiverListed', async function () {
@@ -401,7 +399,9 @@ function AllowlistModuleCommon () {
 
       expect(await this.cmtat.canSend(this.address1)).to.equal(true)
       expect(await this.cmtat.canReceive(this.address2)).to.equal(true)
-      expect(await this.cmtat.canTransfer(this.address1, this.address2, 1)).to.equal(true)
+      expect(
+        await this.cmtat.canTransfer(this.address1, this.address2, 1)
+      ).to.equal(true)
     })
 
     it('testCanTransferMatrixSenderListedReceiverNotListed', async function () {
@@ -414,7 +414,9 @@ function AllowlistModuleCommon () {
 
       expect(await this.cmtat.canSend(this.address1)).to.equal(true)
       expect(await this.cmtat.canReceive(this.address2)).to.equal(false)
-      expect(await this.cmtat.canTransfer(this.address1, this.address2, 1)).to.equal(false)
+      expect(
+        await this.cmtat.canTransfer(this.address1, this.address2, 1)
+      ).to.equal(false)
     })
 
     it('testCanTransferMatrixSenderNotListedReceiverListed', async function () {
@@ -427,7 +429,9 @@ function AllowlistModuleCommon () {
 
       expect(await this.cmtat.canSend(this.address1)).to.equal(false)
       expect(await this.cmtat.canReceive(this.address2)).to.equal(true)
-      expect(await this.cmtat.canTransfer(this.address1, this.address2, 1)).to.equal(false)
+      expect(
+        await this.cmtat.canTransfer(this.address1, this.address2, 1)
+      ).to.equal(false)
     })
 
     it('testCanTransferMatrixSenderNotListedReceiverNotListed', async function () {
@@ -440,7 +444,9 @@ function AllowlistModuleCommon () {
 
       expect(await this.cmtat.canSend(this.address1)).to.equal(false)
       expect(await this.cmtat.canReceive(this.address2)).to.equal(false)
-      expect(await this.cmtat.canTransfer(this.address1, this.address2, 1)).to.equal(false)
+      expect(
+        await this.cmtat.canTransfer(this.address1, this.address2, 1)
+      ).to.equal(false)
     })
 
     it('testZeroValueTransferRequiresSenderAndReceiverAllowlisted', async function () {
@@ -451,17 +457,20 @@ function AllowlistModuleCommon () {
         .connect(this.admin)
         .setAddressAllowlist(this.address2, false, reasonAllowlist)
 
-      expect(await this.cmtat.canTransfer(this.address1, this.address2, 0)).to.equal(false)
-      await expect(
-        this.cmtat.connect(this.address1).transfer(this.address2, 0)
-      ).to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotReceive')
+      expect(
+        await this.cmtat.canTransfer(this.address1, this.address2, 0)
+      ).to.equal(false)
+      await expect(this.cmtat.connect(this.address1).transfer(this.address2, 0))
+        .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotReceive')
         .withArgs(this.address2.address)
 
       await this.cmtat
         .connect(this.admin)
         .setAddressAllowlist(this.address2, true, reasonAllowlist)
 
-      expect(await this.cmtat.canTransfer(this.address1, this.address2, 0)).to.equal(true)
+      expect(
+        await this.cmtat.canTransfer(this.address1, this.address2, 0)
+      ).to.equal(true)
       await expect(
         this.cmtat.connect(this.address1).transfer(this.address2, 0)
       ).to.not.be.reverted
@@ -539,9 +548,7 @@ function AllowlistModuleCommon () {
           .batchMint(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS)
       )
         .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotReceive')
-        .withArgs(
-          this.address3
-        )
+        .withArgs(this.address3)
     })
 
     /* //////////////////////////////////////////////////////////////
@@ -555,7 +562,9 @@ function AllowlistModuleCommon () {
       await this.cmtat
         .connect(this.admin)
         .setAddressAllowlist(this.address1, true, reasonAllowlist)
-      await this.cmtat.connect(this.admin).mint(this.address1, AMOUNT_TO_FREEZE)
+      await this.cmtat
+        .connect(this.admin)
+        .mint(this.address1, AMOUNT_TO_FREEZE)
       this.logs = await this.cmtat
         .connect(this.admin)
         .freezePartialTokens(this.address1, AMOUNT_TO_FREEZE)
@@ -656,9 +665,7 @@ function AllowlistModuleCommon () {
           .batchBurn(TOKEN_HOLDER, TOKEN_BY_HOLDERS_TO_BURN)
       )
         .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotSend')
-        .withArgs(
-          this.address1.address
-        )
+        .withArgs(this.address1.address)
     })
 
     it('testCanBurnFromAllowlistedAddress', async function () {
@@ -666,7 +673,9 @@ function AllowlistModuleCommon () {
       await this.cmtat
         .connect(this.admin)
         .setAddressAllowlist(this.address1, true, reasonAllowlist)
-      await this.cmtat.connect(this.admin).mint(this.address1, AMOUNT_TO_TRANSFER)
+      await this.cmtat
+        .connect(this.admin)
+        .mint(this.address1, AMOUNT_TO_TRANSFER)
       expect(
         await this.cmtat.canTransfer(
           this.address1,
@@ -694,7 +703,9 @@ function AllowlistModuleCommon () {
       await this.cmtat
         .connect(this.admin)
         .setAddressAllowlist(this.address1, true, reasonAllowlist)
-      await this.cmtat.connect(this.admin).mint(this.address1, AMOUNT_TO_TRANSFER)
+      await this.cmtat
+        .connect(this.admin)
+        .mint(this.address1, AMOUNT_TO_TRANSFER)
       expect(
         await this.cmtat.canTransfer(
           this.address1,
@@ -809,9 +820,7 @@ function AllowlistModuleCommon () {
           .transferFrom(this.address3, this.address2, AMOUNT_TO_TRANSFER)
       )
         .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotReceive')
-        .withArgs(
-          this.address2.address
-        )
+        .withArgs(this.address2.address)
     })
 
     it('testCannotTransferTokenWhenSpenderIsNotAllowlistWithTransferFrom', async function () {
@@ -849,9 +858,7 @@ function AllowlistModuleCommon () {
           .transferFrom(this.address3, this.address2, AMOUNT_TO_TRANSFER)
       )
         .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotSend')
-        .withArgs(
-          this.address1.address
-        )
+        .withArgs(this.address1.address)
     })
 
     /* //////////////////////////////////////////////////////////////

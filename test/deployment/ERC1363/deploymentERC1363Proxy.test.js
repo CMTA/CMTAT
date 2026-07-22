@@ -9,9 +9,13 @@ const {
 const { upgrades } = require('hardhat')
 const {
   ZERO_ADDRESS,
-  IERC165_INTERFACEID, IERC721_INTERFACEID,IACCESSCONTROL_INTERFACEID,
-  IERC1363_INTERFACEID, IERC5679_INTERFACEID,
-  IERC1404_INTERFACEID, IERC1404EXTEND_INTERFACEID
+  IERC165_INTERFACEID,
+  IERC721_INTERFACEID,
+  IACCESSCONTROL_INTERFACEID,
+  IERC1363_INTERFACEID,
+  IERC5679_INTERFACEID,
+  IERC1404_INTERFACEID,
+  IERC1404EXTEND_INTERFACEID
 } = require('../../utils')
 
 // Core
@@ -48,14 +52,27 @@ describe('CMTAT - ERC1363 Proxy Deployment', function () {
   /* ============ ERC165 ============ */
   it('testSupportRightInterface', async function () {
     // Assert
-    expect(await this.cmtat.supportsInterface(IACCESSCONTROL_INTERFACEID)).to.equal(true)
-    expect(await this.cmtat.supportsInterface(IERC165_INTERFACEID)).to.equal(true)
+    expect(
+      await this.cmtat.supportsInterface(IACCESSCONTROL_INTERFACEID)
+    ).to.equal(true)
+    expect(await this.cmtat.supportsInterface(IERC165_INTERFACEID)).to.equal(
+      true
+    )
     expect(await this.cmtat.supportsInterface(IERC721_INTERFACEID)).to.equal(
-         false)
-    expect(await this.cmtat.supportsInterface(IERC5679_INTERFACEID)).to.equal(true)
-    expect(await this.cmtat.supportsInterface(IERC1363_INTERFACEID)).to.equal(true)
-    expect(await this.cmtat.supportsInterface(IERC1404_INTERFACEID)).to.equal(true)
-    expect(await this.cmtat.supportsInterface(IERC1404EXTEND_INTERFACEID)).to.equal(true)
+      false
+    )
+    expect(await this.cmtat.supportsInterface(IERC5679_INTERFACEID)).to.equal(
+      true
+    )
+    expect(await this.cmtat.supportsInterface(IERC1363_INTERFACEID)).to.equal(
+      true
+    )
+    expect(await this.cmtat.supportsInterface(IERC1404_INTERFACEID)).to.equal(
+      true
+    )
+    expect(
+      await this.cmtat.supportsInterface(IERC1404EXTEND_INTERFACEID)
+    ).to.equal(true)
     expect(await this.cmtat.supportsInterface('0xffffffff')).to.equal(false)
   })
   it('testCanSendTokenToReceiverContract', async function () {
@@ -104,7 +121,9 @@ describe('CMTAT - ERC1363 Proxy Deployment', function () {
 
   context('Initializer', function () {
     it('testCanInitializeERC1363ProxyManually', async function () {
-      const factory = await ethers.getContractFactory('CMTATUpgradeableERC1363')
+      const factory = await ethers.getContractFactory(
+        'CMTATUpgradeableERC1363'
+      )
       const cmtat = await upgrades.deployProxy(factory, [], {
         initializer: false,
         constructorArgs: [this._.address],
@@ -126,7 +145,9 @@ describe('CMTAT - ERC1363 Proxy Deployment', function () {
       const ruleEngineMock = await ethers.deployContract('RuleEngineMock', [
         this.admin.address
       ])
-      const factory = await ethers.getContractFactory('CMTATUpgradeableERC1363')
+      const factory = await ethers.getContractFactory(
+        'CMTATUpgradeableERC1363'
+      )
       const cmtat = await upgrades.deployProxy(factory, [], {
         initializer: false,
         constructorArgs: [this._.address],
@@ -145,7 +166,9 @@ describe('CMTAT - ERC1363 Proxy Deployment', function () {
     })
 
     it('testCannotInitializeERC1363ProxyTwice', async function () {
-      const factory = await ethers.getContractFactory('CMTATUpgradeableERC1363')
+      const factory = await ethers.getContractFactory(
+        'CMTATUpgradeableERC1363'
+      )
       const cmtat = await upgrades.deployProxy(factory, [], {
         initializer: false,
         constructorArgs: [this._.address],
@@ -170,5 +193,4 @@ describe('CMTAT - ERC1363 Proxy Deployment', function () {
       ).to.be.revertedWithCustomError(cmtat, 'InvalidInitialization')
     })
   })
-
 })

@@ -59,7 +59,7 @@ function UpgradeProxyCommon () {
     // The address of the implementation contract has changed
     expect(IMPLEMENTATION_CONTRACT_ADDRESS_V1).to.not.equal(
       IMPLEMENTATION_CONTRACT_ADDRESS_V2
-    );
+    )
 
     expect(await CMTAT_PROXY_V2.balanceOf(this.address1)).to.equal(20);
 

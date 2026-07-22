@@ -49,5 +49,4 @@ describe('CMTAT - ERC-7551 Proxy Deployment', function () {
   ERC20CrossChainModuleCommon()
   ERC7551ModuleCommon()
   CCIPModuleCommon()
-
 })

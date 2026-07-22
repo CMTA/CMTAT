@@ -248,20 +248,33 @@ function EnforcementModuleCommon () {
 
     it('testCannotFreezeZeroAddress', async function () {
       await expect(
-        this.cmtat.connect(this.admin).setAddressFrozen(ZERO_ADDRESS, true, reasonFreeze)
-      ).to.be.revertedWithCustomError(this.cmtat, 'CMTAT_Enforcement_ZeroAddressNotAllowed')
+        this.cmtat
+          .connect(this.admin)
+          .setAddressFrozen(ZERO_ADDRESS, true, reasonFreeze)
+      ).to.be.revertedWithCustomError(
+        this.cmtat,
+        'CMTAT_Enforcement_ZeroAddressNotAllowed'
+      )
     })
 
     it('testCannotFreezeZeroAddressWithoutReason', async function () {
       await expect(
         this.cmtat.connect(this.admin).setAddressFrozen(ZERO_ADDRESS, true)
-      ).to.be.revertedWithCustomError(this.cmtat, 'CMTAT_Enforcement_ZeroAddressNotAllowed')
+      ).to.be.revertedWithCustomError(
+        this.cmtat,
+        'CMTAT_Enforcement_ZeroAddressNotAllowed'
+      )
     })
 
     it('testCannotBatchFreezeZeroAddress', async function () {
       await expect(
-        this.cmtat.connect(this.admin).batchSetAddressFrozen([ZERO_ADDRESS], [true])
-      ).to.be.revertedWithCustomError(this.cmtat, 'CMTAT_Enforcement_ZeroAddressNotAllowed')
+        this.cmtat
+          .connect(this.admin)
+          .batchSetAddressFrozen([ZERO_ADDRESS], [true])
+      ).to.be.revertedWithCustomError(
+        this.cmtat,
+        'CMTAT_Enforcement_ZeroAddressNotAllowed'
+      )
     })
 
     /* //////////////////////////////////////////////////////////////
@@ -296,9 +309,7 @@ function EnforcementModuleCommon () {
             .transfer(this.address2, AMOUNT_TO_TRANSFER)
         )
           .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotSend')
-          .withArgs(
-            this.address1.address
-          )
+          .withArgs(this.address1.address)
       }
     })
 
@@ -337,9 +348,7 @@ function EnforcementModuleCommon () {
           .transferFrom(this.address3, this.address2, AMOUNT_TO_TRANSFER)
       )
         .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotReceive')
-        .withArgs(
-          this.address2.address
-        )
+        .withArgs(this.address2.address)
     })
 
     it('testCannotTransferTokenWhenSpenderIsFrozenWithTransferFrom', async function () {
@@ -390,9 +399,7 @@ function EnforcementModuleCommon () {
             .transferFrom(this.address3, this.address2, AMOUNT_TO_TRANSFER)
         )
           .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotSend')
-          .withArgs(
-            this.address1.address
-          )
+          .withArgs(this.address1.address)
       }
     })
 

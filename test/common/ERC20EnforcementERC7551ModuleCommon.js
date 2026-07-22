@@ -8,7 +8,9 @@ function ERC20EnforcementERC7551ModuleCommon () {
   context('ERC20 Enforcement ERC7551 Specific', function () {
     beforeEach(async function () {
       await this.cmtat.connect(this.admin).mint(this.address1, 50)
-      await this.cmtat.connect(this.admin).grantRole(await this.cmtat.ERC20ENFORCER_ROLE(), this.admin)
+      await this.cmtat
+        .connect(this.admin)
+        .grantRole(await this.cmtat.ERC20ENFORCER_ROLE(), this.admin)
     })
 
     it('testForcedTransferWithReasonEmitsReasonedEvent', async function () {
@@ -18,8 +20,17 @@ function ERC20EnforcementERC7551ModuleCommon () {
         .forcedTransfer(this.address1, this.address2, amount, REASON)
 
       await expect(logs)
-        .to.emit(this.cmtat, 'ForcedTransfer(address,address,address,uint256,bytes)')
-        .withArgs(this.admin, this.address1, this.address2, amount, REASON_EVENT)
+        .to.emit(
+          this.cmtat,
+          'ForcedTransfer(address,address,address,uint256,bytes)'
+        )
+        .withArgs(
+          this.admin,
+          this.address1,
+          this.address2,
+          amount,
+          REASON_EVENT
+        )
     })
 
     it('testFreezeWithReasonEmitsReasonedEvent', async function () {

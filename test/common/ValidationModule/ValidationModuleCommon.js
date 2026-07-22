@@ -389,24 +389,26 @@ function ValidationModuleCommon () {
       if (!this.erc1404) {
         // Act + Assert
         expect(
-          await this.cmtat.connect(this.admin).detectTransferRestriction(
-            this.address1,
-            this.address2,
-            11
-          )
+          await this.cmtat
+            .connect(this.admin)
+            .detectTransferRestriction(this.address1, this.address2, 11)
         ).to.equal(REJECTED_CODE_BASE_TRANSFER_OK)
         expect(
-          await this.cmtat.connect(this.admin).detectTransferRestrictionFrom(
-            this.admin,
-            this.address1,
-            this.address2,
-            11
-          )
+          await this.cmtat
+            .connect(this.admin)
+            .detectTransferRestrictionFrom(
+              this.admin,
+              this.address1,
+              this.address2,
+              11
+            )
         ).to.equal(REJECTED_CODE_BASE_TRANSFER_OK)
       }
 
       expect(
-        await this.cmtat.connect(this.admin).canTransfer(this.address1, this.address2, 11)
+        await this.cmtat
+          .connect(this.admin)
+          .canTransfer(this.address1, this.address2, 11)
       ).to.equal(true)
     })
 
@@ -584,7 +586,9 @@ function ValidationModuleCommon () {
     })
 
     it('testCanSendReturnsFalseForFrozenAddress', async function () {
-      await this.cmtat.connect(this.admin).setAddressFrozen(this.address1, true)
+      await this.cmtat
+        .connect(this.admin)
+        .setAddressFrozen(this.address1, true)
       expect(await this.cmtat.canSend(this.address1)).to.equal(false)
     })
 
@@ -593,7 +597,9 @@ function ValidationModuleCommon () {
     })
 
     it('testCanReceiveReturnsFalseForFrozenAddress', async function () {
-      await this.cmtat.connect(this.admin).setAddressFrozen(this.address2, true)
+      await this.cmtat
+        .connect(this.admin)
+        .setAddressFrozen(this.address2, true)
       expect(await this.cmtat.canReceive(this.address2)).to.equal(false)
     })
   })

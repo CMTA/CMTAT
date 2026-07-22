@@ -95,7 +95,11 @@ async function deployCMTATPermitStandalone (admin, deployerAddress) {
   return cmtat
 }
 
-async function deployCMTATSnapshotStandalone (forwarder, admin, deployerAddress) {
+async function deployCMTATSnapshotStandalone (
+  forwarder,
+  admin,
+  deployerAddress
+) {
   const cmtat = await ethers.deployContract('CMTATStandaloneSnapshot', [
     forwarder,
     admin,
@@ -170,7 +174,11 @@ async function deployCMTATStandaloneWithParameter (
   return cmtat
 }
 
-async function deployCMTATHolderListStandalone (forwarder, admin, deployerAddress) {
+async function deployCMTATHolderListStandalone (
+  forwarder,
+  admin,
+  deployerAddress
+) {
   const cmtat = await ethers.deployContract('CMTATStandaloneHolderList', [
     forwarder,
     admin,

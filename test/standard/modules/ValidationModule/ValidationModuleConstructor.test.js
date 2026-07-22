@@ -7,7 +7,6 @@ const {
   DEPLOYMENT_DECIMAL
 } = require('../../../deploymentUtils')
 
-
 describe('Standard - ValidationModule - Constructor', function () {
   beforeEach(async function () {
     this.ADDRESS1_INITIAL_BALANCE = 17n

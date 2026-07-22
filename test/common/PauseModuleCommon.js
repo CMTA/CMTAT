@@ -30,8 +30,7 @@ function PauseModuleCommon () {
           this.cmtat
             .connect(this.address1)
             .transfer(this.address2, AMOUNT_TO_TRANSFER)
-        )
-          .to.be.revertedWithCustomError(this.cmtat, 'EnforcedPause')
+        ).to.be.revertedWithCustomError(this.cmtat, 'EnforcedPause')
       }
     })
 
@@ -57,8 +56,7 @@ function PauseModuleCommon () {
           this.cmtat
             .connect(this.address1)
             .transfer(this.address2, AMOUNT_TO_TRANSFER)
-        )
-          .to.be.revertedWithCustomError(this.cmtat, 'EnforcedPause')
+        ).to.be.revertedWithCustomError(this.cmtat, 'EnforcedPause')
       }
     })
 
@@ -189,8 +187,7 @@ function PauseModuleCommon () {
           this.cmtat
             .connect(this.address1)
             .transfer(this.address2, AMOUNT_TO_TRANSFER)
-        )
-          .to.be.revertedWithCustomError(this.cmtat, 'EnforcedPause')
+        ).to.be.revertedWithCustomError(this.cmtat, 'EnforcedPause')
       }
     })
 
@@ -277,8 +274,7 @@ function PauseModuleCommon () {
           this.cmtat
             .connect(this.address3)
             .transferFrom(this.address1, this.address2, AMOUNT_TO_TRANSFER)
-        )
-          .to.be.revertedWithCustomError(this.cmtat, 'EnforcedPause')
+        ).to.be.revertedWithCustomError(this.cmtat, 'EnforcedPause')
       }
     })
   })
@@ -309,8 +305,7 @@ function PauseModuleCommon () {
           this.cmtat
             .connect(this.address1)
             .transfer(this.address2, AMOUNT_TO_TRANSFER)
-        )
-          .to.be.revertedWithCustomError(this.cmtat, 'EnforcedPause')
+        ).to.be.revertedWithCustomError(this.cmtat, 'EnforcedPause')
       }
 
       if (!this.generic) {
@@ -367,8 +362,7 @@ function PauseModuleCommon () {
           this.cmtat
             .connect(this.address3)
             .transferFrom(this.address1, this.address2, AMOUNT_TO_TRANSFER)
-        )
-          .to.be.revertedWithCustomError(this.cmtat, 'EnforcedPause')
+        ).to.be.revertedWithCustomError(this.cmtat, 'EnforcedPause')
       }
 
       // Unpause is reverted

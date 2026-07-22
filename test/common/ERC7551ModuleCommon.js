@@ -83,7 +83,6 @@ function ERC7551ModuleCommon () {
       // Assert
       expect(await this.cmtat.metaData()).to.equal('')
     })
-
   })
 }
 module.exports = ERC7551ModuleCommon

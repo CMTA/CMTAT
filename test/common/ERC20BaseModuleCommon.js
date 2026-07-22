@@ -49,7 +49,9 @@ function ERC20BaseModuleCommon () {
     })
 
     it('testCannotApproveIfOwnerIsFrozen', async function () {
-      await this.cmtat.connect(this.admin).setAddressFrozen(this.address1, true)
+      await this.cmtat
+        .connect(this.admin)
+        .setAddressFrozen(this.address1, true)
       await expect(
         this.cmtat.connect(this.address1).approve(this.address3, 20n)
       )
@@ -58,7 +60,9 @@ function ERC20BaseModuleCommon () {
     })
 
     it('testCannotApproveIfSpenderIsFrozen', async function () {
-      await this.cmtat.connect(this.admin).setAddressFrozen(this.address3, true)
+      await this.cmtat
+        .connect(this.admin)
+        .setAddressFrozen(this.address3, true)
       await expect(
         this.cmtat.connect(this.address1).approve(this.address3, 20n)
       )
@@ -181,7 +185,9 @@ function ERC20BaseModuleCommon () {
         .connect(this.address1)
         .approve(this.address3, 0)
 
-      expect(await this.cmtat.allowance(this.address1, this.address3)).to.equal(0)
+      expect(await this.cmtat.allowance(this.address1, this.address3)).to.equal(
+        0
+      )
       await expect(this.logs)
         .to.emit(this.cmtat, 'Approval')
         .withArgs(this.address1, this.address3, 0)
@@ -250,8 +256,12 @@ function ERC20BaseModuleCommon () {
         .connect(this.address1)
         .transfer(this.address2, 0)
 
-      expect(await this.cmtat.balanceOf(this.address1)).to.equal(beforeBalance1)
-      expect(await this.cmtat.balanceOf(this.address2)).to.equal(beforeBalance2)
+      expect(await this.cmtat.balanceOf(this.address1)).to.equal(
+        beforeBalance1
+      )
+      expect(await this.cmtat.balanceOf(this.address2)).to.equal(
+        beforeBalance2
+      )
       await expect(this.logs)
         .to.emit(this.cmtat, 'Transfer')
         .withArgs(this.address1, this.address2, 0)
@@ -393,9 +403,9 @@ function ERC20BaseModuleCommon () {
       )
       expect(await this.cmtat.totalSupply()).to.equal(TOKEN_INITIAL_SUPPLY)
       // the spender's allowance is consumed
-      expect(
-        await this.cmtat.allowance(this.address1, this.address3)
-      ).to.equal(0n)
+      expect(await this.cmtat.allowance(this.address1, this.address3)).to.equal(
+        0n
+      )
       // emits a Transfer event
       await expect(this.logs)
         .to.emit(this.cmtat, 'Transfer')
@@ -428,8 +438,12 @@ function ERC20BaseModuleCommon () {
         .connect(this.address3)
         .transferFrom(this.address1, this.address2, 0)
 
-      expect(await this.cmtat.balanceOf(this.address1)).to.equal(beforeBalance1)
-      expect(await this.cmtat.balanceOf(this.address2)).to.equal(beforeBalance2)
+      expect(await this.cmtat.balanceOf(this.address1)).to.equal(
+        beforeBalance1
+      )
+      expect(await this.cmtat.balanceOf(this.address2)).to.equal(
+        beforeBalance2
+      )
       await expect(this.logs)
         .to.emit(this.cmtat, 'Transfer')
         .withArgs(this.address1, this.address2, 0)
@@ -438,14 +452,19 @@ function ERC20BaseModuleCommon () {
     it('testCanTransferFromToSelf', async function () {
       await this.cmtat.connect(this.address1).approve(this.address3, 1)
       const beforeBalance = await this.cmtat.balanceOf(this.address1)
-      const beforeAllowance = await this.cmtat.allowance(this.address1, this.address3)
+      const beforeAllowance = await this.cmtat.allowance(
+        this.address1,
+        this.address3
+      )
 
       this.logs = await this.cmtat
         .connect(this.address3)
         .transferFrom(this.address1, this.address1, 1)
 
       expect(await this.cmtat.balanceOf(this.address1)).to.equal(beforeBalance)
-      expect(await this.cmtat.allowance(this.address1, this.address3)).to.equal(beforeAllowance - 1n)
+      expect(await this.cmtat.allowance(this.address1, this.address3)).to.equal(
+        beforeAllowance - 1n
+      )
       await expect(this.logs)
         .to.emit(this.cmtat, 'Transfer')
         .withArgs(this.address1, this.address1, 1)

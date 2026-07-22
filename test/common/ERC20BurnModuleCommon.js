@@ -1,8 +1,4 @@
-const {
-  BURNER_ROLE,
-  MINTER_ROLE,
-  ZERO_ADDRESS
-} = require('../utils')
+const { BURNER_ROLE, MINTER_ROLE, ZERO_ADDRESS } = require('../utils')
 const { expect } = require('chai')
 const REASON_STRING = 'BURN_TEST'
 const REASON_EVENT = ethers.toUtf8Bytes(REASON_STRING)
@@ -165,8 +161,7 @@ function ERC20BurnModuleCommon () {
       await this.cmtat.connect(this.admin).deactivateContract()
       await expect(
         this.cmtat.connect(this.admin).burn(this.address1, VALUE_TYPED)
-      )
-        .to.be.revertedWithCustomError(this.cmtat, 'EnforcedDeactivation')
+      ).to.be.revertedWithCustomError(this.cmtat, 'EnforcedDeactivation')
     })
 
     it('testCanBeBurnEvenIfContractIsPaused', async function () {
@@ -195,16 +190,24 @@ function ERC20BurnModuleCommon () {
         this.skip()
       }
 
-      this.ruleEngineMock = await ethers.deployContract('RuleEngineMock', [this.admin])
+      this.ruleEngineMock = await ethers.deployContract('RuleEngineMock', [
+        this.admin
+      ])
       await this.cmtat.connect(this.admin).setRuleEngine(this.ruleEngineMock)
-      await this.cmtat.connect(this.admin).grantRole(BURNER_ROLE, this.address2)
+      await this.cmtat
+        .connect(this.admin)
+        .grantRole(BURNER_ROLE, this.address2)
 
       await expect(
-        this.cmtat.connect(this.address2)['burn(address,uint256)'](this.address1, 10n)
-      ).to.be.revertedWithCustomError(
-        this.ruleEngineMock,
-        'RuleEngine_InvalidTransfer'
-      ).withArgs(this.address1, ZERO_ADDRESS, 10n)
+        this.cmtat
+          .connect(this.address2)
+          ['burn(address,uint256)'](this.address1, 10n)
+      )
+        .to.be.revertedWithCustomError(
+          this.ruleEngineMock,
+          'RuleEngine_InvalidTransfer'
+        )
+        .withArgs(this.address1, ZERO_ADDRESS, 10n)
     })
 
     it('testBurnWithRuleEngineAuthorizedSpenderCanBurn', async function () {
@@ -212,14 +215,20 @@ function ERC20BurnModuleCommon () {
         this.skip()
       }
 
-      this.ruleEngineMock = await ethers.deployContract('RuleEngineMock', [this.admin])
+      this.ruleEngineMock = await ethers.deployContract('RuleEngineMock', [
+        this.admin
+      ])
       await this.cmtat.connect(this.admin).setRuleEngine(this.ruleEngineMock)
       await this.cmtat.connect(this.admin).grantRole(BURNER_ROLE, this.admin)
 
       await expect(
-        this.cmtat.connect(this.admin)['burn(address,uint256)'](this.address1, 10n)
+        this.cmtat
+          .connect(this.admin)
+          ['burn(address,uint256)'](this.address1, 10n)
       ).to.not.be.reverted
-      expect(await this.cmtat.balanceOf(this.address1)).to.equal(INITIAL_SUPPLY - 10n)
+      expect(await this.cmtat.balanceOf(this.address1)).to.equal(
+        INITIAL_SUPPLY - 10n
+      )
     })
   })
 
@@ -364,8 +373,7 @@ function ERC20BurnModuleCommon () {
             AMOUNT_TO_MINT,
             REASON
           )
-      )
-        .to.be.revertedWithCustomError(this.cmtat, 'EnforcedDeactivation')
+      ).to.be.revertedWithCustomError(this.cmtat, 'EnforcedDeactivation')
     })
 
     it('testCanBeBurnAndMintEvenIFContractIsPaused', async function () {
@@ -628,8 +636,7 @@ function ERC20BurnModuleCommon () {
         this.cmtat
           .connect(this.admin)
           .batchBurn(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS, REASON)
-      )
-        .to.be.revertedWithCustomError(this.cmtat, 'EnforcedDeactivation')
+      ).to.be.revertedWithCustomError(this.cmtat, 'EnforcedDeactivation')
     })
 
     it('testCannotBeBatchBurnIfToIsFrozen', async function () {
@@ -663,7 +670,9 @@ function ERC20BurnModuleCommon () {
       ]
 
       await expect(
-        this.cmtat.connect(this.admin).batchBurn(TOKEN_HOLDER, FULL_BALANCES, REASON_EMPTY)
+        this.cmtat
+          .connect(this.admin)
+          .batchBurn(TOKEN_HOLDER, FULL_BALANCES, REASON_EMPTY)
       ).to.not.be.reverted
 
       expect(await this.cmtat.balanceOf(this.admin)).to.equal(0n)
@@ -679,16 +688,24 @@ function ERC20BurnModuleCommon () {
 
       const TOKEN_HOLDER = [this.admin, this.address1, this.address2]
 
-      this.ruleEngineMock = await ethers.deployContract('RuleEngineMock', [this.admin])
+      this.ruleEngineMock = await ethers.deployContract('RuleEngineMock', [
+        this.admin
+      ])
       await this.cmtat.connect(this.admin).setRuleEngine(this.ruleEngineMock)
-      await this.cmtat.connect(this.admin).grantRole(BURNER_ROLE, this.address3)
+      await this.cmtat
+        .connect(this.admin)
+        .grantRole(BURNER_ROLE, this.address3)
 
       await expect(
-        this.cmtat.connect(this.address3).batchBurn(TOKEN_HOLDER, TOKEN_BY_HOLDERS_TO_BURN, REASON_EMPTY)
-      ).to.be.revertedWithCustomError(
-        this.ruleEngineMock,
-        'RuleEngine_InvalidTransfer'
-      ).withArgs(this.admin, ZERO_ADDRESS, TOKEN_BY_HOLDERS_TO_BURN[0])
+        this.cmtat
+          .connect(this.address3)
+          .batchBurn(TOKEN_HOLDER, TOKEN_BY_HOLDERS_TO_BURN, REASON_EMPTY)
+      )
+        .to.be.revertedWithCustomError(
+          this.ruleEngineMock,
+          'RuleEngine_InvalidTransfer'
+        )
+        .withArgs(this.admin, ZERO_ADDRESS, TOKEN_BY_HOLDERS_TO_BURN[0])
     })
 
     it('testBatchBurnWithRuleEngineAuthorizedSpenderCanBurn', async function () {
@@ -701,12 +718,16 @@ function ERC20BurnModuleCommon () {
       // validates authorized spender propagation, not mock rule limits.
       const TOKEN_BY_HOLDERS_TO_BURN_SAFE = [5n, 6n, 7n]
 
-      this.ruleEngineMock = await ethers.deployContract('RuleEngineMock', [this.admin])
+      this.ruleEngineMock = await ethers.deployContract('RuleEngineMock', [
+        this.admin
+      ])
       await this.cmtat.connect(this.admin).setRuleEngine(this.ruleEngineMock)
       await this.cmtat.connect(this.admin).grantRole(BURNER_ROLE, this.admin)
 
       await expect(
-        this.cmtat.connect(this.admin).batchBurn(TOKEN_HOLDER, TOKEN_BY_HOLDERS_TO_BURN_SAFE, REASON_EMPTY)
+        this.cmtat
+          .connect(this.admin)
+          .batchBurn(TOKEN_HOLDER, TOKEN_BY_HOLDERS_TO_BURN_SAFE, REASON_EMPTY)
       ).to.not.be.reverted
     })
   })

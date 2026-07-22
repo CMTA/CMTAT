@@ -7,7 +7,9 @@ const { ZERO_ADDRESS } = require('../../../utils')
 describe('Standard - DocumentEngineModule', function () {
   beforeEach(async function () {
     Object.assign(this, await loadFixture(fixture))
-    const factory = await ethers.getContractFactory('CMTATDocumentEngineModuleMock')
+    const factory = await ethers.getContractFactory(
+      'CMTATDocumentEngineModuleMock'
+    )
     this.cmtat = await upgrades.deployProxy(
       factory,
       [this.admin.address, ['CMTA Token', 'CMTAT', 0], ZERO_ADDRESS],

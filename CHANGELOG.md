@@ -47,11 +47,7 @@ Custom changelog tag: `Dependencies`, `Documentation`, `Testing`
 
 ## 3.3.0 - rc2
 
-Commit: `dda46305d2bd24b771a648ccdd8fd9361d855f63`
-
 > **Note:** This version has not been audited.
-
-> **Note:** entries below were previously (incorrectly) listed under `3.3.0 - rc1`; they landed on the branch *after* the `rc1` tag (`580d4776…`) and are now attributed to `rc2`.
 
 ### Smart contract
 
@@ -96,9 +92,9 @@ Commit: `dda46305d2bd24b771a648ccdd8fd9361d855f63`
 
 #### Security
 
-- ⚠️ **Upgrade migration required for existing proxies (`name`/`symbol` storage move).** Because `name`/`symbol` were moved to a new ERC-7201 slot (`CMTAT.storage.TokenAttributeModule`), upgrading an **already-deployed** CMTAT proxy from a pre-3.3 layout to this version leaves that new slot empty — `name()` / `symbol()` return empty strings until re-set. Any such upgrade MUST run a one-time `reinitializer` that copies the previous `name` / `symbol` into the new slot. Fresh deployments are unaffected (`decimals` stays in place either way).
-- ⚠️ **`HolderListModule` — the holder set grows without bound and `holders()` is unbounded.** On a token whose transfers are not gated by an allowlist or a rule engine, anyone can inflate `holderCount()` by dusting fresh addresses; the spammer pays the two storage writes, but `holders()` eventually runs out of gas and becomes unusable. It is an off-chain (`eth_call`) getter: on-chain callers, and any caller that cannot bound the holder count, MUST use `holdersInRange(fromIndex, toIndex)` with a bounded window. Deployments expecting a large or adversarial holder set should pair the module with an allowlist.
-- ℹ️ **`HolderListModule` — `holdersInRange` windows are not a consistent snapshot.** The underlying `EnumerableSet` is unordered and a removal moves the last holder into the freed slot, so windows read across several blocks may miss a holder or return one twice. Read the whole list at a fixed block if a consistent view is required.
+- **Upgrade migration required for existing proxies (`name`/`symbol` storage move).** Because `name`/`symbol` were moved to a new ERC-7201 slot (`CMTAT.storage.TokenAttributeModule`), upgrading an **already-deployed** CMTAT proxy from a pre-3.3 layout to this version leaves that new slot empty — `name()` / `symbol()` return empty strings until re-set. Any such upgrade MUST run a one-time `reinitializer` that copies the previous `name` / `symbol` into the new slot. Fresh deployments are unaffected (`decimals` stays in place either way).
+-  **`HolderListModule` — the holder set grows without bound and `holders()` is unbounded.** On a token whose transfers are not gated by an allowlist or a rule engine, anyone can inflate `holderCount()` by dusting fresh addresses; the spammer pays the two storage writes, but `holders()` eventually runs out of gas and becomes unusable. It is an off-chain (`eth_call`) getter: on-chain callers, and any caller that cannot bound the holder count, MUST use `holdersInRange(fromIndex, toIndex)` with a bounded window. Deployments expecting a large or adversarial holder set should pair the module with an allowlist.
+- ℹ**`HolderListModule` — `holdersInRange` windows are not a consistent snapshot.** The underlying `EnumerableSet` is unordered and a removal moves the last holder into the freed slot, so windows read across several blocks may miss a holder or return one twice. Read the whole list at a fixed block if a consistent view is required.
 
 ### Testing
 

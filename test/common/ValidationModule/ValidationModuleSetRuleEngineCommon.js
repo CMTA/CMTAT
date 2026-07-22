@@ -1,7 +1,13 @@
 const { expect } = require('chai')
-const { DEFAULT_ADMIN_ROLE, ZERO_ADDRESS,
-  IERC165_INTERFACEID, IERC721_INTERFACEID,
-  IRULEENGINE_INTERFACEID, IERC1404_INTERFACEID, IERC1404EXTEND_INTERFACEID  } = require('../../utils')
+const {
+  DEFAULT_ADMIN_ROLE,
+  ZERO_ADDRESS,
+  IERC165_INTERFACEID,
+  IERC721_INTERFACEID,
+  IRULEENGINE_INTERFACEID,
+  IERC1404_INTERFACEID,
+  IERC1404EXTEND_INTERFACEID
+} = require('../../utils')
 
 function ValidationModuleSetRuleEngineCommon () {
   context('RuleEngineSetTest', function () {
@@ -11,15 +17,25 @@ function ValidationModuleSetRuleEngineCommon () {
       ])
     })
     it('testCanReturnTheRightInterface', async function () {
-      let ruleEngineInterfaceId = await this.ruleEngineMock.returnInterfaceId()
+      const ruleEngineInterfaceId = await this.ruleEngineMock.returnInterfaceId()
 
       // Assert
-      expect(ruleEngineInterfaceId).to.equal(IRULEENGINE_INTERFACEID);
-      expect(await this.ruleEngineMock.supportsInterface(IRULEENGINE_INTERFACEID)).to.equal(true)
-      expect(await this.ruleEngineMock.supportsInterface(IERC1404_INTERFACEID)).to.equal(true)
-      expect(await this.ruleEngineMock.supportsInterface(IERC1404EXTEND_INTERFACEID)).to.equal(true)
-      expect(await this.ruleEngineMock.supportsInterface(IERC165_INTERFACEID)).to.equal(true)
-      expect(await this.ruleEngineMock.supportsInterface(IERC721_INTERFACEID)).to.equal(false)
+      expect(ruleEngineInterfaceId).to.equal(IRULEENGINE_INTERFACEID)
+      expect(
+        await this.ruleEngineMock.supportsInterface(IRULEENGINE_INTERFACEID)
+      ).to.equal(true)
+      expect(
+        await this.ruleEngineMock.supportsInterface(IERC1404_INTERFACEID)
+      ).to.equal(true)
+      expect(
+        await this.ruleEngineMock.supportsInterface(IERC1404EXTEND_INTERFACEID)
+      ).to.equal(true)
+      expect(
+        await this.ruleEngineMock.supportsInterface(IERC165_INTERFACEID)
+      ).to.equal(true)
+      expect(
+        await this.ruleEngineMock.supportsInterface(IERC721_INTERFACEID)
+      ).to.equal(false)
       // Act
     })
 
@@ -35,7 +51,9 @@ function ValidationModuleSetRuleEngineCommon () {
       await expect(this.logs)
         .to.emit(this.cmtat, 'RuleEngine')
         .withArgs(this.ruleEngineMock.target)
-      expect(await this.cmtat.ruleEngine()).to.equal(this.ruleEngineMock.target)
+      expect(await this.cmtat.ruleEngine()).to.equal(
+        this.ruleEngineMock.target
+      )
     })
 
     it('testCanNotBeSetByAdminWithTheSameValue', async function () {
@@ -53,7 +71,9 @@ function ValidationModuleSetRuleEngineCommon () {
     it('testCannotBeSetByNonAdmin', async function () {
       // Act
       await expect(
-        this.cmtat.connect(this.address1).setRuleEngine(this.ruleEngineMock.target)
+        this.cmtat
+          .connect(this.address1)
+          .setRuleEngine(this.ruleEngineMock.target)
       )
         .to.be.revertedWithCustomError(
           this.cmtat,

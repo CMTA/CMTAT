@@ -67,9 +67,7 @@ function PermitModuleCommon () {
           permit.s
         )
 
-      expect(await this.cmtat.allowance(owner, spender)).to.equal(
-        PERMIT_VALUE
-      )
+      expect(await this.cmtat.allowance(owner, spender)).to.equal(PERMIT_VALUE)
       expect(await this.cmtat.nonces(owner)).to.equal(nonceBefore + 1n)
     })
 
