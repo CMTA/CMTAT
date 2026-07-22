@@ -45,22 +45,18 @@ Custom changelog tag: `Dependencies`, `Documentation`, `Testing`
 
 
 
-## 3.3.0 - rc1
+## 3.3.0 - rc2
+
+Commit: `dda46305d2bd24b771a648ccdd8fd9361d855f63`
 
 > **Note:** This version has not been audited.
+
+> **Note:** entries below were previously (incorrectly) listed under `3.3.0 - rc1`; they landed on the branch *after* the `rc1` tag (`580d4776…`) and are now attributed to `rc2`.
 
 ### Smart contract
 
 #### Added
 
-- New base contract **`CMTATBaseDocument`**:
-  - Introduced as `contracts/modules/1_CMTATBaseDocument.sol`.
-  - Isolates document-management authorization (`_authorizeDocumentManagement`) from `CMTATBaseAccessControl`.
-  - Composes `DocumentERC1643Module` on top of the rule-engine base path.
-- **Stateful RuleEngine transfer hook support (testing/mocks):**
-  - Added `IRuleTransferHook` (`contracts/mocks/RuleEngine/interfaces/IRuleTransferHook.sol`) to allow rules to update rule-local state on transfer callbacks.
-  - Added `RuleTokenHolderTracker` (`contracts/mocks/RuleEngine/RuleTokenHolderTracker.sol`) to track holder balances/list in rule storage.
-  - `RuleEngineMock` now wires the holder-tracker rule and executes transfer hooks in `transferred(...)` paths.
 - New core module **`TokenAttributeModule`** (`contracts/modules/wrapper/core/TokenAttributeModule.sol`):
   - Manages the mutable token attributes `name`/`symbol` (with `setName`/`setSymbol` and the `Name`/`Symbol` events) independently of the ERC-20 interface, in its own ERC-7201 storage (`CMTAT.storage.TokenAttributeModule`).
   - Decoupled from ERC-20 so the metadata management can be reused by non ERC-20 token bases (e.g. a confidential ERC-7984 variant): a token standard only overrides its `name()`/`symbol()` to delegate here.
@@ -80,14 +76,77 @@ Custom changelog tag: `Dependencies`, `Documentation`, `Testing`
 - **`ERC20BaseModule` slimmed to ERC-20 concerns only** — `name`/`symbol`/`setName`/`setSymbol`/`Name`/`Symbol` events moved to the new `TokenAttributeModule`; `ERC20BaseModule` now stores only `decimals`. `__ERC20BaseModule_init_unchained` takes only `decimals`; name/symbol are initialized via `__TokenAttributeModule_init_unchained`.
 - **`CMTATBaseCore` and `CMTATBaseCommon` now inherit `TokenAttributeModule`** and override `name()`/`symbol()` to delegate to it (`CMTATBaseAccessControl` gets it transitively via `CMTATBaseCommon`). Higher-level bases are unaffected. No external ABI/selector change (`setName`/`setSymbol` keep the `IERC3643ERC20Base` selectors).
 - **Storage layout:** `name`/`symbol` moved from the `CMTAT.storage.ERC20BaseModule` slot to the new `CMTAT.storage.TokenAttributeModule` slot; `decimals` is preserved in place. Transparent for fresh deployments — see **Security** for the upgrade‑migration requirement on existing proxies.
+- **`IERC1643.getDocument` returns flat values (ERC-1643 ABI conformance, breaking API change):**
+  - `getDocument(bytes32)` now returns `(string uri, bytes32 documentHash, uint256 lastModified)` instead of a `Document` struct, so the returndata decodes exactly per the ERC-1643 signature rather than prepending a struct offset word.
+  - The `Document` struct is retained for internal storage and for `ICMTAT.CMTATTerms`; only the `getDocument` return is affected. Applies to `DocumentERC1643Module`, `DocumentEngineModule`, and `DocumentEngineMock`.
+- **Contract deactivation interface renamed to the official ERC-8343 (`IERC8343`).** The former `ICMTATDeactivate` — `deactivateContract()` / `deactivated()` / `Deactivated` / `AlreadyDeactivated` — is now standardized as [ERC-8343](https://eips.ethereum.org/EIPS/eip-8343) and moved to its own file `contracts/interfaces/tokenization/draft-IERC8343.sol`. The ERC-165 interface id is unchanged (`0xe9cd80b0`, now referenced via `type(IERC8343).interfaceId` instead of the magic literal), so there is no ABI/selector/discovery change — only the Solidity type name, file location, and NatSpec.
+
+#### Fixed
+
+- **`forcedTransfer` no longer releases frozen tokens on a self-transfer.** `forcedTransfer(from, from, value)` (`from == to`) previously reduced the sender's frozen amount without moving any tokens, effectively unfreezing them; it now reverts.
+- **ERC-1404 predictor/enforcement agreement on zero-value transfers.** `CMTATBaseERC1404._detectTransferRestriction` now delegates its frozen-balance branch to `_checkActiveBalance`, the same predicate the transfer path enforces. A zero-value transfer whose sender is fully frozen is no longer reported as restricted while the transfer itself succeeds; `detectTransferRestriction`, `canTransfer`, and the actual transfer now agree.
+- **ERC-1643 typed errors and input validation.** `DocumentERC1643Module.removeDocument` reverts with `ERC1643MissingDocument()` instead of a string, and `setDocument` now rejects `name == bytes32(0)` with `ERC1643InvalidName()`.
+- **ERC-1643 ERC-165 detection.** `CMTATBaseAccessControl.supportsInterface` now returns `true` for `type(IERC1643).interfaceId` (`0xecfecec8`), so the ERC-1643 document interface is discoverable. This is honest only because `getDocument` now matches the ERC-1643 ABI (see the flat-return change under **Changed**).
+- **ERC-1404 ERC-165 detection.** `supportsInterface` now returns `true` for the mandatory `type(IERC1404).interfaceId` (`0xab84a5c8`) and the spender-aware extension `IERC1404Extend` (`0x78a8de7d`, taken from the hand-computed three-selector XOR in `ERC1404ExtendInterfaceId` — not `type(IERC1404Extend).interfaceId`, which would cover only the added method).
+- **Delegating document token emits ERC-1643 events on its own address (dual emission).** `DocumentEngineModule.setDocument`/`removeDocument` now re-emit the standard `DocumentUpdated`/`DocumentRemoved` events on the token's own address after forwarding to the engine, so subscribers watching the token — as the per-contract ERC-1643 model assumes — observe updates (previously only the engine emitted, on its own address). `removeDocument` reads the metadata before forwarding to include the removed values; both mutators now revert with `CMTAT_DocumentEngineModule_NoDocumentEngine` when no engine is set.
+- **Mocks (test-only) aligned to the standards they claim:**
+  - `RuleEngineMock.supportsInterface` advertises the mandatory ERC-1404 id `0xab84a5c8` (in addition to the extension id `0x78a8de7d`).
+  - `DocumentEngineMock` now reuses the production `DocumentERC1643Module`, fixing a swap-pop enumeration bug (removing a moved document reverted) and emitting the standard flat `DocumentUpdated`/`DocumentRemoved` events.
+  - `CMTATDocumentEngineModuleMock.supportsInterface` advertises `type(IERC1643).interfaceId` (`0xecfecec8`).
+
+#### Security
+
+- ⚠️ **Upgrade migration required for existing proxies (`name`/`symbol` storage move).** Because `name`/`symbol` were moved to a new ERC-7201 slot (`CMTAT.storage.TokenAttributeModule`), upgrading an **already-deployed** CMTAT proxy from a pre-3.3 layout to this version leaves that new slot empty — `name()` / `symbol()` return empty strings until re-set. Any such upgrade MUST run a one-time `reinitializer` that copies the previous `name` / `symbol` into the new slot. Fresh deployments are unaffected (`decimals` stays in place either way).
+- ⚠️ **`HolderListModule` — the holder set grows without bound and `holders()` is unbounded.** On a token whose transfers are not gated by an allowlist or a rule engine, anyone can inflate `holderCount()` by dusting fresh addresses; the spammer pays the two storage writes, but `holders()` eventually runs out of gas and becomes unusable. It is an off-chain (`eth_call`) getter: on-chain callers, and any caller that cannot bound the holder count, MUST use `holdersInRange(fromIndex, toIndex)` with a bounded window. Deployments expecting a large or adversarial holder set should pair the module with an allowlist.
+- ℹ️ **`HolderListModule` — `holdersInRange` windows are not a consistent snapshot.** The underlying `EnumerableSet` is unordered and a removal moves the last holder into the freed slot, so windows read across several blocks may miss a holder or return one twice. Read the whole list at a fixed block if a consistent view is required.
+
+### Testing
+
+#### Changed
+
+- Large test-quality sweep: registered silently-dropped suites, un-swallowed snapshot/terms assertions, replaced no-op tests with real assertions, strengthened weak assertions (cross-chain `Transfer` args, snapshot engine state, batch balances), fixed implicit globals / fragile fixtures / missing awaits, converted fake-skips to `this.skip()`, removed ESLint-flagged dead code, and fixed mislabeled/colliding `describe` titles.
+- `allowUnlimitedContractSize` enabled on the Hardhat network so oversized **test mocks** deploy without hitting EIP-170 (production deployment variants remain within the limit).
+
+#### Added
+
+- Regression tests for the rc2 fixes: ERC-1404/ERC-1643 ERC-165 advertisement, delegating-token dual emission and no-engine guard, `DocumentEngineMock` enumeration/standard-event behavior, and `forcedTransfer` `from == to`.
+
+### Documentation
+
+#### Added
+
+- ERC specification rework and conformance analyses under `doc/ERCSpecification/` — ERC-1404 (base + spender-aware extension), ERC-1643 document management, and ERC-8343 contract deactivation — plus updated READMEs and ERC docs.
+
+#### Dependencies
+
+- Ran `npm audit fix`.
+
+## 3.3.0 - rc1
+
+Commit: `580d4776e4cbb857b2da7d83fd79144ae7e47557`
+
+> **Note:** This version has not been audited.
+
+### Smart contract
+
+#### Added
+
+- New base contract **`CMTATBaseDocument`**:
+  - Introduced as `contracts/modules/1_CMTATBaseDocument.sol`.
+  - Isolates document-management authorization (`_authorizeDocumentManagement`) from `CMTATBaseAccessControl`.
+  - Composes `DocumentERC1643Module` on top of the rule-engine base path.
+- **Stateful RuleEngine transfer hook support (testing/mocks):**
+  - Added `IRuleTransferHook` (`contracts/mocks/RuleEngine/interfaces/IRuleTransferHook.sol`) to allow rules to update rule-local state on transfer callbacks.
+  - Added `RuleTokenHolderTracker` (`contracts/mocks/RuleEngine/RuleTokenHolderTracker.sol`) to track holder balances/list in rule storage.
+  - `RuleEngineMock` now wires the holder-tracker rule and executes transfer hooks in `transferred(...)` paths.
+
+#### Changed
 
 - **ERC-1643 document identifier format aligned to `bytes32`** (breaking API change for document functions):
   - Previous CMTAT variant (e.g. `v3.2.0`) used `string` for document names in `IERC1643` (`getDocument(string)`, `getAllDocuments() -> string[]`).
   - Current implementation uses `bytes32` document names (`getDocument(bytes32)`, `getAllDocuments() -> bytes32[]`) and exposes `setDocument(bytes32,string,bytes32)` / `removeDocument(bytes32)` with associated events.
   - **CMTAT terms remain on the modified CMTAT structure**: `IERC1643CMTAT.DocumentInfo` still uses `string name` for tokenization terms metadata (`setTerms` path).
-- **`IERC1643.getDocument` returns flat values (ERC-1643 ABI conformance, breaking API change):**
-  - `getDocument(bytes32)` now returns `(string uri, bytes32 documentHash, uint256 lastModified)` instead of a `Document` struct, so the returndata decodes exactly per the ERC-1643 signature rather than prepending a struct offset word.
-  - The `Document` struct is retained for internal storage and for `ICMTAT.CMTATTerms`; only the `getDocument` return is affected. Applies to `DocumentERC1643Module`, `DocumentEngineModule`, and `DocumentEngineMock`.
+  - Note: in `rc1`, `getDocument(bytes32)` still returns a `Document` struct; the flat-value return is an `rc2` change.
 - **Base hierarchy refactor (strict dependency-order levels):**
   - `CMTATBaseDocument` at **level 1** (`contracts/modules/1_CMTATBaseDocument.sol`).
   - `CMTATBaseAccessControl` at **level 2** (`contracts/modules/2_CMTATBaseAccessControl.sol`) and now inherits `CMTATBaseDocument`.
@@ -114,15 +173,6 @@ Custom changelog tag: `Dependencies`, `Documentation`, `Testing`
 - Restored full compilation after engine/mock alignment:
   - `CMTATEngineInitializerMock` no longer calls unavailable document-engine initializer on snapshot path.
   - `DocumentEngineMock` now implements IERC1643-compatible `setDocument(bytes32,string,bytes32)`.
-- **ERC-1404 predictor/enforcement agreement on zero-value transfers.** `CMTATBaseERC1404._detectTransferRestriction` now delegates its frozen-balance branch to `_checkActiveBalance`, the same predicate the transfer path enforces. A zero-value transfer whose sender is fully frozen is no longer reported as restricted (code `6`) while the transfer itself succeeds; `detectTransferRestriction`, `canTransfer`, and the actual transfer now agree.
-- **ERC-1643 typed errors and input validation.** `DocumentERC1643Module.removeDocument` reverts with `ERC1643MissingDocument()` instead of a string, and `setDocument` now rejects `name == bytes32(0)` with `ERC1643InvalidName()`.
-- **ERC-1643 ERC-165 detection.** `CMTATBaseAccessControl.supportsInterface` now returns `true` for `type(IERC1643).interfaceId` (`0xecfecec8`), so the ERC-1643 document interface is discoverable. This is honest only because `getDocument` now matches the ERC-1643 ABI (see the flat-return change under **Changed**).
-
-#### Security
-
-- ⚠️ **Upgrade migration required for existing proxies (`name`/`symbol` storage move).** Because `name`/`symbol` were moved to a new ERC-7201 slot (`CMTAT.storage.TokenAttributeModule`), upgrading an **already-deployed** CMTAT proxy from a pre-3.3 layout to this version leaves that new slot empty — `name()` / `symbol()` return empty strings until re-set. Any such upgrade MUST run a one-time `reinitializer` that copies the previous `name` / `symbol` into the new slot. Fresh deployments are unaffected (`decimals` stays in place either way).
-- ⚠️ **`HolderListModule` — the holder set grows without bound and `holders()` is unbounded.** On a token whose transfers are not gated by an allowlist or a rule engine, anyone can inflate `holderCount()` by dusting fresh addresses; the spammer pays the two storage writes, but `holders()` eventually runs out of gas and becomes unusable. It is an off-chain (`eth_call`) getter: on-chain callers, and any caller that cannot bound the holder count, MUST use `holdersInRange(fromIndex, toIndex)` with a bounded window. Deployments expecting a large or adversarial holder set should pair the module with an allowlist.
-- ℹ️ **`HolderListModule` — `holdersInRange` windows are not a consistent snapshot.** The underlying `EnumerableSet` is unordered and a removal moves the last holder into the freed slot, so windows read across several blocks may miss a holder or return one twice. Read the whole list at a fixed block if a consistent view is required.
 
 ### Documentation
 
@@ -177,7 +227,7 @@ Custom changelog tag: `Dependencies`, `Documentation`, `Testing`
 
 #### Changed
 
-- Updated test count references in `README.md` and `doc/README.md`: 3,078 → 5,630 automated tests.
+- Updated automated test count and code-coverage references in `README.md` and `doc/README.md`.
 - `README.md`: added hyperlinks to all ERC standard references in the features table; expanded the Supported Financial Instruments table (added Snapshot, DebtEngine, ERC-1363, and UUPS variants; clarified Allowlist entry); added Contract Sizes section with deployed/initcode sizes for all deployment variants; corrected UUPS standalone note.
 - `SECURITY.md`: expanded responsible disclosure policy.
 - `doc/README.md` and `doc/SUMMARY.md`: updated module-level documentation and surya reports to reflect current hierarchy and coverage results.
@@ -187,7 +237,7 @@ Custom changelog tag: `Dependencies`, `Documentation`, `Testing`
 
 > **Note:** This version has not been audited.
 
-Commit: `49544f4de1993008acfc9e848d0bf03bd31d8579`
+Commit: this version has been released with the wrong commit
 
 ### Smart contract
 
