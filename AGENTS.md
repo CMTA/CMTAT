@@ -98,3 +98,7 @@ DeactivateReportGas=true npx hardhat test
 - `contracts/interfaces/` - All supported interfaces and standards
 - `hardhat.config.js` - Build configuration (EVM & Solidity version)
 - `package.json` - Dependencies and scripts
+
+## Note
+
+After each implemented feature or fix, provide a one-line GitHub commit message for all changes since the last commit.

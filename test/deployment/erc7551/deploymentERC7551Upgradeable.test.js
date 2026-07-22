@@ -1,4 +1,3 @@
-const { expect } = require('chai')
 const {
   deployCMTATERC7551Proxy,
   fixture,
@@ -21,7 +20,6 @@ const ERC20CrossChainModuleCommon = require('../../common/ERC20CrossChainModuleC
 const ERC7551ModuleCommon = require('../../common/ERC7551ModuleCommon')
 const CCIPModuleCommon = require('../../common/CCIPModuleCommon')
 
-const VALUE = 20n
 describe('CMTAT - ERC-7551 Proxy Deployment', function () {
   beforeEach(async function () {
     Object.assign(this, await loadFixture(fixture))

@@ -107,14 +107,30 @@ CMTAT implements a wide set of Ethereum standards:
 CMTAT provides cross-chain compatibility through `ERC20CrossChain` and related deployment options:
 
 - **ERC-7802**: native `crosschainMint` / `crosschainBurn` support for bridge-style interoperability.
-- **Chainlink CCIP (CCT)**: compatible burn/mint token flow, including `getCCIPAdmin()` support through the `CCIPModule`.
+- **Chainlink CCIP (CCT)**: compatible burn/mint token flow, including `getCCIPAdmin()` support through the `CCIPModule`. Scripts and examples are available in the project [CMTAT-CCIP](https://github.com/CMTA/CMTAT-CCIP)
 - **LayerZero**: supported through external OFT adapters (ERC-3643 and ERC-7802 variants) in [CMTAT-LayerZero](https://github.com/CMTA/CMTAT-LayerZero).
 
 For full architecture, permissions, and operational notes, see:
 - [Cross-chain bridge integration](./doc/technical/cross-chain-bridge-integration.md)
 - [Main documentation](./doc/README.md)
 
-## Other Blockchain Implementations
+## Other CMTA projects
+
+### Deployment version
+
+This section regroups projects which implements new CMTAT deployment version for EVM/Ethereum with additionnal features
+
+- [SnapshotEngine](https://github.com/CMTA/SnapshotEngine)
+
+The SnapshotEngine is a smart contract system designed to perform ERC-20 on-chain snapshots, making it easier to distribute dividends or other token-based rewards directly on-chain The Snapshone engine can be external or integrated directly in the main token contract.
+
+- [CMTAT-FIX](https://github.com/CMTA/CMTAT-FIX) ([Nethermind](https://www.nethermind.io))
+
+Integration of FIX descriptor support for CMTAT.
+
+This project provides a modular engine system that enables CMTAT tokens to store, manage, and verify FIX (Financial Information eXchange) protocol descriptors on-chain.
+
+### Blockchain Implementations
 
 CMTAT is blockchain-agnostic and also has implementations/adaptations beyond this Solidity EVM repository:
 
@@ -125,7 +141,33 @@ CMTAT is blockchain-agnostic and also has implementations/adaptations beyond thi
 - **Aztec (privacy-focused variant)**: [private-CMTAT-aztec](https://github.com/CMTA/private-CMTAT-aztec)
 - **Zama Confidential variant**: [CMTAT-Confidential](https://github.com/CMTA/CMTAT-Confidential)
   -  A confidential security token implementation combining CMTAT compliance features with the Zama Confidential Blockchain Protocol for private balances.
+- [CMTAT-Canton](https://github.com/CMTA/CMTAT-Canton): CMTAT version for Canton
 
+### Utility contract
+
+- [RulEngine](https://github.com/CMTA/RuleEnginehttps://github.com/CMTA/RuleEngine: ) 
+
+The RuleEngine is an external contract used to apply transfer restrictions to another contract, such as CMTAT and ERC-3643 tokens. Acting as a controller, it can call different contract rules and apply these rules on each transfer.
+
+- [Rules](https://github.com/CMTA/Rules)
+
+**Rules** is a collection of on-chain compliance and transfer-restriction rules designed for use with the [CMTA RuleEngine](https://github.com/CMTA/RuleEngine) and the [CMTAT token standard](https://github.com/CMTA/CMTAT).
+
+- [SnapshotEngine](https://github.com/CMTA/SnapshotEngine)
+
+The SnapshotEngine is a smart contract system designed to perform ERC-20 on-chain snapshots, making it easier to distribute dividends or other token-based rewards directly on-chain
+
+- [IncomeVault](https://github.com/CMTA/IncomeVault)
+
+The `IncomeVault` is a prototype to perform coupon-payment dividend with a CMTAT and the snapshotEngine
+
+- [CMTAT-Factory](https://github.com/CMTA/CMTAT-Factory)
+
+Factory to deploy CMTAT with Transparent, UUPS and Beacon proxy  using **deterministic addresses (via CREATE2**
+
+- [Delivery vs. payment protocol](https://github.com/CMTA/DVP)
+
+The DvP (Delivery versus Payment) smart contract (DVP.sol) interacts with an Asset Token smart contract (Delivery) and a *Payment Order Token* smart contract (Payment).
 
 ## Security
 

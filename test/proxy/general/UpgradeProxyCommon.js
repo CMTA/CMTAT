@@ -1,5 +1,5 @@
 const { expect } = require('chai')
-const { ethers, upgrades } = require('hardhat')
+const { upgrades } = require('hardhat')
 function UpgradeProxyCommon () {
   /*
    * Functions used: balanceOf, totalSupply, mint
@@ -60,8 +60,6 @@ function UpgradeProxyCommon () {
     expect(IMPLEMENTATION_CONTRACT_ADDRESS_V1).to.not.equal(
       IMPLEMENTATION_CONTRACT_ADDRESS_V2
     );
-
-    ({ logs: this.logs1 } = await CMTAT_PROXY_V2.balanceOf(this.address1))
 
     expect(await CMTAT_PROXY_V2.balanceOf(this.address1)).to.equal(20);
 

@@ -12,7 +12,14 @@ if (reportGas) {
 module.exports = {
   networks: {
     hardhat: {
-      blockGasLimit: 30000000
+      blockGasLimit: 30000000,
+      // Test-only: relaxes the runtime EIP-170 (24 KB) deploy check so oversized
+      // test *mocks* (e.g. CMTATUpgradeableERC1363MsgDataMock, which extends the
+      // full ERC1363 token and adds a getMsgData() helper) can be deployed.
+      // Production contracts are still guarded: contractSizer.strict below throws
+      // at compile time for any non-Mock contract over the limit, and real
+      // networks enforce EIP-170 regardless of this flag.
+      allowUnlimitedContractSize: true
     }
   },
   solidity: {

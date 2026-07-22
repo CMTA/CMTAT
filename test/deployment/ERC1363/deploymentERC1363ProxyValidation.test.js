@@ -1,4 +1,3 @@
-const { expect } = require('chai')
 const ValidationModuleProxyCommon = require('../../common/ValidationModule/proxy/ValidationModuleProxyCommon')
 
 describe('CMTAT ERC1363 - Proxy - ValidationModule', function () {

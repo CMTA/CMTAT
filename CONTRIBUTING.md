@@ -22,6 +22,8 @@ This would make it easier to keep your changes separate from the upstream CMTAT 
 
 It also simplifies upgrading to newer versions of CMTAT, since updating a submodule is typically cleaner and more straightforward than maintaining a fork.
 
+If you want to create a version for another blockchain, you can find more details here: [CMTAT-equivalency-assessment](https://github.com/CMTA/CMTAT-equivalency-assessment)
+
 ## Opening an issue
 
 You can [open an issue] to suggest a feature, a difficulty you have or report a minor bug. For serious bugs in an audited version please do not open an issue, instead refer to our [security policy] for appropriate steps. See [SECURITY.md](./SECURITY.MD).

@@ -9,7 +9,6 @@ const {
   fixture,
   loadFixture
 } = require('../../../deploymentUtils')
-const { ZERO_ADDRESS } = require('../../../utils')
 function ValidationModuleProxyCommon () {
   context('Proxy - ValidationModule', function () {
     beforeEach(async function () {

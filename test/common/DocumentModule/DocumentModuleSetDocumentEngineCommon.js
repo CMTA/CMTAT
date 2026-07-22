@@ -1,5 +1,5 @@
 const { expect } = require('chai')
-const { DOCUMENT_ENGINE_ROLE, ZERO_ADDRESS } = require('../../utils.js')
+const { DOCUMENT_ENGINE_ROLE, ZERO_ADDRESS, IERC1643_INTERFACEID, IERC165_INTERFACEID } = require('../../utils.js')
 const { ethers, upgrades } = require('hardhat')
 
 function DocumentModuleSetDocumentEngineCommon () {
@@ -145,6 +145,47 @@ function DocumentModuleSetDocumentEngineCommon () {
       const documentNames = await this.cmtat.getAllDocuments()
       // Assert
       expect(documentNames.length).to.equal(0)
+    })
+
+    it('testAdvertisesERC1643Interface', async function () {
+      // The engine variant must advertise ERC-1643 (0xecfecec8), matching the
+      // in-contract variant, per the ERC-1643 ERC-165 SHOULD.
+      expect(await this.cmtat.supportsInterface(IERC1643_INTERFACEID)).to.equal(true)
+      expect(await this.cmtat.supportsInterface(IERC165_INTERFACEID)).to.equal(true)
+    })
+
+    it('testTokenReEmitsStandardDocumentEvents', async function () {
+      await this.cmtat
+        .connect(this.admin)
+        .setDocumentEngine(this.documentEngineMock.target)
+      const name = ethers.encodeBytes32String('doc1')
+      const uri = 'ipfs://doc'
+      const documentHash = ethers.encodeBytes32String('hash')
+
+      // ERC-1643 is a per-contract interface: a subscriber watching the token address
+      // must see the events. Since the token delegates to the engine, it re-emits the
+      // standard events on its own address (dual emission).
+      await expect(
+        this.cmtat.connect(this.admin).setDocument(name, uri, documentHash)
+      )
+        .to.emit(this.cmtat, 'DocumentUpdated')
+        .withArgs(name, uri, documentHash)
+
+      await expect(this.cmtat.connect(this.admin).removeDocument(name))
+        .to.emit(this.cmtat, 'DocumentRemoved')
+        .withArgs(name, uri, documentHash)
+    })
+
+    it('testCannotSetDocumentWithoutEngine', async function () {
+      const name = ethers.encodeBytes32String('doc1')
+      await expect(
+        this.cmtat
+          .connect(this.admin)
+          .setDocument(name, 'ipfs://doc', ethers.encodeBytes32String('hash'))
+      ).to.be.revertedWithCustomError(
+        this.cmtat,
+        'CMTAT_DocumentEngineModule_NoDocumentEngine'
+      )
     })
   })
 }

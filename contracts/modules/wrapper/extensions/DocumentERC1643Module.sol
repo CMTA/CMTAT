@@ -25,8 +25,9 @@ abstract contract DocumentERC1643Module is Initializable, IERC1643 {
         _;
     }
 
-    function getDocument(bytes32 name) public view virtual override returns (Document memory document) {
-        return _getDocumentERC1643ModuleStorage()._documents[name];
+    function getDocument(bytes32 name) public view virtual override returns (string memory uri, bytes32 documentHash, uint256 lastModified) {
+        Document storage document = _getDocumentERC1643ModuleStorage()._documents[name];
+        return (document.uri, document.documentHash, document.lastModified);
     }
 
     function getAllDocuments() public view virtual override returns (bytes32[] memory documentNames_) {
@@ -34,6 +35,7 @@ abstract contract DocumentERC1643Module is Initializable, IERC1643 {
     }
 
     function setDocument(bytes32 name, string calldata uri, bytes32 documentHash) public virtual override onlyDocumentManager {
+        require(name != bytes32(0), ERC1643InvalidName());
         DocumentERC1643ModuleStorage storage $ = _getDocumentERC1643ModuleStorage();
         Document storage document = $._documents[name];
         document.uri = uri;
@@ -51,7 +53,7 @@ abstract contract DocumentERC1643Module is Initializable, IERC1643 {
     function removeDocument(bytes32 name) public virtual override onlyDocumentManager {
         DocumentERC1643ModuleStorage storage $ = _getDocumentERC1643ModuleStorage();
         uint256 key = $._documentKey[name];
-        require(key != 0, "CMTAT: document does not exist");
+        require(key != 0, ERC1643MissingDocument());
 
         Document memory document = $._documents[name];
         uint256 index = key - 1;

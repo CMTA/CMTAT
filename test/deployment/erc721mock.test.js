@@ -61,9 +61,13 @@ describe('ERC721MockUpgradeable', function () {
 
   it('testFailedTransferIfNotOwned', async function () {
     await this.cmtat.mint(this.address1, 1)
-    this.cmtat
-      .connect(this.address2)
-      .transferFrom(this.address1, this.address2, 1)
+    await expect(
+      this.cmtat
+        .connect(this.address2)
+        .transferFrom(this.address1, this.address2, 1)
+    )
+      .to.be.revertedWithCustomError(this.cmtat, 'ERC721InsufficientApproval')
+      .withArgs(this.address2.address, 1)
   })
 
   it('testApprovedAndTransfer', async function () {

@@ -12,7 +12,7 @@ const {
   fixture,
   loadFixture
 } = require('../../../deploymentUtils')
-describe('Snapshot Deployment - Standalone', function () {
+describe('Standard - SnapshotModule', function () {
   beforeEach(async function () {
     Object.assign(this, await loadFixture(fixture))
     this.cmtat = await deployCMTATSnapshotStandalone(

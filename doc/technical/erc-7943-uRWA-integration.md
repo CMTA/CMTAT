@@ -87,25 +87,6 @@ transfer(to, 100)
 └─ Transfer executes
 ```
 
-## Operator-as-Spender Semantics (RuleEngine)
-
-In CMTAT RuleEngine-integrated deployments, the effective operator is propagated as `spender` in spender-aware compliance hooks.
-
-- `transferFrom`: spender is the delegated caller.
-- `burnFrom` / `crosschainBurn`: spender is the operator (`_msgSender()`), with `to == address(0)`.
-- `mint` / `crosschainMint`: spender is the operator (`_msgSender()`), with `from == address(0)`.
-- `minterTransfer` (ERC-3643 `batchTransfer` path): spender is the operator (`_msgSender()`), with `from != address(0)` and `to != address(0)`.
-
-RuleEngine implementations should explicitly support these mint/burn operator cases where `operator == spender`.
-
-For `minterTransfer`, spender restrictions apply in the same way as standard operator transfer checks. RuleEngine logic must not classify this path as mint based on `from == address(0)`, because `minterTransfer` is a transfer path.
-
-`burnFrom` remains an access-controlled operation (role-gated) and is not modeled as a classic `transferFrom` compliance case. At hook level, `burn` and `burnFrom` share burn semantics (`to == address(0)`) and cannot be distinguished solely from `(spender, from, to, value)`. If policy needs to differentiate `burnFrom`, it should target the operator addresses that hold the role allowing `burnFrom`.
-
-If a RuleEngine policy is meant to apply only to traditional `transferFrom` spender restrictions, it should explicitly exclude these operator mint/burn paths:
-- apply spender-only rule only when `from != address(0)` (exclude mint),
-- and `to != address(0)` (exclude burn).
-
 ## Error Semantics
 
 | Error | When emitted |
@@ -136,6 +117,8 @@ The following function is not part of ERC-7943. It is included by CMTAT through 
 | Function | Standard | Purpose | Module |
 |---|---|---|---|
 | `canTransferFrom(spender, from, to, value)` | ERC-7551 | Check if a delegated transfer is allowed | `ValidationModuleCore` |
+
+For how `spender` is populated across all operation types (mint, burn, `transferFrom`, `minterTransfer`) when a RuleEngine is configured, see [ruleengine-integration.md — Spender / Operator Semantics](./ruleengine-integration.md#spender--operator-semantics).
 
 ## ERC-165
 

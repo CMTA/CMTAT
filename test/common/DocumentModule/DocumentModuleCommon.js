@@ -21,10 +21,13 @@ function DocumentModuleCommon () {
       }
     })
     it('testCanReturnTheRightAddressIfSet', async function () {
-      if (this.cmtat.interface.hasFunction('documentEngine()') && this.definedAtDeployment) {
-        const documentEngine = await this.cmtat.documentEngine()
-        expect(this.documentEngineMock.target).to.equal(documentEngine)
+      // Only meaningful when the contract exposes documentEngine() and it is
+      // wired at deployment
+      if (!(this.cmtat.interface.hasFunction('documentEngine()') && this.definedAtDeployment)) {
+        this.skip()
       }
+      const documentEngine = await this.cmtat.documentEngine()
+      expect(this.documentEngineMock.target).to.equal(documentEngine)
     })
     it('testCanSetAndGetADocument', async function () {
       const name = ethers.encodeBytes32String('doc1')

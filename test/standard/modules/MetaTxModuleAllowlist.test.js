@@ -5,7 +5,7 @@ const {
   loadFixture
 } = require('../../deploymentUtils.js')
 const { ERC2771ForwarderDomain } = require('../../utils.js')
-describe('Standard - MetaTxModule', function () {
+describe('Standard - MetaTxModule Allowlist', function () {
   beforeEach(async function () {
     Object.assign(this, await loadFixture(fixture))
     this.forwarder = await ethers.deployContract('MinimalForwarderMock')

@@ -4,7 +4,7 @@ const {
   fixture,
   loadFixture
 } = require('../../deploymentUtils')
-describe('Standard - ERC20CrossChain', function () {
+describe('Proxy - ERC20CrossChain', function () {
   beforeEach(async function () {
     Object.assign(this, await loadFixture(fixture))
     this.cmtat = await deployCMTATProxy(

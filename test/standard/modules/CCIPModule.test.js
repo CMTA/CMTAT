@@ -1,7 +1,6 @@
 const CCIPModuleCommon = require('../../common/CCIPModuleCommon')
 const {
   deployCMTATStandalone,
-  DEPLOYMENT_FLAG,
   fixture,
   loadFixture
 } = require('../../deploymentUtils')

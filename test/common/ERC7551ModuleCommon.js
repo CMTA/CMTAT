@@ -1,5 +1,5 @@
 const { expect } = require('chai')
-const { DEFAULT_ADMIN_ROLE, EXTRA_INFORMATION_ROLE } = require('../utils')
+const { EXTRA_INFORMATION_ROLE } = require('../utils')
 const { TERMS } = require('../deploymentUtils')
 
 function ERC7551ModuleCommon () {
@@ -44,7 +44,7 @@ function ERC7551ModuleCommon () {
     })
     it('testCannotNonAdminUpdateTerms', async function () {
       // Arrange - Assert
-      checkTerms(TERMS)
+      await checkTerms(this, TERMS)
       // Act
       await expect(
         this.cmtat

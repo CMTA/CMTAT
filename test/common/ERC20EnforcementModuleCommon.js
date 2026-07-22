@@ -2,20 +2,13 @@ const {
   ERC20ENFORCER_ROLE,
   DEFAULT_ADMIN_ROLE,
   ZERO_ADDRESS,
+  REJECTED_CODE_BASE_TRANSFER_OK,
   REJECTED_CODE_BASE_TRANSFER_REJECTED_FROM_INSUFFICIENT_ACTIVE_BALANCE
 } = require('../utils')
 const { expect } = require('chai')
 
-const REASON_FREEZE_STRING = 'testFreeze'
-const REASON_FREEZE_EVENT = ethers.toUtf8Bytes(REASON_FREEZE_STRING)
-const reasonFreeze = ethers.Typed.bytes(REASON_FREEZE_EVENT)
-const REASON_FREEZE_EMPTY = ethers.Typed.bytes(ethers.toUtf8Bytes(''))
 
 const REASON_STRING = 'testUnfreeze'
-const REASON_UNFREEZE_EVENT = ethers.toUtf8Bytes(REASON_STRING)
-const reasonUnfreeze = ethers.Typed.bytes(REASON_UNFREEZE_EVENT)
-const REASON_EMPTY = ethers.Typed.bytes(ethers.toUtf8Bytes(''))
-const REASON_EMPTY_EVENT = ethers.toUtf8Bytes('')
 
 const REASON_EVENT = ethers.toUtf8Bytes(REASON_STRING)
 const REASON = ethers.Typed.bytes(REASON_EVENT)
@@ -24,15 +17,6 @@ const FREEZE_AMOUNT = 20
 const UNFREEZE_AMOUNT = 10
 const INITIAL_BALANCE = 50
 
-
-function hasFunction (contract, signature) {
-  try {
-    contract.interface.getFunction(signature)
-    return true
-  } catch {
-    return false
-  }
-}
 
 function supportsReasonedEnforcement (ctx) {
   return !!ctx.erc7551
@@ -310,6 +294,21 @@ function ERC20EnforcementModuleCommon () {
         this.cmtat,
         'CMTAT_ERC20EnforcementModule_ValueExceedsAvailableBalance'
       )
+    })
+
+    it('testCannotForceTransferToTheSameAddress', async function () {
+      // Arrange - freeze the whole balance of address1
+      await freezePartialTokensCompat(this, this.admin, this.address1, 50, REASON)
+      // Act
+      await expect(
+        forcedTransferCompat(this, this.admin, this.address1, this.address1, 50, REASON)
+      ).to.be.revertedWithCustomError(
+        this.cmtat,
+        'CMTAT_ERC20EnforcementModule_SelfTransferNotAllowed'
+      )
+      // Assert - the frozen tokens have not been released
+      expect(await this.cmtat.getFrozenTokens(this.address1)).to.equal('50')
+      expect(await this.cmtat.balanceOf(this.address1)).to.equal('50')
     })
 
     it('testCannotNonAdminTransferFunds', async function () {
@@ -1157,6 +1156,22 @@ function ERC20EnforcementModuleCommon () {
         await this.cmtat.canTransfer(this.address1, this.address2, 0)
       ).to.equal(true)
 
+      // detectTransferRestriction must agree with the enforcement path: a zero-value
+      // transfer succeeds, so the predictor must report it as unrestricted, not code 6
+      if (!this.erc1404) {
+        expect(
+          await this.cmtat.detectTransferRestriction(this.address1, this.address2, 0)
+        ).to.equal(REJECTED_CODE_BASE_TRANSFER_OK)
+        expect(
+          await this.cmtat.detectTransferRestrictionFrom(
+            this.admin,
+            this.address1,
+            this.address2,
+            0
+          )
+        ).to.equal(REJECTED_CODE_BASE_TRANSFER_OK)
+      }
+
       await expect(
         this.cmtat.connect(this.address1).transfer(this.address2, 0)
       ).to.not.be.reverted
@@ -1342,83 +1357,6 @@ function ERC20EnforcementModuleCommon () {
       ).to.be.revertedWithCustomError(
         this.cmtat,
         'ERC7943InsufficientUnfrozenBalance').withArgs(
-          this.address1, AMOUNT_TO_TRANSFER, INITIAL_BALANCE - FREEZE_AMOUNT
-      )
-    })
-
-    it('testCannotTransferFromTokenIfActiveBalanceIsNotEnough', async function () {
-      const AMOUNT_TO_TRANSFER = INITIAL_BALANCE - FREEZE_AMOUNT + 1
-      // Arrange
-      // Define allowance
-      await this.cmtat
-        .connect(this.address1)
-        .approve(this.address3, AMOUNT_TO_TRANSFER)
-      // Act
-      await this.cmtat
-        .connect(this.admin)
-        .freezePartialTokens(this.address1, FREEZE_AMOUNT)
-
-      // Assert
-      expect(
-        await this.cmtat.canTransfer(
-          this.address1,
-          this.address2,
-          AMOUNT_TO_TRANSFER
-        )
-      ).to.equal(false)
-
-      expect(
-        await this.cmtat.canTransferFrom(
-          this.address3,
-          this.address1,
-          this.address2,
-          AMOUNT_TO_TRANSFER
-        )
-      ).to.equal(false)
-
-      if (!this.erc1404) {
-        expect(
-          await this.cmtat.detectTransferRestriction(
-            this.address1,
-            this.address2,
-            AMOUNT_TO_TRANSFER
-          )
-        ).to.equal(
-          REJECTED_CODE_BASE_TRANSFER_REJECTED_FROM_INSUFFICIENT_ACTIVE_BALANCE
-        )
-        expect(
-          await this.cmtat.detectTransferRestrictionFrom(
-            this.address3,
-            this.address1,
-            this.address2,
-            AMOUNT_TO_TRANSFER
-          )
-        ).to.equal(
-          REJECTED_CODE_BASE_TRANSFER_REJECTED_FROM_INSUFFICIENT_ACTIVE_BALANCE
-        )
-        expect(
-          await this.cmtat.messageForTransferRestriction(
-            REJECTED_CODE_BASE_TRANSFER_REJECTED_FROM_INSUFFICIENT_ACTIVE_BALANCE
-          )
-        ).to.equal('AddrFrom:insufficientActiveBalance')
-        expect(
-          await this.cmtat.detectTransferRestrictionFrom(
-            this.address3,
-            this.address1,
-            this.address2,
-            AMOUNT_TO_TRANSFER
-          )
-        ).to.equal(
-          REJECTED_CODE_BASE_TRANSFER_REJECTED_FROM_INSUFFICIENT_ACTIVE_BALANCE
-        )
-      }
-
-      await expect(
-        this.cmtat
-          .connect(this.address3)
-          .transferFrom(this.address1, this.address2, AMOUNT_TO_TRANSFER)
-      ).to.be.revertedWithCustomError(
-        this.cmtat, 'ERC7943InsufficientUnfrozenBalance').withArgs(
           this.address1, AMOUNT_TO_TRANSFER, INITIAL_BALANCE - FREEZE_AMOUNT
       )
     })
@@ -1631,84 +1569,6 @@ function ERC20EnforcementModuleCommon () {
             REJECTED_CODE_BASE_TRANSFER_REJECTED_FROM_INSUFFICIENT_ACTIVE_BALANCE
           )
         ).to.equal('AddrFrom:insufficientActiveBalance')
-      }
-
-      await expect(
-        this.cmtat
-          .connect(this.address3)
-          .transferFrom(this.address1, this.address2, AMOUNT_TO_TRANSFER)
-      ).to.be.revertedWithCustomError(
-        this.cmtat,
-        'ERC7943InsufficientUnfrozenBalance').withArgs(
-          this.address1, AMOUNT_TO_TRANSFER, INITIAL_BALANCE - FREEZE_AMOUNT
-      )
-    })
-
-    it('testCannotTransferFromTokenIfActiveBalanceIsNotEnough', async function () {
-      const AMOUNT_TO_TRANSFER = INITIAL_BALANCE - FREEZE_AMOUNT + 1
-      // Arrange
-      // Define allowance
-      await this.cmtat
-        .connect(this.address1)
-        .approve(this.address3, AMOUNT_TO_TRANSFER)
-      // Act
-      await this.cmtat
-        .connect(this.admin)
-        .setFrozenTokens(this.address1, FREEZE_AMOUNT)
-
-      // Assert
-      expect(
-        await this.cmtat.canTransfer(
-          this.address1,
-          this.address2,
-          AMOUNT_TO_TRANSFER
-        )
-      ).to.equal(false)
-
-      expect(
-        await this.cmtat.canTransferFrom(
-          this.address3,
-          this.address1,
-          this.address2,
-          AMOUNT_TO_TRANSFER
-        )
-      ).to.equal(false)
-
-      if (!this.erc1404) {
-        expect(
-          await this.cmtat.detectTransferRestriction(
-            this.address1,
-            this.address2,
-            AMOUNT_TO_TRANSFER
-          )
-        ).to.equal(
-          REJECTED_CODE_BASE_TRANSFER_REJECTED_FROM_INSUFFICIENT_ACTIVE_BALANCE
-        )
-        expect(
-          await this.cmtat.detectTransferRestrictionFrom(
-            this.address3,
-            this.address1,
-            this.address2,
-            AMOUNT_TO_TRANSFER
-          )
-        ).to.equal(
-          REJECTED_CODE_BASE_TRANSFER_REJECTED_FROM_INSUFFICIENT_ACTIVE_BALANCE
-        )
-        expect(
-          await this.cmtat.messageForTransferRestriction(
-            REJECTED_CODE_BASE_TRANSFER_REJECTED_FROM_INSUFFICIENT_ACTIVE_BALANCE
-          )
-        ).to.equal('AddrFrom:insufficientActiveBalance')
-        expect(
-          await this.cmtat.detectTransferRestrictionFrom(
-            this.address3,
-            this.address1,
-            this.address2,
-            AMOUNT_TO_TRANSFER
-          )
-        ).to.equal(
-          REJECTED_CODE_BASE_TRANSFER_REJECTED_FROM_INSUFFICIENT_ACTIVE_BALANCE
-        )
       }
 
       await expect(

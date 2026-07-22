@@ -61,13 +61,33 @@ Custom changelog tag: `Dependencies`, `Documentation`, `Testing`
   - Added `IRuleTransferHook` (`contracts/mocks/RuleEngine/interfaces/IRuleTransferHook.sol`) to allow rules to update rule-local state on transfer callbacks.
   - Added `RuleTokenHolderTracker` (`contracts/mocks/RuleEngine/RuleTokenHolderTracker.sol`) to track holder balances/list in rule storage.
   - `RuleEngineMock` now wires the holder-tracker rule and executes transfer hooks in `transferred(...)` paths.
+- New core module **`TokenAttributeModule`** (`contracts/modules/wrapper/core/TokenAttributeModule.sol`):
+  - Manages the mutable token attributes `name`/`symbol` (with `setName`/`setSymbol` and the `Name`/`Symbol` events) independently of the ERC-20 interface, in its own ERC-7201 storage (`CMTAT.storage.TokenAttributeModule`).
+  - Decoupled from ERC-20 so the metadata management can be reused by non ERC-20 token bases (e.g. a confidential ERC-7984 variant): a token standard only overrides its `name()`/`symbol()` to delegate here.
+  - Authorization via the `_authorizeTokenAttributeManagement()` hook (enforces `DEFAULT_ADMIN_ROLE`).
+- New option module **`HolderListModule`** (`contracts/modules/wrapper/options/HolderListModule.sol`):
+  - Maintains on-chain the set of addresses holding a non-zero balance, in its own ERC-7201 storage (`CMTAT.storage.HolderListModule`), backed by an OpenZeppelin `EnumerableSet.AddressSet`.
+  - Reads: `holderCount()`, `isHolder(address)`, `holderByIndex(uint256)`, the unbounded listing `holders()` and the windowed `holdersInRange(uint256 fromIndex, uint256 toIndex)`, all following the naming of the fungible holder-enumeration specification. The window is half-open `[fromIndex, toIndex)`; `holders()[i] == holderByIndex(i)` within a single block, and `holders()` equals `holdersInRange(0, holderCount())`.
+  - `holderByIndex` reverts with `CMTAT_HolderListModule_IndexOutOfBounds` when `index >= holderCount()`. `holdersInRange` reverts with `CMTAT_HolderListModule_InvalidRange` when `fromIndex > toIndex` (checked first) and with `CMTAT_HolderListModule_IndexOutOfBounds` when `toIndex > holderCount()`; `fromIndex == toIndex` returns an empty window so a paging loop terminates without a special case.
+  - Emits `HolderAdded(address)` / `HolderRemoved(address)` on the zero ↔ non-zero balance transitions.
+  - The set is kept in sync in `_update`, so mint, burn, transfer, transferFrom, forced transfer and cross-chain mint/burn are all covered. `address(0)` is never a holder and a zero-value transfer never creates one.
+  - Reads are unrestricted (no role): the holder set is derivable from the transfer log anyway.
+- New base contract **`CMTATBaseHolderList`** (`contracts/modules/8_CMTATBaseHolderList.sol`): the CMTAT standard module set plus `HolderListModule`. Declares `type(IHolderListModule).interfaceId` in `supportsInterface`.
+- New deployment variants **`CMTATStandaloneHolderList`** and **`CMTATUpgradeableHolderList`** (`contracts/deployment/holderList/`), with the same constructor and `initialize` signatures as the standard variants.
 
 #### Changed
+
+- **`ERC20BaseModule` slimmed to ERC-20 concerns only** — `name`/`symbol`/`setName`/`setSymbol`/`Name`/`Symbol` events moved to the new `TokenAttributeModule`; `ERC20BaseModule` now stores only `decimals`. `__ERC20BaseModule_init_unchained` takes only `decimals`; name/symbol are initialized via `__TokenAttributeModule_init_unchained`.
+- **`CMTATBaseCore` and `CMTATBaseCommon` now inherit `TokenAttributeModule`** and override `name()`/`symbol()` to delegate to it (`CMTATBaseAccessControl` gets it transitively via `CMTATBaseCommon`). Higher-level bases are unaffected. No external ABI/selector change (`setName`/`setSymbol` keep the `IERC3643ERC20Base` selectors).
+- **Storage layout:** `name`/`symbol` moved from the `CMTAT.storage.ERC20BaseModule` slot to the new `CMTAT.storage.TokenAttributeModule` slot; `decimals` is preserved in place. Transparent for fresh deployments — see **Security** for the upgrade‑migration requirement on existing proxies.
 
 - **ERC-1643 document identifier format aligned to `bytes32`** (breaking API change for document functions):
   - Previous CMTAT variant (e.g. `v3.2.0`) used `string` for document names in `IERC1643` (`getDocument(string)`, `getAllDocuments() -> string[]`).
   - Current implementation uses `bytes32` document names (`getDocument(bytes32)`, `getAllDocuments() -> bytes32[]`) and exposes `setDocument(bytes32,string,bytes32)` / `removeDocument(bytes32)` with associated events.
   - **CMTAT terms remain on the modified CMTAT structure**: `IERC1643CMTAT.DocumentInfo` still uses `string name` for tokenization terms metadata (`setTerms` path).
+- **`IERC1643.getDocument` returns flat values (ERC-1643 ABI conformance, breaking API change):**
+  - `getDocument(bytes32)` now returns `(string uri, bytes32 documentHash, uint256 lastModified)` instead of a `Document` struct, so the returndata decodes exactly per the ERC-1643 signature rather than prepending a struct offset word.
+  - The `Document` struct is retained for internal storage and for `ICMTAT.CMTATTerms`; only the `getDocument` return is affected. Applies to `DocumentERC1643Module`, `DocumentEngineModule`, and `DocumentEngineMock`.
 - **Base hierarchy refactor (strict dependency-order levels):**
   - `CMTATBaseDocument` at **level 1** (`contracts/modules/1_CMTATBaseDocument.sol`).
   - `CMTATBaseAccessControl` at **level 2** (`contracts/modules/2_CMTATBaseAccessControl.sol`) and now inherits `CMTATBaseDocument`.
@@ -94,6 +114,15 @@ Custom changelog tag: `Dependencies`, `Documentation`, `Testing`
 - Restored full compilation after engine/mock alignment:
   - `CMTATEngineInitializerMock` no longer calls unavailable document-engine initializer on snapshot path.
   - `DocumentEngineMock` now implements IERC1643-compatible `setDocument(bytes32,string,bytes32)`.
+- **ERC-1404 predictor/enforcement agreement on zero-value transfers.** `CMTATBaseERC1404._detectTransferRestriction` now delegates its frozen-balance branch to `_checkActiveBalance`, the same predicate the transfer path enforces. A zero-value transfer whose sender is fully frozen is no longer reported as restricted (code `6`) while the transfer itself succeeds; `detectTransferRestriction`, `canTransfer`, and the actual transfer now agree.
+- **ERC-1643 typed errors and input validation.** `DocumentERC1643Module.removeDocument` reverts with `ERC1643MissingDocument()` instead of a string, and `setDocument` now rejects `name == bytes32(0)` with `ERC1643InvalidName()`.
+- **ERC-1643 ERC-165 detection.** `CMTATBaseAccessControl.supportsInterface` now returns `true` for `type(IERC1643).interfaceId` (`0xecfecec8`), so the ERC-1643 document interface is discoverable. This is honest only because `getDocument` now matches the ERC-1643 ABI (see the flat-return change under **Changed**).
+
+#### Security
+
+- ⚠️ **Upgrade migration required for existing proxies (`name`/`symbol` storage move).** Because `name`/`symbol` were moved to a new ERC-7201 slot (`CMTAT.storage.TokenAttributeModule`), upgrading an **already-deployed** CMTAT proxy from a pre-3.3 layout to this version leaves that new slot empty — `name()` / `symbol()` return empty strings until re-set. Any such upgrade MUST run a one-time `reinitializer` that copies the previous `name` / `symbol` into the new slot. Fresh deployments are unaffected (`decimals` stays in place either way).
+- ⚠️ **`HolderListModule` — the holder set grows without bound and `holders()` is unbounded.** On a token whose transfers are not gated by an allowlist or a rule engine, anyone can inflate `holderCount()` by dusting fresh addresses; the spammer pays the two storage writes, but `holders()` eventually runs out of gas and becomes unusable. It is an off-chain (`eth_call`) getter: on-chain callers, and any caller that cannot bound the holder count, MUST use `holdersInRange(fromIndex, toIndex)` with a bounded window. Deployments expecting a large or adversarial holder set should pair the module with an allowlist.
+- ℹ️ **`HolderListModule` — `holdersInRange` windows are not a consistent snapshot.** The underlying `EnumerableSet` is unordered and a removal moves the last holder into the freed slot, so windows read across several blocks may miss a holder or return one twice. Read the whole list at a fixed block if a consistent view is required.
 
 ### Documentation
 

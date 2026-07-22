@@ -1,13 +1,6 @@
 const { expect } = require('chai')
-const getUnixTimestamp = () => {
-  return Math.round(new Date().getTime() / 1000)
-}
 
-const timeout = function (ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms))
-}
-
-async function checkSnapshot (time, totalSupply, addressese, balances) {
+async function checkSnapshot (time, totalSupply, balances) {
   const addresses = [this.address1, this.address2, this.address3]
   // Values before the snapshot
   expect(await this.transferEngineMock.snapshotTotalSupply(time)).to.equal(
@@ -39,14 +32,14 @@ async function checkSnapshot (time, totalSupply, addressese, balances) {
   expect(result2[1][0]).to.equal(totalSupply)
 }
 
-async function checkArraySnapshot (snapshots, snapshotsValue) {
+// Synchronous on purpose: it contains no await. Making it async caused every
+// (unawaited) call site to swallow assertion failures as unhandled rejections.
+function checkArraySnapshot (snapshots, snapshotsValue) {
   for (let i = 0; i < snapshots.length; ++i) {
     expect(snapshots[i]).to.equal(snapshotsValue[i])
   }
 }
 module.exports = {
-  getUnixTimestamp,
-  timeout,
   checkSnapshot,
   checkArraySnapshot
 }

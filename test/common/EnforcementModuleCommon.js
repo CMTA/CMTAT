@@ -10,7 +10,6 @@ const { expect } = require('chai')
 const REASON_FREEZE_STRING = 'testFreeze'
 const REASON_FREEZE_EVENT = ethers.toUtf8Bytes(REASON_FREEZE_STRING)
 const reasonFreeze = ethers.Typed.bytes(REASON_FREEZE_EVENT)
-const REASON_FREEZE_EMPTY = ethers.Typed.bytes(ethers.toUtf8Bytes(''))
 
 const REASON_STRING = 'testUnfreeze'
 const REASON_UNFREEZE_EVENT = ethers.toUtf8Bytes(REASON_STRING)
@@ -83,7 +82,7 @@ function EnforcementModuleCommon () {
       const freeze = [false, false, true]
 
       // Arrange
-      testFreezeBatch(sender)
+      await testFreezeBatch.bind(this)(sender)
 
       // Act
       this.logs = await this.cmtat
@@ -429,7 +428,7 @@ function EnforcementModuleCommon () {
       )
     })
 
-    it('testCannotBatchFrozenIfAccountsSIsEmpty', async function () {
+    it('testCannotBatchFrozenIfAccountsIsEmpty', async function () {
       const accounts = []
       const freeze = [false, false]
       await expect(

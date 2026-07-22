@@ -1,7 +1,7 @@
 const { expect } = require('chai')
 const { DEFAULT_ADMIN_ROLE, ZERO_ADDRESS,
-  IERC165_INTERFACEID, IERC721_INTERFACEID, 
-  IRULEENGINE_INTERFACEID, IERC1404EXTEND_INTERFACEID  } = require('../../utils')
+  IERC165_INTERFACEID, IERC721_INTERFACEID,
+  IRULEENGINE_INTERFACEID, IERC1404_INTERFACEID, IERC1404EXTEND_INTERFACEID  } = require('../../utils')
 
 function ValidationModuleSetRuleEngineCommon () {
   context('RuleEngineSetTest', function () {
@@ -16,6 +16,7 @@ function ValidationModuleSetRuleEngineCommon () {
       // Assert
       expect(ruleEngineInterfaceId).to.equal(IRULEENGINE_INTERFACEID);
       expect(await this.ruleEngineMock.supportsInterface(IRULEENGINE_INTERFACEID)).to.equal(true)
+      expect(await this.ruleEngineMock.supportsInterface(IERC1404_INTERFACEID)).to.equal(true)
       expect(await this.ruleEngineMock.supportsInterface(IERC1404EXTEND_INTERFACEID)).to.equal(true)
       expect(await this.ruleEngineMock.supportsInterface(IERC165_INTERFACEID)).to.equal(true)
       expect(await this.ruleEngineMock.supportsInterface(IERC721_INTERFACEID)).to.equal(false)
@@ -28,13 +29,13 @@ function ValidationModuleSetRuleEngineCommon () {
       // Act
       this.logs = await this.cmtat
         .connect(this.admin)
-        .setRuleEngine(this.ruleEngine)
+        .setRuleEngine(this.ruleEngineMock.target)
       // Assert
-      // emits a RuleEngineSet event
+      // emits a RuleEngine event
       await expect(this.logs)
         .to.emit(this.cmtat, 'RuleEngine')
-        .withArgs(this.ruleEngine)
-      expect(await this.cmtat.ruleEngine()).to.equal(this.ruleEngine)
+        .withArgs(this.ruleEngineMock.target)
+      expect(await this.cmtat.ruleEngine()).to.equal(this.ruleEngineMock.target)
     })
 
     it('testCanNotBeSetByAdminWithTheSameValue', async function () {
@@ -52,7 +53,7 @@ function ValidationModuleSetRuleEngineCommon () {
     it('testCannotBeSetByNonAdmin', async function () {
       // Act
       await expect(
-        this.cmtat.connect(this.address1).setRuleEngine(this.ruleEngine)
+        this.cmtat.connect(this.address1).setRuleEngine(this.ruleEngineMock.target)
       )
         .to.be.revertedWithCustomError(
           this.cmtat,
@@ -61,7 +62,7 @@ function ValidationModuleSetRuleEngineCommon () {
         .withArgs(this.address1.address, DEFAULT_ADMIN_ROLE)
     })
 
-    it('testCanReturnMessageWithNoRuleEngine&UnknownRestrictionCode', async function () {
+    it('testCanReturnMessageWithNoRuleEngineAndUnknownRestrictionCode', async function () {
       // Act + Assert
       expect(await this.cmtat.messageForTransferRestriction(254)).to.equal(
         'UnknownCode'

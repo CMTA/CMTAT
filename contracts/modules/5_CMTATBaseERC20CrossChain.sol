@@ -5,7 +5,6 @@ pragma solidity ^0.8.20;
 import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 /* ==== Module === */
 import {CMTATBaseERC1404, CMTATBaseRuleEngine, ERC20Upgradeable} from "./4_CMTATBaseERC1404.sol";
-import {CMTATBaseAccessControl} from "./2_CMTATBaseAccessControl.sol";
 import {CMTATBaseCommon} from "./0_CMTATBaseCommon.sol";
 import {ERC20BurnModuleInternal} from "./wrapper/core/ERC20BurnModule.sol";
 import {ERC20MintModuleInternal} from "./wrapper/core/ERC20MintModule.sol";
@@ -72,8 +71,8 @@ abstract contract CMTATBaseERC20CrossChain is ERC20CrossChainModule, CCIPModule,
         return CMTATBaseCommon.symbol();
     }
 
-    function supportsInterface(bytes4 _interfaceId) public view virtual override(CMTATBaseAccessControl, ERC20CrossChainModule) returns (bool) {
-        return  ERC20CrossChainModule.supportsInterface(_interfaceId)|| CMTATBaseAccessControl.supportsInterface( _interfaceId);
+    function supportsInterface(bytes4 _interfaceId) public view virtual override(CMTATBaseERC1404, ERC20CrossChainModule) returns (bool) {
+        return  ERC20CrossChainModule.supportsInterface(_interfaceId)|| CMTATBaseERC1404.supportsInterface( _interfaceId);
     }
 
     /*//////////////////////////////////////////////////////////////

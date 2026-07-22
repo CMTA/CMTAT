@@ -84,9 +84,13 @@ function PauseModuleCommon () {
       await expect(this.logs)
         .to.emit(this.cmtat, 'Unpaused')
         .withArgs(this.admin)
-      // Transfer works
+      // Transfer is no longer blocked by the pause gate. address1 has no
+      // balance (and may not be allowlisted), so the tx can still revert for
+      // another reason — but it must NOT revert with EnforcedPause anymore.
       if (!this.generic) {
-        this.cmtat.connect(this.address1).transfer(this.address2, 10n)
+        await expect(
+          this.cmtat.connect(this.address1).transfer(this.address2, 10n)
+        ).to.not.be.revertedWithCustomError(this.cmtat, 'EnforcedPause')
       }
     })
 
@@ -106,9 +110,13 @@ function PauseModuleCommon () {
       await expect(this.logs)
         .to.emit(this.cmtat, 'Unpaused')
         .withArgs(this.address1)
-      // Transfer works
+      // Transfer is no longer blocked by the pause gate. address1 has no
+      // balance (and may not be allowlisted), so the tx can still revert for
+      // another reason — but it must NOT revert with EnforcedPause anymore.
       if (!this.generic) {
-        this.cmtat.connect(this.address1).transfer(this.address2, 10n)
+        await expect(
+          this.cmtat.connect(this.address1).transfer(this.address2, 10n)
+        ).to.not.be.revertedWithCustomError(this.cmtat, 'EnforcedPause')
       }
     })
 

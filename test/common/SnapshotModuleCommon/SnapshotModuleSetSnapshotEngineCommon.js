@@ -120,20 +120,28 @@ function SnapshotModuleSetSnapshotEngineCommon () {
   })
 
   context('SnapshotEngineSetTest', function () {
-    it('testCanBeSetByAdmin', async function () {
+    beforeEach(async function () {
+      // Deployed for every test so testCannotBeSetByNonAdmin no longer
+      // depends on testCanBeSetByAdmin having run first
       this.transferEngineMock = await ethers.deployContract(
         'SnapshotEngineMock',
         [ZERO_ADDRESS, this.admin]
       )
+    })
+    it('testCanBeSetByAdmin', async function () {
       // Act
       this.logs = await this.cmtat
         .connect(this.admin)
         .setSnapshotEngine(this.transferEngineMock.target)
       // Assert
-      // emits a SnapshotEngineSet event
+      // emits a SnapshotEngine event
       await expect(this.logs)
         .to.emit(this.cmtat, 'SnapshotEngine')
         .withArgs(this.transferEngineMock.target)
+      // the engine is effectively stored
+      expect(await this.cmtat.snapshotEngine()).to.equal(
+        this.transferEngineMock.target
+      )
     })
 
     it('testCannotBeSetByAdminWithTheSameValue', async function () {

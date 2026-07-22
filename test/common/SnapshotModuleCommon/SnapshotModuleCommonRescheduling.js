@@ -16,7 +16,7 @@ function SnapshotModuleCommonRescheduling () {
           'SnapshotEngineMock',
           [this.cmtat.target, this.admin]
         )
-        this.cmtat
+        await this.cmtat
           .connect(this.admin)
           .setSnapshotEngine(this.transferEngineMock)
       }
@@ -153,7 +153,7 @@ function SnapshotModuleCommonRescheduling () {
       ])
     })
 
-    it('reverts when calling from non-owner', async function () {
+    it('reverts when calling from non-snapshooter', async function () {
       // Act
       await expect(
         this.transferEngineMock
@@ -234,7 +234,7 @@ function SnapshotModuleCommonRescheduling () {
       )
     })
 
-    it('reverts if no snapshot exits', async function () {
+    it('reverts if no snapshot exists', async function () {
       this.logs = await this.transferEngineMock
         .connect(this.admin)
         .unscheduleLastSnapshot(this.snapshotTime)

@@ -10,6 +10,7 @@ import {RuleSpenderAuthorized} from "./RuleSpenderAuthorized.sol";
 import {RuleTokenHolderTracker} from "./RuleTokenHolderTracker.sol";
 import {IRuleTransferHook} from "./interfaces/IRuleTransferHook.sol";
 import {ERC165, IERC165} from "@openzeppelin/contracts/utils/introspection/ERC165.sol";
+import {IERC1404} from "../../interfaces/tokenization/draft-IERC1404.sol";
 import {RuleEngineInterfaceId} from "../../library/RuleEngineInterfaceId.sol";
 import {ERC1404ExtendInterfaceId} from "../../library/ERC1404ExtendInterfaceId.sol";
 /*
@@ -163,8 +164,18 @@ contract RuleEngineMock is ERC165, IRuleEngineMock {
         return "UnknownRestrictionCode";
     }
 
+    /**
+    * @dev advertises support for both the mandatory ERC-1404 interface
+    * (`IERC1404`, id `0xab84a5c8`) and its spender-aware extension
+    * (`IERC1404Extend`, id `0x78a8de7d`), as required by the ERC-1404 rework:
+    * an implementation exposing the extension must still return true for the
+    * mandatory id so a base-only integrator continues to detect it.
+    * @dev The extension id is taken from {ERC1404ExtendInterfaceId} because
+    * Solidity's `type(IERC1404Extend).interfaceId` excludes inherited functions
+    * and would therefore only cover `detectTransferRestrictionFrom`.
+    */
     function supportsInterface(bytes4 interfaceId) public view virtual override(ERC165, IERC165) returns (bool) {
-        return interfaceId == RuleEngineInterfaceId.RULE_ENGINE_INTERFACE_ID || interfaceId == ERC1404ExtendInterfaceId.ERC1404EXTEND_INTERFACE_ID || super.supportsInterface(interfaceId);
+        return interfaceId == type(IERC1404).interfaceId || interfaceId == RuleEngineInterfaceId.RULE_ENGINE_INTERFACE_ID || interfaceId == ERC1404ExtendInterfaceId.ERC1404EXTEND_INTERFACE_ID || super.supportsInterface(interfaceId);
     }
 
     function returnInterfaceId() public pure returns (bytes4) {

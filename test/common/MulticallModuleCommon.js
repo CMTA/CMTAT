@@ -38,8 +38,10 @@ function MulticallModuleCommon () {
         results[1]
       )
 
-      expect(name).to.equal('CMTA Token')
-      expect(symbol).to.equal('CMTAT')
+      // Assert the multicall results match the direct getters rather than
+      // hardcoding the deployed name/symbol (which duplicates fixture knowledge)
+      expect(name).to.equal(await this.cmtat.name())
+      expect(symbol).to.equal(await this.cmtat.symbol())
     })
   })
 }

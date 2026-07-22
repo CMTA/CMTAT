@@ -61,12 +61,12 @@ abstract contract DocumentEngineModule is Initializable, IDocumentEngineModule {
     /**
     * @inheritdoc IERC1643
     */
-    function getDocument(bytes32 name) public view  virtual override(IERC1643) returns (Document memory document){
+    function getDocument(bytes32 name) public view  virtual override(IERC1643) returns (string memory uri, bytes32 documentHash, uint256 lastModified){
         DocumentEngineModuleStorage storage $ = _getDocumentEngineModuleStorage();
         if(address($._documentEngine) != address(0)){
             return $._documentEngine.getDocument(name);
         } else{
-            return Document("", 0x0, 0);
+            return ("", 0x0, 0);
         }
     }
 
@@ -82,12 +82,26 @@ abstract contract DocumentEngineModule is Initializable, IDocumentEngineModule {
 
     function setDocument(bytes32 name, string calldata uri, bytes32 documentHash) public virtual override(IERC1643) onlyDocumentManager {
         DocumentEngineModuleStorage storage $ = _getDocumentEngineModuleStorage();
+        require(address($._documentEngine) != address(0), CMTAT_DocumentEngineModule_NoDocumentEngine());
+        // Persist in the engine (which reverts on invalid input, e.g. the zero name), then re-emit
+        // the standard ERC-1643 event on the token's own address. ERC-1643 is a per-contract
+        // interface and integrators subscribe to the token that exposes {setDocument}; without this
+        // re-emission the update would only be observable on the engine's address. The engine also
+        // emits, on its own address.
         $._documentEngine.setDocument(name, uri, documentHash);
+        emit DocumentUpdated(name, uri, documentHash);
     }
 
     function removeDocument(bytes32 name) public virtual override(IERC1643) onlyDocumentManager {
         DocumentEngineModuleStorage storage $ = _getDocumentEngineModuleStorage();
+        require(address($._documentEngine) != address(0), CMTAT_DocumentEngineModule_NoDocumentEngine());
+        // Read the metadata before removal so the token can re-emit DocumentRemoved with the removed
+        // values (spec: "MUST emit DocumentRemoved with the removed metadata"). The forwarded
+        // removeDocument reverts if the document is missing, so the token only emits after a genuine
+        // removal.
+        (string memory uri, bytes32 documentHash, ) = $._documentEngine.getDocument(name);
         $._documentEngine.removeDocument(name);
+        emit DocumentRemoved(name, uri, documentHash);
     }
 
     /* ============  Restricted Functions ============ */
