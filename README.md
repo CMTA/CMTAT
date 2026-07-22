@@ -96,7 +96,7 @@ CMTAT implements a wide set of Ethereum standards:
 - **[ERC-3643](https://eips.ethereum.org/EIPS/eip-3643)** — security token (without on-chain identity)
 - **[ERC-7551](https://ethereum-magicians.org/t/erc-7551-crypto-security-token-smart-contract-interface-ewpg-reworked/25477)** — crypto security token interface (Germany eWpG profile)
 - **[ERC-7943 (uRWA)](https://eips.ethereum.org/EIPS/eip-7943)** — universal RWA interface
-- **[ERC-1404](https://github.com/ethereum/EIPs/issues/1404)** — restricted token
+- **[ERC-1404](https://github.com/ethereum/EIPs/issues/1404)** — restricted token. CMTAT (and the RuleEngine mock) implement **both** the *original* ERC-1404 — only ever published as a [GitHub issue](https://github.com/ethereum/EIPs/issues/1404), never a merged EIP (`detectTransferRestriction` / `messageForTransferRestriction`) — and its *current rework*, the draft proposal ["Simple Restricted Token" (ERCs PR #1701, open/draft)](https://github.com/ethereum/ERCs/pull/1701), which adds the spender-aware `detectTransferRestrictionFrom`.
 - **[ERC-2612 Permit](https://eips.ethereum.org/EIPS/eip-2612)** — gasless approvals (specific deployment versions only)
 - **[ERC-1363](https://eips.ethereum.org/EIPS/eip-1363)** — payable token hooks (specific deployment versions only)
 - **[ERC-6357 Multicall](https://eips.ethereum.org/EIPS/eip-6357)** — batched calls in one transaction (specific deployment versions only)

@@ -1483,6 +1483,11 @@ interface IERC3643ComplianceRead {
 
 A RuleEngine must implement the `ERC1404Extend` interface which inherits from `IERC1404`
 
+> These two interfaces map to the **two versions of ERC-1404**, both supported by CMTAT (and the RuleEngine mock):
+>
+> - `IERC1404` — the **original** ERC-1404, which was only ever published as a [GitHub issue](https://github.com/ethereum/EIPs/issues/1404) and never became a merged EIP: `detectTransferRestriction(from, to, value)` + `messageForTransferRestriction(code)`.
+> - `IERC1404Extend` — the **current rework**, the draft proposal ["Simple Restricted Token" (ethereum/ERCs PR #1701)](https://github.com/ethereum/ERCs/pull/1701), still **open/draft**, which brings ERC-1404 into the canonical ERC format and adds the spender-aware `detectTransferRestrictionFrom(spender, from, to, value)`.
+
 - IERC1404
 
 ```solidity

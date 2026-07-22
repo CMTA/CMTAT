@@ -36,6 +36,10 @@ Minimum RuleEngine target interface in CMTAT:
 2. Optional `IRuleEngineERC1404` (if ERC-1404-specific behavior is needed):
 - adds `detectTransferRestriction*` and `messageForTransferRestriction`.
 
+> **ERC-1404 — two versions, both supported.** CMTAT (and the RuleEngine mock) implement **both** ERC-1404 variants:
+> - the **original** ERC-1404, which was only ever published as a [GitHub issue](https://github.com/ethereum/EIPs/issues/1404) and never became a merged EIP — covered by `IERC1404` (`detectTransferRestriction(from, to, value)` + `messageForTransferRestriction(code)`);
+> - its **current rework**, the draft proposal ["Simple Restricted Token" (ethereum/ERCs PR #1701)](https://github.com/ethereum/ERCs/pull/1701), still **open/draft**, which brings ERC-1404 into the canonical format — covered by `IERC1404Extend`, adding the spender-aware `detectTransferRestrictionFrom(spender, from, to, value)` that pairs with CMTAT's `canTransferFrom` / spender-aware paths.
+
 ## Configuration Lifecycle
 
 RuleEngine is optional and can be zero-address.
