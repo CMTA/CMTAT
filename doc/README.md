@@ -534,6 +534,8 @@ Module: VersionModule
 | :--------------------------------------------------------- | :--------------- | ------------------ |
 | `version() external view returns (string memory version_)` | Same             | All                |
 
+The `version()` view returns the contract's implementation version as a human-readable [Semantic Versioning 2.0.0](https://semver.org) string. Beyond ERC-3643, this also implements **[ERC-8303 "Contract Version"](https://github.com/ethereum/ERCs/pull/1819)** — a **draft, not yet merged** proposal ([ethereum/ERCs PR #1819](https://github.com/ethereum/ERCs/pull/1819)) that standardizes exactly this minimal `version()` accessor.
+
 ##### Pause
 
 Module: PauseModule

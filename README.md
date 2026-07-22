@@ -21,6 +21,7 @@ CMTAT extends the standard [ERC-20](https://eips.ethereum.org/EIPS/eip-20) token
 | **Configurable Decimals** | Define token decimals at deployment time | [ERC-20](https://eips.ethereum.org/EIPS/eip-20)-compatible behavior | Core |
 | **Forced Transfer** | Admins can move tokens from frozen accounts | [ERC-3643](https://eips.ethereum.org/EIPS/eip-3643), [ERC-7551](https://ethereum-magicians.org/t/erc-7551-crypto-security-token-smart-contract-interface-ewpg-reworked/25477) (eWpG profile), [ERC-7943](https://eips.ethereum.org/EIPS/eip-7943) | Core/Extension |
 | **Set Name / Symbol** | Update token name and symbol after deployment (supported deployment versions) | [ERC-3643](https://eips.ethereum.org/EIPS/eip-3643) | Core |
+| **Contract Versioning** | Expose the contract's implementation version on-chain as a human-readable SemVer string via `version()` | [ERC-8303](https://github.com/ethereum/ERCs/pull/1819) (draft, not yet merged), [ERC-3643](https://eips.ethereum.org/EIPS/eip-3643) | Core |
 | **Freeze Partial Tokens** | Freeze a specific amount of tokens on an address | [ERC-3643](https://eips.ethereum.org/EIPS/eip-3643), [ERC-7551](https://ethereum-magicians.org/t/erc-7551-crypto-security-token-smart-contract-interface-ewpg-reworked/25477) (eWpG profile), [ERC-7943](https://eips.ethereum.org/EIPS/eip-7943) equivalent (`setFrozenTokens`/`getFrozenTokens`) | Extension |
 | **Transfer Validation** | Plug-in rule engine to restrict transfers by origin, receiver, or amount | [ERC-3643](https://eips.ethereum.org/EIPS/eip-3643), [ERC-7551](https://ethereum-magicians.org/t/erc-7551-crypto-security-token-smart-contract-interface-ewpg-reworked/25477), [ERC-7943](https://eips.ethereum.org/EIPS/eip-7943) | Extension/Option |
 | **Snapshots** | Record balances at a specific point in time (e.g., for dividends) | CMTAT SnapshotEngine integration | Extension/Option |
@@ -104,6 +105,7 @@ CMTAT implements a wide set of Ethereum standards:
 - **[ERC-2771](https://eips.ethereum.org/EIPS/eip-2771)** — meta-transactions (gas sponsorship / gasless)
 - **[ERC-7802](https://eips.ethereum.org/EIPS/eip-7802)** — cross-chain transfers
 - **[ERC-7201](https://eips.ethereum.org/EIPS/eip-7201)** — storage namespaces for upgradeability
+- **[ERC-8303](https://github.com/ethereum/ERCs/pull/1819)** — contract version exposed on-chain via `version()` (draft, not yet merged — [PR #1819](https://github.com/ethereum/ERCs/pull/1819))
 - **[UUPS Proxy (ERC-1822 pattern)](https://eips.ethereum.org/EIPS/eip-1822)** — upgradeability pattern (specific deployment versions only)
 
 ![architecture-ERC-simplified.drawio](./doc/schema/drawio/architecture-ERC-simplified.drawio.png)
