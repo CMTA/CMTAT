@@ -1259,7 +1259,9 @@ This schema contains the different roles and their restricted functions.
 
 
 
-![RBAC-diagram-RBAC.drawio](./schema/accessControl/RBAC-diagram-RBAC.drawio.png)
+![RBAC — roles to functions](./schema/plantuml/access-control-rbac.png)
+
+> Source: [`schema/plantuml/access-control-rbac.puml`](./schema/plantuml/access-control-rbac.puml). See also [technical/access-control.md](./technical/access-control.md) for the full role-by-module table.
 
 The OpenZepplin functions `grantRole`and `revokeRole` can be used by the admin to grant and revoke role to an address.
 

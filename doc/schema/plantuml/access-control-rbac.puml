@@ -1,0 +1,109 @@
+@startuml
+title CMTAT Access Control (RBAC) — Roles to Functions
+left to right direction
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam packageStyle rectangle
+skinparam usecase {
+  BackgroundColor #FFFFFF
+  BorderColor #444444
+}
+
+actor "Admin" as Admin
+usecase "DEFAULT_ADMIN_ROLE" as ADMIN
+Admin --> ADMIN : is
+
+note top of ADMIN
+  DEFAULT_ADMIN_ROLE automatically holds **every** role
+  (AccessControlModule hasRole override): it can call every
+  function below and manages (grant / revoke) all roles.
+end note
+
+' ---- Roles ----
+usecase "MINTER_ROLE" as MINTER
+usecase "BURNER_ROLE" as BURNER
+usecase "PAUSER_ROLE" as PAUSER
+usecase "ENFORCER_ROLE" as ENFORCER
+usecase "ERC20ENFORCER_ROLE" as ERC20ENF
+usecase "SNAPSHOOTER_ROLE" as SNAP
+usecase "DOCUMENT_ROLE" as DOC
+usecase "DOCUMENT_ENGINE_ROLE" as DOCENG
+usecase "EXTRA_INFORMATION_ROLE" as EXTRA
+usecase "ALLOWLIST_ROLE" as ALLOW
+usecase "DEBT_ROLE" as DEBT
+usecase "DEBT_ENGINE_ROLE" as DEBTENG
+usecase "CROSS_CHAIN_ROLE" as CROSS
+usecase "BURNER_FROM_ROLE" as BFROM
+usecase "BURNER_SELF_ROLE" as BSELF
+usecase "PROXY_UPGRADE_ROLE" as UPGRADE
+
+' ---- Function groups by module ----
+package "Core" #FFF3E0 {
+  rectangle "MintModule\nmint / batchMint / batchTransfer" as mintFns #FFE0B2
+  rectangle "BurnModule\nburn / batchBurn" as burnFns #FFE0B2
+  rectangle "PauseModule\npause / unpause" as pauseFns #FFE0B2
+  rectangle "PauseModule\ndeactivateContract" as deactFn #FFE0B2
+  rectangle "EnforcementModule\nsetAddressFrozen / batchSetAddressFrozen" as freezeFns #FFE0B2
+  rectangle "TokenAttributeModule\nsetName / setSymbol" as attrFns #FFE0B2
+  rectangle "CMTATBaseCore\nforcedBurn" as forcedBurnFn #FFE0B2
+}
+
+package "Extensions" #E8F5E9 {
+  rectangle "ERC20EnforcementModule\nforcedTransfer" as forcedTransferFn #C8E6C9
+  rectangle "ERC20EnforcementModule\nfreezePartialTokens / unfreezePartialTokens / setFrozenTokens" as partialFns #C8E6C9
+  rectangle "ExtraInformationModule\nsetTokenId / setTerms / setInformation" as extraFns #C8E6C9
+  rectangle "DocumentERC1643Module\nsetDocument / removeDocument" as docFns #C8E6C9
+  rectangle "ValidationModuleRuleEngine\nsetRuleEngine" as ruleEngineFn #C8E6C9
+  rectangle "SnapshotEngineModule\nsetSnapshotEngine" as snapFn #C8E6C9
+}
+
+package "Options" #E3F2FD {
+  rectangle "AllowlistModule\nsetAddressAllowlist / batchSetAddressAllowlist / enableAllowlist" as allowFns #BBDEFB
+  rectangle "ERC7551Module\nsetMetaData / setTerms" as erc7551Fns #BBDEFB
+  rectangle "DebtModule\nsetDebt / setCreditEvents" as debtFns #BBDEFB
+  rectangle "DebtEngineModule\nsetDebtEngine" as debtEngFn #BBDEFB
+  rectangle "DocumentEngineModule\nsetDocumentEngine / setDocument / removeDocument" as docEngFns #BBDEFB
+  rectangle "CMTATBaseERC20CrossChain\ncrosschainMint / crosschainBurn" as crossFns #BBDEFB
+  rectangle "CMTATBaseERC20CrossChain\nburnFrom" as burnFromFn #BBDEFB
+  rectangle "CMTATBaseERC20CrossChain\nburn(value)" as selfBurnFn #BBDEFB
+  rectangle "CCIPModule\nsetCCIPAdmin" as ccipFn #BBDEFB
+}
+
+package "UUPS proxy only" #F5F5F5 {
+  rectangle "CMTATUpgradeableUUPS\n_authorizeUpgrade" as upgradeFn #FFFFFF
+}
+
+' ---- Role -> function edges ----
+MINTER --> mintFns
+BURNER --> burnFns
+PAUSER --> pauseFns
+ENFORCER --> freezeFns
+ERC20ENF --> partialFns
+SNAP --> snapFn
+DOC --> docFns
+DOCENG --> docEngFns
+EXTRA --> extraFns
+EXTRA --> erc7551Fns
+ALLOW --> allowFns
+DEBT --> debtFns
+DEBTENG --> debtEngFn
+CROSS --> crossFns
+BFROM --> burnFromFn
+BSELF --> selfBurnFn
+UPGRADE --> upgradeFn
+
+' ---- DEFAULT_ADMIN_ROLE direct (admin-only) functions ----
+ADMIN --> deactFn
+ADMIN --> attrFns
+ADMIN --> forcedBurnFn
+ADMIN --> forcedTransferFn
+ADMIN --> ruleEngineFn
+ADMIN --> ccipFn
+
+legend bottom
+  Colors follow the module scope: Core (orange), Extensions (green),
+  Options (blue), UUPS proxy (grey). Engine-role functions
+  (DOCUMENT_ENGINE_ROLE / DEBT_ENGINE_ROLE) are distinct from
+  DOCUMENT_ROLE / DEBT_ROLE.
+endlegend
+@enduml
