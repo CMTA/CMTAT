@@ -102,6 +102,8 @@ CMTAT implements a wide set of Ethereum standards:
 - **[ERC-7201](https://eips.ethereum.org/EIPS/eip-7201)** — storage namespaces for upgradeability
 - **[UUPS Proxy (ERC-1822 pattern)](https://eips.ethereum.org/EIPS/eip-1822)** — upgradeability pattern (specific deployment versions only)
 
+![architecture-ERC-simplified.drawio](./doc/schema/drawio/architecture-ERC-simplified.drawio.png)
+
 ## Cross-Chain Compatibility
 
 CMTAT provides cross-chain compatibility through `ERC20CrossChain` and related deployment options:
