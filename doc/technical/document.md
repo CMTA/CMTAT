@@ -14,6 +14,8 @@ CMTAT supports two layers of on-chain document management:
 >
 > Both share the same core document model (`getDocument` / `getAllDocuments` / `setDocument` / `removeDocument`, with `bytes32` document names), which is what CMTAT's `IERC1643` implements.
 
+![Document management: native module vs external engine](../schema/plantuml/document-management.png)
+
 ## Terms
 
 The tokenization terms are a single `CMTATTerms` struct stored in the token contract. They can be read by anyone and set by an address with `EXTRA_INFORMATION_ROLE`.

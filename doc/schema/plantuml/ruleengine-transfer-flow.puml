@@ -1,0 +1,24 @@
+@startuml
+title RuleEngine Validation on a State-Changing Transfer
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+
+actor Caller
+participant "CMTAT" as T
+participant "ValidationModule\n(local checks)" as V
+participant "RuleEngine\n(optional, external)" as R
+
+Caller -> T : transfer / transferFrom / mint / burn
+T -> V : _checkTransferred(spender, from, to, value)
+V -> V : local checks\n(pause, freeze, active balance)
+alt RuleEngine configured
+  alt spender != address(0)  (spender-aware)
+    V -> R : transferred(spender, from, to, value)
+  else spender == address(0)  (ERC-3643)
+    V -> R : transferred(from, to, value)
+  end
+  R --> V : reverts if not compliant
+end
+V --> T : ok (or revert)
+T -> T : ERC20 _update (balances change)
+@enduml

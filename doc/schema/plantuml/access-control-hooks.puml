@@ -1,0 +1,20 @@
+@startuml
+title RBAC — Authorization Hook Indirection
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam componentStyle rectangle
+
+[Wrapper module\ne.g. ERC20MintModule] as W
+[CMTATBaseAccessControl] as B
+[OpenZeppelin\nAccessControl] as OZ
+
+W --> B : declares\nvirtual _authorizeMint()
+B --> OZ : overrides _authorizeMint()\nonlyRole(MINTER_ROLE)
+
+note bottom of B
+  The base overrides every virtual _authorizeX() with onlyRole(<ROLE>).
+  Swapping the access-control mechanism means changing only the base,
+  not the feature modules. DEFAULT_ADMIN_ROLE holds all roles
+  (hasRole override).
+end note
+@enduml

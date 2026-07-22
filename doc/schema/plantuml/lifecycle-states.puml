@@ -1,0 +1,28 @@
+@startuml
+title CMTAT Lifecycle — Pause and Deactivation
+hide empty description
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+
+[*] --> Active
+
+Active  -right-> Paused : pause()\n[PAUSER_ROLE]
+Paused  -left->  Active : unpause()\n[PAUSER_ROLE]
+Paused  -down->  Deactivated : deactivateContract()\n[DEFAULT_ADMIN_ROLE]\n(must be paused)
+
+Active : Blocked by pause: transfer / transferFrom /\napprove / permit / crosschainMint / crosschainBurn /\nburnFrom / self-burn
+Active : Still available: issuer mint / burn, freeze,\nforcedTransfer / forcedBurn
+
+Deactivated : terminal, deactivated() == true
+Deactivated : unpause() reverts\n(CMTAT_PauseModule_ContractIsDeactivated)
+Deactivated : Blocked additionally: mint / burn\n(EnforcedDeactivation)
+Deactivated : Still available: forcedTransfer / forcedBurn, freeze
+
+note bottom of Deactivated
+  Irreversible: no function clears the flag
+  (only a proxy upgrade could).
+  Invariant: deactivated implies paused.
+end note
+
+Deactivated --> [*]
+@enduml

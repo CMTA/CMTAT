@@ -1,0 +1,28 @@
+@startuml
+title Cross-Chain Burn-and-Mint (ERC-7802 / Optimism Superchain)
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+
+actor User
+participant "SuperchainTokenBridge\n(source)" as SB
+participant "CMTAT\n(source chain)" as CS
+participant "L2ToL2\nCrossDomainMessenger" as MSG
+participant "SuperchainTokenBridge\n(destination)" as DB
+participant "CMTAT\n(destination chain)" as CD
+
+User -> SB : sendERC20(to, amount, chainId)
+SB -> CS : crosschainBurn(user, amount)
+note right of CS
+  onlyTokenBridge + whenNotPaused
+  (pausing the token halts the bridge)
+end note
+CS --> SB : emit CrosschainBurn
+SB -> MSG : send initiating message
+... cross-chain relay ...
+MSG -> DB : execute message
+DB -> CD : crosschainMint(to, amount)
+note right of CD
+  onlyTokenBridge + whenNotPaused
+end note
+CD --> DB : emit CrosschainMint
+@enduml

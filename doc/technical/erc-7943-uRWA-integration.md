@@ -70,6 +70,8 @@ Both are public view functions defined in `ValidationModule` and can be overridd
 
 ## Transfer Flow Diagram
 
+![Transfer authorization flow](../schema/plantuml/transfer-validation-flow.png)
+
 When a standard transfer is attempted:
 
 ```

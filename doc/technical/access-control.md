@@ -14,6 +14,8 @@ See also [docs.openzeppelin.com - AccessControl](https://docs.openzeppelin.com/c
 
 **CMTAT base modules** override those virtual functions and enforce RBAC. This separation allows replacing the access control mechanism without modifying the feature modules.
 
+![RBAC authorization hook indirection](../schema/plantuml/access-control-hooks.png)
+
 ## Role List
 
 | Role | Defined in | 32-byte Identifier |

@@ -1,0 +1,26 @@
+@startuml
+title Document Management (ERC-1643) — Native vs External Engine
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam componentStyle rectangle
+
+package "Pattern A — Native storage (all variants except Light)" {
+  [CMTAT token\n+ DocumentERC1643Module] as A
+  database "ERC-7201 storage\n_documents / _documentNames" as ADB
+  A --> ADB : setDocument / removeDocument\n[DOCUMENT_ROLE]
+}
+
+package "Pattern B — External engine (optional module)" {
+  [CMTAT token\n+ DocumentEngineModule] as B
+  [DocumentEngine\n(IERC1643)] as ENG
+  database "Engine storage" as BDB
+  B --> ENG : forwards get / set / remove\n[DOCUMENT_ENGINE_ROLE]
+  ENG --> BDB
+}
+
+note bottom
+  Both expose getDocument / getAllDocuments / setDocument / removeDocument
+  with bytes32 document names. Native ships in every variant except Light;
+  the external engine keeps the token lean and can serve many tokens.
+end note
+@enduml

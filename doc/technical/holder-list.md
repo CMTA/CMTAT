@@ -16,6 +16,8 @@ function _update(address from, address to, uint256 value) internal override {
 }
 ```
 
+![Holder-list membership update](../schema/plantuml/holder-list-update.png)
+
 Because it hooks `_update`, **every** balance change is covered: `transfer`, `transferFrom`, `mint`, `burn`, forced transfer/burn, and cross-chain mint/burn. Two invariants follow directly:
 
 - `address(0)` (the mint source and burn sink) is **never** a holder.

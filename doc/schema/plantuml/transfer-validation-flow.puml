@@ -1,0 +1,35 @@
+@startuml
+title Transfer Authorization Flow (ERC-7943 / RuleEngine)
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+
+start
+:transfer(to, value);
+if (contract paused?) then (yes)
+  :revert EnforcedPause();
+  stop
+else (no)
+endif
+if (sender / spender frozen?) then (yes)
+  :revert ERC7943CannotSend(account);
+  stop
+else (no)
+endif
+if (receiver frozen?) then (yes)
+  :revert ERC7943CannotReceive(account);
+  stop
+else (no)
+endif
+if (RuleEngine rejects?) then (yes)
+  :RuleEngine reverts\n(its own errors);
+  stop
+else (no)
+endif
+if (value > active / unfrozen balance?) then (yes)
+  :revert ERC7943InsufficientUnfrozenBalance(...);
+  stop
+else (no)
+endif
+:transfer executes;
+stop
+@enduml

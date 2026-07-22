@@ -58,6 +58,8 @@ CMTAT implements [ERC-7802](https://eips.ethereum.org/EIPS/eip-7802) in `ERC20Cr
 
 Reference: [docs.optimism.io/interop/superchain-erc20](https://docs.optimism.io/interop/superchain-erc20)
 
+![Cross-chain burn-and-mint sequence](../schema/plantuml/crosschain-superchain-flow.png)
+
 ### Source Chain Flow
 
 1. User calls [`SuperchainTokenBridge.sendERC20`](https://github.com/ethereum-optimism/optimism/blob/develop/packages/contracts-bedrock/src/L2/SuperchainTokenBridge.sol#L52-L78).
