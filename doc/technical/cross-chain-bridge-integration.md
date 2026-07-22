@@ -37,6 +37,15 @@ The CCIP pool must be granted the required `MINTER_ROLE` and `BURNER_FROM_ROLE` 
 **Note**: Pausing the contract via `PauseModule` does **not** block `MintModule.mint()`, so CCIP minting still works while paused. However, `burnFrom`, `crosschainMint`, and `crosschainBurn` all have `whenNotPaused` checks and are blocked while paused. To block minting during a pause, revoke `MINTER_ROLE` from the CCIP pool.  
 With spender-aware compliance enabled, freezing the minter/operator address (`setAddressFrozen`) also blocks mint because the operator is checked as spender in RuleEngine/compliance hooks.
 
+#### Why the cross-chain path is pause-gated (but issuer mint/burn is not)
+
+This difference is intentional and is a **security** control, not an oversight of the pause model.
+
+- Standard `mint`/`burn` (`MINTER_ROLE` / `BURNER_ROLE`) are executed by the **issuer or an address in the issuer's own ecosystem**, an actor the issuer trusts. Keeping them available while paused lets the issuer carry out issuance, redemption, and other corporate actions during a transfer halt (see [lifecycle.md](./lifecycle.md)).
+- `crosschainMint` / `crosschainBurn` / `burnFrom` / self-`burn`, by contrast, are (or can be) triggered by a **third party** — a cross-chain bridge or pool contract (Chainlink CCIP, the Optimism `SuperchainTokenBridge`, a LayerZero adapter) — that sits **outside** the issuer's direct control. Because a bridge can be compromised, misconfigured, or the source of unexpected cross-chain activity, these paths carry `whenNotPaused` so that pausing the token immediately **stops the bridge from minting or burning**. This bounds the blast radius of a faulty or malicious bridge: `pause()` becomes a single, issuer-held kill-switch over every third-party cross-chain mint/burn, while trusted issuer operations keep running.
+
+In short: the pause is applied to the cross-chain burn and mint operations precisely *because* those functions are not necessarily called by the issuer or an address in the issuer's ecosystem, but by a third-party bridge.
+
 `Lock and Mint` / `Burn and Unlock` models are also compatible through the `Burn and Mint` requirement set. `Lock and Unlock` needs no special token contract support.
 
 ### Example
