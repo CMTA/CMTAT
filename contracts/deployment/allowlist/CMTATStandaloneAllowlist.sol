@@ -16,7 +16,6 @@ contract CMTATStandaloneAllowlist is CMTATBaseAllowlist {
      * @param admin address of the admin of contract (Access Control)
      * @param ERC20Attributes_ ERC20 name, symbol and decimals
      * @param extraInformationAttributes_ tokenId, terms, information
-     * @param engines_ external contract
      */
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor(
