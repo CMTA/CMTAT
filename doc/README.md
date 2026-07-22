@@ -1297,7 +1297,7 @@ Since the version v3.2.0, the requirements to use a RuleEngine are the following
 >
 > To be used with a deployment version including the module `ValidationModuleERC1404`:
 >
-> The `RuleEngine` must import and implement the interface `IRuleEngineERC1404`  which extends the interface `IRuleEngine`and defines functions related to [ERC-1404](https://github.com/ethereum/eips/issues/1404).
+> The `RuleEngine` must import and implement the interface `IRuleEngineERC1404`  which extends the interface `IRuleEngine`and defines functions related to ERC-1404 — both the **original** standard (published only as a [GitHub issue](https://github.com/ethereum/eips/issues/1404), never a merged EIP) and its **rework draft** ["Simple Restricted Token" (ethereum/ERCs PR #1701)](https://github.com/ethereum/ERCs/pull/1701), whose spender-aware `detectTransferRestrictionFrom` is provided through `IERC1404Extend`.
 >
 > Currently, all deployed version supporting a RuleEngine used the ERC-1404 version `ValidationModuleERC1404`
 
