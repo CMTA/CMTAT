@@ -1,6 +1,6 @@
 {
   "name": "CMTAT",
-  "version": "3.2.0",
+  "version": "3.3.0",
   "description": "CMTA smart contracts",
   "files": [
     "contracts",
