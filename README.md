@@ -51,6 +51,7 @@ CMTAT is used in production by major financial institutions including **UBS**, *
 - **Stablecoins**: Zand Trust (2025) issued an AED stablecoin using CMTAT v3.0.0 via Taurus infrastructure; [Zand Trust](https://zandtrust.com/).
 - **Tokenized Market Funds**: [UBS uMINT (2024)](https://www.ubs.com/global/en/media/display-page-ndp/en-20241101-first-tokenized-investment-fund.html)
 - **Tokenized Artwork**: [Syz Art tokenization](https://www.syzgroup.com/en/tokenization-syzart).
+- **Private DvP settlement**: [Seturion (2026)](https://group.boerse-stuttgart.com/en/seturion/) (Börse Stuttgart Group) achieved private delivery-vs-payment settlement of tokenized assets on a public blockchain while keeping sensitive data confidential, using [CMTAT on Aztec](https://github.com/CMTA/private-CMTAT-aztec), a zero-knowledge Ethereum Layer-2. [Read more](https://www.linkedin.com/posts/seturion_achieving-private-dvp-settlement-on-public-activity-7424387919538450433-OItI/).
 
 ## Supported Financial Instruments
 
