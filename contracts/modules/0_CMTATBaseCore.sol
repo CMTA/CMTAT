@@ -169,7 +169,7 @@ abstract contract CMTATBaseCore is
      * We can not use type(IERC5679).interfaceId, we use instead of 0xd0017968
      * because IERC5679 inherits from two interfaces (IERC5679Burn and Mint)
      * Core version does not implement in its integrality ERC-7943 (0x3edbb4c4)
-     * type(IERC8343).interfaceId (0xe9cd80b0) is the ERC-8343 contract deactivation interface
+     * type(IERC8343).interfaceId (0xe9cd80b0) is the proposed ERC-8343 (draft) contract deactivation interface
      */
     function supportsInterface(bytes4 interfaceId) public view virtual override(AccessControlUpgradeable, IERC165) returns (bool) {
         return interfaceId == 0xd0017968 || interfaceId == type(IERC8343).interfaceId || AccessControlUpgradeable.supportsInterface(interfaceId);

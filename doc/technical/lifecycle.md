@@ -3,7 +3,7 @@
 CMTAT has two lifecycle controls, implemented in `PauseModule`:
 
 - **Pause** — a *reversible* halt of holder transferability, for temporary incidents.
-- **Deactivation** — an *irreversible*, terminal stop, for end-of-life events (legal migration, corporate actions that cancel or immobilise all tokens). Standardised as [ERC-8343](../ERCSpecification/draft-erc-8343-deactivation.md).
+- **Deactivation** — an *irreversible*, terminal stop, for end-of-life events (legal migration, corporate actions that cancel or immobilise all tokens). Proposed as [ERC-8343](../ERCSpecification/draft-erc-8343-deactivation.md) — a **draft, not yet merged** ([PR #1900](https://github.com/ethereum/ERCs/pull/1900)).
 
 ```
    active  ──pause()──►  paused  ──deactivateContract()──►  deactivated
@@ -29,6 +29,7 @@ Deactivation is built on top of pause: a contract **must be paused before it can
 | | |
 |---|---|
 | Interface | `IERC8343` (`contracts/interfaces/tokenization/draft-IERC8343.sol`), formerly `ICMTATDeactivate` |
+| Standard status | **Draft — not yet merged** ([ERC-8343, PR #1900](https://github.com/ethereum/ERCs/pull/1900)) |
 | ERC-165 id | `0xe9cd80b0` (advertised by `supportsInterface`) |
 | Role | `DEFAULT_ADMIN_ROLE` |
 | Functions | `deactivateContract()`, `deactivated()` |

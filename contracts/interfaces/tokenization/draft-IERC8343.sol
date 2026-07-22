@@ -5,7 +5,7 @@ pragma solidity ^0.8.20;
 /**
 * @title IERC8343 - Contract Deactivation
 * @notice Interface for permanently deactivating a token contract and exposing its
-* deactivation status on-chain. See ERC-8343 (https://eips.ethereum.org/EIPS/eip-8343).
+* deactivation status on-chain. Follows the proposed ERC-8343 (draft, not yet merged).
 *
 * @dev The issuer must be able to "deactivate" the smart contract, to prevent execution of
 * transactions on the distributed ledger.

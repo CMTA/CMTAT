@@ -14,7 +14,7 @@ CMTAT extends the standard [ERC-20](https://eips.ethereum.org/EIPS/eip-20) token
 | Feature | Purpose | Standards | Module Scope |
 |---|---|---|---|
 | **Pause** | Freeze all transfers globally (e.g., during corporate actions) | [ERC-3643](https://eips.ethereum.org/EIPS/eip-3643), [ERC-7551](https://ethereum-magicians.org/t/erc-7551-crypto-security-token-smart-contract-interface-ewpg-reworked/25477) (eWpG profile) | Core |
-| **Deactivate** | Permanently disable token operations when required by lifecycle/governance decisions | [ERC-8343](./doc/ERCSpecification/draft-erc-8343-deactivation.md) | Core |
+| **Deactivate** | Permanently disable token operations when required by lifecycle/governance decisions | [ERC-8343](https://github.com/ethereum/ERCs/pull/1900) (draft, not yet merged) | Core |
 | **Account Freeze** | Block specific addresses from transferring | [ERC-3643](https://eips.ethereum.org/EIPS/eip-3643) enforcement model, [ERC-7943](https://eips.ethereum.org/EIPS/eip-7943) send/receive checks | Core |
 | **Mint / Burn** | Controlled issuance and redemption of tokens | [ERC-3643](https://eips.ethereum.org/EIPS/eip-3643), [ERC-7551](https://ethereum-magicians.org/t/erc-7551-crypto-security-token-smart-contract-interface-ewpg-reworked/25477) (eWpG profile) | Core |
 | **Batch Mint / Batch Burn** | Process multiple mint or burn operations in a single transaction | [ERC-3643](https://eips.ethereum.org/EIPS/eip-3643) | Core |

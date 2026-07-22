@@ -5,11 +5,7 @@ pragma solidity ^0.8.20;
 import {IERC1643CMTAT} from "./draft-IERC1643CMTAT.sol";
 import {IERC1643} from "./draft-IERC1643.sol";
 
-// The former `ICMTATDeactivate` interface is now standardized as ERC-8343 and lives in
-// {IERC8343} (`./draft-IERC8343.sol`).
-
-
-/** 
+/**
 * @title ICMTATBase - Core Tokenization Metadata Interface as part of CMTAT specification
 * @notice Defines base properties and metadata structure for a tokenized asset.
 * @dev Includes token ID, terms (using IERC1643-compliant document), and a general information field.

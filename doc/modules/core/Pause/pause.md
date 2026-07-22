@@ -54,7 +54,7 @@ Emitted when token transfers were unpaused.
 
 ### Interface: `IERC8343` (ERC-8343)
 
- This interface (standardized as [ERC-8343](https://eips.ethereum.org/EIPS/eip-8343), formerly `ICMTATDeactivate`) defines functions and events for irreversibly deactivating a smart contract. Once deactivated, the contract becomes permanently non-functional. This mechanism is useful for compliance-focused or end-of-life lifecycle token contracts.
+ This interface (proposed as [ERC-8343](https://github.com/ethereum/ERCs/pull/1900) — a draft, **not yet merged**; formerly `ICMTATDeactivate`) defines functions and events for irreversibly deactivating a smart contract. Once deactivated, the contract becomes permanently non-functional. This mechanism is useful for compliance-focused or end-of-life lifecycle token contracts.
 
 ------
 
