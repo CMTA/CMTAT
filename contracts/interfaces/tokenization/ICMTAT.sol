@@ -5,56 +5,8 @@ pragma solidity ^0.8.20;
 import {IERC1643CMTAT} from "./draft-IERC1643CMTAT.sol";
 import {IERC1643} from "./draft-IERC1643.sol";
 
-/**
-* The issuer must be able to “deactivate” the smart contract, to prevent execution of transactions on
-* the distributed ledger.
-* Contrary to the “burn” function, the “deactivateContract” function
-* affects all tokens in issuance, and not only some of them. 
-* 
-* a) This function is necessary to allow the issuer to carry out certain corporate actions 
-* (e.g. share splits, reverse splits or mergers), which 
-* require that all existing tokens are either canceled or immobilized and decoupled from the shares
-* (i.e. the tokens no longer represent shares).
-* 
-* b) The “deactivateContract” function can also be used if the issuer decides that it no longer wishes
-* to have its shares issued in the form of ledger-based securities
-* 
-* The “deactivateContract” function does not delete the smart contract’s 
-* storage and code, i.e. tokens are not burned by the function, however it permanently and
-* irreversibly deactivates the smart contract (unless a proxy is used). 
-* 
-*/
-interface ICMTATDeactivate {
-     /**
-     * @notice Emitted when the contract is permanently deactivated.
-     * @param account The address that performed the deactivation.
-     */
-    event Deactivated(address indexed account);
-
-    /**
-     * @notice Error raised when deactivation is attempted after deactivation is already final.
-     */
-    error AlreadyDeactivated();
-
-     /* 
-     * @notice Permanently deactivates the contract.
-     * @dev 
-     * This action is irreversible — once executed, the contract cannot be reactivated.
-     * Requirements:
-     * - The contract MUST be paused before deactivation is allowed.
-     * Emits a {Deactivated} event.
-     * WARNING: Use with caution. This action permanently disables core contract functionality.
-     */
-    function deactivateContract() external;
-
-     /**
-     * @notice Returns whether the contract has been permanently deactivated.
-     * @return isDeactivated A boolean indicating the deactivation status.
-     * @dev Returns `true` if `deactivateContract()` has been successfully called.
-     */
-    function deactivated() external view returns (bool isDeactivated) ;
-}
-
+// The former `ICMTATDeactivate` interface is now standardized as ERC-8343 and lives in
+// {IERC8343} (`./draft-IERC8343.sol`).
 
 
 /** 

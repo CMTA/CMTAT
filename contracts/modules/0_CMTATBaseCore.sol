@@ -30,6 +30,7 @@ import {IBurnMintERC20} from "../interfaces/technical/IMintBurnToken.sol";
 import {IERC7551ERC20EnforcementEvent} from "../interfaces/tokenization/draft-IERC7551.sol";
 import {IERC7943FungibleTransferError}  from "../interfaces/tokenization/draft-IERC7943.sol";
 import {IERC5679} from "../interfaces/technical/IERC5679.sol";
+import {IERC8343} from "../interfaces/tokenization/draft-IERC8343.sol";
 
 /**
 * @dev CMTAT with core modules
@@ -168,10 +169,10 @@ abstract contract CMTATBaseCore is
      * We can not use type(IERC5679).interfaceId, we use instead of 0xd0017968
      * because IERC5679 inherits from two interfaces (IERC5679Burn and Mint)
      * Core version does not implement in its integrality ERC-7943 (0x3edbb4c4)
-     * 0xe9cd80b0 is the interfaceId of ICMTATDeactivate
+     * type(IERC8343).interfaceId (0xe9cd80b0) is the ERC-8343 contract deactivation interface
      */
     function supportsInterface(bytes4 interfaceId) public view virtual override(AccessControlUpgradeable, IERC165) returns (bool) {
-        return interfaceId == 0xd0017968 || interfaceId == 0xe9cd80b0 || AccessControlUpgradeable.supportsInterface(interfaceId);
+        return interfaceId == 0xd0017968 || interfaceId == type(IERC8343).interfaceId || AccessControlUpgradeable.supportsInterface(interfaceId);
     }
 
     /* ============  State Functions ============ */

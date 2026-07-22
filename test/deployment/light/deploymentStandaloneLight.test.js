@@ -116,7 +116,7 @@ describe('CMTAT Core - Standalone', function () {
     const IERC165Interface = '0x01ffc9a7'
     const IERC721Interface = '0x80ac58cd'
     const IERC5679 = '0xd0017968'
-    const ICMTATDeactivate = '0xe9cd80b0'
+    const IERC8343 = '0xe9cd80b0'
     const IERC1404 = '0xab84a5c8'
     const IERC1404Extend = '0x78a8de7d'
     // Assert
@@ -128,7 +128,7 @@ describe('CMTAT Core - Standalone', function () {
       false
     )
     expect(await this.cmtat.supportsInterface(IERC5679)).to.equal(true)
-    expect(await this.cmtat.supportsInterface(ICMTATDeactivate)).to.equal(true)
+    expect(await this.cmtat.supportsInterface(IERC8343)).to.equal(true)
     // The light deployment (CMTATBaseCore) does not include the ERC-1404 module
     expect(await this.cmtat.supportsInterface(IERC1404)).to.equal(false)
     expect(await this.cmtat.supportsInterface(IERC1404Extend)).to.equal(false)
