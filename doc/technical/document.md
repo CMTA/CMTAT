@@ -35,14 +35,14 @@ A `Document` contains:
 
 ```solidity
 mapping(bytes32 => Document) _documents;
-bytes32[]                    _documentNames;
 mapping(bytes32 => uint256)  _documentKey;   // 1-based index for O(1) removal
+bytes32[]                    _documentNames;
 ```
 
 All four ERC-1643 operations are available on the token contract directly — no external engine contract is required:
 
 ```solidity
-function getDocument(bytes32 name) external view returns (Document memory);
+function getDocument(bytes32 name) external view returns (string memory uri, bytes32 documentHash, uint256 lastModified);
 function getAllDocuments() external view returns (bytes32[] memory);
 function setDocument(bytes32 name, string calldata uri, bytes32 documentHash) external;  // requires DOCUMENT_ROLE
 function removeDocument(bytes32 name) external;                                           // requires DOCUMENT_ROLE
@@ -78,7 +78,7 @@ interface IERC1643 {
         uint256 lastModified;
     }
 
-    function getDocument(bytes32 name) external view returns (Document memory doc);
+    function getDocument(bytes32 name) external view returns (string memory uri, bytes32 documentHash, uint256 lastModified);
     function getAllDocuments() external view returns (bytes32[] memory);
     function setDocument(bytes32 name, string calldata uri, bytes32 documentHash) external;
     function removeDocument(bytes32 name) external;

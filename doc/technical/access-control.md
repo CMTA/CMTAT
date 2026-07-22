@@ -39,7 +39,7 @@ See also [docs.openzeppelin.com - AccessControl](https://docs.openzeppelin.com/c
 
 | Module | Function | Role Required |
 |---|---|---|
-| **ERC20BaseModule** | `setName(string)` | `DEFAULT_ADMIN_ROLE` |
+| **TokenAttributeModule** | `setName(string)` | `DEFAULT_ADMIN_ROLE` |
 | | `setSymbol(string)` | `DEFAULT_ADMIN_ROLE` |
 | **ERC20BurnModule** | `burn(address, uint256, bytes)` | `BURNER_ROLE` |
 | | `batchBurn(address[], uint256[], bytes)` | `BURNER_ROLE` |

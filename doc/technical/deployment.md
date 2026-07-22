@@ -25,6 +25,8 @@ Deployment contracts are in `contracts/deployment/`. Each feature set comes in b
 | | | Upgradeable | `CMTATUpgradeableERC7551` |
 | **Snapshot** | Standard + SnapshotEngine support | Standalone | `CMTATStandaloneSnapshot` |
 | | | Upgradeable | `CMTATUpgradeableSnapshot` |
+| **HolderList** | Standard + HolderListModule (on-chain set of non-zero-balance holders) | Standalone | `CMTATStandaloneHolderList` |
+| | | Upgradeable | `CMTATUpgradeableHolderList` |
 
 ## Standard Standalone
 
@@ -62,6 +64,14 @@ See [`debt.md`](./debt.md).
 
 See the [Allowlist module documentation](../modules/options/allowlist/allowlist.md).
 
+## HolderList
+
+See [`holder-list.md`](./holder-list.md). Available as `CMTATStandaloneHolderList` and `CMTATUpgradeableHolderList`.
+
+## Lifecycle (pause / deactivate)
+
+Every deployment variant supports pausing and terminal deactivation (ERC-8343). See [`lifecycle.md`](./lifecycle.md).
+
 ## Factory
 
 Factory contracts for Beacon, Transparent, and UUPS proxy deployments are maintained in a separate repository: [CMTAT Factory](https://github.com/CMTA/CMTATFactory).
@@ -83,7 +93,8 @@ CMTAT implements [ERC-7201](https://eips.ethereum.org/EIPS/eip-7201) for namespa
 | AllowlistModuleInternal | `AllowlistModuleInternalStorageLocation` | `0x53076eaf2d1e2f915f2e0487c9f92cca686c37fd47bf11f95f0da313b2809800` |
 | EnforcementModuleInternal | `EnforcementModuleInternalStorageLocation` | `0x0c7bc8a17be064111d299d7669f49519cb26c58611b72d9f6ccc40a1e1184e00` |
 | ERC20EnforcementModuleInternal | `ERC20EnforcementModuleStorageLocation` | `0x9d8059a24cb596f1948a937c2c163cf14465c2a24abfd3cd009eec4ac4c39800` |
-| ERC20BaseModule | `ERC20BaseModuleStorageLocation` | `0x9bd8d607565c0370ae5f91651ca67fd26d4438022bf72037316600e29e6a3a00` |
+| ERC20BaseModule (`decimals` only) | `ERC20BaseModuleStorageLocation` | `0x9bd8d607565c0370ae5f91651ca67fd26d4438022bf72037316600e29e6a3a00` |
+| TokenAttributeModule (`name`/`symbol`) | `TokenAttributeModuleStorageLocation` | `0xc541cfc06cfa9bb7e38e614bc9457bd7310b58a2a620e4f19164873143c76d00` |
 | PauseModule | - | `0xab1527b6135145d8da1edcbd6b7b270624e17f2b41c74a8c746ff388ad454700` |
 | DocumentEngineModule | `DocumentEngineModuleStorageLocation` | `0xbd0905600c85d707dc53eba2e146c1c2527cd32ac3ff6b86846155151b3e2700` |
 | DocumentERC1643Module | `DocumentERC1643ModuleStorageLocation` | `0x24fbb1cf6345ced60d5278ef6f68f4f7576fd9068704b4c8f1eec8f0bbd8a200` |
@@ -92,6 +103,7 @@ CMTAT implements [ERC-7201](https://eips.ethereum.org/EIPS/eip-7201) for namespa
 | CCIPModule | `CCIPModuleStorageLocation` | `0x364fbfd89c0eee55bbc8dd10b1a9bf3e04fba9f3ee606f4c79a82f9941ad7a00` |
 | DebtModule | `DebtModuleStorageLocation` | `0xf8a315cc5f2213f6481729acd86e55db7ccc930120ccf9fb78b53dcce75f7c00` |
 | ERC7551Module | `ERC7551ModuleStorageLocation` | `0x2727314c926b592b6f70e7d6d2e4677ebcac070f293306927f71fe77858eec00` |
+| HolderListModule (HolderList variants only) | `HolderListModuleStorageLocation` | `0x93edd3717dec98b474d42a698cc89715a70e7eaf60a2dff7170cc742b7b8ca00` |
 | OZ `EIP712Upgradeable` | `EIP712StorageLocation` | `0xa16a46d94261c7517cc8ff89f61c0ce93598e3c849801011dee649a6a557d100` |
 | OZ `NoncesUpgradeable` | `NoncesStorageLocation` | `0x5ab42ced628888259c08ac98db1eb0cf702fc1501344311d8b100cd1bfe4bb00` |
 

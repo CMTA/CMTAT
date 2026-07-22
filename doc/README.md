@@ -1929,6 +1929,8 @@ The following privileged operations are intentionally post-deactivation-enabled:
 - `freezePartialTokens` / `unfreezePartialTokens` (`ERC20EnforcementModule`)
 - `forcedTransfer` and related privileged enforcement paths (`ERC20EnforcementModule` / `ERC20EnforcementERC7551Module`)
 
+See also [technical/lifecycle.md](./technical/lifecycle.md) for the consolidated pause/deactivation reference (state machine, what each state blocks, ERC-8343).
+
 ### Supply management (burn & mint)
 
  Minting and burning follow a simpler path:

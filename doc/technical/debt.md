@@ -108,7 +108,7 @@ The `DebtEngine` must implement `debt()` and `creditEvents()`. The CMTAT token c
 | `DebtModule` (on-chain debt data) | ✓ | — |
 | `DebtEngineModule` (external engine) | — | ✓ |
 | `ERC20CrossChainModule` + `CCIPModule` | — | ✓ |
-| ERC-1404 (`restrictedTransferOf`) | — | ✓ (via `CMTATBaseERC20CrossChain`) |
+| ERC-1404 (`detectTransferRestriction`) | — | ✓ (via `CMTATBaseERC20CrossChain`) |
 | `ERC2771Module` (meta-transactions) | — | — |
 | `CMTATBaseSnapshot` (SnapshotEngine support) | ✓ | ✓ |
 

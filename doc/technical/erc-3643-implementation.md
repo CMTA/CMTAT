@@ -50,8 +50,8 @@ Core ERC-3643 behavior is split across wrapper modules:
   - Implements `pause`, `unpause`, `paused`.
 
 - Token metadata updates:
-  - [ERC20BaseModule.sol](/home/ryan/Pictures/dev/CMTAT/contracts/modules/wrapper/core/ERC20BaseModule.sol)
-  - Implements `setName`, `setSymbol`.
+  - [TokenAttributeModule.sol](/home/ryan/Pictures/dev/CMTAT/contracts/modules/wrapper/core/TokenAttributeModule.sol)
+  - Implements `setName`, `setSymbol` (moved out of `ERC20BaseModule` into `TokenAttributeModule`, with their own ERC-7201 storage; `ERC20BaseModule` now holds only `decimals`).
 
 - Mint / batch mint / ERC-3643 batch transfer path:
   - [ERC20MintModule.sol](/home/ryan/Pictures/dev/CMTAT/contracts/modules/wrapper/core/ERC20MintModule.sol)
