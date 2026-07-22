@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/wrapper/options/CCIPModule.sol | b6bc50ffeb53c42cba4ec0a9d504e25ad158b5cd |
+| ./modules/wrapper/options/CCIPModule.sol | c96f695b0715fce5538393cf8bedec6ef4032a22 |
 
 
 ### Contracts Description Table

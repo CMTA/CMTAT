@@ -82,8 +82,8 @@ The first transfer crediting a **new** address writes two storage slots (the `En
 
 ## Security Considerations
 
-- ⚠️ **Unbounded growth / dusting DoS on `holders()`.** On a token whose transfers are not gated by an allowlist or a rule engine, anyone can inflate `holderCount()` by dusting fresh addresses; the spammer pays the two storage writes, but `holders()` eventually runs out of gas and becomes unusable. `holders()` is an **off-chain (`eth_call`) getter**: on-chain callers, and any caller that cannot bound the holder count, MUST use `holdersInRange(fromIndex, toIndex)` with a bounded window. Deployments expecting a large or adversarial holder set should pair the module with an allowlist.
-- ℹ️ **Windows are not a consistent snapshot.** The underlying `EnumerableSet` is unordered and a removal moves the last holder into the freed slot, so `holderByIndex`/`holdersInRange` results read across several blocks may miss a holder or return one twice. Read the whole set at a fixed block (`eth_call` at a block number) if a consistent view is required.
+- **Unbounded growth / dusting DoS on `holders()`.** On a token whose transfers are not gated by an allowlist or a rule engine, anyone can inflate `holderCount()` by dusting fresh addresses; the spammer pays the two storage writes, but `holders()` eventually runs out of gas and becomes unusable. `holders()` is an **off-chain (`eth_call`) getter**: on-chain callers, and any caller that cannot bound the holder count, MUST use `holdersInRange(fromIndex, toIndex)` with a bounded window. Deployments expecting a large or adversarial holder set should pair the module with an allowlist.
+- **Windows are not a consistent snapshot.** The underlying `EnumerableSet` is unordered and a removal moves the last holder into the freed slot, so `holderByIndex`/`holdersInRange` results read across several blocks may miss a holder or return one twice. Read the whole set at a fixed block (`eth_call` at a block number) if a consistent view is required.
 
 ## Use Case
 

@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/4_CMTATBaseERC1404.sol | 2f40fd05006c12aae809d94f8db9f500fc0d6eba |
+| ./modules/4_CMTATBaseERC1404.sol | 278cb9aa6c4641fa241682be24ffbfb1244e9875 |
 
 
 ### Contracts Description Table
@@ -19,6 +19,7 @@
 | └ | messageForTransferRestriction | Public ❗️ |   |NO❗️ |
 | └ | canTransfer | Public ❗️ |   |NO❗️ |
 | └ | canTransferFrom | Public ❗️ |   |NO❗️ |
+| └ | supportsInterface | Public ❗️ |   |NO❗️ |
 | └ | _detectTransferRestriction | Internal 🔒 |   | |
 
 

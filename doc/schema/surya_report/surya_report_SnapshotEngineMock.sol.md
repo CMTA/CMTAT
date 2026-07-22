@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./mocks/SnapshotEngineMock.sol | ab18b240f491a0a287ff7c8843585b5ab99eab96 |
+| ./mocks/SnapshotEngineMock.sol | 38a5618b9d68f1221176d5c247b590d1065c0c31 |
 
 
 ### Contracts Description Table

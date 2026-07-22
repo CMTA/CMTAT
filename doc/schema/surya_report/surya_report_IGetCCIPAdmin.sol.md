@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./interfaces/technical/IGetCCIPAdmin.sol | 86d91714ece286a23483c1fcfe30b24be3de8fe6 |
+| ./interfaces/technical/IGetCCIPAdmin.sol | d185f90f0daa856e1cde1dd835382aecc9a0a116 |
 
 
 ### Contracts Description Table

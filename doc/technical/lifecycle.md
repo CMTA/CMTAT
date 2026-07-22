@@ -93,7 +93,7 @@ Two points deserve emphasis:
 
 ## Security Considerations
 
-- ⚠️ **Deactivation is irreversible** on an immutable deployment. Confirm the paused state and the intent before calling `deactivateContract()`; there is no undo other than a proxy upgrade.
-- ⚠️ **`DEFAULT_ADMIN_ROLE` is powerful.** It can deactivate the contract (a permanent denial of holder transfers) and, because `forcedTransfer`/`forcedBurn` survive deactivation, can still move tokens afterwards. Protect this key with a multisig or timelock, and note the extra exposure on the UUPS variant (admin and upgrade authority are not segregated).
-- ℹ️ **Pause is a transfer-level control, not a full freeze of the contract.** Issuers who need to stop *all* activity (including minting) must deactivate or manage the mint/burn roles accordingly.
-- ℹ️ **Off-chain interpretation.** Treat `Deactivated` as a terminal lifecycle event for public holder operations, not as a guarantee that no privileged operation can ever execute (forced transfers and admin actions can). For upgradeable deployments, default to "once deactivated, permanently deactivated" unless governance documentation says otherwise.
+- **Deactivation is irreversible** on an immutable deployment. Confirm the paused state and the intent before calling `deactivateContract()`; there is no undo other than a proxy upgrade.
+-  **`DEFAULT_ADMIN_ROLE` is powerful.** It can deactivate the contract (a permanent denial of holder transfers) and, because `forcedTransfer`/`forcedBurn` survive deactivation, can still move tokens afterwards. Protect this key with a multisig or timelock, and note the extra exposure on the UUPS variant (admin and upgrade authority are not segregated).
+- ℹ**Pause is a transfer-level control, not a full freeze of the contract.** Issuers who need to stop *all* activity (including minting) must deactivate or manage the mint/burn roles accordingly.
+- **Off-chain interpretation.** Treat `Deactivated` as a terminal lifecycle event for public holder operations, not as a guarantee that no privileged operation can ever execute (forced transfers and admin actions can). For upgradeable deployments, default to "once deactivated, permanently deactivated" unless governance documentation says otherwise.

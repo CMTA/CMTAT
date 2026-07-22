@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./mocks/engine/CMTATDocumentEngineModuleMock.sol | 87644503f36fd2c746bdea200155504741731c62 |
+| ./mocks/engine/CMTATDocumentEngineModuleMock.sol | 52445c55b4497faea85babb3350bd727c82b8aad |
 
 
 ### Contracts Description Table
@@ -18,6 +18,7 @@
 | **CMTATDocumentEngineModuleMock** | Implementation | CMTATBaseCore, DocumentEngineModule |||
 | └ | <Constructor> | Public ❗️ | 🛑  |NO❗️ |
 | └ | initialize | Public ❗️ | 🛑  | initializer |
+| └ | supportsInterface | Public ❗️ |   |NO❗️ |
 | └ | _authorizeDocumentManagement | Internal 🔒 | 🛑  | onlyRole |
 
 

@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./mocks/DocumentEngineMock.sol | 2f44cd6e8871f3d48ecae589c6c3a8c0555aa009 |
+| ./mocks/DocumentEngineMock.sol | 308ebbbc8d9070b4c36545a0976d093fc0261cb8 |
 
 
 ### Contracts Description Table
@@ -15,16 +15,8 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **IERC1643Whole** | Interface | IDocumentEngine |||
-| └ | setDocument | External ❗️ | 🛑  |NO❗️ |
-| └ | removeDocument | External ❗️ | 🛑  |NO❗️ |
-||||||
-| **DocumentEngineMock** | Implementation | IERC1643Whole |||
-| └ | getDocument | External ❗️ |   |NO❗️ |
-| └ | setDocument | External ❗️ | 🛑  |NO❗️ |
-| └ | setDocument | External ❗️ | 🛑  |NO❗️ |
-| └ | removeDocument | External ❗️ | 🛑  |NO❗️ |
-| └ | getAllDocuments | External ❗️ |   |NO❗️ |
+| **DocumentEngineMock** | Implementation | DocumentERC1643Module |||
+| └ | _authorizeDocumentManagement | Internal 🔒 | 🛑  | |
 
 
 ### Legend

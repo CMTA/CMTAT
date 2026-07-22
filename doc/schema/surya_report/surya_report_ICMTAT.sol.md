@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./interfaces/tokenization/ICMTAT.sol | 442cb59b9909e14766f0912248c7e3839884ced8 |
+| ./interfaces/tokenization/ICMTAT.sol | 049a83fb013b5d30613a951d456acfa8a03d86c2 |
 
 
 ### Contracts Description Table
@@ -14,10 +14,6 @@
 |  Contract  |         Type        |       Bases      |                  |                 |
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
-||||||
-| **ICMTATDeactivate** | Interface |  |||
-| └ | deactivateContract | External ❗️ | 🛑  |NO❗️ |
-| └ | deactivated | External ❗️ |   |NO❗️ |
 ||||||
 | **ICMTATBase** | Interface |  |||
 | └ | tokenId | External ❗️ |   |NO❗️ |

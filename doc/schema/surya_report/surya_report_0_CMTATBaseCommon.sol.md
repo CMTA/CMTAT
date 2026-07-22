@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/0_CMTATBaseCommon.sol | ef3159d406b8c61dbc2520fb37c0c29c5827d2bc |
+| ./modules/0_CMTATBaseCommon.sol | 42637a819a21ccc0ea61a9271932d5b33ef5d6c7 |
 
 
 ### Contracts Description Table
@@ -15,7 +15,7 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **CMTATBaseCommon** | Implementation | VersionModule, ERC20MintModule, ERC20BurnModule, ERC20BaseModule, ERC20EnforcementModule, ExtraInformationModule, IBurnMintERC20, IERC5679 |||
+| **CMTATBaseCommon** | Implementation | VersionModule, ERC20MintModule, ERC20BurnModule, ERC20BaseModule, TokenAttributeModule, ERC20EnforcementModule, ExtraInformationModule, IBurnMintERC20, IERC5679 |||
 | └ | decimals | Public ❗️ |   |NO❗️ |
 | └ | name | Public ❗️ |   |NO❗️ |
 | └ | symbol | Public ❗️ |   |NO❗️ |

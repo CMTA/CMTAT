@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/2_CMTATBaseAccessControl.sol | cf934aa8b26c9bdc2aeb336391b3c4098da70c18 |
+| ./modules/2_CMTATBaseAccessControl.sol | dc5874915bc739805ecc0b5e08268c95c8d3ec65 |
 
 
 ### Contracts Description Table
@@ -18,7 +18,7 @@
 | **CMTATBaseAccessControl** | Implementation | AccessControlModule, CMTATBaseCommon, CMTATBaseDocument |||
 | └ | __CMTAT_commonModules_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |
 | └ | supportsInterface | Public ❗️ |   |NO❗️ |
-| └ | _authorizeERC20AttributeManagement | Internal 🔒 | 🛑  | onlyRole |
+| └ | _authorizeTokenAttributeManagement | Internal 🔒 | 🛑  | onlyRole |
 | └ | _authorizeMint | Internal 🔒 | 🛑  | onlyRole |
 | └ | _authorizeBurn | Internal 🔒 | 🛑  | onlyRole |
 | └ | _authorizeDocumentManagement | Internal 🔒 | 🛑  | onlyRole |

@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/wrapper/controllers/ValidationModuleAllowlist.sol | ba5af4e8ea17a9e4d3b06b627ecfe0a502da1a02 |
+| ./modules/wrapper/controllers/ValidationModuleAllowlist.sol | 8d8146cd8751ad173c9c5d8e99e3c6e4f00b3743 |
 
 
 ### Contracts Description Table

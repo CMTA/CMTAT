@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/wrapper/extensions/ValidationModule/ValidationModuleERC1404.sol | da97b8d6ba4da0b927929d1c220defb662504a05 |
+| ./modules/wrapper/extensions/ValidationModule/ValidationModuleERC1404.sol | 6341799677440a5a556dfcfe480136077b96b878 |
 
 
 ### Contracts Description Table
