@@ -1880,7 +1880,7 @@ Consideration will be given to how this can be achieved in a future release.
 #### Deactivate contracts
 
 ```solidity
-interface ICMTATDeactivate {
+interface IERC8343 {
     event Deactivated(address indexed account);
     error AlreadyDeactivated();
     /**
