@@ -26,14 +26,17 @@ contract CMTATDocumentEngineModuleMock is CMTATBaseCore, DocumentEngineModule {
         __DocumentEngineModule_init_unchained(documentEngine_);
     }
 
-    function _authorizeDocumentManagement() internal virtual override(DocumentEngineModule) onlyRole(DOCUMENT_ENGINE_ROLE) {}
-
     /**
+     * @notice Returns true if this contract implements the interface defined by `interfaceId`.
      * @dev Advertise ERC-1643 support (`type(IERC1643).interfaceId` == 0xecfecec8) for the
      * engine variant, matching the in-contract variant which registers it in
      * {CMTATBaseAccessControl-supportsInterface}. Satisfies the ERC-1643 ERC-165 SHOULD.
+     * @param interfaceId The ERC-165 interface identifier to query.
+     * @return True if `interfaceId` is supported (ERC-1643 or any interface from the base).
      */
     function supportsInterface(bytes4 interfaceId) public view virtual override(CMTATBaseCore) returns (bool) {
         return interfaceId == type(IERC1643).interfaceId || super.supportsInterface(interfaceId);
     }
+
+    function _authorizeDocumentManagement() internal virtual override(DocumentEngineModule) onlyRole(DOCUMENT_ENGINE_ROLE) {}
 }
