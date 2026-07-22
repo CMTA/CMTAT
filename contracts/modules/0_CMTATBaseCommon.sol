@@ -120,9 +120,10 @@ abstract contract CMTATBaseCommon is
     /* ==== Mint and Burn Operations ==== */
     
     /**
-    * @dev 
+    * @dev
     * Mint path
     * Check if the mint is valid
+    * @inheritdoc ERC20MintModuleInternal
     */
     function _mintOverride(address account, uint256 value) internal virtual override(ERC20MintModuleInternal) {
         _checkTransferred(_msgSender(), address(0), account, value);
@@ -130,9 +131,10 @@ abstract contract CMTATBaseCommon is
     }
 
     /**
-    * @dev 
+    * @dev
     * Burn path
     * Check if the burn is valid
+    * @inheritdoc ERC20BurnModuleInternal
     */
     function _burnOverride(address account, uint256 value) internal virtual override(ERC20BurnModuleInternal) {
         _checkTransferred(_msgSender(),  account, address(0), value);
@@ -140,9 +142,10 @@ abstract contract CMTATBaseCommon is
     }
 
     /**
-    * @dev 
+    * @dev
     * Minter-initiated transfer path
     * Check if a minter transfer is valid
+    * @inheritdoc ERC20MintModuleInternal
     */
     function _minterTransferOverride(address from, address to, uint256 value) internal virtual override(ERC20MintModuleInternal) {
         _checkTransferred(_msgSender(), from, to, value);

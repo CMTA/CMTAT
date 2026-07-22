@@ -12,7 +12,7 @@ contract CMTATStandaloneDebtEngine is CMTATBaseDebtEngine {
      * @notice Contract version for standalone deployment
      * @param admin address of the admin of contract (Access Control)
      * @param ERC20Attributes_ ERC20 name, symbol and decimals
-     * @param baseModuleAttributes_ tokenId, terms, information
+     * @param extraInformationAttributes_ tokenId, terms, information
      * @param engines_ external contract
      */
     /// @custom:oz-upgrades-unsafe-allow constructor

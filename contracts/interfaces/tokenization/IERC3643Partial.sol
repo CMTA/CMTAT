@@ -276,6 +276,9 @@ interface IERC3643ComplianceRead {
     /**
      * @notice Returns true if the transfer is valid, and false otherwise.
      * @dev Don't check the balance and the user's right (access control)
+     * @param from The address sending tokens.
+     * @param to The address receiving tokens.
+     * @param value The amount of tokens to transfer.
      * @return isValid True if the transfer is valid, false otherwise.
      */
     function canTransfer(

@@ -38,6 +38,9 @@ abstract contract ValidationModule is
     /**
     * @dev
     * Entrypoint to check mint/burn/standard transfer
+    * @param spender The address initiating the transfer (address(0) for a direct transfer).
+    * @param from The address tokens move from (address(0) for a mint).
+    * @param to The address tokens move to (address(0) for a burn).
     * @return True if the mint/burn/transfer is allowed by the pause and enforcement modules.
     */
     function _canTransferGenericByModule(
@@ -95,6 +98,7 @@ abstract contract ValidationModule is
     /**
     * @dev Reverts if mint is not allowed for `to`.
     * Checks deactivation and frozen status of the recipient.
+    * @param to The recipient whose mint is being validated.
     */
     function _canMintByModuleAndRevert(
         address to
@@ -108,6 +112,7 @@ abstract contract ValidationModule is
     /**
     * @dev Reverts if burn is not allowed for `from`.
     * Checks deactivation and frozen status of the token holder.
+    * @param from The holder whose burn is being validated.
     */
     function _canBurnByModuleAndRevert(
         address from
@@ -122,6 +127,9 @@ abstract contract ValidationModule is
     * @dev calls Pause and Enforcement module
     * check relevant for standard transfer
     * We don't check deactivated() because the contract must be in the pause state to be deactivated
+    * @param spender The address initiating the transfer.
+    * @param from The address tokens move from.
+    * @param to The address tokens move to.
     * @return True if any of `spender`, `from` or `to` is frozen.
     */
     function _canTransferisFrozen(
@@ -184,6 +192,7 @@ abstract contract ValidationModule is
     * @dev Returns true if `account` is allowed to send tokens.
     * Base check: account must not be frozen.
     * Override in subclasses to add allowlist or other checks.
+    * @param account The account being checked.
     * @return allowed True if `account` is allowed to send tokens.
     */
     function _canSend(address account) internal view virtual returns (bool allowed) {
@@ -194,6 +203,7 @@ abstract contract ValidationModule is
     * @dev Returns true if `account` is allowed to receive tokens.
     * Base check: account must not be frozen.
     * Override in subclasses to add allowlist or other checks.
+    * @param account The account being checked.
     * @return allowed True if `account` is allowed to receive tokens.
     */
     function _canReceive(address account) internal view virtual returns (bool allowed) {

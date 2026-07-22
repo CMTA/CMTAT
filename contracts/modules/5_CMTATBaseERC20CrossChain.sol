@@ -82,6 +82,7 @@ abstract contract CMTATBaseERC20CrossChain is ERC20CrossChainModule, CCIPModule,
     /* ==== Mint and Burn Operations ==== */
     /**
     * @dev Check if the mint is valid
+    * @inheritdoc ERC20MintModuleInternal
     */
     function _mintOverride(address account, uint256 value) internal virtual override(CMTATBaseCommon, ERC20MintModuleInternal) {
        // _checkTransferred is called by _mintOverride
@@ -90,6 +91,7 @@ abstract contract CMTATBaseERC20CrossChain is ERC20CrossChainModule, CCIPModule,
 
     /**
     * @dev Check if the burn is valid
+    * @inheritdoc ERC20BurnModuleInternal
     */
     function _burnOverride(address account, uint256 value) internal virtual override(CMTATBaseCommon, ERC20BurnModuleInternal) {
         // _checkTransferred is called by _burnOverride
@@ -98,6 +100,7 @@ abstract contract CMTATBaseERC20CrossChain is ERC20CrossChainModule, CCIPModule,
 
     /**
     * @dev Check if a minter transfer is valid
+    * @inheritdoc ERC20MintModuleInternal
     */
     function _minterTransferOverride(address from, address to, uint256 value) internal virtual override(CMTATBaseCommon, ERC20MintModuleInternal) {
         // _checkTransferred is called by _minterTransferOverride

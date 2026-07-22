@@ -32,6 +32,7 @@ interface IERC1404 {
      * @dev See {ERC-1404}
      * This function is effectively an accessor for the "message",
      * a human-readable explanation as to why a transaction is restricted.
+     * @param restrictionCode The restriction code to translate into a message.
      * @return The human-readable message corresponding to `restrictionCode`.
      */
     function messageForTransferRestriction(
@@ -65,6 +66,10 @@ interface IERC1404Extend is IERC1404{
      * Some examples of this might include:
      * - checking if the token recipient is whitelisted, 
      * - checking if a sender's tokens are frozen in a lock-up period, etc.
+     * @param spender The address initiating the delegated transfer.
+     * @param from The address sending tokens.
+     * @param to The address receiving tokens.
+     * @param value amount of tokens to transfer
      * @return uint8 restricted code, 0 means the transfer is authorized
      *
      */

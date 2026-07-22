@@ -59,6 +59,8 @@ abstract contract ERC20MintModuleInternal is ERC20Upgradeable {
 
     /**
     *  @dev Can be override to emit event
+    *  @param account The account to mint tokens to.
+    *  @param value The amount of tokens to mint.
     */
     function _mintOverride(address account, uint256 value) internal virtual {
         ERC20Upgradeable._mint(account, value);

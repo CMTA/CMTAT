@@ -33,6 +33,7 @@ interface IBurnMintERC20 {
 * @param to receiver to send the new minted tokens
 * @param amountToBurn number of tokens to burn
 * @param amountToMint number of tokens to mint
+* @param data Optional data forwarded to the burn and mint hooks.
 */
  function burnAndMint(address from, address to, uint256 amountToBurn, uint256 amountToMint, bytes calldata data) external;
 }
