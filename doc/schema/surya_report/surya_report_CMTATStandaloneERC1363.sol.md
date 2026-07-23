@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./deployment/ERC1363/CMTATStandaloneERC1363.sol | dd59cc363dc0bc2079d29342ffb167b009cc6002 |
+| ./deployment/ERC1363/CMTATStandaloneERC1363.sol | da970ccf28dcced367bc90c3f85e03075d8fffe3 |
 
 
 ### Contracts Description Table

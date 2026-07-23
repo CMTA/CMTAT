@@ -2,8 +2,8 @@
 
 pragma solidity ^0.8.20;
 
-import {CMTATBaseAllowlist} from "../../modules/2_CMTATBaseAllowlist.sol";
-import {ERC2771Module, ERC2771ContextUpgradeable} from "../../modules/wrapper/options/ERC2771Module.sol";
+import {CMTATBaseAllowlist} from "../../modules/3_CMTATBaseAllowlist.sol";
+import {ERC2771Module} from "../../modules/wrapper/options/ERC2771Module.sol";
 import {ICMTATConstructor} from "../../interfaces/technical/ICMTATConstructor.sol";
 
 /**
@@ -16,7 +16,6 @@ contract CMTATStandaloneAllowlist is CMTATBaseAllowlist {
      * @param admin address of the admin of contract (Access Control)
      * @param ERC20Attributes_ ERC20 name, symbol and decimals
      * @param extraInformationAttributes_ tokenId, terms, information
-     * @param engines_ external contract
      */
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor(

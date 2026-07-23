@@ -1,0 +1,28 @@
+@startuml
+title ERC20MintModule
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+
+class ERC20MintModuleInternal
+interface IERC3643Mint
+interface IERC3643BatchTransfer
+interface IERC7551Mint
+interface IMintBatchERC20Event
+
+abstract class ERC20MintModule {
+    +{static} MINTER_ROLE : bytes32
+    --
+    +mint(address, uint256, bytes)
+    +mint(address, uint256)
+    +batchMint(address[], uint256[])
+    +batchTransfer(address[], uint256[]) : bool
+}
+
+ERC20MintModuleInternal <|-- ERC20MintModule
+IERC3643Mint <|.. ERC20MintModule
+IERC3643BatchTransfer <|.. ERC20MintModule
+IERC7551Mint <|.. ERC20MintModule
+IMintBatchERC20Event <|.. ERC20MintModule
+
+@enduml

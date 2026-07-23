@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./interfaces/technical/IERC20Allowance.sol | d82b6ed708bf2891f078ae3c3a1c05ed35975758 |
+| ./interfaces/technical/IERC20Allowance.sol | 17476edb94781aa3089e8e5a83f7b6b92760d19c |
 
 
 ### Contracts Description Table

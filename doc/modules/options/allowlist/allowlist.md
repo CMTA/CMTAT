@@ -6,7 +6,7 @@ This document defines the Allowlist module
 
 ## Schema
 
-![DebtUML](../../../schema/uml/AllowlistUML.png)
+![DebtUML](../../../schema/plantuml/class/AllowlistModule.png)
 
 ### Inheritance
 
@@ -24,7 +24,7 @@ This document defines the Allowlist module
 
 This section describes the Ethereum API of Allowlist Module.
 
-See also [IAllowlistModule](../../../../contracts/interfaces/modules/IAllowlistModule.sol))
+See also [IAllowlistModule](../../../../contracts/interfaces/modules/IAllowlistModule.sol)
 
 ### Events
 
@@ -224,5 +224,22 @@ returns (bool)
 | Type | Description                     |
 | ---- | ------------------------------- |
 | bool | `true` if allowlist is enabled. |
+
+---
+
+## Transfer Enforcement
+
+The allowlist management API above only controls *who is on the list*. The actual enforcement during transfers is performed by `ValidationModuleAllowlist`, which overrides `_canSend` and `_canReceive` from `ValidationModule`:
+
+- **`_canSend(account)`** — returns `false` when the allowlist is enabled and `account` is not allowlisted (in addition to the base frozen-address check).
+- **`_canReceive(account)`** — same logic applied to the recipient side.
+
+When the allowlist is disabled (`enableAllowlist(false)`), these checks are skipped and the standard frozen-address checks apply.
+
+The same allowlist check is applied to mint and burn targets. Minting to a non-allowlisted address or burning from a non-allowlisted address reverts with `ERC7943CannotReceive` / `ERC7943CannotSend` when the allowlist is enabled.
+
+Allowance authorization (`approve`, `permit`) is separately guarded by `ValidationModuleAllowance`: both `owner` and `spender` must pass `_canSend` (i.e., must be allowlisted when the allowlist is enabled and not frozen).
+
+See also: [validationAllowlist.md](../../controllers/validationAllowlist.md)
 
 

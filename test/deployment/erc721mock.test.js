@@ -24,12 +24,7 @@ describe('ERC721MockUpgradeable', function () {
     )
     this.cmtat = await upgrades.deployProxy(
       ETHERS_CMTAT_PROXY_FACTORY,
-      [
-        NAME,
-        SYMBOL,
-        this.admin.address,
-        ['CMTAT_ISIN', TERMS, 'CMTAT_info']
-      ],
+      [NAME, SYMBOL, this.admin.address, ['CMTAT_ISIN', TERMS, 'CMTAT_info']],
       {
         initializer: 'initialize',
         constructorArgs: [],
@@ -61,9 +56,13 @@ describe('ERC721MockUpgradeable', function () {
 
   it('testFailedTransferIfNotOwned', async function () {
     await this.cmtat.mint(this.address1, 1)
-    this.cmtat
-      .connect(this.address2)
-      .transferFrom(this.address1, this.address2, 1)
+    await expect(
+      this.cmtat
+        .connect(this.address2)
+        .transferFrom(this.address1, this.address2, 1)
+    )
+      .to.be.revertedWithCustomError(this.cmtat, 'ERC721InsufficientApproval')
+      .withArgs(this.address2.address, 1)
   })
 
   it('testApprovedAndTransfer', async function () {
@@ -98,15 +97,16 @@ describe('ERC721MockUpgradeable', function () {
     await this.cmtat.mint(this.admin, 1)
     await this.cmtat.connect(this.admin).setAddressFrozen(this.address1, true)
     await expect(this.cmtat.transferFrom(this.admin, this.address1, 1))
-      .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotTransact')
+      .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotReceive')
       .withArgs(this.address1)
   })
 
   it('testCannotTransferIfContractIsPaused', async function () {
     await this.cmtat.mint(this.admin, 1)
     await this.cmtat.connect(this.admin).pause()
-    await expect(this.cmtat.transferFrom(this.admin, this.address1, 1))
-      .to.be.revertedWithCustomError(this.cmtat, 'EnforcedPause')
+    await expect(
+      this.cmtat.transferFrom(this.admin, this.address1, 1)
+    ).to.be.revertedWithCustomError(this.cmtat, 'EnforcedPause')
   })
 
   it('testCannotMintIfContractIsDeactivated', async function () {
@@ -114,8 +114,57 @@ describe('ERC721MockUpgradeable', function () {
     await this.cmtat.connect(this.admin).pause()
     await this.cmtat.connect(this.admin).deactivateContract()
     // Act
-    await expect(this.cmtat.mint(this.admin, 1))
-      .to.be.revertedWithCustomError(this.cmtat, 'EnforcedDeactivation')
+    await expect(this.cmtat.mint(this.admin, 1)).to.be.revertedWithCustomError(
+      this.cmtat,
+      'EnforcedDeactivation'
+    )
+  })
+
+  it('testCanInitializeManually', async function () {
+    const ETHERS_CMTAT_PROXY_FACTORY = await ethers.getContractFactory(
+      'ERC721MockUpgradeable'
+    )
+    const cmtat = await upgrades.deployProxy(ETHERS_CMTAT_PROXY_FACTORY, [], {
+      initializer: false,
+      constructorArgs: [],
+      from: this.admin.address,
+      unsafeAllow: ['missing-initializer', 'missing-initializer-call']
+    })
+
+    await cmtat.initialize(NAME, SYMBOL, this.admin.address, [
+      'CMTAT_ISIN',
+      TERMS,
+      'CMTAT_info'
+    ])
+
+    expect(await cmtat.name()).to.equal(NAME)
+    expect(await cmtat.symbol()).to.equal(SYMBOL)
+  })
+
+  it('testCannotInitializeTwice', async function () {
+    const ETHERS_CMTAT_PROXY_FACTORY = await ethers.getContractFactory(
+      'ERC721MockUpgradeable'
+    )
+    const cmtat = await upgrades.deployProxy(ETHERS_CMTAT_PROXY_FACTORY, [], {
+      initializer: false,
+      constructorArgs: [],
+      from: this.admin.address,
+      unsafeAllow: ['missing-initializer', 'missing-initializer-call']
+    })
+
+    await cmtat.initialize(NAME, SYMBOL, this.admin.address, [
+      'CMTAT_ISIN',
+      TERMS,
+      'CMTAT_info'
+    ])
+
+    await expect(
+      cmtat.initialize(NAME, SYMBOL, this.admin.address, [
+        'CMTAT_ISIN',
+        TERMS,
+        'CMTAT_info'
+      ])
+    ).to.be.revertedWithCustomError(cmtat, 'InvalidInitialization')
   })
   // Core
   EnforcementModuleCommon()

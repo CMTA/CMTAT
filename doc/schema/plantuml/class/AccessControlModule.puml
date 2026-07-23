@@ -1,0 +1,16 @@
+@startuml
+title AccessControlModule
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+
+class AccessControlUpgradeable
+
+abstract class AccessControlModule {
+    --
+    +hasRole(bytes32, address) view : bool
+}
+
+AccessControlUpgradeable <|-- AccessControlModule
+
+@enduml

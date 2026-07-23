@@ -37,12 +37,14 @@ This module was left out of scope because it is not used yet (and not included i
 
 In CMTAT v3.0.0, this module has been removed and replaced by the module `SnapshotEngine`.
 
-> What is the status of [ERC1404](https://erc1404) compatibility?
+> What is the status of [ERC-1404](https://github.com/ethereum/EIPs/issues/1404) compatibility?
 
-CMTAT includes the two functions defined by ERC1404, namely `detectTransferRestriction` and `messageForTransferRestriction`.
-Thus CMTAT can provide the same functionality as ERC1404.
+CMTAT (and the RuleEngine) implement **both** versions of ERC-1404:
 
-Note that ERC-1404 is still in draft state and not an official ERC.
+- the **original** ERC-1404 — `detectTransferRestriction` and `messageForTransferRestriction` (`IERC1404`) — which was only ever published as a [GitHub issue](https://github.com/ethereum/EIPs/issues/1404) and never became a merged EIP;
+- its **current rework**, the draft proposal ["Simple Restricted Token" (ethereum/ERCs PR #1701)](https://github.com/ethereum/ERCs/pull/1701), which adds the spender-aware `detectTransferRestrictionFrom` (`IERC1404Extend`).
+
+Note that ERC-1404 is still a draft in both forms — not an official, merged ERC.
 
 
 > Is the Validation module optional? 

@@ -4,9 +4,26 @@ This document defines the CMTAT Base Core Module for the CMTA Token specificatio
 
 [TOC]
 
+## Hierarchy Context
+
+`CMTATBaseCore` sits at **level 0** in the CMTAT inheritance hierarchy. It is the self-contained base used exclusively by the **Light** deployment variants (`CMTATStandaloneLight`, `CMTATUpgradeableLight`).
+
+Unlike `CMTATBaseCommon` (also level 0), `CMTATBaseCore` bundles access control, pause, full validation (`ValidationModule`, `ValidationModuleAllowance`), and enforcement into a single compact base:
+
+| Feature | `CMTATBaseCore` | `CMTATBaseCommon` |
+|---|---|---|
+| ERC-20 (mint, burn, base) | ✓ | ✓ |
+| `AccessControlModule` (RBAC, concrete `_authorize*` overrides) | ✓ | — |
+| `PauseModule` + `EnforcementModule` + `ValidationModule` | ✓ | — |
+| `ValidationModuleAllowance` (approve/permit checks) | ✓ | — |
+| `ERC20EnforcementModule` (partial freeze, forced transfer) | — | ✓ |
+| `ExtraInformationModule` | — | ✓ |
+
+`CMTATBaseCommon` is intended to be composed further up the hierarchy (through `CMTATBaseAccessControl` at level 2), where RBAC, enforcement, and extension modules are layered on separately. `CMTATBaseCore` collapses that into one level for the Light case, where only core operations (mint, burn, pause, freeze, `forcedBurn`) are needed.
+
 ## Schema
 
-![CMTATBaseCore](../../schema/uml/CMTATBaseCoreUML.png)
+![CMTATBaseCore](../../schema/plantuml/class/CMTATBaseCore.png)
 
 ### Inheritance
 
@@ -48,13 +65,14 @@ Only authorized users (*DEFAULT_ADMIN_ROLE*) are allowed to call this function.
 
 ##### Events
 
-###### `Enforcement (address,address, uint256, bytes)`
+###### `ForcedTransfer (address,address,address,uint256,bytes)`
 
 ```solidity
-event Enforcement (address indexed enforcer, address indexed account, uint256 amount, bytes data);
+event ForcedTransfer(address indexed operator, address indexed from, address indexed to, uint256 value, bytes data);
 ```
 
-Emitted when the specified `value` amount of tokens owned by `owner`are destroyed with the given `data`
+Emitted when the specified `value` amount of tokens are force-moved by `operator`.
+In `forcedBurn`, this is emitted with `to = address(0)` to represent a forced burn with `data`.
 
 ​    
 

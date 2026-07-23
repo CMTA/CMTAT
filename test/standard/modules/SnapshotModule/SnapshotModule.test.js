@@ -8,14 +8,14 @@ const SnapshotModuleZeroPlannedSnapshotTest = require('../../../common/SnapshotM
 const SnapshotModuleSetSnapshotEngineCommon = require('../../../common/SnapshotModuleCommon/SnapshotModuleSetSnapshotEngineCommon')
 
 const {
-  deployCMTATStandalone,
+  deployCMTATSnapshotStandalone,
   fixture,
   loadFixture
 } = require('../../../deploymentUtils')
 describe('Standard - SnapshotModule', function () {
   beforeEach(async function () {
     Object.assign(this, await loadFixture(fixture))
-    this.cmtat = await deployCMTATStandalone(
+    this.cmtat = await deployCMTATSnapshotStandalone(
       this._.address,
       this.admin.address,
       this.deployerAddress.address

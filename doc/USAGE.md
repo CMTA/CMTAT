@@ -13,19 +13,19 @@ are the latest ones that we tested:
 
 - hardhat.config.js
   - Solidity [0.8.34](https://www.soliditylang.org/blog/2026/02/18/solidity-0.8.34-release-announcement) (via solc-js)
-  - EVM version: Prague (Pectra upgrade)
+  - EVM version: Osaka (Fusaka upgrade)
 
 - Package.json
-  - OpenZeppelin Contracts (Node.js module): [v5.5.0](https://github.com/OpenZeppelin/openzeppelin-contracts/releases/tag/v5.5.0) 
-  - OpenZeppelin Contracts Upgradeable (Node.js module): [v5.5.0](https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/releases/tag/v5.5.0)
+  - OpenZeppelin Contracts (Node.js module): [v5.6.1](https://github.com/OpenZeppelin/openzeppelin-contracts/releases/tag/v5.6.1) 
+  - OpenZeppelin Contracts Upgradeable (Node.js module): [v5.6.1](https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/releases/tag/v5.6.1)
 
 
 ### Tools
 
 - Node v24.12.0
 
-- npm 10.2.5
-- Nomiclabs - Hardhat: ^2.24.0
+- npm 11.11.0
+- Nomiclabs - Hardhat: ^2.28.5
   - **[hardhat-ethers](https://www.npmjs.com/package/@nomicfoundation/hardhat-ethers)**
   - [Hardhat](https://hardhat.org/) plugin for integration with [ethers.js](https://github.com/ethers-io/ethers.js/)
   - **[hardhat-contract-sizer](https://www.npmjs.com/package/hardhat-contract-sizer)**: Output Solidity contract sizes with Hardhat.
@@ -35,11 +35,13 @@ are the latest ones that we tested:
 
 #### Submodule
 
-Use inside Javascript tests
+Used inside JavaScript Hardhat tests (test helper imports).
 
-OpenZeppelin Contracts Upgradeable (submodule) [v5.2.0](https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/releases/tag/v5.2.0)
+OpenZeppelin Contracts Upgradeable (submodule in `lib/openzeppelin-contracts-upgradeable`) [v5.6.1](https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/releases/tag/v5.6.1)
 Upgradeable variant of OpenZeppelin Contracts, meant for use in upgradeable contracts.
 The version of the library used is available in the file [USAGE.md](./USAGE.md)
+
+Current explicit usage in this repository is for Hardhat test helpers (e.g. EIP-712 helpers in `test/common`).
 
 Warning: 
 
@@ -57,7 +59,7 @@ Clone the git repository, with the option `--recurse-submodules` to fetch the su
 
 - Node.js version
 
-We recommend to install the [Node Version Manager `nvm`](https://github.com/nvm-sh/nvm) to manage multiple versions of Node.js on your machine. You can then, for example, install the version 20.5.0 of Node.js with the following command: `nvm install 20.5.0`
+We recommend to install the [Node Version Manager `nvm`](https://github.com/nvm-sh/nvm) to manage multiple versions of Node.js on your machine. You can then, for example, install the version 24.12.0 of Node.js with the following command: `nvm install 24.12.0`
 
 The file [.nvmrc](../.nvmrc) at the root of the project set the Node.js version. `nvm use`will automatically use this version if no version is supplied on the command line.
 
@@ -165,7 +167,7 @@ Solidity static analyzer.
 JavaScript bindings for the Solidity compiler.
 
 ```bash
-solc --base-path . --include-path ./node_modules/ contracts/deployment/CMTAT_STANDALONE.sol
+solc --base-path . --include-path ./node_modules/ contracts/deployment/CMTATStandardStandalone.sol
 ```
 
 ## Generate documentation
@@ -206,9 +208,9 @@ To generate documentation with surya, you can call the three bash scripts in doc
 
 | Task                 | Script                      | Command example                                              |
 | -------------------- | --------------------------- | ------------------------------------------------------------ |
-| Generate graph       | script_surya_graph.sh       | npx surya graph -i contracts/**/*.sol <br />npx surya graph contracts/modules/CMTAT_BASE.sol |
-| Generate inheritance | script_surya_inheritance.sh | npx surya inheritance contracts/modules/CMTAT_BASE.sol -i <br />npx surya inheritance contracts/modules/CMTAT_BASE.sol |
-| Generate report      | script_surya_report.sh      | npx surya mdreport -i surya_report.md contracts/modules/CMTAT_BASE.sol <br />npx surya mdreport surya_report.md contracts/modules/CMTAT_BASE.sol |
+| Generate graph       | script_surya_graph.sh       | npx surya graph -i contracts/**/*.sol <br />npx surya graph contracts/modules/0_CMTATBaseCore.sol |
+| Generate inheritance | script_surya_inheritance.sh | npx surya inheritance contracts/modules/0_CMTATBaseCore.sol -i <br />npx surya inheritance contracts/modules/0_CMTATBaseCore.sol |
+| Generate report      | script_surya_report.sh      | npx surya mdreport -i surya_report.md contracts/modules/0_CMTATBaseCore.sol <br />npx surya mdreport surya_report.md contracts/modules/0_CMTATBaseCore.sol |
 
 In the report, the path for the different files are indicated in absolute. You have to remove the part which correspond to your local filesystem.
 
@@ -229,7 +231,7 @@ npm run-script coverage
 Slither is a Solidity static analysis framework written in Python3
 
 ```bash
-slither .  --checklist --filter-paths "mocks|openzeppelin-contracts-upgradeable|openzeppelin-contracts|@openzeppelin|test" > slither-report.md
+slither .  --checklist --filter-paths "mocks|lib/openzeppelin-contracts-upgradeable|openzeppelin-contracts|@openzeppelin|test" > slither-report.md
 ```
 
 ### [Mythril](https://github.com/Consensys/mythril)
@@ -253,13 +255,13 @@ Note: Candidate: function require(bool, string memory)
 - Standalone
 
 ```bash
-myth analyze contracts/deployment/CMTATStandalone.sol --solc-json solc_setting.json > myth_standalone_report.md
+myth analyze contracts/deployment/CMTATStandardStandalone.sol --solc-json solc_setting.json > myth_standalone_report.md
 ```
 
 - With proxy
 
 ```bash
-myth analyze contracts/deployment/CMTATUpgradeable.sol --solc-json solc_setting.json > myth_proxy_report.md
+myth analyze contracts/deployment/CMTATStandardUpgradeable.sol --solc-json solc_setting.json > myth_proxy_report.md
 ```
 
 File path for `solc` is configured in `solc_setting.json`

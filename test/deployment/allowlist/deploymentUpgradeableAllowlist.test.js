@@ -1,10 +1,8 @@
-const { expect } = require('chai')
 const {
   deployCMTATAllowlistProxy,
   fixture,
   loadFixture
 } = require('../../deploymentUtils')
-const { ZERO_ADDRESS } = require('../../utils')
 const ERC20BaseModuleCommon = require('../../common/ERC20BaseModuleCommon')
 const ERC20MintModuleCommon = require('../../common/ERC20MintModuleCommon')
 const ERC20BurnModuleCommon = require('../../common/ERC20BurnModuleCommon')
@@ -16,6 +14,7 @@ const ExtraInfoModuleCommon = require('../../common/ExtraInfoModuleCommon')
 const DocumentModuleCommon = require('../../common/DocumentModule/DocumentModuleCommon')
 const AllowlistModuleCommon = require('../../common/AllowlistModuleCommon')
 const ERC20EnforcementModuleCommon = require('../../common/ERC20EnforcementModuleCommon')
+const ERC20EnforcementERC7551ModuleCommon = require('../../common/ERC20EnforcementERC7551ModuleCommon')
 describe('CMTAT Allowlist - Upgradeable', function () {
   beforeEach(async function () {
     Object.assign(this, await loadFixture(fixture))
@@ -30,6 +29,7 @@ describe('CMTAT Allowlist - Upgradeable', function () {
       .connect(this.admin)
       .batchSetAddressAllowlist(accounts, Allowlist)
     this.erc1404 = true
+    this.erc7551 = true
     this.dontCheckTimestamp = true
   })
   // Core
@@ -42,6 +42,7 @@ describe('CMTAT Allowlist - Upgradeable', function () {
   ValidationModuleCommonCore()
   // Extensions
   ERC20EnforcementModuleCommon()
+  ERC20EnforcementERC7551ModuleCommon()
   DocumentModuleCommon()
   ExtraInfoModuleCommon()
   // options

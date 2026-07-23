@@ -13,16 +13,19 @@ interface IRuleEngineMock is IRuleEngineERC1404 {
 
     /**
      * @dev return the number of rules
+     * @return The number of rules currently configured.
      */
     function rulesCount() external view returns (uint256);
 
     /**
      * @dev return the rule at the index specified by ruleId
+     * @return The rule stored at index `ruleId`.
      */
     function rule(uint256 ruleId) external view returns (IRule);
 
     /**
      * @dev return all the rules
+     * @return The list of all configured rules.
      */
     function rules() external view returns (IRule[] memory);
 }

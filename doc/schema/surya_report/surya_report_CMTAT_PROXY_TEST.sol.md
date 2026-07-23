@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./mocks/test/proxy/CMTAT_PROXY_TEST.sol | 39750d80d95a709dabf4dbe75c337588dc4b94c9 |
+| ./mocks/test/proxy/CMTAT_PROXY_TEST.sol | 75c01c5597d04bc00863a78c109d878cadca89e6 |
 
 
 ### Contracts Description Table
@@ -15,8 +15,8 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **CMTAT_PROXY_TEST** | Implementation | CMTATUpgradeable |||
-| └ | <Constructor> | Public ❗️ | 🛑  | CMTATUpgradeable |
+| **CMTAT_PROXY_TEST** | Implementation | CMTATStandardUpgradeable |||
+| └ | <Constructor> | Public ❗️ | 🛑  | CMTATStandardUpgradeable |
 
 
 ### Legend

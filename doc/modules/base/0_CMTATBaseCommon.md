@@ -6,7 +6,7 @@ This document defines the CMTAT Base Common Module for the CMTA Token specificat
 
 ## Schema
 
-![CMTATBaseCore](../../schema/uml/CMTATBaseCommonUML.png)
+![CMTATBaseCore](../../schema/plantuml/class/CMTATBaseCommon.png)
 
 ### Inheritance
 

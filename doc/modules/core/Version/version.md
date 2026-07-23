@@ -11,15 +11,15 @@ This document defines the Version Module for the CMTA Token specification.
 
 ## Schema
 
-![BaseUML](../../../schema/uml/BaseUML.png)
+![BaseUML](../../../schema/plantuml/class/VersionModule.png)
 
 ### Inheritance
 
-![surya_inheritance_BaseModule.sol](../../../schema/surya_inheritance/surya_inheritance_VersionModule.sol.png)
+![surya_inheritance_VersionModule.sol](../../../schema/surya_inheritance/surya_inheritance_VersionModule.sol.png)
 
 ### Graph
 
-![surya_graph_BaseModule.sol](../../../schema/surya_graph/surya_graph_VersionModule.sol.png)
+![surya_graph_VersionModule.sol](../../../schema/surya_graph/surya_graph_VersionModule.sol.png)
 
 
 
@@ -36,7 +36,7 @@ function version() external view returns (string memory version_);
 ```
 ```solidity
 function version() 
-public view virtual override(IERC3643Base) 
+public view virtual override(IERC3643Version) 
 returns (string memory version_)
 ```
 

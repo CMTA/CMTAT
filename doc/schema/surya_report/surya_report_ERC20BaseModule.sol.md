@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/wrapper/core/ERC20BaseModule.sol | cab390d71b15a78a4f9cda1a6e00095545de8ef8 |
+| ./modules/wrapper/core/ERC20BaseModule.sol | d375266f5e0cbdf31228fd1673a968c4ba464be9 |
 
 
 ### Contracts Description Table
@@ -15,16 +15,11 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **ERC20BaseModule** | Implementation | ERC20Upgradeable, IERC20Allowance, IERC3643ERC20Base, IERC20BatchBalance |||
+| **ERC20BaseModule** | Implementation | ERC20Upgradeable, IERC20Allowance, IERC20BatchBalance |||
 | └ | __ERC20BaseModule_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |
 | └ | transferFrom | Public ❗️ | 🛑  |NO❗️ |
 | └ | decimals | Public ❗️ |   |NO❗️ |
-| └ | name | Public ❗️ |   |NO❗️ |
-| └ | symbol | Public ❗️ |   |NO❗️ |
-| └ | setName | Public ❗️ | 🛑  | onlyERC20AttributeManager |
-| └ | setSymbol | Public ❗️ | 🛑  | onlyERC20AttributeManager |
 | └ | batchBalanceOf | Public ❗️ |   |NO❗️ |
-| └ | _authorizeERC20AttributeManagement | Internal 🔒 | 🛑  | |
 | └ | _getERC20BaseModuleStorage | Private 🔐 |   | |
 
 

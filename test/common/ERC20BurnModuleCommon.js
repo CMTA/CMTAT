@@ -1,11 +1,5 @@
-const {
-  BURNER_ROLE,
-  BURNER_FROM_ROLE,
-  MINTER_ROLE,
-  ZERO_ADDRESS
-} = require('../utils')
+const { BURNER_ROLE, MINTER_ROLE, ZERO_ADDRESS } = require('../utils')
 const { expect } = require('chai')
-// const REASON = 'BURN_TEST'
 const REASON_STRING = 'BURN_TEST'
 const REASON_EVENT = ethers.toUtf8Bytes(REASON_STRING)
 const REASON = ethers.Typed.bytes(REASON_EVENT)
@@ -13,7 +7,6 @@ const REASON_EMPTY = ethers.Typed.bytes(ethers.toUtf8Bytes(''))
 function ERC20BurnModuleCommon () {
   context('burn', function () {
     const INITIAL_SUPPLY = 50n
-    const INITIAL_SUPPLY_TYPED = ethers.Typed.uint256(50)
     const VALUE1 = 20n
     const VALUE_TYPED = ethers.Typed.uint256(20)
     const DIFFERENCE = INITIAL_SUPPLY - VALUE1
@@ -168,8 +161,7 @@ function ERC20BurnModuleCommon () {
       await this.cmtat.connect(this.admin).deactivateContract()
       await expect(
         this.cmtat.connect(this.admin).burn(this.address1, VALUE_TYPED)
-      )
-        .to.be.revertedWithCustomError(this.cmtat, 'EnforcedDeactivation')
+      ).to.be.revertedWithCustomError(this.cmtat, 'EnforcedDeactivation')
     })
 
     it('testCanBeBurnEvenIfContractIsPaused', async function () {
@@ -185,19 +177,63 @@ function ERC20BurnModuleCommon () {
         .setAddressFrozen(this.address1, true)
 
       // Act
-      const VALUE = 20
       const VALUE_TYPED = ethers.Typed.uint256(20)
       await expect(
         this.cmtat.connect(this.admin).burn(this.address1, VALUE_TYPED)
       )
-        .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotTransact')
+        .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotSend')
         .withArgs(this.address1.address)
+    })
+
+    it('testBurnPropagatesSpenderToRuleEngine', async function () {
+      if (!this.cmtat.setRuleEngine) {
+        this.skip()
+      }
+
+      this.ruleEngineMock = await ethers.deployContract('RuleEngineMock', [
+        this.admin
+      ])
+      await this.cmtat.connect(this.admin).setRuleEngine(this.ruleEngineMock)
+      await this.cmtat
+        .connect(this.admin)
+        .grantRole(BURNER_ROLE, this.address2)
+
+      await expect(
+        this.cmtat
+          .connect(this.address2)
+          ['burn(address,uint256)'](this.address1, 10n)
+      )
+        .to.be.revertedWithCustomError(
+          this.ruleEngineMock,
+          'RuleEngine_InvalidTransfer'
+        )
+        .withArgs(this.address1, ZERO_ADDRESS, 10n)
+    })
+
+    it('testBurnWithRuleEngineAuthorizedSpenderCanBurn', async function () {
+      if (!this.cmtat.setRuleEngine) {
+        this.skip()
+      }
+
+      this.ruleEngineMock = await ethers.deployContract('RuleEngineMock', [
+        this.admin
+      ])
+      await this.cmtat.connect(this.admin).setRuleEngine(this.ruleEngineMock)
+      await this.cmtat.connect(this.admin).grantRole(BURNER_ROLE, this.admin)
+
+      await expect(
+        this.cmtat
+          .connect(this.admin)
+          ['burn(address,uint256)'](this.address1, 10n)
+      ).to.not.be.reverted
+      expect(await this.cmtat.balanceOf(this.address1)).to.equal(
+        INITIAL_SUPPLY - 10n
+      )
     })
   })
 
   context('burnAndMint', function () {
     const INITIAL_SUPPLY = 50n
-    const VALUE1 = 20n
     const REASON_STRING_LOCAL = 'recovery'
     const REASON_EVENT_LOCAL = ethers.toUtf8Bytes(REASON_STRING_LOCAL)
     const REASON = ethers.Typed.bytes(REASON_EVENT_LOCAL)
@@ -337,8 +373,7 @@ function ERC20BurnModuleCommon () {
             AMOUNT_TO_MINT,
             REASON
           )
-      )
-        .to.be.revertedWithCustomError(this.cmtat, 'EnforcedDeactivation')
+      ).to.be.revertedWithCustomError(this.cmtat, 'EnforcedDeactivation')
     })
 
     it('testCanBeBurnAndMintEvenIFContractIsPaused', async function () {
@@ -438,10 +473,10 @@ function ERC20BurnModuleCommon () {
     }
 
     beforeEach(async function () {
-      const TOKEN_HOLDER = [this.admin, this.address1, this.address2];
-      ({ logs: this.logs1 } = await this.cmtat
+      const TOKEN_HOLDER = [this.admin, this.address1, this.address2]
+      await this.cmtat
         .connect(this.admin)
-        .batchMint(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS))
+        .batchMint(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS)
       expect(await this.cmtat.totalSupply()).to.equal(INITIAL_SUPPLY)
     })
 
@@ -460,7 +495,6 @@ function ERC20BurnModuleCommon () {
     })
 
     it('testCanBeBurntBatchByBurnerRoleWithoutReason', async function () {
-      const TOKEN_HOLDER = [this.admin, this.address1, this.address2]
       // Arrange
       await this.cmtat
         .connect(this.admin)
@@ -472,7 +506,6 @@ function ERC20BurnModuleCommon () {
     })
 
     it('testCanBeBurntBatchByBurnerRole', async function () {
-      const TOKEN_HOLDER = [this.admin, this.address1, this.address2]
       // Arrange
       await this.cmtat
         .connect(this.admin)
@@ -592,7 +625,7 @@ function ERC20BurnModuleCommon () {
       const TOKEN_HOLDER = [this.admin, this.address1, this.address2]
       const TOKEN_SUPPLY_BY_HOLDERS = [10n, 100n, 1000n]
 
-      this.cmtat
+      await this.cmtat
         .connect(this.admin)
         .batchMint(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS)
       // Arrange
@@ -603,15 +636,14 @@ function ERC20BurnModuleCommon () {
         this.cmtat
           .connect(this.admin)
           .batchBurn(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS, REASON)
-      )
-        .to.be.revertedWithCustomError(this.cmtat, 'EnforcedDeactivation')
+      ).to.be.revertedWithCustomError(this.cmtat, 'EnforcedDeactivation')
     })
 
     it('testCannotBeBatchBurnIfToIsFrozen', async function () {
       const TOKEN_HOLDER = [this.address1, this.admin, this.address2]
       const TOKEN_SUPPLY_BY_HOLDERS = [10n, 100n, 1000n]
 
-      this.cmtat
+      await this.cmtat
         .connect(this.admin)
         .batchMint(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS)
 
@@ -625,8 +657,78 @@ function ERC20BurnModuleCommon () {
           .connect(this.admin)
           .batchBurn(TOKEN_HOLDER, TOKEN_SUPPLY_BY_HOLDERS, REASON)
       )
-        .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotTransact')
+        .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotSend')
         .withArgs(this.address1)
+    })
+
+    it('testCanBatchBurnWithExactBalances', async function () {
+      const TOKEN_HOLDER = [this.admin, this.address1, this.address2]
+      const FULL_BALANCES = [
+        await this.cmtat.balanceOf(this.admin),
+        await this.cmtat.balanceOf(this.address1),
+        await this.cmtat.balanceOf(this.address2)
+      ]
+
+      await expect(
+        this.cmtat
+          .connect(this.admin)
+          .batchBurn(TOKEN_HOLDER, FULL_BALANCES, REASON_EMPTY)
+      ).to.not.be.reverted
+
+      expect(await this.cmtat.balanceOf(this.admin)).to.equal(0n)
+      expect(await this.cmtat.balanceOf(this.address1)).to.equal(0n)
+      expect(await this.cmtat.balanceOf(this.address2)).to.equal(0n)
+      expect(await this.cmtat.totalSupply()).to.equal(0n)
+    })
+
+    it('testBatchBurnPropagatesSpenderToRuleEngine', async function () {
+      if (!this.cmtat.setRuleEngine) {
+        this.skip()
+      }
+
+      const TOKEN_HOLDER = [this.admin, this.address1, this.address2]
+
+      this.ruleEngineMock = await ethers.deployContract('RuleEngineMock', [
+        this.admin
+      ])
+      await this.cmtat.connect(this.admin).setRuleEngine(this.ruleEngineMock)
+      await this.cmtat
+        .connect(this.admin)
+        .grantRole(BURNER_ROLE, this.address3)
+
+      await expect(
+        this.cmtat
+          .connect(this.address3)
+          .batchBurn(TOKEN_HOLDER, TOKEN_BY_HOLDERS_TO_BURN, REASON_EMPTY)
+      )
+        .to.be.revertedWithCustomError(
+          this.ruleEngineMock,
+          'RuleEngine_InvalidTransfer'
+        )
+        .withArgs(this.admin, ZERO_ADDRESS, TOKEN_BY_HOLDERS_TO_BURN[0])
+    })
+
+    it('testBatchBurnWithRuleEngineAuthorizedSpenderCanBurn', async function () {
+      if (!this.cmtat.setRuleEngine) {
+        this.skip()
+      }
+
+      const TOKEN_HOLDER = [this.admin, this.address1, this.address2]
+      // Keep values below RuleMock threshold (< 20) so this test
+      // validates authorized spender propagation, not mock rule limits.
+      const TOKEN_BY_HOLDERS_TO_BURN_SAFE = [5n, 6n, 7n]
+
+      this.ruleEngineMock = await ethers.deployContract('RuleEngineMock', [
+        this.admin
+      ])
+      await this.cmtat.connect(this.admin).setRuleEngine(this.ruleEngineMock)
+      await this.cmtat.connect(this.admin).grantRole(BURNER_ROLE, this.admin)
+
+      await expect(
+        this.cmtat
+          .connect(this.admin)
+          .batchBurn(TOKEN_HOLDER, TOKEN_BY_HOLDERS_TO_BURN_SAFE, REASON_EMPTY)
+      ).to.not.be.reverted
     })
   })
 }

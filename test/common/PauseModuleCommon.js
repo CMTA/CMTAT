@@ -30,8 +30,7 @@ function PauseModuleCommon () {
           this.cmtat
             .connect(this.address1)
             .transfer(this.address2, AMOUNT_TO_TRANSFER)
-        )
-          .to.be.revertedWithCustomError(this.cmtat, 'EnforcedPause')
+        ).to.be.revertedWithCustomError(this.cmtat, 'EnforcedPause')
       }
     })
 
@@ -57,8 +56,7 @@ function PauseModuleCommon () {
           this.cmtat
             .connect(this.address1)
             .transfer(this.address2, AMOUNT_TO_TRANSFER)
-        )
-          .to.be.revertedWithCustomError(this.cmtat, 'EnforcedPause')
+        ).to.be.revertedWithCustomError(this.cmtat, 'EnforcedPause')
       }
     })
 
@@ -84,9 +82,13 @@ function PauseModuleCommon () {
       await expect(this.logs)
         .to.emit(this.cmtat, 'Unpaused')
         .withArgs(this.admin)
-      // Transfer works
+      // Transfer is no longer blocked by the pause gate. address1 has no
+      // balance (and may not be allowlisted), so the tx can still revert for
+      // another reason — but it must NOT revert with EnforcedPause anymore.
       if (!this.generic) {
-        this.cmtat.connect(this.address1).transfer(this.address2, 10n)
+        await expect(
+          this.cmtat.connect(this.address1).transfer(this.address2, 10n)
+        ).to.not.be.revertedWithCustomError(this.cmtat, 'EnforcedPause')
       }
     })
 
@@ -106,9 +108,13 @@ function PauseModuleCommon () {
       await expect(this.logs)
         .to.emit(this.cmtat, 'Unpaused')
         .withArgs(this.address1)
-      // Transfer works
+      // Transfer is no longer blocked by the pause gate. address1 has no
+      // balance (and may not be allowlisted), so the tx can still revert for
+      // another reason — but it must NOT revert with EnforcedPause anymore.
       if (!this.generic) {
-        this.cmtat.connect(this.address1).transfer(this.address2, 10n)
+        await expect(
+          this.cmtat.connect(this.address1).transfer(this.address2, 10n)
+        ).to.not.be.revertedWithCustomError(this.cmtat, 'EnforcedPause')
       }
     })
 
@@ -181,8 +187,7 @@ function PauseModuleCommon () {
           this.cmtat
             .connect(this.address1)
             .transfer(this.address2, AMOUNT_TO_TRANSFER)
-        )
-          .to.be.revertedWithCustomError(this.cmtat, 'EnforcedPause')
+        ).to.be.revertedWithCustomError(this.cmtat, 'EnforcedPause')
       }
     })
 
@@ -269,8 +274,7 @@ function PauseModuleCommon () {
           this.cmtat
             .connect(this.address3)
             .transferFrom(this.address1, this.address2, AMOUNT_TO_TRANSFER)
-        )
-          .to.be.revertedWithCustomError(this.cmtat, 'EnforcedPause')
+        ).to.be.revertedWithCustomError(this.cmtat, 'EnforcedPause')
       }
     })
   })
@@ -301,8 +305,7 @@ function PauseModuleCommon () {
           this.cmtat
             .connect(this.address1)
             .transfer(this.address2, AMOUNT_TO_TRANSFER)
-        )
-          .to.be.revertedWithCustomError(this.cmtat, 'EnforcedPause')
+        ).to.be.revertedWithCustomError(this.cmtat, 'EnforcedPause')
       }
 
       if (!this.generic) {
@@ -359,8 +362,7 @@ function PauseModuleCommon () {
           this.cmtat
             .connect(this.address3)
             .transferFrom(this.address1, this.address2, AMOUNT_TO_TRANSFER)
-        )
-          .to.be.revertedWithCustomError(this.cmtat, 'EnforcedPause')
+        ).to.be.revertedWithCustomError(this.cmtat, 'EnforcedPause')
       }
 
       // Unpause is reverted
@@ -389,6 +391,17 @@ function PauseModuleCommon () {
         .withArgs(this.address1.address, DEFAULT_ADMIN_ROLE)
       // Assert
       expect(await this.cmtat.deactivated()).to.equal(false)
+    })
+
+    it('testCannotBeDeactivatedTwice', async function () {
+      // Arrange
+      await this.cmtat.connect(this.admin).pause()
+      await this.cmtat.connect(this.admin).deactivateContract()
+
+      // Act + Assert
+      await expect(
+        this.cmtat.connect(this.admin).deactivateContract()
+      ).to.be.revertedWithCustomError(this.cmtat, 'AlreadyDeactivated')
     })
   })
 }

@@ -1,0 +1,26 @@
+@startuml
+title ERC20BurnModule
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+
+class ERC20BurnModuleInternal
+interface IBurnBatchERC20
+interface IERC3643Burn
+interface IERC7551Burn
+
+abstract class ERC20BurnModule {
+    +{static} BURNER_ROLE : bytes32
+    --
+    +burn(address, uint256, bytes)
+    +burn(address, uint256)
+    +batchBurn(address[], uint256[], bytes)
+    +batchBurn(address[], uint256[])
+}
+
+ERC20BurnModuleInternal <|-- ERC20BurnModule
+IBurnBatchERC20 <|.. ERC20BurnModule
+IERC3643Burn <|.. ERC20BurnModule
+IERC7551Burn <|.. ERC20BurnModule
+
+@enduml

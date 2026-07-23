@@ -12,7 +12,7 @@ This document defines ERC20Mint Module for the CMTA Token specification.
 
 ## Schema
 
-![ERC20MintUML](../../../schema/uml/ERC20MintUML.png)
+![ERC20MintUML](../../../schema/plantuml/class/ERC20MintModule.png)
 
 ### Inheritance
 

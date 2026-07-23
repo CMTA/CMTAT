@@ -1,0 +1,30 @@
+@startuml
+title Transfer restriction - core mint / burn
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+
+start
+:mint(account, value) / batchMint(accounts, values)\nburn(account, value) / batchBurn(accounts, values);
+if (contract deactivated?) then (yes)
+  :revert EnforcedDeactivation;
+  stop
+else (no)
+endif
+if (account frozen?) then (yes)
+  :revert ERC7943CannotReceive(to)   [mint]\nor ERC7943CannotSend(from)   [burn];
+  stop
+else (no)
+endif
+if (RuleEngine set?) then (yes)
+  :RuleEngine.transferred(...)\n(reverts if not compliant);
+else (no)
+endif
+:mint / burn valid -> rest of the ERC-20 flow;
+stop
+
+note right
+  Mint and burn are NOT blocked by pause - only by deactivation.
+  To burn from a frozen address, the issuer must use
+  forcedBurn / forcedTransfer (ERC20Enforcement).
+end note
+@enduml

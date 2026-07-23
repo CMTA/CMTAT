@@ -1,9 +1,5 @@
 const { expect } = require('chai')
-const { ERC20ENFORCER_ROLE, DEFAULT_ADMIN_ROLE } = require('../utils')
-const REASON_STRING = 'Bad guy'
-const REASON_EVENT = ethers.toUtf8Bytes(REASON_STRING)
-const REASON = ethers.Typed.bytes(REASON_EVENT)
-const REASON_EMPTY = ethers.Typed.bytes(ethers.toUtf8Bytes(''))
+const { DEFAULT_ADMIN_ROLE } = require('../utils')
 function ERC20BaseModuleCommon () {
   context('Token structure', function () {
     it('testHasTheDefinedName', async function () {
@@ -46,12 +42,32 @@ function ERC20BaseModuleCommon () {
 
   context('ERC20 approval / approve', function () {
     it('testCannotApproveIfPaused', async function () {
-      if(!this.core){
-        await this.cmtat.connect(this.admin).pause();
-        await expect(
-          this.cmtat.connect(this.admin).approve(this.address1, 20n)
-        ).to.be.revertedWithCustomError(this.cmtat, 'EnforcedPause')
-      }
+      await this.cmtat.connect(this.admin).pause()
+      await expect(
+        this.cmtat.connect(this.admin).approve(this.address1, 20n)
+      ).to.be.revertedWithCustomError(this.cmtat, 'EnforcedPause')
+    })
+
+    it('testCannotApproveIfOwnerIsFrozen', async function () {
+      await this.cmtat
+        .connect(this.admin)
+        .setAddressFrozen(this.address1, true)
+      await expect(
+        this.cmtat.connect(this.address1).approve(this.address3, 20n)
+      )
+        .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotSend')
+        .withArgs(this.address1.address)
+    })
+
+    it('testCannotApproveIfSpenderIsFrozen', async function () {
+      await this.cmtat
+        .connect(this.admin)
+        .setAddressFrozen(this.address3, true)
+      await expect(
+        this.cmtat.connect(this.address1).approve(this.address3, 20n)
+      )
+        .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotSend')
+        .withArgs(this.address3.address)
     })
   })
 
@@ -66,7 +82,7 @@ function ERC20BaseModuleCommon () {
         .to.emit(this.cmtat, 'Symbol')
         .withArgs(NEW_SYMBOL, NEW_SYMBOL)
     })
-    it('testCannotNonAdminUpdateName', async function () {
+    it('testCannotNonAdminUpdateSymbol', async function () {
       // Act
       await expect(this.cmtat.connect(this.address1).setSymbol('New Symbol'))
         .to.be.revertedWithCustomError(
@@ -100,8 +116,10 @@ function ERC20BaseModuleCommon () {
       // Assert
       const ADDRESSES = [this.address1, this.address2, this.address3]
       let result = await this.cmtat.batchBalanceOf(ADDRESSES)
+      expect(result[0].length).to.equal(ADDRESSES.length)
       expect(result[0][0]).to.equal(TOKEN_AMOUNTS[0])
       expect(result[0][1]).to.equal(TOKEN_AMOUNTS[1])
+      expect(result[0][2]).to.equal(TOKEN_AMOUNTS[2])
       expect(result[1]).to.equal(TOKEN_INITIAL_SUPPLY)
 
       const ADDRESSES2 = []
@@ -161,6 +179,19 @@ function ERC20BaseModuleCommon () {
         .to.emit(this.cmtat, 'Approval')
         .withArgs(this.address1, this.address3, AMOUNT_TO_APPROVE)
     })
+
+    it('testApproveZeroValue', async function () {
+      this.logs = await this.cmtat
+        .connect(this.address1)
+        .approve(this.address3, 0)
+
+      expect(await this.cmtat.allowance(this.address1, this.address3)).to.equal(
+        0
+      )
+      await expect(this.logs)
+        .to.emit(this.cmtat, 'Approval')
+        .withArgs(this.address1, this.address3, 0)
+    })
   })
 
   context('Transfer', function () {
@@ -215,6 +246,38 @@ function ERC20BaseModuleCommon () {
       )
         .to.be.revertedWithCustomError(this.cmtat, 'ERC20InsufficientBalance')
         .withArgs(this.address1.address, ADDRESS1_BALANCE, AMOUNT_TO_TRANSFER)
+    })
+
+    it('testCanTransferZeroValue', async function () {
+      const beforeBalance1 = await this.cmtat.balanceOf(this.address1)
+      const beforeBalance2 = await this.cmtat.balanceOf(this.address2)
+
+      this.logs = await this.cmtat
+        .connect(this.address1)
+        .transfer(this.address2, 0)
+
+      expect(await this.cmtat.balanceOf(this.address1)).to.equal(
+        beforeBalance1
+      )
+      expect(await this.cmtat.balanceOf(this.address2)).to.equal(
+        beforeBalance2
+      )
+      await expect(this.logs)
+        .to.emit(this.cmtat, 'Transfer')
+        .withArgs(this.address1, this.address2, 0)
+    })
+
+    it('testCanTransferToSelf', async function () {
+      const beforeBalance = await this.cmtat.balanceOf(this.address1)
+
+      this.logs = await this.cmtat
+        .connect(this.address1)
+        .transfer(this.address1, 1)
+
+      expect(await this.cmtat.balanceOf(this.address1)).to.equal(beforeBalance)
+      await expect(this.logs)
+        .to.emit(this.cmtat, 'Transfer')
+        .withArgs(this.address1, this.address1, 1)
     })
 
     // allows address3 to transfer tokens from address1 to address2 with the right allowance
@@ -320,10 +383,14 @@ function ERC20BaseModuleCommon () {
 
     it('testTransferFromOneAccountToAnother', async function () {
       const AMOUNT_TO_TRANSFER = 11n
-      // Act
-      this.logs = await this.cmtat
+      // Arrange - address1 approves address3 to spend on its behalf
+      await this.cmtat
         .connect(this.address1)
-        .transfer(this.address2, AMOUNT_TO_TRANSFER)
+        .approve(this.address3, AMOUNT_TO_TRANSFER)
+      // Act - address3 moves address1's tokens to address2 via transferFrom
+      this.logs = await this.cmtat
+        .connect(this.address3)
+        .transferFrom(this.address1, this.address2, AMOUNT_TO_TRANSFER)
       // Assert
       expect(await this.cmtat.balanceOf(this.address1)).to.equal(
         TOKEN_AMOUNTS[0] - AMOUNT_TO_TRANSFER
@@ -335,24 +402,72 @@ function ERC20BaseModuleCommon () {
         TOKEN_AMOUNTS[2]
       )
       expect(await this.cmtat.totalSupply()).to.equal(TOKEN_INITIAL_SUPPLY)
+      // the spender's allowance is consumed
+      expect(await this.cmtat.allowance(this.address1, this.address3)).to.equal(
+        0n
+      )
       // emits a Transfer event
       await expect(this.logs)
         .to.emit(this.cmtat, 'Transfer')
         .withArgs(this.address1, this.address2, AMOUNT_TO_TRANSFER)
     })
 
-    // ADDRESS1 -> ADDRESS2
+    // ADDRESS1 -> ADDRESS2 (via ADDRESS3 as spender)
     it('testCannotTransferMoreTokensThanOwn', async function () {
       const ADDRESS1_BALANCE = await this.cmtat.balanceOf(this.address1)
       const AMOUNT_TO_TRANSFER = 50n
+      // Arrange - approve enough so the balance check (not the allowance) is hit
+      await this.cmtat
+        .connect(this.address1)
+        .approve(this.address3, AMOUNT_TO_TRANSFER)
       // Act
       await expect(
         this.cmtat
-          .connect(this.address1)
-          .transfer(this.address2, AMOUNT_TO_TRANSFER)
+          .connect(this.address3)
+          .transferFrom(this.address1, this.address2, AMOUNT_TO_TRANSFER)
       )
         .to.be.revertedWithCustomError(this.cmtat, 'ERC20InsufficientBalance')
         .withArgs(this.address1.address, ADDRESS1_BALANCE, AMOUNT_TO_TRANSFER)
+    })
+
+    it('testCanTransferFromZeroValue', async function () {
+      const beforeBalance1 = await this.cmtat.balanceOf(this.address1)
+      const beforeBalance2 = await this.cmtat.balanceOf(this.address2)
+
+      this.logs = await this.cmtat
+        .connect(this.address3)
+        .transferFrom(this.address1, this.address2, 0)
+
+      expect(await this.cmtat.balanceOf(this.address1)).to.equal(
+        beforeBalance1
+      )
+      expect(await this.cmtat.balanceOf(this.address2)).to.equal(
+        beforeBalance2
+      )
+      await expect(this.logs)
+        .to.emit(this.cmtat, 'Transfer')
+        .withArgs(this.address1, this.address2, 0)
+    })
+
+    it('testCanTransferFromToSelf', async function () {
+      await this.cmtat.connect(this.address1).approve(this.address3, 1)
+      const beforeBalance = await this.cmtat.balanceOf(this.address1)
+      const beforeAllowance = await this.cmtat.allowance(
+        this.address1,
+        this.address3
+      )
+
+      this.logs = await this.cmtat
+        .connect(this.address3)
+        .transferFrom(this.address1, this.address1, 1)
+
+      expect(await this.cmtat.balanceOf(this.address1)).to.equal(beforeBalance)
+      expect(await this.cmtat.allowance(this.address1, this.address3)).to.equal(
+        beforeAllowance - 1n
+      )
+      await expect(this.logs)
+        .to.emit(this.cmtat, 'Transfer')
+        .withArgs(this.address1, this.address1, 1)
     })
   })
 }

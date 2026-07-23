@@ -57,13 +57,14 @@ interface IERC7551Pause {
 }
 interface IERC7551ERC20EnforcementEvent {
     /**
-     * @notice Emitted when a forced transfer or burn occurs.
-     * @param enforcer The address that initiated the enforcement.
-     * @param account The address affected by the enforcement.
-     * @param amount The number of tokens involved.
-     * @param data Additional data related to the enforcement.
+     * @notice Emitted when a forced transfer is executed.
+     * @param operator The address that initiated the forced transfer.
+     * @param from The address from which tokens are debited.
+     * @param to The address to which tokens are credited.
+     * @param value The amount of tokens transferred.
+     * @param data Optional metadata associated with the action.
      */
-    event Enforcement (address indexed enforcer, address indexed account, uint256 amount, bytes data);
+    event ForcedTransfer(address indexed operator, address indexed from, address indexed to, uint256 value, bytes data);
 }
 
 interface IERC7551ERC20EnforcementTokenFrozenEvent {

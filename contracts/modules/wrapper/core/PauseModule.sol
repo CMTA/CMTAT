@@ -7,7 +7,7 @@ import {PausableUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/Pau
 /* ==== Tokenization === */
 import {IERC3643Pause} from "../../../interfaces/tokenization/IERC3643Partial.sol";
 import {IERC7551Pause} from "../../../interfaces/tokenization/draft-IERC7551.sol";
-import {ICMTATDeactivate} from "../../../interfaces/tokenization/ICMTAT.sol";
+import {IERC8343} from "../../../interfaces/tokenization/draft-IERC8343.sol";
 
 
 /**
@@ -21,7 +21,7 @@ import {ICMTATDeactivate} from "../../../interfaces/tokenization/ICMTAT.sol";
  * period, or having an emergency switch for freezing all token transfers in the
  * event of a large bug.
  */
-abstract contract PauseModule is PausableUpgradeable, IERC3643Pause, IERC7551Pause, ICMTATDeactivate {
+abstract contract PauseModule is PausableUpgradeable, IERC3643Pause, IERC7551Pause, IERC8343 {
     error CMTAT_PauseModule_ContractIsDeactivated();
     error EnforcedDeactivation();
     /* ============ State Variables ============ */
@@ -72,19 +72,22 @@ abstract contract PauseModule is PausableUpgradeable, IERC3643Pause, IERC7551Pau
     }
 
     /**
-    * @inheritdoc ICMTATDeactivate
+    * @inheritdoc IERC8343
     * @custom:access-control
     * - the caller must have the `DEFAULT_ADMIN_ROLE`.
     * @custom:devimpl
     * With a proxy architecture, it is still possible to rollback by deploying a new implementation which sets the variable to false.
     */
     function deactivateContract()
-        public virtual override(ICMTATDeactivate)
+        public virtual override(IERC8343)
         onlyDeactivateContractManager
     {
         // Contract must be in pause state
         PausableUpgradeable._requirePaused();
         PauseModuleStorage storage $ = _getPauseModuleStorage();
+        if ($._isDeactivated) {
+            revert AlreadyDeactivated();
+        }
         $._isDeactivated = true;
        emit Deactivated(_msgSender());
     }
@@ -98,9 +101,9 @@ abstract contract PauseModule is PausableUpgradeable, IERC3643Pause, IERC7551Pau
    }
 
     /**
-    * @inheritdoc ICMTATDeactivate
+    * @inheritdoc IERC8343
     */
-    function deactivated() public view virtual override(ICMTATDeactivate) returns (bool){
+    function deactivated() public view virtual override(IERC8343) returns (bool){
         PauseModuleStorage storage $ = _getPauseModuleStorage();
         return $._isDeactivated;
     }

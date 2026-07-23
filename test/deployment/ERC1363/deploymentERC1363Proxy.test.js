@@ -1,12 +1,21 @@
 const { expect } = require('chai')
 const {
   deployCMTATERC1363Proxy,
+  DEPLOYMENT_DECIMAL,
+  TERMS,
   fixture,
   loadFixture
 } = require('../../deploymentUtils')
+const { upgrades } = require('hardhat')
 const {
-  IERC165_INTERFACEID, IERC721_INTERFACEID,IACCESSCONTROL_INTERFACEID,
-  IERC1363_INTERFACEID, IERC5679_INTERFACEID
+  ZERO_ADDRESS,
+  IERC165_INTERFACEID,
+  IERC721_INTERFACEID,
+  IACCESSCONTROL_INTERFACEID,
+  IERC1363_INTERFACEID,
+  IERC5679_INTERFACEID,
+  IERC1404_INTERFACEID,
+  IERC1404EXTEND_INTERFACEID
 } = require('../../utils')
 
 // Core
@@ -18,20 +27,12 @@ const ERC20BurnModuleCommon = require('../../common/ERC20BurnModuleCommon')
 const EnforcementModuleCommon = require('../../common/EnforcementModuleCommon')
 // Extensions
 const ERC20EnforcementModuleCommon = require('../../common/ERC20EnforcementModuleCommon')
+const ERC20EnforcementERC7551ModuleCommon = require('../../common/ERC20EnforcementERC7551ModuleCommon')
 const DocumentModuleCommon = require('../../common/DocumentModule/DocumentModuleCommon')
 const ExtraInfoModuleCommon = require('../../common/ExtraInfoModuleCommon')
 // options
 const ERC20CrossChainModuleCommon = require('../../common/ERC20CrossChainModuleCommon')
 const CCIPModuleCommon = require('../../common/CCIPModuleCommon')
-// Snapshot
-const SnapshotModuleCommonRescheduling = require('../../common/SnapshotModuleCommon/SnapshotModuleCommonRescheduling')
-const SnapshotModuleCommonScheduling = require('../../common/SnapshotModuleCommon/SnapshotModuleCommonScheduling')
-const SnapshotModuleCommonUnschedule = require('../../common/SnapshotModuleCommon/SnapshotModuleCommonUnschedule')
-const SnapshotModuleCommonGetNextSnapshot = require('../../common/SnapshotModuleCommon/SnapshotModuleCommonGetNextSnapshot')
-const SnapshotModuleMultiplePlannedTest = require('../../common/SnapshotModuleCommon/global/SnapshotModuleMultiplePlannedTest')
-const SnapshotModuleOnePlannedSnapshotTest = require('../../common/SnapshotModuleCommon/global/SnapshotModuleOnePlannedSnapshotTest')
-const SnapshotModuleZeroPlannedSnapshotTest = require('../../common/SnapshotModuleCommon/global/SnapshotModuleZeroPlannedSnapshot')
-const SnapshotModuleSetSnapshotEngineCommon = require('../../common/SnapshotModuleCommon/SnapshotModuleSetSnapshotEngineCommon')
 const VALUE = 20n
 describe('CMTAT - ERC1363 Proxy Deployment', function () {
   beforeEach(async function () {
@@ -41,6 +42,7 @@ describe('CMTAT - ERC1363 Proxy Deployment', function () {
       this.admin.address,
       this.deployerAddress.address
     )
+    this.erc7551 = true
     this.dontCheckTimestamp = true
     const ReceiverMockFactory = await ethers.getContractFactory(
       'ERC1363ReceiverMock'
@@ -50,12 +52,28 @@ describe('CMTAT - ERC1363 Proxy Deployment', function () {
   /* ============ ERC165 ============ */
   it('testSupportRightInterface', async function () {
     // Assert
-    expect(await this.cmtat.supportsInterface(IACCESSCONTROL_INTERFACEID)).to.equal(true)
-    expect(await this.cmtat.supportsInterface(IERC165_INTERFACEID)).to.equal(true)
+    expect(
+      await this.cmtat.supportsInterface(IACCESSCONTROL_INTERFACEID)
+    ).to.equal(true)
+    expect(await this.cmtat.supportsInterface(IERC165_INTERFACEID)).to.equal(
+      true
+    )
     expect(await this.cmtat.supportsInterface(IERC721_INTERFACEID)).to.equal(
-         false)
-    expect(await this.cmtat.supportsInterface(IERC5679_INTERFACEID)).to.equal(true)
-    expect(await this.cmtat.supportsInterface(IERC1363_INTERFACEID)).to.equal(true)
+      false
+    )
+    expect(await this.cmtat.supportsInterface(IERC5679_INTERFACEID)).to.equal(
+      true
+    )
+    expect(await this.cmtat.supportsInterface(IERC1363_INTERFACEID)).to.equal(
+      true
+    )
+    expect(await this.cmtat.supportsInterface(IERC1404_INTERFACEID)).to.equal(
+      true
+    )
+    expect(
+      await this.cmtat.supportsInterface(IERC1404EXTEND_INTERFACEID)
+    ).to.equal(true)
+    expect(await this.cmtat.supportsInterface('0xffffffff')).to.equal(false)
   })
   it('testCanSendTokenToReceiverContract', async function () {
     // Arrange
@@ -93,6 +111,7 @@ describe('CMTAT - ERC1363 Proxy Deployment', function () {
 
   // Extensions
   ERC20EnforcementModuleCommon()
+  ERC20EnforcementERC7551ModuleCommon()
   DocumentModuleCommon()
   ExtraInfoModuleCommon()
 
@@ -100,14 +119,78 @@ describe('CMTAT - ERC1363 Proxy Deployment', function () {
   ERC20CrossChainModuleCommon()
   CCIPModuleCommon()
 
-  // Snapshot
-  SnapshotModuleMultiplePlannedTest()
-  SnapshotModuleOnePlannedSnapshotTest()
-  SnapshotModuleZeroPlannedSnapshotTest()
-  SnapshotModuleCommonRescheduling()
-  SnapshotModuleCommonScheduling()
-  SnapshotModuleCommonUnschedule()
-  SnapshotModuleCommonGetNextSnapshot()
-  // Set snapshot Engine
-  SnapshotModuleSetSnapshotEngineCommon
+  context('Initializer', function () {
+    it('testCanInitializeERC1363ProxyManually', async function () {
+      const factory = await ethers.getContractFactory(
+        'CMTATUpgradeableERC1363'
+      )
+      const cmtat = await upgrades.deployProxy(factory, [], {
+        initializer: false,
+        constructorArgs: [this._.address],
+        from: this.deployerAddress.address,
+        unsafeAllow: ['missing-initializer']
+      })
+
+      await cmtat.initialize(
+        this.admin.address,
+        ['CMTA Token', 'CMTAT', DEPLOYMENT_DECIMAL],
+        ['CMTAT_ISIN', TERMS, 'CMTAT_info'],
+        [ZERO_ADDRESS]
+      )
+
+      expect(await cmtat.ruleEngine()).to.equal(ZERO_ADDRESS)
+    })
+
+    it('testCanInitializeERC1363ProxyWithRuleEngine', async function () {
+      const ruleEngineMock = await ethers.deployContract('RuleEngineMock', [
+        this.admin.address
+      ])
+      const factory = await ethers.getContractFactory(
+        'CMTATUpgradeableERC1363'
+      )
+      const cmtat = await upgrades.deployProxy(factory, [], {
+        initializer: false,
+        constructorArgs: [this._.address],
+        from: this.deployerAddress.address,
+        unsafeAllow: ['missing-initializer']
+      })
+
+      await cmtat.initialize(
+        this.admin.address,
+        ['CMTA Token', 'CMTAT', DEPLOYMENT_DECIMAL],
+        ['CMTAT_ISIN', TERMS, 'CMTAT_info'],
+        [ruleEngineMock.target]
+      )
+
+      expect(await cmtat.ruleEngine()).to.equal(ruleEngineMock.target)
+    })
+
+    it('testCannotInitializeERC1363ProxyTwice', async function () {
+      const factory = await ethers.getContractFactory(
+        'CMTATUpgradeableERC1363'
+      )
+      const cmtat = await upgrades.deployProxy(factory, [], {
+        initializer: false,
+        constructorArgs: [this._.address],
+        from: this.deployerAddress.address,
+        unsafeAllow: ['missing-initializer']
+      })
+
+      await cmtat.initialize(
+        this.admin.address,
+        ['CMTA Token', 'CMTAT', DEPLOYMENT_DECIMAL],
+        ['CMTAT_ISIN', TERMS, 'CMTAT_info'],
+        [ZERO_ADDRESS]
+      )
+
+      await expect(
+        cmtat.initialize(
+          this.admin.address,
+          ['CMTA Token', 'CMTAT', DEPLOYMENT_DECIMAL],
+          ['CMTAT_ISIN', TERMS, 'CMTAT_info'],
+          [ZERO_ADDRESS]
+        )
+      ).to.be.revertedWithCustomError(cmtat, 'InvalidInitialization')
+    })
+  })
 })

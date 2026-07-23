@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./interfaces/tokenization/draft-IERC1643.sol | 5e6aabb7f05bca44c712b5b8b2707c066c1b27fc |
+| ./interfaces/tokenization/draft-IERC1643.sol | 430d6604bc3ff3b5fb36c541aac376e3d9b39c26 |
 
 
 ### Contracts Description Table
@@ -18,6 +18,8 @@
 | **IERC1643** | Interface |  |||
 | └ | getDocument | External ❗️ |   |NO❗️ |
 | └ | getAllDocuments | External ❗️ |   |NO❗️ |
+| └ | setDocument | External ❗️ | 🛑  |NO❗️ |
+| └ | removeDocument | External ❗️ | 🛑  |NO❗️ |
 
 
 ### Legend

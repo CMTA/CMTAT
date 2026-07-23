@@ -5,8 +5,13 @@ const {
   loadFixture
 } = require('../../deploymentUtils')
 const {
-  IERC165_INTERFACEID, IERC721_INTERFACEID,IACCESSCONTROL_INTERFACEID,
-  IERC5679_INTERFACEID, IERC1363_INTERFACEID
+  IERC165_INTERFACEID,
+  IERC721_INTERFACEID,
+  IACCESSCONTROL_INTERFACEID,
+  IERC5679_INTERFACEID,
+  IERC1363_INTERFACEID,
+  IERC1404_INTERFACEID,
+  IERC1404EXTEND_INTERFACEID
 } = require('../../utils')
 
 // Core
@@ -21,6 +26,7 @@ const ERC20CrossChainModuleCommon = require('../../common/ERC20CrossChainModuleC
 const CCIPModuleCommon = require('../../common/CCIPModuleCommon')
 // Extensions
 const ERC20EnforcementModuleCommon = require('../../common/ERC20EnforcementModuleCommon')
+const ERC20EnforcementERC7551ModuleCommon = require('../../common/ERC20EnforcementERC7551ModuleCommon')
 const DocumentModuleCommon = require('../../common/DocumentModule/DocumentModuleCommon')
 const ExtraInfoModuleCommon = require('../../common/ExtraInfoModuleCommon')
 const VALUE = 20n
@@ -32,6 +38,7 @@ describe('CMTAT ERC1363 - Standalone', function () {
       this.admin.address,
       this.deployerAddress.address
     )
+    this.erc7551 = true
     this.dontCheckTimestamp = true
     const ReceiverMockFactory = await ethers.getContractFactory(
       'ERC1363ReceiverMock'
@@ -41,12 +48,27 @@ describe('CMTAT ERC1363 - Standalone', function () {
 
   /* ============ ERC165 ============ */
   it('testSupportRightInterface', async function () {
-    expect(await this.cmtat.supportsInterface(IACCESSCONTROL_INTERFACEID)).to.equal(true)
-    expect(await this.cmtat.supportsInterface(IERC165_INTERFACEID)).to.equal(true)
+    expect(
+      await this.cmtat.supportsInterface(IACCESSCONTROL_INTERFACEID)
+    ).to.equal(true)
+    expect(await this.cmtat.supportsInterface(IERC165_INTERFACEID)).to.equal(
+      true
+    )
     expect(await this.cmtat.supportsInterface(IERC721_INTERFACEID)).to.equal(
-         false)
-    expect(await this.cmtat.supportsInterface(IERC5679_INTERFACEID)).to.equal(true)
-    expect(await this.cmtat.supportsInterface(IERC1363_INTERFACEID)).to.equal(true)
+      false
+    )
+    expect(await this.cmtat.supportsInterface(IERC5679_INTERFACEID)).to.equal(
+      true
+    )
+    expect(await this.cmtat.supportsInterface(IERC1363_INTERFACEID)).to.equal(
+      true
+    )
+    expect(await this.cmtat.supportsInterface(IERC1404_INTERFACEID)).to.equal(
+      true
+    )
+    expect(
+      await this.cmtat.supportsInterface(IERC1404EXTEND_INTERFACEID)
+    ).to.equal(true)
   })
   it('testCanSendTokenToReceiverContract', async function () {
     // Arrange
@@ -89,6 +111,7 @@ describe('CMTAT ERC1363 - Standalone', function () {
   CCIPModuleCommon()
   // Extensions
   ERC20EnforcementModuleCommon()
+  ERC20EnforcementERC7551ModuleCommon()
   DocumentModuleCommon()
   ExtraInfoModuleCommon()
 })

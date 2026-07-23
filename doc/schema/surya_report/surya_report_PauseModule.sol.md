@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/wrapper/core/PauseModule.sol | 0980a0d824c410ca19ee321e50b766924453fd56 |
+| ./modules/wrapper/core/PauseModule.sol | 9c29b98667b896b61d8e37f59b3dadc89d8549ef |
 
 
 ### Contracts Description Table
@@ -15,7 +15,7 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **PauseModule** | Implementation | PausableUpgradeable, IERC3643Pause, IERC7551Pause, ICMTATDeactivate |||
+| **PauseModule** | Implementation | PausableUpgradeable, IERC3643Pause, IERC7551Pause, IERC8343 |||
 | └ | pause | Public ❗️ | 🛑  | onlyPauseManager |
 | └ | unpause | Public ❗️ | 🛑  | onlyPauseManager |
 | └ | deactivateContract | Public ❗️ | 🛑  | onlyDeactivateContractManager |

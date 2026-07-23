@@ -1,10 +1,8 @@
-const { expect } = require('chai')
 const {
   deployCMTATDebtStandalone,
   fixture,
   loadFixture
 } = require('../../deploymentUtils')
-const { ZERO_ADDRESS } = require('../../utils')
 // Core
 const ERC20BaseModuleCommon = require('../../common/ERC20BaseModuleCommon')
 const ERC20MintModuleCommon = require('../../common/ERC20MintModuleCommon')
@@ -27,7 +25,7 @@ const SnapshotModuleMultiplePlannedTest = require('../../common/SnapshotModuleCo
 const SnapshotModuleOnePlannedSnapshotTest = require('../../common/SnapshotModuleCommon/global/SnapshotModuleOnePlannedSnapshotTest')
 const SnapshotModuleZeroPlannedSnapshotTest = require('../../common/SnapshotModuleCommon/global/SnapshotModuleZeroPlannedSnapshot')
 const SnapshotModuleSetSnapshotEngineCommon = require('../../common/SnapshotModuleCommon/SnapshotModuleSetSnapshotEngineCommon')
-describe('CMTAT Debt - Standalone', function () {
+describe('CMTAT Debt - Standalone Snapshot', function () {
   beforeEach(async function () {
     Object.assign(this, await loadFixture(fixture))
     this.cmtat = await deployCMTATDebtStandalone(
@@ -62,7 +60,7 @@ describe('CMTAT Debt - Standalone', function () {
   SnapshotModuleCommonUnschedule()
   SnapshotModuleCommonGetNextSnapshot()
   // Set snapshot Engine
-  SnapshotModuleSetSnapshotEngineCommon
+  SnapshotModuleSetSnapshotEngineCommon()
   // options
   DebtModuleCommon()
 })

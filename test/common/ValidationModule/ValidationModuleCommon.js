@@ -24,13 +24,15 @@ function ValidationModuleCommon () {
       }
     })
     it('testCanReturnTheRightAddressIfSet', async function () {
-      if (this.definedAtDeployment) {
-        expect(this.ruleEngineMock.target).to.equal(
-          await this.cmtat.ruleEngine()
-        )
+      // Only meaningful when the rule engine is wired at deployment
+      if (!this.definedAtDeployment) {
+        this.skip()
       }
+      expect(this.ruleEngineMock.target).to.equal(
+        await this.cmtat.ruleEngine()
+      )
     })
-    it('testCanCanTransferWithoutRuleEngine', async function () {
+    it('testCanTransferWithoutRuleEngine', async function () {
       if (!this.erc1404) {
         // Arrange
         await this.cmtat.connect(this.admin).setRuleEngine(ZERO_ADDRESS)
@@ -60,14 +62,16 @@ function ValidationModuleCommon () {
     })
 
     it('testCanReturnMessageValidTransfer', async function () {
-      if (!this.erc1404) {
-        // Act + Assert
-        expect(
-          await this.cmtat.messageForTransferRestriction(
-            REJECTED_CODE_BASE_TRANSFER_OK
-          )
-        ).to.equal('NoRestriction')
+      // This human-readable message is only defined by the non-erc1404 validation
+      if (this.erc1404) {
+        this.skip()
       }
+      // Act + Assert
+      expect(
+        await this.cmtat.messageForTransferRestriction(
+          REJECTED_CODE_BASE_TRANSFER_OK
+        )
+      ).to.equal('NoRestriction')
     })
 
     it('testCanDetectTransferRestrictionWithAmountTooHigh', async function () {
@@ -92,14 +96,16 @@ function ValidationModuleCommon () {
     })
 
     it('testCanReturnMessageWithAmountTooHigh', async function () {
-      if (!this.erc1404) {
-        // Act + Assert
-        expect(
-          await this.cmtat.messageForTransferRestriction(
-            RULE_MOCK_AMOUNT_MAX_CODE
-          )
-        ).to.equal('Amount too high')
+      // This human-readable message is only defined by the non-erc1404 validation
+      if (this.erc1404) {
+        this.skip()
       }
+      // Act + Assert
+      expect(
+        await this.cmtat.messageForTransferRestriction(
+          RULE_MOCK_AMOUNT_MAX_CODE
+        )
+      ).to.equal('Amount too high')
     })
 
     it('testCanReturnMessageWithUnknownRestrictionCode', async function () {
@@ -248,7 +254,7 @@ function ValidationModuleCommon () {
       ).to.equal(false)
     })
 
-    it('testCanCanTransferFromWithoutRuleEngine', async function () {
+    it('testCanTransferFromWithoutRuleEngine', async function () {
       // Arrange
       if (!this.erc1404) {
         await this.cmtat.connect(this.admin).setRuleEngine(ZERO_ADDRESS)
@@ -367,7 +373,7 @@ function ValidationModuleCommon () {
       }
     })
 
-    it('testCanCanMintWithoutRuleEngine', async function () {
+    it('testCanMintWithoutRuleEngine', async function () {
       if (!this.erc1404) {
         // Arrange
         await this.cmtat.connect(this.admin).setRuleEngine(ZERO_ADDRESS)
@@ -383,24 +389,26 @@ function ValidationModuleCommon () {
       if (!this.erc1404) {
         // Act + Assert
         expect(
-          await this.cmtat.detectTransferRestriction(
-            this.address1,
-            this.address2,
-            11
-          )
-        ).to.equal(0)
+          await this.cmtat
+            .connect(this.admin)
+            .detectTransferRestriction(this.address1, this.address2, 11)
+        ).to.equal(REJECTED_CODE_BASE_TRANSFER_OK)
         expect(
-          await this.cmtat.detectTransferRestrictionFrom(
-            this.address3,
-            this.address1,
-            this.address2,
-            11
-          )
-        ).to.equal(0)
+          await this.cmtat
+            .connect(this.admin)
+            .detectTransferRestrictionFrom(
+              this.admin,
+              this.address1,
+              this.address2,
+              11
+            )
+        ).to.equal(REJECTED_CODE_BASE_TRANSFER_OK)
       }
 
       expect(
-        await this.cmtat.canTransfer(this.address1, this.address2, 11)
+        await this.cmtat
+          .connect(this.admin)
+          .canTransfer(this.address1, this.address2, 11)
       ).to.equal(true)
     })
 
@@ -426,14 +434,16 @@ function ValidationModuleCommon () {
     })
 
     it('testCanReturnMessageWithMintAmountTooHigh', async function () {
-      if (!this.erc1404) {
-        // Act + Assert
-        expect(
-          await this.cmtat.messageForTransferRestriction(
-            RULE_MOCK_MINT_RESTRICTION_CODE
-          )
-        ).to.equal('Mint amount too high')
+      // This human-readable message is only defined by the non-erc1404 validation
+      if (this.erc1404) {
+        this.skip()
       }
+      // Act + Assert
+      expect(
+        await this.cmtat.messageForTransferRestriction(
+          RULE_MOCK_MINT_RESTRICTION_CODE
+        )
+      ).to.equal('Mint amount too high')
     })
 
     // this.address1 may transfer tokens to this.address2
@@ -567,6 +577,30 @@ function ValidationModuleCommon () {
       expect(
         await this.cmtat.canTransfer(this.address1, ZERO_ADDRESS, 10)
       ).to.equal(false)
+    })
+  })
+
+  context('ValidationModuleSendReceiveCheckTest', function () {
+    it('testCanSendReturnsTrueForUnfrozenAddress', async function () {
+      expect(await this.cmtat.canSend(this.address1)).to.equal(true)
+    })
+
+    it('testCanSendReturnsFalseForFrozenAddress', async function () {
+      await this.cmtat
+        .connect(this.admin)
+        .setAddressFrozen(this.address1, true)
+      expect(await this.cmtat.canSend(this.address1)).to.equal(false)
+    })
+
+    it('testCanReceiveReturnsTrueForUnfrozenAddress', async function () {
+      expect(await this.cmtat.canReceive(this.address2)).to.equal(true)
+    })
+
+    it('testCanReceiveReturnsFalseForFrozenAddress', async function () {
+      await this.cmtat
+        .connect(this.admin)
+        .setAddressFrozen(this.address2, true)
+      expect(await this.cmtat.canReceive(this.address2)).to.equal(false)
     })
   })
 }

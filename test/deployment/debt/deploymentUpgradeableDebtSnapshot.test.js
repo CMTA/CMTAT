@@ -1,10 +1,8 @@
-const { expect } = require('chai')
 const {
   deployCMTATDebtProxy,
   fixture,
   loadFixture
 } = require('../../deploymentUtils')
-const { ZERO_ADDRESS } = require('../../utils')
 // Core
 const ERC20BaseModuleCommon = require('../../common/ERC20BaseModuleCommon')
 const ERC20MintModuleCommon = require('../../common/ERC20MintModuleCommon')
@@ -53,7 +51,7 @@ describe('CMTAT Debt - Upgradeable Snapshot', function () {
   ValidationModuleCommonCore()
 
   // Extensions
-  ERC20EnforcementModuleCommon
+  ERC20EnforcementModuleCommon()
   DocumentModuleCommon()
   ExtraInfoModuleCommon()
   // Snapshot

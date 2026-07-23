@@ -1,4 +1,3 @@
-const { expect } = require('chai')
 const { ZERO_ADDRESS } = require('../../utils')
 const UpgradeProxyCommon = require('./UpgradeProxyCommon')
 const {
@@ -13,7 +12,9 @@ describe('UpgradeableCMTAT - Proxy', function () {
   beforeEach(async function () {
     Object.assign(this, await loadFixture(fixture))
     /* Factory & Artefact */
-    CMTAT_PROXY_FACTORY = await ethers.getContractFactory('CMTATUpgradeable')
+    CMTAT_PROXY_FACTORY = await ethers.getContractFactory(
+      'CMTATStandardUpgradeable'
+    )
     this.CMTAT_PROXY_TestFactory = await ethers.getContractFactory(
       'CMTAT_PROXY_TEST'
     )

@@ -1,0 +1,27 @@
+@startuml
+title PauseModule
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+
+class PausableUpgradeable
+interface IERC3643Pause
+interface IERC7551Pause
+interface IERC8343
+
+abstract class PauseModule {
+    +{static} PAUSER_ROLE : bytes32
+    --
+    +pause()
+    +unpause()
+    +deactivateContract()
+    +paused() view : bool
+    +deactivated() view : bool
+}
+
+PausableUpgradeable <|-- PauseModule
+IERC3643Pause <|.. PauseModule
+IERC7551Pause <|.. PauseModule
+IERC8343 <|.. PauseModule
+
+@enduml

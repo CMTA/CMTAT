@@ -1,0 +1,23 @@
+@startuml
+title Holder List — Membership Update inside _update
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+
+start
+:_update(from, to, value);
+:super._update(...)  (balances written first);
+if (from != address(0) and balanceOf(from) == 0?) then (yes)
+  :remove(from)\nemit HolderRemoved;
+else (no)
+endif
+if (to != address(0) and balanceOf(to) != 0?) then (yes)
+  :add(to)\nemit HolderAdded;
+else (no)
+endif
+stop
+note right
+  Holder set = { addr : balanceOf(addr) != 0 }.
+  address(0) is never a holder; a zero-value transfer
+  to a fresh address does not create one.
+end note
+@enduml

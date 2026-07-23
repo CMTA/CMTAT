@@ -1,5 +1,5 @@
 const { expect } = require('chai')
-const { DEFAULT_ADMIN_ROLE, EXTRA_INFORMATION_ROLE } = require('../utils')
+const { EXTRA_INFORMATION_ROLE } = require('../utils')
 const { TERMS } = require('../deploymentUtils')
 
 function ExtraInfoModuleCommon () {
@@ -61,7 +61,6 @@ function ExtraInfoModuleCommon () {
       this.logs = await this.cmtat.connect(this.admin).setTerms(NEW_TERMS)
       // Assert
 
-      // let blockTimestamp = (await ethers.provider.getBlock('latest')).timestamp;
       await checkTerms(this, NEW_TERMS)
       const blockTimestamp = (
         await ethers.provider.getBlock(this.logs.blockNumber)
@@ -76,7 +75,7 @@ function ExtraInfoModuleCommon () {
     })
     it('testCannotNonAdminUpdateTerms', async function () {
       // Arrange - Assert
-      checkTerms(TERMS)
+      await checkTerms(this, TERMS)
       // Act
       await expect(this.cmtat.connect(this.address1).setTerms(TERMS))
         .to.be.revertedWithCustomError(
@@ -84,8 +83,13 @@ function ExtraInfoModuleCommon () {
           'AccessControlUnauthorizedAccount'
         )
         .withArgs(this.address1.address, EXTRA_INFORMATION_ROLE)
-      // Assert
-      checkTerms(TERMS)
+      // Assert - terms are unchanged after the failed update.
+      // Assert content only (not checkTerms): the reverted setTerms mines a
+      // block, so checkTerms' `storedTimestamp == block.timestamp` sub-check
+      // would spuriously fail even though the terms themselves did not change.
+      const termsAfter = await this.cmtat.terms()
+      expect(termsAfter[0]).to.equal(TERMS[0])
+      expect(termsAfter[1][0]).to.equal(TERMS[1])
     })
     it('testAdminCanUpdateInformation', async function () {
       // Arrange - Assert

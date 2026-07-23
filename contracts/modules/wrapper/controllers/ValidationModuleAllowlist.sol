@@ -20,6 +20,8 @@ abstract contract ValidationModuleAllowlist is
     /* ============ View functions ============ */
     /**
     * @dev Use forcedTransfer (or forcedBurn) to burn tokens from an non-allowlist address
+    * @param account The account whose mint/burn is being validated.
+    * @return True if the mint/burn is allowed (allowlist check plus the base checks).
     */
     function _canMintBurnByModule(
         address account
@@ -33,6 +35,10 @@ abstract contract ValidationModuleAllowlist is
 
     /**
     * @dev Add allowlist check for standard transfer
+    * @param spender The address initiating the transfer.
+    * @param from The address tokens move from.
+    * @param to The address tokens move to.
+    * @return True if the allowlist blocks the transfer (allowlist enabled and a party is not allowlisted).
     */
     function _canTransferStandardByModuleAllowlist(
         address spender,
@@ -50,6 +56,10 @@ abstract contract ValidationModuleAllowlist is
 
     /**
     * @dev Add allowlist check for standard transfer
+    * @param spender The address initiating the transfer.
+    * @param from The address tokens move from.
+    * @param to The address tokens move to.
+    * @return True if the standard transfer is allowed (passes the allowlist and base checks).
     */
     function _canTransferStandardByModule(
         address spender,
@@ -62,22 +72,44 @@ abstract contract ValidationModuleAllowlist is
         return ValidationModule._canTransferStandardByModule(spender, from, to);
     }
 
-    function _canTransact(address account) internal view virtual override(ValidationModule) returns (bool allowed) {
+    /// @inheritdoc ValidationModule
+    function _canSend(address account) internal view virtual override(ValidationModule) returns (bool allowed) {
         if(_isAllowlistEnabled() && !isAllowlisted(account)){
             return false;
         } else {
-            return ValidationModule._canTransact(account);
+            return ValidationModule._canSend(account);
+        }
+    }
+
+    /// @inheritdoc ValidationModule
+    function _canReceive(address account) internal view virtual override(ValidationModule) returns (bool allowed) {
+        if(_isAllowlistEnabled() && !isAllowlisted(account)){
+            return false;
+        } else {
+            return ValidationModule._canReceive(account);
         }
     }
 
     /* ============ View functions which revert ============ */
-    function _canMintBurnByModuleAndRevert(
-        address account
+    /// @inheritdoc ValidationModule
+    function _canMintByModuleAndRevert(
+        address to
     ) internal view virtual override(ValidationModule) {
-        if(_isAllowlistEnabled() && !isAllowlisted(account)){
-            revert ERC7943CannotTransact(account);
+        if(_isAllowlistEnabled() && !isAllowlisted(to)){
+            revert ERC7943CannotReceive(to);
         } else {
-            ValidationModule._canMintBurnByModuleAndRevert(account);
+            ValidationModule._canMintByModuleAndRevert(to);
+        }
+    }
+
+    /// @inheritdoc ValidationModule
+    function _canBurnByModuleAndRevert(
+        address from
+    ) internal view virtual override(ValidationModule) {
+        if(_isAllowlistEnabled() && !isAllowlisted(from)){
+            revert ERC7943CannotSend(from);
+        } else {
+            ValidationModule._canBurnByModuleAndRevert(from);
         }
     }
 
@@ -87,7 +119,7 @@ abstract contract ValidationModuleAllowlist is
         address to
     ) internal view virtual override(ValidationModule) {
         _canTransferStandardByModuleAllowlistAndRevert(spender, from, to);
-       ValidationModule._canTransferStandardByModuleAndRevert(spender, from, to);
+        ValidationModule._canTransferStandardByModuleAndRevert(spender, from, to);
     }
 
     function _canTransferStandardByModuleAllowlistAndRevert(
@@ -95,19 +127,14 @@ abstract contract ValidationModuleAllowlist is
         address from,
         address to
     ) internal view virtual {
-        address account;
         if(_isAllowlistEnabled()){
             if (spender != address(0) && !isAllowlisted(spender)){
-                account = spender;
+                revert ERC7943CannotSend(spender);
             } else if (!isAllowlisted(from)) {
-                account = from;
-            } else if(!isAllowlisted(to) ){
-                account = to;
-            } else {
-               return;
+                revert ERC7943CannotSend(from);
+            } else if(!isAllowlisted(to)){
+                revert ERC7943CannotReceive(to);
             }
-            // Will revert if the last else branch has not be taken
-            revert ERC7943CannotTransact(account);
         }
     }
 }

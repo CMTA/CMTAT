@@ -1,0 +1,20 @@
+@startuml
+title DebtEngineModule
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+
+interface IDebtEngineModule
+
+abstract class DebtEngineModule {
+  +{static} DEBT_ENGINE_ROLE : bytes32
+  --
+  +setDebtEngine(IDebtEngine)
+  +creditEvents() view : CreditEvents
+  +debt() view : DebtInformation
+  +debtEngine() view : IDebtEngine
+}
+
+IDebtEngineModule <|.. DebtEngineModule
+
+@enduml

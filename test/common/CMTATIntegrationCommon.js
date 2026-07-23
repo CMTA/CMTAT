@@ -1,22 +1,44 @@
 const { expect } = require('chai')
-const { ZERO_ADDRESS,
-  IERC165_INTERFACEID, IERC721_INTERFACEID,IACCESSCONTROL_INTERFACEID,
-  IERC5679_INTERFACEID, IERC7943_INTERFACEID } = require('../utils')
+const {
+  ZERO_ADDRESS,
+  IERC165_INTERFACEID,
+  IERC721_INTERFACEID,
+  IACCESSCONTROL_INTERFACEID,
+  IERC5679_INTERFACEID,
+  IERC7943_INTERFACEID,
+  IERC8343_INTERFACEID,
+  IERC1643_INTERFACEID,
+  REJECTED_CODE_BASE_TRANSFER_REJECTED_DEACTIVATED
+} = require('../utils')
 const VALUE1 = 20n
 const VALUE2 = 50n
 function CMTATIntegrationCommon () {
   context('CMTAT integration test', function () {
-      /* ============ ERC165 ============ */
+    /* ============ ERC165 ============ */
     it('testSupportRightInterface', async function () {
       // Assert
-      expect(await this.cmtat.supportsInterface(IACCESSCONTROL_INTERFACEID)).to.equal(true)
-      expect(await this.cmtat.supportsInterface(IERC165_INTERFACEID)).to.equal(true)
+      expect(
+        await this.cmtat.supportsInterface(IACCESSCONTROL_INTERFACEID)
+      ).to.equal(true)
+      expect(await this.cmtat.supportsInterface(IERC165_INTERFACEID)).to.equal(
+        true
+      )
       expect(await this.cmtat.supportsInterface(IERC721_INTERFACEID)).to.equal(
-          false)
-      expect(await this.cmtat.supportsInterface(IERC5679_INTERFACEID)).to.equal(true)
-      expect(await this.cmtat.supportsInterface(IERC7943_INTERFACEID)).to.equal(true)
-
-
+        false
+      )
+      expect(await this.cmtat.supportsInterface(IERC5679_INTERFACEID)).to.equal(
+        true
+      )
+      expect(await this.cmtat.supportsInterface(IERC7943_INTERFACEID)).to.equal(
+        true
+      )
+      expect(await this.cmtat.supportsInterface(IERC8343_INTERFACEID)).to.equal(
+        true
+      )
+      expect(await this.cmtat.supportsInterface(IERC1643_INTERFACEID)).to.equal(
+        true
+      )
+      expect(await this.cmtat.supportsInterface('0xffffffff')).to.equal(false)
     })
 
     it('testCMTATIntegration', async function () {
@@ -29,21 +51,6 @@ function CMTATIntegrationCommon () {
       await expect(this.logs)
         .to.emit(this.cmtat, 'Name')
         .withArgs(NEW_NAME, NEW_NAME)
-
-      /* ============ Extra information =========== */
-      it('testAdminCanUpdateInformation', async function () {
-        // Arrange - Assert
-        expect(await this.cmtat.information()).to.equal('CMTAT_info')
-        // Act
-        this.logs = await this.cmtat
-          .connect(this.admin)
-          .setInformation('new info available')
-        // Assert
-        expect(await this.cmtat.information()).to.equal('new info available')
-        await expect(this.logs)
-          .to.emit(this.cmtat, 'Information')
-          .withArgs('new info available')
-      })
 
       /* ============ ERC 7551 information =========== */
       if (this.erc7551) {
@@ -99,111 +106,113 @@ function CMTATIntegrationCommon () {
       await expect(this.logs)
         .to.emit(this.cmtat, 'CrosschainMint')
         .withArgs(this.address1, VALUE2, this.admin)
+    })
 
-      /* ============ Pause module ============ */
+    /* ============ Extra information =========== */
+    it('testAdminCanUpdateInformation', async function () {
+      // Arrange - Assert
+      expect(await this.cmtat.information()).to.equal('CMTAT_info')
+      // Act
+      this.logs = await this.cmtat
+        .connect(this.admin)
+        .setInformation('new info available')
+      // Assert
+      expect(await this.cmtat.information()).to.equal('new info available')
+      await expect(this.logs)
+        .to.emit(this.cmtat, 'Information')
+        .withArgs('new info available')
+    })
 
-      it('testCanDeactivatedByAdminIfContractIsPaused', async function () {
-        const AMOUNT_TO_TRANSFER = 10n
-        // Arrange
-        await this.cmtat.connect(this.admin).pause()
+    /* ============ Pause module ============ */
+    it('testCanDeactivatedByAdminIfContractIsPaused', async function () {
+      const AMOUNT_TO_TRANSFER = 10n
+      // Arrange
+      await this.cmtat.connect(this.admin).pause()
 
-        // Act
-        this.logs = await this.cmtat.connect(this.admin).deactivateContract()
+      // Act
+      this.logs = await this.cmtat.connect(this.admin).deactivateContract()
 
-        // Assert
-        expect(await this.cmtat.deactivated()).to.equal(true)
-        // Contract is in pause state
-        expect(await this.cmtat.paused()).to.equal(true)
-        // emits a Deactivated event
-        await expect(this.logs)
-          .to.emit(this.cmtat, 'Deactivated')
-          .withArgs(this.admin)
-        // Transfer is reverted because contract is in paused state
-        if (!this.generic) {
-          await expect(
-            this.cmtat
-              .connect(this.address1)
-              .transfer(this.address2, AMOUNT_TO_TRANSFER)
-          )
-            .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
-            .withArgs(
-              this.address1.address,
-              this.address2.address,
-              AMOUNT_TO_TRANSFER
-            )
-        }
-
-        if (!this.generic) {
-          expect(
-            await this.cmtat.canTransfer(
-              this.address1,
-              this.address2,
-              AMOUNT_TO_TRANSFER
-            )
-          ).to.equal(false)
-
-          expect(
-            await this.cmtat.canTransferFrom(
-              this.address3,
-              this.address1,
-              this.address2,
-              AMOUNT_TO_TRANSFER
-            )
-          ).to.equal(false)
-        }
-
-        if (!this.erc1404 && !this.generic) {
-          // Assert
-          expect(
-            await this.cmtat.detectTransferRestrictionFrom(
-              this.address3,
-              this.address1,
-              this.address2,
-              AMOUNT_TO_TRANSFER
-            )
-          ).to.equal(REJECTED_CODE_BASE_TRANSFER_REJECTED_DEACTIVATED)
-          expect(
-            await this.cmtat.detectTransferRestriction(
-              this.address1,
-              this.address2,
-              AMOUNT_TO_TRANSFER
-            )
-          ).to.equal(REJECTED_CODE_BASE_TRANSFER_REJECTED_DEACTIVATED)
-          // Assert
-          expect(
-            await this.cmtat.detectTransferRestrictionFrom(
-              this.address1,
-              this.address3,
-              this.address2,
-              AMOUNT_TO_TRANSFER
-            )
-          ).to.equal(REJECTED_CODE_BASE_TRANSFER_REJECTED_DEACTIVATED)
-          expect(
-            await this.cmtat.messageForTransferRestriction(
-              REJECTED_CODE_BASE_TRANSFER_REJECTED_DEACTIVATED
-            )
-          ).to.equal('ContractDeactivated')
-          await expect(
-            this.cmtat
-              .connect(this.address3)
-              .transferFrom(this.address1, this.address2, AMOUNT_TO_TRANSFER)
-          )
-            .to.be.revertedWithCustomError(this.cmtat, 'CMTAT_InvalidTransfer')
-            .withArgs(
-              this.address1.address,
-              this.address2.address,
-              AMOUNT_TO_TRANSFER
-            )
-        }
-
-        // Unpause is reverted
+      // Assert
+      expect(await this.cmtat.deactivated()).to.equal(true)
+      // Contract is in pause state
+      expect(await this.cmtat.paused()).to.equal(true)
+      // emits a Deactivated event
+      await expect(this.logs)
+        .to.emit(this.cmtat, 'Deactivated')
+        .withArgs(this.admin)
+      // Transfer is reverted because contract is in paused state
+      if (!this.generic) {
         await expect(
-          this.cmtat.connect(this.admin).unpause()
-        ).to.be.revertedWithCustomError(
-          this.cmtat,
-          'CMTAT_PauseModule_ContractIsDeactivated'
-        )
-      })
+          this.cmtat
+            .connect(this.address1)
+            .transfer(this.address2, AMOUNT_TO_TRANSFER)
+        ).to.be.revertedWithCustomError(this.cmtat, 'EnforcedPause')
+      }
+
+      if (!this.generic) {
+        expect(
+          await this.cmtat.canTransfer(
+            this.address1,
+            this.address2,
+            AMOUNT_TO_TRANSFER
+          )
+        ).to.equal(false)
+
+        expect(
+          await this.cmtat.canTransferFrom(
+            this.address3,
+            this.address1,
+            this.address2,
+            AMOUNT_TO_TRANSFER
+          )
+        ).to.equal(false)
+      }
+
+      if (!this.erc1404 && !this.generic) {
+        // Assert
+        expect(
+          await this.cmtat.detectTransferRestrictionFrom(
+            this.address3,
+            this.address1,
+            this.address2,
+            AMOUNT_TO_TRANSFER
+          )
+        ).to.equal(REJECTED_CODE_BASE_TRANSFER_REJECTED_DEACTIVATED)
+        expect(
+          await this.cmtat.detectTransferRestriction(
+            this.address1,
+            this.address2,
+            AMOUNT_TO_TRANSFER
+          )
+        ).to.equal(REJECTED_CODE_BASE_TRANSFER_REJECTED_DEACTIVATED)
+        // Assert
+        expect(
+          await this.cmtat.detectTransferRestrictionFrom(
+            this.address1,
+            this.address3,
+            this.address2,
+            AMOUNT_TO_TRANSFER
+          )
+        ).to.equal(REJECTED_CODE_BASE_TRANSFER_REJECTED_DEACTIVATED)
+        expect(
+          await this.cmtat.messageForTransferRestriction(
+            REJECTED_CODE_BASE_TRANSFER_REJECTED_DEACTIVATED
+          )
+        ).to.equal('ContractDeactivated')
+        await expect(
+          this.cmtat
+            .connect(this.address3)
+            .transferFrom(this.address1, this.address2, AMOUNT_TO_TRANSFER)
+        ).to.be.revertedWithCustomError(this.cmtat, 'EnforcedPause')
+      }
+
+      // Unpause is reverted
+      await expect(
+        this.cmtat.connect(this.admin).unpause()
+      ).to.be.revertedWithCustomError(
+        this.cmtat,
+        'CMTAT_PauseModule_ContractIsDeactivated'
+      )
     })
   })
 }

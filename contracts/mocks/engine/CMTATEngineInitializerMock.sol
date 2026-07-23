@@ -2,9 +2,9 @@
 
 pragma solidity ^0.8.20;
 
-import {CMTATUpgradeable} from "../../deployment/CMTATUpgradeable.sol";
-import {IERC1643} from "../../interfaces/engine/IDocumentEngine.sol";
+import {CMTATUpgradeableSnapshot} from "../../deployment/snapshot/CMTATUpgradeableSnapshot.sol";
 import {ISnapshotEngine} from "../../interfaces/engine/ISnapshotEngine.sol";
+import {IERC1643} from "../../interfaces/engine/IDocumentEngine.sol";
 
 /**
  * @title CMTATEngineInitializerMock
@@ -13,9 +13,8 @@ import {ISnapshotEngine} from "../../interfaces/engine/ISnapshotEngine.sol";
  *
  * This contract exposes:
  * - __SnapshotEngineModule_init_unchained() - sets SnapshotEngine during initialization
- * - __DocumentEngineModule_init_unchained() - sets DocumentEngine during initialization
  */
-contract CMTATEngineInitializerMock is CMTATUpgradeable {
+contract CMTATEngineInitializerMock is CMTATUpgradeableSnapshot {
     /**
      * @notice Contract version for the deployment with a proxy
      * @param forwarderIrrevocable address of the forwarder, required for the gasless support
@@ -23,7 +22,7 @@ contract CMTATEngineInitializerMock is CMTATUpgradeable {
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor(
         address forwarderIrrevocable
-    ) CMTATUpgradeable(forwarderIrrevocable) {
+    ) CMTATUpgradeableSnapshot(forwarderIrrevocable) {
         // Nothing to do
     }
 
@@ -32,15 +31,13 @@ contract CMTATEngineInitializerMock is CMTATUpgradeable {
      * This allows testing the uncovered initializer branches.
      * Uses reinitializer(2) to allow calling after initial initialize().
      * @param snapshotEngine_ The snapshot engine address (can be zero)
-     * @param documentEngine_ The document engine address (can be zero)
      */
     function initializeWithEngines(
         ISnapshotEngine snapshotEngine_,
-        IERC1643 documentEngine_
+        IERC1643 /* documentEngine_ */
     ) public reinitializer(2) {
         // Call the uncovered initializers
         // These functions check for non-zero address internally
         __SnapshotEngineModule_init_unchained(snapshotEngine_);
-        __DocumentEngineModule_init_unchained(documentEngine_);
     }
 }

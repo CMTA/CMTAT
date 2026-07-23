@@ -1,0 +1,19 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+title ERC20EnforcementERC7551Module (ERC-7551 bytes-aware enforcement)
+class "ERC20EnforcementModule" as E
+interface "IERC7551ERC20Enforcement" as I
+abstract class ERC20EnforcementERC7551Module {
+  +ERC20ENFORCER_ROLE : bytes32
+  --
+  +getFrozenTokens(address) view : uint256
+  +getActiveBalanceOf(address) view : uint256
+  +forcedTransfer(address, address, uint256, bytes) : bool
+  +freezePartialTokens(address, uint256, bytes)
+  +unfreezePartialTokens(address, uint256, bytes)
+}
+E <|-- ERC20EnforcementERC7551Module
+I <|.. ERC20EnforcementERC7551Module
+@enduml

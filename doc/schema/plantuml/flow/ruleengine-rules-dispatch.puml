@@ -1,0 +1,34 @@
+@startuml
+title CMTAT RuleEngine — transfer validation dispatch
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+
+actor "Token holder" as H
+participant "CMTAT\n(or ERC-3643 token)" as T
+participant "RuleEngine" as RE
+participant "Rule 0\n(e.g. Whitelist)" as R0
+participant "Rule 1" as R1
+participant "Rule n" as Rn
+
+H -> T : 1. transfer(to, value)
+T -> RE : 2. transferred(from, to, value)
+note right of T
+  ERC-3643 transfer hook.
+  CMTAT v3.3.0+ also passes the spender/operator
+  (spender-aware path) so mint/burn/transferFrom
+  operators are visible to the rules.
+end note
+RE -> R0 : 3a. transferred(...)
+RE -> R1 : 3b. transferred(...)
+RE -> Rn : 3c. transferred(...)
+note over RE, Rn
+  The RuleEngine forwards the check to every configured rule;
+  any rule that reverts blocks the transfer.
+end note
+
+note over T, RE
+  Each Rule itself implements the RuleEngine interface, so a single Rule
+  can be set **directly** on CMTAT as its rule engine (no RuleEngine controller).
+  Use the RuleEngine only when several rules must be combined on one token.
+end note
+@enduml

@@ -1,0 +1,22 @@
+@startuml
+title ERC7551Module
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+
+class ExtraInformationModule
+interface IERC7551Document
+
+abstract class ERC7551Module {
+  +{static} EXTRA_INFORMATION_ROLE : bytes32
+  --
+  +setMetaData(string)
+  +setTerms(bytes32, string)
+  +metaData() view : string
+  +termsHash() view : bytes32
+}
+
+ExtraInformationModule <|-- ERC7551Module
+IERC7551Document <|.. ERC7551Module
+
+@enduml

@@ -13,7 +13,7 @@ The interface and struct to represent Debt is available in `/contracts/interface
 
 ## Schema
 
-![DebtUML](../../../schema/uml/DebtUML.png)
+![DebtUML](../../../schema/plantuml/class/DebtModule.png)
 
 ### Inheritance
 

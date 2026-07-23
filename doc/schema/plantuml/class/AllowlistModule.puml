@@ -1,0 +1,24 @@
+@startuml
+title AllowlistModule
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+
+abstract class AllowlistModule {
+  +{static} ALLOWLIST_ROLE : bytes32
+  --
+  +setAddressAllowlist(address, bool)
+  +setAddressAllowlist(address, bool, bytes)
+  +batchSetAddressAllowlist(address[], bool[])
+  +enableAllowlist(bool)
+  +isAllowlistEnabled() view : bool
+  +isAllowlisted(address) view : bool
+}
+
+class AllowlistModuleInternal
+interface IAllowlistModule
+
+AllowlistModuleInternal <|-- AllowlistModule
+IAllowlistModule <|.. AllowlistModule
+
+@enduml

@@ -1,0 +1,16 @@
+@startuml
+title ERC2771Module
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+
+abstract class ERC2771Module {
+  --
+  +ERC2771Module(address trustedForwarder)
+}
+
+class ERC2771ContextUpgradeable
+
+ERC2771ContextUpgradeable <|-- ERC2771Module
+
+@enduml

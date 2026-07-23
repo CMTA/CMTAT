@@ -12,7 +12,7 @@ The ERC20Base Module sets forth the ERC20 basic functionalities a token must hav
 
 ## Schema
 
-![ERC20BaseUML](../../../schema/uml/ERC20BaseUML.png)
+![ERC20BaseUML](../../../schema/plantuml/class/ERC20BaseModule.png)
 
 ### Inheritance
 
@@ -122,7 +122,7 @@ function setName(string calldata name_) external;
 ```solidity
 function setName(string calldata name_) 
 public virtual override(IERC3643ERC20Base) 
-onlyERC20AttributeManager
+onlyTokenAttributeManager
 ```
 
 Sets the name of the token.
@@ -144,7 +144,7 @@ function setSymbol(string calldata symbol_) external;
 ```solidity
 function setSymbol(string calldata symbol_) 
 public virtual override(IERC3643ERC20Base) 
-onlyERC20AttributeManager
+onlyTokenAttributeManager
 ```
 
 Sets the symbol of the token.

@@ -1,0 +1,37 @@
+@startuml
+title CMTATBaseCommon
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+
+class VersionModule
+class ERC20MintModule
+class ERC20BurnModule
+class ERC20BaseModule
+class TokenAttributeModule
+class ERC20EnforcementModule
+class ExtraInformationModule
+interface IBurnMintERC20
+interface IERC5679
+
+abstract class CMTATBaseCommon {
+    --
+    +transfer(address, uint256) : bool
+    +transferFrom(address, address, uint256) : bool
+    +burnAndMint(address, address, uint256, uint256, bytes) : void
+    +decimals() view : uint8
+    +name() view : string
+    +symbol() view : string
+}
+
+VersionModule <|-- CMTATBaseCommon
+ERC20MintModule <|-- CMTATBaseCommon
+ERC20BurnModule <|-- CMTATBaseCommon
+ERC20BaseModule <|-- CMTATBaseCommon
+TokenAttributeModule <|-- CMTATBaseCommon
+ERC20EnforcementModule <|-- CMTATBaseCommon
+ExtraInformationModule <|-- CMTATBaseCommon
+IBurnMintERC20 <|-- CMTATBaseCommon
+IERC5679 <|-- CMTATBaseCommon
+
+@enduml

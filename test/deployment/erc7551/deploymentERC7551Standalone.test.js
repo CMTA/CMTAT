@@ -1,4 +1,3 @@
-const { expect } = require('chai')
 const {
   deployCMTATERC7551Standalone,
   fixture,
@@ -17,17 +16,9 @@ const ERC7551ModuleCommon = require('../../common/ERC7551ModuleCommon')
 const CCIPModuleCommon = require('../../common/CCIPModuleCommon')
 // Extensions
 const ERC20EnforcementModuleCommon = require('../../common/ERC20EnforcementModuleCommon')
+const ERC20EnforcementERC7551ModuleCommon = require('../../common/ERC20EnforcementERC7551ModuleCommon')
 const DocumentModuleCommon = require('../../common/DocumentModule/DocumentModuleCommon')
 const ExtraInfoModuleCommon = require('../../common/ExtraInfoModuleCommon')
-// Snapshot
-const SnapshotModuleCommonRescheduling = require('../../common/SnapshotModuleCommon/SnapshotModuleCommonRescheduling')
-const SnapshotModuleCommonScheduling = require('../../common/SnapshotModuleCommon/SnapshotModuleCommonScheduling')
-const SnapshotModuleCommonUnschedule = require('../../common/SnapshotModuleCommon/SnapshotModuleCommonUnschedule')
-const SnapshotModuleCommonGetNextSnapshot = require('../../common/SnapshotModuleCommon/SnapshotModuleCommonGetNextSnapshot')
-const SnapshotModuleMultiplePlannedTest = require('../../common/SnapshotModuleCommon/global/SnapshotModuleMultiplePlannedTest')
-const SnapshotModuleOnePlannedSnapshotTest = require('../../common/SnapshotModuleCommon/global/SnapshotModuleOnePlannedSnapshotTest')
-const SnapshotModuleZeroPlannedSnapshotTest = require('../../common/SnapshotModuleCommon/global/SnapshotModuleZeroPlannedSnapshot')
-const SnapshotModuleSetSnapshotEngineCommon = require('../../common/SnapshotModuleCommon/SnapshotModuleSetSnapshotEngineCommon')
 
 describe('CMTAT ERC7551 - Standalone', function () {
   beforeEach(async function () {
@@ -37,6 +28,7 @@ describe('CMTAT ERC7551 - Standalone', function () {
       this.admin.address,
       this.deployerAddress.address
     )
+    this.erc7551 = true
   })
   // Core
   VersionModuleCommon()
@@ -52,17 +44,7 @@ describe('CMTAT ERC7551 - Standalone', function () {
   CCIPModuleCommon()
   // Extensions
   ERC20EnforcementModuleCommon()
+  ERC20EnforcementERC7551ModuleCommon()
   DocumentModuleCommon()
   ExtraInfoModuleCommon()
-
-  // Snapshot
-  SnapshotModuleMultiplePlannedTest()
-  SnapshotModuleOnePlannedSnapshotTest()
-  SnapshotModuleZeroPlannedSnapshotTest()
-  SnapshotModuleCommonRescheduling()
-  SnapshotModuleCommonScheduling()
-  SnapshotModuleCommonUnschedule()
-  SnapshotModuleCommonGetNextSnapshot()
-  // Set snapshot Engine
-  // SnapshotModuleSetSnapshotEngineCommon()
 })

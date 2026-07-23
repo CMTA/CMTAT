@@ -1,0 +1,27 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+title HolderListModule
+class "ERC20Upgradeable" as E
+interface "IHolderListModule" as I {
+  +holderCount() : uint256
+  +isHolder(address) : bool
+  +holderByIndex(uint256) : address
+  +holders() : address[]
+  +holdersInRange(uint256, uint256) : address[]
+}
+abstract class HolderListModule {
+  --
+  +holderCount() view : uint256
+  +isHolder(address) view : bool
+  +holderByIndex(uint256) view : address
+  +holders() view : address[]
+  +holdersInRange(uint256, uint256) view : address[]
+  ..events..
+  HolderAdded(address)
+  HolderRemoved(address)
+}
+E <|-- HolderListModule
+I <|.. HolderListModule
+@enduml

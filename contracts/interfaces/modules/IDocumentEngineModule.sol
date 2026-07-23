@@ -22,6 +22,10 @@ interface IDocumentEngineModule is IERC1643 {
     * @notice Thrown when attempting to set the same document engine as the current one.
     */
    error CMTAT_DocumentEngineModule_SameValue();
+    /**
+    * @notice Thrown when a document mutation is attempted while no document engine is set.
+    */
+   error CMTAT_DocumentEngineModule_NoDocumentEngine();
    /* ============ Functions ============ */
     /**
     * @notice Sets a new document engine contract.

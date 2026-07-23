@@ -1,0 +1,17 @@
+@startuml
+title Snapshot Engine — Recorded Before Each Transfer
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+
+actor Caller
+participant "CMTAT" as T
+participant "SnapshotEngine\n(optional, external)" as S
+
+Caller -> T : transfer / mint / burn
+T -> T : _update(from, to, value)
+hnote right of T : before balances change
+T -> S : operateOnTransfer(from, to,\n  balanceFrom, balanceTo, totalSupply)
+S -> S : record balances & total supply\nat the current block
+S --> T : return
+T -> T : apply balance changes (super._update)
+@enduml

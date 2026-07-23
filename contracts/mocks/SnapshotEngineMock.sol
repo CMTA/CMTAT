@@ -22,8 +22,9 @@ contract SnapshotEngineMock is SnapshotModuleBase, AccessControlUpgradeable, ISn
     function setERC20(ERC20Upgradeable erc20_) public{
         erc20 = erc20_;
     }
-    /** 
+    /**
      * @dev Returns `true` if `account` has been granted `role`.
+     * @return True if `account` holds `role` (the default admin implicitly holds every role).
      */
     function hasRole(
         bytes32 role,
@@ -63,7 +64,8 @@ contract SnapshotEngineMock is SnapshotModuleBase, AccessControlUpgradeable, ISn
     //////////////////////////////////////////////////////////////*/
     /**
     * @notice Return snapshotBalanceOf and snapshotTotalSupply to avoid multiple calls
-    * @return ownerBalance ,  totalSupply - see snapshotBalanceOf and snapshotTotalSupply
+    * @return ownerBalance The snapshot balance of `owner` at `time`.
+    * @return totalSupply The snapshot total supply at `time`.
     */
     function snapshotInfo(uint256 time, address owner) public view returns (uint256 ownerBalance, uint256 totalSupply) {
         ownerBalance = snapshotBalanceOf(time, owner);
@@ -72,7 +74,8 @@ contract SnapshotEngineMock is SnapshotModuleBase, AccessControlUpgradeable, ISn
 
     /**
     * @notice Return snapshotBalanceOf for each address in the array and the total supply
-    * @return ownerBalances array with the balance of each address, the total supply
+    * @return ownerBalances Array with the snapshot balance of each address at `time`.
+    * @return totalSupply The snapshot total supply at `time`.
     */
     function snapshotInfoBatch(uint256 time, address[] calldata addresses) public view returns (uint256[] memory ownerBalances, uint256 totalSupply) {
         ownerBalances = new uint256[](addresses.length);
@@ -84,7 +87,8 @@ contract SnapshotEngineMock is SnapshotModuleBase, AccessControlUpgradeable, ISn
 
     /**
     * @notice Return snapshotBalanceOf for each address in the array and the total supply
-    * @return ownerBalances array with the balance of each address, the total supply
+    * @return ownerBalances Array (per time) with the snapshot balance of each address.
+    * @return totalSupply Array with the snapshot total supply at each time.
     */
     function snapshotInfoBatch(uint256[] calldata times, address[] calldata addresses) public view returns (uint256[][] memory ownerBalances, uint256[] memory totalSupply) {
         ownerBalances = new uint256[][](times.length);

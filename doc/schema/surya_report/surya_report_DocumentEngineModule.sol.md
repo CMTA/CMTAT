@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/wrapper/extensions/DocumentEngineModule.sol | a96b453eb169a3ac7cd0f614bfb17dfb8eb7fbbe |
+| ./modules/wrapper/options/DocumentEngineModule.sol | b2cf06a20a3b044efab8bef9ce4d327e5356c2cf |
 
 
 ### Contracts Description Table
@@ -20,6 +20,8 @@
 | └ | documentEngine | Public ❗️ |   |NO❗️ |
 | └ | getDocument | Public ❗️ |   |NO❗️ |
 | └ | getAllDocuments | Public ❗️ |   |NO❗️ |
+| └ | setDocument | Public ❗️ | 🛑  | onlyDocumentManager |
+| └ | removeDocument | Public ❗️ | 🛑  | onlyDocumentManager |
 | └ | setDocumentEngine | Public ❗️ | 🛑  | onlyDocumentManager |
 | └ | _setDocumentEngine | Internal 🔒 | 🛑  | |
 | └ | _authorizeDocumentManagement | Internal 🔒 | 🛑  | |

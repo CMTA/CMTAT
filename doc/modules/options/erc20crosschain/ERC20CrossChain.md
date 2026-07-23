@@ -1,4 +1,4 @@
-# ERc20CrossChain
+# ERC20CrossChain
 
 This document defines the ERC20CrossChain module for the CMTA Token specification.
 
@@ -6,7 +6,7 @@ This document defines the ERC20CrossChain module for the CMTA Token specificatio
 
 ## Schema
 
-![ERC20CrossChain](../../../schema/uml/ERC20CrossChainUML.png)
+![ERC20CrossChain](../../../schema/plantuml/class/ERC20CrossChainModule.png)
 
 ### Inheritance
 
@@ -16,7 +16,7 @@ This document defines the ERC20CrossChain module for the CMTA Token specificatio
 
 ### Graph
 
-![surya_graph_CoreModule.sol](../../../schema/surya_graph/surya_graph_ERC20CrossChainModule.sol.png)
+![surya_graph_ERC20CrossChainModule.sol](../../../schema/surya_graph/surya_graph_ERC20CrossChainModule.sol.png)
 
 ## API for Ethereum
 
@@ -76,7 +76,7 @@ function crosschainMint(address to, uint256 value) external;
 ```solidity
 function crosschainMint(address to, uint256 value) 
 public virtual override(IERC7802)
-onlyRole(CROSS_CHAIN_ROLE) whenNotPaused
+onlyTokenBridge
 ```
 
 Mints tokens as part of a crosschain transfer.
@@ -93,6 +93,7 @@ Mints tokens as part of a crosschain transfer.
 - The contract must not be paused 
   - error: `EnforcedPause()`
 - Only authorized users (`CROSS_CHAIN_ROLE`) are allowed to call this function.
+- Compliance path note (CMTAT base integration): operator (`_msgSender()`) is propagated through transfer-compliance checks for spender-aware RuleEngine restriction support.
 
 **Emits:**
 
@@ -110,7 +111,7 @@ function crosschainBurn(address from, uint256 value) external;
 ```solidity
 function crosschainBurn(address from, uint256 value) 
 public virtual override(IERC7802)
-onlyRole(CROSS_CHAIN_ROLE) whenNotPaused
+onlyTokenBridge
 ```
 
 Burns tokens in preparation for a crosschain transfer.
@@ -129,6 +130,7 @@ Burns tokens in preparation for a crosschain transfer.
 - The contract must not be paused 
   - error: `EnforcedPause()`
 - Only authorized users (`CROSS_CHAIN_ROLE`) are allowed to call this function.
+- Compliance path note (CMTAT base integration): operator (`_msgSender()`) is propagated through transfer-compliance checks for spender-aware RuleEngine restriction support.
 
  **Emits:**
 
@@ -144,7 +146,7 @@ Burns tokens in preparation for a crosschain transfer.
 ```solidity
 function burnFrom(address account, uint256 value)
 public virtual override(IBurnFromERC20) 
-onlyRole(BURNER_FROM_ROLE) whenNotPaused
+onlyBurnerFrom
 ```
 
 Burns tokens from an account by using the caller’s allowance.
@@ -164,6 +166,7 @@ Burns tokens from an account by using the caller’s allowance.
 - The contract must not be paused 
   - error: `EnforcedPause()`
 - Only authorized users (`BURNER_FROM_ROLE`) are allowed to call this function.
+- Compliance path note (CMTAT base integration): operator (`_msgSender()`) is propagated through transfer-compliance checks for spender-aware RuleEngine restriction support.
 
 **Emits:**
 

@@ -1,0 +1,24 @@
+@startuml
+title ExtraInformationModule
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+
+class Initializable
+interface ICMTATBase
+
+abstract class ExtraInformationModule {
+    +{static} EXTRA_INFORMATION_ROLE : bytes32
+    --
+    +setTokenId(string) : void
+    +setTerms(IERC1643CMTAT.DocumentInfo) : void
+    +setInformation(string) : void
+    +tokenId() view : string
+    +terms() view : CMTATTerms
+    +information() view : string
+}
+
+Initializable <|-- ExtraInformationModule
+ICMTATBase <|.. ExtraInformationModule
+
+@enduml

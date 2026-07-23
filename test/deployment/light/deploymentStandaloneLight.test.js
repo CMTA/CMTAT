@@ -48,8 +48,11 @@ describe('CMTAT Core - Standalone', function () {
       .withArgs(this.address1, ZERO_ADDRESS, VALUE1)
     // Emits a Burn event
     await expect(this.logs)
-      .to.emit(this.cmtat, 'Enforcement')
-      .withArgs(sender, this.address1, VALUE1, REASON_EVENT)
+      .to.emit(
+        this.cmtat,
+        'ForcedTransfer(address,address,address,uint256,bytes)'
+      )
+      .withArgs(sender, this.address1, ZERO_ADDRESS, VALUE1, REASON_EVENT)
     // Check balances and total supply
     expect(await this.cmtat.balanceOf(this.address1)).to.equal(DIFFERENCE)
     expect(await this.cmtat.totalSupply()).to.equal(DIFFERENCE)
@@ -67,8 +70,17 @@ describe('CMTAT Core - Standalone', function () {
       .withArgs(this.address1, ZERO_ADDRESS, DIFFERENCE)
     // Emits a Burn event
     await expect(this.logs)
-      .to.emit(this.cmtat, 'Enforcement')
-      .withArgs(this.admin, this.address1, DIFFERENCE, REASON_EVENT)
+      .to.emit(
+        this.cmtat,
+        'ForcedTransfer(address,address,address,uint256,bytes)'
+      )
+      .withArgs(
+        this.admin,
+        this.address1,
+        ZERO_ADDRESS,
+        DIFFERENCE,
+        REASON_EVENT
+      )
     // Check balances and total supply
     expect(await this.cmtat.balanceOf(this.address1)).to.equal(0)
     expect(await this.cmtat.totalSupply()).to.equal(0)
@@ -112,11 +124,13 @@ describe('CMTAT Core - Standalone', function () {
   /* ============ ERC165 ============ */
   it('testSupportRightInterface', async function () {
     const erc1363Interface = '0xb0202a11'
-    // don't really know how to compute this easily
     //  type(IAccessControl).interfaceId
     const IERC165Interface = '0x01ffc9a7'
     const IERC721Interface = '0x80ac58cd'
     const IERC5679 = '0xd0017968'
+    const IERC8343 = '0xe9cd80b0'
+    const IERC1404 = '0xab84a5c8'
+    const IERC1404Extend = '0x78a8de7d'
     // Assert
     expect(await this.cmtat.supportsInterface(erc1363Interface)).to.equal(
       false
@@ -126,5 +140,10 @@ describe('CMTAT Core - Standalone', function () {
       false
     )
     expect(await this.cmtat.supportsInterface(IERC5679)).to.equal(true)
+    expect(await this.cmtat.supportsInterface(IERC8343)).to.equal(true)
+    // The light deployment (CMTATBaseCore) does not include the ERC-1404 module
+    expect(await this.cmtat.supportsInterface(IERC1404)).to.equal(false)
+    expect(await this.cmtat.supportsInterface(IERC1404Extend)).to.equal(false)
+    expect(await this.cmtat.supportsInterface('0xffffffff')).to.equal(false)
   })
 })

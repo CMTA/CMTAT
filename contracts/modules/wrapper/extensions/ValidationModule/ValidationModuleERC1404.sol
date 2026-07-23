@@ -138,6 +138,7 @@ abstract contract ValidationModuleERC1404 is
 
     /**
     * @dev override this function to add further restriction
+    * @return code The restriction code (0 = no restriction).
     */
     function _detectTransferRestriction(
         address from,

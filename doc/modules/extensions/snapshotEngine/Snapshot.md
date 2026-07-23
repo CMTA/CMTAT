@@ -16,7 +16,7 @@ This module allows to set a specific engine called `SnapshotEngine`to perform sn
 
 ## Schema
 
-![snapshotUML](../../../schema/uml/snapshotUML.png)
+![snapshotUML](../../../schema/plantuml/class/SnapshotEngineModule.png)
 
 ### Inheritance
 
@@ -90,3 +90,53 @@ Returns the currently active snapshot engine.
 | Returns          | Type              | Description                                   |
 | ---------------- | ----------------- | --------------------------------------------- |
 | `snapshotEngine` | `ISnapshotEngine` | Address of the currently set snapshot engine. |
+
+---
+
+## Base Mixins
+
+### `CMTATBaseSnapshot` (level 0)
+
+`contracts/modules/0_CMTATBaseSnapshot.sol`
+
+A pure mixin that composes `ERC20Upgradeable` and `SnapshotEngineModule`. Its sole role is to wire the ERC-20 `_update` hook into the snapshot engine:
+
+```solidity
+abstract contract CMTATBaseSnapshot is ERC20Upgradeable, SnapshotEngineModule {
+    function _update(address from, address to, uint256 amount) internal virtual override(ERC20Upgradeable) {
+        ISnapshotEngine snapshotEngineLocal = snapshotEngine();
+        if (address(snapshotEngineLocal) != address(0)) {
+            // snapshot balances before transfer, then call operateOnTransfer
+            ERC20Upgradeable._update(from, to, amount);
+            snapshotEngineLocal.operateOnTransfer(from, to, fromBalanceBefore, toBalanceBefore, totalSupplyBefore);
+        } else {
+            ERC20Upgradeable._update(from, to, amount);
+        }
+    }
+}
+```
+
+`CMTATBaseSnapshot` is intentionally access-control-free: the `_authorizeSnapshots()` hook is left `abstract` and is implemented by the consuming base contract (typically enforcing `SNAPSHOOTER_ROLE`).
+
+### `CMTATBaseERC2771Snapshot` (level 7)
+
+`contracts/modules/7_CMTATBaseERC2771Snapshot.sol`
+
+Combines `CMTATBaseERC2771` (gasless meta-transactions via ERC-2771 trusted forwarder) with `CMTATBaseSnapshot`. It resolves the `_update` diamond-inheritance ambiguity by delegating to `CMTATBaseSnapshot._update`, and similarly resolves `_msgSender` / `_msgData` / `_contextSuffixLength` in favour of `CMTATBaseERC2771`.
+
+This is the base contract used by the dedicated **Snapshot** deployment variants (`CMTATStandaloneSnapshot`, `CMTATUpgradeableSnapshot`).
+
+---
+
+## Deployment Variants
+
+| Variant | Base | Available snapshot support |
+|---|---|---|
+| `CMTATStandaloneSnapshot` | `CMTATBaseERC2771Snapshot` | Yes — dedicated variant |
+| `CMTATUpgradeableSnapshot` | `CMTATBaseERC2771Snapshot` | Yes — dedicated variant |
+| `CMTATStandaloneDebt` | `CMTATBaseDebt` (inherits `CMTATBaseSnapshot`) | Yes — included by default |
+| `CMTATUpgradeableDebt` | `CMTATBaseDebt` | Yes — included by default |
+| `CMTATStandaloneDebtEngine` | `CMTATBaseDebtEngine` (inherits `CMTATBaseSnapshot`) | Yes — included by default |
+| `CMTATUpgradeableDebtEngine` | `CMTATBaseDebtEngine` | Yes — included by default |
+
+Issuers using the `Debt` or `DebtEngine` deployment variants do **not** need to deploy the separate `Snapshot` variant to access SnapshotEngine support — it is already available through `CMTATBaseSnapshot` in those base contracts.

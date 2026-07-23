@@ -2,21 +2,21 @@
 
 This document defines the CCIP Module for the CMTA Token specification. 
 
-The goal of this module is to implement specific function to the standard [CCT](https://docs.chain.link/ccip/concepts/cross-chain-token/evm) for cross-chain transfers trough [Chainlink CCIP](https://docs.chain.link/ccip).
+The goal of this module is to implement specific function to the standard [CCT](https://docs.chain.link/ccip/concepts/cross-chain-token/evm) for cross-chain transfers through [Chainlink CCIP](https://docs.chain.link/ccip).
 
 [TOC]
 
 ## Schema
 
-![MetaTxUML](../../../schema/uml/CCIPUML.png)
+![CCIPUML](../../../schema/plantuml/class/CCIPModule.png)
 
 ### Inheritance
 
-![surya_inheritance_MetaTxModule.sol](../../../schema/surya_inheritance/surya_inheritance_CCIPModule.sol.png)
+![surya_inheritance_CCIPModule.sol](../../../schema/surya_inheritance/surya_inheritance_CCIPModule.sol.png)
 
 ### Graph
 
-![surya_graph_MetaTxModule.sol](../../../schema/surya_graph/surya_graph_CCIPModule.sol.png)
+![surya_graph_CCIPModule.sol](../../../schema/surya_graph/surya_graph_CCIPModule.sol.png)
 
 
 

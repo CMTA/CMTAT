@@ -22,6 +22,8 @@ abstract contract ERC20BurnModuleInternal is ERC20Upgradeable {
     //////////////////////////////////////////////////////////////*/
     /**
     * @dev internal function to burn in batch
+    * @param accounts The accounts to burn tokens from.
+    * @param values The amounts of tokens to burn, aligned with `accounts`.
     */
     function _batchBurn(
         address[] calldata accounts,
@@ -39,6 +41,8 @@ abstract contract ERC20BurnModuleInternal is ERC20Upgradeable {
     /**
     * @dev Internal function to burn
     * Can be override to perform supplementary check on burn action
+    * @param account The account to burn tokens from.
+    * @param value The amount of tokens to burn.
     */
     function _burnOverride(
         address account,

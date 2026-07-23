@@ -1,0 +1,33 @@
+@startuml
+title CMTAT modules and their external engine contracts
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam componentStyle rectangle
+left to right direction
+
+legend top left
+  <back:#BBDEFB>    </back> Option module
+  <back:#C8E6C9>    </back> Extension module
+endlegend
+
+package "CMTAT" {
+  rectangle "DebtEngineModule" as DEM #BBDEFB
+  rectangle "ValidationModuleRuleEngine" as VMRE #C8E6C9
+  rectangle "SnapshotEngineModule" as SEM #C8E6C9
+  rectangle "DocumentEngineModule\n(ERC-1643)" as DocEM #C8E6C9
+}
+
+rectangle "DebtEngine\n(IDebtEngine)" as DE
+rectangle "RuleEngine\n(IRuleEngine, ERC-1404)" as RE
+rectangle "SnapshotEngine\n(ISnapshotEngine)" as SE
+rectangle "DocumentEngine\n(ERC-1643)" as DocE
+
+DEM --> DE : delegates
+VMRE --> RE : transferred / canTransfer
+SEM --> SE : operateOnTransfer
+DocEM --> DocE : get / set / remove document
+
+note bottom
+  All engines are optional external contracts; their address can be left to zero.
+end note
+@enduml

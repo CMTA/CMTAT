@@ -1,0 +1,21 @@
+@startuml
+title Transfer restriction - cross-chain mint / burn (ERC20CrossChain option)
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+
+start
+:crosschainMint / crosschainBurn (ERC-7802)\nburnFrom(account, value) / burn(value);
+if (contract paused?) then (yes)
+  :revert EnforcedPause;
+  stop
+else (no)
+endif
+:the standard mint / burn validation then applies\n(deactivation -> frozen -> RuleEngine, see the mint / burn schema);
+stop
+
+note right
+  Unlike issuer mint / burn, the cross-chain paths ARE pause-gated
+  (the bridge check carries whenNotPaused), so pausing the token
+  halts a third-party bridge.
+end note
+@enduml

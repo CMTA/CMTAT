@@ -20,6 +20,7 @@ contract RuleMockMint is IRule, CodeList {
 
     /**
     * @dev 20 the limit of the maximum amount
+    * @return The restriction code (0 = allowed, MINT_TOO_HIGH when minting `_amount >= 25`).
     */
     function detectTransferRestriction(
         address _from,

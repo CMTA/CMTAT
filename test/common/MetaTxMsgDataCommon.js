@@ -1,7 +1,7 @@
 const helpers = require('@nomicfoundation/hardhat-network-helpers')
 const {
   getDomain
-} = require('../../openzeppelin-contracts-upgradeable/test/helpers/eip712')
+} = require('../../lib/openzeppelin-contracts-upgradeable/test/helpers/eip712')
 const { expect } = require('chai')
 
 function MetaTxMsgDataCommon () {
@@ -22,7 +22,8 @@ function MetaTxMsgDataCommon () {
     })
 
     it('returns correct msgData for direct call', async function () {
-      const expectedData = this.cmtat.interface.encodeFunctionData('getMsgData')
+      const expectedData =
+        this.cmtat.interface.encodeFunctionData('getMsgData')
       const result = await this.cmtat.getMsgData.staticCall()
       expect(result).to.equal(expectedData)
     })
@@ -33,7 +34,7 @@ function MetaTxMsgDataCommon () {
         from: await this.address1.getAddress(),
         to: this.cmtat.target,
         value: 0n,
-        data: data,
+        data,
         gas: 100000n,
         deadline: (await helpers.time.latest()) + 60,
         nonce: await this.forwarder.nonces(this.address1)
@@ -46,7 +47,7 @@ function MetaTxMsgDataCommon () {
       const tx = await this.forwarder.connect(this.address3).execute(request)
       const receipt = await tx.wait()
       // Parse MsgDataReturned event
-      const log = receipt.logs.find(l => {
+      const log = receipt.logs.find((l) => {
         try {
           return this.cmtat.interface.parseLog(l)?.name === 'MsgDataReturned'
         } catch {

@@ -1,0 +1,25 @@
+@startuml
+title ERC20EnforcementModule
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+
+class ERC20EnforcementModuleInternal
+interface IERC3643ERC20Enforcement
+interface IERC7943FungibleEnforcementSpecific
+
+abstract class ERC20EnforcementModule {
+    +{static} ERC20ENFORCER_ROLE : bytes32
+    --
+    +getFrozenTokens(address) view : uint256
+    +forcedTransfer(address, address, uint256) : bool
+    +freezePartialTokens(address, uint256) : void
+    +unfreezePartialTokens(address, uint256) : void
+    +setFrozenTokens(address, uint256) : bool
+}
+
+ERC20EnforcementModuleInternal <|-- ERC20EnforcementModule
+IERC3643ERC20Enforcement <|.. ERC20EnforcementModule
+IERC7943FungibleEnforcementSpecific <|.. ERC20EnforcementModule
+
+@enduml

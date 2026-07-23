@@ -40,6 +40,10 @@ abstract contract ValidationModuleCore is
 
     /**
     * @dev function used by canTransfer and operateOnTransfer
+    * @param spender The address initiating the transfer.
+    * @param from The address tokens move from.
+    * @param to The address tokens move to.
+    * @return True if the transfer is allowed by the validation module.
     */
     function _canTransferByModule(
         address spender,

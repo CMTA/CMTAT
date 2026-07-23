@@ -20,6 +20,7 @@ contract RuleMock is IRule, CodeList {
 
     /**
     * @dev 20 the limit of the maximum amount
+    * @return The restriction code (0 = allowed, AMOUNT_TOO_HIGH when `_amount >= 20`).
     */
     function detectTransferRestriction(
         address _from,

@@ -1,0 +1,17 @@
+@startuml
+title CCIPModule
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+
+abstract class CCIPModule {
+  --
+  +setCCIPAdmin(address)
+  +getCCIPAdmin() view : address
+}
+
+interface IGetCCIPAdmin
+
+IGetCCIPAdmin <|.. CCIPModule
+
+@enduml

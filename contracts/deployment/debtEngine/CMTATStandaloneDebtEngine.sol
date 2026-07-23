@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.20;
 
-import {CMTATBaseDebtEngine} from "../../modules/5_CMTATBaseDebtEngine.sol";
+import {CMTATBaseDebtEngine} from "../../modules/6_CMTATBaseDebtEngine.sol";
 import {ICMTATConstructor} from "../../interfaces/technical/ICMTATConstructor.sol";
 /**
 * @title CMTAT version for a standalone deployment (without proxy)
@@ -12,7 +12,7 @@ contract CMTATStandaloneDebtEngine is CMTATBaseDebtEngine {
      * @notice Contract version for standalone deployment
      * @param admin address of the admin of contract (Access Control)
      * @param ERC20Attributes_ ERC20 name, symbol and decimals
-     * @param baseModuleAttributes_ tokenId, terms, information
+     * @param extraInformationAttributes_ tokenId, terms, information
      * @param engines_ external contract
      */
     /// @custom:oz-upgrades-unsafe-allow constructor

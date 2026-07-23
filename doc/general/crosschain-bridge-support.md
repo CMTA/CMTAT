@@ -12,7 +12,7 @@ Generally, in term of implementation, it depends of the model to handle cross-ch
 
 [TOC]
 
-## Chainlink CCIP and ERC-7802 (Optmism)
+## Chainlink CCIP and ERC-7802 (Optimism)
 
 See in the README the corresponding section
 
@@ -27,6 +27,8 @@ You can register your existing token directly via the contract or use the [ITS P
 [docs.axelar.dev/dev/send-tokens/interchain-tokens/register-existing-token/](https://docs.axelar.dev/dev/send-tokens/interchain-tokens/register-existing-token/)
 
 ## LayerZero
+
+> **Note:** ready-made OFT adapters (ERC-3643 and ERC-7802 variants) are now maintained in the dedicated [CMTAT-LayerZero](https://github.com/CMTA/CMTAT-LayerZero) repository, so the manual approaches described below are usually not needed.
 
 There are two possibilities to use LayerZero with a CMTAT:
 

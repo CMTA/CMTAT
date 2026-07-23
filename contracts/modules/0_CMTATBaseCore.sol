@@ -11,12 +11,14 @@ import { IERC165 } from "@openzeppelin/contracts/interfaces/IERC165.sol";
 import {ERC20BurnModule, ERC20BurnModuleInternal} from "./wrapper/core/ERC20BurnModule.sol";
 import {ERC20MintModule, ERC20MintModuleInternal} from "./wrapper/core/ERC20MintModule.sol";
 import {ERC20BaseModule, ERC20Upgradeable} from "./wrapper/core/ERC20BaseModule.sol";
+import {TokenAttributeModule} from "./wrapper/core/TokenAttributeModule.sol";
 
 // Other
 import {VersionModule} from "./wrapper/core/VersionModule.sol";
 import {PauseModule}  from "./wrapper/core/PauseModule.sol";
 import {EnforcementModule} from "./wrapper/core/EnforcementModule.sol";
-import {ValidationModule, ValidationModuleCore} from "./wrapper/core/ValidationModuleCore.sol";
+import {ValidationModule} from "./wrapper/core/ValidationModuleCore.sol";
+import {ValidationModuleAllowance} from "./wrapper/extensions/ValidationModule/ValidationModuleAllowance.sol";
 
 // Security
 import {AccessControlModule, AccessControlUpgradeable} from "./wrapper/security/AccessControlModule.sol";
@@ -28,6 +30,7 @@ import {IBurnMintERC20} from "../interfaces/technical/IMintBurnToken.sol";
 import {IERC7551ERC20EnforcementEvent} from "../interfaces/tokenization/draft-IERC7551.sol";
 import {IERC7943FungibleTransferError}  from "../interfaces/tokenization/draft-IERC7943.sol";
 import {IERC5679} from "../interfaces/technical/IERC5679.sol";
+import {IERC8343} from "../interfaces/tokenization/draft-IERC8343.sol";
 
 /**
 * @dev CMTAT with core modules
@@ -40,8 +43,9 @@ abstract contract CMTATBaseCore is
     // Core
     ERC20MintModule,
     ERC20BurnModule,
-    ValidationModuleCore,
+    ValidationModuleAllowance,
     ERC20BaseModule,
+    TokenAttributeModule,
     AccessControlModule,
     IForcedBurnERC20,
     IBurnMintERC20,
@@ -115,7 +119,8 @@ abstract contract CMTATBaseCore is
     function __CMTAT_modules_init_unchained(address admin, ICMTATConstructor.ERC20Attributes memory ERC20Attributes_ ) internal virtual onlyInitializing {
         // AccessControlModule_init_unchained is called firstly due to inheritance
         __AccessControlModule_init_unchained(admin);
-        __ERC20BaseModule_init_unchained(ERC20Attributes_.decimalsIrrevocable, ERC20Attributes_.name, ERC20Attributes_.symbol);
+        __ERC20BaseModule_init_unchained(ERC20Attributes_.decimalsIrrevocable);
+        __TokenAttributeModule_init_unchained(ERC20Attributes_.name, ERC20Attributes_.symbol);
     }
 
 
@@ -144,18 +149,18 @@ abstract contract CMTATBaseCore is
     }
 
 
-    /*
-    * @inheritdoc ERC20BaseModule
+    /**
+    * @inheritdoc TokenAttributeModule
     */
-    function name() public virtual override(ERC20Upgradeable, ERC20BaseModule) view returns (string memory) {
-        return ERC20BaseModule.name();
+    function name() public virtual override(ERC20Upgradeable, TokenAttributeModule) view returns (string memory) {
+        return TokenAttributeModule.name();
     }
 
-    /*
-    * @inheritdoc ERC20BaseModule
+    /**
+    * @inheritdoc TokenAttributeModule
     */
-    function symbol() public virtual override(ERC20Upgradeable, ERC20BaseModule) view returns (string memory) {
-        return ERC20BaseModule.symbol();
+    function symbol() public virtual override(ERC20Upgradeable, TokenAttributeModule) view returns (string memory) {
+        return TokenAttributeModule.symbol();
     }
 
     /**
@@ -163,10 +168,11 @@ abstract contract CMTATBaseCore is
      * @dev 
      * We can not use type(IERC5679).interfaceId, we use instead of 0xd0017968
      * because IERC5679 inherits from two interfaces (IERC5679Burn and Mint)
-     * Core version does not implement in its integrality ERC-7943 (0x29388973)
+     * Core version does not implement in its integrality ERC-7943 (0x3edbb4c4)
+     * type(IERC8343).interfaceId (0xe9cd80b0) is the proposed ERC-8343 (draft) contract deactivation interface
      */
     function supportsInterface(bytes4 interfaceId) public view virtual override(AccessControlUpgradeable, IERC165) returns (bool) {
-        return interfaceId == 0xd0017968 || AccessControlUpgradeable.supportsInterface(interfaceId);
+        return interfaceId == 0xd0017968 || interfaceId == type(IERC8343).interfaceId || AccessControlUpgradeable.supportsInterface(interfaceId);
     }
 
     /* ============  State Functions ============ */
@@ -178,6 +184,14 @@ abstract contract CMTATBaseCore is
         ValidationModule._canTransferGenericByModuleAndRevert(address(0), from, to);
         ERC20Upgradeable._transfer(from, to, value);
         return true;
+    }
+
+    /*
+    * @inheritdoc ERC20Upgradeable
+    */
+    function approve(address spender, uint256 value) public virtual override returns (bool) {
+        _canAuthorizeAllowanceByModuleAndRevert(_msgSender(), spender);
+        return ERC20Upgradeable.approve(spender, value);
     }
     /*
     * @inheritdoc ERC20BaseModule
@@ -227,7 +241,7 @@ abstract contract CMTATBaseCore is
         require(EnforcementModule.isFrozen(account), CMTAT_BurnEnforcement_AddressIsNotFrozen());
         // Skip ERC20BurnModule
         ERC20Upgradeable._burn(account, value);
-        emit Enforcement(_msgSender(), account, value, data);
+        emit ForcedTransfer(_msgSender(), account, address(0), value, data);
     }
 
     /*//////////////////////////////////////////////////////////////
@@ -236,13 +250,13 @@ abstract contract CMTATBaseCore is
 
     /* ==== Mint and Burn Operations ==== */
     function _mintOverride(address account, uint256 value) internal virtual override(ERC20MintModuleInternal) {
-        ValidationModule._canMintBurnByModuleAndRevert(account);
+        ValidationModule._canMintByModuleAndRevert(account);
         ERC20MintModuleInternal._mintOverride(account, value);
     }
 
 
     function _burnOverride(address account, uint256 value) internal virtual override(ERC20BurnModuleInternal) {
-        ValidationModule._canMintBurnByModuleAndRevert(account);
+        ValidationModule._canBurnByModuleAndRevert(account);
         ERC20BurnModuleInternal._burnOverride(account, value);
     }
 
@@ -266,5 +280,5 @@ abstract contract CMTATBaseCore is
 
     function _authorizeFreeze() internal virtual override(EnforcementModule) onlyRole(ENFORCER_ROLE){}
 
-    function _authorizeERC20AttributeManagement() internal virtual override(ERC20BaseModule) onlyRole(DEFAULT_ADMIN_ROLE){}
+    function _authorizeTokenAttributeManagement() internal virtual override(TokenAttributeModule) onlyRole(DEFAULT_ADMIN_ROLE){}
 }

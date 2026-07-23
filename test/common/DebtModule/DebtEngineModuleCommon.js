@@ -12,13 +12,13 @@ function DebtEngineModuleCommon () {
           .connect(this.admin)
           .setDebtEngine(this.debtEngineMock.target)
       }
-      debtIdentifier = {
+      const debtIdentifier = {
         issuerName: 'CMTA',
         issuerDescription: 'Capital Market',
         guarantor: 'Guarantor A',
         debtHolder: 'debtHolder A'
       }
-      debtInstrument = {
+      const debtInstrument = {
         interestRate: 500, // Example: 5.00%
         parValue: 1000000, // Example: 1,000,000
         minimumDenomination: 200,
@@ -46,11 +46,13 @@ function DebtEngineModuleCommon () {
     })
 
     it('testCanReturnTheRightAddressIfSet', async function () {
-      if (this.definedAtDeployment) {
-        expect(this.debtEngineMock.target).to.equal(
-          await this.cmtat.debtEngine()
-        )
+      // Only meaningful when the debt engine is wired at deployment
+      if (!this.definedAtDeployment) {
+        this.skip()
       }
+      expect(this.debtEngineMock.target).to.equal(
+        await this.cmtat.debtEngine()
+      )
     })
 
     it('testCanSetAndGetDebtCorrectly', async function () {

@@ -9,12 +9,12 @@ import {ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/Cont
 import {ValidationModule} from "./wrapper/controllers/ValidationModule.sol";
 /* ==== Wrapper === */
 // Security
-import {AccessControlModule, AccessControlUpgradeable} from "./wrapper/security/AccessControlModule.sol";
+import {AccessControlModule} from "./wrapper/security/AccessControlModule.sol";
 // Core
 import {VersionModule} from "./wrapper/core/VersionModule.sol";
 // Extensions
 import {ExtraInformationModule} from "./wrapper/extensions/ExtraInformationModule.sol";
-import {DocumentEngineModule, IERC1643} from "./wrapper/extensions/DocumentEngineModule.sol";
+import {DocumentERC1643Module} from "./wrapper/extensions/DocumentERC1643Module.sol";
  /* ==== Interface and other library === */
 import {ICMTATConstructor} from "../interfaces/technical/ICMTATConstructor.sol";
 
@@ -30,7 +30,7 @@ abstract contract CMTATBaseGeneric is
     // Core
     VersionModule,
     // Extension
-    DocumentEngineModule,
+    DocumentERC1643Module,
     ExtraInformationModule,
     AccessControlModule
 {  
@@ -83,6 +83,6 @@ abstract contract CMTATBaseGeneric is
     //////////////////////////////////////////////////////////////*/
 
     /* ==== Access Control ==== */
-    function  _authorizeDocumentManagement() internal virtual override(DocumentEngineModule) onlyRole(DOCUMENT_ROLE){}
+    function  _authorizeDocumentManagement() internal virtual override(DocumentERC1643Module) onlyRole(DOCUMENT_ROLE){}
     function  _authorizeExtraInfoManagement() internal virtual override(ExtraInformationModule) onlyRole(EXTRA_INFORMATION_ROLE){}
 }

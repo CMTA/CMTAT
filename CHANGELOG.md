@@ -25,6 +25,8 @@ See [https://semver.org](https://semver.org)
 
 Reference: [keepachangelog.com/en/1.1.0/](https://keepachangelog.com/en/1.1.0/)
 
+Custom changelog tag: `Dependencies`, `Documentation`, `Testing`
+
 ## Checklist
 
 > Before a new release, perform the following tasks
@@ -36,16 +38,332 @@ Reference: [keepachangelog.com/en/1.1.0/](https://keepachangelog.com/en/1.1.0/)
 
 - Documentation
   - Perform a code coverage and update the files in the corresponding directory [./doc/general/test/coverage](./doc/general/test/coverage)
-  - Perform an audit with several audit tools (Aderyn and Slither), update the report in the corresponding directory  [./doc/audits/tools](./doc/audits/tools)
+  - Perform an audit with several audit tools (Aderyn and Slither), update the report in the corresponding directory  [./doc/security/tools](./doc/security/tools)
   - Update surya doc by running the 3 scripts in [./doc/script](./doc/script)
   
   - Update changelog
 
 
 
+## 3.3.0 - rc2
+
+> **Note:** This version has not been audited.
+
+### Smart contract
+
+#### Added
+
+- New core module **`TokenAttributeModule`** (`contracts/modules/wrapper/core/TokenAttributeModule.sol`):
+  - Manages the mutable token attributes `name`/`symbol` (with `setName`/`setSymbol` and the `Name`/`Symbol` events) independently of the ERC-20 interface, in its own ERC-7201 storage (`CMTAT.storage.TokenAttributeModule`).
+  - Decoupled from ERC-20 so the metadata management can be reused by non ERC-20 token bases (e.g. a confidential ERC-7984 variant): a token standard only overrides its `name()`/`symbol()` to delegate here.
+  - Authorization via the `_authorizeTokenAttributeManagement()` hook (enforces `DEFAULT_ADMIN_ROLE`).
+- New option module **`HolderListModule`** (`contracts/modules/wrapper/options/HolderListModule.sol`):
+  - Maintains on-chain the set of addresses holding a non-zero balance, in its own ERC-7201 storage (`CMTAT.storage.HolderListModule`), backed by an OpenZeppelin `EnumerableSet.AddressSet`.
+  - Reads: `holderCount()`, `isHolder(address)`, `holderByIndex(uint256)`, the unbounded listing `holders()` and the windowed `holdersInRange(uint256 fromIndex, uint256 toIndex)`, all following the naming of the fungible holder-enumeration specification. The window is half-open `[fromIndex, toIndex)`; `holders()[i] == holderByIndex(i)` within a single block, and `holders()` equals `holdersInRange(0, holderCount())`.
+  - `holderByIndex` reverts with `CMTAT_HolderListModule_IndexOutOfBounds` when `index >= holderCount()`. `holdersInRange` reverts with `CMTAT_HolderListModule_InvalidRange` when `fromIndex > toIndex` (checked first) and with `CMTAT_HolderListModule_IndexOutOfBounds` when `toIndex > holderCount()`; `fromIndex == toIndex` returns an empty window so a paging loop terminates without a special case.
+  - Emits `HolderAdded(address)` / `HolderRemoved(address)` on the zero ↔ non-zero balance transitions.
+  - The set is kept in sync in `_update`, so mint, burn, transfer, transferFrom, forced transfer and cross-chain mint/burn are all covered. `address(0)` is never a holder and a zero-value transfer never creates one.
+  - Reads are unrestricted (no role): the holder set is derivable from the transfer log anyway.
+- New base contract **`CMTATBaseHolderList`** (`contracts/modules/8_CMTATBaseHolderList.sol`): the CMTAT standard module set plus `HolderListModule`. Declares `type(IHolderListModule).interfaceId` in `supportsInterface`.
+- New deployment variants **`CMTATStandaloneHolderList`** and **`CMTATUpgradeableHolderList`** (`contracts/deployment/holderList/`), with the same constructor and `initialize` signatures as the standard variants.
+
+#### Changed
+
+- **`ERC20BaseModule` slimmed to ERC-20 concerns only** — `name`/`symbol`/`setName`/`setSymbol`/`Name`/`Symbol` events moved to the new `TokenAttributeModule`; `ERC20BaseModule` now stores only `decimals`. `__ERC20BaseModule_init_unchained` takes only `decimals`; name/symbol are initialized via `__TokenAttributeModule_init_unchained`.
+- **`CMTATBaseCore` and `CMTATBaseCommon` now inherit `TokenAttributeModule`** and override `name()`/`symbol()` to delegate to it (`CMTATBaseAccessControl` gets it transitively via `CMTATBaseCommon`). Higher-level bases are unaffected. No external ABI/selector change (`setName`/`setSymbol` keep the `IERC3643ERC20Base` selectors).
+- **Storage layout:** `name`/`symbol` moved from the `CMTAT.storage.ERC20BaseModule` slot to the new `CMTAT.storage.TokenAttributeModule` slot; `decimals` is preserved in place. Transparent for fresh deployments — see **Security** for the upgrade‑migration requirement on existing proxies.
+- **`IERC1643.getDocument` returns flat values (ERC-1643 ABI conformance, breaking API change):**
+  - `getDocument(bytes32)` now returns `(string uri, bytes32 documentHash, uint256 lastModified)` instead of a `Document` struct, so the returndata decodes exactly per the ERC-1643 signature rather than prepending a struct offset word.
+  - The `Document` struct is retained for internal storage and for `ICMTAT.CMTATTerms`; only the `getDocument` return is affected. Applies to `DocumentERC1643Module`, `DocumentEngineModule`, and `DocumentEngineMock`.
+- **Contract deactivation interface renamed to align with the proposed ERC-8343 (`IERC8343`).** The former `ICMTATDeactivate` — `deactivateContract()` / `deactivated()` / `Deactivated` / `AlreadyDeactivated` — now follows the draft [ERC-8343](https://github.com/ethereum/ERCs/pull/1900), which is **not yet merged** (available only as PR #1900), and is moved to its own file `contracts/interfaces/tokenization/draft-IERC8343.sol`. The ERC-165 interface id is unchanged (`0xe9cd80b0`, now referenced via `type(IERC8343).interfaceId` instead of the magic literal), so there is no ABI/selector/discovery change — only the Solidity type name, file location, and NatSpec.
+
+#### Fixed
+
+- **`forcedTransfer` no longer releases frozen tokens on a self-transfer.** `forcedTransfer(from, from, value)` (`from == to`) previously reduced the sender's frozen amount without moving any tokens, effectively unfreezing them; it now reverts.
+- **ERC-1404 predictor/enforcement agreement on zero-value transfers.** `CMTATBaseERC1404._detectTransferRestriction` now delegates its frozen-balance branch to `_checkActiveBalance`, the same predicate the transfer path enforces. A zero-value transfer whose sender is fully frozen is no longer reported as restricted while the transfer itself succeeds; `detectTransferRestriction`, `canTransfer`, and the actual transfer now agree.
+- **ERC-1643 typed errors and input validation.** `DocumentERC1643Module.removeDocument` reverts with `ERC1643MissingDocument()` instead of a string, and `setDocument` now rejects `name == bytes32(0)` with `ERC1643InvalidName()`.
+- **ERC-1643 ERC-165 detection.** `CMTATBaseAccessControl.supportsInterface` now returns `true` for `type(IERC1643).interfaceId` (`0xecfecec8`), so the ERC-1643 document interface is discoverable. This is honest only because `getDocument` now matches the ERC-1643 ABI (see the flat-return change under **Changed**).
+- **ERC-1404 ERC-165 detection.** `supportsInterface` now returns `true` for the mandatory `type(IERC1404).interfaceId` (`0xab84a5c8`) and the spender-aware extension `IERC1404Extend` (`0x78a8de7d`, taken from the hand-computed three-selector XOR in `ERC1404ExtendInterfaceId` — not `type(IERC1404Extend).interfaceId`, which would cover only the added method).
+- **Delegating document token emits ERC-1643 events on its own address (dual emission).** `DocumentEngineModule.setDocument`/`removeDocument` now re-emit the standard `DocumentUpdated`/`DocumentRemoved` events on the token's own address after forwarding to the engine, so subscribers watching the token — as the per-contract ERC-1643 model assumes — observe updates (previously only the engine emitted, on its own address). `removeDocument` reads the metadata before forwarding to include the removed values; both mutators now revert with `CMTAT_DocumentEngineModule_NoDocumentEngine` when no engine is set.
+- **Mocks (test-only) aligned to the standards they claim:**
+  - `RuleEngineMock.supportsInterface` advertises the mandatory ERC-1404 id `0xab84a5c8` (in addition to the extension id `0x78a8de7d`).
+  - `DocumentEngineMock` now reuses the production `DocumentERC1643Module`, fixing a swap-pop enumeration bug (removing a moved document reverted) and emitting the standard flat `DocumentUpdated`/`DocumentRemoved` events.
+  - `CMTATDocumentEngineModuleMock.supportsInterface` advertises `type(IERC1643).interfaceId` (`0xecfecec8`).
+
+#### Security
+
+- **Upgrade migration required for existing proxies (`name`/`symbol` storage move).** Because `name`/`symbol` were moved to a new ERC-7201 slot (`CMTAT.storage.TokenAttributeModule`), upgrading an **already-deployed** CMTAT proxy from a pre-3.3 layout to this version leaves that new slot empty — `name()` / `symbol()` return empty strings until re-set. Any such upgrade MUST run a one-time `reinitializer` that copies the previous `name` / `symbol` into the new slot. Fresh deployments are unaffected (`decimals` stays in place either way).
+-  **`HolderListModule` — the holder set grows without bound and `holders()` is unbounded.** On a token whose transfers are not gated by an allowlist or a rule engine, anyone can inflate `holderCount()` by dusting fresh addresses; the spammer pays the two storage writes, but `holders()` eventually runs out of gas and becomes unusable. It is an off-chain (`eth_call`) getter: on-chain callers, and any caller that cannot bound the holder count, MUST use `holdersInRange(fromIndex, toIndex)` with a bounded window. Deployments expecting a large or adversarial holder set should pair the module with an allowlist.
+- ℹ**`HolderListModule` — `holdersInRange` windows are not a consistent snapshot.** The underlying `EnumerableSet` is unordered and a removal moves the last holder into the freed slot, so windows read across several blocks may miss a holder or return one twice. Read the whole list at a fixed block if a consistent view is required.
+
+### Testing
+
+#### Changed
+
+- Large test-quality sweep: registered silently-dropped suites, un-swallowed snapshot/terms assertions, replaced no-op tests with real assertions, strengthened weak assertions (cross-chain `Transfer` args, snapshot engine state, batch balances), fixed implicit globals / fragile fixtures / missing awaits, converted fake-skips to `this.skip()`, removed ESLint-flagged dead code, and fixed mislabeled/colliding `describe` titles.
+- `allowUnlimitedContractSize` enabled on the Hardhat network so oversized **test mocks** deploy without hitting EIP-170 (production deployment variants remain within the limit).
+
+#### Added
+
+- Regression tests for the rc2 fixes: ERC-1404/ERC-1643 ERC-165 advertisement, delegating-token dual emission and no-engine guard, `DocumentEngineMock` enumeration/standard-event behavior, and `forcedTransfer` `from == to`.
+
+### Documentation
+
+#### Added
+
+- ERC specification rework and conformance analyses under `doc/ERCSpecification/` — ERC-1404 (base + spender-aware extension), ERC-1643 document management, and ERC-8343 contract deactivation — plus updated READMEs and ERC docs.
+
+#### Dependencies
+
+- Ran `npm audit fix`.
+
+## 3.3.0 - rc1
+
+Commit: `580d4776e4cbb857b2da7d83fd79144ae7e47557`
+
+> **Note:** This version has not been audited.
+
+### Smart contract
+
+#### Added
+
+- New base contract **`CMTATBaseDocument`**:
+  - Introduced as `contracts/modules/1_CMTATBaseDocument.sol`.
+  - Isolates document-management authorization (`_authorizeDocumentManagement`) from `CMTATBaseAccessControl`.
+  - Composes `DocumentERC1643Module` on top of the rule-engine base path.
+- **Stateful RuleEngine transfer hook support (testing/mocks):**
+  - Added `IRuleTransferHook` (`contracts/mocks/RuleEngine/interfaces/IRuleTransferHook.sol`) to allow rules to update rule-local state on transfer callbacks.
+  - Added `RuleTokenHolderTracker` (`contracts/mocks/RuleEngine/RuleTokenHolderTracker.sol`) to track holder balances/list in rule storage.
+  - `RuleEngineMock` now wires the holder-tracker rule and executes transfer hooks in `transferred(...)` paths.
+
+#### Changed
+
+- **ERC-1643 document identifier format aligned to `bytes32`** (breaking API change for document functions):
+  - Previous CMTAT variant (e.g. `v3.2.0`) used `string` for document names in `IERC1643` (`getDocument(string)`, `getAllDocuments() -> string[]`).
+  - Current implementation uses `bytes32` document names (`getDocument(bytes32)`, `getAllDocuments() -> bytes32[]`) and exposes `setDocument(bytes32,string,bytes32)` / `removeDocument(bytes32)` with associated events.
+  - **CMTAT terms remain on the modified CMTAT structure**: `IERC1643CMTAT.DocumentInfo` still uses `string name` for tokenization terms metadata (`setTerms` path).
+  - Note: in `rc1`, `getDocument(bytes32)` still returns a `Document` struct; the flat-value return is an `rc2` change.
+- **Base hierarchy refactor (strict dependency-order levels):**
+  - `CMTATBaseDocument` at **level 1** (`contracts/modules/1_CMTATBaseDocument.sol`).
+  - `CMTATBaseAccessControl` at **level 2** (`contracts/modules/2_CMTATBaseAccessControl.sol`) and now inherits `CMTATBaseDocument`.
+  - `CMTATBaseAllowlist` and `CMTATBaseRuleEngine` at **level 3**.
+  - `CMTATBaseDebt` and `CMTATBaseERC1404` at **level 4**.
+  - `CMTATBaseERC20CrossChain` at **level 5**.
+  - `CMTATBaseERC2612`, `CMTATBaseERC2771`, `CMTATBaseDebtEngine` at **level 6**.
+  - `CMTATBaseERC2771Snapshot`, `CMTATBaseERC7551Enforcement` at **level 7**.
+  - `CMTATBaseERC1363`, `CMTATBaseERC7551` at **level 8**.
+- **`CMTATBaseCommon`** no longer inherits `DocumentERC1643Module`.
+- **`CMTATBaseAccessControl`** now defines `_authorizeDocumentManagement` and enforces `DOCUMENT_ROLE`.
+- Updated impacted imports and deployment references to match the new module numbering/layout.
+- **ERC20CrossChain burn-path cleanup (no external API change):**
+  - Removed redundant `crosschainBurn` override from `CMTATBaseERC20CrossChain`; level-5 now uses `ERC20CrossChainModule.crosschainBurn` directly.
+  - Removed redundant sender-aware burn override from `CMTATBaseERC20CrossChain`; burn/burnFrom sender-aware flow now relies on the module implementation.
+  - In `ERC20CrossChainModule`, simplified internal self-burn routing and renamed helper `_burnWithSender` to `_burnFromOperator` for clearer intent.
+- **Meta-tx `_msgData` ERC1363 test path adjusted to avoid bytecode-size deployment failures:**
+  - Slimmed `CMTATUpgradeableERC1363MsgDataMock.getMsgData()` by removing event emission and using a `view` return path.
+  - Reworked `test/standard/modules/MetaTxMsgDataERC1363.test.js` to validate trusted-forwarder calldata shape directly instead of relying on event parsing.
+
+#### Fixed
+
+- Fixed compile-path inconsistencies caused by stale numbered imports after base-level refactor.
+- Restored full compilation after engine/mock alignment:
+  - `CMTATEngineInitializerMock` no longer calls unavailable document-engine initializer on snapshot path.
+  - `DocumentEngineMock` now implements IERC1643-compatible `setDocument(bytes32,string,bytes32)`.
+
+### Documentation
+
+#### Changed
+
+- Updated base-module hierarchy and file references in `doc/README.md` to reflect:
+  - `1_CMTATBaseDocument.sol`
+  - `2_CMTATBaseAccessControl.sol`
+  - `3_CMTATBaseAllowlist.sol`
+  - `3_CMTATBaseRuleEngine.sol`
+  - `4_CMTATBaseDebt.sol`
+  - `4_CMTATBaseERC1404.sol`
+  - `5_CMTATBaseERC20CrossChain.sol`
+  - `6_CMTATBaseERC2612.sol`
+  - `6_CMTATBaseERC2771.sol`
+  - `6_CMTATBaseDebtEngine.sol`
+  - `7_CMTATBaseERC2771Snapshot.sol`
+  - `7_CMTATBaseERC7551Enforcement.sol`
+  - `8_CMTATBaseERC1363.sol`
+  - `8_CMTATBaseERC7551.sol`
+- Updated `doc/README.md` ERC-1643 section to use current `bytes32` API signatures (`getDocument(bytes32)`, `getAllDocuments() returns (bytes32[])`) with compatibility note for `IERC1643CMTAT.DocumentInfo.name` (`string`).
+- Updated contracts tree file `.claude/tree/contracts_tree.txt`.
+- Added technical clarification for freeze-event semantics across standards:
+  - `doc/technical/erc-7943-uRWA-integration.md` now explicitly documents that base `Frozen(account, amount)` is a normalized frozen-state update event (including unfreeze updates), while direction should be derived from ERC-3643/7551 directional events.
+  - `doc/technical/erc-3643-implementation.md` now documents the event-layering model (`Frozen` base state update + `TokensFrozen`/`TokensUnfrozen` directional wrappers).
+
+### Testing
+
+#### Added
+
+- Added dedicated stateful RuleEngine rule test coverage in `test/standard/modules/RuleEngineMockStatefulRule.test.js`:
+  - verifies holder-balance tracking and holder-list transitions through transfer hook callbacks.
+- Added initializer edge-case tests for `DocumentEngineModule` and `SnapshotEngineModule`:
+  - `test/common/DocumentModule/DocumentModuleSetDocumentEngineCommon.js`: covers zero-engine assignment and re-initialization revert paths.
+  - `test/common/SnapshotModuleCommon/SnapshotModuleSetSnapshotEngineCommon.js`: covers zero-engine assignment and re-initialization revert paths.
+- Added standard initializer branch tests in `test/deployment/deployment.test.js`:
+  - manual initialization path, initialization with rule engine, and double-initialize revert.
+- Added interface and initializer coverage across deployment test suites:
+  - `test/common/CMTATIntegrationCommon.js`: extended integration paths.
+  - `test/deployment/erc721mock.test.js`: ERC-721 generic initializer and interface paths.
+  - Light/core, standard, permit, ERC-1363, snapshot, and document deployment suites.
+- Added edge-case coverage for core transfer and approve paths:
+  - `test/common/ERC20BaseModuleCommon.js`: zero-value transfers and explicit approve coverage.
+  - `test/common/AllowlistModuleCommon.js`: explicit `canSend`/`canReceive` matrix including zero-value transfers.
+- Extended `test/common/AllowlistModuleCommon.js`, `test/common/DocumentModule/DocumentModuleCommon.js`, and `test/common/ERC20EnforcementModuleCommon.js` with additional edge-case tests.
+
+#### Fixed
+
+- Removed hardcoded `gasLimit: 30_000_000` override from `deployCMTATERC1363Standalone` in `test/deploymentUtils.js`. The explicit override exceeded the Prague/Fusaka per-transaction gas cap (`FUSAKA_TRANSACTION_GAS_LIMIT = 16,777,216`) enforced by Hardhat ≥ 2.28, causing a `ProviderError` on every ERC-1363 standalone test run. Auto-estimated gas is well within the cap for this contract.
+
+### Documentation
+
+#### Changed
+
+- Updated automated test count and code-coverage references in `README.md` and `doc/README.md`.
+- `README.md`: added hyperlinks to all ERC standard references in the features table; expanded the Supported Financial Instruments table (added Snapshot, DebtEngine, ERC-1363, and UUPS variants; clarified Allowlist entry); added Contract Sizes section with deployed/initcode sizes for all deployment variants; corrected UUPS standalone note.
+- `SECURITY.md`: expanded responsible disclosure policy.
+- `doc/README.md` and `doc/SUMMARY.md`: updated module-level documentation and surya reports to reflect current hierarchy and coverage results.
+- Updated code coverage reports in `doc/test/coverage/` after full test run.
+
+## 3.3.0 - rc0
+
+> **Note:** This version has not been audited.
+
+Commit: this version has been released with the wrong commit
+
+### Smart contract
+
+#### Added
+
+- New base contract **`CMTATBaseERC2612`** (`contracts/modules/4_CMTATBaseERC2612.sol`) combining:
+  - [ERC-2612 Permit](https://eips.ethereum.org/EIPS/eip-2612): gasless approvals via EIP-712 signature (`permit`), gated by CMTAT pause and freeze validation.
+  - [ERC-6357 Multicall](https://eips.ethereum.org/EIPS/eip-6357): batch multiple contract calls into a single transaction (`multicall`).
+- New deployment variants: **`CMTATStandalonePermit`** and **`CMTATUpgradeablePermit`** (`contracts/deployment/permit/`), based on `CMTATBaseERC2612`.
+- New module **`ERC20EnforcementERC7551Module`** (`contracts/modules/wrapper/options/ERC20EnforcementERC7551Module.sol`):
+  - Splits ERC-7551 specific enforcement out of `ERC20EnforcementModule` (see *Changed*).
+  - Provides `bytes data` overloads for `forcedTransfer`, `freezePartialTokens`, `unfreezePartialTokens` (as required by `IERC7551ERC20Enforcement`).
+  - Provides `getActiveBalanceOf` and overrides `getFrozenTokens` to satisfy both `IERC7551ERC20Enforcement` and `IERC3643ERC20Enforcement`.
+- New validation contract **`ValidationModuleAllowance`** (`contracts/modules/wrapper/extensions/ValidationModule/ValidationModuleAllowance.sol`):
+  - Validates allowance authorization (`approve` and `permit`): reverts if the contract is paused or if `owner`/`spender` is frozen.
+  - Used in `CMTATBaseERC2612.permit` to enforce CMTAT compliance checks before setting the allowance.
+- New mixin **`CMTATBaseSnapshot`** (`contracts/modules/0_CMTATBaseSnapshot.sol`):
+  - Pure ERC-20 + `SnapshotEngineModule` mixin providing the `_update` hook for historical balance tracking.
+  - Designed to be composed into deployment variants that require snapshot support.
+- New base contract **`CMTATBaseERC2771Snapshot`** (`contracts/modules/6_CMTATBaseERC2771Snapshot.sol`):
+  - Combines `CMTATBaseERC2771` with `CMTATBaseSnapshot`, resolving all ERC-20 / snapshot disambiguation overrides.
+  - Used as the foundation for snapshot-enabled standard deployment variants.
+- New base contract **`CMTATBaseERC7551Enforcement`** (`contracts/modules/6_CMTATBaseERC7551Enforcement.sol`):
+  - Combines `CMTATBaseERC2771` with `ERC20EnforcementERC7551Module`.
+  - Exposes ERC-7551 enforcement functions (`forcedTransfer/freezePartialTokens/unfreezePartialTokens` with `bytes`) and `getActiveBalanceOf` in Standard deployments.
+- New deployment variants **`CMTATStandaloneSnapshot`** and **`CMTATUpgradeableSnapshot`** (`contracts/deployment/snapshot/`):
+  - Standard CMTAT feature set plus SnapshotEngine support for historical balance queries.
+
+#### Changed
+
+- **`ERC20EnforcementModule`**: Removed `IERC7551ERC20Enforcement` interface inheritance and the ERC-7551 specific functions (`getActiveBalanceOf`, `forcedTransfer(address,address,uint256,bytes)`, `freezePartialTokens(address,uint256,bytes)`, `unfreezePartialTokens(address,uint256,bytes)`). These are now in `ERC20EnforcementERC7551Module`. The module now implements only `IERC3643ERC20Enforcement` and `IERC7943FungibleEnforcementSpecific`.
+- **ERC-7551 event model alignment**:
+  - `IERC7551ERC20EnforcementEvent` now exposes `ForcedTransfer(address operator, address from, address to, uint256 value, bytes data)` (replacing the legacy `Enforcement(...)` event shape).
+  - ERC-7551 event emission was removed from `ERC20EnforcementModuleInternal` and is now emitted in ERC-7551 specific paths (`ERC20EnforcementERC7551Module`, and `CMTATBaseCore.forcedBurn`).
+- **`CMTATBaseERC7551`**: Updated to inherit from `ERC20EnforcementERC7551Module` (instead of relying on `ERC20EnforcementModule` alone) to expose ERC-7551 bytes-data enforcement functions and `getActiveBalanceOf`. Added explicit diamond-inheritance disambiguation overrides for `_msgSender`, `_msgData`, `_contextSuffixLength`, `_update`, `transfer`, `transferFrom`, `approve`, `name`, `symbol`, `decimals`, and `getFrozenTokens`.
+- **`CMTATBaseERC7551`**: Promoted to level 7 (`contracts/modules/7_CMTATBaseERC7551.sol`) and now inherits from `CMTATBaseERC7551Enforcement`.
+- **`CMTATBaseERC1363`**: Promoted to level 7 (`contracts/modules/7_CMTATBaseERC1363.sol`) and now inherits from `CMTATBaseERC7551Enforcement` so ERC-1363 deployments keep the standard ERC-7551 enforcement path.
+- **`CMTATStandardStandalone`** and **`CMTATStandardUpgradeable`** now inherit from `CMTATBaseERC7551Enforcement`, so Standard deployments expose ERC-7551 enforcement functions.
+- **`CMTATUpgradeableUUPS`** inheritance remains unchanged (no `CMTATBaseERC7551Enforcement`).
+- **`CMTATBaseAllowlist`**: Now composes `ERC20EnforcementERC7551Module`, so Allowlist deployments also expose ERC-7551 enforcement functions (`forcedTransfer/freezePartialTokens/unfreezePartialTokens` with `bytes`) and `getActiveBalanceOf`.
+- **`EnforcementModuleInternal`**: Hardened freeze-list writes by rejecting `address(0)` in `_addAddressToTheList` (new `CMTAT_Enforcement_ZeroAddressNotAllowed` custom error), preventing misuse of `setAddressFrozen` / `batchSetAddressFrozen` on the zero address.
+- **`ERC20EnforcementModuleInternal`**: Hardened partial freeze paths by rejecting `address(0)` in `_freezePartialTokens` and `_unfreezePartialTokens` (new `CMTAT_ERC20EnforcementModule_ZeroAddressNotAllowed` custom error).
+- **`CMTATBaseDebtEngine`**: Now inherits from both `CMTATBaseERC20CrossChain` and `CMTATBaseSnapshot`, adding SnapshotEngine support to the Debt variant. Adds `_authorizeSnapshots` and disambiguation overrides for `_update`, `transfer`, `transferFrom`, `approve`, `name`, `symbol`, `decimals`.
+- **`CMTATBaseDebt`**: Restored SnapshotEngine support by inheriting `CMTATBaseSnapshot` and adding the required disambiguation/authorization overrides (`approve`, `transfer`, `transferFrom`, `decimals`, `name`, `symbol`, `_update`, `_authorizeSnapshots`) so Debt deployments expose `snapshotEngine` / `setSnapshotEngine` again.
+- **RuleEngine operator propagation for cross-chain burn flows**:
+  - `burn` now preserves and propagates `_msgSender()` through the transfer-compliance hook so spender-aware RuleEngine checks are enforced for operator-initiated burns.
+  - `burnFrom` now preserves and propagates `_msgSender()` through the transfer-compliance hook so spender-aware RuleEngine checks are enforced for allowance-based delegated burns.
+  - `crosschainBurn` now follows the same operator propagation model for consistency with `burnFrom`.
+  - `mint` and `crosschainMint` now also propagate `_msgSender()` so spender-aware RuleEngine checks apply consistently to operator-initiated mint flows.
+- **ERC-7943 interface update** — breaking changes aligned with the updated ERC-7943 specification:
+  - `canTransact(address)` removed; replaced by `canSend(address)` and `canReceive(address)` in `ValidationModule`, implementing the new `IERC7943FungibleSendReceiveCheck` interface. Both currently delegate to the same underlying eligibility check (frozen status + allowlist), but allow future asymmetric access policies.
+  - `ERC7943CannotTransact` error removed; replaced by directional errors `ERC7943CannotSend` (emitted when a sender, spender, or burn source is blocked) and `ERC7943CannotReceive` (emitted when a recipient or mint target is blocked), defined in `IERC7943FungibleSendReceiveError`.
+  - Internal `_canTransact` split into `_canSend` and `_canReceive` (both virtual, overridden in `ValidationModuleAllowlist`).
+  - `_canMintBurnByModuleAndRevert` split into `_canMintByModuleAndRevert` (reverts with `ERC7943CannotReceive`) and `_canBurnByModuleAndRevert` (reverts with `ERC7943CannotSend`).
+  - Interface names: `IERC7943TransactError` → `IERC7943FungibleSendReceiveError`; `IERC7943TransactCheck` → `IERC7943FungibleSendReceiveCheck`.
+  - ERC-7943 ERC-165 interface ID updated: `0x29388973` → `0x3edbb4c4`.
+
+### Testing
+
+#### Added
+
+- New test files for the Permit deployment variants: `test/deployment/permit/deploymentPermitStandalone.test.js`, `test/deployment/permit/deploymentPermitUpgradeable.test.js`.
+- New common test modules: `test/common/PermitModuleCommon.js`, `test/common/MulticallModuleCommon.js`.
+
+#### Changed
+
+- `test/common/AllowlistModuleCommon.js`: updated to cover new allowance validation behavior and ERC-7943 directional errors.
+- `test/common/ERC20BaseModuleCommon.js`: updated to cover updated `approve` validation and ERC-7943 directional errors.
+- `test/common/EnforcementModuleCommon.js`, `test/common/PermitModuleCommon.js`, `test/common/ERC20BurnModuleCommon.js`, `test/common/ERC20MintModuleCommon.js`, `test/common/ERC20CrossChainModuleCommon.js`: replaced `canTransact` calls with `canSend`; replaced `ERC7943CannotTransact` revert expectations with the appropriate directional error (`ERC7943CannotSend` or `ERC7943CannotReceive`).
+- `test/utils.js`: updated `IERC7943_INTERFACEID` to `0x3edbb4c4`.
+- `test/deployment/erc721mock.test.js`: updated to `ERC7943CannotReceive`.
+- Deployment test wiring updated after snapshot-module extraction:
+  - Removed snapshot common test calls from non-snapshot deployment suites where `snapshotEngine()` is not exposed (ERC-7551 and ERC-1363 proxy deployment suites).
+  - Added dedicated ERC-7551 enforcement common tests (`test/common/ERC20EnforcementERC7551ModuleCommon.js`) and wired them to ERC-7551 deployment suites.
+  - Added zero-address rejection coverage for enforcement freeze entry points in `test/common/EnforcementModuleCommon.js` (`setAddressFrozen` overloads and `batchSetAddressFrozen`).
+  - Added zero-address rejection coverage for partial freeze entry points in `test/common/ERC20EnforcementModuleCommon.js` (`freezePartialTokens` / `unfreezePartialTokens`, with and without reason).
+  - Added RuleEngine spender-propagation coverage for `burn` and `batchBurn` (`test/common/ERC20BurnModuleCommon.js`) to validate operator-aware checks.
+  - Added `batchBurn` exact-balance edge-case coverage (`testCanBatchBurnWithExactBalances`) in `test/common/ERC20BurnModuleCommon.js`.
+- `package.json`:
+  - `test:snapshot` script path list fixed to remove stale/non-existent targets.
+  - Added `test:snapshot:module` to keep module-level snapshot suite invocation separate.
+
+### Documentation
+
+#### Added
+
+- ERC specification: `doc/ERCSpecification/erc-2612.md` (ERC-2612 Permit).
+- ERC specification: `doc/ERCSpecification/erc-6357-multicall.md` (ERC-6357 Multicall).
+- Module documentation: `doc/modules/options/erc2612/erc2612.md` (`CMTATBaseERC2612` API reference).
+- `ERC20EnforcementERC7551Module` section in `doc/modules/options/erc7551/erc7551.md`.
+- Old ERC-7943 specification archived as `doc/ERCSpecification/erc-7943-uRWA-old.md` for reference.
+
+#### Changed
+
+- `doc/SUMMARY.md`: added **Permit** and **Snapshot** deployment variants; updated inheritance hierarchy to show `CMTATBaseERC2612` and `CMTATBaseERC2771Snapshot` branches.
+- `doc/README.md`: updated ERC-7943 interface table, implementation mapping, transfer flow diagram, and pre-check functions table to reflect `canSend`/`canReceive` split and new error names.
+- `doc/README.md` and `doc/modules/options/erc7551/erc7551.md`: updated ERC-7551 event references from legacy `Enforcement(...)` to `ForcedTransfer(operator,from,to,value,data)` and clarified that ERC-7551 event emission occurs in `ERC20EnforcementERC7551Module`.
+- `doc/modules/extensions/ERC20Enforcement/erc20enforcement.md`: added note about ERC-7551 enforcement functions moved to `ERC20EnforcementERC7551Module`.
+- `doc/modules/options/erc7551/erc7551.md`: added overview table distinguishing `ERC7551Module` from `ERC20EnforcementERC7551Module`.
+- Updated ERC specifications: `erc-1404-restricted.md`, `erc-3643.md`, `erc-7551-ewpg.md`, `erc-7943-uRWA.md`.
+- `doc/README.md`:
+  - Fixed broken local links in audit references.
+  - Corrected deployment-functionality summary tables for snapshot/MetaTx coverage.
+  - Added a dedicated `CMTAT Snapshot` column in the functionality matrix to avoid ambiguity.
+  - Updated security documentation paths from `doc/audits/...` to `doc/security/...` after directory rename.
+  - Added Sequent pre-review references in both audit/pre-review and tooling sections.
+- `README.md` and `doc/README.md`:
+  - Clarified that **Hardhat** is the main development toolchain for CMTAT/repository.
+  - Added note that **Forge/Foundry** is installed for compilation, while Foundry-specific scripts/tests are maintained in [CMTAT-Foundry](https://github.com/CMTA/CMTAT-Foundry).
+  - Updated Hardhat links to `https://v2.hardhat.org` and Foundry link to `https://www.getfoundry.sh`.
+- `doc/USAGE.md`:
+  - Updated OpenZeppelin dependency references to `v5.6.1`.
+  - Updated OpenZeppelin upgradeable submodule location to `lib/openzeppelin-contracts-upgradeable` and clarified its use for Hardhat test helpers.
+  - Updated Node.js reference to `v24.12.0`.
+
+### Dependencies
+
+#### Changed
+
+- Upgraded OpenZeppelin npm packages to `v5.6.1`:
+  - `@openzeppelin/contracts`
+  - `@openzeppelin/contracts-upgradeable`
+- Moved OpenZeppelin upgradeable git submodule from `openzeppelin-contracts-upgradeable` to `lib/openzeppelin-contracts-upgradeable`, and updated test helper imports accordingly.
+- Updated `.nvmrc` to `v24.12.0`.
+
 ## 3.2.0
 
 > **Note:** This version has not been audited.
+
+Commit: `49544f4de1993008acfc9e848d0bf03bd31d8579`
 
 ### Smart contract
 
