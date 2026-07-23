@@ -1,0 +1,23 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+title CMTATBaseERC2612 (Permit + Multicall)
+class "CMTATBaseERC20CrossChain" as CC
+class "ERC20PermitUpgradeable" as P
+class "MulticallUpgradeable" as M
+abstract class CMTATBaseERC2612 {
+  --
+  +permit(owner, spender, value, deadline, v, r, s)
+  +approve(address, uint256) : bool
+  +transfer(address, uint256) : bool
+  +transferFrom(address, address, uint256) : bool
+  +decimals() view : uint8
+  +name() view : string
+  +symbol() view : string
+  ..inherited: multicall(bytes[]), nonces(address), DOMAIN_SEPARATOR()..
+}
+CC <|-- CMTATBaseERC2612
+P  <|-- CMTATBaseERC2612
+M  <|-- CMTATBaseERC2612
+@enduml

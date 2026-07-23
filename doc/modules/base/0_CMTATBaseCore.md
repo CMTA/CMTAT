@@ -23,7 +23,7 @@ Unlike `CMTATBaseCommon` (also level 0), `CMTATBaseCore` bundles access control,
 
 ## Schema
 
-![CMTATBaseCore](../../schema/uml/CMTATBaseCoreUML.png)
+![CMTATBaseCore](../../schema/plantuml/class/CMTATBaseCore.png)
 
 ### Inheritance
 

@@ -14,7 +14,7 @@ However, this is not enforced in the functions that allow to change a user’s a
 
 ## Schema
 
-![PauseUML](../../../schema/uml/PauseUML.png)
+![PauseUML](../../../schema/plantuml/class/PauseModule.png)
 
 ### Inheritance
 

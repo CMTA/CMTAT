@@ -1,0 +1,21 @@
+@startuml
+title DebtModule
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+
+interface IDebtModule
+
+abstract class DebtModule {
+  +{static} DEBT_ROLE : bytes32
+  --
+  +setCreditEvents(CreditEvents)
+  +setDebt(ICMTATDebt.DebtInformation)
+  +setDebtInstrument(ICMTATDebt.DebtInstrument)
+  +creditEvents() view : CreditEvents
+  +debt() view : DebtInformation
+}
+
+IDebtModule <|.. DebtModule
+
+@enduml

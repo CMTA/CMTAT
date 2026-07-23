@@ -54,7 +54,7 @@ RuleEngine is optional and can be zero-address.
 
 ## Runtime Call Flow
 
-![RuleEngine validation on a state-changing transfer](../schema/plantuml/ruleengine-transfer-flow.png)
+![RuleEngine validation on a state-changing transfer](../schema/plantuml/flow/ruleengine-transfer-flow.png)
 
 ### A) Read-only checks
 

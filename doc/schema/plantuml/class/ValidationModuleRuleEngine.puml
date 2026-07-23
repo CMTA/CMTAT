@@ -1,0 +1,20 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+title ValidationModuleRuleEngine (extension)
+class "ValidationModuleAllowance" as VA
+class "ValidationModuleRuleEngineInternal" as VRI
+abstract class ValidationModuleRuleEngine {
+  --
+  +setRuleEngine(IRuleEngine)
+  +canTransfer(address, address, uint256) view : bool
+  +canTransferFrom(address, address, address, uint256) view : bool
+  ..calls..
+  RuleEngine.transferred(spender, from, to, value)
+  ..error..
+  CMTAT_ValidationModule_SameValue()
+}
+VA  <|-- ValidationModuleRuleEngine
+VRI <|-- ValidationModuleRuleEngine
+@enduml

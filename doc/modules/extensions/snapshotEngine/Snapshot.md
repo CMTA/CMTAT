@@ -16,7 +16,7 @@ This module allows to set a specific engine called `SnapshotEngine`to perform sn
 
 ## Schema
 
-![snapshotUML](../../../schema/uml/snapshotUML.png)
+![snapshotUML](../../../schema/plantuml/class/SnapshotEngineModule.png)
 
 ### Inheritance
 

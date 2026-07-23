@@ -10,7 +10,7 @@ This document defines the Validation Module for the CMTA Token specification. Th
 
 ## Schema
 
-
+![ValidationModule class diagram](../../schema/plantuml/class/ValidationModule.png)
 
 ### Inheritance
 

@@ -8,6 +8,8 @@ This document defines the Validation RuleEngine Module for the CMTA Token specif
 
 ## Schema
 
+![ValidationModuleRuleEngine class diagram](../../schema/plantuml/class/ValidationModuleRuleEngine.png)
+
 ### Inheritance
 
 ![surya_inheritance_ValidationModuleRuleEngine.sol](../../schema/surya_inheritance/surya_inheritance_ValidationModuleRuleEngine.sol.png)

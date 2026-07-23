@@ -12,7 +12,7 @@ The interface and struct to represent Debt is available in [ICMTAT.sol](../../..
 
 ## Schema
 
-![DebtEngineUML](../../../schema/uml/DebtEngineUML.png)
+![DebtEngineUML](../../../schema/plantuml/class/DebtEngineModule.png)
 
 ### Inheritance
 

@@ -11,7 +11,7 @@ CMTAT has two lifecycle controls, implemented in `PauseModule`:
      └──── unpause() ──────┘                                 unpause() reverts
 ```
 
-![CMTAT lifecycle state diagram](../schema/plantuml/lifecycle-states.png)
+![CMTAT lifecycle state diagram](../schema/plantuml/flow/lifecycle-states.png)
 
 Deactivation is built on top of pause: a contract **must be paused before it can be deactivated**, and once deactivated it **cannot be unpaused**. So `deactivated` is a *permanent, terminal pause*.
 

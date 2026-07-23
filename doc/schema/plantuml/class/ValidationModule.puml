@@ -1,0 +1,22 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+title ValidationModule (controller)
+class "PauseModule" as P
+class "EnforcementModule" as EN
+interface "IERC7943FungibleSendReceiveCheck" as ISR
+interface "IERC7943FungibleSendReceiveError" as IER
+abstract class ValidationModule {
+  --
+  +canSend(address) view : bool
+  +canReceive(address) view : bool
+  ..internal..
+  _canTransferGenericByModuleAndRevert(spender, from, to)
+  (pause + freeze checks -> ERC7943CannotSend/Receive)
+}
+P  <|-- ValidationModule
+EN <|-- ValidationModule
+ISR <|.. ValidationModule
+IER <|.. ValidationModule
+@enduml

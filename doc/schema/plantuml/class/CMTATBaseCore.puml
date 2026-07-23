@@ -1,0 +1,50 @@
+@startuml
+title CMTATBaseCore
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+
+class VersionModule
+class ERC20MintModule
+class ERC20BurnModule
+class ValidationModuleAllowance
+class ERC20BaseModule
+class TokenAttributeModule
+class AccessControlModule
+interface IForcedBurnERC20
+interface IBurnMintERC20
+interface IERC5679
+class "Initializable / ContextUpgradeable\n+ others" as OZ
+
+abstract class CMTATBaseCore {
+    --
+    +initialize(address, ICMTATConstructor.ERC20Attributes) : void
+    +transfer(address, uint256) : bool
+    +approve(address, uint256) : bool
+    +transferFrom(address, address, uint256) : bool
+    +burnAndMint(address, address, uint256, uint256, bytes) : void
+    +forcedBurn(address, uint256, bytes) : void
+    +supportsInterface(bytes4) view : bool
+    +decimals() view : uint8
+    +name() view : string
+    +symbol() view : string
+}
+
+VersionModule <|-- CMTATBaseCore
+ERC20MintModule <|-- CMTATBaseCore
+ERC20BurnModule <|-- CMTATBaseCore
+ValidationModuleAllowance <|-- CMTATBaseCore
+ERC20BaseModule <|-- CMTATBaseCore
+TokenAttributeModule <|-- CMTATBaseCore
+AccessControlModule <|-- CMTATBaseCore
+IForcedBurnERC20 <|-- CMTATBaseCore
+IBurnMintERC20 <|-- CMTATBaseCore
+IERC5679 <|-- CMTATBaseCore
+OZ <|-- CMTATBaseCore
+
+note bottom of CMTATBaseCore
+  Also implements IERC7551ERC20EnforcementEvent
+  and IERC7943FungibleTransferError (+ others)
+end note
+
+@enduml

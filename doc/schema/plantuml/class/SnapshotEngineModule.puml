@@ -1,0 +1,20 @@
+@startuml
+title SnapshotEngineModule
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+
+interface ISnapshotEngineModule
+interface ISnapshotEngine
+
+abstract class SnapshotEngineModule {
+    +{static} SNAPSHOOTER_ROLE : bytes32
+    --
+    +setSnapshotEngine(ISnapshotEngine) : void
+    +snapshotEngine() view : ISnapshotEngine
+}
+
+ISnapshotEngineModule <|-- SnapshotEngineModule
+SnapshotEngineModule ..> ISnapshotEngine : uses
+
+@enduml

@@ -1,0 +1,18 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+title ValidationModuleAllowlist (controller)
+class "AllowlistModule" as A
+class "ValidationModule" as V
+abstract class ValidationModuleAllowlist {
+  --
+  ..overrides (internal)..
+  _canSend / _canReceive (adds allowlist check)
+  _canTransferStandardByModuleAndRevert
+  (reverts ERC7943CannotSend / ERC7943CannotReceive
+   when the allowlist is enabled and a party is not allowlisted)
+}
+A <|-- ValidationModuleAllowlist
+V <|-- ValidationModuleAllowlist
+@enduml

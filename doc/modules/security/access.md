@@ -11,7 +11,7 @@ This document defines Authorization Module for the CMTA Token specification.
 
 ## Schema
 
-![AuthorizationUML](../../schema/uml/AccessControlUML.png)
+![AuthorizationUML](../../schema/plantuml/class/AccessControlModule.png)
 
 ### RBAC
 
@@ -26,7 +26,7 @@ The DEFAULT_ADMIN_ROLE has automatically all the roles.
 
 This behavior is implemented by overriding the function `hasRole` from OpenZeppelin
 
-![RBAC — roles to functions](../../schema/plantuml/access-control-rbac.png)
+![RBAC — roles to functions](../../schema/plantuml/flow/access-control-rbac.png)
 
 ### Graph
 

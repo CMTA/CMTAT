@@ -6,7 +6,7 @@ This document defines the ERC20CrossChain module for the CMTA Token specificatio
 
 ## Schema
 
-![ERC20CrossChain](../../../schema/uml/ERC20CrossChainUML.png)
+![ERC20CrossChain](../../../schema/plantuml/class/ERC20CrossChainModule.png)
 
 ### Inheritance
 

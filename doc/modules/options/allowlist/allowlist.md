@@ -6,7 +6,7 @@ This document defines the Allowlist module
 
 ## Schema
 
-![DebtUML](../../../schema/uml/AllowlistUML.png)
+![DebtUML](../../../schema/plantuml/class/AllowlistModule.png)
 
 ### Inheritance
 

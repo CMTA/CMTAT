@@ -1,0 +1,16 @@
+@startuml
+title VersionModule
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+
+interface IERC3643Version
+
+abstract class VersionModule {
+    --
+    +version() view : string
+}
+
+IERC3643Version <|.. VersionModule
+
+@enduml

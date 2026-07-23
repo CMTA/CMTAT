@@ -8,7 +8,7 @@ The goal of this module is to implement specific function to the standard [CCT](
 
 ## Schema
 
-![CCIPUML](../../../schema/uml/CCIPUML.png)
+![CCIPUML](../../../schema/plantuml/class/CCIPModule.png)
 
 ### Inheritance
 

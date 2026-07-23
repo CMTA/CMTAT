@@ -1,0 +1,32 @@
+@startuml
+title ERC20BaseModule
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+
+class ERC20Upgradeable
+interface IERC20Allowance
+interface IERC20BatchBalance
+interface IERC3643ERC20Base
+
+abstract class ERC20BaseModule {
+    --
+    +transferFrom(address, address, uint256) : bool
+    +decimals() view : uint8
+    +batchBalanceOf(address[]) view : (uint256[], uint256)
+}
+
+abstract class TokenAttributeModule {
+    --
+    +name() view : string
+    +symbol() view : string
+    +setName(string)
+    +setSymbol(string)
+}
+
+ERC20Upgradeable <|-- ERC20BaseModule
+IERC20Allowance <|.. ERC20BaseModule
+IERC20BatchBalance <|.. ERC20BaseModule
+IERC3643ERC20Base <|.. TokenAttributeModule
+
+@enduml

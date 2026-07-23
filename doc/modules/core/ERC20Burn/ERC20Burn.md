@@ -12,7 +12,7 @@ This document defines the ERC20Burn Module for the CMTA Token specification.
 
 ## Schema
 
-![ERC20BurnUML](../../../schema/uml/ERC20BurnUML.png)
+![ERC20BurnUML](../../../schema/plantuml/class/ERC20BurnModule.png)
 
 ### Inheritance
 

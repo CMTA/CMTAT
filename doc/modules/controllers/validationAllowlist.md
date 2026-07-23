@@ -6,6 +6,8 @@ This document defines the Validation Allowlist Module for the CMTA Token specifi
 
 ## Schema
 
+![ValidationModuleAllowlist class diagram](../../schema/plantuml/class/ValidationModuleAllowlist.png)
+
 ### Inheritance
 
 ![surya_inheritance_ValidationModuleAllowlist.sol](../../schema/surya_inheritance/surya_inheritance_ValidationModuleAllowlist.sol.png)

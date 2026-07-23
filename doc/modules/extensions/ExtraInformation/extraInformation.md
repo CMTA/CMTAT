@@ -32,7 +32,7 @@ The ExtraInformation Module set the basic properties common to the different CMT
 
 ## Schema
 
-![ExtraInformationUML](../../../schema/uml/ExtraInformationUML.png)
+![ExtraInformationUML](../../../schema/plantuml/class/ExtraInformationModule.png)
 
 ### Inheritance
 

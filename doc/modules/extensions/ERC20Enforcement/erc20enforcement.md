@@ -14,7 +14,7 @@ This document defines the ERC20 Enforcement Module for the CMTA Token specificat
 
 ## Schema
 
-![EnforcementUML](../../../schema/uml/ERC20EnforcementUML.png)
+![EnforcementUML](../../../schema/plantuml/class/ERC20EnforcementModule.png)
 
 ### Inheritance
 

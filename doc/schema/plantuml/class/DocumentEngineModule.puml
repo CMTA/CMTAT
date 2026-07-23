@@ -1,0 +1,35 @@
+@startuml
+title DocumentEngineModule and DocumentERC1643Module (ERC-1643)
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+
+interface IERC1643
+interface IDocumentEngineModule
+
+abstract class DocumentEngineModule {
+    +{static} DOCUMENT_ENGINE_ROLE : bytes32
+    --
+    +documentEngine() view : IERC1643
+    +getDocument(bytes32) view : (string, bytes32, uint256)
+    +getAllDocuments() view : bytes32[]
+    +setDocument(bytes32, string, bytes32) : void
+    +removeDocument(bytes32) : void
+    +setDocumentEngine(IERC1643) : void
+}
+
+abstract class DocumentERC1643Module {
+    +{static} DOCUMENT_ROLE : bytes32
+    --
+    +getDocument(bytes32) view : (string, bytes32, uint256)
+    +getAllDocuments() view : bytes32[]
+    +setDocument(bytes32, string, bytes32) : void
+    +removeDocument(bytes32) : void
+}
+
+IDocumentEngineModule <|-- DocumentEngineModule
+IERC1643 <|-- DocumentEngineModule
+IERC1643 <|-- DocumentERC1643Module
+DocumentEngineModule ..> IERC1643 : delegates to engine
+
+@enduml

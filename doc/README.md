@@ -1268,9 +1268,9 @@ This schema contains the different roles and their restricted functions.
 
 
 
-![RBAC — roles to functions](./schema/plantuml/access-control-rbac.png)
+![RBAC — roles to functions](./schema/plantuml/flow/access-control-rbac.png)
 
-> Source: [`schema/plantuml/access-control-rbac.puml`](./schema/plantuml/access-control-rbac.puml). See also [technical/access-control.md](./technical/access-control.md) for the full role-by-module table.
+> Source: [`schema/plantuml/flow/access-control-rbac.puml`](./schema/plantuml/flow/access-control-rbac.puml). See also [technical/access-control.md](./technical/access-control.md) for the full role-by-module table.
 
 The OpenZepplin functions `grantRole`and `revokeRole` can be used by the admin to grant and revoke role to an address.
 
@@ -1295,9 +1295,9 @@ These engines are **optional** and their addresses can be left to zero.
 
 Here is a schema with the different modules and the associated engines.
 
-![CMTAT modules and their external engine contracts](./schema/plantuml/engine-modules.png)
+![CMTAT modules and their external engine contracts](./schema/plantuml/flow/engine-modules.png)
 
-> Source: [`schema/plantuml/engine-modules.puml`](./schema/plantuml/engine-modules.puml).
+> Source: [`schema/plantuml/flow/engine-modules.puml`](./schema/plantuml/flow/engine-modules.puml).
 
 #### RuleEngine (IERC-1404)
 
@@ -1348,9 +1348,9 @@ This function `_transferred` is called before each transfer/burn/mint through th
 
 Here is a schema to show how it works:
 
-![How CMTAT calls the RuleEngine](./schema/plantuml/engine-ruleengine-base.png)
+![How CMTAT calls the RuleEngine](./schema/plantuml/flow/engine-ruleengine-base.png)
 
-> Source: [`schema/plantuml/engine-ruleengine-base.puml`](./schema/plantuml/engine-ruleengine-base.puml).
+> Source: [`schema/plantuml/flow/engine-ruleengine-base.puml`](./schema/plantuml/flow/engine-ruleengine-base.puml).
 
 1. The token holders initiate a transfer transaction on CMTAT contract.
 2. The validation module inside the CMTAT calls the ERC-3643 function `transferred` from the RuleEngine if set with the following parameters inside: `from, to, value`.
@@ -1608,9 +1608,9 @@ The different rules are not included in the RuleEngine interface and you are fre
 
 ###### Schema
 
-![CMTAT RuleEngine — transfer validation dispatch](./schema/plantuml/ruleengine-rules-dispatch.png)
+![CMTAT RuleEngine — transfer validation dispatch](./schema/plantuml/flow/ruleengine-rules-dispatch.png)
 
-> Source: [`schema/plantuml/ruleengine-rules-dispatch.puml`](./schema/plantuml/ruleengine-rules-dispatch.puml).
+> Source: [`schema/plantuml/flow/ruleengine-rules-dispatch.puml`](./schema/plantuml/flow/ruleengine-rules-dispatch.puml).
 
 ###### Version
 
@@ -2069,9 +2069,9 @@ interface IAllowlistModule {
 
 #### Schema
 
-![Allowlist transfer restriction](./schema/plantuml/transfer-restriction-allowlist.png)
+![Allowlist transfer restriction](./schema/plantuml/flow/transfer-restriction-allowlist.png)
 
-> Source: [`schema/plantuml/transfer-restriction-allowlist.puml`](./schema/plantuml/transfer-restriction-allowlist.puml).
+> Source: [`schema/plantuml/flow/transfer-restriction-allowlist.puml`](./schema/plantuml/flow/transfer-restriction-allowlist.puml).
 
 
 
@@ -2081,17 +2081,17 @@ Here is a schema describing the different checks performed during transfers and 
 
 **Standard transfer** — `transfer`, `transferFrom`, ERC-3643 `batchTransfer` (pause -> frozen -> RuleEngine):
 
-![Transfer restriction - standard transfer](./schema/plantuml/transfer-restriction-standard.png)
+![Transfer restriction - standard transfer](./schema/plantuml/flow/transfer-restriction-standard.png)
 
 **Supply management** — core `mint` / `batchMint` / `burn` / `batchBurn` (deactivation -> frozen -> RuleEngine; not blocked by pause):
 
-![Transfer restriction - core mint / burn](./schema/plantuml/transfer-restriction-mint-burn.png)
+![Transfer restriction - core mint / burn](./schema/plantuml/flow/transfer-restriction-mint-burn.png)
 
 **Cross-chain** — `crosschainMint` / `crosschainBurn` / `burnFrom` / self-`burn` (pause-gated, then the mint/burn flow above):
 
-![Transfer restriction - cross-chain mint / burn](./schema/plantuml/transfer-restriction-crosschain.png)
+![Transfer restriction - cross-chain mint / burn](./schema/plantuml/flow/transfer-restriction-crosschain.png)
 
-> Sources: [`transfer-restriction-standard.puml`](./schema/plantuml/transfer-restriction-standard.puml), [`transfer-restriction-mint-burn.puml`](./schema/plantuml/transfer-restriction-mint-burn.puml), [`transfer-restriction-crosschain.puml`](./schema/plantuml/transfer-restriction-crosschain.puml).
+> Sources: [`transfer-restriction-standard.puml`](./schema/plantuml/flow/transfer-restriction-standard.puml), [`transfer-restriction-mint-burn.puml`](./schema/plantuml/flow/transfer-restriction-mint-burn.puml), [`transfer-restriction-crosschain.puml`](./schema/plantuml/flow/transfer-restriction-crosschain.puml).
 
 ### ERC-20 approve
 
@@ -2113,11 +2113,11 @@ The `Light` deployment version follows the same pause and allowance-authorizatio
 
 For the Permit deployment version, the same allowance-authorization checks are also applied to `permit`, using the signed `owner` and `spender` addresses.
 
-![Approve restriction](./schema/plantuml/approve-restriction.png)
+![Approve restriction](./schema/plantuml/flow/approve-restriction.png)
 
 > **"allowed to send"** means `canSend(account)` returns `true`, i.e. the account is **not frozen** and — in the Allowlist deployment when the allowlist is enabled — is **on the allowlist**. The spender is checked because `approve` grants it the right to later move the owner's tokens via `transferFrom`, where it acts as the sender.
 >
-> Source: [`schema/plantuml/approve-restriction.puml`](./schema/plantuml/approve-restriction.puml).
+> Source: [`schema/plantuml/flow/approve-restriction.puml`](./schema/plantuml/flow/approve-restriction.puml).
 
 > **Note:** beyond this built-in freeze/allowlist check, a **RuleEngine** can add restrictions targeting the **spender** directly — a dedicated rule already exists for this, [`RuleSpenderWhitelist`](https://github.com/CMTA/Rules), which only checks the `spender` of a `transferFrom` against a whitelist while leaving direct holder transfers unrestricted (see [Rules](#rules)).
 

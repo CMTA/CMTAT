@@ -11,7 +11,7 @@ This document defines the Version Module for the CMTA Token specification.
 
 ## Schema
 
-![BaseUML](../../../schema/uml/BaseUML.png)
+![BaseUML](../../../schema/plantuml/class/VersionModule.png)
 
 ### Inheritance
 

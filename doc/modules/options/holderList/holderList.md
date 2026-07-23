@@ -8,6 +8,8 @@ See also the technical guide: [technical/holder-list.md](../../../technical/hold
 
 ## Schema
 
+![HolderListModule class diagram](../../../schema/plantuml/class/HolderListModule.png)
+
 ### Inheritance
 
 ![surya_inheritance_HolderListModule.sol](../../../schema/surya_inheritance/surya_inheritance_HolderListModule.sol.png)

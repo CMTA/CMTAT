@@ -1,0 +1,24 @@
+@startuml
+title EnforcementModule
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+
+class EnforcementModuleInternal
+interface IERC3643Enforcement
+interface IERC3643EnforcementEvent
+
+abstract class EnforcementModule {
+    +{static} ENFORCER_ROLE : bytes32
+    --
+    +setAddressFrozen(address, bool) : void
+    +setAddressFrozen(address, bool, bytes) : void
+    +batchSetAddressFrozen(address[], bool[]) : void
+    +isFrozen(address) view : bool
+}
+
+EnforcementModuleInternal <|-- EnforcementModule
+IERC3643Enforcement <|.. EnforcementModule
+IERC3643EnforcementEvent <|.. EnforcementModule
+
+@enduml

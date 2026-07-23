@@ -6,7 +6,7 @@ The SnapshotEngine allows performing on-chain balance and total supply snapshots
 
 **Before** each transfer (mint, burn, or standard transfer), CMTAT calls `operateOnTransfer` on the configured engine. This records balances and total supply at that point in time so that historical queries remain accurate.
 
-![Snapshot recorded before each transfer](../schema/plantuml/snapshot-flow.png)
+![Snapshot recorded before each transfer](../schema/plantuml/flow/snapshot-flow.png)
 
 ```solidity
 interface ISnapshotEngine {

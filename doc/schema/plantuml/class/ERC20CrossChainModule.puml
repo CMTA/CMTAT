@@ -1,0 +1,31 @@
+@startuml
+title ERC20CrossChainModule
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+
+abstract class ERC20CrossChainModule {
+  +{static} BURNER_FROM_ROLE : bytes32
+  +{static} BURNER_SELF_ROLE : bytes32
+  +{static} CROSS_CHAIN_ROLE : bytes32
+  --
+  +crosschainMint(address, uint256) <<onlyTokenBridge>>
+  +crosschainBurn(address, uint256) <<onlyTokenBridge>>
+  +burnFrom(address, uint256)
+  +burn(uint256)
+  +supportsInterface(bytes4) view : bool
+}
+
+class ERC20MintModule
+class ERC20BurnModule
+class ERC165Upgradeable
+interface IERC7802
+interface IBurnFromERC20
+
+ERC20MintModule <|-- ERC20CrossChainModule
+ERC20BurnModule <|-- ERC20CrossChainModule
+ERC165Upgradeable <|-- ERC20CrossChainModule
+IERC7802 <|.. ERC20CrossChainModule
+IBurnFromERC20 <|.. ERC20CrossChainModule
+
+@enduml
