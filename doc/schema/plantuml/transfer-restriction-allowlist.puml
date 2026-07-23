@@ -1,0 +1,21 @@
+@startuml
+title Allowlist transfer restriction (ValidationModuleAllowlist / AllowlistModule)
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+
+start
+:Operation to validate\n**Supply management:** mint / batchMint / burn / batchBurn\n**Transfer:** transfer / transferFrom / ERC-3643 batchTransfer;
+if (allowlist enabled?) then (no)
+  :allowlist check skipped;
+  :continue with the standard transfer-restriction checks\n(pause, freeze, active balance, ... - see the general schema below);
+  stop
+else (yes)
+  if (all involved parties allowlisted?\nmint -> to | burn -> from | transfer -> spender, from, to) then (yes)
+    :continue with the standard transfer-restriction checks\n(see the general schema below);
+    stop
+  else (no)
+    :revert\nERC7943CannotSend(spender / from)  or\nERC7943CannotReceive(to);
+    stop
+  endif
+endif
+@enduml

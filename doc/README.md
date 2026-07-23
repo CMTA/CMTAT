@@ -2061,7 +2061,9 @@ interface IAllowlistModule {
 
 #### Schema
 
-![transfer_restriction-allowlist.drawio](./schema/drawio/transfer_restriction-allowlist.drawio.png)
+![Allowlist transfer restriction](./schema/plantuml/transfer-restriction-allowlist.png)
+
+> Source: [`schema/plantuml/transfer-restriction-allowlist.puml`](./schema/plantuml/transfer-restriction-allowlist.puml).
 
 
 
