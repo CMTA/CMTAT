@@ -25,7 +25,7 @@ are the latest ones that we tested:
 - Node v24.12.0
 
 - npm 11.11.0
-- Nomiclabs - Hardhat: ^2.24.0
+- Nomiclabs - Hardhat: ^2.28.5
   - **[hardhat-ethers](https://www.npmjs.com/package/@nomicfoundation/hardhat-ethers)**
   - [Hardhat](https://hardhat.org/) plugin for integration with [ethers.js](https://github.com/ethers-io/ethers.js/)
   - **[hardhat-contract-sizer](https://www.npmjs.com/package/hardhat-contract-sizer)**: Output Solidity contract sizes with Hardhat.
@@ -167,7 +167,7 @@ Solidity static analyzer.
 JavaScript bindings for the Solidity compiler.
 
 ```bash
-solc --base-path . --include-path ./node_modules/ contracts/deployment/CMTAT_STANDALONE.sol
+solc --base-path . --include-path ./node_modules/ contracts/deployment/CMTATStandardStandalone.sol
 ```
 
 ## Generate documentation
@@ -208,9 +208,9 @@ To generate documentation with surya, you can call the three bash scripts in doc
 
 | Task                 | Script                      | Command example                                              |
 | -------------------- | --------------------------- | ------------------------------------------------------------ |
-| Generate graph       | script_surya_graph.sh       | npx surya graph -i contracts/**/*.sol <br />npx surya graph contracts/modules/CMTAT_BASE.sol |
-| Generate inheritance | script_surya_inheritance.sh | npx surya inheritance contracts/modules/CMTAT_BASE.sol -i <br />npx surya inheritance contracts/modules/CMTAT_BASE.sol |
-| Generate report      | script_surya_report.sh      | npx surya mdreport -i surya_report.md contracts/modules/CMTAT_BASE.sol <br />npx surya mdreport surya_report.md contracts/modules/CMTAT_BASE.sol |
+| Generate graph       | script_surya_graph.sh       | npx surya graph -i contracts/**/*.sol <br />npx surya graph contracts/modules/0_CMTATBaseCore.sol |
+| Generate inheritance | script_surya_inheritance.sh | npx surya inheritance contracts/modules/0_CMTATBaseCore.sol -i <br />npx surya inheritance contracts/modules/0_CMTATBaseCore.sol |
+| Generate report      | script_surya_report.sh      | npx surya mdreport -i surya_report.md contracts/modules/0_CMTATBaseCore.sol <br />npx surya mdreport surya_report.md contracts/modules/0_CMTATBaseCore.sol |
 
 In the report, the path for the different files are indicated in absolute. You have to remove the part which correspond to your local filesystem.
 

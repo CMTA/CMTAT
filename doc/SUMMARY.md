@@ -2,6 +2,7 @@
 
 - **Standard** (`CMTATStandardStandalone` / `CMTATStandardUpgradeable`) - Core features, no snapshot engine
 - **Snapshot** (`CMTATStandaloneSnapshot` / `CMTATUpgradeableSnapshot`) - Same as standard + SnapshotEngine support
+- **HolderList** (`CMTATStandaloneHolderList` / `CMTATUpgradeableHolderList`) - Same as standard + on-chain holder enumeration (`HolderListModule`)
 - **Light** - Minimal for stablecoins
 - **Allowlist** - Whitelist-based transfers (KYC)
 - **Debt** - Bond-specific fields (maturity, coupon) + SnapshotEngine support
@@ -51,7 +52,8 @@ Standard chain:
               ├── CMTATBaseERC2771Snapshot (7) - + CMTATBaseSnapshot  [Snapshot variant]
               └── CMTATBaseERC7551Enforcement (7) - ERC-7551 enforcement overrides
                       ├── CMTATBaseERC1363 (8) - ERC-1363 transferAndCall  [ERC-1363 variant]
-                      └── CMTATBaseERC7551 (8) - ERC-7551 (eWpG)  [ERC-7551 variant]
+                      ├── CMTATBaseERC7551 (8) - ERC-7551 (eWpG)  [ERC-7551 variant]
+                      └── CMTATBaseHolderList (8) - HolderListModule (on-chain holder set)  [HolderList variant]
 ```
 
 ---
@@ -63,3 +65,4 @@ Standard chain:
 - `BURNER_ROLE` - Can burn tokens
 - `PAUSER_ROLE` - Can pause/unpause contract
 - `ENFORCER_ROLE` - Can freeze/unfreeze addresses
+- *Plus module-specific roles* (`SNAPSHOOTER_ROLE`, `DOCUMENT_ROLE`, `EXTRA_INFORMATION_ROLE`, `ERC20ENFORCER_ROLE`, `ALLOWLIST_ROLE`, `DEBT_ROLE`, `DEBT_ENGINE_ROLE`, `DOCUMENT_ENGINE_ROLE`, `CROSS_CHAIN_ROLE`, `BURNER_FROM_ROLE`, `BURNER_SELF_ROLE`, `PROXY_UPGRADE_ROLE`) — see [technical/access-control.md](./technical/access-control.md) for the complete list.
