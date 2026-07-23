@@ -107,6 +107,7 @@ CMTAT implements a wide set of Ethereum standards:
 - **[ERC-7802](https://eips.ethereum.org/EIPS/eip-7802)** — cross-chain transfers
 - **[ERC-7201](https://eips.ethereum.org/EIPS/eip-7201)** — storage namespaces for upgradeability
 - **[ERC-8303](https://github.com/ethereum/ERCs/pull/1819)** — contract version exposed on-chain via `version()` (draft, not yet merged — [PR #1819](https://github.com/ethereum/ERCs/pull/1819))
+- **[ERC-8343](https://github.com/ethereum/ERCs/pull/1900)** — contract deactivation (`deactivateContract()` / `deactivated()`), formerly `ICMTATDeactivate` (draft, not yet merged — [PR #1900](https://github.com/ethereum/ERCs/pull/1900))
 - **[UUPS Proxy (ERC-1822 pattern)](https://eips.ethereum.org/EIPS/eip-1822)** — upgradeability pattern (specific deployment versions only)
 
 ![architecture-ERC-simplified.drawio](./doc/schema/drawio/architecture-ERC-simplified.drawio.png)
