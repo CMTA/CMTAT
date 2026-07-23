@@ -2113,6 +2113,8 @@ For the Permit deployment version, the same allowance-authorization checks are a
 
 ![Approve restriction](./schema/plantuml/approve-restriction.png)
 
+> **"allowed to send"** means `canSend(account)` returns `true`, i.e. the account is **not frozen** and — in the Allowlist deployment when the allowlist is enabled — is **on the allowlist**. The spender is checked because `approve` grants it the right to later move the owner's tokens via `transferFrom`, where it acts as the sender.
+>
 > Source: [`schema/plantuml/approve-restriction.puml`](./schema/plantuml/approve-restriction.puml).
 
 ## Functionality details
