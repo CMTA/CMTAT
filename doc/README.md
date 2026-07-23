@@ -545,7 +545,7 @@ And finally `setCompliance` because CMTAT uses a different architecture for its 
 
 Module: VersionModule
 
-| **ERC-3643**                                               | **CMTAT v3.0.0** | Deployment version |
+| **ERC-3643**                                               | **CMTAT v3.3.0** | Deployment version |
 | :--------------------------------------------------------- | :--------------- | ------------------ |
 | `version() external view returns (string memory version_)` | Same             | All                |
 
@@ -555,7 +555,7 @@ The `version()` view returns the contract's implementation version as a human-re
 
 Module: PauseModule
 
-| **ERC-3643**                             | **CMTAT v3.0.0**                  | Deployment version |
+| **ERC-3643**                             | **CMTAT v3.3.0**                  | Deployment version |
 | :--------------------------------------- | :-------------------------------- | ------------------ |
 | `pause() external`                       | Same                              | All                |
 | `unpause() external`                     | Same                              | All                |
@@ -565,14 +565,14 @@ Module: PauseModule
 
 ##### ERC20Base
 
-| **ERC-3643**                                  | **CMTAT v3.0.0**                     | Deployment version |
+| **ERC-3643**                                  | **CMTAT v3.3.0**                     | Deployment version |
 | :-------------------------------------------- | :----------------------------------- | ------------------ |
 | `setName(string calldata _name) external;`    | `setName(string calldata name_)`     | All                |
 | `setSymbol(string calldata _symbol) external` | `setSymbol(string calldata symbol_)` | All                |
 
 ##### Supply Management (burn/mint)
 
-| **ERC-3643**                                                 | **CMTAT v3.0.0 Modules** | **CMTAT v3.0.0 Functions**                                   | Deployment version |
+| **ERC-3643**                                                 | **CMTAT v3.3.0 Modules** | **CMTAT v3.3.0 Functions**                                   | Deployment version |
 | :----------------------------------------------------------- | :----------------------- | :----------------------------------------------------------- | ------------------ |
 | `batchMint(address[] calldata _toList, uint256[] calldata _amounts) external;` | ERC20MintModule          | `mint(address account, uint256 value)`                       | All                |
 | `batchMint(address[] calldata _toList, uint256[] calldata _amounts) external;` | ERC20MintModule          | `batchMint(address[] calldata accounts,uint256[] calldata values) ` | All                |
@@ -584,7 +584,7 @@ Warning: `batchTransfer` is restricted to the MINTER_ROLE to avoid the possibili
 
 ##### ERC20Enforcement
 
-| **ERC-3643**                                                 | **CMTAT v3.0.0**                                             | Deployment version                                  |
+| **ERC-3643**                                                 | **CMTAT v3.3.0**                                             | Deployment version                                  |
 | :----------------------------------------------------------- | :----------------------------------------------------------- | --------------------------------------------------- |
 | `isFrozen(address _userAddress)`                             | `isFrozen(address account)`                                  | All                                                 |
 | `forcedTransfer(address _from, address _to, uint256 _amount) external returns (bool)` | `forcedTransfer(address from, address to, uint256 value) external returns (bool)` | All except Light version (replaced by `forcedBurn`) |
@@ -594,7 +594,7 @@ Warning: `batchTransfer` is restricted to the MINTER_ROLE to avoid the possibili
 
 Note: `canTransfer` is defined for the compliance contract in ERC-3643.
 
-| **ERC-3643**                                                 | **CMTAT v3.0.0**                                       | Deployment version |
+| **ERC-3643**                                                 | **CMTAT v3.3.0**                                       | Deployment version |
 | :----------------------------------------------------------- | :----------------------------------------------------- | ------------------ |
 | `canTransfer(address _from, address _to, uint256 _amount) external view returns (bool)` | `canTransfer(address from, address to, uint256 value)` | All                |
 
