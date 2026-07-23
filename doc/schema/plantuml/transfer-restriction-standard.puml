@@ -1,0 +1,29 @@
+@startuml
+title Transfer restriction - standard transfer (transfer / transferFrom / batchTransfer)
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+
+start
+:transfer(to, value) / transferFrom(from, to, value) / ERC-3643 batchTransfer(tos, values)\nspender = msg.sender (transferFrom) or address(0) (transfer);
+if (contract paused?) then (yes)
+  :revert EnforcedPause;
+  stop
+else (no)
+endif
+if (spender / from / to frozen?) then (yes)
+  :revert ERC7943CannotSend(spender or from)\nor ERC7943CannotReceive(to);
+  stop
+else (no)
+endif
+if (RuleEngine set?) then (yes)
+  :RuleEngine.transferred(spender, from, to, value)\n(reverts if the transfer is not compliant);
+else (no)
+endif
+:transfer valid -> rest of the ERC-20 flow\n(balance check, allowance if transferFrom, ...);
+stop
+
+note right
+  Deactivation is not checked here: a deactivated contract is always
+  paused, so the pause check already blocks the transfer.
+end note
+@enduml

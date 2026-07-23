@@ -2073,13 +2073,21 @@ interface IAllowlistModule {
 
 ### Schema
 
-Here is a schema describing the different check performed during:
+Here is a schema describing the different checks performed during transfers and supply management. Because the flow differs by operation, it is split into three schemas.
 
-- `transfer`, `transferFrom` and `batchTransfer`
-- `burn` / `mint` (supply management)
-- `burn` / `mint` for crosschain transfers
+**Standard transfer** — `transfer`, `transferFrom`, ERC-3643 `batchTransfer` (pause -> frozen -> RuleEngine):
 
-![transfer_restriction.drawio](./schema/drawio/transfer_restriction.drawio.png)
+![Transfer restriction - standard transfer](./schema/plantuml/transfer-restriction-standard.png)
+
+**Supply management** — core `mint` / `batchMint` / `burn` / `batchBurn` (deactivation -> frozen -> RuleEngine; not blocked by pause):
+
+![Transfer restriction - core mint / burn](./schema/plantuml/transfer-restriction-mint-burn.png)
+
+**Cross-chain** — `crosschainMint` / `crosschainBurn` / `burnFrom` / self-`burn` (pause-gated, then the mint/burn flow above):
+
+![Transfer restriction - cross-chain mint / burn](./schema/plantuml/transfer-restriction-crosschain.png)
+
+> Sources: [`transfer-restriction-standard.puml`](./schema/plantuml/transfer-restriction-standard.puml), [`transfer-restriction-mint-burn.puml`](./schema/plantuml/transfer-restriction-mint-burn.puml), [`transfer-restriction-crosschain.puml`](./schema/plantuml/transfer-restriction-crosschain.puml).
 
 ### ERC-20 approve
 
