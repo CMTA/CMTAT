@@ -1295,7 +1295,9 @@ These engines are **optional** and their addresses can be left to zero.
 
 Here is a schema with the different modules and the associated engines.
 
-![Engine-Engine.drawio](./schema/drawio/Engine-Engine.drawio.png)
+![CMTAT modules and their external engine contracts](./schema/plantuml/engine-modules.png)
+
+> Source: [`schema/plantuml/engine-modules.puml`](./schema/plantuml/engine-modules.puml).
 
 #### RuleEngine (IERC-1404)
 
