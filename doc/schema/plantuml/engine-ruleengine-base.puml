@@ -1,0 +1,18 @@
+@startuml
+title How CMTAT calls the RuleEngine (transfer / mint / burn)
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+
+|CMTAT|
+start
+:1. transfer, mint or burn call;
+if (2. RuleEngine set?\n(RuleEngine != address(0))) then (true)
+  |RuleEngine|
+  :3. transferred(from, to, value)\n(reverts if the transfer is not authorised);
+  |CMTAT|
+else (false)
+endif
+:9. rest of the code\n(ERC-20 update, balance / allowance checks, ...);
+:10. end of execution;
+stop
+@enduml

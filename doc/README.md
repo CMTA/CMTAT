@@ -1346,7 +1346,9 @@ This function `_transferred` is called before each transfer/burn/mint through th
 
 Here is a schema to show how it works:
 
-![Engine-RuleEngine-Base.drawio](./schema/drawio/Engine-RuleEngine-Base.drawio.png)
+![How CMTAT calls the RuleEngine](./schema/plantuml/engine-ruleengine-base.png)
+
+> Source: [`schema/plantuml/engine-ruleengine-base.puml`](./schema/plantuml/engine-ruleengine-base.puml).
 
 1. The token holders initiate a transfer transaction on CMTAT contract.
 2. The validation module inside the CMTAT calls the ERC-3643 function `transferred` from the RuleEngine if set with the following parameters inside: `from, to, value`.
