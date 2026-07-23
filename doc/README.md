@@ -2117,6 +2117,8 @@ For the Permit deployment version, the same allowance-authorization checks are a
 >
 > Source: [`schema/plantuml/approve-restriction.puml`](./schema/plantuml/approve-restriction.puml).
 
+> **Note:** beyond this built-in freeze/allowlist check, a **RuleEngine** can add restrictions targeting the **spender** directly — a dedicated rule already exists for this, [`RuleSpenderWhitelist`](https://github.com/CMTA/Rules), which only checks the `spender` of a `transferFrom` against a whitelist while leaving direct holder transfers unrestricted (see [Rules](#rules)).
+
 ## Functionality details
 
 ### ERC-20 properties 
