@@ -2101,7 +2101,9 @@ The `Light` deployment version follows the same pause and allowance-authorizatio
 
 For the Permit deployment version, the same allowance-authorization checks are also applied to `permit`, using the signed `owner` and `spender` addresses.
 
-![Approve restriction](./schema/drawio/transfer_restriction-approve.drawio.png)
+![Approve restriction](./schema/plantuml/approve-restriction.png)
+
+> Source: [`schema/plantuml/approve-restriction.puml`](./schema/plantuml/approve-restriction.puml).
 
 ## Functionality details
 

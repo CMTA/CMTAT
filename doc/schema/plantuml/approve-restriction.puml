@@ -1,0 +1,30 @@
+@startuml
+title ERC-20 approve / permit restriction
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+
+start
+:approve(spender, value)\n(and permit(owner, spender, ...) for the Permit version);
+if (contract paused?) then (yes)
+  :revert EnforcedPause;
+  stop
+else (no)
+endif
+if (owner allowed to send?\n(not frozen; allowlisted if the allowlist is enabled)) then (no)
+  :revert ERC7943CannotSend(owner);
+  stop
+else (yes)
+endif
+if (spender allowed to send?) then (no)
+  :revert ERC7943CannotSend(spender);
+  stop
+else (yes)
+endif
+:set the ERC-20 allowance;
+stop
+
+note right
+  Applies to all deployment versions, including Light.
+  owner = msg.sender (or the signed owner for permit).
+end note
+@enduml
