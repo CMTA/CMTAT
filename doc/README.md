@@ -1600,9 +1600,13 @@ In this implementation, the token holder calls the ERC-20 function `transfer` wh
 
 The different rules are not included in the RuleEngine interface and you are free to build a different RuleEngine.
 
+> **Note:** the rules for the CMTAT RuleEngine can now also be set **directly** on CMTAT, without going through the RuleEngine controller. Every rule implements the RuleEngine interface, so a single rule can act as the token's rule engine on its own; the RuleEngine is only needed when several rules must be combined on one token.
+
 ###### Schema
 
-![RuleEngine.drawio](./schema/drawio/RuleEngine.drawio.png)
+![CMTAT RuleEngine — transfer validation dispatch](./schema/plantuml/ruleengine-rules-dispatch.png)
+
+> Source: [`schema/plantuml/ruleengine-rules-dispatch.puml`](./schema/plantuml/ruleengine-rules-dispatch.puml).
 
 ###### Version
 
