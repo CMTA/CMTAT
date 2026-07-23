@@ -453,6 +453,8 @@ ERC-3643 enforces identity management as a core component of the standards by us
 
 While CMTAT does not include directly the identity management system, it shares with ERC-3643 many of the same functions. The interface is available in [IERC3643Partial.sol](../contracts/interfaces/tokenization/IERC3643Partial.sol)
 
+The ERC-3643 on-chain identity layer can nonetheless be added to CMTAT **without a dedicated deployment version**, by plugging an ERC-3643 `IdentityRegistry` into the RuleEngine through the [`RuleIdentityRegistry`](https://github.com/CMTA/Rules) rule (see [Rules](#rules)). Transfers are then validated against the registered/eligible identities, giving ERC-3643-style identity compliance on top of a standard CMTAT.
+
 If you want to use CMTAT to create a version implementing all functions from ERC-3643, you can create it through a dedicated deployment version (like what has been done for UUPS and ERC-1363).
 
 The implemented interface is available in [IERC3643Partial](../contracts/interfaces/tokenization/IERC3643Partial.sol).
@@ -1635,6 +1637,13 @@ Here are the list of rules in development:
 | RuleConditionalTransferLight | Ready-Write                          | In development                                               | This rule requires that transfers have to be approved before being executed by the token |
 | RuleConditionalTransfer      | Ready-Write                          | <strong><span style="color: #b00020;">&#x2718;</span></strong><br /> (experimental rule) | Same principle as the light version (see above) but with more options such as a time limit for approving a request as well as for carrying out the transfer |
 | RuleMintAllowance            | Read-Write                           | In development                                               | Enforces a per-minter mint quota: an operator sets each minter's maximum mint allowance and every mint deducts from it (regular transfers and burns are unaffected). Useful to cap how much a cross-chain bridge or pool can mint, bounding the blast radius of a compromised minter that could otherwise mint up to `uint256` max. Requires the spender-aware path (CMTAT v3.3.0+) so the minter is passed via `transferred(spender, from, to, value)`. See [RuleMintAllowance.md](https://github.com/CMTA/Rules/blob/main/doc/technical/RuleMintAllowance.md). |
+| RuleMaxTotalSupply           | Read-only                            | In development                                               | Caps issuance: rejects any mint that would push the token's `totalSupply` above a configured maximum. |
+| RuleIdentityRegistry         | Read-only                            | In development                                               | Plugs an [ERC-3643](https://eips.ethereum.org/EIPS/eip-3643) identity registry ([onchain-id](https://www.onchainid.com/)) into the RuleEngine and CMTAT: verifies that the transfer participants are registered and eligible in the ERC-3643 `IdentityRegistry`, adding the ERC-3643-style on-chain identity compliance that CMTAT does not embed natively. |
+| RuleSpenderWhitelist         | Read-only                            | In development                                               | Restricts only the `spender` of a `transferFrom` (delegated transfer) against a whitelist; direct holder-initiated transfers are always allowed. |
+| RuleERC2980                  | Read-only                            | In development                                               | Implements [ERC-2980](https://eips.ethereum.org/EIPS/eip-2980) (Swiss compliance) with a recipient-only whitelist plus a frozen-list. |
+| RuleConditionalTransferLightMultiToken | Read-Write                 | In development                                               | Multi-token variant of `RuleConditionalTransferLight`, scoping approvals by token address. Bound directly to each token rather than shared through a RuleEngine. |
+
+> This is a selection; additional community/external rules also exist, e.g. **RuleSelf** (integration of the [Self](https://self.xyz) zero-knowledge identity, community-maintained). See the [Rules repository](https://github.com/CMTA/Rules) for the complete, up-to-date list.
 
 #### SnapshotEngine
 
