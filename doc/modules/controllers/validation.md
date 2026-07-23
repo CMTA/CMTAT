@@ -37,7 +37,7 @@ A transfer is permitted only when all of the following pass:
 
 1. **Not paused** — `PauseModule.paused()` must be false (standard transfers) or not deactivated (mint/burn).
 2. **Not frozen** — `spender`, `from`, and `to` must each pass `EnforcementModule.isFrozen`.
-3. **Not RuleEngine-blocked** — if a `RuleEngine` is set, `operateOnTransfer` must return a passing code.
+3. **Not RuleEngine-blocked** — if a `RuleEngine` is set, its `transferred(...)` hook must not revert (and the read-only `canTransfer` / `canTransferFrom` return true).
 4. **Allowlist (Allowlist variant only)** — if allowlist is enabled, `from`, `to`, and `spender` must each be allowlisted.
 
 Mint and burn paths skip the spender freeze check and instead check whether the recipient (`mint`) or source (`burn`) address is frozen and whether the contract is deactivated.

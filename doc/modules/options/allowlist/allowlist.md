@@ -24,7 +24,7 @@ This document defines the Allowlist module
 
 This section describes the Ethereum API of Allowlist Module.
 
-See also [IAllowlistModule](../../../../contracts/interfaces/modules/IAllowlistModule.sol))
+See also [IAllowlistModule](../../../../contracts/interfaces/modules/IAllowlistModule.sol)
 
 ### Events
 

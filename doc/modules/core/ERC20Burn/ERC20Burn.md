@@ -22,7 +22,7 @@ This document defines the ERC20Burn Module for the CMTA Token specification.
 
 ### Graph
 
-![surya_graph_BurnModule.sol](../../../schema/surya_graph/surya_graph_ERC20BurnModule.sol.png)
+![surya_graph_ERC20BurnModule.sol](../../../schema/surya_graph/surya_graph_ERC20BurnModule.sol.png)
 
 ## API for Ethereum
 
@@ -41,7 +41,7 @@ This section describes the Ethereum API of Burn Module.
 
 #### Event
 
-##### BatchBurn(address,address[],bytes)
+##### BatchBurn(address,address[],uint256[],bytes)
 
 ```solidity
 event BatchBurn(address indexed burner,address[] accounts,uint256[] values,bytes data)
@@ -66,7 +66,7 @@ function batchBurn(address[] calldata accounts,uint256[] calldata values,bytes m
 
 ```solidity
 function batchBurn(address[] calldata accounts,uint256[] calldata values,bytes memory data) 
-public virtual override(IBurnERC20) onlyRole(BURNER_ROLE) 
+public virtual override(IBurnBatchERC20) onlyBurner 
 ```
 
 Performs a batch burn operation from multiple accounts.

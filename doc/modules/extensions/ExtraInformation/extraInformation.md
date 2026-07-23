@@ -40,7 +40,7 @@ The ExtraInformation Module set the basic properties common to the different CMT
 
 ### Graph
 
-![surya_graph_ExtraInformationModuleModule.sol](../../../schema/surya_graph/surya_graph_ExtraInformationModule.sol.png)
+![surya_graph_ExtraInformationModule.sol](../../../schema/surya_graph/surya_graph_ExtraInformationModule.sol.png)
 
 
 
@@ -131,20 +131,20 @@ Returns the current tokenization token ID.
 #### `terms()->(string,(string,bytes32,uint256))`
 
 ```solidity
-function terms() external view returns (Terms)
+function terms() external view returns (CMTATTerms)
 ```
 
 ```solidity
 function terms() 
 public view virtual override(ICMTATBase)  
-returns (Terms memory terms_)
+returns (CMTATTerms memory terms_)
 ```
 
 Returns the current tokenization terms.
 
 | Returns  | Type    | Description                             |
 | -------- | ------- | --------------------------------------- |
-| `terms_` | `Terms` | Struct with name and document metadata. |
+| `terms_` | `CMTATTerms` | Struct with name and document metadata. |
 
 
 

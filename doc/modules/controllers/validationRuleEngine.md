@@ -22,7 +22,7 @@ This document defines the Validation RuleEngine Module for the CMTA Token specif
 
 This section describes the Ethereum API of the Validation Module.
 
-The rules are defined using an (optional) rule engine, set using the `setRuleEngine` method. The `RuleEngine` implementation is not provided along with this implementation but it has to comply with the interface [IRuleEngine](https://github.com/CMTA/CMTAT/blob/master/contracts/interfaces/IRuleEngine.sol). The RuleEgine call rules that must respect the interface [IRule](https://github.com/CMTA/CMTAT/blob/master/contracts/interfaces/IRule.sol)
+The rules are defined using an (optional) rule engine, set using the `setRuleEngine` method. The `RuleEngine` implementation is not provided along with this implementation but it has to comply with the interface [IRuleEngine](https://github.com/CMTA/CMTAT/blob/master/contracts/interfaces/engine/IRuleEngine.sol). The RuleEngine calls rules that must respect the `IRule` interface defined in the [Rules](https://github.com/CMTA/Rules) repository
 
 ### `function setRuleEngine(IRuleEngine ruleEngine_)`
 

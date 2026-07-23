@@ -91,6 +91,8 @@ Permanently disables the contract.
 
 - The contract must be paused before it can be deactivated.
   - Error: `ExpectedPause()`
+- The contract must not already be deactivated.
+  - Error: `AlreadyDeactivated()`
 - Only authorized users (`DEFAULT_ADMIN_ROLE`) are allowed to call this function.
 
 **Emits** 

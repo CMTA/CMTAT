@@ -28,7 +28,7 @@ The interface and struct to represent Debt is available in [ICMTAT.sol](../../..
 
 ## API for Ethereum
 
-This section describes the Ethereum API of Debt Module.
+This section describes the Ethereum API of Debt Engine Module.
 
 ### Events
 
@@ -127,7 +127,7 @@ Returns the address of the current `DebtEngine`.
 ```solidity
 function setDebtEngine(IDebtEngine debtEngine_) 
 public virtual 
-onlyRole(DEBT_ROLE)
+onlyRole(DEBT_ENGINE_ROLE)
 ```
 
 Sets a new external `DebtEngine` to handle delegated debt and credit logic.
@@ -144,4 +144,4 @@ Sets a new external `DebtEngine` to handle delegated debt and credit logic.
 
 **Requirements:**
 
-- Only authorized users (*DEBT_ROLE*) are allowed to call this function.
+- Only authorized users (*DEBT_ENGINE_ROLE*) are allowed to call this function.

@@ -113,7 +113,7 @@ Returns the address of the currently assigned document engine.
 ### IERC1643
 
 > Standardized interface for managing documents in ERC-1400 security tokens.
->  This version improves the original ERC-1643 by using a `Document` struct to represent document metadata.
+>  The `Document` struct stores document metadata; `getDocument` returns its fields as flat ERC-1643 values (`uri`, `documentHash`, `lastModified`).
 
 #### Structs
 
@@ -136,13 +136,13 @@ A structure that stores metadata for a document.
 ##### `getDocument(bytes32)->((string,bytes32,uint256))`
 
 ```public
-function getDocument(bytes32 name) external view returns (Document doc)
+function getDocument(bytes32 name) external view returns (string memory uri, bytes32 documentHash, uint256 lastModified)
 ```
 
 ```solidity
 function getDocument(bytes32 name) 
 public view  virtual override(IERC1643) 
-returns (Document memory document)
+returns (string memory uri, bytes32 documentHash, uint256 lastModified)
 ```
 
 Retrieves a document by its name.
@@ -159,7 +159,9 @@ Retrieves a document by its name.
 
 | Name       | Type       | Description                                               |
 | ---------- | ---------- | --------------------------------------------------------- |
-| `document` | `Document` | The full metadata (URI, hash, timestamp) of the document. |
+| `uri`          | `string`  | URI pointing to the document.                |
+| `documentHash` | `bytes32` | Hash of the document contents.               |
+| `lastModified` | `uint256` | Block timestamp of the last on-chain update. |
 
 
 

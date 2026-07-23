@@ -59,7 +59,7 @@ function getFrozenTokens(address account) external view returns (uint256 frozenB
 
 ```solidity
 function getFrozenTokens(address account) 
-public override(IERC3643ERC20Enforcement) 
+public override(IERC7943FungibleEnforcement) 
 view virtual 
 returns (uint256)
 ```
@@ -194,7 +194,7 @@ function forcedTransfer(address from, address to, uint256 value) external return
 
 ```solidity
 function forcedTransfer(address from, address to, uint256 value) 
-public virtual override(IERC3643ERC20Enforcement) 
+public virtual override(IERC7943FungibleEnforcement) 
 onlyForcedTransferManager 
 returns (bool)
 ```
@@ -223,7 +223,9 @@ If needed, frozen tokens are automatically unfrozen to fulfill the transfer.
 
 **Emits:**
 
+- `ForcedTransfer` (ERC-7943, always on success)
 - `TokensUnfrozen` (if frozen tokens are used)
+- `Frozen` (ERC-7943, if frozen tokens are used)
 - `Transfer` (always on success)
 
 **Requirements:**
@@ -248,7 +250,7 @@ If needed, frozen tokens are automatically unfrozen to fulfill the transfer.
 
 #### Events
 
-*See related events in `IERC7551ERC20EnforcementEvent`:*
+*See related ERC-7551 events — `ForcedTransfer` (in `IERC7551ERC20EnforcementEvent`); `TokensFrozen` / `TokensUnfrozen` (in `IERC7551ERC20EnforcementTokenFrozenEvent`):*
 
 - `TokensFrozen(address account, uint256 amount, bytes data)`
 - `TokensUnfrozen(address account, uint256 amount, bytes data)`
