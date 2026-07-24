@@ -16,13 +16,15 @@ test
 │   ├── ERC20BaseModuleCommon.js
 │   ├── ERC20BurnModuleCommon.js
 │   ├── ERC20CrossChainModuleCommon.js
+│   ├── ERC20EnforcementERC7551ModuleCommon.js
 │   ├── ERC20EnforcementModuleCommon.js
 │   ├── ERC20MintModuleCommon.js
 │   ├── ERC7551ModuleCommon.js
 │   ├── ExtraInfoModuleCommon.js
 │   ├── HolderListModuleCommon.js
-│   ├── MulticallModuleCommon.js
 │   ├── MetaTxModuleCommon.js
+│   ├── MetaTxMsgDataCommon.js
+│   ├── MulticallModuleCommon.js
 │   ├── PauseModuleCommon.js
 │   ├── PermitModuleCommon.js
 │   ├── SnapshotModuleCommon
@@ -42,6 +44,7 @@ test
 │   ├── ValidationModule
 │   │   ├── proxy
 │   │   │   └── ValidationModuleProxyCommon.js
+│   │   ├── RuleEngineReentrancyCommon.js
 │   │   ├── ValidationModuleCommonCore.js
 │   │   ├── ValidationModuleCommon.js
 │   │   └── ValidationModuleSetRuleEngineCommon.js
@@ -57,7 +60,7 @@ test
 │   │   ├── deploymentUpgradeableDebtSnapshot.test.js
 │   │   └── deploymentUpgradeableDebt.test.js
 │   ├── debtEngine
-│   │   ├── deploymentStandaloneDebtEngineSnapshot.test .js
+│   │   ├── deploymentStandaloneDebtEngineSnapshot.test.js
 │   │   ├── deploymentStandaloneDebtEngine.test.js
 │   │   └── deploymentUpgradeableDebtEngine.test.js
 │   ├── deployment.test.js
@@ -71,12 +74,15 @@ test
 │   ├── erc7551
 │   │   ├── deploymentERC7551Standalone.test.js
 │   │   └── deploymentERC7551Upgradeable.test.js
+│   ├── light
+│   │   ├── deploymentStandaloneLight.test.js
+│   │   └── deploymentUpgradeableLight.test.js
 │   ├── permit
 │   │   ├── deploymentPermitStandalone.test.js
 │   │   └── deploymentPermitUpgradeable.test.js
-│   └── light
-│       ├── deploymentStandaloneLight.test.js
-│       └── deploymentUpgradeableLight.test.js
+│   └── snapshot
+│       ├── deploymentStandaloneSnapshot.test.js
+│       └── deploymentUpgradeableSnapshot.test.js
 ├── deploymentUtils.js
 ├── proxy
 │   ├── general
@@ -104,6 +110,7 @@ test
 │       ├── SnapshotModule
 │       │   └── SnapshotModule.test.js
 │       ├── ValidationModule
+│       │   ├── ValidationModuleReentrancy.test.js
 │       │   └── ValidationModule.test.js
 │       └── VersionModule.test.js
 ├── standard
@@ -112,6 +119,8 @@ test
 │       │   └── AuthorizationModule.test.js
 │       ├── CCIPModule.test.js
 │       ├── CMTATIntegration.test.js
+│       ├── DocumentEngineModule
+│       │   └── DocumentEngineModule.test.js
 │       ├── DocumentModule
 │       │   └── DocumentModule.test.js
 │       ├── EnforcementModule.test.js
@@ -126,14 +135,20 @@ test
 │       ├── MetaTxModuleERC1363.test.js
 │       ├── MetaTxModule.test.js
 │       ├── MetaTxModuleUUPS.test.js
+│       ├── MetaTxMsgDataAllowlist.test.js
+│       ├── MetaTxMsgDataERC1363.test.js
+│       ├── MetaTxMsgDataSnapshot.test.js
+│       ├── MetaTxMsgData.test.js
 │       ├── PauseModule.test.js
+│       ├── RuleEngineMockStatefulRule.test.js
 │       ├── SnapshotModule
 │       │   └── SnapshotModule.test.js
 │       ├── ValidationModule
 │       │   ├── ValidationModuleConstructor.test.js
+│       │   ├── ValidationModuleReentrancy.test.js
 │       │   ├── ValidationModuleSetRuleEngine.test.js
 │       │   └── ValidationModule.test.js
 │       └── VersionModule.test.js
 └── utils.js
 
-30 directories, 101 files
+33 directories, 118 files
