@@ -20,7 +20,8 @@ function ERC7551ModuleCommon () {
     })
     it('testAdminCanUpdateTerms', async function () {
       const NEW_TERMS = [
-        '',
+        // The ERC-7551 overload carries no name, so the existing one is kept (NM-22)
+        TERMS[0],
         'https://example.com/doc2',
         '0xe405e5dad3b45f611e35717af4430b4560f12cd4054380b856446d286c341d05'
       ]
@@ -42,6 +43,31 @@ function ERC7551ModuleCommon () {
         .to.emit(this.cmtat, 'Terms(bytes32,string)')
         .withArgs(NEW_TERMS[2], NEW_TERMS[1])
     })
+    /*
+     * NM-22 (Nethermind AuditAgent v3.3.0-rc2): the ERC-7551 `setTerms(bytes32,string)`
+     * overload carries no document name, so it must leave the existing one alone.
+     * Previously it forwarded an empty string and silently erased it.
+     */
+    it('testERC7551SetTermsPreservesDocumentName', async function () {
+      const NEW_URI = 'https://example.com/doc3'
+      const NEW_HASH =
+        '0xe405e5dad3b45f611e35717af4430b4560f12cd4054380b856446d286c341d05'
+      // Arrange: the token is deployed with a named terms document
+      await checkTerms(this, TERMS)
+
+      // Act: update through the ERC-7551 overload
+      await this.cmtat
+        .connect(this.admin)
+        .setTerms(ethers.Typed.bytes32(NEW_HASH), ethers.Typed.string(NEW_URI))
+
+      // Assert: uri and hash updated, name untouched
+      const result = await this.cmtat.terms()
+      expect(result[0]).to.equal(TERMS[0])
+      expect(result[1][0]).to.equal(NEW_URI)
+      expect(result[1][1]).to.equal(NEW_HASH)
+      expect(await this.cmtat.termsHash()).to.equal(NEW_HASH)
+    })
+
     it('testCannotNonAdminUpdateTerms', async function () {
       // Arrange - Assert
       await checkTerms(this, TERMS)

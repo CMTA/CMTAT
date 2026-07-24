@@ -5,7 +5,6 @@ pragma solidity ^0.8.20;
 /* ==== Module === */
 import {ExtraInformationModule} from "../extensions/ExtraInformationModule.sol";
 /* ==== Tokenization === */
-import {IERC1643CMTAT} from "../../../interfaces/tokenization/draft-IERC1643CMTAT.sol";
 import {IERC7551Document} from "../../../interfaces/tokenization/draft-IERC7551.sol";
 
 /**
@@ -50,8 +49,10 @@ abstract contract ERC7551Module is ExtraInformationModule, IERC7551Document {
     * - the caller must have the `EXTRA_INFORMATION_ROLE`.
     */
     function setTerms(bytes32 hash_, string calldata uri_) public virtual override(IERC7551Document) onlyExtraInfoManager {
-        IERC1643CMTAT.DocumentInfo memory terms_ = IERC1643CMTAT.DocumentInfo("", uri_, hash_);
-        _setTerms(terms_);
+        // The ERC-7551 signature carries no document name, so only the document (uri + hash) is
+        // updated. Forwarding an empty name through _setTerms would silently erase a name set
+        // through the {ICMTATBase-setTerms} overload.
+        _setTermsDocument(hash_, uri_);
         emit Terms(hash_, uri_);
     }
 
