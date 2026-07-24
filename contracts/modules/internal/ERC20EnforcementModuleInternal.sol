@@ -32,6 +32,13 @@ abstract contract ERC20EnforcementModuleInternal is ERC20Upgradeable, IERC7943Fu
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
     function _setFrozenTokens(address account, uint256 value) internal virtual returns(bool) {
+        // The zero address holds no balance, so a non-zero frozen amount on it would make
+        // _checkActiveBalance(address(0), value) fail for every value > 0 and revert the common
+        // mint path (mint, batchMint, crosschainMint, the mint leg of burnAndMint).
+        // Same guard as _freezePartialTokens / _unfreezePartialTokens.
+        if (account == address(0)) {
+            revert CMTAT_ERC20EnforcementModule_ZeroAddressNotAllowed();
+        }
         ERC20EnforcementModuleStorage storage $ = _getEnforcementModuleStorage();
         uint256 frozenTokensLocal = $._frozenTokens[account];
         // Unfreeze path
