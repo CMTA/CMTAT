@@ -1,6 +1,6 @@
 //SPDX-License-Identifier: MPL-2.0
 
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.24;
 
 import {CMTATBaseDebtEngine} from "../../modules/6_CMTATBaseDebtEngine.sol";
 import {ICMTATConstructor} from "../../interfaces/technical/ICMTATConstructor.sol";

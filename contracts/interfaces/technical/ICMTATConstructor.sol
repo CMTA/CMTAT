@@ -1,5 +1,5 @@
 //SPDX-License-Identifier: MPL-2.0
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.24;
 
 import {IRuleEngine} from "../engine/IRuleEngine.sol";
 import {IERC1643CMTAT} from "../tokenization/draft-IERC1643CMTAT.sol";

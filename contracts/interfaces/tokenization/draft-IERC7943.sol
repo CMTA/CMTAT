@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MPL-2.0
 
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.24;
 
 /**
 * @notice Enforcement Interface for ERC-20 based implementations common with ERC-3643 interface.

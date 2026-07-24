@@ -45,9 +45,11 @@ Custom changelog tag: `Dependencies`, `Documentation`, `Testing`
 
 ## 3.3.0 - rc3
 
-## 3.3.0 - rc2
+## 3.3.0 - rc2 - 2026-07-24
 
 > **Note:** This version has not been audited.
+
+Commit: 35d8940b40943828c5ea407dc6b22d559d92e4ae
 
 ### Smart contract
 
@@ -416,7 +418,7 @@ Commit: `49544f4de1993008acfc9e848d0bf03bd31d8579`
 
 - Update Solidity version to [0.8.34](https://www.soliditylang.org/blog/2026/02/18/solidity-0.8.34-release-announcement) in Hardhat config file.
 
-## 3.1.0 - 20251209
+## 3.1.0 - 2025-12-09
 
 > This version is not audited
 

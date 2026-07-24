@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MPL-2.0
 
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.24;
 
 import {IERC1404Extend} from "../tokenization/draft-IERC1404.sol";
 import {IERC3643IComplianceContract} from "../tokenization/IERC3643Partial.sol";

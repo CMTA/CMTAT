@@ -28,6 +28,35 @@ The rules are defined using an (optional) rule engine, set using the `setRuleEng
 
 ## Integration notes for RuleEngine implementers
 
+### The `transferred` callback is reentrant on some deployment variants
+
+`transferred(...)` is invoked from `_checkTransferred`, i.e. **after** the active-balance (frozen) check and **before** `ERC20Upgradeable._transfer` moves any balance. That check is not re-evaluated afterwards.
+
+A RuleEngine that calls back into the token during the callback is therefore validated twice against the *same* pre-transfer snapshot, and the outer and inner transfers can together move more than the holder's unfrozen balance. Measured on an unguarded build: a holder with `balance=100`, `frozenTokens=60` (active 40) lost **80** tokens to an outer `transferFrom(holder, attacker, 40)` plus one nested `transferFrom` of 40, leaving `frozenTokens(60) > balanceOf(20)` — the freeze invariant broken.
+
+CMTAT wraps the callback in a transient (EIP-1153) reentrancy guard, but **only on the deployment variants that have the bytecode headroom for it**. The guard costs ~195 bytes of deployed bytecode and several variants sit within a few hundred bytes of the EIP-170 24 KiB limit; enabling it there would make them undeployable.
+
+| Deployment variant | Deployed size (bytes) | Reentrancy guard |
+| --- | ---: | :---: |
+| `CMTATStandaloneSnapshot` / `CMTATUpgradeableSnapshot` | 22 859 | ✅ |
+| `CMTATStandardStandalone` / `CMTATStandardUpgradeable` | 23 039 | ✅ |
+| `CMTATStandaloneERC7551` / `CMTATUpgradeableERC7551` | 23 731 | ✅ |
+| `CMTATStandaloneDebt` / `CMTATUpgradeableDebt` | 23 805 | ❌ |
+| `CMTATStandalonePermit` / `CMTATUpgradeablePermit` | 23 961 | ❌ |
+| `CMTATUpgradeableUUPS` | 24 176 | ❌ |
+| `CMTATStandaloneDebtEngine` / `CMTATUpgradeableDebtEngine` | 24 429 | ❌ |
+| `CMTATStandaloneERC1363` / `CMTATUpgradeableERC1363` | 24 443 | ❌ |
+| `CMTATStandaloneHolderList` / `CMTATUpgradeableHolderList` | 24 456 | ❌ |
+| `CMTATStandaloneAllowlist`, `CMTATStandaloneLight` (and proxies) | 20 405 / 11 562 | n/a — no RuleEngine |
+
+> **WARNING — variants without the guard.** On the ❌ rows the trust assumption is load-bearing: the RuleEngine is set by `DEFAULT_ADMIN_ROLE`, is **fully trusted**, and **MUST NOT** transfer control to untrusted code during `transferred(...)`. A rule that calls an arbitrary external address — a hook, a callback, a user-supplied contract — breaks that assumption and re-opens the drain described above. If your rule set needs to call untrusted code, deploy a guarded variant.
+
+On guarded variants a reentrant callback reverts the whole transaction with OpenZeppelin's `ReentrancyGuardReentrantCall`. The guard is entered only when a RuleEngine is set (a deployment with no engine pays nothing) and released when the callback returns, so batch operations and `burnAndMint`, which invoke the hook several times in one transaction, are unaffected.
+
+To enable the guard on a variant that currently lacks it, inherit `ReentrancyGuardTransient` in the deployment contract and override `_callRuleEngineTransferred` with `nonReentrant` — see `contracts/deployment/CMTATStandardStandalone.sol` — and re-check the deployed size against the 24 576-byte limit.
+
+> Reported as NM-7 / NM-9 / NM-11 / NM-16 / NM-18 by [Nethermind AuditAgent](https://auditagent.nethermind.io/) on CMTAT v3.3.0-rc2; see the [maintainer feedback](../../security/tools/nethermind-audit-agent/v3.3.0-rc2/audit_agent_report_v3.3.0-rc2-feedback.md).
+
 ### Zero-value calls to `transferred` are permissionless
 
 The `transferred(...)` callback can be reached by **anyone**, for an **arbitrary `from`**, with `value == 0` and without any allowance.

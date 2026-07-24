@@ -1,7 +1,7 @@
 //SPDX-License-Identifier: MPL-2.0
 import {ICMTATDebt, ICMTATCreditEvents} from "../tokenization/ICMTAT.sol";
 import {IDebtEngine} from "../engine/IDebtEngine.sol";
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.24;
 /**
 * @notice interface to represent DebtEngineModule (debt information and credit events.)
 */

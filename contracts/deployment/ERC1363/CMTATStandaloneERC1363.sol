@@ -1,6 +1,6 @@
 //SPDX-License-Identifier: MPL-2.0
 
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.24;
 
 import {CMTATBaseERC1363} from "../../modules/8_CMTATBaseERC1363.sol";
 import {ERC2771Module} from "../../modules/wrapper/options/ERC2771Module.sol";

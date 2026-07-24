@@ -1,6 +1,6 @@
 //SPDX-License-Identifier: MPL-2.0
 
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.24;
 
 import {CMTATUpgradeableSnapshot} from "../../deployment/snapshot/CMTATUpgradeableSnapshot.sol";
 import {ISnapshotEngine} from "../../interfaces/engine/ISnapshotEngine.sol";
