@@ -12,6 +12,29 @@ The PauseModule contract introduces contract pausing functionality into the CMTA
 
 However, this is not enforced in the functions that allow to change a user’s allowance. We don't think it is necessary to prevent allowance change while the contract is in the pause state.
 
+Note that setting an allowance to **zero** — a revocation — is always permitted, including while the contract is paused or deactivated and when the owner or spender is frozen or off the allowlist. A revocation can only reduce what a spender may move, and a holder must always be able to sever ties with a compromised or sanctioned spender. Non-zero grants remain subject to the usual checks.
+
+## What pause stops, and what it does not
+
+Pause is an emergency stop on **circulation**, not on the issuer's control of the instrument. The dividing line is **who is acting**, not which function is called:
+
+- **Issuer operations continue while paused.** Minting, issuer burns and enforcement actions express the issuer's own authority over supply. Blocking them would defeat the purpose of being able to pause: the issuer must retain the ability to act on the instrument precisely while circulation is halted.
+- **Third-party operations are stopped.** Operations performed by a bridge, or by an operator spending someone else's allowance, are exactly what a pause is meant to halt. In particular, cross-chain settlement must stop rather than keep moving supply between chains against a frozen local state.
+
+| Path | Module | Role | While paused |
+| --- | --- | --- | --- |
+| `mint`, `batchMint` | `ERC20MintModule` (issuer) | `MINTER_ROLE` | **Allowed** |
+| `burn`, `batchBurn` | `ERC20BurnModule` (issuer) | `BURNER_ROLE` | **Allowed** |
+| `forcedTransfer`, `forcedBurn` | enforcement (issuer) | `DEFAULT_ADMIN_ROLE` | **Allowed** |
+| `transfer`, `transferFrom` | `ERC20BaseModule` (holders) | — | **Blocked** — `EnforcedPause()` |
+| `burnFrom` | `ERC20CrossChainModule` (third party) | `BURNER_FROM_ROLE` | **Blocked** — `EnforcedPause()` |
+| `burn(uint256)` (self-burn) | `ERC20CrossChainModule` (third party) | `BURNER_SELF_ROLE` | **Blocked** — `EnforcedPause()` |
+| `crosschainMint`, `crosschainBurn` | `ERC20CrossChainModule` (bridge) | `CROSS_CHAIN_ROLE` | **Blocked** — `EnforcedPause()` |
+| `approve(spender, 0)` (revocation) | allowance | — | **Allowed** |
+| `approve(spender, n > 0)` | allowance | — | **Blocked** — `EnforcedPause()` |
+
+The two burn families are easy to confuse because they share a name. `ERC20BurnModule.burn(address,uint256)` is the **issuer** burn and is not pause-gated; `ERC20CrossChainModule.burn(uint256)` and `burnFrom(address,uint256)` are **third-party** burns and are. See [ERC20Burn](../ERC20Burn/ERC20Burn.md) and [ERC20CrossChain](../../options/erc20crosschain/ERC20CrossChain.md) for the per-function requirements.
+
 ## Schema
 
 ![PauseUML](../../../schema/plantuml/class/PauseModule.png)

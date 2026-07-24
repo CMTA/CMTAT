@@ -1921,6 +1921,27 @@ By separating burn/mint from standard transfer, the admin can re-adjust the supp
 
 On the other hand, specific function for cross-chain bridge (`5_CMTATBaseERC20CrossChain.sol`) will revert if contract is paused because they are not intended to be used by the issuer to manage the supply.
 
+The dividing line is therefore **who is acting**, not which function is called: pause is an emergency stop on *circulation*, and it leaves the issuer's own control over the instrument intact.
+
+| Path | Module | Role | While paused |
+| --- | --- | --- | --- |
+| `mint`, `batchMint` | `ERC20MintModule` (issuer) | `MINTER_ROLE` | **Allowed** |
+| `burn`, `batchBurn` | `ERC20BurnModule` (issuer) | `BURNER_ROLE` | **Allowed** |
+| `forcedTransfer`, `forcedBurn` | enforcement (issuer) | `DEFAULT_ADMIN_ROLE` | **Allowed** |
+| `transfer`, `transferFrom` | `ERC20BaseModule` (holders) | — | **Blocked** — `EnforcedPause()` |
+| `burnFrom` | `ERC20CrossChainModule` (third party) | `BURNER_FROM_ROLE` | **Blocked** — `EnforcedPause()` |
+| `burn(uint256)` (self-burn) | `ERC20CrossChainModule` (third party) | `BURNER_SELF_ROLE` | **Blocked** — `EnforcedPause()` |
+| `crosschainMint`, `crosschainBurn` | `ERC20CrossChainModule` (bridge) | `CROSS_CHAIN_ROLE` | **Blocked** — `EnforcedPause()` |
+| `approve(spender, 0)` (revocation) | allowance | — | **Allowed** |
+| `approve(spender, n > 0)` | allowance | — | **Blocked** — `EnforcedPause()` |
+
+Two points worth flagging to integrators:
+
+- The two burn families share a name. `ERC20BurnModule.burn(address,uint256)` is the **issuer** burn and is not pause-gated; `ERC20CrossChainModule.burn(uint256)` and `burnFrom(address,uint256)` are **third-party** burns and are.
+- Setting an allowance to **zero** is always permitted, including while paused or deactivated and when the owner or spender is frozen or off the allowlist: a revocation can only reduce what a spender may move, so a holder can always sever ties with a compromised or sanctioned spender. Non-zero grants remain subject to the usual checks.
+
+See [modules/core/Pause/pause.md](./modules/core/Pause/pause.md#what-pause-stops-and-what-it-does-not) for the same split at module level.
+
 #### Future possible improvement
 
 An alternative solution would be to provide an additional function `pauseAllTransfers` which would pause standard transfers, as well as all burn and mint operations.

@@ -247,7 +247,7 @@ Burns a specific amount of tokens from the given account by sending them to the 
 **Notes**:
 
 - Reverts if the account's balance is insufficient.
-- Burn can occur even if transfers are paused.
+- Burn can occur even if transfers are paused. This applies to the **issuer** burn documented here (`ERC20BurnModule`, `BURNER_ROLE`). The third-party burns exposed by `ERC20CrossChainModule` — `burnFrom(address,uint256)` and `burn(uint256)` — **are** blocked while paused; see [pause.md](../Pause/pause.md#what-pause-stops-and-what-it-does-not).
 
 **Emits:** 
 

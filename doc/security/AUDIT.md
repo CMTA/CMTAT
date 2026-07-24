@@ -71,7 +71,7 @@ Here are the reports produced by [Nethermind Audit Agent](https://auditagent.net
 
 | Version | High | Medium | Low | Info | Best practices | Anything to fix? |
 | ------- | ---: | -----: | --: | ---: | -------------: | ---------------- |
-| v3.3.0-rc2 | 1 | 4 | 3 | 14 | 2 | **3 defects fixed** (NM-15/17 zero-address guard, NM-3/8 allowance revocation, NM-22 terms name) + NM-4, NM-6 and NM-21 documented; 1 item open (NM-24 NatSpec). Nothing exploitable; the High is a false positive. |
+| v3.3.0-rc2 | 1 | 4 | 3 | 14 | 2 | **3 defects fixed** (NM-15/17 zero-address guard, NM-3/8 allowance revocation, NM-22 terms name) + NM-4, NM-6, NM-20 and NM-21 documented; 1 item open (NM-24 NatSpec). Nothing exploitable; the High is a false positive. |
 | v3.1.0 | 2 | 2 | 10 | — | — | No — 7 invalid, 7 design choices. |
 
 ### v3.3.0-rc2 (Scan ID 9, 2026-07-23, commit `35d8940b…9d92e4ae`)
@@ -94,7 +94,7 @@ outcome: **5 fixed · 14 accepted as design · 4 rejected (false positive / fals
 | NM-12 | `setDocument` emits raw inputs instead of the engine post-state | Info → Info | Design choice (documented dual-emission) |
 | NM-13, NM-14, NM-19 | Engine setters accept `address(this)` / non-compliant addresses | Info ×3 → Info | Design choice (privileged, recoverable) |
 | **NM-15, NM-17** | **`setFrozenTokens` can freeze the zero address and brick all mint paths** | **Info ×2 → Low** | **Fixed** |
-| NM-20 | Pausing disables privileged burn interfaces | Info → Info | Design choice (`BURNER_ROLE` burn survives pause) |
+| NM-20 | Pausing disables privileged burn interfaces | Info → Info | Design choice — **documented**; pause stops **third-party/bridge** supply ops (`burnFrom`, self-burn, `crosschainMint/Burn`), **issuer** ops (`BURNER_ROLE` burn, mint, enforcement) survive |
 | NM-21 | Mutable token name desynchronizes the EIP-712 domain separator | Info → Info | Design choice — **documented**; probed: `permit` still works via ERC-5267 `eip712Domain()`, so the reported DoS does not occur |
 | **NM-22** | **ERC-7551 `setTerms` overload silently erases the document name** | **Info → Info** | **Fixed** |
 | NM-23 | `detectTransferRestrictionFrom` reports `SPENDER_FROZEN` before deactivated/paused | Best practice → Info | Design choice (reporting nit, no bypass) |

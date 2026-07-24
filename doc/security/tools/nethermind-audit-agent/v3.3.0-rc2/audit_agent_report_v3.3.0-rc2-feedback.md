@@ -80,11 +80,11 @@ NatSpec correction. None of the 24 findings is exploitable by an unprivileged ac
 | **NM-17** | **Info → Low** | **Fixed (same defect as NM-15)** | **Fixed** |
 | NM-18 | Info → Informational | Accepted as design (duplicate of NM-7) | Accepted |
 | NM-19 | Info → Informational | Accepted as design | Accepted |
-| NM-20 | Info → Informational | Accepted as design | Accepted |
+| NM-20 | Info → Informational | Accepted as design — issuer vs third-party split, probed — **documented** | Accepted — rationale documented |
 | NM-21 | Info → Informational | Accepted as design (claim overstated) — **documented** | Accepted — doc + NatSpec added |
 | **NM-22** | **Info → Informational** | **Fixed** | **Fixed** — ERC-7551 overload preserves the name |
 | NM-23 | Best Practices → Informational | Accepted as design (optional reorder) | Accepted |
-| **NM-24** | **Best Practices → Informational** | **Fix recommended (NatSpec)** | **Open** |
+| **NM-24** | **Best Practices → Informational** | **Fix recommended (NatSpec)** — analysis extended; `forcedTransfer` drift found | **Open** |
 
 ---
 
@@ -508,7 +508,11 @@ asymmetry within the enforcement modules the clearest evidence that this was an 
   (`test/standard/modules/ERC20EnforcementModule.test.js`, `test/proxy/modules/ERC20EnforcementModule.test.js`) —
   116 passing.
 
-### NM-20 — Pausing disables privileged burn interfaces (Info → Informational)
+### NM-20 — Pausing disables privileged burn interfaces (Info → Informational — **DOCUMENTED**)
+
+> **Summary:** correct behaviour. Pause stops **third-party / bridge** supply operations and leaves **issuer**
+> operations available. The rationale was already in `doc/README.md`; the gap was module-level scoping in
+> `ERC20Burn.md`, now fixed.
 
 **Claim.** Documentation says pausing blocks standard transfers but not privileged burns, yet
 `_authorizeBurnFrom` and `_authorizeSelfBurn` carry `whenNotPaused`, so `burnFrom` and `burn(value)` revert while
@@ -522,8 +526,88 @@ emergency stop for allowance-based and bridge-mediated supply movement. The issu
 which checks deactivation and the target's frozen status but **not** pause, so it remains available while paused.
 The report's premise conflates that path with the cross-chain overloads.
 
-*Suggested (docs only):* state the split explicitly in the pause documentation — `BURNER_ROLE` burn survives
-pause; `burnFrom` / self-burn / crosschain burn+mint do not.
+#### The split is issuer operations vs third-party (bridge) operations
+
+The distinction the report missed is not "some burns are gated and some are not" — it is **who is acting**:
+
+- **Issuer operations** (`ERC20BurnModule`, `ERC20MintModule`, enforcement) express the issuer's own control over
+  supply. Pause is an emergency stop on *circulation*, not on the issuer's ability to manage the instrument, so
+  these must keep working while paused — that is the whole point of being able to pause.
+- **Third-party operations** (`ERC20CrossChainModule`) are performed by a **bridge or an allowance-holding
+  operator**, not by the issuer. `burnFrom` spends someone else's allowance; `burn(uint256)` is a self-burn by a
+  bridge-side actor holding `BURNER_SELF_ROLE`; `crosschainMint` / `crosschainBurn` are the ERC-7802 bridge
+  entry points. These are exactly the flows a pause is meant to halt: while the token is paused, cross-chain
+  settlement must stop rather than continue moving supply between chains against a frozen local state.
+
+Read that way, `whenNotPaused` on `_authorizeBurnFrom`, `_authorizeSelfBurn` and `_checkTokenBridge` is not an
+inconsistency with the issuer burn path — it is the line between the two categories, drawn deliberately.
+
+#### Measured behaviour
+
+Probed on `CMTATStandardStandalone` with the contract paused (throwaway test, not retained):
+
+| Path | Module | Role | While paused |
+| --- | --- | --- | --- |
+| `burn(address,uint256)` | `ERC20BurnModule` (issuer) | `BURNER_ROLE` | **Allowed** |
+| `batchBurn(address[],uint256[])` | `ERC20BurnModule` (issuer) | `BURNER_ROLE` | **Allowed** |
+| `mint(address,uint256)` | `ERC20MintModule` (issuer) | `MINTER_ROLE` | **Allowed** |
+| `forcedTransfer(...)` | `ERC20EnforcementModule` (issuer/enforcement) | `DEFAULT_ADMIN_ROLE` | **Allowed** |
+| `burnFrom(address,uint256)` | `ERC20CrossChainModule` (third party) | `BURNER_FROM_ROLE` | **Blocked** — `EnforcedPause()` |
+| `burn(uint256)` self-burn | `ERC20CrossChainModule` (third party) | `BURNER_SELF_ROLE` | **Blocked** — `EnforcedPause()` |
+| `crosschainBurn(address,uint256)` | `ERC20CrossChainModule` (bridge) | `CROSS_CHAIN_ROLE` | **Blocked** — `EnforcedPause()` |
+| `crosschainMint(address,uint256)` | `ERC20CrossChainModule` (bridge) | `CROSS_CHAIN_ROLE` | **Blocked** — `EnforcedPause()` |
+
+The split is clean along the issuer / third-party line, with no exceptions. (`forcedBurn` is a `CMTATBaseCore`
+function and is therefore absent from the full variants; on the Light variants it is gated only by
+`DEFAULT_ADMIN_ROLE`, so it too survives pause — consistent with the issuer-operation rule.)
+
+#### Is this already documented? Yes — including the rationale
+
+The behaviour **and** its rationale were already written down. `doc/README.md`, under *Pause & Deactivate contract
+(PauseModule) → Note*, states both halves explicitly:
+
+> The pause function does not affect burn and mint operations implemented in the contracts `ERC20MintModule` and
+> `ERC20BurnModule`. By separating burn/mint from standard transfer, the admin can re-adjust the supply while the
+> standard transfers are paused. […] On the other hand, specific function for cross-chain bridge
+> (`5_CMTATBaseERC20CrossChain.sol`) **will revert if contract is paused because they are not intended to be used
+> by the issuer to manage the supply**.
+
+That last clause is precisely the issuer-vs-third-party principle. The per-function facts are documented too:
+
+| Statement | Where |
+| --- | --- |
+| Rationale — issuer supply management vs cross-chain bridge functions | `doc/README.md` (*Pause & Deactivate → Note*) |
+| *"Burn can occur even if transfers are paused."* | `doc/modules/core/ERC20Burn/ERC20Burn.md` |
+| *"If the interface `{IERC7551Pause}` is implemented, minting is allowed even when transfers are paused."* | `doc/modules/core/ERC20Mint/ERC20Mint.md` |
+| *"The contract must not be paused — error: `EnforcedPause()`"* on `crosschainMint`, `crosschainBurn`, `burnFrom` and `burn(uint256)` | `doc/modules/options/erc20crosschain/ERC20CrossChain.md` |
+
+So the report's premise — that documentation promises privileged burns remain available — is **half true** in a
+narrower sense than first assessed: `doc/README.md` is correct and complete, but the *module-level* page
+`ERC20Burn.md` states "burn can occur even if transfers are paused" without scoping it to `ERC20BurnModule`. An
+integrator reading only that page and then calling `ERC20CrossChainModule.burnFrom` would be surprised. Given the
+two functions share the name `burn`, that is the most plausible route to the finding.
+
+> **Correction.** An earlier revision of this entry stated that the rationale was undocumented. That was wrong —
+> it is in `doc/README.md`, which the initial search did not cover. The gap was narrower: module-level scoping,
+> not a missing rationale.
+
+**Resolution — documented (no behaviour change).** Since `doc/README.md` already carried the rationale, the work
+was to propagate it to the module pages where the ambiguity actually bites, and to remove the over-promise.
+
+- `doc/modules/core/ERC20Burn/ERC20Burn.md` — **the important edit.** The *"Burn can occur even if transfers are
+  paused"* note is now scoped to the issuer burn it documents, and states that the `ERC20CrossChainModule` burns
+  are blocked. This is the sentence that most plausibly produced the finding.
+- `doc/modules/core/Pause/pause.md` — new section *"What pause stops, and what it does not"*, stating the
+  issuer-vs-third-party principle and tabulating every affected path (mint, issuer burn, enforcement, holder
+  transfers, the four `ERC20CrossChainModule` entry points, and both `approve` cases), closing on the `burn`
+  name collision. The Rationale section also gained a sentence on the NM-3 revocation carve-out, which the pause
+  documentation still described in pre-v3.2.0 terms.
+- `doc/modules/options/erc20crosschain/ERC20CrossChain.md` — a note directly under the title covering all four
+  entry points, with the reason and the same warning about the two `burn` overloads.
+- `doc/README.md` — the existing *Pause & Deactivate → Note* was **extended in place** (not duplicated elsewhere)
+  with the per-path table, the `burn` name-collision warning and the allowance-revocation carve-out.
+
+The per-function requirement lists were not changed — they were already accurate.
 
 ### NM-21 — Mutable token name desynchronizes the EIP-712 domain separator (Info → Informational — **DOCUMENTED**)
 
@@ -651,9 +735,73 @@ finding L1 (*"Misleading `Spend` event emitted on `transferFrom` when allowance 
 comment added): the comment landed in `ERC20BaseModule`, but the interface documentation that states the opposite
 was never updated. An integrator reading the interface — the natural place to look — gets the wrong contract.
 
+#### `transferFrom` vs `burnFrom` — the two emit sites differ
+
+There are exactly two `Spend` emit sites in the codebase. They agree on the defect but differ in three ways that
+matter to an indexer.
+
+| | `ERC20BaseModule.transferFrom` | `ERC20CrossChainModule._burnFrom` |
+| --- | --- | --- |
+| Available on | every variant with an allowance surface | CrossChain-derived variants only |
+| Allowance spent by | `ERC20Upgradeable.transferFrom` (internally) | an explicit `ERC20Upgradeable._spendAllowance(account, sender, value)` |
+| Emitted | **after** the transfer completes | **between** `_spendAllowance` and the burn |
+| Guarded | `if (result) { … }` | unconditional |
+| Spender argument | `_msgSender()`, read at emit time | the `sender` parameter, captured in `burnFrom` as `_msgSender()` |
+| Event order in the receipt | `Transfer` → `Spend` | `Spend` → `Transfer` → `BurnFrom` |
+
+The **event ordering is inverted** between the two paths, confirmed by probe (throwaway test, not retained):
+
+```
+transferFrom (infinite): [Transfer -> Spend]
+burnFrom     (infinite): [Spend -> Transfer -> BurnFrom]
+transferFrom (finite)  : [Transfer -> Spend]
+burnFrom     (finite)  : [Spend -> Transfer -> BurnFrom]
+```
+
+This falls out of where each site sits: `ERC20BaseModule` wraps the OpenZeppelin call and emits once it returns,
+whereas `_burnFrom` emits between spending the allowance and performing the burn. An indexer that pairs a `Spend`
+with the *following* `Transfer` will mis-associate them on one of the two paths. Neither ordering is wrong, but
+they are not consistent with each other, and nothing documents that.
+
+The `if (result)` guard on `transferFrom` is vacuous — `ERC20Upgradeable.transferFrom` either returns `true` or
+reverts — so both sites are unconditional in practice. The difference is cosmetic but makes one site *look*
+conditional and the other not.
+
+The self-burn path `burn(uint256)` correctly emits **no** `Spend`: it calls `_burnFromOperator` directly, without
+`_spendAllowance`, because no allowance is involved.
+
+#### The report found half of the accounting drift
+
+Probed on `CMTATStandardStandalone`:
+
+| Path | Allowance actually reduced? | `Spend` emitted? | Result |
+| --- | --- | --- | --- |
+| `transferFrom`, finite allowance | Yes | Yes | Correct |
+| `transferFrom`, infinite allowance | **No** (stays `type(uint256).max`) | **Yes** | **Over-reports** — the NM-24 case |
+| `burnFrom`, finite allowance | Yes | Yes | Correct |
+| `burnFrom`, infinite allowance | **No** (stays `type(uint256).max`) | **Yes** | **Over-reports** — the NM-24 case |
+| `forcedTransfer` against an existing allowance | **Yes** (500 → 490) | **No** | **Under-reports** — not in the report |
+
+The last row is the mirror image of the finding and the tool did not surface it.
+`ERC20EnforcementModuleInternal._forcedTransfer` reduces the owner→recipient allowance when one exists, using
+`ERC20Upgradeable._approve(from, to, …, false)`. The trailing `false` suppresses the `Approval` event, and no
+`Spend` is emitted either, so a forced transfer silently consumes allowance with **no allowance-related event at
+all** — the observed receipt is `[Transfer -> ForcedTransfer]` while the allowance moves from 500 to 490.
+
+So an integrator reconstructing allowances purely from events drifts in *both* directions: too low after an
+infinite-approval `transferFrom`/`burnFrom`, and too high after a `forcedTransfer`. Any correct integration must
+read `allowance()` rather than accumulate events — which is the substantive guidance, and is what the corrected
+NatSpec should say.
+
+The `forcedTransfer` behaviour is arguably intended (an enforcement action is not a spend by the spender, and the
+suppressed `Approval` avoids implying the *owner* re-approved), but it is undocumented, and it is the more
+surprising of the two directions.
+
 *Recommended fix (not applied by this triage):* correct the `IERC20Allowance.Spend` NatSpec to state that the
-event **is** emitted on every allowance-consuming call, including infinite approvals, and that it therefore does
-not by itself imply an allowance reduction. Behaviour unchanged.
+event **is** emitted on every allowance-consuming call, including infinite approvals, that it therefore does not by
+itself imply an allowance reduction, and that it is **not** emitted when `forcedTransfer` consumes an allowance —
+so `Spend` must not be used as a complete ledger of allowance movement. Consider also documenting the differing
+event order between the two paths. Behaviour unchanged in all cases.
 
 ---
 
