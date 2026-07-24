@@ -89,13 +89,14 @@ See also [docs.openzeppelin.com - AccessControl](https://docs.openzeppelin.com/c
 ## Input Guards
 
 - `EnforcementModule.setAddressFrozen(...)` and `batchSetAddressFrozen(...)` reject `address(0)` (`CMTAT_Enforcement_ZeroAddressNotAllowed`).
-- `ERC20EnforcementModule.freezePartialTokens(...)` and `unfreezePartialTokens(...)` reject `address(0)` (`CMTAT_ERC20EnforcementModule_ZeroAddressNotAllowed`).
+- `ERC20EnforcementModule.freezePartialTokens(...)`, `unfreezePartialTokens(...)` and `setFrozenTokens(...)` reject `address(0)` (`CMTAT_ERC20EnforcementModule_ZeroAddressNotAllowed`).
 
 ## Role Interaction Notes
 
 - `ENFORCER_ROLE` can effectively block mint operations by freezing the minter/operator address with `setAddressFrozen(address, true)`.  
   In spender-aware compliance paths, mint uses the effective operator as spender, so a frozen operator reverts with `ERC7943CannotSend`.
 - `SNAPSHOOTER_ROLE` controls `setSnapshotEngine(address)`. Setting a snapshot engine that always reverts can create a **transfer-liveness halt** (a pause-like effect) for state-changing token flows that execute through `_update`.
+- `CROSS_CHAIN_ROLE` is checked against the **raw `msg.sender`**, not `_msgSender()` — the only role gate in CMTAT that does so, and deliberately (a bridge holds unbounded mint authority and must not be impersonable through a relayer). A bridge must therefore call `crosschainMint` / `crosschainBurn` directly, and **`CROSS_CHAIN_ROLE` must never be granted to the ERC-2771 forwarder**: it would let any user mint arbitrarily through a relayed call. See [cross-chain-bridge-integration.md](./cross-chain-bridge-integration.md#the-bridge-gate-uses-msgsender-not-_msgsender).
 
 ## Key Management
 

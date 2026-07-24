@@ -93,6 +93,7 @@ Mints tokens as part of a crosschain transfer.
 - The contract must not be paused 
   - error: `EnforcedPause()`
 - Only authorized users (`CROSS_CHAIN_ROLE`) are allowed to call this function.
+- The role is checked against the **raw `msg.sender`**, not `_msgSender()`: the call cannot be relayed through the ERC-2771 forwarder, and `CROSS_CHAIN_ROLE` must never be granted to that forwarder. See [cross-chain-bridge-integration.md](../../../technical/cross-chain-bridge-integration.md#the-bridge-gate-uses-msgsender-not-_msgsender).
 - Compliance path note (CMTAT base integration): operator (`_msgSender()`) is propagated through transfer-compliance checks for spender-aware RuleEngine restriction support.
 
 **Emits:**
@@ -130,6 +131,7 @@ Burns tokens in preparation for a crosschain transfer.
 - The contract must not be paused 
   - error: `EnforcedPause()`
 - Only authorized users (`CROSS_CHAIN_ROLE`) are allowed to call this function.
+- The role is checked against the **raw `msg.sender`**, not `_msgSender()`: the call cannot be relayed through the ERC-2771 forwarder, and `CROSS_CHAIN_ROLE` must never be granted to that forwarder. See [cross-chain-bridge-integration.md](../../../technical/cross-chain-bridge-integration.md#the-bridge-gate-uses-msgsender-not-_msgsender).
 - Compliance path note (CMTAT base integration): operator (`_msgSender()`) is propagated through transfer-compliance checks for spender-aware RuleEngine restriction support.
 
  **Emits:**

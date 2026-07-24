@@ -98,6 +98,19 @@ Choose the adapter that matches the interface used by the LayerZero pool.
 | `mint(address, uint256)` | `MINTER_ROLE` | Grant to CCIP pool |
 | `setCCIPAdmin(address)` | `DEFAULT_ADMIN_ROLE` | Manage CCIP registration |
 
+### The bridge gate uses `msg.sender`, not `_msgSender()`
+
+`crosschainMint` and `crosschainBurn` are guarded by the `onlyTokenBridge` modifier, which authorizes the **raw `msg.sender`** — deliberately, and unlike every other role gate in CMTAT, which resolves the caller through `_msgSender()` (ERC-2771 aware). CMTAT follows OpenZeppelin's `draft-ERC20Bridgeable` here: a token bridge holds an unbounded mint authority, so it must never be impersonable through a relayer.
+
+Two consequences for integrators:
+
+- **A bridge cannot relay its calls through the ERC-2771 forwarder.** It must call `crosschainMint` / `crosschainBurn` **directly**, as `msg.sender`. A meta-transaction relayed by the forwarder reverts, because the forwarder — not the bridge — is the raw caller and does not hold `CROSS_CHAIN_ROLE`.
+- **Never grant `CROSS_CHAIN_ROLE` to the ERC-2771 forwarder.** This is the tempting "fix" for the point above, and it is a critical misconfiguration: granting it would make **every relayed call pass the gate**, since `onlyTokenBridge` only ever inspects the raw caller. Any user could then submit a meta-transaction through the forwarder and mint an arbitrary amount to any address — the token's supply control would be gone. The forwarder is set at construction and is irrevocable in standalone deployments, so this cannot be undone by re-pointing it; the only remedy is revoking the role.
+
+> The same reasoning applies to any contract that can be made to call the token on a third party's behalf: `CROSS_CHAIN_ROLE` must be held only by contracts whose call to `crosschainMint` / `crosschainBurn` is itself the authorization decision.
+
+Reported as NM-4 by [Nethermind AuditAgent](https://auditagent.nethermind.io/) on CMTAT v3.3.0-rc2 and assessed as intended behaviour with a deployment constraint; see the [maintainer feedback](../security/tools/nethermind-audit-agent/v3.3.0-rc2/audit_agent_report_v3.3.0-rc2-feedback.md).
+
 ## RuleEngine Operator Semantics
 
 - `burnFrom` uses allowance and now propagates `_msgSender()` into the compliance hook, so spender-aware RuleEngine checks are applied.

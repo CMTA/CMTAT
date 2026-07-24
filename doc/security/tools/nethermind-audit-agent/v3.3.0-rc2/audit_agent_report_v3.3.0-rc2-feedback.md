@@ -50,12 +50,12 @@ Debt, DebtEngine, HolderList, Permit, Snapshot, ERC-1363, ERC-7551, Light), `con
 
 ## Outcome
 
-**4 fixed · 14 accepted as design · 4 rejected (false positive / false premise) · 2 fix recommended** = 24.
+**5 fixed · 14 accepted as design · 4 rejected (false positive / false premise) · 1 fix recommended** = 24.
 
-Two distinct defects were fixed, each reported twice: **NM-15/NM-17** (zero-address freeze bricking every mint
-path) and **NM-3/NM-8** (allowance revocation blocked while paused or restricted). The two remaining "fix
-recommended" items (NM-22, NM-24) are minor documentation/metadata issues. None of the 24 findings is exploitable
-by an unprivileged actor.
+Three defects were fixed: **NM-15/NM-17** (zero-address freeze bricking every mint path), **NM-3/NM-8** (allowance
+revocation blocked while paused or restricted) and **NM-22** (ERC-7551 `setTerms` erasing the document name).
+NM-6 was additionally **documented** rather than changed. The one remaining "fix recommended" item (NM-24) is a
+NatSpec correction. None of the 24 findings is exploitable by an unprivileged actor.
 
 ## Findings triage
 
@@ -64,7 +64,7 @@ by an unprivileged actor.
 | NM-1 | High → Informational | Rejected (false positive) | Closed |
 | NM-2 | Medium → Informational | Rejected (duplicate of NM-1) | Closed |
 | NM-3 | Medium → Low | **Fixed** | **Fixed** — revocation (`value == 0`) always authorized |
-| NM-4 | Medium → Informational | Rejected (design; misconfiguration precondition) | Closed |
+| NM-4 | Medium → Informational | Rejected (design; misconfiguration precondition) — **documented** | Closed — deployment constraint documented |
 | NM-5 | Medium → Informational | Accepted as design | Accepted |
 | NM-6 | Low → Informational | Accepted as design (RuleEngine responsibility) — **documented** | Accepted — doc + NatSpec added |
 | NM-7 | Low → Low | Accepted as design (trusted-RuleEngine model) | Accepted |
@@ -82,7 +82,7 @@ by an unprivileged actor.
 | NM-19 | Info → Informational | Accepted as design | Accepted |
 | NM-20 | Info → Informational | Accepted as design | Accepted |
 | NM-21 | Info → Informational | Accepted as design (claim overstated) | Accepted |
-| **NM-22** | **Info → Informational** | **Fix recommended (minor)** | **Open** |
+| **NM-22** | **Info → Informational** | **Fixed** | **Fixed** — ERC-7551 overload preserves the name |
 | NM-23 | Best Practices → Informational | Accepted as design (optional reorder) | Accepted |
 | **NM-24** | **Best Practices → Informational** | **Fix recommended (NatSpec)** | **Open** |
 
@@ -188,8 +188,29 @@ The second half restates the inherent ERC-2771 trust model: a trusted forwarder 
 deployment. Verify that the chosen forwarder is trustworthy before deploying, as it can submit arbitrary calls on
 behalf of any user"*), and the forwarder is immutable (constructor-set), so it cannot be swapped post-deployment.
 
-*Suggested (docs only):* state explicitly in the cross-chain deployment guidance that `CROSS_CHAIN_ROLE` must
-never be granted to the ERC-2771 forwarder.
+**Resolution — documented (no behaviour change).** The disposition stands: `msg.sender` is the correct check and
+the code was already right. What was missing is that the *deployment constraint* it implies was only discoverable
+by reading a comment inside a modifier. It is now stated where an integrator will meet it:
+
+- `doc/technical/cross-chain-bridge-integration.md` — new subsection *"The bridge gate uses `msg.sender`, not
+  `_msgSender()`"* under the Access Control Summary. It gives the rationale (a bridge holds unbounded mint
+  authority and must not be impersonable through a relayer), then the two practical consequences: a bridge must
+  call `crosschainMint` / `crosschainBurn` **directly**, and `CROSS_CHAIN_ROLE` **must never** be granted to the
+  ERC-2771 forwarder — spelling out that doing so would let any user mint arbitrarily through a relayed call, and
+  that the forwarder is irrevocable in standalone deployments so the only remedy is revoking the role. It
+  generalizes the rule: `CROSS_CHAIN_ROLE` must be held only by contracts whose call *is* the authorization
+  decision.
+- `doc/technical/access-control.md` — a Role Interaction Note recording that `CROSS_CHAIN_ROLE` is the only role
+  gate checked against the raw `msg.sender`, with a link to the section above.
+- `doc/modules/options/erc20crosschain/ERC20CrossChain.md` — the requirement lists for `crosschainMint` and
+  `crosschainBurn` now state that the call cannot be relayed through the forwarder.
+- `contracts/modules/wrapper/options/ERC20CrossChainModule.sol` — the `onlyTokenBridge` comment was extended with
+  an explicit `DEPLOYMENT CONSTRAINT` paragraph. Comment-only; the bytecode is unchanged.
+
+Note that the *first* consequence is the trap that leads to the second: an integrator whose relayed bridge call
+reverts is being told, correctly, that the bridge must call directly — and the natural but catastrophic
+"fix" is to grant the role to the forwarder. Documenting the revert without documenting why the obvious
+workaround is unsafe would have left the finding's attack path open, which is why both are stated together.
 
 ### NM-5 — Missing freeze enforcement on `spender` for `burnFrom` and minter transfers (Medium → Informational)
 
@@ -449,13 +470,13 @@ integration caveat, not a denial of service.
 *Suggested (docs only):* note on `setName` that renaming does not change the EIP-712 domain, and that integrators
 must read `eip712Domain()` rather than `name()`.
 
-### NM-22 — ERC-7551 `setTerms` overload silently erases the document name (Info → **Informational — fix recommended**)
+### NM-22 — ERC-7551 `setTerms` overload silently erases the document name (Info → **Informational — FIXED**)
 
 **Claim.** `ERC7551Module.setTerms(bytes32 hash_, string calldata uri_)` constructs
 `IERC1643CMTAT.DocumentInfo("", uri_, hash_)` and forwards it to `_setTerms`, which overwrites the whole terms
 struct — wiping a `name` previously set through `ExtraInformationModule.setTerms(DocumentInfo)`.
 
-**Verdict — VALID (minor). Recommended for fixing.** Confirmed in
+**Verdict — VALID (minor). Fixed.** Confirmed in
 `contracts/modules/wrapper/options/ERC7551Module.sol` (the `""` literal) and
 `contracts/modules/wrapper/extensions/ExtraInformationModule.sol`, where `_setTerms` unconditionally assigns
 `$._terms.name = terms_.name`. The ERC-7551 signature carries no name, so the overload cannot supply one; the
@@ -463,9 +484,29 @@ result is silent data loss in on-chain terms metadata that off-chain legal/compl
 funds or transfer logic are affected, and the name can be restored via the `DocumentInfo` overload — hence
 Informational.
 
-*Recommended fix (not applied by this triage):* in the ERC-7551 overload, preserve the current name
-(`terms().name`) instead of passing `""`, and add a test asserting the name survives a
-`setTerms(bytes32,string)` call. If the erasure is in fact intended, document it on the overload instead.
+**Resolution — fixed.**
+
+- **Confirmation before fixing.** As with NM-15, the repository already **pinned the erasure in a test**:
+  `testAdminCanUpdateTerms` (`test/common/ERC7551ModuleCommon.js`) asserted the resulting name was `''` after an
+  ERC-7551 `setTerms`, even though the token is deployed with the terms name `'doc1'`. A new test asserting the
+  name is preserved was added first and confirmed **failing** (`expected '' to equal 'doc1'`).
+- **Fix.**
+  - `contracts/modules/wrapper/extensions/ExtraInformationModule.sol` — new internal
+    `_setTermsDocument(bytes32 documentHash_, string memory uri_)` updates only the document part
+    (`uri`, `documentHash`, `lastModified`) and emits the same `Terms($._terms)` event, leaving `$._terms.name`
+    untouched.
+  - `contracts/modules/wrapper/options/ERC7551Module.sol` — `setTerms(bytes32,string)` now calls
+    `_setTermsDocument(hash_, uri_)` instead of building a `DocumentInfo("", uri_, hash_)` and routing it through
+    `_setTerms`. The now-unused `IERC1643CMTAT` import was removed.
+  - The `ICMTATBase` overload `setTerms(IERC1643CMTAT.DocumentInfo)` is unchanged: supplying a name explicitly
+    still sets it, including to the empty string if that is what the caller passes.
+  - Both events are still emitted exactly as before (`ICMTATBase.Terms(CMTATTerms)` from the module,
+    `IERC7551Document.Terms(bytes32,string)` from the overload).
+- **Tests.** `test/common/ERC7551ModuleCommon.js` — added `testERC7551SetTermsPreservesDocumentName` (asserts the
+  uri and hash update while the name survives). The pre-existing `testAdminCanUpdateTerms` was updated: its
+  expected name changed from `''` to `TERMS[0]`, since it had encoded the erasure as expected behaviour.
+- **Verification.** ERC-7551 standalone + upgradeable suites: 476 passing. Full suite: **5868 passing, 87 pending,
+  0 failing**.
 
 ### NM-23 — `detectTransferRestrictionFrom` reports `SPENDER_FROZEN` before deactivated/paused (Best Practices → Informational)
 

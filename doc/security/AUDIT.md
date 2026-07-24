@@ -71,21 +71,21 @@ Here are the reports produced by [Nethermind Audit Agent](https://auditagent.net
 
 | Version | High | Medium | Low | Info | Best practices | Anything to fix? |
 | ------- | ---: | -----: | --: | ---: | -------------: | ---------------- |
-| v3.3.0-rc2 | 1 | 4 | 3 | 14 | 2 | **2 defects fixed** (NM-15/17 zero-address guard, NM-3/8 allowance revocation), 2 minor items open (NM-24 NatSpec, NM-22 terms name). Nothing exploitable; the High is a false positive. |
+| v3.3.0-rc2 | 1 | 4 | 3 | 14 | 2 | **3 defects fixed** (NM-15/17 zero-address guard, NM-3/8 allowance revocation, NM-22 terms name) + NM-4 and NM-6 documented; 1 item open (NM-24 NatSpec). Nothing exploitable; the High is a false positive. |
 | v3.1.0 | 2 | 2 | 10 | — | — | No — 7 invalid, 7 design choices. |
 
 ### v3.3.0-rc2 (Scan ID 9, 2026-07-23, commit `35d8940b…9d92e4ae`)
 
 **24 findings** (1 high, 4 medium, 3 low, 14 info, 2 best practices) across 100 contracts / 8067 LoC. Triage
-outcome: **4 fixed · 14 accepted as design · 4 rejected (false positive / false premise) · 2 fix recommended**
-(NM-15/NM-17 and NM-3/NM-8 are two distinct defects, each reported twice).
+outcome: **5 fixed · 14 accepted as design · 4 rejected (false positive / false premise) · 1 fix recommended**
+(NM-15/NM-17 and NM-3/NM-8 are duplicate pairs, so the five cover three distinct defects).
 
 | ID | Title | Severity (tool → CMTA) | Disposition |
 | --- | --- | --- | --- |
 | NM-1 | Uninitialized proxy can be seized by the first caller to `initialize` | High → Info | Rejected (false positive) |
 | NM-2 | Anyone can claim an uninitialized proxy by calling `initialize` first | Medium → Info | Rejected (duplicate of NM-1) |
 | NM-3 | Paused/restricted holders cannot revoke stale allowances | Medium → Low | **Fixed** |
-| NM-4 | Inconsistent context resolution (`msg.sender` vs `_msgSender()`) in the bridge gate | Medium → Info | Rejected (intentional; misconfiguration precondition) |
+| NM-4 | Inconsistent context resolution (`msg.sender` vs `_msgSender()`) in the bridge gate | Medium → Info | Rejected (intentional) — **deployment constraint documented** (never grant `CROSS_CHAIN_ROLE` to the ERC-2771 forwarder) |
 | NM-5 | Missing freeze enforcement on `spender` for `burnFrom` / minter transfers | Medium → Info | Design choice |
 | NM-6 | Zero-value delegated transfers mutate RuleEngine state | Low → Info | Design choice (RuleEngine responsibility) — **documented** in `IRuleEngine` NatSpec + RuleEngine integration notes |
 | NM-7, NM-9, NM-11, NM-16, NM-18 | RuleEngine callback runs before balance effects (reentrancy ordering) | Low / Info ×4 → Low | Design choice (trusted RuleEngine) — **document the trust assumption** |
@@ -96,20 +96,20 @@ outcome: **4 fixed · 14 accepted as design · 4 rejected (false positive / fals
 | **NM-15, NM-17** | **`setFrozenTokens` can freeze the zero address and brick all mint paths** | **Info ×2 → Low** | **Fixed** |
 | NM-20 | Pausing disables privileged burn interfaces | Info → Info | Design choice (`BURNER_ROLE` burn survives pause) |
 | NM-21 | Mutable token name desynchronizes the EIP-712 domain separator | Info → Info | Design choice (ERC-5267 `eip712Domain()` mitigates) |
-| **NM-22** | **ERC-7551 `setTerms` overload silently erases the document name** | **Info → Info** | **Fix recommended (minor)** |
+| **NM-22** | **ERC-7551 `setTerms` overload silently erases the document name** | **Info → Info** | **Fixed** |
 | NM-23 | `detectTransferRestrictionFrom` reports `SPENDER_FROZEN` before deactivated/paused | Best practice → Info | Design choice (reporting nit, no bypass) |
 | **NM-24** | **Unconditional `Spend` emission contradicts `IERC20Allowance` NatSpec** | **Best practice → Info** | **Fix recommended (NatSpec)** |
 
 **Nothing exploitable by an unprivileged actor and no funds at risk.** The single High and its Medium duplicate
-are false positives (implementations call `_disableInitializers()`; proxies are initialized atomically). Two minor
-items remain open: the stale `IERC20Allowance.Spend` NatSpec (NM-24) and the ERC-7551 `setTerms` name erasure
-(NM-22). Full rationale per finding: [feedback](./tools/nethermind-audit-agent/v3.3.0-rc2/audit_agent_report_v3.3.0-rc2-feedback.md).
+are false positives (implementations call `_disableInitializers()`; proxies are initialized atomically). One item
+remains open: the stale `IERC20Allowance.Spend` NatSpec (NM-24). Full rationale per finding: [feedback](./tools/nethermind-audit-agent/v3.3.0-rc2/audit_agent_report_v3.3.0-rc2-feedback.md).
 
 **Substantive findings addressed in this release:**
 
 | ID | Fix | Files / tests |
 | --- | --- | --- |
 | NM-3 / NM-8 | `_canAuthorizeAllowanceByModuleAndRevert` now takes the allowance `value` and returns early when it is zero, so setting an allowance to zero — a revocation, which can only reduce a spender's reach — is always authorized, including while paused/deactivated or when the owner or spender is frozen or off the allowlist. Non-zero grants stay gated exactly as before; the redundant `whenNotPaused` modifier was removed from the two `approve` overrides (the pause check lives inside the internal function). | `contracts/modules/wrapper/extensions/ValidationModule/ValidationModuleAllowance.sol`, `0_CMTATBaseCore.sol`, `3_CMTATBaseRuleEngine.sol`, `3_CMTATBaseAllowlist.sol`, `6_CMTATBaseERC2612.sol` (`permit`); 7 regression tests across `test/common/{PauseModuleCommon,EnforcementModuleCommon,AllowlistModuleCommon}.js`, including two negative guards. |
+| NM-22 | The ERC-7551 `setTerms(bytes32,string)` overload — whose signature carries no document name — now updates only the document (`uri`, `documentHash`, `lastModified`) via a new internal `_setTermsDocument`, instead of forwarding an empty name through `_setTerms` and silently erasing a name set through the `ICMTATBase` overload. | `contracts/modules/wrapper/extensions/ExtraInformationModule.sol`, `contracts/modules/wrapper/options/ERC7551Module.sol`; `testERC7551SetTermsPreservesDocumentName` in `test/common/ERC7551ModuleCommon.js` (the pre-existing `testAdminCanUpdateTerms` had encoded the erasure and was corrected). |
 | NM-15 / NM-17 | `_setFrozenTokens` now rejects `address(0)` with `CMTAT_ERC20EnforcementModule_ZeroAddressNotAllowed()`, matching `_freezePartialTokens` / `_unfreezePartialTokens` and `EnforcementModule`'s full-address freeze. Prevents an `ERC20ENFORCER_ROLE` holder from bricking every mint path (`mint`, `batchMint`, `crosschainMint`, the mint leg of `burnAndMint`) with a single call. | `contracts/modules/internal/ERC20EnforcementModuleInternal.sol`; 5 regression tests in `test/common/ERC20EnforcementModuleCommon.js` (a pre-existing test that pinned the buggy behaviour under the misleading name `testSetFrozenTokensOnZeroAddressDoesNotBreakMintFlow` was removed). |
 
 ### v3.1.0
