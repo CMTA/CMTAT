@@ -38,6 +38,11 @@ abstract contract CMTATBaseERC2612 is CMTATBaseERC20CrossChain, ERC20PermitUpgra
     * @dev Reverts if the contract is paused or if owner/spender is frozen, unless `value`
     * is zero: a zero-value permit is a gasless revocation and stays available so an owner
     * can always sever ties with a spender, even while restricted.
+    *
+    * The EIP-712 domain name is fixed at initialization and is **not** updated by
+    * {TokenAttributeModule-setName}. Signers must build the domain from the ERC-5267
+    * {eip712Domain} function (or `DOMAIN_SEPARATOR()`), not from {name}, which may have
+    * been changed since deployment.
     */
     function permit(
         address owner,

@@ -78,6 +78,15 @@ abstract contract TokenAttributeModule is Initializable, IERC3643ERC20Base {
     /* ======== State functions ======= */
     /**
      *  @inheritdoc IERC3643ERC20Base
+     *  @dev
+     *  WARNING - on deployment variants that also support ERC-2612 (`permit`), renaming the token does **not**
+     *  change the EIP-712 domain separator. The domain name is captured at initialization by OpenZeppelin's
+     *  `EIP712Upgradeable` and, per its own documentation, "cannot be changed except through a smart contract
+     *  upgrade"; `DOMAIN_SEPARATOR()` therefore keeps using the original name after {setName}.
+     *
+     *  Existing and future permits remain valid: signers must simply build the EIP-712 domain from the ERC-5267
+     *  {eip712Domain} function (or from `DOMAIN_SEPARATOR()`), which reports the name actually in use — never
+     *  from {name}. A signature produced with the post-rename {name} is rejected with `ERC2612InvalidSigner`.
      */
     function setName(string calldata name_) public virtual override(IERC3643ERC20Base) onlyTokenAttributeManager {
         TokenAttributeModuleStorage storage $ = _getTokenAttributeModuleStorage();

@@ -71,7 +71,7 @@ Here are the reports produced by [Nethermind Audit Agent](https://auditagent.net
 
 | Version | High | Medium | Low | Info | Best practices | Anything to fix? |
 | ------- | ---: | -----: | --: | ---: | -------------: | ---------------- |
-| v3.3.0-rc2 | 1 | 4 | 3 | 14 | 2 | **3 defects fixed** (NM-15/17 zero-address guard, NM-3/8 allowance revocation, NM-22 terms name) + NM-4 and NM-6 documented; 1 item open (NM-24 NatSpec). Nothing exploitable; the High is a false positive. |
+| v3.3.0-rc2 | 1 | 4 | 3 | 14 | 2 | **3 defects fixed** (NM-15/17 zero-address guard, NM-3/8 allowance revocation, NM-22 terms name) + NM-4, NM-6 and NM-21 documented; 1 item open (NM-24 NatSpec). Nothing exploitable; the High is a false positive. |
 | v3.1.0 | 2 | 2 | 10 | — | — | No — 7 invalid, 7 design choices. |
 
 ### v3.3.0-rc2 (Scan ID 9, 2026-07-23, commit `35d8940b…9d92e4ae`)
@@ -86,7 +86,7 @@ outcome: **5 fixed · 14 accepted as design · 4 rejected (false positive / fals
 | NM-2 | Anyone can claim an uninitialized proxy by calling `initialize` first | Medium → Info | Rejected (duplicate of NM-1) |
 | NM-3 | Paused/restricted holders cannot revoke stale allowances | Medium → Low | **Fixed** |
 | NM-4 | Inconsistent context resolution (`msg.sender` vs `_msgSender()`) in the bridge gate | Medium → Info | Rejected (intentional) — **deployment constraint documented** (never grant `CROSS_CHAIN_ROLE` to the ERC-2771 forwarder) |
-| NM-5 | Missing freeze enforcement on `spender` for `burnFrom` / minter transfers | Medium → Info | Design choice |
+| NM-5 | Missing freeze enforcement on `spender` for `burnFrom` / minter transfers | Medium → Info | Design choice (spender propagation traced + probed; freeze is a holder-level control, `revokeRole` is the operator lever) |
 | NM-6 | Zero-value delegated transfers mutate RuleEngine state | Low → Info | Design choice (RuleEngine responsibility) — **documented** in `IRuleEngine` NatSpec + RuleEngine integration notes |
 | NM-7, NM-9, NM-11, NM-16, NM-18 | RuleEngine callback runs before balance effects (reentrancy ordering) | Low / Info ×4 → Low | Design choice (trusted RuleEngine) — **document the trust assumption** |
 | NM-8 | Allowance revocation blocked for frozen/non-allowlisted spenders | Low → Low | **Fixed** (same change as NM-3) |
@@ -95,7 +95,7 @@ outcome: **5 fixed · 14 accepted as design · 4 rejected (false positive / fals
 | NM-13, NM-14, NM-19 | Engine setters accept `address(this)` / non-compliant addresses | Info ×3 → Info | Design choice (privileged, recoverable) |
 | **NM-15, NM-17** | **`setFrozenTokens` can freeze the zero address and brick all mint paths** | **Info ×2 → Low** | **Fixed** |
 | NM-20 | Pausing disables privileged burn interfaces | Info → Info | Design choice (`BURNER_ROLE` burn survives pause) |
-| NM-21 | Mutable token name desynchronizes the EIP-712 domain separator | Info → Info | Design choice (ERC-5267 `eip712Domain()` mitigates) |
+| NM-21 | Mutable token name desynchronizes the EIP-712 domain separator | Info → Info | Design choice — **documented**; probed: `permit` still works via ERC-5267 `eip712Domain()`, so the reported DoS does not occur |
 | **NM-22** | **ERC-7551 `setTerms` overload silently erases the document name** | **Info → Info** | **Fixed** |
 | NM-23 | `detectTransferRestrictionFrom` reports `SPENDER_FROZEN` before deactivated/paused | Best practice → Info | Design choice (reporting nit, no bypass) |
 | **NM-24** | **Unconditional `Spend` emission contradicts `IERC20Allowance` NatSpec** | **Best practice → Info** | **Fix recommended (NatSpec)** |

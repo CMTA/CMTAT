@@ -131,6 +131,8 @@ Sets the name of the token.
 | ------ | ------ | ------------------------------------ |
 | `name` | string | The new name to assign to the token. |
 
+> **ERC-2612 note.** On deployment variants that support `permit`, renaming the token does **not** change the EIP-712 domain separator: the domain name is captured at initialization and `DOMAIN_SEPARATOR()` keeps using it. `permit` continues to work — signers must build the EIP-712 domain from the ERC-5267 `eip712Domain()` function (or `DOMAIN_SEPARATOR()`), never from `name()`. A signature produced with the post-rename `name()` is rejected with `ERC2612InvalidSigner`. See [erc2612.md](../../options/erc2612/erc2612.md#the-eip-712-domain-name-is-fixed-at-deployment).
+
 
 
 ------

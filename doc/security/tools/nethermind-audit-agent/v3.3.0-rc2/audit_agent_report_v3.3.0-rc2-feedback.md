@@ -65,7 +65,7 @@ NatSpec correction. None of the 24 findings is exploitable by an unprivileged ac
 | NM-2 | Medium → Informational | Rejected (duplicate of NM-1) | Closed |
 | NM-3 | Medium → Low | **Fixed** | **Fixed** — revocation (`value == 0`) always authorized |
 | NM-4 | Medium → Informational | Rejected (design; misconfiguration precondition) — **documented** | Closed — deployment constraint documented |
-| NM-5 | Medium → Informational | Accepted as design | Accepted |
+| NM-5 | Medium → Informational | Accepted as design — spender propagation traced and probed | Accepted (see follow-up on `access-control.md`) |
 | NM-6 | Low → Informational | Accepted as design (RuleEngine responsibility) — **documented** | Accepted — doc + NatSpec added |
 | NM-7 | Low → Low | Accepted as design (trusted-RuleEngine model) | Accepted |
 | NM-8 | Low → Low | **Fixed (same change as NM-3)** | **Fixed** |
@@ -81,7 +81,7 @@ NatSpec correction. None of the 24 findings is exploitable by an unprivileged ac
 | NM-18 | Info → Informational | Accepted as design (duplicate of NM-7) | Accepted |
 | NM-19 | Info → Informational | Accepted as design | Accepted |
 | NM-20 | Info → Informational | Accepted as design | Accepted |
-| NM-21 | Info → Informational | Accepted as design (claim overstated) | Accepted |
+| NM-21 | Info → Informational | Accepted as design (claim overstated) — **documented** | Accepted — doc + NatSpec added |
 | **NM-22** | **Info → Informational** | **Fixed** | **Fixed** — ERC-7551 overload preserves the name |
 | NM-23 | Best Practices → Informational | Accepted as design (optional reorder) | Accepted |
 | **NM-24** | **Best Practices → Informational** | **Fix recommended (NatSpec)** | **Open** |
@@ -232,6 +232,81 @@ The rationale is unchanged from AuditAgent v3.1.0 findings #3 and #10: mint/burn
 spender** in the ERC-20 sense — the actor is a `MINTER_ROLE` / `BURNER_ROLE` / `BURNER_FROM_ROLE` holder, and
 account freezing is a *holder*-level control, not an operator-level one. The control for a compromised operator is
 role revocation (`revokeRole`), which is immediate and total; freezing was never intended to demote a role holder.
+
+#### What mint and burn actually pass as `spender`
+
+Because the finding turns on this, the argument was traced end to end. The two hierarchies differ.
+
+**`CMTATBaseCommon` (all full variants) — passes `_msgSender()`:**
+
+| Path | Call | `spender` |
+| --- | --- | --- |
+| `_mintOverride` | `_checkTransferred(_msgSender(), address(0), account, value)` | the minter |
+| `_burnOverride` | `_checkTransferred(_msgSender(), account, address(0), value)` | the burner |
+| `_minterTransferOverride` | `_checkTransferred(_msgSender(), from, to, value)` | the minter |
+
+**`CMTATBaseCore` (Light variants) — no spender at all:**
+
+| Path | Call | `spender` |
+| --- | --- | --- |
+| `_mintOverride` | `_canMintByModuleAndRevert(account)` | n/a — not a spender-parameterized function |
+| `_burnOverride` | `_canBurnByModuleAndRevert(account)` | n/a |
+| `_minterTransferOverride` | `_canTransferGenericByModuleAndRevert(address(0), from, to)` | **hardcoded `address(0)`** |
+
+So the report's specific claim about `CMTATBaseCore._minterTransferOverride` hardcoding `address(0)` is accurate,
+but it applies to the **Light variants only**; the full variants propagate the real operator.
+
+#### Where the spender goes after that
+
+Propagating the operator is not the same as checking it. `ValidationModule._canTransferGenericByModuleAndRevert`
+routes on `from`/`to`:
+
+```solidity
+if (from == address(0))      _canMintByModuleAndRevert(to);       // mint  -> spender DROPPED
+else if (to == address(0))   _canBurnByModuleAndRevert(from);     // burn  -> spender DROPPED
+else                         _canTransferStandardByModuleAndRevert(spender, from, to);  // spender USED
+```
+
+`_canMintByModuleAndRevert` and `_canBurnByModuleAndRevert` take a **single address** in every variant, including
+the `ValidationModuleAllowlist` overrides. On mint and burn the spender is therefore carried all the way in and
+then discarded at the routing step — the freeze check never sees it.
+
+It is not discarded everywhere: in the RuleEngine variant, `ValidationModuleRuleEngine._transferred` branches on
+`spender != address(0)`, so mint and burn reach the **4-argument** `ruleEngine_.transferred(spender, from, to,
+value)` with the minter/burner as `spender`. The RuleEngine is told who the operator is; CMTAT's own freeze logic
+does not use it.
+
+#### Empirical confirmation
+
+Probed on `CMTATStandardStandalone` (throwaway test, not retained):
+
+| Scenario | Result |
+| --- | --- |
+| Frozen `MINTER_ROLE` holder calls `mint` | **Succeeds** — recipient balance 10 |
+| Frozen `BURNER_ROLE` holder calls `burn` on a non-frozen holder | **Succeeds** — holder balance 100 → 90 |
+| Burn targeting a frozen holder | Reverts `ERC7943CannotSend(holder)` ✓ |
+
+Freezing an operator does not stop them minting or burning; freezing a holder does stop tokens being burned from
+them. This matches the design rationale above, and confirms the disposition: the lever against a compromised
+operator is `revokeRole`, not `setAddressFrozen`.
+
+#### Follow-up: a documentation statement this contradicts
+
+`doc/technical/access-control.md` currently states, under *Role Interaction Notes*:
+
+> `ENFORCER_ROLE` can effectively block mint operations by freezing the minter/operator address with
+> `setAddressFrozen(address, true)`. In spender-aware compliance paths, mint uses the effective operator as
+> spender, so a frozen operator reverts with `ERC7943CannotSend`.
+
+The probe contradicts this: the frozen minter minted successfully. The first half is right that the operator is
+*passed* as `spender`, but the mint routing drops it before any freeze check, so no `ERC7943CannotSend` is raised.
+The statement could only hold if a configured RuleEngine chose to reject the spender — which is not what the text
+says, and is not true of the base contracts or of a deployment without a RuleEngine.
+
+This is **not** part of NM-5 (the tool did not report it, and the contract behaviour is intended). It is tracked
+here because it is a documented security control that does not exist as described — a reader could reasonably
+freeze a compromised minter and believe issuance is stopped. Left unchanged pending a decision on whether to
+correct the documentation or to make the behaviour match it.
 
 ### NM-6 — Zero-value delegated transfers can mutate RuleEngine state (Low → Informational)
 
@@ -450,7 +525,7 @@ The report's premise conflates that path with the cross-chain overloads.
 *Suggested (docs only):* state the split explicitly in the pause documentation — `BURNER_ROLE` burn survives
 pause; `burnFrom` / self-burn / crosschain burn+mint do not.
 
-### NM-21 — Mutable token name desynchronizes the EIP-712 domain separator (Info → Informational)
+### NM-21 — Mutable token name desynchronizes the EIP-712 domain separator (Info → Informational — **DOCUMENTED**)
 
 **Claim.** `TokenAttributeModule.setName()` changes `name()`, but the EIP-712 domain separator was built from the
 initial name and OpenZeppelin provides no way to update it, so `permit` suffers "a permanent denial of service"
@@ -467,8 +542,37 @@ actually in use. Wallets and dApps that build the domain the standard way — fr
 Only integrators that derive the domain from `name()` would produce signatures that fail. So this is an
 integration caveat, not a denial of service.
 
-*Suggested (docs only):* note on `setName` that renaming does not change the EIP-712 domain, and that integrators
-must read `eip712Domain()` rather than `name()`.
+**Empirical confirmation.** Probed on `CMTATStandalonePermit` (throwaway test, not retained), calling
+`setName("RENAMED TOKEN")` on a token deployed as `CMTA Token`:
+
+| Observation | Result |
+| --- | --- |
+| `name()` after the rename | `RENAMED TOKEN` |
+| `eip712Domain().name` after the rename | `CMTA Token` (unchanged) |
+| `DOMAIN_SEPARATOR()` | unchanged |
+| `permit` signed with the **new** `name()` | Reverts `ERC2612InvalidSigner` |
+| `permit` signed with `eip712Domain().name` | **Succeeds** |
+
+This settles the severity question: `permit` is **not** disabled by a rename. The report's *"permanent denial of
+service for the `permit` functionality"* is incorrect — the function keeps working for any signer that discovers
+the domain the standard way. Only an integration that hard-codes the domain from `name()` breaks, and it breaks
+silently at the moment of the rename until a `permit` call reverts. That is an integration caveat worth
+documenting, not a defect to fix. (Note that CMTAT's own `test/common/PermitModuleCommon.js` builds its domain
+from `await this.cmtat.name()` — correct in the tests, since they never rename, but a fair illustration of how
+natural the wrong pattern is.)
+
+**Resolution — documented (no behaviour change).**
+
+- `contracts/modules/wrapper/core/TokenAttributeModule.sol` — a `WARNING` block on `setName` states that the
+  EIP-712 domain separator is not updated by a rename, that permits stay valid, and that signers must use
+  `eip712Domain()` / `DOMAIN_SEPARATOR()` rather than `name()`, naming the `ERC2612InvalidSigner` failure mode.
+- `contracts/modules/6_CMTATBaseERC2612.sol` — the same point, briefly, on `permit`.
+- `doc/modules/options/erc2612/erc2612.md` — new section *"The EIP-712 domain name is fixed at deployment"* with
+  the before/after table, the do/don't for building the domain, and a note for issuers who intend to use
+  `setName` on a Permit deployment to confirm their integrators read `eip712Domain()`.
+- `doc/modules/core/ERC20Base/ERC20base.md` — a cross-referencing note on the `setName(string)` reference entry.
+
+The Solidity edits are comments only; the bytecode is unchanged.
 
 ### NM-22 — ERC-7551 `setTerms` overload silently erases the document name (Info → **Informational — FIXED**)
 
@@ -603,6 +707,14 @@ the exact configuration the code comment forbids — and NM-3/NM-5 are documente
    emitted for infinite allowances; both emit sites emit unconditionally. Documentation fix only. **Open.**
 4. **NM-22 — ERC-7551 `setTerms` overload wipes the terms document name.** Minor, silent metadata loss.
    **Open — fix or document.**
+
+**One follow-up came out of the NM-5 analysis and is not itself an AuditAgent finding:**
+`doc/technical/access-control.md` claims that freezing a minter blocks minting (*"a frozen operator reverts with
+`ERC7943CannotSend`"*). Tracing and probing the spender argument for NM-5 showed this is not the case — the
+operator is propagated as `spender` but dropped by the mint/burn routing before any freeze check, and a frozen
+`MINTER_ROLE` holder mints successfully. The contract behaviour is intended; the documentation describes a control
+that does not exist. Worth correcting, since an operator could freeze a compromised minter and wrongly believe
+issuance is stopped. See the follow-up under NM-5.
 
 **One item deserves a decision rather than a patch:** the RuleEngine callback ordering (NM-7/9/11/16/18). The
 ordering is real and confirmed, but it is only exploitable if the fully trusted, `DEFAULT_ADMIN_ROLE`-set
