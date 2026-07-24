@@ -190,7 +190,7 @@ abstract contract CMTATBaseCore is
     * @inheritdoc ERC20Upgradeable
     */
     function approve(address spender, uint256 value) public virtual override returns (bool) {
-        _canAuthorizeAllowanceByModuleAndRevert(_msgSender(), spender);
+        _canAuthorizeAllowanceByModuleAndRevert(_msgSender(), spender, value);
         return ERC20Upgradeable.approve(spender, value);
     }
     /*

@@ -33,7 +33,9 @@ abstract contract CMTATBaseERC1363 is ERC1363Upgradeable, CMTATBaseERC7551Enforc
     
     /* ============ State functions ============ */
     /**
-    * @dev revert if the contract is in pause state
+    * @dev revert if the contract is in pause state, unless `value` is zero:
+    * setting an allowance to zero is a revocation and stays available while paused
+    * or while the owner/spender is frozen or off the allowlist.
     * @inheritdoc ERC20Upgradeable
     */
     function approve(address spender, uint256 value) public virtual override(ERC20Upgradeable, CMTATBaseERC7551Enforcement, IERC20) returns (bool) {

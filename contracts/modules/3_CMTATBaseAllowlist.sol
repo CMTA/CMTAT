@@ -112,7 +112,9 @@ abstract contract CMTATBaseAllowlist is
                 Functions requiring several modules
     //////////////////////////////////////////////////////////////*/
     /**
-    * @dev revert if the contract is in pause state
+    * @dev revert if the contract is in pause state, unless `value` is zero:
+    * setting an allowance to zero is a revocation and stays available while paused
+    * or while the owner/spender is frozen or off the allowlist.
     * @notice Changing a non-zero allowance to another non-zero value carries the standard
     * ERC-20 allowance race condition: a spender who observes the pending transaction can
     * front-run it and spend the old allowance before the new value takes effect.
@@ -120,8 +122,10 @@ abstract contract CMTATBaseAllowlist is
     * if strict control over the total amount a spender can consume is required.
     * @inheritdoc ERC20Upgradeable
     */
-    function approve(address spender, uint256 value) public virtual override(ERC20Upgradeable) whenNotPaused returns (bool) {
-        _canAuthorizeAllowanceByModuleAndRevert(_msgSender(), spender);
+    function approve(address spender, uint256 value) public virtual override(ERC20Upgradeable) returns (bool) {
+        // The pause check lives in _canAuthorizeAllowanceByModuleAndRevert, which lets a
+        // revocation (value == 0) through. A `whenNotPaused` modifier here would block it.
+        _canAuthorizeAllowanceByModuleAndRevert(_msgSender(), spender, value);
         return ERC20Upgradeable.approve(spender, value);
     }
 

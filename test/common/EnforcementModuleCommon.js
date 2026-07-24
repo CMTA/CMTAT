@@ -351,6 +351,60 @@ function EnforcementModuleCommon () {
         .withArgs(this.address2.address)
     })
 
+    /*
+     * NM-3 (Nethermind AuditAgent v3.3.0-rc2): revoking an allowance must remain
+     * possible when the spender (or the owner) is frozen. Freezing a spender is
+     * precisely when a holder most needs to cut the approval, and the previous
+     * behaviour left the stale allowance live until the freeze was lifted.
+     */
+    it('testCanRevokeAllowanceWhenSpenderIsFrozen', async function () {
+      if (this.generic) {
+        return
+      }
+      // Arrange: address1 approves address3, then address3 gets frozen
+      await this.cmtat.connect(this.address1).approve(this.address3, 20)
+      await this.cmtat
+        .connect(this.admin)
+        .setAddressFrozen(this.address3, true, reasonFreeze)
+
+      // Act + Assert: revocation goes through
+      await expect(this.cmtat.connect(this.address1).approve(this.address3, 0))
+        .to.not.be.reverted
+      expect(
+        await this.cmtat.allowance(this.address1, this.address3)
+      ).to.equal(0)
+    })
+
+    it('testCanRevokeAllowanceWhenOwnerIsFrozen', async function () {
+      if (this.generic) {
+        return
+      }
+      await this.cmtat.connect(this.address1).approve(this.address3, 20)
+      await this.cmtat
+        .connect(this.admin)
+        .setAddressFrozen(this.address1, true, reasonFreeze)
+
+      await expect(this.cmtat.connect(this.address1).approve(this.address3, 0))
+        .to.not.be.reverted
+      expect(
+        await this.cmtat.allowance(this.address1, this.address3)
+      ).to.equal(0)
+    })
+
+    it('testCannotGrantAllowanceWhenSpenderIsFrozen', async function () {
+      if (this.generic) {
+        return
+      }
+      // The carve-out must not open non-zero grants to a frozen spender
+      await this.cmtat
+        .connect(this.admin)
+        .setAddressFrozen(this.address3, true, reasonFreeze)
+
+      await expect(this.cmtat.connect(this.address1).approve(this.address3, 20))
+        .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotSend')
+        .withArgs(this.address3.address)
+    })
+
     it('testCannotTransferTokenWhenSpenderIsFrozenWithTransferFrom', async function () {
       const AMOUNT_TO_TRANSFER = 10
       // Arrange

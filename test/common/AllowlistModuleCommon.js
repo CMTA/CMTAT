@@ -491,6 +491,34 @@ function AllowlistModuleCommon () {
         .withArgs(this.address1.address)
     })
 
+    /*
+     * NM-3 (Nethermind AuditAgent v3.3.0-rc2): delisting a spender must not trap
+     * the holder's existing allowance. Revocation (value == 0) stays available.
+     */
+    it('testCanRevokeAllowanceWhenSpenderIsNotAllowlisted', async function () {
+      const AMOUNT_TO_APPROVE = 10n
+      await this.cmtat
+        .connect(this.admin)
+        .setAddressAllowlist(this.address1, true, reasonAllowlist)
+      await this.cmtat
+        .connect(this.admin)
+        .setAddressAllowlist(this.address2, true, reasonAllowlist)
+      await this.cmtat
+        .connect(this.address1)
+        .approve(this.address2, AMOUNT_TO_APPROVE)
+
+      // Spender falls out of compliance
+      await this.cmtat
+        .connect(this.admin)
+        .setAddressAllowlist(this.address2, false, reasonAllowlist)
+
+      await expect(this.cmtat.connect(this.address1).approve(this.address2, 0))
+        .to.not.be.reverted
+      expect(
+        await this.cmtat.allowance(this.address1, this.address2)
+      ).to.equal(0)
+    })
+
     it('testCannotApproveWhenSpenderIsNotAllowlisted', async function () {
       const AMOUNT_TO_APPROVE = 10n
       await this.cmtat
