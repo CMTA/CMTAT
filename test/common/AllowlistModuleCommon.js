@@ -1,4 +1,4 @@
-const { ALLOWLIST_ROLE, ZERO_ADDRESS } = require('../utils')
+const { ALLOWLIST_ROLE, ZERO_ADDRESS, MINTER_ROLE } = require('../utils')
 const { expect } = require('chai')
 
 const REASON_ALLOWLIST_STRING = 'testAllowlist'
@@ -577,6 +577,40 @@ function AllowlistModuleCommon () {
       )
         .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotReceive')
         .withArgs(this.address3)
+    })
+
+    it('testMinterNotAllowlistedCanStillMint', async function () {
+      // The operator/minter is NOT required to be allowlisted: mint validates the recipient,
+      // not the caller. A minter that is not on the allowlist can still mint to an allowlisted
+      // recipient. (The context beforeEach leaves every address de-allowlisted.)
+      await this.cmtat.connect(this.admin).grantRole(MINTER_ROLE, this.address1)
+      await this.cmtat
+        .connect(this.admin)
+        .setAddressAllowlist(this.address2, true, reasonAllowlist)
+      expect(await this.cmtat.isAllowlisted(this.address1)).to.equal(false)
+
+      await expect(this.cmtat.connect(this.address1).mint(this.address2, 10n)).to
+        .not.be.reverted
+      expect(await this.cmtat.balanceOf(this.address2)).to.equal(10n)
+    })
+
+    it('testMinterNotAllowlistedCanStillBatchMint', async function () {
+      await this.cmtat.connect(this.admin).grantRole(MINTER_ROLE, this.address1)
+      await this.cmtat
+        .connect(this.admin)
+        .setAddressAllowlist(this.address2, true, reasonAllowlist)
+      await this.cmtat
+        .connect(this.admin)
+        .setAddressAllowlist(this.address3, true, reasonAllowlist)
+      expect(await this.cmtat.isAllowlisted(this.address1)).to.equal(false)
+
+      await expect(
+        this.cmtat
+          .connect(this.address1)
+          .batchMint([this.address2.address, this.address3.address], [10n, 20n])
+      ).to.not.be.reverted
+      expect(await this.cmtat.balanceOf(this.address2)).to.equal(10n)
+      expect(await this.cmtat.balanceOf(this.address3)).to.equal(20n)
     })
 
     /* //////////////////////////////////////////////////////////////

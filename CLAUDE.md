@@ -81,6 +81,18 @@ npm run coverage              # Generate coverage report
 npm run hardhat:compile       # Compile contracts
 ```
 
+## Test Catalogue
+
+The test suite is catalogued per feature module and per deployment version in **[doc/test/Test.md](doc/test/Test.md)**
+— a hand-maintained map whose purpose is to make **missing tests easy to find**.
+
+**Whenever you add, change or remove a test, update `doc/test/Test.md` in the same change:**
+- test added → adjust the module's `it` count / scenario, and add a matrix row or column if it covers a new feature or variant;
+- test removed → remove it, and note any resulting coverage gap;
+- new deployment variant or shared test module → add the corresponding matrix column / row and module-reference entry.
+
+An out-of-date catalogue is worse than none — keep it in sync.
+
 ## Test Troubleshooting
 
 If tests fail with gas reporter / Mocha reporter errors (for example `ERR_MOCHA_INVALID_REPORTER` with `eth-gas-reporter`), run tests with gas reporting disabled:

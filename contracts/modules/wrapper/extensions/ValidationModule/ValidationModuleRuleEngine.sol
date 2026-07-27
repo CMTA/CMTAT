@@ -148,10 +148,11 @@ abstract contract ValidationModuleRuleEngine is
     * `frozenTokens <= balanceOf` invariant.
     *
     * The external call is isolated in {_callRuleEngineTransferred}, which is `virtual` so that a
-    * deployment variant can wrap it in a reentrancy guard by inheriting
-    * {ValidationModuleRuleEngineReentrancyGuard}.
+    * deployment variant can wrap it in a reentrancy guard by inheriting OpenZeppelin's
+    * `ReentrancyGuardTransient` and overriding {_callRuleEngineTransferred} with `nonReentrant`
+    * (see e.g. `contracts/deployment/CMTATStandardStandalone.sol`).
     *
-    * WARNING - the guard is **not** enabled on every variant. It costs ~187 bytes of deployed
+    * WARNING - the guard is **not** enabled on every variant. It costs ~195 bytes of deployed
     * bytecode, and several variants are within a few hundred bytes of the EIP-170 24 KiB limit, so
     * enabling it there would make them undeployable. Variants without the guard rely on the standard
     * CMTAT trust assumption: the RuleEngine is set by `DEFAULT_ADMIN_ROLE`, is fully trusted, and
@@ -174,9 +175,9 @@ abstract contract ValidationModuleRuleEngine is
     * @dev Performs the RuleEngine `transferred` call.
     *
     * Declared `virtual` so a deployment variant can wrap it in a reentrancy guard by overriding it
-    * with {ValidationModuleRuleEngineReentrancyGuard}. The base implementation is **unguarded**: see
-    * the security note on {_transferred} for which variants enable the guard and why it is not
-    * enabled everywhere.
+    * with `nonReentrant` (inheriting OpenZeppelin's `ReentrancyGuardTransient`). The base
+    * implementation is **unguarded**: see the security note on {_transferred} for which variants
+    * enable the guard and why it is not enabled everywhere.
     */
     function _callRuleEngineTransferred(
         IRuleEngine ruleEngine_,

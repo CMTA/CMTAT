@@ -161,6 +161,46 @@ function PermitModuleCommon () {
         .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotSend')
         .withArgs(spender)
     })
+
+    // NM-3 / NM-8: a zero-value permit is a *revocation* and must stay available even while paused
+    // or while the owner/spender is frozen — the same carve-out already tested for `approve`.
+    async function grantThenExpectZeroValuePermitAllowed (ctx, restrict) {
+      const owner = await ctx.permitOwner.getAddress()
+      const spender = await ctx.permitSpender.getAddress()
+      // Set a non-zero allowance first (unrestricted)
+      const grant = await ctx.signPermit()
+      await ctx.cmtat
+        .connect(ctx.address3)
+        .permit(owner, spender, grant.value, grant.deadline, grant.v, grant.r, grant.s)
+      expect(await ctx.cmtat.allowance(owner, spender)).to.equal(PERMIT_VALUE)
+      // Apply the restriction, then revoke with a zero-value permit
+      await restrict(owner, spender)
+      const revoke = await ctx.signPermit({ value: 0n })
+      await expect(
+        ctx.cmtat
+          .connect(ctx.address3)
+          .permit(owner, spender, revoke.value, revoke.deadline, revoke.v, revoke.r, revoke.s)
+      ).to.not.be.reverted
+      expect(await ctx.cmtat.allowance(owner, spender)).to.equal(0n)
+    }
+
+    it('allows a zero-value permit (revocation) while paused', async function () {
+      await grantThenExpectZeroValuePermitAllowed(this, async () => {
+        await this.cmtat.connect(this.admin).pause()
+      })
+    })
+
+    it('allows a zero-value permit (revocation) when the owner is frozen', async function () {
+      await grantThenExpectZeroValuePermitAllowed(this, async (owner) => {
+        await this.cmtat.connect(this.admin).setAddressFrozen(owner, true)
+      })
+    })
+
+    it('allows a zero-value permit (revocation) when the spender is frozen', async function () {
+      await grantThenExpectZeroValuePermitAllowed(this, async (owner, spender) => {
+        await this.cmtat.connect(this.admin).setAddressFrozen(spender, true)
+      })
+    })
   })
 }
 

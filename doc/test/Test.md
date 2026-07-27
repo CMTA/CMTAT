@@ -142,7 +142,7 @@ scenarios list the `context(...)` groups.
 | DebtEngine | `DebtModule/DebtEngineModuleCommon.js` | 3 | Delegated debt reads via engine. |
 | CrossChain | `ERC20CrossChainModuleCommon.js` | 32 | ERC-7802 `crosschainMint`/`crosschainBurn`, `burnFrom`, self-burn; `onlyTokenBridge`; RuleEngine spender propagation. |
 | CCIP | `CCIPModuleCommon.js` | 3 | `setCCIPAdmin` access control. |
-| Permit | `PermitModuleCommon.js` | 5 | ERC-2612 `permit` (valid, paused, frozen). ⚠️ *No zero-value permit revocation test yet — see AUDIT_NETHERMIND_IMP I-3.* |
+| Permit | `PermitModuleCommon.js` | 8 | ERC-2612 `permit` (valid, expired, paused, owner/spender frozen); **zero-value permit revocation allowed while paused / owner or spender frozen** (NM-3/8). |
 | Multicall | `MulticallModuleCommon.js` | 2 | ERC-6357 batching. |
 | MetaTx | `MetaTxModuleCommon.js` + `MetaTxMsgDataCommon.js` | 4 | ERC-2771 gasless (`_msgSender`), `_msgData` coverage. |
 

@@ -45,11 +45,11 @@ Custom changelog tag: `Dependencies`, `Documentation`, `Testing`
 
 ## 3.3.0 - rc3
 
-## 3.3.0 - rc2 - 2026-07-24
+## 3.3.0 - rc2 - 2026-07-23
 
 > **Note:** This version has not been audited.
 
-Commit: 35d8940b40943828c5ea407dc6b22d559d92e4ae
+Commit: `35d8940b40943828c5ea407dc6b22d559d92e4ae`
 
 ### Smart contract
 
@@ -420,7 +420,19 @@ Commit: `49544f4de1993008acfc9e848d0bf03bd31d8579`
 
 ## 3.1.0 - 2025-12-09
 
+Commit: `9c96c8eed903cb092e37b089316515ecefbd10fe`
+
 > This version is not audited
+
+**Issue**
+
+Known issue for this release
+
+- [Frozen tokens may exceed balance and break active-balance assumptions](https://github.com/CMTA/CMTAT/issues/375) (medium)
+
+- [Operator/Spender Identity Lost in RuleEngine Hooks (burn/mint/cross-chain)](https://github.com/CMTA/CMTAT/issues/376) (low)
+- [Operator/Spender Identity Lost in RuleEngine Hooks (burn/mint/cross-chain)](https://github.com/CMTA/CMTAT/issues/376)(Informational)
+- [setAddressFrozen(address(0)) should be rejected](https://github.com/CMTA/CMTAT/issues/372)
 
 **Fixed**
 
@@ -466,13 +478,26 @@ Commit: `49544f4de1993008acfc9e848d0bf03bd31d8579`
 - Add summary tab for CMTAT framework functionalities to help build CMTAT version for other blockchains
 - Add audit reports made by [Nethermind Audit Agents](https://auditagent.nethermind.io)
 
-
 ## 3.0.0 - 2025-08-28
 
-- Major release audited by [Halborn](https://www.halborn.com)
-- Improved comments and documentation
+Commit: `69eecc9735ce8ada84fd35801888b05747658939`
 
-See changelogs of the rc versions for details.
+Major release audited by [Halborn](https://www.halborn.com)
+
+**Issue** 
+
+Known issues for this release:
+
+- [Misleading NatSpec Comments](https://github.com/CMTA/CMTAT/issues/330)
+- [Incorrect error parameters in _unfreezeTokens](https://github.com/CMTA/CMTAT/issues/329)
+- [CMTATUpgradeableUUPS contract may be not initializable](https://github.com/CMTA/CMTAT/issues/327)
+- [CMTATBaseAllowlist - Redundant State Checks](https://github.com/CMTA/CMTAT/issues/332)
+- [Snpashot update - CEI pattern](https://github.com/CMTA/CMTAT/issues/326)
+- [Operator/Spender Identity Lost in RuleEngine Hooks (burn/mint/cross-chain)](https://github.com/CMTA/CMTAT/issues/376) (low)
+
+Difference with v.3.0.0 rc version:
+- Improved comments and documentation
+- See changelogs of the rc versions for details.
 
 Main changes with the last audited release (v2.3.0):
 
