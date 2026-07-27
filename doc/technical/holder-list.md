@@ -96,4 +96,9 @@ So the marginal cost of this module on such a transfer is roughly **two warm `SL
 
 ## Use Case
 
-The on-chain holder set supports issuer reporting and corporate actions (e.g. enumerating shareholders for a distribution or a vote) without reconstructing the list from the full transfer history off-chain. For dividend-style *balance-at-a-block* queries, use the [Snapshot Engine](./snapshot.md) / [CMTA/SnapshotEngine](https://github.com/CMTA/SnapshotEngine) instead — the holder list tracks *current* membership, not historical balances.
+The on-chain holder set supports issuer reporting and corporate actions (e.g. enumerating shareholders for a distribution or a vote) without reconstructing the list from the full transfer history off-chain.
+
+For dividend-style *balance-at-a-block* queries, the holder list itself only tracks **current** membership, not historical balances — so the right tool depends on *where* the query runs:
+
+- **Off-chain** (indexers, distribution scripts, reporting): you do **not** need the Snapshot Engine. Call the read functions with `eth_call` pinned to a historical block number — `balanceOf`, `holdersInRange`, `holderCount` all return the state as of that block. This gives a consistent balance-at-a-block view for free, and is the recommended approach for off-chain dividend computation. Read the whole set at a single fixed block for a coherent snapshot (see [Security Considerations](#security-considerations) on windowed reads).
+- **On-chain** (a contract that must act on a past balance during execution — e.g. an on-chain dividend or voting contract that reads a snapshot value): historical state is not available to the EVM, so use the [Snapshot Engine](./snapshot.md) / [CMTA/SnapshotEngine](https://github.com/CMTA/SnapshotEngine), which records balances at scheduled points and exposes them on-chain.
