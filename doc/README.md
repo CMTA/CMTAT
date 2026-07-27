@@ -3057,6 +3057,8 @@ A code coverage is available in [index.html](./test/coverage/index.html).
 
 ![coverage](./general/coverage.png)
 
+The full test suite is catalogued per feature module and per deployment version in **[test/Test.md](./test/Test.md)** — a hand-maintained map (module × deployment-version coverage matrix, per-module scenario reference) whose purpose is to make **missing tests easy to find**. It must be updated whenever a test is added, changed or removed.
+
 ## Usage
 
 More details are available in the file [USAGE.md](./USAGE.md)

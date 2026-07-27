@@ -35,7 +35,7 @@ function setCCIPAdmin(address newAdmin) public virtual  // DEFAULT_ADMIN_ROLE
 The CCIP pool must be granted the required `MINTER_ROLE` and `BURNER_FROM_ROLE` (or `BURNER_SELF_ROLE`) to operate.
 
 **Note**: Pausing the contract via `PauseModule` does **not** block `MintModule.mint()`, so CCIP minting still works while paused. However, `burnFrom`, `crosschainMint`, and `crosschainBurn` all have `whenNotPaused` checks and are blocked while paused. To block minting during a pause, revoke `MINTER_ROLE` from the CCIP pool.  
-With spender-aware compliance enabled, freezing the minter/operator address (`setAddressFrozen`) also blocks mint because the operator is checked as spender in RuleEngine/compliance hooks.
+Freezing the pool's address with `setAddressFrozen` does **not** block its `mint` / `crosschainMint`: CMTAT's own freeze logic checks the *recipient*, not the operator, so a frozen minter can still mint. On a RuleEngine deployment (e.g. Standard) the operator is forwarded to the configured RuleEngine as the `spender` argument of `transferred(...)`, so a RuleEngine *rule* may reject the mint on that basis — but the base contract does not, and the Light variant has no RuleEngine. To stop a compromised pool from minting, **revoke its `MINTER_ROLE`**. See [access-control.md](./access-control.md#what-freeze-and-pause-block-per-operation).
 
 #### Why the cross-chain path is pause-gated (but issuer mint/burn is not)
 

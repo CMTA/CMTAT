@@ -1106,35 +1106,37 @@ proxies are initialized atomically, a precondition the report itself admits it d
 remaining three Mediums, NM-4 requires an administrator to grant `CROSS_CHAIN_ROLE` to the ERC-2771 forwarder —
 the exact configuration the code comment forbids — and NM-3/NM-5 are documented design positions.
 
-**Two defects were fixed; two minor items remain open:**
+**All actionable items have been resolved. No item remains open.** The four defects and the reentrancy cluster
+were fixed in code where warranted; the rest were documented. Summary:
 
 1. **NM-15 / NM-17 — `_setFrozenTokens` missing the zero-address guard** (`ERC20EnforcementModuleInternal.sol`).
-   An `ERC20ENFORCER_ROLE` holder could halt all minting protocol-wide with one call. Privileged,
-   self-recoverable, no fund loss — but it contradicted the guard already present in the sibling functions in the
-   same file, and in `EnforcementModule`'s full-address freeze path. **FIXED** (guard added, 5 regression tests;
-   a pre-existing test that pinned the buggy behaviour under a misleading name was removed).
-2. **NM-3 / NM-8 — allowance revocation blocked while paused or restricted**
-   (`ValidationModuleAllowance.sol` + 4 call sites). A holder could not zero out a stale allowance to a
-   compromised, frozen or delisted spender for the duration of the restriction. **FIXED** — `value == 0` is now
-   always authorized; non-zero grants remain gated exactly as before (7 regression tests, including two negative
-   guards).
-3. **NM-24 — `IERC20Allowance.Spend` NatSpec contradicts the implementation.** The interface says the event is not
-   emitted for infinite allowances; both emit sites emit unconditionally. Documentation fix only. **Open.**
-4. **NM-22 — ERC-7551 `setTerms` overload wipes the terms document name.** Minor, silent metadata loss.
-   **Open — fix or document.**
+   An `ERC20ENFORCER_ROLE` holder could halt all minting protocol-wide with one call. **FIXED** — guard added
+   (matching the sibling functions), 5 regression tests; the pre-existing test that pinned the bug under a
+   misleading name was removed.
+2. **NM-3 / NM-8 — allowance revocation blocked while paused or restricted** (`ValidationModuleAllowance.sol` +
+   4 call sites). **FIXED** — `value == 0` is always authorized; non-zero grants remain gated exactly as before
+   (7 regression tests, two of them negative guards).
+3. **NM-24 — `Spend` event contradicts its NatSpec, and `forcedTransfer` consumed allowance silently.** **FIXED** —
+   the `IERC20Allowance.Spend` NatSpec was corrected, and `_forcedTransfer` now emits `Spend` on the allowance
+   reduction (4 regression tests). The residual `transferFrom`/`burnFrom` cosmetic inconsistency is documented in
+   `doc/technical/allowance-spend-event.md` as an optional future improvement.
+4. **NM-22 — ERC-7551 `setTerms` overload wiped the terms document name.** **FIXED** — name-preserving overload
+   (`_setTermsDocument`), 1 regression test; the test that pinned the erasure was corrected.
+5. **NM-7 / NM-9 / NM-11 / NM-16 / NM-18 — RuleEngine callback reentrancy.** **FIXED where it fits** — the external
+   callback is isolated in a `virtual` `_callRuleEngineTransferred`, wrapped in OpenZeppelin's
+   `ReentrancyGuardTransient` (`nonReentrant`) on the deployment variants with bytecode headroom (Standard,
+   Snapshot, ERC-7551). The variants without headroom stay unguarded **by design**, and the trust assumption (the
+   `DEFAULT_ADMIN_ROLE`-set RuleEngine must not hand control to untrusted code) is now documented with a
+   per-variant table in
+   [`doc/modules/controllers/validationRuleEngine.md`](../../../../modules/controllers/validationRuleEngine.md).
+   Malicious-engine mock + 7 regression tests.
 
-**One follow-up came out of the NM-5 analysis and is not itself an AuditAgent finding:**
-`doc/technical/access-control.md` claims that freezing a minter blocks minting (*"a frozen operator reverts with
-`ERC7943CannotSend`"*). Tracing and probing the spender argument for NM-5 showed this is not the case — the
-operator is propagated as `spender` but dropped by the mint/burn routing before any freeze check, and a frozen
-`MINTER_ROLE` holder mints successfully. The contract behaviour is intended; the documentation describes a control
-that does not exist. Worth correcting, since an operator could freeze a compromised minter and wrongly believe
-issuance is stopped. See the follow-up under NM-5.
-
-**One item deserves a decision rather than a patch:** the RuleEngine callback ordering (NM-7/9/11/16/18). The
-ordering is real and confirmed, but it is only exploitable if the fully trusted, `DEFAULT_ADMIN_ROLE`-set
-RuleEngine hands control to untrusted code. That trust assumption is what makes CMTAT safe here, and it is
-currently **undocumented** — it should be written into
-[`doc/modules/controllers/validationRuleEngine.md`](../../../../modules/controllers/validationRuleEngine.md).
-Whether to additionally add a `nonReentrant` guard or move the callback after `_transfer` is a cost/semantics
-trade-off for CMTA, not a defect to be patched silently.
+**The NM-5 documentation follow-up is also resolved.** `doc/technical/access-control.md` previously claimed a
+frozen operator cannot mint. Probing showed the opposite — CMTAT's own freeze checks the recipient, not the
+operator, so a frozen `MINTER_ROLE` holder mints successfully (a configured RuleEngine may still reject via the
+spender it receives; the Light variant has no RuleEngine). The behaviour is intended and unchanged; the
+documentation was corrected across `access-control.md` (with a per-operation/per-deployment table), `doc/README.md`,
+`ERC20Mint.md` and `cross-chain-bridge-integration.md`, and locked in by tests (`testFrozenMinterCanStillMint` /
+`…BatchMint`, verified on Standard, Light and Allowlist; `testMintPropagatesSpenderToRuleEngine` for the RuleEngine
+rejection path). The Light `_minterTransferOverride` was additionally aligned to pass `_msgSender()` (behaviour-
+neutral).
