@@ -71,14 +71,15 @@ Here are the reports produced by [Nethermind Audit Agent](https://auditagent.net
 
 | Version | High | Medium | Low | Info | Best practices | Anything to fix? |
 | ------- | ---: | -----: | --: | ---: | -------------: | ---------------- |
-| v3.3.0-rc2 | 1 | 4 | 3 | 14 | 2 | **3 defects fixed** (NM-15/17 zero-address guard, NM-3/8 allowance revocation, NM-22 terms name) + NM-4, NM-6, NM-20 and NM-21 documented; 1 item open (NM-24 NatSpec). Nothing exploitable; the High is a false positive. |
+| v3.3.0-rc2 | 1 | 4 | 3 | 14 | 2 | **3 defects fixed** (NM-15/17 zero-address guard, NM-3/8 allowance revocation, NM-22 terms name), NM-7 cluster partially fixed (reentrancy guard where size permits); NM-4/6/20/21/24 documented. Nothing exploitable; the High is a false positive; **no open item**. |
 | v3.1.0 | 2 | 2 | 10 | — | — | No — 7 invalid, 7 design choices. |
 
 ### v3.3.0-rc2 (Scan ID 9, 2026-07-23, commit `35d8940b…9d92e4ae`)
 
 **24 findings** (1 high, 4 medium, 3 low, 14 info, 2 best practices) across 100 contracts / 8067 LoC. Triage
-outcome: **5 fixed · 14 accepted as design · 4 rejected (false positive / false premise) · 1 fix recommended**
-(NM-15/NM-17 and NM-3/NM-8 are duplicate pairs, so the five cover three distinct defects).
+outcome: **5 fixed (behaviour) · 1 fixed doc-only (NM-24) · 14 accepted as design · 4 rejected (false positive /
+false premise)** (NM-15/NM-17 and NM-3/NM-8 are duplicate pairs, so the five behaviour fixes cover three distinct
+defects; the NM-7 cluster is additionally guarded on the variants with bytecode headroom).
 
 | ID | Title | Severity (tool → CMTA) | Disposition |
 | --- | --- | --- | --- |
@@ -88,21 +89,22 @@ outcome: **5 fixed · 14 accepted as design · 4 rejected (false positive / fals
 | NM-4 | Inconsistent context resolution (`msg.sender` vs `_msgSender()`) in the bridge gate | Medium → Info | Rejected (intentional) — **deployment constraint documented** (never grant `CROSS_CHAIN_ROLE` to the ERC-2771 forwarder) |
 | NM-5 | Missing freeze enforcement on `spender` for `burnFrom` / minter transfers | Medium → Info | Design choice (spender propagation traced + probed; freeze is a holder-level control, `revokeRole` is the operator lever) |
 | NM-6 | Zero-value delegated transfers mutate RuleEngine state | Low → Info | Design choice (RuleEngine responsibility) — **documented** in `IRuleEngine` NatSpec + RuleEngine integration notes |
-| NM-7, NM-9, NM-11, NM-16, NM-18 | RuleEngine callback runs before balance effects (reentrancy ordering) | Low / Info ×4 → Low | Design choice (trusted RuleEngine) — **document the trust assumption** |
+| NM-7, NM-9, NM-11, NM-16, NM-18 | RuleEngine callback runs before balance effects (reentrancy ordering) | Low / Info ×4 → Low | **Partially fixed** — OZ `ReentrancyGuardTransient` on variants with bytecode headroom (Standard, Snapshot, ERC-7551); others documented (trusted RuleEngine) |
 | NM-8 | Allowance revocation blocked for frozen/non-allowlisted spenders | Low → Low | **Fixed** (same change as NM-3) |
 | NM-10 | Documented two-step default-admin protection is absent | Info → Info | Rejected (false premise — quotes OpenZeppelin's own comment) |
 | NM-12 | `setDocument` emits raw inputs instead of the engine post-state | Info → Info | Design choice (documented dual-emission) |
-| NM-13, NM-14, NM-19 | Engine setters accept `address(this)` / non-compliant addresses | Info ×3 → Info | Design choice (privileged, recoverable) |
+| NM-13, NM-14, NM-19 | Engine setters accept `address(this)` / non-compliant addresses | Info ×3 → Info | Design choice (privileged, recoverable) — ERC-165 hardening tracked in [#395](https://github.com/CMTA/CMTAT/issues/395) |
 | **NM-15, NM-17** | **`setFrozenTokens` can freeze the zero address and brick all mint paths** | **Info ×2 → Low** | **Fixed** |
 | NM-20 | Pausing disables privileged burn interfaces | Info → Info | Design choice — **documented**; pause stops **third-party/bridge** supply ops (`burnFrom`, self-burn, `crosschainMint/Burn`), **issuer** ops (`BURNER_ROLE` burn, mint, enforcement) survive |
 | NM-21 | Mutable token name desynchronizes the EIP-712 domain separator | Info → Info | Design choice — **documented**; probed: `permit` still works via ERC-5267 `eip712Domain()`, so the reported DoS does not occur |
 | **NM-22** | **ERC-7551 `setTerms` overload silently erases the document name** | **Info → Info** | **Fixed** |
 | NM-23 | `detectTransferRestrictionFrom` reports `SPENDER_FROZEN` before deactivated/paused | Best practice → Info | Design choice (reporting nit, no bypass) |
-| **NM-24** | **Unconditional `Spend` emission contradicts `IERC20Allowance` NatSpec** | **Best practice → Info** | **Fix recommended (NatSpec)** |
+| **NM-24** | **Unconditional `Spend` emission contradicts `IERC20Allowance` NatSpec** | **Best practice → Info** | **Fixed (doc-only)** — NatSpec corrected; consistency improvement in [allowance-spend-event.md](../technical/allowance-spend-event.md) |
 
 **Nothing exploitable by an unprivileged actor and no funds at risk.** The single High and its Medium duplicate
-are false positives (implementations call `_disableInitializers()`; proxies are initialized atomically). One item
-remains open: the stale `IERC20Allowance.Spend` NatSpec (NM-24). Full rationale per finding: [feedback](./tools/nethermind-audit-agent/v3.3.0-rc2/audit_agent_report_v3.3.0-rc2-feedback.md).
+are false positives (implementations call `_disableInitializers()`; proxies are initialized atomically). The last
+best-practice item, the stale `IERC20Allowance.Spend` NatSpec (NM-24), has been corrected (doc-only), leaving **no
+open item**. Full rationale per finding: [feedback](./tools/nethermind-audit-agent/v3.3.0-rc2/audit_agent_report_v3.3.0-rc2-feedback.md).
 
 **Substantive findings addressed in this release:**
 

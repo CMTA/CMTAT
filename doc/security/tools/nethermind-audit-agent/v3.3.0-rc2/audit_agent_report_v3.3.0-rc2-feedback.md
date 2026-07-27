@@ -50,12 +50,14 @@ Debt, DebtEngine, HolderList, Permit, Snapshot, ERC-1363, ERC-7551, Light), `con
 
 ## Outcome
 
-**5 fixed · 14 accepted as design · 4 rejected (false positive / false premise) · 1 fix recommended** = 24.
+**5 fixed (behaviour) · 1 fixed (doc-only, NM-24) · 14 accepted as design · 4 rejected (false positive / false premise)** = 24.
 
-Three defects were fixed: **NM-15/NM-17** (zero-address freeze bricking every mint path), **NM-3/NM-8** (allowance
-revocation blocked while paused or restricted) and **NM-22** (ERC-7551 `setTerms` erasing the document name).
-NM-6 was additionally **documented** rather than changed. The one remaining "fix recommended" item (NM-24) is a
-NatSpec correction. None of the 24 findings is exploitable by an unprivileged actor.
+Three defects were fixed in behaviour: **NM-15/NM-17** (zero-address freeze bricking every mint path),
+**NM-3/NM-8** (allowance revocation blocked while paused or restricted) and **NM-22** (ERC-7551 `setTerms` erasing
+the document name). The **NM-7 cluster** (RuleEngine reentrancy) is guarded on the deployment variants that have
+bytecode headroom. **NM-24** was resolved doc-only (the `IERC20Allowance.Spend` NatSpec was corrected). NM-4, NM-6,
+NM-20 and NM-21 were documented rather than changed. **No item is left open**, and none of the 24 findings is
+exploitable by an unprivileged actor.
 
 ## Findings triage
 
@@ -67,24 +69,24 @@ NatSpec correction. None of the 24 findings is exploitable by an unprivileged ac
 | NM-4 | Medium → Informational | Rejected (design; misconfiguration precondition) — **documented** | Closed — deployment constraint documented |
 | NM-5 | Medium → Informational | Accepted as design — spender propagation traced and probed | Accepted (see follow-up on `access-control.md`) |
 | NM-6 | Low → Informational | Accepted as design (RuleEngine responsibility) — **documented** | Accepted — doc + NatSpec added |
-| NM-7 | Low → Low | Accepted as design (trusted-RuleEngine model) | Accepted |
+| NM-7 | Low → Low | **Partially fixed** — guard on variants with size headroom | **Fixed (guarded variants)** / documented elsewhere |
 | NM-8 | Low → Low | **Fixed (same change as NM-3)** | **Fixed** |
-| NM-9 | Info → Low | Accepted as design (duplicate of NM-7) | Accepted |
+| NM-9 | Info → Low | **Partially fixed (same change as NM-7)** | **Fixed (guarded variants)** |
 | NM-10 | Info → Informational | Rejected (false premise) | Closed |
-| NM-11 | Info → Low | Accepted as design (duplicate of NM-7) | Accepted |
+| NM-11 | Info → Low | **Partially fixed (same change as NM-7)** | **Fixed (guarded variants)** |
 | NM-12 | Info → Informational | Accepted as design | Accepted |
-| NM-13 | Info → Informational | Accepted as design | Accepted |
-| NM-14 | Info → Informational | Accepted as design | Accepted |
+| NM-13 | Info → Informational | Accepted as design — hardening tracked | Accepted ([#395](https://github.com/CMTA/CMTAT/issues/395)) |
+| NM-14 | Info → Informational | Accepted as design — hardening tracked | Accepted ([#395](https://github.com/CMTA/CMTAT/issues/395)) |
 | **NM-15** | **Info → Low** | **Fixed** | **Fixed** — zero-address guard in `_setFrozenTokens` |
-| NM-16 | Info → Low | Accepted as design (duplicate of NM-7) | Accepted |
+| NM-16 | Info → Low | **Partially fixed (same change as NM-7)** | **Fixed (guarded variants)** |
 | **NM-17** | **Info → Low** | **Fixed (same defect as NM-15)** | **Fixed** |
-| NM-18 | Info → Informational | Accepted as design (duplicate of NM-7) | Accepted |
-| NM-19 | Info → Informational | Accepted as design | Accepted |
+| NM-18 | Info → Informational | **Partially fixed (same change as NM-7)** | **Fixed (guarded variants)** |
+| NM-19 | Info → Informational | Accepted as design — hardening tracked | Accepted ([#395](https://github.com/CMTA/CMTAT/issues/395)) |
 | NM-20 | Info → Informational | Accepted as design — issuer vs third-party split, probed — **documented** | Accepted — rationale documented |
 | NM-21 | Info → Informational | Accepted as design (claim overstated) — **documented** | Accepted — doc + NatSpec added |
 | **NM-22** | **Info → Informational** | **Fixed** | **Fixed** — ERC-7551 overload preserves the name |
-| NM-23 | Best Practices → Informational | Accepted as design (optional reorder) | Accepted |
-| **NM-24** | **Best Practices → Informational** | **Fix recommended (NatSpec)** — analysis extended; `forcedTransfer` drift found | **Open** |
+| NM-23 | Best Practices → Informational | Accepted as design — reorder options + drawbacks documented | Accepted (Variant 1 suggested, not applied) |
+| **NM-24** | **Best Practices → Informational** | **Fixed (doc-only)** — NatSpec corrected; consistency improvement recorded in technical doc | **Fixed (documented)** |
 
 ---
 
@@ -376,16 +378,80 @@ NM-18's read-only-reentrancy variant is the same precondition seen from outside:
 `balanceOf`/`totalSupply` *during* a RuleEngine callback observes pre-transfer state. That again requires the
 trusted engine to hand control to untrusted code mid-callback.
 
-*Two follow-ups for CMTA (neither is a fix to a live vulnerability):*
-1. **Document the trust assumption.** `doc/modules/controllers/validationRuleEngine.md` currently describes the
-   API but never states that the RuleEngine is fully trusted and **MUST NOT** transfer control to untrusted code
-   during `transferred(...)`. That assumption is what makes this cluster non-exploitable, so it should be written
-   down rather than implied.
-2. **Optional defence in depth.** Either apply a `nonReentrant` guard to the ERC-20 entry points, or invoke the
-   RuleEngine callback *after* `ERC20Upgradeable._transfer` (checks-effects-interactions). Both have costs — gas
-   on every transfer for the guard, and a semantic change for the reordering (the engine would observe
-   post-transfer state, and could no longer veto by reverting on pre-state) — so this is a deliberate design
-   call, not a defect to be patched silently.
+#### Reproduction — the exploit is real, given its precondition
+
+The cluster was reproduced end to end before deciding anything, with a purpose-built malicious engine
+(`contracts/mocks/RuleEngine/RuleEngineReentrantMock.sol`) that performs one nested `transferFrom` during the
+`transferred` callback.
+
+A first attempt **failed**, and the failure is informative: the engine called
+`transferFrom(victim, attacker, 40)` and got `ERC20InsufficientAllowance(engine, 0, 40)`. The nested call executes
+with the *engine* as `msg.sender`, so the engine — not the attacker — needs the allowance. Reentrancy alone is not
+enough; the reentering party must already be authorized. That is exactly the precondition NM-9 states (*"if the
+rule-engine address has spender allowance from a partially frozen holder"*), and NM-16's variant (an engine that
+calls attacker-controlled code, letting the attacker's own allowance be used) is the other way to satisfy it.
+
+With the precondition satisfied, on an unguarded build:
+
+| | `balanceOf(victim)` | `frozenTokens` | attacker received | `frozenTokens <= balanceOf` |
+| --- | ---: | ---: | ---: | :---: |
+| Before | 100 | 60 (active 40) | — | holds |
+| After outer `transferFrom(victim, attacker, 40)` + one nested 40 | **20** | 60 | **80** | **BROKEN** |
+
+80 tokens moved on a 40-token unfrozen allowance, and the freeze invariant was left violated. With the guard the
+same scenario moves exactly 40 and the invariant holds.
+
+**Resolution — guard added, on the variants that can carry it.**
+
+- `ValidationModuleRuleEngine` now isolates the external call in an `internal virtual`
+  `_callRuleEngineTransferred(...)`. The base implementation is **unguarded**.
+- Deployment variants with bytecode headroom inherit OpenZeppelin's `ReentrancyGuardTransient` and override that
+  function with `nonReentrant`. The **transient (EIP-1153)** guard is used rather than the storage-based one so no
+  storage slot is added: existing upgradeable proxies keep their layout and no initializer has to run.
+- The guard is entered **only when a RuleEngine is set**, and released when the callback returns, so deployments
+  without an engine pay nothing and sequential hooks (`batchMint`, `burnAndMint`) are unaffected.
+
+**Why not everywhere — measured.** The guard costs ~195 bytes of deployed bytecode. Several variants are within a
+few hundred bytes of the EIP-170 24 576-byte limit, and enabling it there makes them **undeployable**:
+
+| Variant | Unguarded | Guard | Result |
+| --- | ---: | :---: | --- |
+| `CMTATStandaloneSnapshot` / `CMTATUpgradeableSnapshot` | 22 664 | ✅ | 22 859 |
+| `CMTATStandardStandalone` / `CMTATStandardUpgradeable` | 22 844 | ✅ | 23 039 |
+| `CMTATStandaloneERC7551` / `CMTATUpgradeableERC7551` | 23 536 | ✅ | 23 731 |
+| `CMTATStandaloneDebt` / `CMTATUpgradeableDebt` | 23 805 | ❌ | — |
+| `CMTATStandalonePermit` / `CMTATUpgradeablePermit` | 23 961 | ❌ | — |
+| `CMTATUpgradeableUUPS` | 24 176 | ❌ | — |
+| `CMTATStandaloneDebtEngine` / `CMTATUpgradeableDebtEngine` | 24 429 | ❌ | would be 24 624 — **over limit** |
+| `CMTATStandaloneERC1363` / `CMTATUpgradeableERC1363` | 24 443 | ❌ | would be 24 638 — **over limit** |
+| `CMTATStandaloneHolderList` / `CMTATUpgradeableHolderList` | 24 456 | ❌ | would be 24 651 — **over limit** |
+| Allowlist / Light variants | 20 405 / 11 562 | n/a | no RuleEngine — never reach this code |
+
+The selection rule applied is *unguarded size below 23 KiB*. An earlier iteration used a hand-rolled inline
+transient guard (119 bytes instead of 195) to fit more variants; it was **rejected** in favour of the audited
+OpenZeppelin library, because the 76 bytes saved still left `HolderList` at 1 byte of headroom — not a real margin
+— and because the hand-rolled version used `tload`/`tstore` under a `^0.8.20` pragma, which would have failed with
+a confusing assembly error on 0.8.20–0.8.23 instead of a clean pragma error.
+
+- **Tests.** `test/common/ValidationModule/RuleEngineReentrancyCommon.js` — 7 tests run against a guarded
+  standalone and a guarded proxy variant: the drain is blocked, the nested call is rejected, the reentrant call
+  reverts with `ReentrancyGuardReentrantCall` when the engine propagates it, the direct `transfer` path is guarded
+  too, and normal transfers / consecutive transfers / `batchMint` still work (proving the guard does not leak
+  across sequential callbacks).
+- **Compiler floor raised.** `ReentrancyGuardTransient` requires EIP-1153 transient storage and declares
+  `pragma solidity ^0.8.24`, so the project can no longer be compiled at 0.8.20–0.8.23. All **128** contract files
+  were moved from `^0.8.20` (and one stray `^0.8.0`) to **`^0.8.24`**, so every file declares the real floor
+  instead of a version the build does not support. The pinned compiler is unchanged (0.8.34 in `hardhat.config.js`
+  and `foundry.toml`), and the Aderyn L-3 *"Unspecific Solidity Pragma"* disposition was updated to match.
+- **Documentation.** `doc/modules/controllers/validationRuleEngine.md` gained a section with the per-variant table
+  and an explicit **WARNING** that on unguarded variants the trust assumption is load-bearing: the RuleEngine is
+  set by `DEFAULT_ADMIN_ROLE`, is fully trusted, and **MUST NOT** transfer control to untrusted code during
+  `transferred(...)`. It also explains how to enable the guard on another variant and to re-check the size.
+
+**Residual risk.** On the ❌ variants the behaviour is unchanged and the finding stands as originally triaged —
+accepted as design, mitigated by the trust assumption, now documented rather than implied. NM-18's read-only
+reentrancy (a third-party protocol reading `balanceOf` during the callback) is likewise unchanged on those
+variants.
 
 ### NM-8 — Allowance revocation blocked for frozen or non-allowlisted spenders (Low → Low — **FIXED**)
 
@@ -445,6 +511,20 @@ recoverable** — the setters write storage without calling the engine, so a bad
 
 *Optional (cheap) hardening, not applied:* reject `address(this)` in the three setters. It closes the
 self-recursion footgun for one comparison, without pretending to validate interface conformance.
+
+**Tracked for a possible future release:** [CMTA/CMTAT#395](https://github.com/CMTA/CMTAT/issues/395) — validate
+engines with ERC-165 in `setRuleEngine` / `setDocumentEngine` / `setDebtEngine`. Two notes from scoping that issue:
+
+- The RuleEngine case is nearly free — `IRuleEngine` **already extends `IERC165`**, and
+  `RuleEngineInterfaceId.RULE_ENGINE_INTERFACE_ID` / `ERC1404ExtendInterfaceId.ERC1404EXTEND_INTERFACE_ID` already
+  exist as libraries, with `RuleEngineMock` and `contracts/mocks/ERC165Helper/` already implementing them. Only the
+  setter check is missing. It is also the highest-value case: an EOA rule engine makes `transferred(...)` succeed
+  silently, so transfers proceed with **all compliance rules bypassed** — the only one of the three that fails
+  *open*.
+- `IERC1643` and `IDebtEngine` do **not** extend `IERC165`, so requiring it there is a breaking change for
+  already-deployed engines, and the check would add code to variants that have under 1 KiB of headroom against the
+  EIP-170 limit (`CMTATStandaloneHolderList` 23.870 KiB, `CMTATStandaloneERC1363` 23.857 KiB,
+  `CMTATStandaloneDebtEngine` 23.844 KiB).
 
 ### NM-15 / NM-17 — `setFrozenTokens` can freeze the zero address and brick every mint path (Info ×2 → **Low — FIXED**)
 
@@ -710,10 +790,81 @@ be blocked, so this is a reporting/state-drift inconsistency, not a bypass."* On
 displays differs from the reason the enforcement path (`_canTransferStandardByModuleAndRevert`, which reverts on
 pause first) would raise.
 
-*Optional (cosmetic) reorder, not applied:* evaluate deactivated/paused before the spender-frozen branch so the
-predicted reason matches the enforcement order.
+#### What the fix would change in code
 
-### NM-24 — Unconditional `Spend` emission contradicts the interface documentation (Best Practices → **Informational — fix recommended**)
+Today `detectTransferRestrictionFrom` checks the spender first, then delegates the rest to
+`_detectTransferRestriction`, which holds the deactivated/paused checks:
+
+```solidity
+function detectTransferRestrictionFrom(address spender, address from, address to, uint256 value) ... {
+    if (isFrozen(spender)) {                                   // <-- evaluated before deactivated/paused
+        return TRANSFER_REJECTED_SPENDER_FROZEN;               //     (code 5)
+    } else {
+        uint8 codeReturn = _detectTransferRestriction(from, to, value); // deactivated(1) → paused(2) → from(3) → to(4)
+        ...
+    }
+}
+```
+
+The required order is deactivated (1) → paused (2) → **then** the frozen-participant codes. Two ways to get there,
+each with a different trade-off:
+
+**Variant 1 — delegate first, check the spender last (smallest, reorders among the frozen codes).**
+
+```solidity
+uint8 codeReturn = _detectTransferRestriction(from, to, value); // deactivated → paused → from → to
+if (codeReturn != TRANSFER_OK) {
+    return codeReturn;
+} else if (isFrozen(spender)) {
+    return TRANSFER_REJECTED_SPENDER_FROZEN;
+} else if (address(ruleEngine_) != address(0)) {
+    return ruleEngine_.detectTransferRestrictionFrom(spender, from, to, value);
+} else {
+    return TRANSFER_OK;
+}
+```
+
+This satisfies the invariant (deactivated/paused always precede `SPENDER_FROZEN`) with essentially no size change,
+but it also moves the spender-frozen code from *first* to *last* among the frozen codes: when the spender **and**
+`from`/`to` are all frozen, the function now returns `FROM_FROZEN`/`TO_FROZEN` instead of `SPENDER_FROZEN`. That is
+a second, subtler change to the reported reason.
+
+**Variant 2 — evaluate deactivated/paused inline before the spender branch (preserves spender-first, costs a little
+size).**
+
+```solidity
+if (deactivated())       return TRANSFER_REJECTED_DEACTIVATED;
+else if (paused())       return TRANSFER_REJECTED_PAUSED;
+else if (isFrozen(spender)) return TRANSFER_REJECTED_SPENDER_FROZEN;
+else { uint8 codeReturn = _detectTransferRestriction(from, to, value); ... }
+```
+
+This keeps `SPENDER_FROZEN` ahead of `FROM_FROZEN`/`TO_FROZEN`, but the `deactivated()`/`paused()` checks now run
+**twice** (again inside `_detectTransferRestriction`) — two redundant `SLOAD`s and a few extra bytes of bytecode
+on contracts (`ERC1363`, `HolderList`, `DebtEngine`) that are already within a few hundred bytes of the EIP-170
+limit. `detectTransferRestrictionFrom` is a `view`, so the gas is only paid by off-chain callers, but the size is
+paid at deploy time regardless.
+
+#### Drawbacks common to both
+
+- **It is an observable change to a returned value.** For the specific state (contract deactivated or paused **and**
+  the spender frozen) the function returns a different non-zero code than before. No transfer outcome changes — the
+  transfer is still predicted blocked, and the enforcement path is untouched — but any off-chain integrator
+  (exchange, wallet) that keys UI or logic on the exact code sees a different reason. That is precisely the class
+  of consumer ERC-1404 restriction codes exist for, so it is not purely internal.
+- **No on-chain benefit.** The write path (`_canTransferStandardByModuleAndRevert`) already reverts on pause before
+  any frozen check, so the fix only aligns the *predicted* reason with the *enforced* reason; it removes a
+  reporting/state-drift inconsistency, nothing more.
+- `messageForTransferRestriction` needs no change — the code *values* are unchanged, only which one is returned in
+  the overlap case.
+
+**Recommendation.** Low priority; if applied, prefer **Variant 1** — it matches the invariant the finding asks for
+with no size cost, and the spender-vs-from/to reordering it introduces is within the "frozen participant" group the
+spec does not order internally. Because it is nonetheless an observable code change for integrators, it is best
+bundled into a release that already touches the ERC-1404 surface rather than shipped on its own. Left unapplied by
+this triage.
+
+### NM-24 — Unconditional `Spend` emission contradicts the interface documentation (Best Practices → **Informational — FIXED (doc-only)**)
 
 **Claim.** `ERC20BaseModule.transferFrom` emits `Spend` on every successful transfer, and
 `ERC20CrossChainModule._burnFrom` emits it immediately after `_spendAllowance`, without suppressing the
@@ -797,11 +948,83 @@ The `forcedTransfer` behaviour is arguably intended (an enforcement action is no
 suppressed `Approval` avoids implying the *owner* re-approved), but it is undocumented, and it is the more
 surprising of the two directions.
 
-*Recommended fix (not applied by this triage):* correct the `IERC20Allowance.Spend` NatSpec to state that the
-event **is** emitted on every allowance-consuming call, including infinite approvals, that it therefore does not by
-itself imply an allowance reduction, and that it is **not** emitted when `forcedTransfer` consumes an allowance —
-so `Spend` must not be used as a complete ledger of allowance movement. Consider also documenting the differing
-event order between the two paths. Behaviour unchanged in all cases.
+#### Making the two paths consistent — options, drawbacks, recommendation
+
+If CMTA wants `transferFrom` and `burnFrom` to emit `Spend` **identically** (same ordering, same
+infinite-allowance handling), there are three ways to get there. They differ in how much behaviour they change and
+what they cost.
+
+**Option A — emit `Spend` from a single overridden `_spendAllowance` (behaviour change; reconciles code with the
+interface).** Both paths already funnel their allowance spend through OpenZeppelin's
+`ERC20Upgradeable._spendAllowance(owner, spender, value)` — `transferFrom` calls it internally, `_burnFrom` calls
+it explicitly. That function reduces the allowance **only when it is finite** (`currentAllowance < type(uint256).max`).
+Overriding it once, emitting `Spend` inside that same finite branch, and deleting the two explicit `emit Spend`
+statements would make the two paths identical *and* make the behaviour match what `IERC20Allowance.Spend` already
+claims — no `Spend` on an infinite allowance:
+
+```solidity
+function _spendAllowance(address owner, address spender, uint256 value) internal virtual override {
+    if (allowance(owner, spender) != type(uint256).max) {
+        emit IERC20Allowance.Spend(owner, spender, value);
+    }
+    super._spendAllowance(owner, spender, value);
+}
+```
+
+- *Upside:* one emit site, one ordering (`Spend` → `Transfer` on both paths), and the interface NatSpec becomes
+  true as written instead of needing correction.
+- *Drawbacks:* (1) it is an **observable behaviour change** — `Spend` stops being emitted for infinite-allowance
+  spends, and the `transferFrom` order flips from `Transfer → Spend` to `Spend → Transfer`; any existing indexer
+  keyed on either is broken, so this belongs in a **major version**, not a patch. (2) The `allowance(...)` read in
+  the override is an **extra `SLOAD` on every `transferFrom`** — the hottest path in the token — unless
+  `_spendAllowance` is fully re-implemented to reuse the value it already loads, which means diverging from the
+  audited OpenZeppelin body. (3) It removes the "a delegated spend happened" signal that infinite-approval
+  integrators may currently rely on. (4) It does **not** address the `forcedTransfer` gap (that path never touches
+  `_spendAllowance`).
+
+**Option B — reorder `_burnFrom` so its `Spend` is emitted after the burn (ordering only).** Move the `emit Spend`
+in `ERC20CrossChainModule._burnFrom` to after `_burnFromOperator`, giving `Transfer → BurnFrom → Spend` so that
+`Spend` is last on both paths.
+
+- *Upside:* cheapest possible change — no gas cost, no size cost, no infinite-allowance semantics change.
+- *Drawbacks:* it only aligns the *ordering*, so the actual NM-24 contradiction (emission on infinite allowance)
+  is untouched and still needs the NatSpec fix anyway; it decouples the `Spend` event from the `_spendAllowance`
+  call it represents, so the code reads less obviously; and it is still an observable change for any indexer keyed
+  on the current order. Cosmetic alignment for cosmetic inconsistency — little is actually bought.
+
+**Option 0 — document only (no code change).** Correct the `IERC20Allowance.Spend` NatSpec, and note the ordering
+difference and the `forcedTransfer` gap.
+
+- *Upside:* no gas, no bytecode, no behaviour change, nothing broken for existing integrators. The one piece of
+  guidance that actually matters — *reconstruct allowances from `allowance()`, never by summing `Spend` events* —
+  is a documentation fix in every option, so it fully resolves the integrator-facing problem on its own.
+- *Drawback:* the two paths stay cosmetically inconsistent (different event order); integrators have to read the
+  note rather than infer a single rule from behaviour.
+
+**Recommendation — Option 0 (document only).** The inconsistency is real but harmless: no funds, no accounting
+error for anyone who reads `allowance()`, and the two "wrong" directions (over-report on infinite approvals,
+under-report on `forcedTransfer`) are both event-only. Every code option imposes an observable behaviour change —
+and Option A additionally adds an `SLOAD` to the busiest function in the contract and risks the EIP-170 size limit
+on the variants that are already within a few hundred bytes of it. Spending gas and a breaking change to make a
+cosmetic difference disappear is a poor trade when the correctness guidance is a doc fix regardless. If CMTA does
+want the interface's current "no `Spend` on infinite" wording to become literally true, that is **Option A,
+deferred to a major version**, done together with the same treatment for `forcedTransfer`.
+
+**Resolution — documented (no behaviour change).**
+
+- `contracts/interfaces/technical/IERC20Allowance.sol` — the `Spend` NatSpec was corrected. It previously claimed
+  the event is *not* emitted for infinite allowances (the reverse of the implementation); it now states that
+  `Spend` **is** emitted on every allowance-consuming call including infinite approvals, that `value` is the amount
+  used rather than any reduction, that `forcedTransfer` can consume an allowance **without** emitting `Spend`, and
+  that integrators must read `allowance(owner, spender)` rather than accumulate `Spend`/`Approval` events.
+- `doc/technical/allowance-spend-event.md` (new) — a cross-cutting reference covering the two emit sites, the
+  ordering difference, the two-directional accounting drift, the read-`allowance()` guidance, and a **"Possible
+  improvement — making the two paths consistent"** section describing the single-`_spendAllowance` unification
+  (Option A above), its drawbacks, and why it is deferred rather than applied. Linked from the README technical
+  index.
+
+Behaviour is unchanged on every path. The consistency options (A/B) analysed above are recorded in the technical
+doc as a possible future improvement, not scheduled work.
 
 ---
 
