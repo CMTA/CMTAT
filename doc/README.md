@@ -2219,7 +2219,9 @@ If you want to track all operations which burn or mint tokens, you can track the
 | `CrosschainMint(address indexed to, uint256 value, address indexed sender)` | IERC7802                      | ERC-7802              | `crosschainMint`<br />(ERC20CrossChain)                      |
 | `CrosschainBurn(address indexed from, uint256 value, address indexed sender)` | IERC7802                      | ERC-7802              | `crosschainBurn`<br />(ERC20CrossChain)                      |
 | `ForcedTransfer(address indexed operator, address indexed from, address indexed to, uint256 value, bytes data)` | IERC7551ERC20EnforcementEvent | ERC-7551 (draft)      | `forcedTransfer`<br />(ERC20EnforcementERC7551Module)<br />`forcedBurn`<br />(CMTATBaseCore) |
-| `Spend(address indexed account, address indexed spender, uint256 value)` | IERC20Allowance               | -                     | `transferFrom`<br />(ERC20BaseModule)<br />`transferFrom`don't change the supply<br />`burnFrom(address account, uint256 value)` |
+| `Spend(address indexed account, address indexed spender, uint256 value)` | IERC20Allowance               | -                     | `transferFrom` (ERC20BaseModule)<br />`burnFrom` (ERC20CrossChain)<br />`forcedTransfer` — on the allowance reduction (ERC20EnforcementModule) |
+
+> The `Spend` event signals *consumption* of an allowance. It is emitted on every allowance-consuming `transferFrom` / `burnFrom` — **including infinite approvals**, where the allowance is not actually reduced — so `value` is the amount used, not the size of any reduction. `forcedTransfer` also emits it when it reduces a finite allowance. It is **not** a complete ledger of allowance movement: to obtain a current allowance, read `allowance(owner, spender)`, never accumulate `Spend`/`Approval` events. See [technical/allowance-spend-event.md](./technical/allowance-spend-event.md).
 
 
 

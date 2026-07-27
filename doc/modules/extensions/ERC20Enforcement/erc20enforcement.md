@@ -183,6 +183,8 @@ The frozen amount may exceed the account's current token balance (over-freezing 
 **Requirements:**
 
 - Only authorized users (*ERC20ENFORCER_ROLE*) are allowed to call this function.
+- `account` cannot be the zero address (`address(0)`), otherwise reverts with `CMTAT_ERC20EnforcementModule_ZeroAddressNotAllowed`. This matches `freezePartialTokens` / `unfreezePartialTokens`, and prevents a non-zero frozen amount on `address(0)` from bricking the mint path (a non-zero mint would fail `_checkActiveBalance(address(0), value)`).
+- Reverts with `CMTAT_ERC20EnforcementModule_ValueEqualCurrentFrozenTokens` if `value` equals the account's current frozen amount.
 
 ------
 
