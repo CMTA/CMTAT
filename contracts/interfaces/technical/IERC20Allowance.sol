@@ -13,17 +13,19 @@ interface IERC20Allowance {
      * @dev
      * - Similar in intent to the ERC-20 `Approval` event, but signals *consumption* of an
      *   allowance rather than its granting.
-     * - Emitted by the allowance-consuming entry points: `transferFrom` (ERC20BaseModule) and
-     *   `burnFrom` (ERC20CrossChainModule).
+     * - Emitted by the allowance-consuming entry points: `transferFrom` (ERC20BaseModule),
+     *   `burnFrom` (ERC20CrossChainModule), and `forcedTransfer` (ERC20EnforcementModule) when the
+     *   latter reduces a finite owner→recipient allowance.
      * - WARNING - this event does NOT, by itself, imply that the on-chain allowance decreased.
-     *   It is emitted on *every* successful allowance-consuming call, including when the allowance
-     *   is infinite (`type(uint256).max`), in which case OpenZeppelin leaves the allowance
-     *   unchanged. `value` is the amount used, not the size of any reduction.
-     * - WARNING - `Spend` is NOT a complete ledger of allowance movement. `forcedTransfer`
-     *   (ERC20EnforcementModule) can consume an owner→recipient allowance without emitting `Spend`
-     *   (or `Approval`). To reconstruct the current allowance, read `allowance(owner, spender)` —
-     *   never accumulate `Spend` (or `Approval`) events.
-     * - Event ordering differs between the two emit sites: `transferFrom` emits `Transfer` then
+     *   It is emitted on *every* successful allowance-consuming `transferFrom` / `burnFrom`,
+     *   including when the allowance is infinite (`type(uint256).max`), in which case OpenZeppelin
+     *   leaves the allowance unchanged. `value` is the amount used, not the size of any reduction.
+     * - For `forcedTransfer`, `Spend` is emitted only when the allowance is finite and non-zero
+     *   (the case where it is actually reduced), and `value` is the amount taken from it (capped by
+     *   the allowance). `forcedTransfer` does not emit `Approval` for that reduction.
+     * - To reconstruct the current allowance, read `allowance(owner, spender)` — never accumulate
+     *   `Spend` (or `Approval`) events.
+     * - Event ordering differs between the emit sites: `transferFrom` emits `Transfer` then
      *   `Spend`; `burnFrom` emits `Spend` then `Transfer` then `BurnFrom`. See
      *   [doc/technical/allowance-spend-event.md](../../../doc/technical/allowance-spend-event.md).
      * @param account The owner of the tokens whose allowance is being spent.

@@ -939,6 +939,10 @@ The last row is the mirror image of the finding and the tool did not surface it.
 `Spend` is emitted either, so a forced transfer silently consumes allowance with **no allowance-related event at
 all** — the observed receipt is `[Transfer -> ForcedTransfer]` while the allowance moves from 500 to 490.
 
+> **Update (applied):** the `forcedTransfer` row above describes the state at triage. It has since been fixed —
+> `_forcedTransfer` now emits `Spend` on the allowance reduction (see Resolution below), so that path no longer
+> under-reports. The `transferFrom`/`burnFrom` over-report on infinite approvals is unchanged.
+
 So an integrator reconstructing allowances purely from events drifts in *both* directions: too low after an
 infinite-approval `transferFrom`/`burnFrom`, and too high after a `forcedTransfer`. Any correct integration must
 read `allowance()` rather than accumulate events — which is the substantive guidance, and is what the corrected
@@ -1010,21 +1014,32 @@ cosmetic difference disappear is a poor trade when the correctness guidance is a
 want the interface's current "no `Spend` on infinite" wording to become literally true, that is **Option A,
 deferred to a major version**, done together with the same treatment for `forcedTransfer`.
 
-**Resolution — documented (no behaviour change).**
+**Resolution — documentation, plus one small behaviour change to close the `forcedTransfer` under-report.**
 
+- `contracts/modules/internal/ERC20EnforcementModuleInternal.sol` — **behaviour change.** `_forcedTransfer` now
+  emits `IERC20Allowance.Spend(from, to, spentAllowance)` when it reduces a finite, non-zero `from`→`to` allowance
+  (`spentAllowance = min(currentAllowance, value)`). This closes the under-report row above: the reduction is no
+  longer silent. The allowance-reduction logic is unchanged (the `_approve(..., false)` still suppresses
+  `Approval`); only the `Spend` emission is added. Measured cost: +72 bytes on the tightest variant
+  (`CMTATStandaloneHolderList`, now 24 528 / 24 576 — 48 bytes of headroom), within limit on all variants.
 - `contracts/interfaces/technical/IERC20Allowance.sol` — the `Spend` NatSpec was corrected. It previously claimed
   the event is *not* emitted for infinite allowances (the reverse of the implementation); it now states that
-  `Spend` **is** emitted on every allowance-consuming call including infinite approvals, that `value` is the amount
-  used rather than any reduction, that `forcedTransfer` can consume an allowance **without** emitting `Spend`, and
-  that integrators must read `allowance(owner, spender)` rather than accumulate `Spend`/`Approval` events.
-- `doc/technical/allowance-spend-event.md` (new) — a cross-cutting reference covering the two emit sites, the
-  ordering difference, the two-directional accounting drift, the read-`allowance()` guidance, and a **"Possible
-  improvement — making the two paths consistent"** section describing the single-`_spendAllowance` unification
-  (Option A above), its drawbacks, and why it is deferred rather than applied. Linked from the README technical
-  index.
+  `Spend` **is** emitted on every allowance-consuming `transferFrom`/`burnFrom` including infinite approvals, that
+  `value` is the amount used rather than any reduction, that `forcedTransfer` now emits `Spend` on the reduction it
+  performs (finite non-zero allowance only), and that integrators must read `allowance(owner, spender)` rather than
+  accumulate `Spend`/`Approval` events.
+- `doc/technical/allowance-spend-event.md` (new) — a cross-cutting reference covering the three emit sites, the
+  ordering difference, the residual over-report on infinite approvals, the read-`allowance()` guidance, and a
+  **"Possible improvement — making the emit sites consistent"** section describing the single-`_spendAllowance`
+  unification (Option A above), its drawbacks, and why the `transferFrom`/`burnFrom` half is deferred. Linked from
+  the README technical index.
+- Tests — `test/common/ERC20EnforcementModuleCommon.js`: the two allowance-reducing `forcedTransfer` tests now
+  assert the `Spend` amount (full and partial consumption), plus two new tests asserting **no** `Spend` when there
+  is no allowance and when the allowance is infinite.
 
-Behaviour is unchanged on every path. The consistency options (A/B) analysed above are recorded in the technical
-doc as a possible future improvement, not scheduled work.
+Only the `forcedTransfer` under-report was closed in behaviour; the remaining `transferFrom`/`burnFrom`
+inconsistencies (ordering, emission on infinite approvals) stay documentation-only, recorded in the technical doc
+as a possible future improvement rather than scheduled work.
 
 ---
 

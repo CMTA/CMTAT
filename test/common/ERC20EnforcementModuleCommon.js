@@ -304,6 +304,10 @@ function ERC20EnforcementModuleCommon () {
       await expect(this.logs)
         .to.emit(this.cmtat, 'Transfer')
         .withArgs(this.address1, this.address2, AMOUNT_TO_TRANSFER)
+      // The allowance is fully consumed (10 < 20), so Spend reports the 10 actually taken
+      await expect(this.logs)
+        .to.emit(this.cmtat, 'Spend')
+        .withArgs(this.address1, this.address2, AMOUNT_TO_APPROVE)
     })
 
     it('testCanForceTransferFromAddress1ToAddress2AsAdminAndReduceAllowance', async function () {
@@ -342,6 +346,50 @@ function ERC20EnforcementModuleCommon () {
       await expect(this.logs)
         .to.emit(this.cmtat, 'Transfer')
         .withArgs(this.address1, this.address2, AMOUNT_TO_TRANSFER)
+      // Allowance sufficient (30 >= 20): Spend reports the 20 taken, allowance left at 10
+      await expect(this.logs)
+        .to.emit(this.cmtat, 'Spend')
+        .withArgs(this.address1, this.address2, AMOUNT_TO_TRANSFER)
+    })
+
+    it('testForcedTransferWithoutAllowanceDoesNotEmitSpend', async function () {
+      // No allowance from from->to: the allowance branch is skipped, so no Spend is emitted
+      const AMOUNT_TO_TRANSFER = 20
+      expect(await this.cmtat.allowance(this.address1, this.address2)).to.equal(
+        '0'
+      )
+      this.logs = await forcedTransferCompat(
+        this,
+        this.admin,
+        this.address1,
+        this.address2,
+        AMOUNT_TO_TRANSFER,
+        REASON
+      )
+      await expect(this.logs).to.not.emit(this.cmtat, 'Spend')
+      await expect(this.logs)
+        .to.emit(this.cmtat, 'ForcedTransfer(address,address,uint256)')
+        .withArgs(this.address1, this.address2, AMOUNT_TO_TRANSFER)
+    })
+
+    it('testForcedTransferWithInfiniteAllowanceDoesNotEmitSpend', async function () {
+      // Infinite allowance is never reduced (matches transferFrom/burnFrom), so no Spend either
+      const AMOUNT_TO_TRANSFER = 20
+      await this.cmtat
+        .connect(this.address1)
+        .approve(this.address2, ethers.MaxUint256)
+      this.logs = await forcedTransferCompat(
+        this,
+        this.admin,
+        this.address1,
+        this.address2,
+        AMOUNT_TO_TRANSFER,
+        REASON
+      )
+      await expect(this.logs).to.not.emit(this.cmtat, 'Spend')
+      expect(await this.cmtat.allowance(this.address1, this.address2)).to.equal(
+        ethers.MaxUint256
+      )
     })
 
     it('testCanForceBurnWithForceTransferAsAdmin', async function () {

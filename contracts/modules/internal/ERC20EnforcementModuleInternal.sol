@@ -4,6 +4,8 @@ pragma solidity ^0.8.24;
 
 /* ==== OpenZeppelin === */
 import {ERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
+/* ==== Technical === */
+import {IERC20Allowance} from "../../interfaces/technical/IERC20Allowance.sol";
 /* ==== Tokenization === */
 import {IERC7943FungibleEnforcementEventAndError} from "../../interfaces/tokenization/draft-IERC7943.sol";
 
@@ -119,16 +121,14 @@ abstract contract ERC20EnforcementModuleInternal is ERC20Upgradeable, IERC7943Fu
             // See https://ethereum-magicians.org/t/erc-3643-the-t-rex-token-standard/6844/11
             uint256 currentAllowance = allowance(from, to);
             if (currentAllowance > 0 && currentAllowance < type(uint256).max) {
-                if (currentAllowance < value) {
-                     unchecked {
-                        ERC20Upgradeable._approve(from, to, 0, false);
-                     }
-                } else{
-                    unchecked {
-                         ERC20Upgradeable._approve(from, to, currentAllowance - value, false);
-                    }
+                // Amount actually taken from the from->to allowance (capped by the allowance)
+                uint256 spentAllowance = currentAllowance < value ? currentAllowance : value;
+                unchecked {
+                    ERC20Upgradeable._approve(from, to, currentAllowance - spentAllowance, false);
                 }
-              
+                // Emit Spend so the allowance consumption is observable, consistent with
+                // transferFrom / burnFrom. `_approve(..., false)` above still suppresses Approval.
+                emit IERC20Allowance.Spend(from, to, spentAllowance);
             }
             ERC20Upgradeable._transfer(from, to, value);
         }

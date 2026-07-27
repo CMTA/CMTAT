@@ -12,36 +12,39 @@ event Spend(address indexed account, address indexed spender, uint256 value);
 
 There are two emit sites, and they behave slightly differently.
 
-| | `transferFrom` (`ERC20BaseModule`) | `burnFrom` (`ERC20CrossChainModule`) |
-| --- | --- | --- |
-| Available on | every variant with an allowance surface | cross-chain variants only |
-| Allowance spent by | `ERC20Upgradeable.transferFrom` (internally) | an explicit `ERC20Upgradeable._spendAllowance(...)` |
-| `Spend` emitted | **after** the transfer completes | **between** `_spendAllowance` and the burn |
-| Event order in the receipt | `Transfer` → `Spend` | `Spend` → `Transfer` → `BurnFrom` |
+| | `transferFrom` (`ERC20BaseModule`) | `burnFrom` (`ERC20CrossChainModule`) | `forcedTransfer` (`ERC20EnforcementModule`) |
+| --- | --- | --- | --- |
+| Available on | every variant with an allowance surface | cross-chain variants only | every variant with enforcement |
+| Allowance spent by | `ERC20Upgradeable.transferFrom` (internally) | an explicit `_spendAllowance(...)` | manual `_approve(from, to, reduced, false)` |
+| `Spend` emitted | **after** the transfer completes | **between** `_spendAllowance` and the burn | when a finite non-zero `from`→`to` allowance is reduced |
+| Event order in the receipt | `Transfer` → `Spend` | `Spend` → `Transfer` → `BurnFrom` | `Spend` → `Transfer` → `ForcedTransfer` |
 
 The self-burn `burn(uint256)` emits **no** `Spend` — it consumes no allowance.
 
 ## What `Spend` does and does not tell you
 
-- **It does not imply the allowance decreased.** `Spend` is emitted on every successful allowance-consuming call,
-  including when the allowance is infinite (`type(uint256).max`), where OpenZeppelin leaves the allowance unchanged.
-  `value` is the amount *used*, not the size of any reduction.
-- **It is not a complete ledger of allowance movement.** `forcedTransfer` (`ERC20EnforcementModule`) can reduce an
-  owner→recipient allowance without emitting `Spend` — and, because it calls `_approve(..., false)`, without
-  emitting `Approval` either.
+- **It does not imply the allowance decreased.** On `transferFrom` / `burnFrom`, `Spend` is emitted on every
+  successful call, including when the allowance is infinite (`type(uint256).max`), where OpenZeppelin leaves the
+  allowance unchanged. `value` is the amount *used*, not the size of any reduction.
+- **`forcedTransfer` emits `Spend` only when it actually reduces the allowance** — i.e. when the `from`→`to`
+  allowance is finite and non-zero. `value` is then the amount taken from it (capped by the allowance). It does
+  **not** emit `Approval` for that reduction, so `Spend` is the only signal of it.
 
-Net effect for an integrator that reconstructs allowances purely from events: the figure drifts **too low** after
-an infinite-approval `transferFrom`/`burnFrom`, and **too high** after a `forcedTransfer`.
+Net effect for an integrator that reconstructs allowances purely from events: the figure still drifts **too low**
+after an infinite-approval `transferFrom`/`burnFrom` (a `Spend` with no matching reduction). The former
+`forcedTransfer` *under*-report is gone — the reduction now emits `Spend`.
 
 > **Guidance.** To obtain a spender's current allowance, always read `allowance(owner, spender)` on-chain. Never
-> accumulate `Spend` (or `Approval`) events as a substitute.
+> accumulate `Spend` (or `Approval`) events as a substitute — the infinite-allowance case alone makes event-summing
+> wrong.
 
-## Possible improvement — making the two paths consistent
+## Possible improvement — making the emit sites consistent
 
-The two emit sites are consistent enough to be usable but not identical: they differ in event ordering, and both
-emit even on infinite approvals (which the older `IERC20Allowance` NatSpec incorrectly claimed they did not — that
-NatSpec has been corrected). A future release could unify them. This is **not planned** and would be a behaviour
-change, so it is recorded here as an option rather than a commitment.
+`forcedTransfer` now emits `Spend` when it reduces a finite allowance, so it is no longer a silent consumer. The
+two remaining `transferFrom` / `burnFrom` sites are consistent enough to be usable but not identical: they differ
+in event ordering, and both emit even on infinite approvals (which the older `IERC20Allowance` NatSpec incorrectly
+claimed they did not — that NatSpec has been corrected). A future release could unify them. This is **not planned**
+and would be a behaviour change, so it is recorded here as an option rather than a commitment.
 
 The cleanest unification emits `Spend` from a single overridden `_spendAllowance`, through which **both** paths
 already route their allowance spend:
@@ -66,8 +69,6 @@ with the two explicit `emit Spend` statements removed. This would give one emit 
 - The `allowance(...)` read in the override is an **extra `SLOAD` on every `transferFrom`** — the hottest path in
   the token — unless `_spendAllowance` is fully re-implemented to reuse the value it already loads, which means
   diverging from the audited OpenZeppelin body.
-- It does **not** address the `forcedTransfer` gap, which never routes through `_spendAllowance`; that would need
-  its own change.
 - Several deployment variants are within a few hundred bytes of the EIP-170 24 KiB limit, so even a small net
   addition must be measured before it can ship.
 
@@ -75,8 +76,10 @@ A cheaper, ordering-only variant (moving `burnFrom`'s `emit Spend` to after the 
 paths) aligns the receipts but leaves the infinite-allowance emission untouched, so it does not remove the
 substantive inconsistency and is not worth a breaking change on its own.
 
-**Current position:** documentation only. The `IERC20Allowance.Spend` NatSpec has been corrected to describe the
-real behaviour, and the guidance above (read `allowance()`, do not sum events) is the durable fix for integrators.
+**Current position:** `forcedTransfer` now emits `Spend` on the allowance reduction (so its former under-report is
+closed); the `transferFrom`/`burnFrom` unification remains documentation-only. The `IERC20Allowance.Spend` NatSpec
+has been corrected to describe the real behaviour, and the guidance above (read `allowance()`, do not sum events)
+is the durable fix for integrators.
 
 > Origin: Nethermind AuditAgent v3.3.0-rc2 finding NM-24. See the
 > [maintainer feedback](../security/tools/nethermind-audit-agent/v3.3.0-rc2/audit_agent_report_v3.3.0-rc2-feedback.md).
