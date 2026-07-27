@@ -45,6 +45,10 @@ Custom changelog tag: `Dependencies`, `Documentation`, `Testing`
 
 ## 3.3.0 - rc3
 
+### Dependencies
+
+- Update the pinned Solidity compiler from 0.8.34 to [0.8.36](https://docs.soliditylang.org/en/v0.8.36/) in `hardhat.config.js` and `foundry.toml`. The floating source pragma is unchanged (`^0.8.24`, required by EIP-1153 transient storage).
+
 ## 3.3.0 - rc2 - 2026-07-23
 
 > **Note:** This version has not been audited.

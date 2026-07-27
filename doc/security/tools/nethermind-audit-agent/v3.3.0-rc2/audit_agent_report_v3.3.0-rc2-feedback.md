@@ -487,7 +487,7 @@ a confusing assembly error on 0.8.20–0.8.23 instead of a clean pragma error.
 - **Compiler floor raised.** `ReentrancyGuardTransient` requires EIP-1153 transient storage and declares
   `pragma solidity ^0.8.24`, so the project can no longer be compiled at 0.8.20–0.8.23. All **128** contract files
   were moved from `^0.8.20` (and one stray `^0.8.0`) to **`^0.8.24`**, so every file declares the real floor
-  instead of a version the build does not support. The pinned compiler is unchanged (0.8.34 in `hardhat.config.js`
+  instead of a version the build does not support. The pinned compiler is unchanged (0.8.36 in `hardhat.config.js`
   and `foundry.toml`), and the Aderyn L-3 *"Unspecific Solidity Pragma"* disposition was updated to match.
 - **Documentation.** `doc/modules/controllers/validationRuleEngine.md` gained a section with the per-variant table
   and an explicit **WARNING** that on unguarded variants the trust assumption is load-bearing: the RuleEngine is

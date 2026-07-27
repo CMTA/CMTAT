@@ -3129,7 +3129,7 @@ The project is built with [Hardhat](https://v2.hardhat.org) and uses [OpenZeppel
 [Hardhat](https://v2.hardhat.org) is the main development toolchain for this repository and for CMTAT. [Forge (Foundry)](https://www.getfoundry.sh) is also installed and can compile contracts here, but Foundry-specific deployment scripts and Foundry-native tests are maintained in a dedicated repository: [CMTAT-Foundry](https://github.com/CMTA/CMTAT-Foundry).
 
 - hardhat.config.js
-  - Solidity [v0.8.34](https://docs.soliditylang.org/en/v0.8.34/)
+  - Solidity [v0.8.36](https://docs.soliditylang.org/en/v0.8.36/)
   - EVM version: Osaka (Fusaka upgrade)
   - Optimizer: true, 200 runs
 
@@ -3172,7 +3172,7 @@ Alternatively, you can install Hardhat [globally](https://v2.hardhat.org/hardhat
 npm run-script size
 ```
 
-Measured with `solc 0.8.34`, optimizer enabled (200 runs). EVM deployed bytecode limit: **24.576 KiB**.
+Measured with `solc 0.8.36`, optimizer enabled (200 runs). EVM deployed bytecode limit: **24.576 KiB**.
 
 The deployed size is identical between standalone and upgradeable for the same variant; the initcode is larger for standalone contracts since it embeds the full constructor logic rather than a proxy initializer.
 

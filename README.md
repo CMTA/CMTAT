@@ -73,7 +73,7 @@ Most products come in a **standalone** (immutable) or **upgradeable** (proxy) va
 
 ## Contract Sizes
 
-Measured with `solc 0.8.34`, optimizer enabled (200 runs). EVM deployed bytecode limit: **24.576 KiB**.
+Measured with `solc 0.8.36`, optimizer enabled (200 runs). EVM deployed bytecode limit: **24.576 KiB**.
 
 | Deployment Version | Deployed (KiB) | Initcode standalone (KiB) | Initcode upgradeable (KiB) |
 |---|---|---|---|
