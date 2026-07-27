@@ -96,4 +96,4 @@ So the marginal cost of this module on such a transfer is roughly **two warm `SL
 
 ## Use Case
 
-The on-chain holder set supports issuer reporting and corporate actions (e.g. enumerating shareholders for a distribution or a vote) without reconstructing the list from the full transfer history off-chain. For dividend-style *balance-at-a-block* queries, use the [Snapshot Engine](./snapshot.md) instead — the holder list tracks *current* membership, not historical balances.
+The on-chain holder set supports issuer reporting and corporate actions (e.g. enumerating shareholders for a distribution or a vote) without reconstructing the list from the full transfer history off-chain. For dividend-style *balance-at-a-block* queries, use the [Snapshot Engine](./snapshot.md) / [CMTA/SnapshotEngine](https://github.com/CMTA/SnapshotEngine) instead — the holder list tracks *current* membership, not historical balances.
