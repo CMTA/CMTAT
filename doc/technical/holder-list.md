@@ -80,7 +80,14 @@ Revert rules:
 
 ## Gas
 
-The first transfer crediting a **new** address writes two storage slots (the `EnumerableSet` stores the value and its index); the transfer that empties an account clears them. Transfers between existing holders that leave both balances non-zero cost nothing extra for this module.
+The first transfer crediting a **new** address writes two storage slots (the `EnumerableSet` stores the value and its index); the transfer that empties an account clears them.
+
+A transfer between two existing holders that leaves both balances non-zero performs **no storage write** to the holder set (no `add`/`remove`, no `HolderAdded`/`HolderRemoved` event) — but it is **not free**. After the base ERC-20 transfer, `_update` still:
+
+- reads `balanceOf(from)` — one `SLOAD` (the slot is warm, just written by the transfer). Since it is non-zero, the `remove(from)` branch short-circuits and the holder set is not touched on the sender side.
+- reads `balanceOf(to)` — one `SLOAD` (also warm). Since it is non-zero, it calls `EnumerableSet.add(to)`, which performs **one membership-check `SLOAD`** (the recipient's index slot, typically cold), finds `to` already present, and returns `false` without writing.
+
+So the marginal cost of this module on such a transfer is roughly **two warm `SLOAD`s + one (usually cold) `SLOAD` + the branch logic — no `SSTORE`**. The expensive part (the two storage writes) only occurs when an address *becomes* a holder or *stops being* one.
 
 ## Security Considerations
 
