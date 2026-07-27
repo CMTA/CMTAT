@@ -1149,8 +1149,7 @@ Any compromise to the DEFAULT_ADMIN_ROLE account may allow a hacker to take adva
 
 ##### Role interaction notes
 
-- `ENFORCER_ROLE` can block mint operations by freezing the minter/operator address via `setAddressFrozen(address, true)`.  
-  In spender-aware compliance paths, mint uses the effective operator as spender, so a frozen operator reverts with `ERC7943CannotSend`.
+- Freezing an operator via `setAddressFrozen(operator, true)` does **not** block that operator's `mint` / `batchMint` — minting validates the recipient (and deactivation), not the caller, so a frozen `MINTER_ROLE` holder can still mint. It **does** block the operator's `batchTransfer` / `transfer` / `transferFrom`, where the operator is the sender/spender. To stop a compromised minter, revoke its role. On the Standard version a configured RuleEngine still receives the operator as `spender` and may reject a mint. See [technical/access-control.md](./technical/access-control.md#what-freeze-and-pause-block-per-operation) and the [Enforcement chapter table](#freeze-acts-on-the-senderrecipient-not-on-the-operator).
 - `SNAPSHOOTER_ROLE` can trigger a **transfer-liveness halt** (pause-like effect) if it configures a snapshot engine that always reverts, because snapshot hooks run inside `_update` on state-changing token operations.
 
 #### Role list
@@ -1852,6 +1851,20 @@ Due to a limited contract size, there is no batch version with a data parameter 
 `setAddressFrozen` and `batchSetAddressFrozen` reject `address(0)`.
 
 When an address is frozen, it is not possible to mint tokens to this address or burn its tokens. To move tokens from a frozen address, the issuer must use the function `forcedTransfer`.
+
+#### Freeze acts on the sender/recipient, not on the operator
+
+Freezing blocks an operation only where the frozen address is the **sender, spender or recipient** — never where it is merely the **minter**. In particular, freezing a `MINTER_ROLE` holder does **not** stop that holder from minting: `mint` / `batchMint` validate the recipient (and the contract's deactivation state), not the caller. To stop a compromised minter, revoke its role (`revokeRole(MINTER_ROLE, operator)`).
+
+By contrast, `batchTransfer` (a `MINTER_ROLE` function that moves the caller's **own** existing tokens) is a transfer, so freezing the caller **does** block it.
+
+| Operation | Creates tokens? | Freezing the **operator** blocks it? |
+| --- | :---: | :---: |
+| `mint` / `batchMint` | Yes | **No** — operator not checked (only the recipient is) ¹ |
+| `batchTransfer` | No (moves the caller's own) | **Yes** — the operator is the sender |
+| `transfer` / `transferFrom` | No | **Yes** — the operator is the sender / spender |
+
+¹ On the **Standard** version, if a RuleEngine is configured the operator is forwarded to it as the `spender` argument of `transferred(...)`, so a RuleEngine *rule* may reject a mint by a frozen/blocked operator. CMTAT's own freeze logic does not, and the **Light** version has no RuleEngine. See [technical/access-control.md](./technical/access-control.md#what-freeze-and-pause-block-per-operation) for the full per-operation and per-deployment table (pause, deactivation, sender/recipient freeze).
 
 ### ERC20EnforcementModule
 

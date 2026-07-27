@@ -264,7 +264,11 @@ abstract contract CMTATBaseCore is
     * @dev Check if a minter transfer is valid
     */
     function _minterTransferOverride(address from, address to, uint256 value) internal virtual override(ERC20MintModuleInternal) {
-        ValidationModule._canTransferGenericByModuleAndRevert(address(0), from, to);
+        // Pass the operator (_msgSender()) as spender, consistent with CMTATBaseCommon and the
+        // transferFrom path, instead of hardcoding address(0). A minter transfer moves the
+        // minter's own tokens, so `from == _msgSender()`; threading the spender keeps the
+        // spender-aware validation surface uniform across the Light and full bases (NM-5).
+        ValidationModule._canTransferGenericByModuleAndRevert(_msgSender(), from, to);
         ERC20MintModuleInternal._minterTransferOverride(from, to, value);
     }
 

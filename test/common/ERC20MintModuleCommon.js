@@ -607,6 +607,21 @@ function ERC20MintModuleCommon () {
         .withArgs(TOKEN_HOLDER[1])
     })
 
+    it('testCannotBatchTransferIfMinterIsFrozen', async function () {
+      // NM-5: the minter-transfer path threads the operator (_msgSender()) as spender in
+      // every base (Light and full), so freezing the minter blocks its own batchTransfer.
+      const TOKEN_ADDRESS_TOS = [this.address1, this.address2, this.address3]
+      // The batchTransfer beforeEach minted TOKEN_AMOUNTS to the admin (the minter)
+      await this.cmtat.connect(this.admin).setAddressFrozen(this.admin, true)
+      await expect(
+        this.cmtat
+          .connect(this.admin)
+          .batchTransfer(TOKEN_ADDRESS_TOS, TOKEN_AMOUNTS)
+      )
+        .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotSend')
+        .withArgs(this.admin.address)
+    })
+
     it('testBatchTransferPropagatesSpenderToRuleEngine', async function () {
       if (!this.cmtat.setRuleEngine) {
         this.skip()

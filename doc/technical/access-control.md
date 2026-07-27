@@ -93,10 +93,52 @@ See also [docs.openzeppelin.com - AccessControl](https://docs.openzeppelin.com/c
 
 ## Role Interaction Notes
 
-- `ENFORCER_ROLE` can effectively block mint operations by freezing the minter/operator address with `setAddressFrozen(address, true)`.  
-  In spender-aware compliance paths, mint uses the effective operator as spender, so a frozen operator reverts with `ERC7943CannotSend`.
+- Freezing an operator with `setAddressFrozen(operator, true)` does **not** block that operator's `mint` / `batchMint`. Minting validates the **recipient** (and the contract's deactivation state), not the caller: a frozen `MINTER_ROLE` holder can still mint. It **does** block that operator's `batchTransfer`, `transfer` and `transferFrom`, because there the operator is the sender/spender (`ERC7943CannotSend(operator)`). To stop a compromised minter from minting, revoke its role (`revokeRole(MINTER_ROLE, operator)`) — freezing is a holder-level control, not an operator-level one. See [the freeze-vs-operation table below](#what-freeze-and-pause-block-per-operation).
+  - Caveat (RuleEngine deployments, e.g. Standard): the operator **is** passed to a configured RuleEngine as the `spender` argument of `transferred(spender, from, to, value)`, so a RuleEngine *rule* may choose to reject a mint by a frozen/blocked operator. CMTAT's own freeze logic does not; the Light variant has no RuleEngine, so no such hook exists there.
 - `SNAPSHOOTER_ROLE` controls `setSnapshotEngine(address)`. Setting a snapshot engine that always reverts can create a **transfer-liveness halt** (a pause-like effect) for state-changing token flows that execute through `_update`.
 - `CROSS_CHAIN_ROLE` is checked against the **raw `msg.sender`**, not `_msgSender()` — the only role gate in CMTAT that does so, and deliberately (a bridge holds unbounded mint authority and must not be impersonable through a relayer). A bridge must therefore call `crosschainMint` / `crosschainBurn` directly, and **`CROSS_CHAIN_ROLE` must never be granted to the ERC-2771 forwarder**: it would let any user mint arbitrarily through a relayed call. See [cross-chain-bridge-integration.md](./cross-chain-bridge-integration.md#the-bridge-gate-uses-msgsender-not-_msgsender).
+
+## What freeze and pause block, per operation
+
+The key distinction is between **minting** (creating tokens, validated on the *recipient*) and **transfers**
+including `batchTransfer` (moving existing tokens, validated on the *sender/spender*). Freezing an address only
+blocks operations where that address is the sender, spender or recipient — never where it is merely the *minter*.
+
+| Operation | Role | Creates tokens? | Blocked while **paused**? | Blocked while **deactivated**? | **Operator** (caller) frozen → blocked? | **Recipient** frozen → blocked? | **Sender/spender** frozen → blocked? |
+| --- | --- | :---: | :---: | :---: | :---: | :---: | :---: |
+| `mint` / `batchMint` | `MINTER_ROLE` | Yes | No | Yes | **No** | Yes (`ERC7943CannotReceive`) | n/a |
+| `batchTransfer` | `MINTER_ROLE` | No (moves caller's own) | Yes | Yes | **Yes** (`ERC7943CannotSend`) | Yes | operator **is** the sender |
+| `transfer` | — | No | Yes | Yes | n/a | Yes | Yes (sender) |
+| `transferFrom` | — | No | Yes | Yes | n/a | Yes | Yes (both spender and `from`) |
+
+Notes:
+- `batchTransfer` also requires the caller's **unfrozen** balance to cover the amount (partial freeze limits it), and
+  reverts with `ERC7943InsufficientUnfrozenBalance` otherwise.
+- `forcedTransfer` / `forcedBurn` (`DEFAULT_ADMIN` / `ERC20ENFORCER_ROLE`) deliberately **bypass** these
+  restrictions — that is their purpose (moving or burning frozen holders' tokens).
+
+### Does freezing the *operator* block it, by deployment version?
+
+The freeze behaviour above is identical across deployment versions. The only per-version difference is the optional
+**RuleEngine**, which the Standard version consults (if one is set) and the Light version does not have at all.
+
+| Operation | Standard | Light | Notes |
+| --- | :---: | :---: | --- |
+| `mint` / `batchMint` | **No** ¹ | **No** | Operator/minter is not checked; only the recipient and deactivation are. |
+| `batchTransfer` | **Yes** | **Yes** | Operator is the sender (`from`). |
+| `transfer` / `transferFrom` | **Yes** | **Yes** | Operator is the sender / spender. |
+
+¹ **Standard only:** although CMTAT's own freeze logic does not block a mint by a frozen operator, the operator is
+passed to a configured RuleEngine as the `spender` argument of `transferred(spender, from, to, value)` (and to
+`canTransferFrom` in the read path). A RuleEngine *rule* may therefore choose to reject a mint by a frozen or
+otherwise-restricted operator. This is a RuleEngine responsibility, not a base-contract guarantee; the Light
+version has no RuleEngine hook.
+
+The Allowlist variant additionally requires the recipient (mint) or both parties (transfer) to be allowlisted when
+the allowlist is enabled; that is orthogonal to the freeze behaviour above.
+
+**Takeaway:** to stop a compromised minter from minting, **revoke its `MINTER_ROLE`** — freezing the address will
+not prevent minting (only a RuleEngine rule can, on the Standard version).
 
 ## Key Management
 

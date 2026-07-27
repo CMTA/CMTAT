@@ -87,7 +87,7 @@ defects; the NM-7 cluster is additionally guarded on the variants with bytecode 
 | NM-2 | Anyone can claim an uninitialized proxy by calling `initialize` first | Medium → Info | Rejected (duplicate of NM-1) |
 | NM-3 | Paused/restricted holders cannot revoke stale allowances | Medium → Low | **Fixed** |
 | NM-4 | Inconsistent context resolution (`msg.sender` vs `_msgSender()`) in the bridge gate | Medium → Info | Rejected (intentional) — **deployment constraint documented** (never grant `CROSS_CHAIN_ROLE` to the ERC-2771 forwarder) |
-| NM-5 | Missing freeze enforcement on `spender` for `burnFrom` / minter transfers | Medium → Info | Design choice (spender propagation traced + probed; freeze is a holder-level control, `revokeRole` is the operator lever) |
+| NM-5 | Missing freeze enforcement on `spender` for `burnFrom` / minter transfers | Medium → Info | Design choice; **Light `_minterTransferOverride` aligned** to pass `_msgSender()` like the full base (behaviour-neutral). Freeze stays a holder-level control, `revokeRole` is the operator lever |
 | NM-6 | Zero-value delegated transfers mutate RuleEngine state | Low → Info | Design choice (RuleEngine responsibility) — **documented** in `IRuleEngine` NatSpec + RuleEngine integration notes |
 | NM-7, NM-9, NM-11, NM-16, NM-18 | RuleEngine callback runs before balance effects (reentrancy ordering) | Low / Info ×4 → Low | **Partially fixed** — OZ `ReentrancyGuardTransient` on variants with bytecode headroom (Standard, Snapshot, ERC-7551); others documented (trusted RuleEngine) |
 | NM-8 | Allowance revocation blocked for frozen/non-allowlisted spenders | Low → Low | **Fixed** (same change as NM-3) |

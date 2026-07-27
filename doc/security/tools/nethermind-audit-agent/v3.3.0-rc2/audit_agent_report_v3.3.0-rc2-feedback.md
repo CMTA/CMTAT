@@ -67,7 +67,7 @@ exploitable by an unprivileged actor.
 | NM-2 | Medium → Informational | Rejected (duplicate of NM-1) | Closed |
 | NM-3 | Medium → Low | **Fixed** | **Fixed** — revocation (`value == 0`) always authorized |
 | NM-4 | Medium → Informational | Rejected (design; misconfiguration precondition) — **documented** | Closed — deployment constraint documented |
-| NM-5 | Medium → Informational | Accepted as design — spender propagation traced and probed | Accepted (see follow-up on `access-control.md`) |
+| NM-5 | Medium → Informational | Accepted as design — Light minter-transfer spender **aligned** with the full base (behaviour-neutral) | Partially addressed (see follow-up on `access-control.md`) |
 | NM-6 | Low → Informational | Accepted as design (RuleEngine responsibility) — **documented** | Accepted — doc + NatSpec added |
 | NM-7 | Low → Low | **Partially fixed** — guard on variants with size headroom | **Fixed (guarded variants)** / documented elsewhere |
 | NM-8 | Low → Low | **Fixed (same change as NM-3)** | **Fixed** |
@@ -214,15 +214,18 @@ reverts is being told, correctly, that the bridge must call directly — and the
 "fix" is to grant the role to the forwarder. Documenting the revert without documenting why the obvious
 workaround is unsafe would have left the finding's attack path open, which is why both are stated together.
 
-### NM-5 — Missing freeze enforcement on `spender` for `burnFrom` and minter transfers (Medium → Informational)
+### NM-5 — Missing freeze enforcement on `spender` for `burnFrom` and minter transfers (Medium → Informational — **partially addressed**)
 
 **Claim.** Burn routing checks only `from`; `CMTATBaseCore._minterTransferOverride` hardcodes `address(0)` as the
 spender; `CMTATBaseCommon._checkTransferred` ignores its `spender` argument entirely.
 
-**Verdict — accepted as design.** All three observations are factually correct:
+**Verdict — accepted as design; the Light-variant inconsistency was aligned.** All three observations are factually
+correct. The one that was a genuine *inconsistency* — `CMTATBaseCore` (Light) hardcoding `address(0)` where the
+full base passes `_msgSender()` — has been fixed for uniformity (see Resolution below). The rest stands as
+design.
 
-- `contracts/modules/0_CMTATBaseCore.sol` — `_minterTransferOverride` calls
-  `ValidationModule._canTransferGenericByModuleAndRevert(address(0), from, to)`.
+- `contracts/modules/0_CMTATBaseCore.sol` — `_minterTransferOverride` **now** calls
+  `ValidationModule._canTransferGenericByModuleAndRevert(_msgSender(), from, to)` (was `address(0)`).
 - `contracts/modules/0_CMTATBaseCommon.sol` — `_checkTransferred(address /*spender*/, …)` only calls
   `_checkActiveBalanceAndRevert(from, value)`; the spender-aware checks are layered by the derived modules
   (`3_CMTATBaseRuleEngine.sol`, `3_CMTATBaseAllowlist.sol`), which do pass `spender` through to
@@ -247,16 +250,17 @@ Because the finding turns on this, the argument was traced end to end. The two h
 | `_burnOverride` | `_checkTransferred(_msgSender(), account, address(0), value)` | the burner |
 | `_minterTransferOverride` | `_checkTransferred(_msgSender(), from, to, value)` | the minter |
 
-**`CMTATBaseCore` (Light variants) — no spender at all:**
+**`CMTATBaseCore` (Light variants):**
 
 | Path | Call | `spender` |
 | --- | --- | --- |
 | `_mintOverride` | `_canMintByModuleAndRevert(account)` | n/a — not a spender-parameterized function |
 | `_burnOverride` | `_canBurnByModuleAndRevert(account)` | n/a |
-| `_minterTransferOverride` | `_canTransferGenericByModuleAndRevert(address(0), from, to)` | **hardcoded `address(0)`** |
+| `_minterTransferOverride` | `_canTransferGenericByModuleAndRevert(_msgSender(), from, to)` | the minter *(aligned — was `address(0)`)* |
 
-So the report's specific claim about `CMTATBaseCore._minterTransferOverride` hardcoding `address(0)` is accurate,
-but it applies to the **Light variants only**; the full variants propagate the real operator.
+The report's specific claim about `CMTATBaseCore._minterTransferOverride` hardcoding `address(0)` was accurate at
+triage. It has since been changed to pass `_msgSender()`, matching `CMTATBaseCommon` (see Resolution). The mint and
+burn overrides remain `spender`-free by structure, as in the full base.
 
 #### Where the spender goes after that
 
@@ -305,10 +309,35 @@ The probe contradicts this: the frozen minter minted successfully. The first hal
 The statement could only hold if a configured RuleEngine chose to reject the spender — which is not what the text
 says, and is not true of the base contracts or of a deployment without a RuleEngine.
 
-This is **not** part of NM-5 (the tool did not report it, and the contract behaviour is intended). It is tracked
-here because it is a documented security control that does not exist as described — a reader could reasonably
-freeze a compromised minter and believe issuance is stopped. Left unchanged pending a decision on whether to
-correct the documentation or to make the behaviour match it.
+This is **not** part of NM-5 (the tool did not report it, and the contract behaviour is intended). It was a
+documented security control that did not exist as described — a reader could have frozen a compromised minter and
+believed issuance was stopped.
+
+**Resolved (documentation).** CMTA chose to keep the minter behaviour unchanged (freezing is holder-level;
+`revokeRole` is the operator lever) and correct the documentation instead. `doc/technical/access-control.md` now
+states that freezing an operator does **not** block `mint`/`batchMint` (only the recipient and deactivation are
+checked), that it **does** block the operator's `batchTransfer`/`transfer`/`transferFrom` (operator is the
+sender/spender), and that on the Standard version a configured RuleEngine still receives the operator as `spender`
+and may reject. A per-operation × per-deployment table was added there, with condensed versions in `doc/README.md`
+(Enforcement chapter) and the `ERC20Mint` module page.
+
+#### Resolution — Light minter-transfer aligned with the full base (no behaviour change)
+
+`contracts/modules/0_CMTATBaseCore.sol` — `_minterTransferOverride` now passes `_msgSender()` as the spender
+instead of a hardcoded `address(0)`, matching `CMTATBaseCommon._minterTransferOverride` and the `transferFrom`
+path. This removes the one genuine *inconsistency* the finding pointed at (the Light base treated its minter
+transfers differently from every other base).
+
+The change is **behaviour-neutral**. `_minterTransferOverride` is only ever reached from
+`ERC20MintModuleInternal._batchTransfer`, which passes `from = _msgSender()`, so `spender == from` on this path.
+In `_canTransferisFrozenAndRevert` the spender is checked before `from`, but both are the same address, so the
+revert (a frozen minter → `ERC7943CannotSend(minter)`) and the outcome are identical to before; only the argument
+is now threaded consistently. Light adds no bytecode (`CMTATStandaloneLight` unchanged at 11 562 bytes). It does
+**not** change the mint/burn paths — those remain `spender`-free by structure in both bases, so the
+freeze-does-not-block-a-minter behaviour probed above is unchanged, as is the `access-control.md` follow-up.
+
+Regression test: `test/common/ERC20MintModuleCommon.js` — `testCannotBatchTransferIfMinterIsFrozen` asserts a
+frozen minter's `batchTransfer` reverts with `ERC7943CannotSend(minter)`, run across the Light and full variants.
 
 ### NM-6 — Zero-value delegated transfers can mutate RuleEngine state (Low → Informational)
 
