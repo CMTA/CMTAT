@@ -71,15 +71,17 @@ Here are the reports produced by [Nethermind Audit Agent](https://auditagent.net
 
 | Version | High | Medium | Low | Info | Best practices | Anything to fix? |
 | ------- | ---: | -----: | --: | ---: | -------------: | ---------------- |
-| v3.3.0-rc2 | 1 | 4 | 3 | 14 | 2 | **3 defects fixed** (NM-15/17 zero-address guard, NM-3/8 allowance revocation, NM-22 terms name), NM-7 cluster partially fixed (reentrancy guard where size permits); NM-4/6/20/21/24 documented. Nothing exploitable; the High is a false positive; **no open item**. |
+| v3.3.0-rc2 | 1 | 4 | 3 | 14 | 2 | **12 code fixes**: zero-address guard (NM-15/17), allowance revocation (NM-3/8), ERC-7551 terms name (NM-22), `forcedTransfer` `Spend` + NatSpec (NM-24), Light minter-transfer alignment (NM-5), RuleEngine reentrancy guard where size permits (NM-7/9/11/16/18). NM-4/6/20/21 documented. Nothing exploitable; the High is a false positive; **no open item**. |
 | v3.1.0 | 2 | 2 | 10 | — | — | No — 7 invalid, 7 design choices. |
 
 ### v3.3.0-rc2 (Scan ID 9, 2026-07-23, commit `35d8940b…9d92e4ae`)
 
 **24 findings** (1 high, 4 medium, 3 low, 14 info, 2 best practices) across 100 contracts / 8067 LoC. Triage
-outcome: **5 fixed (behaviour) · 1 fixed doc-only (NM-24) · 14 accepted as design · 4 rejected (false positive /
-false premise)** (NM-15/NM-17 and NM-3/NM-8 are duplicate pairs, so the five behaviour fixes cover three distinct
-defects; the NM-7 cluster is additionally guarded on the variants with bytecode headroom).
+outcome: **12 fixed in code · 8 accepted as design (5 with new documentation) · 4 rejected (false positive /
+false premise)**. The 12 code fixes cover the zero-address guard (NM-15/17), allowance revocation (NM-3/8), the
+ERC-7551 `setTerms` name (NM-22), `forcedTransfer` `Spend` + NatSpec (NM-24), the Light minter-transfer alignment
+(NM-5), and the RuleEngine reentrancy guard on the size-permitting variants (NM-7/9/11/16/18). No item is left
+open.
 
 | ID | Title | Severity (tool → CMTA) | Disposition |
 | --- | --- | --- | --- |

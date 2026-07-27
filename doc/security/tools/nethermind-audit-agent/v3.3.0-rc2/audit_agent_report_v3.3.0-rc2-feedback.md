@@ -50,14 +50,24 @@ Debt, DebtEngine, HolderList, Permit, Snapshot, ERC-1363, ERC-7551, Light), `con
 
 ## Outcome
 
-**5 fixed (behaviour) · 1 fixed (doc-only, NM-24) · 14 accepted as design · 4 rejected (false positive / false premise)** = 24.
+**12 fixed in code · 8 accepted as design (5 with new documentation) · 4 rejected (false positive / false premise)** = 24.
 
-Three defects were fixed in behaviour: **NM-15/NM-17** (zero-address freeze bricking every mint path),
-**NM-3/NM-8** (allowance revocation blocked while paused or restricted) and **NM-22** (ERC-7551 `setTerms` erasing
-the document name). The **NM-7 cluster** (RuleEngine reentrancy) is guarded on the deployment variants that have
-bytecode headroom. **NM-24** was resolved doc-only (the `IERC20Allowance.Spend` NatSpec was corrected). NM-4, NM-6,
-NM-20 and NM-21 were documented rather than changed. **No item is left open**, and none of the 24 findings is
-exploitable by an unprivileged actor.
+The **12 code fixes** (counting the duplicate pairs and the reentrancy cluster individually):
+- the zero-address freeze guard on `_setFrozenTokens` (**NM-15 / NM-17**);
+- allowance revocation always allowed while paused or restricted (**NM-3 / NM-8**);
+- the ERC-7551 `setTerms` name-preservation (**NM-22**);
+- `forcedTransfer` now emitting `Spend`, plus the corrected `IERC20Allowance.Spend` NatSpec (**NM-24** — a behaviour
+  change *and* a doc fix);
+- the Light minter-transfer spender alignment (**NM-5**, behaviour-neutral);
+- the RuleEngine reentrancy guard on the size-permitting variants (**NM-7 / NM-9 / NM-11 / NM-16 / NM-18**).
+
+The **8 accepted as design** (no code change): **NM-6**, **NM-20** and **NM-21** gained new documentation;
+**NM-13 / NM-14 / NM-19** are accepted with optional ERC-165 hardening tracked in
+[#395](https://github.com/CMTA/CMTAT/issues/395); **NM-12** and **NM-23** stand as design (NM-23 with two code
+variants written up but not applied). The **4 rejected** are false positives or a misconfiguration precondition:
+**NM-1**, **NM-2**, **NM-4** (which also gained a documented deployment constraint) and **NM-10**.
+
+**No item is left open**, and none of the 24 findings is exploitable by an unprivileged actor.
 
 ## Findings triage
 
@@ -164,9 +174,11 @@ it: a holder must always be able to sever ties with a compromised or sanctioned 
   - `test/common/EnforcementModuleCommon.js` — `testCanRevokeAllowanceWhenSpenderIsFrozen`,
     `testCanRevokeAllowanceWhenOwnerIsFrozen`, `testCannotGrantAllowanceWhenSpenderIsFrozen` (negative guard).
   - `test/common/AllowlistModuleCommon.js` — `testCanRevokeAllowanceWhenSpenderIsNotAllowlisted`.
-- **Verification.** The four revocation tests went from failing to passing on the fix; the two negative guards
-  passed throughout. Both fixes were validated together against the whole test suite: **5866 passing, 87 pending,
-  0 failing**.
+  - `test/common/PermitModuleCommon.js` — the `permit` twin of the carve-out (added in the audit-verification
+    follow-up, since `permit` shares `_canAuthorizeAllowanceByModuleAndRevert` with `approve`): zero-value permit
+    revocation *"while paused / when the owner is frozen / when the spender is frozen"*.
+- **Verification.** The revocation tests went from failing to passing on the fix; the negative guards passed
+  throughout. Validated in the full suite — **5998 passing / 0 failing** on the current tree (after all fixes).
 - **Note for integrators.** This reverses the v3.2.0 response to AuditAgent v3.1.0 finding #13 *for the zero value
   only*. `approve` remains pause-gated for every non-zero amount; only revocation was opened. The `whenNotPaused`
   modifier no longer appears on the `approve` signatures, but the pause enforcement it provided is unchanged.
@@ -319,7 +331,8 @@ states that freezing an operator does **not** block `mint`/`batchMint` (only the
 checked), that it **does** block the operator's `batchTransfer`/`transfer`/`transferFrom` (operator is the
 sender/spender), and that on the Standard version a configured RuleEngine still receives the operator as `spender`
 and may reject. A per-operation × per-deployment table was added there, with condensed versions in `doc/README.md`
-(Enforcement chapter) and the `ERC20Mint` module page.
+(Enforcement chapter), the `ERC20Mint` module page and `doc/technical/cross-chain-bridge-integration.md` (the last
+of which previously overstated that freezing blocks mint).
 
 #### Resolution — Light minter-transfer aligned with the full base (no behaviour change)
 
@@ -336,8 +349,12 @@ is now threaded consistently. Light adds no bytecode (`CMTATStandaloneLight` unc
 **not** change the mint/burn paths — those remain `spender`-free by structure in both bases, so the
 freeze-does-not-block-a-minter behaviour probed above is unchanged, as is the `access-control.md` follow-up.
 
-Regression test: `test/common/ERC20MintModuleCommon.js` — `testCannotBatchTransferIfMinterIsFrozen` asserts a
-frozen minter's `batchTransfer` reverts with `ERC7943CannotSend(minter)`, run across the Light and full variants.
+Regression tests (`test/common/ERC20MintModuleCommon.js`): `testCannotBatchTransferIfMinterIsFrozen` asserts a
+frozen minter's `batchTransfer` reverts with `ERC7943CannotSend(minter)`; `testFrozenMinterCanStillMint` /
+`testFrozenMinterCanStillBatchMint` assert a frozen minter's `mint`/`batchMint` still **succeed** — locking in the
+documented freeze-does-not-block-issuance behaviour — verified on Standard, Light and Allowlist. The analogous
+allowlist case (a non-allowlisted minter can mint to an allowlisted recipient) is covered by
+`testMinterNotAllowlistedCanStillMint` in `test/common/AllowlistModuleCommon.js`.
 
 ### NM-6 — Zero-value delegated transfers can mutate RuleEngine state (Low → Informational)
 
@@ -802,8 +819,7 @@ Informational.
 - **Tests.** `test/common/ERC7551ModuleCommon.js` — added `testERC7551SetTermsPreservesDocumentName` (asserts the
   uri and hash update while the name survives). The pre-existing `testAdminCanUpdateTerms` was updated: its
   expected name changed from `''` to `TERMS[0]`, since it had encoded the erasure as expected behaviour.
-- **Verification.** ERC-7551 standalone + upgradeable suites: 476 passing. Full suite: **5868 passing, 87 pending,
-  0 failing**.
+- **Verification.** ERC-7551 standalone + upgradeable suites: 476 passing. Full suite (current tree): **5998 passing / 0 failing**.
 
 ### NM-23 — `detectTransferRestrictionFrom` reports `SPENDER_FROZEN` before deactivated/paused (Best Practices → Informational)
 
@@ -1115,7 +1131,7 @@ were fixed in code where warranted; the rest were documented. Summary:
    misleading name was removed.
 2. **NM-3 / NM-8 — allowance revocation blocked while paused or restricted** (`ValidationModuleAllowance.sol` +
    4 call sites). **FIXED** — `value == 0` is always authorized; non-zero grants remain gated exactly as before
-   (7 regression tests, two of them negative guards).
+   (7 `approve` revocation tests plus 3 `permit` revocation tests; two negative guards).
 3. **NM-24 — `Spend` event contradicts its NatSpec, and `forcedTransfer` consumed allowance silently.** **FIXED** —
    the `IERC20Allowance.Spend` NatSpec was corrected, and `_forcedTransfer` now emits `Spend` on the allowance
    reduction (4 regression tests). The residual `transferFrom`/`burnFrom` cosmetic inconsistency is documented in
