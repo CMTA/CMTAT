@@ -1,6 +1,8 @@
-### Guideline
+# CMTAT specification vs implementation
 
-If you create a version for another blockchain, feel free to use this summary tab to build a correspondence table between CMTAT framework, CMTAT Solidity version and your implementation.
+This document maps the **CMTAT framework specification** (the functional requirements defined by CMTA) to the features of **this Solidity reference implementation**, so the two can be compared function by function.
+
+> Porting CMTAT to another blockchain is out of scope here. For a correspondence table between the CMTAT framework and a non-Solidity implementation, see [CMTAT/CMTAT-equivalency-assessment](https://github.com/CMTA/CMTAT-equivalency-assessment).
 
 #### CMTAT framework
 
@@ -25,14 +27,7 @@ In the below table, the CMTAT framework required features are mapped to Solidity
 
 **Freeze** 
 
-To be compatible with [ERC-3643](https://eips.ethereum.org/EIPS/eip-3643), the freeze functionality is implemented with only one function: `setAddressFrozen` which takes the target address and the frozen status (true/false).
-
-However, for non-EVM blockchains, it could be clearer and make more sense to separate the freeze and unfreeze (or `thaw`) functionality with two separate and distinct functions, such as: 
-
-```solidity
-freeze(address targetAddress)
-unfreeze(address targetAddress)
-```
+To be compatible with [ERC-3643](https://eips.ethereum.org/EIPS/eip-3643), the specification's separate *freeze* and *unfreeze* capabilities are implemented with a single function: `setAddressFrozen`, which takes the target address and the frozen status (true/false).
 
 #### CMTAT extended 
 
@@ -54,7 +49,7 @@ In the below table, the CMTAT framework extendedfeatures are mapped to Solidity 
 
 In the standard burn function, it is not possible to burn token from a frozen wallet.  CMTAT offers a dedicated function `forcedTransfer`which allows to force a transfer or a burn. If the `forcedTransfer` function is not available, the alternative is to implement only the function `forcedBurn`. 
 
-This is what is done for the CMTAT light version which does not include `forcedTransfer`. You can also decide to implement both. In this case, we suggest that only `forcedBurn`can burn tokens and not `forcedTransfer`. With the CMTAT Solidity version, when `forcedTransfer` is available, we do not implement `forcedBurn` to reduce smart contract code size, but this limitation is not necessarily present with other blockchains.
+This is what is done for the CMTAT light version, which does not include `forcedTransfer`. In this implementation, when `forcedTransfer` is available, `forcedBurn` is not implemented, to reduce smart contract code size (EIP-170).
 
 #### Implementation details
 
@@ -71,5 +66,3 @@ This is what is done for the CMTAT light version which does not include `forcedT
 It's deliberate that only the issuer (and not the tokenholder) can burn a token, and that this corresponds to a legal requirement in several countries.
 
 Indeed, once issued, a security can only be cancelled by its issuer, not by its holder. Since the token serves as a vehicle for the security, the same must apply to the token itself. An investor wishing to "get rid of" a token must transfer it to the issuer, who can then cancel it when the law allows.
-
-However, feel free to add it in your CMTAT version if this makes sense for you from a legal or business perspective.

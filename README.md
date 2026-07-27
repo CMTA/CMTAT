@@ -73,7 +73,7 @@ Most products come in a **standalone** (immutable) or **upgradeable** (proxy) va
 
 ## Contract Sizes
 
-Measured with `solc 0.8.36`, optimizer enabled (200 runs). EVM deployed bytecode limit: **24.576 KiB**.
+Measured with `solc 0.8.34`, optimizer enabled (200 runs). EVM deployed bytecode limit: **24.576 KiB**.
 
 | Deployment Version | Deployed (KiB) | Initcode standalone (KiB) | Initcode upgradeable (KiB) |
 |---|---|---|---|
@@ -197,7 +197,7 @@ Per-tool reports, maintainer feedback, and dispositions are collected in **[doc/
 
 | Scan | High | Medium | Low | Info | Best practices | Verdict |
 | ---- | ---: | -----: | --: | ---: | -------------: | ------- |
-| v3.3.0-rc2 (Scan ID 9, 2026-07-23) | 1 | 4 | 3 | 14 | 2 | Nothing exploitable by an unprivileged actor; the High is a false positive. **12 code fixes:** NM-15/17 (missing `address(0)` guard in `_setFrozenTokens`, which let an `ERC20ENFORCER_ROLE` holder brick every mint path), NM-3/8 (allowance revocation was blocked while paused or when a party was frozen/delisted), NM-22 (the ERC-7551 `setTerms` overload silently erased the terms document name), NM-24 (`forcedTransfer` now emits `Spend`, and the `Spend` NatSpec was corrected), NM-5 (the Light minter-transfer spender was aligned with the full base), and the RuleEngine reentrancy cluster (NM-7/9/11/16/18) guarded on the variants with bytecode headroom. Remaining items are documentation (NM-4/6/20/21); no open item. |
+| v3.3.0-rc2 (Scan ID 9, 2026-07-23) | 1 | 4 | 3 | 14 | 2 | Nothing exploitable by an unprivileged actor; the High is a false positive. **Three defects fixed:** NM-15/17 (missing `address(0)` guard in `_setFrozenTokens`, which let an `ERC20ENFORCER_ROLE` holder brick every mint path), NM-3/8 (allowance revocation was blocked while paused or when a party was frozen/delisted) and NM-22 (the ERC-7551 `setTerms` overload silently erased the terms document name). The RuleEngine reentrancy cluster (NM-7/9/11/16/18) is guarded on the variants with bytecode headroom. Remaining items are documentation fixes (NM-4/6/20/21/24); no open item. |
 
 Report: [audit_agent_report_v3.3.0-rc2.pdf](./doc/security/tools/nethermind-audit-agent/v3.3.0-rc2/audit_agent_report_v3.3.0-rc2.pdf) · Maintainer triage: [audit_agent_report_v3.3.0-rc2-feedback.md](./doc/security/tools/nethermind-audit-agent/v3.3.0-rc2/audit_agent_report_v3.3.0-rc2-feedback.md)
 
@@ -270,4 +270,4 @@ Focused, subsystem-level guides live in [`doc/technical/`](./doc/technical/):
 - **Architecture & operations** — [Deployment variants](./doc/technical/deployment.md) · [Lifecycle: pause & deactivation](./doc/technical/lifecycle.md) · [Access control (roles)](./doc/technical/access-control.md)
 - **Standards** — [ERC-3643 implementation](./doc/technical/erc-3643-implementation.md) · [ERC-7551 (eWpG)](./doc/technical/erc7551.md) · [ERC-7943 (uRWA) integration](./doc/technical/erc-7943-uRWA-integration.md) · [Documents (ERC-1643)](./doc/technical/document.md) · [RuleEngine (ERC-1404)](./doc/technical/ruleengine-integration.md)
 - **Features** — [Holder list](./doc/technical/holder-list.md) · [Snapshots](./doc/technical/snapshot.md) · [Debt & credit events](./doc/technical/debt.md) · [Permit & Multicall](./doc/technical/permit-multicall.md) · [Cross-chain bridge integration](./doc/technical/cross-chain-bridge-integration.md) · [Spend allowance event](./doc/technical/allowance-spend-event.md)
-- **Use cases & porting** — [Stablecoins](./doc/technical/stablecoin.md) · [Guideline: porting to a new blockchain](./doc/technical/guideline-new-blockchain.md)
+- **Use cases & porting** — [Stablecoins](./doc/technical/stablecoin.md) · [CMTAT specification vs implementation](./doc/technical/cmtat-specification-analyse.md) · [Porting to another blockchain](https://github.com/CMTA/CMTAT-equivalency-assessment)
