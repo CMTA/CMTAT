@@ -128,7 +128,8 @@ If you need to *move* the tokens to another address instead of burning them, Lig
 ### Deactivation
 
 `deactivateContract()` (requires `DEFAULT_ADMIN_ROLE`, contract must be paused first) permanently disables the contract. After deactivation:
-- All state-changing operations revert.
+- Holder transfers and standard `mint` / `burn` revert with `EnforcedDeactivation`.
+- Privileged enforcement operations still work by design: `forcedBurn` (Light) / `forcedTransfer` (Standard) and the freeze setters remain available to the admin/enforcer, so a terminated position can still be swept. See [lifecycle.md](./lifecycle.md).
 - Read functions still work.
 - The state is irreversible.
 

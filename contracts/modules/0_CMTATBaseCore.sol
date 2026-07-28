@@ -230,6 +230,10 @@ abstract contract CMTATBaseCore is
 
     /**
     * @inheritdoc IForcedBurnERC20
+    * @dev Burns directly via `ERC20Upgradeable._burn`, so it bypasses the pause/deactivation
+    * validation used by the standard burn path. This is intentional — the Light variant's
+    * enforcement burn remains available **after deactivation** (per ERC-8343), so the enforcer
+    * can still cancel a frozen or migrated position on a terminated token.
     * @custom:access-control
     * - The caller must have the `DEFAULT_ADMIN_ROLE`.
     */

@@ -1996,7 +1996,7 @@ interface IERC8343 {
 
 Since the version v2.3.1, a function `deactivateContract` is implemented in the PauseModule to deactivate the contract.
 
-If a contract is deactivated, it is no longer possible to perform transfer and burn/mint operations.
+If a contract is deactivated, holder transfers and standard `burn` / `mint` operations revert with `EnforcedDeactivation`. Privileged enforcement operations — `forcedTransfer`, `forcedBurn` and the freeze setters — **intentionally remain available** so the enforcer/admin can still act on a terminated token (see [Post-deactivation privileged operations](#post-deactivation-privileged-operations) below and [technical/lifecycle.md](./technical/lifecycle.md)).
 
 ##### Kill (previous version)
 
@@ -2026,6 +2026,9 @@ The following privileged operations are intentionally post-deactivation-enabled:
 - `setAddressFrozen` / `batchSetAddressFrozen` (`EnforcementModule`)
 - `freezePartialTokens` / `unfreezePartialTokens` (`ERC20EnforcementModule`)
 - `forcedTransfer` and related privileged enforcement paths (`ERC20EnforcementModule` / `ERC20EnforcementERC7551Module`)
+- `forcedBurn` (Light / `CMTATBaseCore`) — the Light variant's enforcement burn
+
+This is intentional: `forcedTransfer` / `forcedBurn` move tokens through the ERC-20 `_update` primitive directly (the enforcer's regulatory tool), so they bypass the pause/deactivation validation applied to holder transfers and standard issuance. Per [ERC-8343](../ERCSpecification/draft-erc-8343-deactivation.md) a named privileged operation may remain available after deactivation (e.g. to sweep a frozen or migrated position). Because `DEFAULT_ADMIN_ROLE` can hold these roles, it can still move tokens after deactivation — protect that key with a multisig/timelock.
 
 See also [technical/lifecycle.md](./technical/lifecycle.md) for the consolidated pause/deactivation reference (state machine, what each state blocks, ERC-8343).
 

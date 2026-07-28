@@ -110,6 +110,13 @@ abstract contract ERC20EnforcementModuleInternal is ERC20Upgradeable, IERC7943Fu
         }
     }
 
+    /**
+    * @dev
+    * Moves tokens through the ERC-20 `_update` primitive directly, without the pause/deactivation
+    * validation applied to holder transfers and standard issuance. This is intentional: forced
+    * transfer/burn is the enforcer's regulatory tool and, per ERC-8343, a named privileged operation
+    * that remains available **after deactivation** (e.g. to sweep a frozen or migrated position).
+    */
     function _forcedTransfer(address from, address to, uint256 value) internal virtual {
         // A self forced transfer moves no token, but _unfreezeTokens would still release the frozen ones
         require(from != to, CMTAT_ERC20EnforcementModule_SelfTransferNotAllowed());
