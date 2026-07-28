@@ -2859,6 +2859,12 @@ Here are the different fields and functions to read and store the related debt i
 
 #### Schema
 
+Both debt variants build on a **RuleEngine-capable** base — not the full standard base — and add debt features plus the snapshot base, but they differ in how the debt data is stored and whether cross-chain is included:
+
+- **`CMTATBaseDebt`** (level 4, *Debt base schema*) inherits `CMTATBaseRuleEngine` (level 3 — core modules, core validation and the RuleEngine) and mixes in the **internal** `DebtModule` (debt terms and credit events stored in the token) plus `CMTATBaseSnapshot`. It deliberately stops below the cross-chain (level 5) and ERC-2771 (level 6) layers, so the Debt variant has **no** `ERC20CrossChain` and **no** meta-transaction support.
+- **`CMTATBaseDebtEngine`** (level 6, *DebtEngine base schema*) instead sits on `CMTATBaseERC20CrossChain` (level 5) and swaps the internal module for the **external** `DebtEngineModule`, so debt data lives in a separate `DebtEngine` contract. Being on the cross-chain base, it keeps `ERC20CrossChain` and the ERC-1404 rule-engine surface; like Debt it omits ERC-2771.
+- For each, `CMTATStandalone…` and `CMTATUpgradeable…` (the first two schemas of each block) extend the base and differ only in standalone-vs-proxy wiring.
+
 ##### Debt
 
 - CMTAT Standalone Debt
@@ -2924,6 +2930,25 @@ The same allowance authorization checks apply to both `approve` and `permit`:
 
 This deployment version is useful when a workflow needs gas-sponsored approvals, signature-based UX, or atomic batching of several token operations.
 
+#### Inheritance
+
+The Permit variant builds on the cross-chain base and adds the two OpenZeppelin mixins that give it its name:
+
+- **`CMTATBaseERC2612`** (level 6, *base schema*) is `abstract` and inherits `CMTATBaseERC20CrossChain` (level 5 — core modules, validation, RuleEngine and ERC-20 cross-chain), then mixes in OpenZeppelin's `ERC20PermitUpgradeable` (`permit`) and `MulticallUpgradeable` (`multicall`). Unlike the standard base it does **not** pull in `ERC2771Module`, to keep the bytecode lean under EIP-170.
+- **`CMTATStandalonePermit`** and **`CMTATUpgradeablePermit`** extend that base and differ only in standalone-vs-proxy wiring.
+
+- CMTAT Base Permit
+
+![surya_inheritance_6_CMTATBaseERC2612.sol](./schema/surya_inheritance/surya_inheritance_6_CMTATBaseERC2612.sol.png)
+
+- CMTAT Standalone Permit
+
+![surya_inheritance_CMTATStandalonePermit.sol](./schema/surya_inheritance/surya_inheritance_CMTATStandalonePermit.sol.png)
+
+- CMTAT Upgradeable Permit
+
+![surya_inheritance_CMTATUpgradeablePermit.sol](./schema/surya_inheritance/surya_inheritance_CMTATUpgradeablePermit.sol.png)
+
 ### Allowlist
 
 The Allowlist deployment version allows to restrict transfer to token holders present inside an allowlist (whitelist) maintained inside the smart contract. 
@@ -2947,6 +2972,11 @@ More information regarding the Ethereum API available in the [Allowlist module d
 
 
 #### Inheritance
+
+The Allowlist variant swaps the RuleEngine branch for an **in-contract whitelist**, which is why it sits at level 3 (parallel to the RuleEngine base) and cannot use a RuleEngine / ERC-1404:
+
+- **`CMTATBaseAllowlist`** (level 3, *base schema*) inherits `CMTATBaseAccessControl` (level 2) and composes `ValidationModuleAllowlist` (the whitelist check that replaces the RuleEngine validation), `ValidationModuleAllowance`, `ERC2771Module` (so it keeps meta-transactions) and `ERC20EnforcementERC7551Module` (so `forcedTransfer` and the ERC-7551 enforcement surface stay available).
+- **`CMTATStandaloneAllowlist`** and **`CMTATUpgradeableAllowlist`** extend that base and differ only in standalone-vs-proxy wiring.
 
 - CMTAT Standalone Allowlist
 
