@@ -45,9 +45,48 @@ Custom changelog tag: `Dependencies`, `Documentation`, `Testing`
 
 ## 3.3.0 - rc3
 
+> **Note:** This version has not been audited.
+
+Main theme: remediation of the **Nethermind AuditAgent v3.3.0-rc2** automated review. Maintainer triage outcome: **12 fixed in code · 8 accepted as design (5 documented) · 4 rejected**; no open item. Full per-finding dispositions in [audit_agent_report_v3.3.0-rc2-feedback.md](./doc/security/tools/nethermind-audit-agent/v3.3.0-rc2/audit_agent_report_v3.3.0-rc2-feedback.md).
+
+### Smart contract
+
+#### Fixed
+
+- **NM-15/17 — missing `address(0)` guard in `_setFrozenTokens`** (`ERC20EnforcementModuleInternal`): an `ERC20ENFORCER_ROLE` holder could freeze tokens on the zero address and brick every mint path. A zero-address guard now rejects it.
+- **NM-3/8 — allowance revocation blocked while paused / frozen**: setting an allowance to `0` is now always permitted. `_canAuthorizeAllowanceByModuleAndRevert` returns early when `value == 0`, so an owner can revoke a spender even while the contract is paused or a party is frozen/delisted.
+- **NM-22 — `setTerms(bytes32,string)` overload erased the terms document name**: the overload now preserves the existing document `name` instead of silently clearing it (`ERC7551Module` / `ExtraInformationModule`).
+- **NM-24 — `forcedTransfer` allowance accounting**: `forcedTransfer` now emits `Spend(from, to, min(currentAllowance, value))` and the `IERC20Allowance.Spend` NatSpec was corrected.
+- **NM-5 — Light minter transfer**: `_minterTransferOverride` now threads `_msgSender()` as the spender argument, aligning the Light variant with the other deployments.
+
+#### Security
+
+- **NM-7/9/11/16/18 — reentrancy on the RuleEngine `transferred` callback**: the `transferred` callback (invoked before balance effects) is now protected by a transient-storage reentrancy guard (OpenZeppelin `ReentrancyGuardTransient`, EIP-1153) on the deployment variants with bytecode headroom. `_callRuleEngineTransferred` is `virtual` and only guards when a RuleEngine is set; size-constrained variants can override, and the limitation is documented. Added a malicious reentrant RuleEngine mock (`RuleEngineReentrantMock`) to cover the attack.
+
+#### Changed
+
+- Raised the Solidity source pragma floor to `^0.8.24` across all contracts, required by the EIP-1153 transient storage used by the new reentrancy guard.
+
+### Testing
+
+#### Added
+
+- Malicious-engine reentrancy tests (`test/common/ValidationModule/RuleEngineReentrancyCommon.js`) plus per-variant wiring.
+- Regression tests for the fixes above: zero-value permit/allowance revocation while paused or with a frozen owner/spender, `setTerms` name preservation, `forcedTransfer` `Spend` event, the Light minter-transfer spender.
+- Coverage tests that a non-allowlisted minter can still mint, a frozen minter can still mint, and that freeze does not block `mint`/`batchMint` (standard + light).
+- **`doc/test/Test.md`** — a hand-maintained test catalogue (module × deployment-version matrix, per-module scenario reference) to make missing tests easy to find; its maintenance is now required by `CLAUDE.md` / `AGENTS.md`.
+
+### Documentation
+
+- Documented the accepted-as-design findings: NM-4 (raw `msg.sender` bridge gate and the `CROSS_CHAIN_ROLE` forwarder constraint), NM-6 (permissionless zero-value `transferred` callbacks in the `IRuleEngine` NatSpec), NM-20 (the ERC20Burn pause note — `burnFrom` / `burn(value)` carry the pause check as cross-chain/third-party operations), NM-21 (`setName` does not update the EIP-712 domain; signers must read `eip712Domain()`), and an allowance-spend-event technical note (NM-24).
+- Expanded `doc/README.md`: ERC-2771 per-deployment support table; split of the ERC-1404 version-support row into base (`detectTransferRestriction`) and reworked-only Extension (`detectTransferRestrictionFrom`); native `DocumentERC1643Module` vs external `DocumentEngineModule`; inheritance schemas for ERC-1363, Light, Debt, DebtEngine, Permit and Allowlist; a per-tool security-tools overview; and a `CMTAT-Confidential` entry under official implementations.
+- Renamed `guideline-new-blockchain.md` → `cmtat-specification-analyse.md` (rescoped to a CMTAT-specification-vs-implementation comparison); porting now points to the external [CMTAT-equivalency-assessment](https://github.com/CMTA/CMTAT-equivalency-assessment) repository. Removed the ERC-1450 links from the Technical Guides.
+- Corrected `holder-list.md` (the gas cost of a transfer between existing holders, and off-chain balance-at-a-block via `eth_call`).
+
 ### Dependencies
 
-- Update the pinned Solidity compiler from 0.8.34 to [0.8.36](https://docs.soliditylang.org/en/v0.8.36/) in `hardhat.config.js` and `foundry.toml`. The floating source pragma is unchanged (`^0.8.24`, required by EIP-1153 transient storage).
+- Update the pinned Solidity compiler from 0.8.34 to [0.8.36](https://docs.soliditylang.org/en/v0.8.36/) in `hardhat.config.js` and `foundry.toml`.
+- Bump the `npm` devDependency to `^12.0.1`.
 
 ## 3.3.0 - rc2 - 2026-07-23
 
