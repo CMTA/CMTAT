@@ -63,6 +63,7 @@ Proxy module suites, not the variant entry file.
 | Validation — Core (`canTransfer`, pause/freeze) | ✓ | ✓ | ✓ | (std) | (std) | (std) | ✓ | ✓ | (std) | (std) |
 | Validation — RuleEngine (full, ERC-1404) | — | ✓ | — | (std) | (std) | (std) | — | — | (std) | (std) |
 | Validation — RuleEngine reentrancy (NM-7) | — | ✓ | — | — | — | — | — | — | — | — |
+| Validation — RuleEngine spender dispatch | — | ✓ | — | — | — | — | — | — | — | — |
 | Allowlist | — | (std) | ✓ | — | — | — | — | — | — | — |
 | Document (ERC-1643) | — | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 | DocumentEngine | — | ✓ | — | — | — | — | — | — | — | — |
@@ -113,6 +114,7 @@ scenarios list the `context(...)` groups.
 | Validation (RuleEngine) | `ValidationModule/ValidationModuleCommon.js` | 27 | RuleEngine transfer/transferFrom/mint gating, mint/burn frozen, send/receive checks (ERC-1404 + ERC-7943). |
 | Validation setRuleEngine | `ValidationModule/ValidationModuleSetRuleEngineCommon.js` | 6 | `setRuleEngine` access control + same-value revert. |
 | Validation reentrancy | `ValidationModule/RuleEngineReentrancyCommon.js` | 7 | Malicious reentrant RuleEngine cannot drain frozen tokens; guard reverts `ReentrancyGuardReentrantCall`; normal/batch flows unaffected (NM-7/9/11/16/18). |
+| Validation spender dispatch | `ValidationModule/RuleEngineSpenderDispatchCommon.js` | 2 | `transferFrom` routes to the spender-aware 4-arg `transferred(spender,…)` overload and forwards the real spender; a direct `transfer` routes to the legacy 3-arg overload (spender `address(0)`). Uses `RuleEngineSpenderRecorderMock`; kills the `spender != address(0)` dispatch mutant. |
 | Allowlist | `AllowlistModuleCommon.js` | 36 | `setAddressAllowlist`/batch/`enableAllowlist`; allowlisted send/receive; `transferFrom` requires spender **and** from/to allowlisted (`testCannotTransferTokenWhenSpenderIsNotAllowlistWithTransferFrom`); **minter need not be allowlisted to mint** (`testMinterNotAllowlistedCanStillMint`/`…BatchMint`); approve while not allowlisted; revocation carve-out. |
 
 ### Documents, metadata, holder list
