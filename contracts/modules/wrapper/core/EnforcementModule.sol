@@ -22,7 +22,7 @@ abstract contract EnforcementModule is
 
 
     /* ============ Modifier ============ */
-    /// @dev Modifier to restrict access to the burner functions
+    /// @dev Modifier to restrict access to the address-freeze functions (via `_authorizeFreeze`, ENFORCER_ROLE)
     modifier onlyEnforcer() {
         _authorizeFreeze();
         _;

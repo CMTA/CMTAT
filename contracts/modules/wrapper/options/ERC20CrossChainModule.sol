@@ -96,7 +96,7 @@ abstract contract ERC20CrossChainModule is ERC20MintModule, ERC20BurnModule, ERC
     /**
     * @inheritdoc IBurnFromERC20
     * @custom:access-control
-    * - Protected by the modifier onlyBurnerFrom
+    * - Protected by the modifier onlySelfBurn (BURNER_SELF_ROLE).
     */
     function burn(
         uint256 value
