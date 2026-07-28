@@ -1804,10 +1804,11 @@ Using an external contract provides two advantages:
 
 Here is the list of the different versions available for each CMTAT version.
 
-| CMTAT version            | DocumentEngine                                               |
-| ------------------------ | ------------------------------------------------------------ |
-| CMTAT v3.0.0             | Under development                                            |
-| CMTAT v2.5.0 (unaudited) | [DocumentEngine v0.3.0](https://github.com/CMTA/DocumentEngine/releases/tag/v0.3.0) (unaudited) |
+| CMTAT version               | DocumentEngine                                               |
+| --------------------------- | ------------------------------------------------------------ |
+| CMTAT v3.3.0                | [DocumentEngine v0.4.0](https://github.com/CMTA/DocumentEngine/releases/tag/v0.4.0) (unaudited) |
+| CMTAT v3.0.0 - CMTAT v3.2.0 | Not developed                                                |
+| CMTAT v2.5.0 (unaudited)    | [DocumentEngine v0.3.0](https://github.com/CMTA/DocumentEngine/releases/tag/v0.3.0) (unaudited) |
 
 #### AuthorizationEngine (Deprecated)
 
