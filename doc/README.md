@@ -2678,6 +2678,13 @@ More information on this standard here: [erc1363.org](https://erc1363.org), [Rar
 
 #### Inheritance
 
+The ERC-1363 variant reuses the **Standard** module set and adds the ERC-1363 callback layer on top; the three schemas below read from the shared base down to the two deployable contracts:
+
+- **`CMTATBaseERC1363`** (level 8, *first schema*) is `abstract` and inherits the full standard base through `CMTATBaseERC7551Enforcement` (level 7 — core modules, RuleEngine, ERC-20 cross-chain and ERC-7551 enforcement), then mixes in OpenZeppelin's `ERC1363Upgradeable`, which brings `transferAndCall` / `approveAndCall`. The extra `CMTATBaseRuleEngine` / `CMTATBaseERC20CrossChain` imports are only there to resolve the diamond (`_update`, `supportsInterface`) overrides.
+- **`CMTATStandaloneERC1363`** and **`CMTATUpgradeableERC1363`** (*second and third schemas*) both extend that base and add `ERC2771Module`; they differ **only** in deployment plumbing — the standalone locks its state in a constructor, the upgradeable one is initialised behind a proxy. The functional surface is identical.
+
+So the diagram widens by exactly one mixin compared with the Standard variant: everything the Standard token can do, plus the ERC-1363 receiver/spender callbacks.
+
 - CMTAT ERC-1363 Base
 
 ![surya_inheritance_CMTAT_ERC1363_BASE.sol](./schema/surya_inheritance/surya_inheritance_8_CMTATBaseERC1363.sol.png)
@@ -2705,6 +2712,13 @@ The light version only includes core modules.
 It also includes a function `forcedBurn` to allow the admin to burn a token from a frozen address. This function is not required for deployment versions which include the extension module `ERC20EnforcementModule` because this module contains a function `forcedTransfer` which can be used instead.
 
 If the address is not frozen, it is also possible to perform a burn-and-mint atomically through the function `burnAndMint` like the deployment standard versions
+
+Mirroring the ERC-1363 layout, the schemas go from the shared base up to the two deployable contracts — but here the base sits at the **bottom** of the module stack instead of the top:
+
+- **`CMTATBaseCore`** (level 0, *last schema*) inherits **only the core modules** — ERC-20 base, mint, burn, pause, enforcement, core validation, access control and versioning — with no RuleEngine, cross-chain, snapshot, ERC-2771 or ERC-1363. It adds `forcedBurn` so an admin can still burn from a frozen address without pulling in the heavier `ERC20EnforcementModule`.
+- **`CMTATStandaloneLight`** and **`CMTATUpgradeableLight`** (*first two schemas*) extend `CMTATBaseCore` directly and, as with the ERC-1363 pair, differ only in standalone-vs-proxy wiring.
+
+This is why the Light schema is the shallowest of all variants: it is the one deployment whose base is level 0.
 
 - CMTAT Upgradeable Light
 
