@@ -3290,6 +3290,10 @@ This section provides an overview of CMTAT-related projects, both official imple
 
 ### Official / CMTA-Managed Implementations
 
+#### [CMTAT-Confidential](https://github.com/CMTA/CMTAT-Confidential)
+
+Confidential version of CMTAT that keeps balances and transfer amounts private using Fully Homomorphic Encryption. It builds on OpenZeppelin's [ERC-7984](https://eips.ethereum.org/EIPS/eip-7984) confidential-token standard and [Zama](https://www.zama.ai/)'s FHEVM (encrypted `euint64` balances, transfers validated through zero-knowledge proofs), while preserving CMTAT's compliance features (pause, freeze, forced transfer). Audited by OpenZeppelin (2026).
+
 #### Solana
 
 Specifications to deploy CMTAT-compliant tokens on Solana are available in the repository [CMTAT-Solana](https://github.com/CMTA/CMTAT-Solana), developed by [Taurus](https://www.taurushq.com) as an internal CMTA project in collaboration with the Solana Foundation.
