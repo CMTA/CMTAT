@@ -191,13 +191,11 @@ CMTAT has been audited by [ABDK](https://abdk.consulting) (v1.0, v2.3.0) and [Ha
 
 In addition to external audits and test coverage, CMTAT security reviews also include static analysis tools such as [Aderyn](https://github.com/Cyfrin/aderyn) and [Slither](https://github.com/crytic/slither), as well as AI-assisted auditing tools such as [Nethermind Audit Agent](https://auditagent.nethermind.io).
 
-Per-tool reports, maintainer feedback, and dispositions are collected in **[doc/security/AUDIT.md](./doc/security/AUDIT.md)**. The v3.3.0 static-analysis run (Slither 0.11.5 — 110 results; Aderyn 0.6.5 — 2 High, 10 Low) surfaced **no exploitable finding requiring a code fix**: every result is a false positive, a documented design choice, an environment note, or a style/optimization item.
+Per-tool reports, maintainer feedback, and dispositions are collected in **[doc/security/AUDIT.md](./doc/security/AUDIT.md)**. 
 
-### [Nethermind AuditAgent](https://auditagent.nethermind.io/) — v3.3.0-rc2
+**Last version**
 
-| Scan | High | Medium | Low | Info | Best practices | Verdict |
-| ---- | ---: | -----: | --: | ---: | -------------: | ------- |
-| v3.3.0-rc2 (Scan ID 9, 2026-07-23) | 1 | 4 | 3 | 14 | 2 | Nothing exploitable by an unprivileged actor; the High is a false positive. **Three defects fixed:** NM-15/17 (missing `address(0)` guard in `_setFrozenTokens`, which let an `ERC20ENFORCER_ROLE` holder brick every mint path), NM-3/8 (allowance revocation was blocked while paused or when a party was frozen/delisted) and NM-22 (the ERC-7551 `setTerms` overload silently erased the terms document name). The RuleEngine reentrancy cluster (NM-7/9/11/16/18) is guarded on the variants with bytecode headroom. Remaining items are documentation fixes (NM-4/6/20/21/24); no open item. |
+NethermindAudit Agent tool
 
 Report: [audit_agent_report_v3.3.0-rc2.pdf](./doc/security/tools/nethermind-audit-agent/v3.3.0-rc2/audit_agent_report_v3.3.0-rc2.pdf) · Maintainer triage: [audit_agent_report_v3.3.0-rc2-feedback.md](./doc/security/tools/nethermind-audit-agent/v3.3.0-rc2/audit_agent_report_v3.3.0-rc2-feedback.md)
 
