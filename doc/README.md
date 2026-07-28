@@ -2420,9 +2420,36 @@ interface ICMTATBase {
 
 #### Additional documents through ERC1643 and DocumentEngine
 
-Additional documents can be added through the `DocumentEngine`
+Beyond the single tokenization `terms` above, CMTAT can attach an arbitrary **set** of named [ERC-1643](https://github.com/ethereum/EIPs/issues/1643) documents (each a `bytes32` name → `{uri, documentHash, lastModified}`). There are **two complementary ways** to expose them, both implementing the same `IERC1643` interface, so an off-chain reader calls the same `getDocument` / `getAllDocuments` regardless of where the data lives:
 
-For more information, see the section dedicated to the `DocumentEngine`
+| Mechanism | Module | Where documents are stored | Availability |
+| --- | --- | --- | --- |
+| **Native (in-contract)** | [`DocumentERC1643Module`](../contracts/modules/wrapper/extensions/DocumentERC1643Module.sol) | In the token contract's own ERC-7201 storage | New in **v3.3.0**, on the deployment variants that include the document base (`CMTATBaseDocument`, level 1) |
+| **External engine** | [`DocumentEngineModule`](./modules/extensions/documentEngine/document.md) | In a separate `DocumentEngine` contract that the token points to | Optional module — currently **not shipped in any deployment variant**, validated through test mocks |
+
+**Native module — `DocumentERC1643Module`.** Documents are managed on the token itself:
+
+```solidity
+function setDocument(bytes32 name, string calldata uri, bytes32 documentHash) external; // onlyDocumentManager
+function removeDocument(bytes32 name) external;                                          // onlyDocumentManager
+function getDocument(bytes32 name) external view returns (string memory uri, bytes32 documentHash, uint256 lastModified);
+function getAllDocuments() external view returns (bytes32[] memory documentNames_);
+```
+
+- Writes are gated by the `DOCUMENT_ROLE`; reads are unrestricted.
+- `setDocument` emits `DocumentUpdated(name, uri, documentHash)` (both on insert and update); `removeDocument` emits `DocumentRemoved` and reverts `ERC1643MissingDocument` if the name is unknown. `lastModified` is stamped by the contract.
+- The zero name is rejected with `ERC1643InvalidName`. A `getDocument` on an unregistered name returns **empty values without reverting**, matching the ERC-1643 ABI.
+
+**External engine — `DocumentEngineModule`.** Instead of storing documents in the token, the token holds the address of an external `DocumentEngine` (any contract implementing `IERC1643`) and delegates the reads to it:
+
+```solidity
+function setDocumentEngine(IERC1643 documentEngine_) external; // DOCUMENT_ENGINE_ROLE
+function documentEngine() external view returns (IERC1643);
+```
+
+This keeps document logic upgradeable and off the token's bytecode, and lets several tokens share one engine. `getDocument` / `getAllDocuments` on the token forward to the configured engine.
+
+Both mechanisms support the **two versions of ERC-1643** CMTAT implements — the *original* (only ever a [GitHub issue](https://github.com/ethereum/EIPs/issues/1643)) and its *rework* draft ["Document Management for Security Tokens" (ethereum/ERCs PR #1754)](https://github.com/ethereum/ERCs/pull/1754) — which share the same `bytes32`-named document model. For the engine contract, its interface, expected roles, and the released `DocumentEngine` versions, see the [DocumentEngine (IERC-1643)](#documentengine-ierc-1643) section.
 
 ### Cross-chain transfers (ERC-7802, CCIP-CCT, LayerZero)
 
