@@ -2185,6 +2185,24 @@ The CMTAT supports client-side gasless transactions using the standard [ERC-2771
 
 The contract uses the OpenZeppelin contract `ERC2771ContextUpgradeable`, which allows a contract to get the original client with `_msgSender()` instead of the feepayer given by `msg.sender`.
 
+#### Deployment version support
+
+The `ERC2771Module` is included in **every deployment variant except Light, Permit, Debt and DebtEngine**, where it is intentionally omitted (Light is minimal by design; Permit, Debt and DebtEngine drop it to keep bytecode under the EIP-170 limit). Both the standalone and upgradeable flavours of each variant behave the same.
+
+| Deployment variant | MetaTx/Gasless (ERC-2771) | Note |
+| --- | :---: | --- |
+| Standard | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | Via `CMTATBaseERC7551Enforcement` |
+| ERC-7551 | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | |
+| Snapshot | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | Via `CMTATBaseERC2771Snapshot` |
+| Allowlist | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | |
+| ERC-1363 | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | |
+| HolderList | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | |
+| UUPS | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | Via `CMTATBaseERC2771` |
+| Light | <strong><span style="color: #b00020;">&#x2718;</span></strong> | Minimal variant (`CMTATBaseCore`), module omitted |
+| Permit | <strong><span style="color: #b00020;">&#x2718;</span></strong> | Omitted to keep bytecode lean (EIP-170) |
+| Debt | <strong><span style="color: #b00020;">&#x2718;</span></strong> | Omitted (`ERC2771Module` and cross-chain excluded) |
+| DebtEngine | <strong><span style="color: #b00020;">&#x2718;</span></strong> | Omitted |
+
 At deployment, the parameter  `forwarder` inside the CMTAT contract constructor has to be set  with the defined address of the forwarder. 
 
 After deployment:
