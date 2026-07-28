@@ -24,7 +24,7 @@ are the latest ones that we tested:
 
 - Node v24.12.0
 
-- npm 11.11.0
+- npm 12.0.1
 - Nomiclabs - Hardhat: ^2.28.5
   - **[hardhat-ethers](https://www.npmjs.com/package/@nomicfoundation/hardhat-ethers)**
   - [Hardhat](https://hardhat.org/) plugin for integration with [ethers.js](https://github.com/ethers-io/ethers.js/)
