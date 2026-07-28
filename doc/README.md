@@ -393,6 +393,18 @@ The CMTAT supports the following optional features:
 - "Gasless" (MetaTx) transactions with [ERC-2771](https://eips.ethereum.org/EIPS/eip-2771)
   - Module: ERC2771Module
 
+- Signature-based approvals with [ERC-2612 Permit](https://eips.ethereum.org/EIPS/eip-2612) (approve without an on-chain `approve` transaction)
+  - Deployment: CMTAT Standalone Permit / CMTAT Upgradeable Permit
+  - Base: CMTATBaseERC2612 (OpenZeppelin `ERC20PermitUpgradeable`)
+
+- Batching several calls in a single transaction with [ERC-6357 Multicall](https://eips.ethereum.org/EIPS/eip-6357)
+  - Deployment: CMTAT Standalone Permit / CMTAT Upgradeable Permit
+  - Base: CMTATBaseERC2612 (OpenZeppelin `MulticallUpgradeable`)
+
+- Maintain on-chain the list of addresses holding a non-zero balance (issuer reporting, corporate actions)
+  - Deployment: CMTAT Standalone HolderList / CMTAT Upgradeable HolderList
+  - Module: HolderListModule
+
 
 Furthermore, the present implementation uses standard mechanisms in
 order to support `upgradeability`, via deployment of the token with a proxy by implementing [ERC-7201](https://eips.ethereum.org/EIPS/eip-7201)
