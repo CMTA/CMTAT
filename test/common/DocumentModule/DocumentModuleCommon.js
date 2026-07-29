@@ -90,6 +90,54 @@ function DocumentModuleCommon () {
       expect(doc.lastModified).to.be.gt(0)
     })
 
+    it('testSetDocumentEmitsDocumentUpdated', async function () {
+      const name = ethers.encodeBytes32String('doc1')
+      const uri = 'https://github.com/CMTA/CMTAT'
+      const documentHash = ethers.encodeBytes32String('hash1')
+
+      // ERC-1643: setDocument MUST emit DocumentUpdated on create/update.
+      // On the DocumentEngine variant the token re-emits the event on its own address.
+      await expect(
+        this.cmtat.connect(this.admin).setDocument(name, uri, documentHash)
+      )
+        .to.emit(this.cmtat, 'DocumentUpdated')
+        .withArgs(name, uri, documentHash)
+    })
+
+    it('testRemoveDocumentEmitsDocumentRemoved', async function () {
+      const name = ethers.encodeBytes32String('doc1')
+      const uri = 'https://github.com/CMTA/CMTAT'
+      const documentHash = ethers.encodeBytes32String('hash1')
+      await this.cmtat.connect(this.admin).setDocument(name, uri, documentHash)
+
+      // ERC-1643: removeDocument MUST emit DocumentRemoved with the removed metadata.
+      await expect(this.cmtat.connect(this.admin).removeDocument(name))
+        .to.emit(this.cmtat, 'DocumentRemoved')
+        .withArgs(name, uri, documentHash)
+    })
+
+    it('testCannotSetDocumentWithZeroName', async function () {
+      const uri = 'https://github.com/CMTA/CMTAT'
+      const documentHash = ethers.encodeBytes32String('hash1')
+
+      // ERC-1643 (rework): setDocument SHOULD revert on name == bytes32(0) with ERC1643InvalidName.
+      await expect(
+        this.cmtat
+          .connect(this.admin)
+          .setDocument(ethers.ZeroHash, uri, documentHash)
+      ).to.be.revertedWithCustomError(this.cmtat, 'ERC1643InvalidName')
+    })
+
+    it('testCannotRemoveMissingDocument', async function () {
+      const name = ethers.encodeBytes32String('unknown')
+
+      // ERC-1643: removeDocument MUST revert if the named document does not exist
+      // (ERC1643MissingDocument).
+      await expect(
+        this.cmtat.connect(this.admin).removeDocument(name)
+      ).to.be.revertedWithCustomError(this.cmtat, 'ERC1643MissingDocument')
+    })
+
     it('testCanGetNullValueIfNoDocument', async function () {
       const name = ethers.encodeBytes32String('doc1')
       const doc = await this.cmtat.getDocument(name)

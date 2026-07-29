@@ -181,6 +181,8 @@ returns (bytes32[] memory documentNames_)
 
 Returns the list of all registered document names.
 
+> **Note — unbounded read.** `getAllDocuments()` returns the whole set in a single call, so its cost grows with the number of stored documents. Per the [ERC-1643](../../../ERCSpecification/rework/erc-1643.md) security considerations, this is the only enumeration path and it is **not paginated** — CMTAT deliberately keeps it simple because a token's legal/operational document set is expected to stay **small** (a handful of offering documents, legends, disclosures), not to grow adversarially like a holder list. Deployments that expect a large document set should front it with an off-chain index (subscribe to `DocumentUpdated` / `DocumentRemoved`) rather than relying on a single on-chain read. Contrast with [`HolderListModule`](../../options/holderList/holderList.md), whose set *can* grow via dusting and therefore exposes the paginated `holdersInRange`.
+
 ###### Returns
 
 | Name             | Type        | Description                        |

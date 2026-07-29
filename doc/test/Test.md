@@ -120,7 +120,7 @@ scenarios list the `context(...)` groups.
 ### Documents, metadata, holder list
 | Module | File | `it` | Covers |
 | --- | --- | --: | --- |
-| Document | `DocumentModule/DocumentModuleCommon.js` | 9 | ERC-1643 `setDocument`/`removeDocument`/`getDocument`. |
+| Document | `DocumentModule/DocumentModuleCommon.js` | 13 | ERC-1643 `setDocument`/`removeDocument`/`getDocument`/`getAllDocuments`; `DocumentUpdated`/`DocumentRemoved` event emission; `ERC1643InvalidName` on zero name; `ERC1643MissingDocument` on absent remove. Runs on both the native `DocumentERC1643Module` and the external `DocumentEngineModule`. |
 | DocumentEngine | `DocumentModule/DocumentModuleSetDocumentEngineCommon.js` | 10 | `setDocumentEngine`, initializer, delegated reads. |
 | ExtraInformation | `ExtraInfoModuleCommon.js` | 8 | `setTokenId`/`setTerms`/`setInformation`. |
 | ERC-7551 | `ERC7551ModuleCommon.js` | 6 | `setMetaData`, `setTerms(bytes32,string)`; **name-preserving overload** (`testERC7551SetTermsPreservesDocumentName`, NM-22). |
