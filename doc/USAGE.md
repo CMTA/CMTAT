@@ -234,6 +234,13 @@ Slither is a Solidity static analysis framework written in Python3
 slither .  --checklist --filter-paths "mocks|lib/openzeppelin-contracts-upgradeable|openzeppelin-contracts|@openzeppelin|test" > slither-report.md
 ```
 
+The versioned reports in [security/AUDIT.md](./security/AUDIT.md) are produced with the shorter equivalent form
+(mocks excluded):
+
+```bash
+slither . --checklist --filter-paths "node_modules,lib,test,forge-std,mocks" > doc/security/tools/slither/vX.Y.Z-slither-report.md
+```
+
 ### [Mythril](https://github.com/Consensys/mythril)
 
 It seems that Mythril version [v.0.24.8](https://github.com/ConsenSysDiligence/mythril/releases/tag/v0.24.8) does not support custom error or maybe it is an error related to `solc`.
@@ -272,6 +279,12 @@ See [Cyfrin/aderyn](https://github.com/Cyfrin/aderyn)
 
 ```bash
 aderyn . -x mocks
+```
+
+The versioned reports in [security/AUDIT.md](./security/AUDIT.md) are produced with:
+
+```bash
+aderyn -x mocks --output doc/security/tools/aderyn/vX.Y.Z-aderyn-report.md
 ```
 
 ## Others NodeJS tools

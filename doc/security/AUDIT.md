@@ -11,7 +11,7 @@ Here are the reports produced by [Aderyn](https://github.com/Cyfrin/aderyn):
 | v3.3.0  | [v3.3.0-aderyn-report.md](./tools/aderyn/v3.3.0-aderyn-report.md)<br />[v3.3.0-aderyn-feedback.md](./tools/aderyn/v3.3.0-aderyn-feedback.md) |
 | v3.0.0  | [v3.0.0-aderyn-report.md](./tools/aderyn/archive/v3.0.0-aderyn-report.md) |
 
-Summary (v3.3.0 — refreshed 2026-07-22, `aderyn 0.6.5`, mocks excluded, 101 files / 3736 nSLOC):
+Summary (v3.3.0 — refreshed 2026-07-30 on the rc3 source, `aderyn 0.6.5`, mocks excluded, 101 files / 3826 nSLOC):
 
 | Category | Tool Severity | Count | CMTAT Maintainer Assessment | Status |
 | ------- | ------------- | ----- | --------------------------- | ------ |
@@ -30,19 +30,19 @@ Here are the reports produced by [Slither](https://github.com/crytic/slither):
 | v3.0.0  | [v3.0.0-slither-report.md](./tools/slither/archive/v3.0.0-slither-report.md) |
 | v2.3.0  | [v2.3.0-slither-report.md](./tools/slither/archive/v2.3.0-slither-report.md) |
 
-Summary (v3.3.0 — refreshed 2026-07-22, `slither 0.11.5`, mocks excluded, 110 results):
+Summary (v3.3.0 — refreshed 2026-07-30 on the rc3 source, `slither 0.11.5`, mocks excluded, 158 results):
 
 | Detector | Tool Severity | Count | CMTAT Maintainer Assessment | Status |
 | ------- | ------------- | ----- | --------------------------- | ------ |
 | `uninitialized-local` | Medium | 1 | False positive (local defaults to `0`, intentional) | Closed |
 | `unused-return` | Medium | 2 | False positive (DocumentEngine forwards / intentionally discards `lastModified`) | Closed |
-| `calls-loop` | Low | 28 | Design choice (batch/hook external calls) | Accepted |
+| `calls-loop` | Low | 76 | Design choice (batch/hook external calls: 64 RuleEngine `transferred`, 12 snapshot `operateOnTransfer`) | Accepted |
 | `reentrancy-events` | Low | 2 | Design choice (ERC-1643 dual-emit after trusted engine call) | Accepted |
 | `assembly` | Informational | 16 | Expected pattern (ERC-7201 slots) | Accepted |
 | `dead-code` | Informational | 1 | False positive (mandatory `_msgData` override) | Closed |
 | `naming-convention` | Informational | 60 | Style-only | Closed |
 
-**Nothing to fix** — 0 High; both Medium and both Low categories are false positives or documented design choices. The two new detectors vs the prior snapshot (`unused-return`, `reentrancy-events`) both stem from the intentional ERC-1643 document-engine dual-emission. See [feedback](./tools/slither/v3.3.0-slither-feedback.md).
+**Nothing to fix** — 0 High; both Medium and both Low categories are false positives or documented design choices. No detector was added or removed vs the prior snapshot; `calls-loop` rose 28 → 76 only because the RuleEngine `transferred` hook was factored into the `virtual` `_callRuleEngineTransferred` (so it can be wrapped in `nonReentrant`), which makes Slither enumerate each batch call stack reaching the same single external call. See [feedback](./tools/slither/v3.3.0-slither-feedback.md).
 
 ## [Mythril](https://github.com/Consensys/mythril)
 

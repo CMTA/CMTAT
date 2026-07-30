@@ -3161,8 +3161,8 @@ Beyond the external human audits above, every CMTAT release is run through stati
 
 | Tool | Type | Latest run | Outcome |
 | --- | --- | --- | --- |
-| [Aderyn](https://github.com/Cyfrin/aderyn) (Cyfrin) | Static analyzer (Rust) | v3.3.0 (`aderyn 0.6.5`) | 2 High + 10 Low, all reviewed — **nothing to fix**; the only accept-and-mitigate item is L-1 centralization (mitigated by governance at deployment). |
-| [Slither](https://github.com/crytic/slither) (Crytic) | Static analyzer (Python) | v3.3.0 (`slither 0.11.5`, 110 results) | 0 High; every Medium/Low is a false positive or a documented design choice — **nothing to fix**. |
+| [Aderyn](https://github.com/Cyfrin/aderyn) (Cyfrin) | Static analyzer (Rust) | v3.3.0 (`aderyn 0.6.5`, 2026-07-30 on rc3) | 2 High + 10 Low, all reviewed — **nothing to fix**; the only accept-and-mitigate item is L-1 centralization (mitigated by governance at deployment). |
+| [Slither](https://github.com/crytic/slither) (Crytic) | Static analyzer (Python) | v3.3.0 (`slither 0.11.5`, 158 results, 2026-07-30 on rc3) | 0 High; every Medium/Low is a false positive or a documented design choice — **nothing to fix**. |
 | [Mythril](https://github.com/Consensys/mythril) | Symbolic execution | v2.5.0 | Last runnable version; on v3.0.0+ the tool hits a fatal `solc` error and cannot complete. |
 | [Nethermind AuditAgent](https://auditagent.nethermind.io) | AI-assisted review | v3.3.0-rc2 (Scan ID 9) | 24 findings (1 High / 4 Med / 3 Low / 14 Info / 2 best-practice) → **12 code fixes**, the rest documented or rejected; the High is a false positive; **no open item**. |
 | [Wake Arena](https://ackee.xyz) (Ackee Blockchain Security) | AI vulnerability analysis | v3.2.0-rc2 (Feb 2026) | Findings triaged with a per-finding maintainer response. |
