@@ -1464,6 +1464,45 @@ external view returns (uint8);
 
 The ERC-165 interface id for the `IERC1404Extend` interface is `0x78a8de7d`
 
+###### Scope: transfers only, never mint or burn
+
+> [!IMPORTANT]
+>
+> `detectTransferRestriction` and `detectTransferRestrictionFrom` describe the **holder transfer
+> path only** — `transfer` and `transferFrom`. They do **not** govern the mint and burn entry
+> points, and the `address(0)` encoding proposed by the ERC-1404 rework draft
+> (`from == address(0)` for a mint, `to == address(0)` for a burn) is **not supported** by CMTAT.
+> Such a query is answered as if it were a holder transfer, so it can report a restriction the
+> mint/burn path does not enforce — for example `TRANSFER_REJECTED_PAUSED` while a `MINTER_ROLE`
+> mint would in fact succeed.
+>
+> This is structural rather than an omission. CMTAT exposes **several entry points per
+> supply-changing operation, and the pause rule differs between them**:
+>
+> | Operation | Entry point | Blocked while paused? |
+> | --- | --- | --- |
+> | Mint | `mint`, `batchMint` (`MINTER_ROLE`) | ❌ no |
+> | Mint | `crosschainMint` (token bridge) | ✅ yes |
+> | Burn | `burn(address,uint256[,bytes])`, `batchBurn` (`BURNER_ROLE`) | ❌ no |
+> | Burn | `burnFrom` (`BURNER_FROM_ROLE`) | ✅ yes |
+> | Burn | `burn(uint256)` (`BURNER_SELF_ROLE`) | ✅ yes |
+> | Burn | `crosschainBurn` (token bridge) | ✅ yes |
+>
+> `(from, to, value)` — and `(spender, from, to, value)` — carry no entry-point discriminator, and
+> the operator address does not identify one either (the same account may hold several burn roles),
+> so **no single return value can describe every mint or every burn**. Rather than designate a
+> predictor that would be correct for one entry point and wrong for another, CMTAT designates
+> **none** for supply-changing operations. Integrators MUST NOT infer a mint or burn outcome from
+> either ERC-1404 predictor.
+>
+> To predict a mint or a burn, use CMTAT's own predicates — `canTransfer(address(0), to, value)` and
+> `canTransferFrom(operator, from, address(0), value)` (ERC-3643 / ERC-7551), which branch on the
+> `address(0)` encoding through the same helper the enforcement path uses
+> (`ValidationModule._canTransferGenericByModule`) — together with the per-entry-point role and
+> pause requirements documented in [ERC20Mint](./modules/core/ERC20Mint/ERC20Mint.md),
+> [ERC20Burn](./modules/core/ERC20Burn/ERC20Burn.md) and
+> [pause.md](./modules/core/Pause/pause.md#what-pause-stops-and-what-it-does-not).
+
 ##### Interface details
 
 ###### IRuleEngine

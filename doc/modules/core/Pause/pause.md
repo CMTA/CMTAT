@@ -35,6 +35,15 @@ Pause is an emergency stop on **circulation**, not on the issuer's control of th
 
 The two burn families are easy to confuse because they share a name. `ERC20BurnModule.burn(address,uint256)` is the **issuer** burn and is not pause-gated; `ERC20CrossChainModule.burn(uint256)` and `burnFrom(address,uint256)` are **third-party** burns and are. See [ERC20Burn](../ERC20Burn/ERC20Burn.md) and [ERC20CrossChain](../../options/erc20crosschain/ERC20CrossChain.md) for the per-function requirements.
 
+> **Consequence for ERC-1404 prediction.** Because the pause rule differs *between entry points of
+> the same operation* (issuer mint/burn allowed, bridge and third-party mint/burn blocked), a single
+> `detectTransferRestriction(address(0), to, value)` / `detectTransferRestriction(from, address(0), value)`
+> answer cannot describe every mint or every burn — the ERC-1404 signature carries no entry-point
+> discriminator. CMTAT therefore designates **no** ERC-1404 predictor for supply-changing operations:
+> those methods cover `transfer` / `transferFrom` only, and mint/burn must be predicted with
+> `canTransfer` / `canTransferFrom`. See the
+> [ERC-1404 scope note](../../../README.md#scope-transfers-only-never-mint-or-burn).
+
 ## Schema
 
 ![PauseUML](../../../schema/plantuml/class/PauseModule.png)

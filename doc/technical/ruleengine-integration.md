@@ -40,6 +40,18 @@ Minimum RuleEngine target interface in CMTAT:
 > - the **original** ERC-1404, which was only ever published as a [GitHub issue](https://github.com/ethereum/EIPs/issues/1404) and never became a merged EIP — covered by `IERC1404` (`detectTransferRestriction(from, to, value)` + `messageForTransferRestriction(code)`);
 > - its **current rework**, the draft proposal ["Simple Restricted Token" (ethereum/ERCs PR #1701)](https://github.com/ethereum/ERCs/pull/1701), still **open/draft**, which brings ERC-1404 into the canonical format — covered by `IERC1404Extend`, adding the spender-aware `detectTransferRestrictionFrom(spender, from, to, value)` that pairs with CMTAT's `canTransferFrom` / spender-aware paths.
 
+> **Scope — transfers only.** Both `detectTransferRestriction*` methods describe `transfer` /
+> `transferFrom`. CMTAT does **not** support the rework draft's `address(0)` encoding for mint/burn
+> prediction, because its pause rule differs *between entry points of the same operation*
+> (`MINTER_ROLE` mint and `BURNER_ROLE` burn proceed while paused; `crosschainMint`,
+> `crosschainBurn`, `burnFrom` and `burn(uint256)` do not), and the ERC-1404 signature carries no
+> entry-point discriminator. Use `canTransfer` / `canTransferFrom` for mint and burn prediction. See
+> the [ERC-1404 scope note](../README.md#scope-transfers-only-never-mint-or-burn).
+>
+> A RuleEngine still receives mint/burn notifications through `transferred(...)` with the
+> `address(0)` encoding — that is the *enforcement* path and is unaffected by the above. What is
+> not supported is *predicting* a mint or burn through the ERC-1404 read methods.
+
 ## Configuration Lifecycle
 
 RuleEngine is optional and can be zero-address.

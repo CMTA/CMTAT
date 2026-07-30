@@ -13,6 +13,31 @@ import {IRuleEngineERC1404} from "../../../../interfaces/engine/IRuleEngine.sol"
  *
  * Useful for to restrict and validate transfers
  * Required a RuleEngine implementing the interface IRuleEngineERC1404
+ *
+ * @custom:scope {detectTransferRestriction} and {detectTransferRestrictionFrom} describe the
+ * **holder transfer path only** — `transfer` and `transferFrom`. They do **not** govern the
+ * mint and burn entry points, and the `address(0)` encoding of the ERC-1404 rework draft
+ * (`from == address(0)` for a mint, `to == address(0)` for a burn) is **not** supported here:
+ * a query built that way is answered as if it were a holder transfer, so it can report a
+ * restriction the mint/burn path does not enforce (typically {PauseModule-paused}).
+ *
+ * The reason is structural, not an oversight. CMTAT exposes several entry points per
+ * supply-changing operation and the **pause rule differs between them**:
+ * - mint: `mint` / `batchMint` (`MINTER_ROLE`) are allowed while paused, `crosschainMint`
+ *   (token bridge) is not;
+ * - burn: `burn(address,uint256[,bytes])` / `batchBurn` (`BURNER_ROLE`) are allowed while paused,
+ *   `burnFrom` (`BURNER_FROM_ROLE`), `burn(uint256)` (`BURNER_SELF_ROLE`) and `crosschainBurn`
+ *   are not.
+ *
+ * `(from, to, value)` — and `(spender, from, to, value)` — carry no entry-point discriminator, and
+ * the operator address does not identify one either (the same address may hold several burn roles),
+ * so no single return value can describe every mint or every burn. Rather than designate a predictor
+ * that would be right for one entry point and wrong for another, this module designates **none**.
+ *
+ * To predict a mint or a burn, use the module's own predicates instead — {canTransfer} /
+ * {canTransferFrom}, which branch on the `address(0)` encoding through
+ * {ValidationModule-_canTransferGenericByModule}, the same helper the enforcement path uses — and
+ * the role/pause requirements documented per entry point.
  */
 abstract contract ValidationModuleERC1404 is
    ValidationModuleRuleEngine, IERC1404Extend
@@ -94,6 +119,9 @@ abstract contract ValidationModuleERC1404 is
      * @param value uint256 the amount of tokens to be transferred
      * @return code of the rejection reason
      * @dev see {ERC-1404}
+     * @dev Scope: `transfer` / `transferFrom` only. Passing `address(0)` as `from` or `to` to query
+     * a mint or a burn is **not** supported — see the scope note on this contract; use
+     * {canTransfer} / {canTransferFrom} for those operations.
      */
     function detectTransferRestriction(
         address from,
@@ -111,6 +139,21 @@ abstract contract ValidationModuleERC1404 is
         }
     }
 
+    /**
+     * @notice check if `spender` can transfer `value` token from `from` to `to`
+     * @param spender address The address initiating the delegated transfer
+     * @param from address The address which you want to send tokens from
+     * @param to address The address which you want to transfer to
+     * @param value uint256 the amount of tokens to be transferred
+     * @return code of the rejection reason
+     * @dev see {ERC-1404} (rework draft, spender-aware extension)
+     * @dev Scope: `transferFrom` only. The `spender` argument is the delegated-transfer initiator,
+     * **not** a mint/burn operator: passing an operator with `from`/`to` set to `address(0)` to
+     * predict a mint or a burn is not supported — see the scope note on this contract.
+     * The `spender == from` case is deliberately evaluated through this path (no short-circuit to
+     * {detectTransferRestriction}), because a frozen initiator blocks `transferFrom` even when it
+     * owns the tokens.
+     */
     function detectTransferRestrictionFrom(
         address spender,
         address from,
