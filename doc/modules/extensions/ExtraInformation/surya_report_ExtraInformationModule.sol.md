@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/wrapper/extensions/ExtraInformationModule.sol | e4c857f5b5ed57b090a01749604094fb15385d7d |
+| ./modules/wrapper/extensions/ExtraInformationModule.sol | 8f6b445e2b0f694afb115819018a66b65ac3ad60 |
 
 
 ### Contracts Description Table
@@ -24,6 +24,7 @@
 | └ | terms | Public ❗️ |   |NO❗️ |
 | └ | information | Public ❗️ |   |NO❗️ |
 | └ | _setTerms | Internal 🔒 | 🛑  | |
+| └ | _setTermsDocument | Internal 🔒 | 🛑  | |
 | └ | _setTokenId | Internal 🔒 | 🛑  | |
 | └ | _setTerms | Internal 🔒 | 🛑  | |
 | └ | _setInformation | Internal 🔒 | 🛑  | |

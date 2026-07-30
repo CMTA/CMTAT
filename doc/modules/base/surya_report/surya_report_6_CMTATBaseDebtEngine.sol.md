@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/6_CMTATBaseDebtEngine.sol | bfeb152012d9b39da44296cc36fa90eb0f2b8035 |
+| ./modules/6_CMTATBaseDebtEngine.sol | a80e3040a1f615e3edc947bbd3fadbaf21c1e0a1 |
 
 
 ### Contracts Description Table

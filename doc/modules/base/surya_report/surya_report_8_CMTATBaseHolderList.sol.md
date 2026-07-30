@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/5_CMTATBaseERC20CrossChain.sol | 8004dee72cddd763301d2ebc042807edecb06e5e |
+| ./modules/8_CMTATBaseHolderList.sol | fde61227a31826dc6f4014f5ffa9525335ff872d |
 
 
 ### Contracts Description Table
@@ -15,21 +15,18 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **CMTATBaseERC20CrossChain** | Implementation | ERC20CrossChainModule, CCIPModule, CMTATBaseERC1404 |||
-| └ | approve | Public ❗️ | 🛑  |NO❗️ |
+| **CMTATBaseHolderList** | Implementation | CMTATBaseERC7551Enforcement, HolderListModule |||
 | └ | transfer | Public ❗️ | 🛑  |NO❗️ |
 | └ | transferFrom | Public ❗️ | 🛑  |NO❗️ |
-| └ | decimals | Public ❗️ |   |NO❗️ |
+| └ | approve | Public ❗️ | 🛑  |NO❗️ |
 | └ | name | Public ❗️ |   |NO❗️ |
 | └ | symbol | Public ❗️ |   |NO❗️ |
+| └ | decimals | Public ❗️ |   |NO❗️ |
 | └ | supportsInterface | Public ❗️ |   |NO❗️ |
-| └ | _mintOverride | Internal 🔒 | 🛑  | |
-| └ | _burnOverride | Internal 🔒 | 🛑  | |
-| └ | _minterTransferOverride | Internal 🔒 | 🛑  | |
-| └ | _authorizeCCIPSetAdmin | Internal 🔒 | 🛑  | onlyRole |
-| └ | _checkTokenBridge | Internal 🔒 | 🛑  | whenNotPaused |
-| └ | _authorizeBurnFrom | Internal 🔒 | 🛑  | onlyRole whenNotPaused |
-| └ | _authorizeSelfBurn | Internal 🔒 | 🛑  | onlyRole whenNotPaused |
+| └ | _update | Internal 🔒 | 🛑  | |
+| └ | _msgSender | Internal 🔒 |   | |
+| └ | _msgData | Internal 🔒 |   | |
+| └ | _contextSuffixLength | Internal 🔒 |   | |
 
 
 ### Legend

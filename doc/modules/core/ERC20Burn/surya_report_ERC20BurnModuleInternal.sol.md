@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/internal/ERC20BurnModuleInternal.sol | [object Promise] |
+| ./modules/internal/ERC20BurnModuleInternal.sol | 6e7e3e3f2e88f75be2a881adf1fa10db6b236b52 |
 
 
 ### Contracts Description Table

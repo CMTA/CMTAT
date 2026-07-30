@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/3_CMTATBaseAllowlist.sol | 517b746b223a533ad42e9dad2a49520c1fd14d1f |
+| ./modules/3_CMTATBaseAllowlist.sol | 3487697f10471c48fbbf710c669b2c2a13e738a3 |
 
 
 ### Contracts Description Table
@@ -20,7 +20,7 @@
 | └ | __CMTAT_init | Internal 🔒 | 🛑  | onlyInitializing |
 | └ | __CMTAT_openzeppelin_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |
 | └ | __CMTAT_modules_init_unchained | Internal 🔒 | 🛑  | onlyInitializing |
-| └ | approve | Public ❗️ | 🛑  | whenNotPaused |
+| └ | approve | Public ❗️ | 🛑  |NO❗️ |
 | └ | transfer | Public ❗️ | 🛑  |NO❗️ |
 | └ | transferFrom | Public ❗️ | 🛑  |NO❗️ |
 | └ | decimals | Public ❗️ |   |NO❗️ |

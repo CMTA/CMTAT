@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/internal/EnforcementModuleInternal.sol | e4f8ad6066ed208d03ee4f98168801e6ef9dd55b |
+| ./modules/wrapper/extensions/DocumentERC1643Module.sol | 84f36862aa1e5dc107647a0bdf38e7294cefc9ae |
 
 
 ### Contracts Description Table
@@ -15,12 +15,13 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **EnforcementModuleInternal** | Implementation | Initializable, ContextUpgradeable |||
-| └ | _addAddressToTheList | Internal 🔒 | 🛑  | |
-| └ | _addAddressToTheList | Internal 🔒 | 🛑  | |
-| └ | _addAddressesToTheList | Internal 🔒 | 🛑  | |
-| └ | _addressIsListed | Internal 🔒 |   | |
-| └ | _getEnforcementModuleInternalStorage | Internal 🔒 |   | |
+| **DocumentERC1643Module** | Implementation | Initializable, IERC1643 |||
+| └ | getDocument | Public ❗️ |   |NO❗️ |
+| └ | getAllDocuments | Public ❗️ |   |NO❗️ |
+| └ | setDocument | Public ❗️ | 🛑  | onlyDocumentManager |
+| └ | removeDocument | Public ❗️ | 🛑  | onlyDocumentManager |
+| └ | _authorizeDocumentManagement | Internal 🔒 | 🛑  | |
+| └ | _getDocumentERC1643ModuleStorage | Private 🔐 |   | |
 
 
 ### Legend

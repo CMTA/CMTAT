@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/wrapper/core/ERC20BurnModule.sol | 29d72656d403fe9ea2843efe91ffcddb5deddd2c |
+| ./modules/wrapper/core/ERC20BurnModule.sol | 3f109e92e878e64dd13b17eb9c385c19a7c4a3e6 |
 
 
 ### Contracts Description Table

@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/internal/EnforcementModuleInternal.sol | e4f8ad6066ed208d03ee4f98168801e6ef9dd55b |
+| ./modules/wrapper/extensions/ValidationModule/ValidationModuleAllowance.sol | 367a48e1124c4b2d20fbc7fbede9b52ac5b55c30 |
 
 
 ### Contracts Description Table
@@ -15,12 +15,8 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **EnforcementModuleInternal** | Implementation | Initializable, ContextUpgradeable |||
-| └ | _addAddressToTheList | Internal 🔒 | 🛑  | |
-| └ | _addAddressToTheList | Internal 🔒 | 🛑  | |
-| └ | _addAddressesToTheList | Internal 🔒 | 🛑  | |
-| └ | _addressIsListed | Internal 🔒 |   | |
-| └ | _getEnforcementModuleInternalStorage | Internal 🔒 |   | |
+| **ValidationModuleAllowance** | Implementation | ValidationModuleCore |||
+| └ | _canAuthorizeAllowanceByModuleAndRevert | Internal 🔒 |   | |
 
 
 ### Legend

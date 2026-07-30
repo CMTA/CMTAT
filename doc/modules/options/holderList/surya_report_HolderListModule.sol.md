@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/internal/EnforcementModuleInternal.sol | e4f8ad6066ed208d03ee4f98168801e6ef9dd55b |
+| ./modules/wrapper/options/HolderListModule.sol | 97df6e51036140125e4ec455e5bc31b6f10d7f91 |
 
 
 ### Contracts Description Table
@@ -15,12 +15,14 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **EnforcementModuleInternal** | Implementation | Initializable, ContextUpgradeable |||
-| └ | _addAddressToTheList | Internal 🔒 | 🛑  | |
-| └ | _addAddressToTheList | Internal 🔒 | 🛑  | |
-| └ | _addAddressesToTheList | Internal 🔒 | 🛑  | |
-| └ | _addressIsListed | Internal 🔒 |   | |
-| └ | _getEnforcementModuleInternalStorage | Internal 🔒 |   | |
+| **HolderListModule** | Implementation | ERC20Upgradeable, IHolderListModule |||
+| └ | holderCount | Public ❗️ |   |NO❗️ |
+| └ | isHolder | Public ❗️ |   |NO❗️ |
+| └ | holderByIndex | Public ❗️ |   |NO❗️ |
+| └ | holders | Public ❗️ |   |NO❗️ |
+| └ | holdersInRange | Public ❗️ |   |NO❗️ |
+| └ | _update | Internal 🔒 | 🛑  | |
+| └ | _getHolderListModuleStorage | Private 🔐 |   | |
 
 
 ### Legend

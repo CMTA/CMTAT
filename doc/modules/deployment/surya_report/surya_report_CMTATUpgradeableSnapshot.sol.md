@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./deployment/CMTATStandardStandalone.sol | [object Promise] |
+| ./deployment/snapshot/CMTATUpgradeableSnapshot.sol | 251976b5ca73cdb4ab92f8b825529b3879a33182 |
 
 
 ### Contracts Description Table
@@ -15,8 +15,9 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **CMTATStandalone** | Implementation | CMTATBaseERC2771 |||
+| **CMTATUpgradeableSnapshot** | Implementation | CMTATBaseERC2771Snapshot, ReentrancyGuardTransient |||
 | └ | <Constructor> | Public ❗️ | 🛑  | ERC2771Module |
+| └ | _callRuleEngineTransferred | Internal 🔒 | 🛑  | nonReentrant |
 
 
 ### Legend

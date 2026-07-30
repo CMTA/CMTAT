@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/wrapper/controllers/ValidationModuleAllowlist.sol | [object Promise] |
+| ./modules/wrapper/controllers/ValidationModuleAllowlist.sol | b48d670fdf8eb25ef742ee9891eab7a8cfa31810 |
 
 
 ### Contracts Description Table
@@ -17,7 +17,14 @@
 ||||||
 | **ValidationModuleAllowlist** | Implementation | AllowlistModule, ValidationModule |||
 | └ | _canMintBurnByModule | Internal 🔒 |   | |
-| └ | _canTransferGenericByModule | Internal 🔒 |   | |
+| └ | _canTransferStandardByModuleAllowlist | Internal 🔒 |   | |
+| └ | _canTransferStandardByModule | Internal 🔒 |   | |
+| └ | _canSend | Internal 🔒 |   | |
+| └ | _canReceive | Internal 🔒 |   | |
+| └ | _canMintByModuleAndRevert | Internal 🔒 |   | |
+| └ | _canBurnByModuleAndRevert | Internal 🔒 |   | |
+| └ | _canTransferStandardByModuleAndRevert | Internal 🔒 |   | |
+| └ | _canTransferStandardByModuleAllowlistAndRevert | Internal 🔒 |   | |
 
 
 ### Legend

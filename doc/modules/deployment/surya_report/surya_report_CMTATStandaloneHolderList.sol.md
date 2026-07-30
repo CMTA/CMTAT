@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/internal/EnforcementModuleInternal.sol | e4f8ad6066ed208d03ee4f98168801e6ef9dd55b |
+| ./deployment/holderList/CMTATStandaloneHolderList.sol | 87873906f3e506fde4f7cc71f4e03d34e6e2abed |
 
 
 ### Contracts Description Table
@@ -15,12 +15,8 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **EnforcementModuleInternal** | Implementation | Initializable, ContextUpgradeable |||
-| └ | _addAddressToTheList | Internal 🔒 | 🛑  | |
-| └ | _addAddressToTheList | Internal 🔒 | 🛑  | |
-| └ | _addAddressesToTheList | Internal 🔒 | 🛑  | |
-| └ | _addressIsListed | Internal 🔒 |   | |
-| └ | _getEnforcementModuleInternalStorage | Internal 🔒 |   | |
+| **CMTATStandaloneHolderList** | Implementation | CMTATBaseHolderList |||
+| └ | <Constructor> | Public ❗️ | 🛑  | ERC2771Module |
 
 
 ### Legend

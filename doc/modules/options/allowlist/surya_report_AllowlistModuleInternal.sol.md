@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/internal/AllowlistModuleInternal.sol | [object Promise] |
+| ./modules/internal/AllowlistModuleInternal.sol | 6523eb6f8af841eec44a50647bde8bfbb119fc3b |
 
 
 ### Contracts Description Table

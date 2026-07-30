@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/internal/EnforcementModuleInternal.sol | e4f8ad6066ed208d03ee4f98168801e6ef9dd55b |
+| ./deployment/snapshot/CMTATStandaloneSnapshot.sol | 09f8a4b84e23532342765692dccd4f8f409ee0e3 |
 
 
 ### Contracts Description Table
@@ -15,12 +15,9 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **EnforcementModuleInternal** | Implementation | Initializable, ContextUpgradeable |||
-| └ | _addAddressToTheList | Internal 🔒 | 🛑  | |
-| └ | _addAddressToTheList | Internal 🔒 | 🛑  | |
-| └ | _addAddressesToTheList | Internal 🔒 | 🛑  | |
-| └ | _addressIsListed | Internal 🔒 |   | |
-| └ | _getEnforcementModuleInternalStorage | Internal 🔒 |   | |
+| **CMTATStandaloneSnapshot** | Implementation | CMTATBaseERC2771Snapshot, ReentrancyGuardTransient |||
+| └ | <Constructor> | Public ❗️ | 🛑  | ERC2771Module |
+| └ | _callRuleEngineTransferred | Internal 🔒 | 🛑  | nonReentrant |
 
 
 ### Legend
