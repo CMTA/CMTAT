@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./mocks/CMTATMsgDataMock.sol | 717bd7b3aaa6b7b348909cefaca7a40bbb75e8aa |
+| ./mocks/CMTATMsgDataMock.sol | 5c30a05a18b10859647fbdb893eea8e9fcd5b0ba |
 
 
 ### Contracts Description Table

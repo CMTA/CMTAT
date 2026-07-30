@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./interfaces/technical/IERC7802.sol | d15ad9680adf4fd33c9816619ded7737c2092eae |
+| ./interfaces/technical/IERC7802.sol | 747c67cf1a98a4f0785e6b84e17b6cd09d0c9ff5 |
 
 
 ### Contracts Description Table

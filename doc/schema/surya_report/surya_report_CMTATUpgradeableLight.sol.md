@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./deployment/light/CMTATUpgradeableLight.sol | 7655b0f507c280139447798831f192c1fe9ce6cf |
+| ./deployment/light/CMTATUpgradeableLight.sol | b2bc9fae0c0180f11d4c66de98f16a935a97cad3 |
 
 
 ### Contracts Description Table

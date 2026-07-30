@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./deployment/debtEngine/CMTATUpgradeableDebtEngine.sol | 8d719c0a5922d1257f64b858640ae7d5b3499baa |
+| ./mocks/RuleEngine/RuleEngineSpenderRecorderMock.sol | 601a9c378dbefa63f117c04734c3a82cac14294d |
 
 
 ### Contracts Description Table
@@ -15,8 +15,12 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **CMTATUpgradeableDebtEngine** | Implementation | CMTATBaseDebtEngine |||
-| └ | <Constructor> | Public ❗️ | 🛑  |NO❗️ |
+| **RuleEngineSpenderRecorderMock** | Implementation | ERC165, IRuleEngine |||
+| └ | transferred | Public ❗️ | 🛑  |NO❗️ |
+| └ | transferred | Public ❗️ | 🛑  |NO❗️ |
+| └ | canTransfer | Public ❗️ |   |NO❗️ |
+| └ | canTransferFrom | Public ❗️ |   |NO❗️ |
+| └ | supportsInterface | Public ❗️ |   |NO❗️ |
 
 
 ### Legend

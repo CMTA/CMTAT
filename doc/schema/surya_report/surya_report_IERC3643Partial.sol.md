@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./interfaces/tokenization/IERC3643Partial.sol | 8358c87ebcdb71cb6a72b342e796ca0a930101f6 |
+| ./interfaces/tokenization/IERC3643Partial.sol | e0119b65a7d74bab33bc50e36e31b60bcea8567c |
 
 
 ### Contracts Description Table

@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./deployment/CMTATStandardStandalone.sol | 5bfd01883b5b2efb0304c154db283d25d1897e2c |
+| ./deployment/CMTATStandardStandalone.sol | 0ef9dcd77454b756d96296db37186204a7b1f07c |
 
 
 ### Contracts Description Table
@@ -15,8 +15,9 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **CMTATStandardStandalone** | Implementation | CMTATBaseERC7551Enforcement |||
+| **CMTATStandardStandalone** | Implementation | CMTATBaseERC7551Enforcement, ReentrancyGuardTransient |||
 | └ | <Constructor> | Public ❗️ | 🛑  | ERC2771Module |
+| └ | _callRuleEngineTransferred | Internal 🔒 | 🛑  | nonReentrant |
 
 
 ### Legend

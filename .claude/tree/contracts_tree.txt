@@ -90,6 +90,7 @@ contracts
 │   │   │   └── IRuleTransferHook.sol
 │   │   ├── RuleEngineMock.sol
 │   │   ├── RuleEngineReentrantMock.sol
+│   │   ├── RuleEngineSpenderRecorderMock.sol
 │   │   ├── RuleMockMint.sol
 │   │   ├── RuleMock.sol
 │   │   ├── RuleSpenderAuthorized.sol

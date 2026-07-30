@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./mocks/test/proxy/CMTAT_PROXY_TEST_UUPS.sol | fa06f4d41e8ad377639707a7a4b847fc6df53d38 |
+| ./mocks/test/proxy/CMTAT_PROXY_TEST_UUPS.sol | b02eb37f977c66ac9667e6910ac535ddaf0267a7 |
 
 
 ### Contracts Description Table

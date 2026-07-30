@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/wrapper/core/TokenAttributeModule.sol | de60d9cb13d34bd78647777a55e3ebaff3c323a4 |
+| ./modules/wrapper/core/TokenAttributeModule.sol | 18f449c5b71414aee542323edc7f2d80e1e6808e |
 
 
 ### Contracts Description Table
