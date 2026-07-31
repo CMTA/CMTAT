@@ -138,12 +138,26 @@ Use deployment summary in [doc/SUMMARY.md](../SUMMARY.md) and deployment tables 
 - cross-chain/operator-driven paths.
 4. Do not rely only on `from == address(0)`/`to == address(0)` unless policy intentionally treats operator mint/burn uniformly.
 5. If targeting ERC-1404 UX, implement `IRuleEngineERC1404` functions consistently with `canTransfer*`.
+6. `messageForTransferRestriction(code)` must return a **non-empty** string for every code the engine can return,
+   and that string must never denote the absence of a restriction (`"No restriction"`, `""`, …) for a non-zero
+   code. The token resolves its own codes (`0`–`6`) and **forwards every other code to the engine verbatim**, so
+   the engine's string is what integrators and user interfaces display. An empty or misleading string therefore
+   surfaces a blocked transfer as if it were permitted — see the ERC-1404 rework draft,
+   `messageForTransferRestriction`. The token does not inspect the forwarded value: the RuleEngine is
+   `DEFAULT_ADMIN_ROLE`-set and trusted, and a length check would guard only the least harmful failure while
+   costing bytecode on variants already close to the EIP-170 limit.
+7. The engine must implement `IRuleEngineERC1404` if the token exposes ERC-1404. `detectTransferRestriction` /
+   `messageForTransferRestriction` on the token forward to the engine unguarded, so an engine without those
+   methods makes both token view functions revert (the enforcement path, which calls `transferred(...)`, is
+   unaffected). See design choice 1 below: the engine type is not validated at set-time.
 
 ## Known Design Choices
 
 1. RuleEngine address is not contract-type enforced at set-time by default (design choice).
 2. Read-only pre-checks are advisory; runtime may still revert on later checks/state changes.
 3. RuleEngine is optional; base validation still applies even when RuleEngine is unset.
+4. The token does not sanitise what the engine returns — neither the restriction code nor the message. Both are
+   forwarded as-is, consistent with the trusted-engine assumption stated above and with design choice 1.
 
 ## Cross-References
 
