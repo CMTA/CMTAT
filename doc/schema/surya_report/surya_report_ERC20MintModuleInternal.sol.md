@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/internal/ERC20MintModuleInternal.sol | 716930d665c8e5189385e1384e4435412d42b95f |
+| ./modules/internal/ERC20MintModuleInternal.sol | 41b2893fb24992819dada2a0eab305e5b0e0efd1 |
 
 
 ### Contracts Description Table

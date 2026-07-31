@@ -26,6 +26,66 @@ This section describes the Ethereum API of the Validation Module.
 
 The rules are defined using an (optional) rule engine, set using the `setRuleEngine` method. The `RuleEngine` implementation is not provided along with this implementation but it has to comply with the interface [IRuleEngine](https://github.com/CMTA/CMTAT/blob/master/contracts/interfaces/engine/IRuleEngine.sol). The RuleEngine calls rules that must respect the `IRule` interface defined in the [Rules](https://github.com/CMTA/Rules) repository
 
+## Integration notes for RuleEngine implementers
+
+### The `transferred` callback is reentrant on some deployment variants
+
+`transferred(...)` is invoked from `_checkTransferred`, i.e. **after** the active-balance (frozen) check and **before** `ERC20Upgradeable._transfer` moves any balance. That check is not re-evaluated afterwards.
+
+A RuleEngine that calls back into the token during the callback is therefore validated twice against the *same* pre-transfer snapshot, and the outer and inner transfers can together move more than the holder's unfrozen balance. Measured on an unguarded build: a holder with `balance=100`, `frozenTokens=60` (active 40) lost **80** tokens to an outer `transferFrom(holder, attacker, 40)` plus one nested `transferFrom` of 40, leaving `frozenTokens(60) > balanceOf(20)` — the freeze invariant broken.
+
+CMTAT wraps the callback in a transient (EIP-1153) reentrancy guard, but **only on the deployment variants that have the bytecode headroom for it**. The guard costs ~195 bytes of deployed bytecode and several variants sit within a few hundred bytes of the EIP-170 24 KiB limit; enabling it there would make them undeployable.
+
+| Deployment variant | Deployed size (bytes) | Reentrancy guard |
+| --- | ---: | :---: |
+| `CMTATStandaloneSnapshot` / `CMTATUpgradeableSnapshot` | 22 859 | ✅ |
+| `CMTATStandardStandalone` / `CMTATStandardUpgradeable` | 23 039 | ✅ |
+| `CMTATStandaloneERC7551` / `CMTATUpgradeableERC7551` | 23 731 | ✅ |
+| `CMTATStandaloneDebt` / `CMTATUpgradeableDebt` | 23 805 | ❌ |
+| `CMTATStandalonePermit` / `CMTATUpgradeablePermit` | 23 961 | ❌ |
+| `CMTATUpgradeableUUPS` | 24 176 | ❌ |
+| `CMTATStandaloneDebtEngine` / `CMTATUpgradeableDebtEngine` | 24 429 | ❌ |
+| `CMTATStandaloneERC1363` / `CMTATUpgradeableERC1363` | 24 443 | ❌ |
+| `CMTATStandaloneHolderList` / `CMTATUpgradeableHolderList` | 24 456 | ❌ |
+| `CMTATStandaloneAllowlist`, `CMTATStandaloneLight` (and proxies) | 20 405 / 11 562 | n/a — no RuleEngine |
+
+> **WARNING — variants without the guard.** On the ❌ rows the trust assumption is load-bearing: the RuleEngine is set by `DEFAULT_ADMIN_ROLE`, is **fully trusted**, and **MUST NOT** transfer control to untrusted code during `transferred(...)`. A rule that calls an arbitrary external address — a hook, a callback, a user-supplied contract — breaks that assumption and re-opens the drain described above. If your rule set needs to call untrusted code, deploy a guarded variant.
+
+On guarded variants a reentrant callback reverts the whole transaction with OpenZeppelin's `ReentrancyGuardReentrantCall`. The guard is entered only when a RuleEngine is set (a deployment with no engine pays nothing) and released when the callback returns, so batch operations and `burnAndMint`, which invoke the hook several times in one transaction, are unaffected.
+
+To enable the guard on a variant that currently lacks it, inherit `ReentrancyGuardTransient` in the deployment contract and override `_callRuleEngineTransferred` with `nonReentrant` — see `contracts/deployment/CMTATStandardStandalone.sol` — and re-check the deployed size against the 24 576-byte limit.
+
+> Reported as NM-7 / NM-9 / NM-11 / NM-16 / NM-18 by [Nethermind AuditAgent](https://auditagent.nethermind.io/) on CMTAT v3.3.0-rc2; see the [maintainer feedback](../../security/tools/nethermind-audit-agent/v3.3.0-rc2/audit_agent_report_v3.3.0-rc2-feedback.md).
+
+### Zero-value calls to `transferred` are permissionless
+
+The `transferred(...)` callback can be reached by **anyone**, for an **arbitrary `from`**, with `value == 0` and without any allowance.
+
+Two ERC-20 properties combine to make this possible, and neither is a defect:
+
+- ERC-20 requires that *"transfers of 0 values MUST be treated as normal transfers"*, so the token notifies the RuleEngine for them like any other transfer;
+- OpenZeppelin's `_spendAllowance` consumes nothing when `value == 0`, so `transferFrom` succeeds with a zero allowance.
+
+Concretely, any address can call `transferFrom(victim, anyone, 0)` on the token. The call passes the validation gates (the victim must not be frozen, the token must not be paused, ...), emits a zero-value `Transfer`, moves nothing, and still invokes `transferred(attacker, victim, anyone, 0)` on the configured RuleEngine. The 3-argument ERC-3643 overload is reachable the same way through `transfer(to, 0)`.
+
+CMTAT deliberately does **not** suppress the notification for a zero value: doing so would make the compliance notifications inconsistent with the token's own ERC-20 transfer semantics, and a rule engine that needs to observe every transfer would silently miss a class of them.
+
+**Requirement.** A RuleEngine — and every `IRule` it calls — **MUST treat `value == 0` as carrying no economic meaning**. Any stateful rule must be a no-op for a zero value, in particular:
+
+| Rule kind | What a zero-value call must not do |
+| --- | --- |
+| Cooldown / holding period | Start, extend or reset a timer |
+| Quota / volume cap | Consume budget or increment a counter |
+| Tax or fee bucket | Accrue or settle anything |
+| Holder tracking | Add, remove or reorder a holder |
+| Sanction / freeze bookkeeping | Change a participant's status |
+
+Otherwise an attacker can desynchronize policy state from actual balances, or keep a holder permanently restricted, at no cost beyond gas.
+
+Implementations that cannot make a rule idempotent at zero should reject the call explicitly (`require(value > 0)` inside that rule) rather than let it mutate state — but note that reverting makes every zero-value transfer of the token revert too, which is not ERC-20 compliant. Preferring a no-op is strongly recommended.
+
+> Reported as NM-6 by [Nethermind AuditAgent](https://auditagent.nethermind.io/) on CMTAT v3.3.0-rc2 and assessed as a RuleEngine-side responsibility; see the [maintainer feedback](../../security/tools/nethermind-audit-agent/v3.3.0-rc2/audit_agent_report_v3.3.0-rc2-feedback.md).
+
 ### `function setRuleEngine(IRuleEngine ruleEngine_)`
 
 Updates the RuleEngine used to enforce validation rules.

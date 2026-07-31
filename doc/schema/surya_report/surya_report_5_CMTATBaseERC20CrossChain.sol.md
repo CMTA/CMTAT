@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/5_CMTATBaseERC20CrossChain.sol | adfb29de086e5b1045a9de445282d66b6589978d |
+| ./modules/5_CMTATBaseERC20CrossChain.sol | 8004dee72cddd763301d2ebc042807edecb06e5e |
 
 
 ### Contracts Description Table

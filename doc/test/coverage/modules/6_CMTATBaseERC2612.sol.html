@@ -173,7 +173,17 @@
 128
 129
 130
-131</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -199,10 +209,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">460×</span>
-<span class="cline-any cline-yes">460×</span>
-<span class="cline-any cline-yes">460×</span>
-<span class="cline-any cline-yes">460×</span>
+<span class="cline-any cline-yes">500×</span>
+<span class="cline-any cline-yes">500×</span>
+<span class="cline-any cline-yes">500×</span>
+<span class="cline-any cline-yes">500×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -221,8 +231,15 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">10×</span>
-<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">22×</span>
+<span class="cline-any cline-yes">16×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -233,7 +250,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">92×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">114×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -243,7 +263,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">31×</span>
+<span class="cline-any cline-yes">30×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -286,7 +306,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">18×</span>
+<span class="cline-any cline-yes">26×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -299,13 +319,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">10×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// SPDX-License-Identifier: MPL-2.0
 &nbsp;
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.24;
 &nbsp;
 /* ==== OpenZeppelin === */
 import {ERC20PermitUpgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/ERC20PermitUpgradeable.sol";
@@ -340,7 +360,14 @@ abstract contract CMTATBaseERC2612 is CMTATBaseERC20CrossChain, ERC20PermitUpgra
     //////////////////////////////////////////////////////////////*/
     /**
     * @inheritdoc ERC20PermitUpgradeable
-    * @dev Reverts if the contract is paused or if owner/spender is frozen.
+    * @dev Reverts if the contract is paused or if owner/spender is frozen, unless `value`
+    * is zero: a zero-value permit is a gasless revocation and stays available so an owner
+    * can always sever ties with a spender, even while restricted.
+    *
+    * The EIP-712 domain name is fixed at initialization and is **not** updated by
+    * {TokenAttributeModule-setName}. Signers must build the domain from the ERC-5267
+    * {eip712Domain} function (or `DOMAIN_SEPARATOR()`), not from {name}, which may have
+    * been changed since deployment.
     */
     function permit(
         address owner,
@@ -351,13 +378,16 @@ abstract contract CMTATBaseERC2612 is CMTATBaseERC20CrossChain, ERC20PermitUpgra
         bytes32 r,
         bytes32 s
     ) public virtual override(ERC20PermitUpgradeable) {
-        _canAuthorizeAllowanceByModuleAndRevert(owner, spender);
+        _canAuthorizeAllowanceByModuleAndRevert(owner, spender, value);
         ERC20PermitUpgradeable.permit(owner, spender, value, deadline, v, r, s);
     }
 &nbsp;
     /* ============ State functions ============ */
     /**
-    * @dev revert if the contract is in pause state
+    * @dev revert if the contract is in pause state, unless `value` is zero:
+    * setting an allowance to zero is a revocation and stays available while paused
+    * or while the owner/spender is frozen or off the allowlist.
+    * @inheritdoc ERC20Upgradeable
     */
     function approve(
         address spender,
@@ -439,7 +469,7 @@ abstract contract CMTATBaseERC2612 is CMTATBaseERC20CrossChain, ERC20PermitUpgra
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu May 21 2026 10:55:39 GMT+0200 (Central European Summer Time)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Fri Jul 31 2026 15:34:22 GMT+0200 (Central European Summer Time)
 </div>
 </div>
 <script src="../prettify.js"></script>

@@ -3,8 +3,8 @@ contracts
 │   ├── allowlist
 │   │   ├── CMTATStandaloneAllowlist.sol
 │   │   └── CMTATUpgradeableAllowlist.sol
-│   ├── CMTATStandalone.sol
-│   ├── CMTATUpgradeable.sol
+│   ├── CMTATStandardStandalone.sol
+│   ├── CMTATStandardUpgradeable.sol
 │   ├── CMTATUpgradeableUUPS.sol
 │   ├── debt
 │   │   ├── CMTATStandaloneDebt.sol
@@ -21,15 +21,15 @@ contracts
 │   ├── holderList
 │   │   ├── CMTATStandaloneHolderList.sol
 │   │   └── CMTATUpgradeableHolderList.sol
+│   ├── light
+│   │   ├── CMTATStandaloneLight.sol
+│   │   └── CMTATUpgradeableLight.sol
 │   ├── permit
 │   │   ├── CMTATStandalonePermit.sol
 │   │   └── CMTATUpgradeablePermit.sol
-│   ├── snapshot
-│   │   ├── CMTATStandaloneSnapshot.sol
-│   │   └── CMTATUpgradeableSnapshot.sol
-│   └── light
-│       ├── CMTATStandaloneLight.sol
-│       └── CMTATUpgradeableLight.sol
+│   └── snapshot
+│       ├── CMTATStandaloneSnapshot.sol
+│       └── CMTATUpgradeableSnapshot.sol
 ├── interfaces
 │   ├── engine
 │   │   ├── IDebtEngine.sol
@@ -41,6 +41,7 @@ contracts
 │   │   ├── IDebtEngineModule.sol
 │   │   ├── IDebtModule.sol
 │   │   ├── IDocumentEngineModule.sol
+│   │   ├── IHolderListModule.sol
 │   │   └── ISnapshotEngineModule.sol
 │   ├── technical
 │   │   ├── ICMTATConstructor.sol
@@ -55,15 +56,18 @@ contracts
 │       ├── draft-IERC1643.sol
 │       ├── draft-IERC7551.sol
 │       ├── draft-IERC7943.sol
+│       ├── draft-IERC8343.sol
 │       ├── ICMTAT.sol
 │       └── IERC3643Partial.sol
 ├── library
 │   ├── ERC1404ExtendInterfaceId.sol
 │   └── RuleEngineInterfaceId.sol
 ├── mocks
+│   ├── CMTATMsgDataMock.sol
 │   ├── DebtEngineMock.sol
 │   ├── DocumentEngineMock.sol
 │   ├── engine
+│   │   ├── CMTATDocumentEngineModuleMock.sol
 │   │   └── CMTATEngineInitializerMock.sol
 │   ├── ERC1363ReceiverMock.sol
 │   ├── ERC165Helper
@@ -82,76 +86,83 @@ contracts
 │   │   ├── CodeList.sol
 │   │   ├── interfaces
 │   │   │   ├── IRuleEngineMock.sol
-│   │   │   └── IRule.sol
+│   │   │   ├── IRule.sol
+│   │   │   └── IRuleTransferHook.sol
 │   │   ├── RuleEngineMock.sol
+│   │   ├── RuleEngineReentrantMock.sol
+│   │   ├── RuleEngineSpenderRecorderMock.sol
 │   │   ├── RuleMockMint.sol
-│   │   └── RuleMock.sol
+│   │   ├── RuleMock.sol
+│   │   ├── RuleSpenderAuthorized.sol
+│   │   └── RuleTokenHolderTracker.sol
 │   ├── SnapshotEngineMock.sol
 │   └── test
 │       └── proxy
 │           ├── CMTAT_PROXY_TEST.sol
 │           └── CMTAT_PROXY_TEST_UUPS.sol
-├── modules
-│   ├── 0_CMTATBaseCommon.sol
-│   ├── 0_CMTATBaseCore.sol
-│   ├── 0_CMTATBaseGeneric.sol
-│   ├── 0_CMTATBaseSnapshot.sol
-│   ├── 2_CMTATBaseAccessControl.sol
-│   ├── 3_CMTATBaseAllowlist.sol
-│   ├── 3_CMTATBaseRuleEngine.sol
-│   ├── 1_CMTATBaseDocument.sol
-│   ├── 4_CMTATBaseDebt.sol
-│   ├── 4_CMTATBaseERC1404.sol
-│   ├── 4_CMTATBaseERC20CrossChain.sol
-│   ├── 4_CMTATBaseERC2612.sol
-│   ├── 5_CMTATBaseDebtEngine.sol
-│   ├── 5_CMTATBaseERC2771.sol
-│   ├── 6_CMTATBaseERC2771Snapshot.sol
-│   ├── 6_CMTATBaseERC7551Enforcement.sol
-│   ├── 7_CMTATBaseERC1363.sol
-│   ├── 7_CMTATBaseERC7551.sol
-│   ├── 8_CMTATBaseHolderList.sol
-│   ├── internal
-│   │   ├── AllowlistModuleInternal.sol
-│   │   ├── common
-│   │   │   └── EnforcementModuleLibrary.sol
-│   │   ├── EnforcementModuleInternal.sol
-│   │   ├── ERC20BurnModuleInternal.sol
-│   │   ├── ERC20EnforcementModuleInternal.sol
-│   │   ├── ERC20MintModuleInternal.sol
-│   │   └── ValidationModuleRuleEngineInternal.sol
-│   └── wrapper
-│       ├── controllers
-│       │   ├── ValidationModuleAllowlist.sol
-│       │   └── ValidationModule.sol
-│       ├── core
-│       │   ├── EnforcementModule.sol
-│       │   ├── ERC20BaseModule.sol
-│       │   ├── ERC20BurnModule.sol
-│       │   ├── ERC20MintModule.sol
-│       │   ├── PauseModule.sol
-│       │   ├── TokenAttributeModule.sol
-│       │   ├── ValidationModuleCore.sol
-│       │   └── VersionModule.sol
-│       ├── extensions
-│       │   ├── DocumentEngineModule.sol
-│       │   ├── ERC20EnforcementModule.sol
-│       │   ├── ExtraInformationModule.sol
-│       │   ├── SnapshotEngineModule.sol
-│       │   └── ValidationModule
-│       │       ├── ValidationModuleAllowance.sol
-│       │       ├── ValidationModuleERC1404.sol
-│       │       └── ValidationModuleRuleEngine.sol
-│       ├── options
-│       │   ├── AllowlistModule.sol
-│       │   ├── CCIPModule.sol
-│       │   ├── DebtEngineModule.sol
-│       │   ├── DebtModule.sol
-│       │   ├── ERC20CrossChainModule.sol
-│       │   ├── ERC20EnforcementERC7551Module.sol
-│       │   ├── ERC2771Module.sol
-│       │   ├── ERC7551Module.sol
-│       │   └── HolderListModule.sol
-│       └── security
-│           └── AccessControlModule.sol
-33 directories, 110 files
+└── modules
+    ├── 0_CMTATBaseCommon.sol
+    ├── 0_CMTATBaseCore.sol
+    ├── 0_CMTATBaseGeneric.sol
+    ├── 0_CMTATBaseSnapshot.sol
+    ├── 1_CMTATBaseDocument.sol
+    ├── 2_CMTATBaseAccessControl.sol
+    ├── 3_CMTATBaseAllowlist.sol
+    ├── 3_CMTATBaseRuleEngine.sol
+    ├── 4_CMTATBaseDebt.sol
+    ├── 4_CMTATBaseERC1404.sol
+    ├── 5_CMTATBaseERC20CrossChain.sol
+    ├── 6_CMTATBaseDebtEngine.sol
+    ├── 6_CMTATBaseERC2612.sol
+    ├── 6_CMTATBaseERC2771.sol
+    ├── 7_CMTATBaseERC2771Snapshot.sol
+    ├── 7_CMTATBaseERC7551Enforcement.sol
+    ├── 8_CMTATBaseERC1363.sol
+    ├── 8_CMTATBaseERC7551.sol
+    ├── 8_CMTATBaseHolderList.sol
+    ├── internal
+    │   ├── AllowlistModuleInternal.sol
+    │   ├── common
+    │   │   └── EnforcementModuleLibrary.sol
+    │   ├── EnforcementModuleInternal.sol
+    │   ├── ERC20BurnModuleInternal.sol
+    │   ├── ERC20EnforcementModuleInternal.sol
+    │   ├── ERC20MintModuleInternal.sol
+    │   └── ValidationModuleRuleEngineInternal.sol
+    └── wrapper
+        ├── controllers
+        │   ├── ValidationModuleAllowlist.sol
+        │   └── ValidationModule.sol
+        ├── core
+        │   ├── EnforcementModule.sol
+        │   ├── ERC20BaseModule.sol
+        │   ├── ERC20BurnModule.sol
+        │   ├── ERC20MintModule.sol
+        │   ├── PauseModule.sol
+        │   ├── TokenAttributeModule.sol
+        │   ├── ValidationModuleCore.sol
+        │   └── VersionModule.sol
+        ├── extensions
+        │   ├── DocumentERC1643Module.sol
+        │   ├── ERC20EnforcementModule.sol
+        │   ├── ExtraInformationModule.sol
+        │   ├── SnapshotEngineModule.sol
+        │   └── ValidationModule
+        │       ├── ValidationModuleAllowance.sol
+        │       ├── ValidationModuleERC1404.sol
+        │       └── ValidationModuleRuleEngine.sol
+        ├── options
+        │   ├── AllowlistModule.sol
+        │   ├── CCIPModule.sol
+        │   ├── DebtEngineModule.sol
+        │   ├── DebtModule.sol
+        │   ├── DocumentEngineModule.sol
+        │   ├── ERC20CrossChainModule.sol
+        │   ├── ERC20EnforcementERC7551Module.sol
+        │   ├── ERC2771Module.sol
+        │   ├── ERC7551Module.sol
+        │   └── HolderListModule.sol
+        └── security
+            └── AccessControlModule.sol
+
+35 directories, 129 files

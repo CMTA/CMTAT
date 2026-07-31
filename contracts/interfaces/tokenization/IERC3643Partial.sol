@@ -7,7 +7,7 @@
 * (e.g., `amount` → `value`).
 */ 
 
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.24;
 
 import {IERC7943FungibleEnforcement} from "./draft-IERC7943.sol";
 

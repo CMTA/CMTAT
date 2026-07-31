@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MPL-2.0
 
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.24;
 /* ==== OpenZeppelin === */
 import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 /* ==== Module === */
@@ -17,7 +17,9 @@ import {CCIPModule} from "./wrapper/options/CCIPModule.sol";
 abstract contract CMTATBaseERC20CrossChain is ERC20CrossChainModule, CCIPModule, CMTATBaseERC1404  {
      /* ============  State Functions ============ */
         /**
-    * @dev revert if the contract is in pause state
+    * @dev revert if the contract is in pause state, unless `value` is zero:
+    * setting an allowance to zero is a revocation and stays available while paused
+    * or while the owner/spender is frozen or off the allowlist.
     * @inheritdoc ERC20Upgradeable
     */
     function approve(address spender, uint256 value) public virtual override(ERC20Upgradeable, CMTATBaseRuleEngine) returns (bool) {

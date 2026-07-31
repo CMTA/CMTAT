@@ -43,6 +43,32 @@ This check applies to senders, spenders, and burn sources.
 
 Identical logic applied to the recipient side (mint targets and transfer recipients).
 
+### `transfer` vs `transferFrom` — who must be allowlisted
+
+When the allowlist is enabled, a **standard `transfer`** requires the **sender (`from`)** and the
+**recipient (`to`)** to be allowlisted. A direct `transfer` has no third-party operator, so no spender is checked
+(internally the spender is `address(0)`).
+
+A **`transferFrom`** additionally requires the **spender** — the `msg.sender` executing the transfer with an
+allowance — to be allowlisted. All three of `spender`, `from` and `to` must be on the allowlist; the checks are
+evaluated in that order:
+
+| Party | Not allowlisted → revert |
+|---|---|
+| `spender` (the `transferFrom` caller) | `ERC7943CannotSend(spender)` |
+| `from` (token holder) | `ERC7943CannotSend(from)` |
+| `to` (recipient) | `ERC7943CannotReceive(to)` |
+
+> **This is deliberate.** In a permissioned (allowlist) deployment, the operator executing a delegated transfer is
+> itself a transfer participant and must be vetted — an allowance alone does not exempt it. A consequence is that a
+> **non-allowlisted contract (e.g. a DEX router or escrow) cannot move allowlisted holders' tokens via
+> `transferFrom`**; the operator must be allowlisted first. The mirror behaviour holds for `approve`/`permit`
+> (both `owner` and `spender` must pass `_canSend`) — see [Allowance Authorization](#allowance-authorization-validationmoduleallowance).
+
+Note that **minting is different**: `mint`/`batchMint` validate only the recipient, *not* the operator, so a
+non-allowlisted `MINTER_ROLE` holder can still mint to an allowlisted recipient. See
+[access-control.md](../../technical/access-control.md#what-freeze-and-pause-block-per-operation).
+
 ### Effect of `enableAllowlist(bool status)`
 
 | `status` | `_canSend` / `_canReceive` behaviour |

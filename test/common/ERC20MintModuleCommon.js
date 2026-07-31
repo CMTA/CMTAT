@@ -178,6 +178,35 @@ function ERC20MintModuleCommon () {
       ).to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotReceive')
     })
 
+    it('testFrozenMinterCanStillMint', async function () {
+      // NM-5 / documented behaviour: CMTAT's own freeze logic does NOT block mint — only the
+      // recipient (and deactivation) is checked, not the operator. A frozen MINTER_ROLE holder
+      // can still mint. (Standard version: a configured RuleEngine could still reject via the
+      // spender it receives, but none is set by default here; Light has no RuleEngine.)
+      // To stop a compromised minter, revoke its role — freezing does not.
+      await this.cmtat.connect(this.admin).setAddressFrozen(this.admin, true)
+      expect(await this.cmtat.isFrozen(this.admin)).to.equal(true)
+
+      await expect(this.cmtat.connect(this.admin).mint(this.address2, VALUE1)).to
+        .not.be.reverted
+      expect(await this.cmtat.balanceOf(this.address2)).to.equal(VALUE1)
+    })
+
+    it('testFrozenMinterCanStillBatchMint', async function () {
+      await this.cmtat.connect(this.admin).setAddressFrozen(this.admin, true)
+
+      await expect(
+        this.cmtat
+          .connect(this.admin)
+          .batchMint([this.address2.address, this.address3.address], [
+            VALUE1,
+            VALUE2
+          ])
+      ).to.not.be.reverted
+      expect(await this.cmtat.balanceOf(this.address2)).to.equal(VALUE1)
+      expect(await this.cmtat.balanceOf(this.address3)).to.equal(VALUE2)
+    })
+
     it('testMintPropagatesSpenderToRuleEngine', async function () {
       if (!this.cmtat.setRuleEngine) {
         this.skip()
@@ -605,6 +634,21 @@ function ERC20MintModuleCommon () {
       )
         .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotReceive')
         .withArgs(TOKEN_HOLDER[1])
+    })
+
+    it('testCannotBatchTransferIfMinterIsFrozen', async function () {
+      // NM-5: the minter-transfer path threads the operator (_msgSender()) as spender in
+      // every base (Light and full), so freezing the minter blocks its own batchTransfer.
+      const TOKEN_ADDRESS_TOS = [this.address1, this.address2, this.address3]
+      // The batchTransfer beforeEach minted TOKEN_AMOUNTS to the admin (the minter)
+      await this.cmtat.connect(this.admin).setAddressFrozen(this.admin, true)
+      await expect(
+        this.cmtat
+          .connect(this.admin)
+          .batchTransfer(TOKEN_ADDRESS_TOS, TOKEN_AMOUNTS)
+      )
+        .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotSend')
+        .withArgs(this.admin.address)
     })
 
     it('testBatchTransferPropagatesSpenderToRuleEngine', async function () {

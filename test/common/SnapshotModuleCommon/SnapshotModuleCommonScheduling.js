@@ -73,6 +73,12 @@ function SnapshotModuleCommonScheduling () {
     it('reverts when trying to schedule a snapshot in the past', async function () {
       const SNAPSHOT_TIME = this.currentTime - time.duration.seconds(60)
       if (!this.dontCheckTimestamp) {
+        // The revert reports the executing block's `block.timestamp`. Reading it
+        // with `time.latest()` while the call is in flight is a race (it returns
+        // the previous block on a fast run and the call's own block on a slow
+        // one, e.g. under `npm run coverage`), so pin it instead.
+        const EXECUTION_TIME = (await time.latest()) + time.duration.seconds(1)
+        await time.setNextBlockTimestamp(EXECUTION_TIME)
         await expect(
           this.transferEngineMock
             .connect(this.admin)
@@ -82,10 +88,7 @@ function SnapshotModuleCommonScheduling () {
             this.transferEngineMock,
             'CMTAT_SnapshotModule_SnapshotScheduledInThePast'
           )
-          .withArgs(
-            SNAPSHOT_TIME,
-            (await time.latest()) + time.duration.seconds(1)
-          )
+          .withArgs(SNAPSHOT_TIME, EXECUTION_TIME)
       } else {
         await expect(
           this.transferEngineMock

@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./mocks/DebtEngineMock.sol | a8bacdee9b87f32ec0ffefbada5c953e657668cb |
+| ./mocks/DebtEngineMock.sol | e778516332519b3ae3b014b609bc6ecbb2f7f38c |
 
 
 ### Contracts Description Table

@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./mocks/library/snapshot/SnapshotModuleBase.sol | a5d3aad7662179b4d735239ec4db643c35f347bc |
+| ./mocks/library/snapshot/SnapshotModuleBase.sol | 4882381048da33ecf6a714c8df449209308f5077 |
 
 
 ### Contracts Description Table

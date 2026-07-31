@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MPL-2.0
 
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.24;
 /* ==== OpenZeppelin === */
 import {ERC165Upgradeable, IERC165} from "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165Upgradeable.sol";
 /* ==== Module === */
@@ -30,6 +30,12 @@ abstract contract ERC20CrossChainModule is ERC20MintModule, ERC20BurnModule, ERC
     modifier onlyTokenBridge() {
         // Token bridge should never be impersonated using a relayer/forwarder. Using msg.sender is preferable to
         // _msgSender() for security reasons.
+        //
+        // DEPLOYMENT CONSTRAINT - this is the only role gate in CMTAT that authorizes the raw msg.sender, so a
+        // bridge MUST call crosschainMint/crosschainBurn directly; a call relayed through the ERC-2771 forwarder
+        // reverts, because the forwarder is the raw caller. CROSS_CHAIN_ROLE MUST NOT be granted to that
+        // forwarder to work around it: every relayed call would then pass this gate, letting any user mint an
+        // arbitrary amount to any address. See doc/technical/cross-chain-bridge-integration.md
         _checkTokenBridge(msg.sender);
         _;
     }
@@ -90,7 +96,7 @@ abstract contract ERC20CrossChainModule is ERC20MintModule, ERC20BurnModule, ERC
     /**
     * @inheritdoc IBurnFromERC20
     * @custom:access-control
-    * - Protected by the modifier onlyBurnerFrom
+    * - Protected by the modifier onlySelfBurn (BURNER_SELF_ROLE).
     */
     function burn(
         uint256 value

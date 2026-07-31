@@ -2,6 +2,8 @@
 
 This document defines the ERC20CrossChain module for the CMTA Token specification.
 
+> **Pause.** Every entry point in this module — `crosschainMint`, `crosschainBurn`, `burnFrom` and `burn(uint256)` — is blocked while the contract is paused (`EnforcedPause()`). These are **third-party** operations, performed by a bridge or by an operator spending someone else's allowance, and are exactly what a pause is meant to halt: cross-chain settlement must stop rather than keep moving supply between chains against a frozen local state. The **issuer** operations (`ERC20BurnModule.burn` with `BURNER_ROLE`, and minting) are *not* pause-gated. Do not confuse `ERC20CrossChainModule.burn(uint256)` with `ERC20BurnModule.burn(address,uint256)`. See [pause.md](../../core/Pause/pause.md#what-pause-stops-and-what-it-does-not).
+
 [TOC]
 
 ## Schema
@@ -93,6 +95,7 @@ Mints tokens as part of a crosschain transfer.
 - The contract must not be paused 
   - error: `EnforcedPause()`
 - Only authorized users (`CROSS_CHAIN_ROLE`) are allowed to call this function.
+- The role is checked against the **raw `msg.sender`**, not `_msgSender()`: the call cannot be relayed through the ERC-2771 forwarder, and `CROSS_CHAIN_ROLE` must never be granted to that forwarder. See [cross-chain-bridge-integration.md](../../../technical/cross-chain-bridge-integration.md#the-bridge-gate-uses-msgsender-not-_msgsender).
 - Compliance path note (CMTAT base integration): operator (`_msgSender()`) is propagated through transfer-compliance checks for spender-aware RuleEngine restriction support.
 
 **Emits:**
@@ -130,6 +133,7 @@ Burns tokens in preparation for a crosschain transfer.
 - The contract must not be paused 
   - error: `EnforcedPause()`
 - Only authorized users (`CROSS_CHAIN_ROLE`) are allowed to call this function.
+- The role is checked against the **raw `msg.sender`**, not `_msgSender()`: the call cannot be relayed through the ERC-2771 forwarder, and `CROSS_CHAIN_ROLE` must never be granted to that forwarder. See [cross-chain-bridge-integration.md](../../../technical/cross-chain-bridge-integration.md#the-bridge-gate-uses-msgsender-not-_msgsender).
 - Compliance path note (CMTAT base integration): operator (`_msgSender()`) is propagated through transfer-compliance checks for spender-aware RuleEngine restriction support.
 
  **Emits:**

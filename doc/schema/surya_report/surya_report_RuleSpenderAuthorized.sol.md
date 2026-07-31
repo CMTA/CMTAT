@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./mocks/RuleEngine/RuleSpenderAuthorized.sol | 498f27e9d42bb5ecb81647c185055ee085376c3b |
+| ./mocks/RuleEngine/RuleSpenderAuthorized.sol | a971dac231847665500903fa091800a865365a05 |
 
 
 ### Contracts Description Table

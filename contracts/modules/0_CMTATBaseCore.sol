@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MPL-2.0
 
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.24;
 
 /* ==== OpenZeppelin === */
 import {Initializable} from "@openzeppelin/contracts/proxy/utils/Initializable.sol";
@@ -190,7 +190,7 @@ abstract contract CMTATBaseCore is
     * @inheritdoc ERC20Upgradeable
     */
     function approve(address spender, uint256 value) public virtual override returns (bool) {
-        _canAuthorizeAllowanceByModuleAndRevert(_msgSender(), spender);
+        _canAuthorizeAllowanceByModuleAndRevert(_msgSender(), spender, value);
         return ERC20Upgradeable.approve(spender, value);
     }
     /*
@@ -230,6 +230,10 @@ abstract contract CMTATBaseCore is
 
     /**
     * @inheritdoc IForcedBurnERC20
+    * @dev Burns directly via `ERC20Upgradeable._burn`, so it bypasses the pause/deactivation
+    * validation used by the standard burn path. This is intentional — the Light variant's
+    * enforcement burn remains available **after deactivation** (per ERC-8343), so the enforcer
+    * can still cancel a frozen or migrated position on a terminated token.
     * @custom:access-control
     * - The caller must have the `DEFAULT_ADMIN_ROLE`.
     */
@@ -264,7 +268,11 @@ abstract contract CMTATBaseCore is
     * @dev Check if a minter transfer is valid
     */
     function _minterTransferOverride(address from, address to, uint256 value) internal virtual override(ERC20MintModuleInternal) {
-        ValidationModule._canTransferGenericByModuleAndRevert(address(0), from, to);
+        // Pass the operator (_msgSender()) as spender, consistent with CMTATBaseCommon and the
+        // transferFrom path, instead of hardcoding address(0). A minter transfer moves the
+        // minter's own tokens, so `from == _msgSender()`; threading the spender keeps the
+        // spender-aware validation surface uniform across the Light and full bases (NM-5).
+        ValidationModule._canTransferGenericByModuleAndRevert(_msgSender(), from, to);
         ERC20MintModuleInternal._minterTransferOverride(from, to, value);
     }
 

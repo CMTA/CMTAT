@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./interfaces/technical/ICMTATConstructor.sol | 37b1d13de4f748a6a78e9a8d4c2908ae30551c12 |
+| ./interfaces/technical/ICMTATConstructor.sol | b1e27a93de1f1de6380e3ce46ddc7d18a86f8240 |
 
 
 ### Contracts Description Table

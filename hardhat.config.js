@@ -4,6 +4,14 @@ require('solidity-coverage')
 require("hardhat-contract-sizer");
 require("@nomicfoundation/hardhat-chai-matchers")
 
+// solidity-coverage instruments every contract, and the instrumented bytecode of
+// the largest deployment variants costs more than the EIP-7825 per-transaction
+// gas cap (2**24 = 16,777,216 gas) to deploy, which the `osaka` hardfork enforces
+// ("Transaction ran out of gas"). Coverage runs therefore fall back to `prague`,
+// the last hardfork before that cap; HARDHAT_HARDFORK overrides both.
+const isCoverageRun = process.argv.includes("coverage");
+const hardfork = process.env.HARDHAT_HARDFORK || (isCoverageRun ? "prague" : "osaka");
+
 const deactivateReportGas = process.env.DeactivateReportGas === "true" || process.env.DeactivateReportGas === "1";
 const reportGas = !deactivateReportGas;
 if (reportGas) {
@@ -12,6 +20,9 @@ if (reportGas) {
 module.exports = {
   networks: {
     hardhat: {
+      // `osaka` for the test run (same target as the compiler), `prague` under
+      // coverage — see the isCoverageRun comment above.
+      hardfork,
       blockGasLimit: 30000000,
       // Test-only: relaxes the runtime EIP-170 (24 KB) deploy check so oversized
       // test *mocks* (e.g. CMTATUpgradeableERC1363MsgDataMock, which extends the
@@ -23,7 +34,7 @@ module.exports = {
     }
   },
   solidity: {
-    version: '0.8.34',
+    version: '0.8.36',
     settings: {
       optimizer: {
         enabled: true,

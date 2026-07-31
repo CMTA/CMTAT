@@ -81,6 +81,18 @@ npm run coverage              # Generate coverage report
 npm run hardhat:compile       # Compile contracts
 ```
 
+## Test Catalogue
+
+The test suite is catalogued per feature module and per deployment version in **[doc/test/Test.md](doc/test/Test.md)**
+— a hand-maintained map whose purpose is to make **missing tests easy to find**.
+
+**Whenever you add, change or remove a test, update `doc/test/Test.md` in the same change:**
+- test added → adjust the module's `it` count / scenario, and add a matrix row or column if it covers a new feature or variant;
+- test removed → remove it, and note any resulting coverage gap;
+- new deployment variant or shared test module → add the corresponding matrix column / row and module-reference entry.
+
+An out-of-date catalogue is worse than none — keep it in sync.
+
 ## Test Troubleshooting
 
 If tests fail with gas reporter / Mocha reporter errors (for example `ERR_MOCHA_INVALID_REPORTER` with `eth-gas-reporter`), run tests with gas reporting disabled:
@@ -98,6 +110,31 @@ DeactivateReportGas=true npx hardhat test
 - `contracts/interfaces/` - All supported interfaces and standards
 - `hardhat.config.js` - Build configuration (EVM & Solidity version)
 - `package.json` - Dependencies and scripts
+
+## Documentation Lookup
+
+Before stating that something is **not documented**, search **all** of the documentation surfaces below. They
+overlap and none of them is authoritative on its own — a rationale is often recorded in one place and the
+per-function facts in another.
+
+| Surface | What lives there |
+| --- | --- |
+| `doc/README.md` | The largest document. Standards mapping (ERC-3643, ERC-7943, ERC-7551, ERC-7802), architecture, module list, access control, engines, and the **Enforcement / Transfer restriction** chapter — including behavioural rationales such as why pause does not block issuer mint/burn. |
+| `doc/USAGE.md` | Build, test, deploy and tooling instructions. |
+| `doc/modules/**` | Per-module reference pages (`core/`, `extensions/`, `options/`, `controllers/`), one per module, with per-function requirements, events and errors. |
+| `doc/technical/**` | Cross-cutting topics: `access-control.md`, `cross-chain-bridge-integration.md`, `deployment.md`, `upgradeable.md`, `stablecoin.md`, ERC-specific notes. |
+| `doc/SUMMARY.md` | Short index of modules, deployment variants and roles. |
+| `doc/security/**` | Audit reports and maintainer feedback. |
+| `contracts/**` NatSpec + inline comments | Design rationales are frequently recorded only in code comments (e.g. the `onlyTokenBridge` `msg.sender` justification). |
+
+Practical rule: grep the whole `doc/` tree **and** `contracts/`, not a subset.
+
+```bash
+grep -rn -i "<topic>" doc/ contracts/ --include=*.md --include=*.sol | grep -v doc/hardhat-compilation
+```
+
+Exclude `doc/hardhat-compilation/` (flattened build artifacts, including vendored OpenZeppelin comments) — matches
+there are **not** CMTAT statements and must not be quoted as project documentation.
 
 ## Note
 

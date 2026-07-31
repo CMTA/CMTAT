@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MPL-2.0
 
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.24;
 
 /* ==== Openzeppelin === */
 import {Initializable} from "@openzeppelin/contracts/proxy/utils/Initializable.sol";
@@ -124,6 +124,22 @@ abstract contract ExtraInformationModule is Initializable, ICMTATBase {
     function _setTerms(IERC1643CMTAT.DocumentInfo memory terms_) internal{
 		ExtraInformationModuleStorage storage $ = _getExtraInformationModuleStorage();
         _setTerms($, terms_);
+    }
+
+    /**
+    * @dev Update the terms document (uri + hash) while leaving the document name untouched.
+    *
+    * Used by the ERC-7551 `setTerms(bytes32,string)` overload, whose signature carries no name:
+    * forwarding an empty one through {_setTerms} would silently erase a name previously set via
+    * {setTerms(IERC1643CMTAT.DocumentInfo)}.
+    */
+    function _setTermsDocument(bytes32 documentHash_, string memory uri_) internal virtual {
+        ExtraInformationModuleStorage storage $ = _getExtraInformationModuleStorage();
+        $._terms.doc.documentHash = documentHash_;
+        $._terms.doc.uri = uri_;
+        $._terms.doc.lastModified = block.timestamp;
+        // Event
+        emit Terms($._terms);
     }
 
     function _setTokenId(

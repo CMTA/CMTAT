@@ -393,6 +393,18 @@ The CMTAT supports the following optional features:
 - "Gasless" (MetaTx) transactions with [ERC-2771](https://eips.ethereum.org/EIPS/eip-2771)
   - Module: ERC2771Module
 
+- Signature-based approvals with [ERC-2612 Permit](https://eips.ethereum.org/EIPS/eip-2612) (approve without an on-chain `approve` transaction)
+  - Deployment: CMTAT Standalone Permit / CMTAT Upgradeable Permit
+  - Base: CMTATBaseERC2612 (OpenZeppelin `ERC20PermitUpgradeable`)
+
+- Batching several calls in a single transaction with [ERC-6357 Multicall](https://eips.ethereum.org/EIPS/eip-6357)
+  - Deployment: CMTAT Standalone Permit / CMTAT Upgradeable Permit
+  - Base: CMTATBaseERC2612 (OpenZeppelin `MulticallUpgradeable`)
+
+- Maintain on-chain the list of addresses holding a non-zero balance (issuer reporting, corporate actions)
+  - Deployment: CMTAT Standalone HolderList / CMTAT Upgradeable HolderList
+  - Module: HolderListModule
+
 
 Furthermore, the present implementation uses standard mechanisms in
 order to support `upgradeability`, via deployment of the token with a proxy by implementing [ERC-7201](https://eips.ethereum.org/EIPS/eip-7201)
@@ -419,8 +431,9 @@ Here the list of ERC supported between different version:
 | [ERC-1363](https://eips.ethereum.org/EIPS/eip-1363)          | CMTATBaseERC1363                             | Standard Track (final)   | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #b00020;">&#x2718;</span></strong> |
 | **Tokenization**                                             |                                              |                          |                                                              |                                                              |                                                              |                                                              |                                                              |                                                              |                                                              |                                                              |                                                              |
 | [ERC-7943 (uRWA)](https://eips.ethereum.org/EIPS/eip-7943)   | ValidationModuleCore, ERC20EnforcementModule | Review                   | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> |
-| [ERC-1404](https://github.com/ethereum/eips/issues/1404)<br />(Simple Restricted Token Standard) | ValidationModuleERC1404<br />(Extensions)     | Draft                    | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #b00020;">&#x2718;</span></strong> |
-| [ERC-1643](https://github.com/ethereum/eips/issues/1643) (Document Management Standard) <br />(Standard from [ERC-1400](https://github.com/ethereum/EIPs/issues/1411))<br />(Slightly improved) | DocumentModule<br />(Extensions)              | Draft                    | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong><br />(through DocumentEngine with small improvement) | <strong><span style="color: #1e7e34;">&#x2714;</span></strong><br />(through DocumentEngine with small improvement) | <strong><span style="color: #1e7e34;">&#x2714;</span></strong><br />(native DocumentERC1643Module + optional engine) | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> |
+| [ERC-1404](https://github.com/ethereum/eips/issues/1404)<br />(Simple Restricted Token Standard - original + [reworked](https://github.com/ethereum/ERCs/pull/1701))<br />base path `detectTransferRestriction` | ValidationModuleERC1404<br />(Extensions)     | Draft                    | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #b00020;">&#x2718;</span></strong> |
+| ERC-1404 Extension<br />(only [reworked](https://github.com/ethereum/ERCs/pull/1701), `IERC1404Extend`)<br />spender path `detectTransferRestrictionFrom` | ValidationModuleERC1404<br />(Extensions)     | Draft                    | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #b00020;">&#x2718;</span></strong> |
+| [ERC-1643](https://github.com/ethereum/eips/issues/1643) (Document Management Standard - Standard from [ERC-1400 ](https://github.com/ethereum/EIPs/issues/1411)- original + [reworked](https://github.com/ethereum/ERCs/pull/1754)) | DocumentModule<br />(Extensions)              | Draft                    | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong><br />(through DocumentEngine with small improvement) | <strong><span style="color: #1e7e34;">&#x2714;</span></strong><br />(through DocumentEngine with small improvement) | <strong><span style="color: #1e7e34;">&#x2714;</span></strong><br />(native DocumentERC1643Module + optional engine) | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> |
 | [ERC-3643](https://eips.ethereum.org/EIPS/eip-3643)<br /><br />(Without on-chain identity) | Core + ERC20EnforcementModule (extensions)   | Standard Track (final)   | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> |
 | [ERC-7551](https://ethereum-magicians.org/t/erc-7551-crypto-security-token-smart-contract-interface-ewpg-reworked/25477) | Core + ERC20EnforcementModule (extensions)   | Draft                    | <strong><span style="color: #b00020;">&#x2718;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | Partially                                                    | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> |
 | [ERC-8343](https://github.com/ethereum/ERCs/pull/1900)<br />(Contract deactivation, formerly ICMTATDeactivate) | PauseModule | Draft<br />(PR #1900) | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong><br />(aligned to ERC-8343 draft) | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> |
@@ -1149,8 +1162,7 @@ Any compromise to the DEFAULT_ADMIN_ROLE account may allow a hacker to take adva
 
 ##### Role interaction notes
 
-- `ENFORCER_ROLE` can block mint operations by freezing the minter/operator address via `setAddressFrozen(address, true)`.  
-  In spender-aware compliance paths, mint uses the effective operator as spender, so a frozen operator reverts with `ERC7943CannotSend`.
+- Freezing an operator via `setAddressFrozen(operator, true)` does **not** block that operator's `mint` / `batchMint` — minting validates the recipient (and deactivation), not the caller, so a frozen `MINTER_ROLE` holder can still mint. It **does** block the operator's `batchTransfer` / `transfer` / `transferFrom`, where the operator is the sender/spender. To stop a compromised minter, revoke its role. On the Standard version a configured RuleEngine still receives the operator as `spender` and may reject a mint. See [technical/access-control.md](./technical/access-control.md#what-freeze-and-pause-block-per-operation) and the [Enforcement chapter table](#freeze-acts-on-the-senderrecipient-not-on-the-operator).
 - `SNAPSHOOTER_ROLE` can trigger a **transfer-liveness halt** (pause-like effect) if it configures a snapshot engine that always reverts, because snapshot hooks run inside `_update` on state-changing token operations.
 
 #### Role list
@@ -1451,6 +1463,45 @@ external view returns (uint8);
 ```
 
 The ERC-165 interface id for the `IERC1404Extend` interface is `0x78a8de7d`
+
+###### Scope: transfers only, never mint or burn
+
+> [!IMPORTANT]
+>
+> `detectTransferRestriction` and `detectTransferRestrictionFrom` describe the **holder transfer
+> path only** — `transfer` and `transferFrom`. They do **not** govern the mint and burn entry
+> points, and the `address(0)` encoding proposed by the ERC-1404 rework draft
+> (`from == address(0)` for a mint, `to == address(0)` for a burn) is **not supported** by CMTAT.
+> Such a query is answered as if it were a holder transfer, so it can report a restriction the
+> mint/burn path does not enforce — for example `TRANSFER_REJECTED_PAUSED` while a `MINTER_ROLE`
+> mint would in fact succeed.
+>
+> This is structural rather than an omission. CMTAT exposes **several entry points per
+> supply-changing operation, and the pause rule differs between them**:
+>
+> | Operation | Entry point | Blocked while paused? |
+> | --- | --- | --- |
+> | Mint | `mint`, `batchMint` (`MINTER_ROLE`) | ❌ no |
+> | Mint | `crosschainMint` (token bridge) | ✅ yes |
+> | Burn | `burn(address,uint256[,bytes])`, `batchBurn` (`BURNER_ROLE`) | ❌ no |
+> | Burn | `burnFrom` (`BURNER_FROM_ROLE`) | ✅ yes |
+> | Burn | `burn(uint256)` (`BURNER_SELF_ROLE`) | ✅ yes |
+> | Burn | `crosschainBurn` (token bridge) | ✅ yes |
+>
+> `(from, to, value)` — and `(spender, from, to, value)` — carry no entry-point discriminator, and
+> the operator address does not identify one either (the same account may hold several burn roles),
+> so **no single return value can describe every mint or every burn**. Rather than designate a
+> predictor that would be correct for one entry point and wrong for another, CMTAT designates
+> **none** for supply-changing operations. Integrators MUST NOT infer a mint or burn outcome from
+> either ERC-1404 predictor.
+>
+> To predict a mint or a burn, use CMTAT's own predicates — `canTransfer(address(0), to, value)` and
+> `canTransferFrom(operator, from, address(0), value)` (ERC-3643 / ERC-7551), which branch on the
+> `address(0)` encoding through the same helper the enforcement path uses
+> (`ValidationModule._canTransferGenericByModule`) — together with the per-entry-point role and
+> pause requirements documented in [ERC20Mint](./modules/core/ERC20Mint/ERC20Mint.md),
+> [ERC20Burn](./modules/core/ERC20Burn/ERC20Burn.md) and
+> [pause.md](./modules/core/Pause/pause.md#what-pause-stops-and-what-it-does-not).
 
 ##### Interface details
 
@@ -1792,10 +1843,11 @@ Using an external contract provides two advantages:
 
 Here is the list of the different versions available for each CMTAT version.
 
-| CMTAT version            | DocumentEngine                                               |
-| ------------------------ | ------------------------------------------------------------ |
-| CMTAT v3.0.0             | Under development                                            |
-| CMTAT v2.5.0 (unaudited) | [DocumentEngine v0.3.0](https://github.com/CMTA/DocumentEngine/releases/tag/v0.3.0) (unaudited) |
+| CMTAT version               | DocumentEngine                                               |
+| --------------------------- | ------------------------------------------------------------ |
+| CMTAT v3.3.0                | [DocumentEngine v0.4.0](https://github.com/CMTA/DocumentEngine/releases/tag/v0.4.0) (unaudited) |
+| CMTAT v3.0.0 - CMTAT v3.2.0 | Not developed                                                |
+| CMTAT v2.5.0 (unaudited)    | [DocumentEngine v0.3.0](https://github.com/CMTA/DocumentEngine/releases/tag/v0.3.0) (unaudited) |
 
 #### AuthorizationEngine (Deprecated)
 
@@ -1852,6 +1904,20 @@ Due to a limited contract size, there is no batch version with a data parameter 
 `setAddressFrozen` and `batchSetAddressFrozen` reject `address(0)`.
 
 When an address is frozen, it is not possible to mint tokens to this address or burn its tokens. To move tokens from a frozen address, the issuer must use the function `forcedTransfer`.
+
+#### Freeze acts on the sender/recipient, not on the operator
+
+Freezing blocks an operation only where the frozen address is the **sender, spender or recipient** — never where it is merely the **minter**. In particular, freezing a `MINTER_ROLE` holder does **not** stop that holder from minting: `mint` / `batchMint` validate the recipient (and the contract's deactivation state), not the caller. To stop a compromised minter, revoke its role (`revokeRole(MINTER_ROLE, operator)`).
+
+By contrast, `batchTransfer` (a `MINTER_ROLE` function that moves the caller's **own** existing tokens) is a transfer, so freezing the caller **does** block it.
+
+| Operation | Creates tokens? | Freezing the **operator** blocks it? |
+| --- | :---: | :---: |
+| `mint` / `batchMint` | Yes | **No** — operator not checked (only the recipient is) ¹ |
+| `batchTransfer` | No (moves the caller's own) | **Yes** — the operator is the sender |
+| `transfer` / `transferFrom` | No | **Yes** — the operator is the sender / spender |
+
+¹ On the **Standard** version, if a RuleEngine is configured the operator is forwarded to it as the `spender` argument of `transferred(...)`, so a RuleEngine *rule* may reject a mint by a frozen/blocked operator. CMTAT's own freeze logic does not, and the **Light** version has no RuleEngine. See [technical/access-control.md](./technical/access-control.md#what-freeze-and-pause-block-per-operation) for the full per-operation and per-deployment table (pause, deactivation, sender/recipient freeze).
 
 ### ERC20EnforcementModule
 
@@ -1921,6 +1987,27 @@ By separating burn/mint from standard transfer, the admin can re-adjust the supp
 
 On the other hand, specific function for cross-chain bridge (`5_CMTATBaseERC20CrossChain.sol`) will revert if contract is paused because they are not intended to be used by the issuer to manage the supply.
 
+The dividing line is therefore **who is acting**, not which function is called: pause is an emergency stop on *circulation*, and it leaves the issuer's own control over the instrument intact.
+
+| Path | Module | Role | While paused |
+| --- | --- | --- | --- |
+| `mint`, `batchMint` | `ERC20MintModule` (issuer) | `MINTER_ROLE` | **Allowed** |
+| `burn`, `batchBurn` | `ERC20BurnModule` (issuer) | `BURNER_ROLE` | **Allowed** |
+| `forcedTransfer`, `forcedBurn` | enforcement (issuer) | `DEFAULT_ADMIN_ROLE` | **Allowed** |
+| `transfer`, `transferFrom` | `ERC20BaseModule` (holders) | — | **Blocked** — `EnforcedPause()` |
+| `burnFrom` | `ERC20CrossChainModule` (third party) | `BURNER_FROM_ROLE` | **Blocked** — `EnforcedPause()` |
+| `burn(uint256)` (self-burn) | `ERC20CrossChainModule` (third party) | `BURNER_SELF_ROLE` | **Blocked** — `EnforcedPause()` |
+| `crosschainMint`, `crosschainBurn` | `ERC20CrossChainModule` (bridge) | `CROSS_CHAIN_ROLE` | **Blocked** — `EnforcedPause()` |
+| `approve(spender, 0)` (revocation) | allowance | — | **Allowed** |
+| `approve(spender, n > 0)` | allowance | — | **Blocked** — `EnforcedPause()` |
+
+Two points worth flagging to integrators:
+
+- The two burn families share a name. `ERC20BurnModule.burn(address,uint256)` is the **issuer** burn and is not pause-gated; `ERC20CrossChainModule.burn(uint256)` and `burnFrom(address,uint256)` are **third-party** burns and are.
+- Setting an allowance to **zero** is always permitted, including while paused or deactivated and when the owner or spender is frozen or off the allowlist: a revocation can only reduce what a spender may move, so a holder can always sever ties with a compromised or sanctioned spender. Non-zero grants remain subject to the usual checks.
+
+See [modules/core/Pause/pause.md](./modules/core/Pause/pause.md#what-pause-stops-and-what-it-does-not) for the same split at module level.
+
 #### Future possible improvement
 
 An alternative solution would be to provide an additional function `pauseAllTransfers` which would pause standard transfers, as well as all burn and mint operations.
@@ -1948,7 +2035,7 @@ interface IERC8343 {
 
 Since the version v2.3.1, a function `deactivateContract` is implemented in the PauseModule to deactivate the contract.
 
-If a contract is deactivated, it is no longer possible to perform transfer and burn/mint operations.
+If a contract is deactivated, holder transfers and standard `burn` / `mint` operations revert with `EnforcedDeactivation`. Privileged enforcement operations — `forcedTransfer`, `forcedBurn` and the freeze setters — **intentionally remain available** so the enforcer/admin can still act on a terminated token (see [Post-deactivation privileged operations](#post-deactivation-privileged-operations) below and [technical/lifecycle.md](./technical/lifecycle.md)).
 
 ##### Kill (previous version)
 
@@ -1978,6 +2065,9 @@ The following privileged operations are intentionally post-deactivation-enabled:
 - `setAddressFrozen` / `batchSetAddressFrozen` (`EnforcementModule`)
 - `freezePartialTokens` / `unfreezePartialTokens` (`ERC20EnforcementModule`)
 - `forcedTransfer` and related privileged enforcement paths (`ERC20EnforcementModule` / `ERC20EnforcementERC7551Module`)
+- `forcedBurn` (Light / `CMTATBaseCore`) — the Light variant's enforcement burn
+
+This is intentional: `forcedTransfer` / `forcedBurn` move tokens through the ERC-20 `_update` primitive directly (the enforcer's regulatory tool), so they bypass the pause/deactivation validation applied to holder transfers and standard issuance. Per [ERC-8343](../ERCSpecification/draft-erc-8343-deactivation.md) a named privileged operation may remain available after deactivation (e.g. to sweep a frozen or migrated position). Because `DEFAULT_ADMIN_ROLE` can hold these roles, it can still move tokens after deactivation — protect that key with a multisig/timelock.
 
 See also [technical/lifecycle.md](./technical/lifecycle.md) for the consolidated pause/deactivation reference (state machine, what each state blocks, ERC-8343).
 
@@ -2150,6 +2240,24 @@ The CMTAT supports client-side gasless transactions using the standard [ERC-2771
 
 The contract uses the OpenZeppelin contract `ERC2771ContextUpgradeable`, which allows a contract to get the original client with `_msgSender()` instead of the feepayer given by `msg.sender`.
 
+#### Deployment version support
+
+The `ERC2771Module` is included in **every deployment variant except Light, Permit, Debt and DebtEngine**, where it is intentionally omitted (Light is minimal by design; Permit, Debt and DebtEngine drop it to keep bytecode under the EIP-170 limit). Both the standalone and upgradeable flavours of each variant behave the same.
+
+| Deployment variant | MetaTx/Gasless (ERC-2771) | Note |
+| --- | :---: | --- |
+| Standard | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | Via `CMTATBaseERC7551Enforcement` |
+| ERC-7551 | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | |
+| Snapshot | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | Via `CMTATBaseERC2771Snapshot` |
+| Allowlist | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | |
+| ERC-1363 | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | |
+| HolderList | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | |
+| UUPS | <strong><span style="color: #1e7e34;">&#x2714;</span></strong> | Via `CMTATBaseERC2771` |
+| Light | <strong><span style="color: #b00020;">&#x2718;</span></strong> | Minimal variant (`CMTATBaseCore`), module omitted |
+| Permit | <strong><span style="color: #b00020;">&#x2718;</span></strong> | Omitted to keep bytecode lean (EIP-170) |
+| Debt | <strong><span style="color: #b00020;">&#x2718;</span></strong> | Omitted (`ERC2771Module` and cross-chain excluded) |
+| DebtEngine | <strong><span style="color: #b00020;">&#x2718;</span></strong> | Omitted |
+
 At deployment, the parameter  `forwarder` inside the CMTAT contract constructor has to be set  with the defined address of the forwarder. 
 
 After deployment:
@@ -2185,7 +2293,9 @@ If you want to track all operations which burn or mint tokens, you can track the
 | `CrosschainMint(address indexed to, uint256 value, address indexed sender)` | IERC7802                      | ERC-7802              | `crosschainMint`<br />(ERC20CrossChain)                      |
 | `CrosschainBurn(address indexed from, uint256 value, address indexed sender)` | IERC7802                      | ERC-7802              | `crosschainBurn`<br />(ERC20CrossChain)                      |
 | `ForcedTransfer(address indexed operator, address indexed from, address indexed to, uint256 value, bytes data)` | IERC7551ERC20EnforcementEvent | ERC-7551 (draft)      | `forcedTransfer`<br />(ERC20EnforcementERC7551Module)<br />`forcedBurn`<br />(CMTATBaseCore) |
-| `Spend(address indexed account, address indexed spender, uint256 value)` | IERC20Allowance               | -                     | `transferFrom`<br />(ERC20BaseModule)<br />`transferFrom`don't change the supply<br />`burnFrom(address account, uint256 value)` |
+| `Spend(address indexed account, address indexed spender, uint256 value)` | IERC20Allowance               | -                     | `transferFrom` (ERC20BaseModule)<br />`burnFrom` (ERC20CrossChain)<br />`forcedTransfer` — on the allowance reduction (ERC20EnforcementModule) |
+
+> The `Spend` event signals *consumption* of an allowance. It is emitted on every allowance-consuming `transferFrom` / `burnFrom` — **including infinite approvals**, where the allowance is not actually reduced — so `value` is the amount used, not the size of any reduction. `forcedTransfer` also emits it when it reduces a finite allowance. It is **not** a complete ledger of allowance movement: to obtain a current allowance, read `allowance(owner, spender)`, never accumulate `Spend`/`Approval` events. See [technical/allowance-spend-event.md](./technical/allowance-spend-event.md).
 
 
 
@@ -2365,9 +2475,36 @@ interface ICMTATBase {
 
 #### Additional documents through ERC1643 and DocumentEngine
 
-Additional documents can be added through the `DocumentEngine`
+Beyond the single tokenization `terms` above, CMTAT can attach an arbitrary **set** of named [ERC-1643](https://github.com/ethereum/EIPs/issues/1643) documents (each a `bytes32` name → `{uri, documentHash, lastModified}`). There are **two complementary ways** to expose them, both implementing the same `IERC1643` interface, so an off-chain reader calls the same `getDocument` / `getAllDocuments` regardless of where the data lives:
 
-For more information, see the section dedicated to the `DocumentEngine`
+| Mechanism | Module | Where documents are stored | Availability |
+| --- | --- | --- | --- |
+| **Native (in-contract)** | [`DocumentERC1643Module`](../contracts/modules/wrapper/extensions/DocumentERC1643Module.sol) | In the token contract's own ERC-7201 storage | New in **v3.3.0**, on the deployment variants that include the document base (`CMTATBaseDocument`, level 1) |
+| **External engine** | [`DocumentEngineModule`](./modules/extensions/documentEngine/document.md) | In a separate `DocumentEngine` contract that the token points to | Optional module — currently **not shipped in any deployment variant**, validated through test mocks |
+
+**Native module — `DocumentERC1643Module`.** Documents are managed on the token itself:
+
+```solidity
+function setDocument(bytes32 name, string calldata uri, bytes32 documentHash) external; // onlyDocumentManager
+function removeDocument(bytes32 name) external;                                          // onlyDocumentManager
+function getDocument(bytes32 name) external view returns (string memory uri, bytes32 documentHash, uint256 lastModified);
+function getAllDocuments() external view returns (bytes32[] memory documentNames_);
+```
+
+- Writes are gated by the `DOCUMENT_ROLE`; reads are unrestricted.
+- `setDocument` emits `DocumentUpdated(name, uri, documentHash)` (both on insert and update); `removeDocument` emits `DocumentRemoved` and reverts `ERC1643MissingDocument` if the name is unknown. `lastModified` is stamped by the contract.
+- The zero name is rejected with `ERC1643InvalidName`. A `getDocument` on an unregistered name returns **empty values without reverting**, matching the ERC-1643 ABI.
+
+**External engine — `DocumentEngineModule`.** Instead of storing documents in the token, the token holds the address of an external `DocumentEngine` (any contract implementing `IERC1643`) and delegates the reads to it:
+
+```solidity
+function setDocumentEngine(IERC1643 documentEngine_) external; // DOCUMENT_ENGINE_ROLE
+function documentEngine() external view returns (IERC1643);
+```
+
+This keeps document logic upgradeable and off the token's bytecode, and lets several tokens share one engine. `getDocument` / `getAllDocuments` on the token forward to the configured engine.
+
+Both mechanisms support the **two versions of ERC-1643** CMTAT implements — the *original* (only ever a [GitHub issue](https://github.com/ethereum/EIPs/issues/1643)) and its *rework* draft ["Document Management for Security Tokens" (ethereum/ERCs PR #1754)](https://github.com/ethereum/ERCs/pull/1754) — which share the same `bytes32`-named document model. For the engine contract, its interface, expected roles, and the released `DocumentEngine` versions, see the [DocumentEngine (IERC-1643)](#documentengine-ierc-1643) section.
 
 ### Cross-chain transfers (ERC-7802, CCIP-CCT, LayerZero)
 
@@ -2596,6 +2733,13 @@ More information on this standard here: [erc1363.org](https://erc1363.org), [Rar
 
 #### Inheritance
 
+The ERC-1363 variant reuses the **Standard** module set and adds the ERC-1363 callback layer on top; the three schemas below read from the shared base down to the two deployable contracts:
+
+- **`CMTATBaseERC1363`** (level 8, *first schema*) is `abstract` and inherits the full standard base through `CMTATBaseERC7551Enforcement` (level 7 — core modules, RuleEngine, ERC-20 cross-chain and ERC-7551 enforcement), then mixes in OpenZeppelin's `ERC1363Upgradeable`, which brings `transferAndCall` / `approveAndCall`. The extra `CMTATBaseRuleEngine` / `CMTATBaseERC20CrossChain` imports are only there to resolve the diamond (`_update`, `supportsInterface`) overrides.
+- **`CMTATStandaloneERC1363`** and **`CMTATUpgradeableERC1363`** (*second and third schemas*) both extend that base and add `ERC2771Module`; they differ **only** in deployment plumbing — the standalone locks its state in a constructor, the upgradeable one is initialised behind a proxy. The functional surface is identical.
+
+So the diagram widens by exactly one mixin compared with the Standard variant: everything the Standard token can do, plus the ERC-1363 receiver/spender callbacks.
+
 - CMTAT ERC-1363 Base
 
 ![surya_inheritance_CMTAT_ERC1363_BASE.sol](./schema/surya_inheritance/surya_inheritance_8_CMTATBaseERC1363.sol.png)
@@ -2623,6 +2767,13 @@ The light version only includes core modules.
 It also includes a function `forcedBurn` to allow the admin to burn a token from a frozen address. This function is not required for deployment versions which include the extension module `ERC20EnforcementModule` because this module contains a function `forcedTransfer` which can be used instead.
 
 If the address is not frozen, it is also possible to perform a burn-and-mint atomically through the function `burnAndMint` like the deployment standard versions
+
+Mirroring the ERC-1363 layout, the schemas go from the shared base up to the two deployable contracts — but here the base sits at the **bottom** of the module stack instead of the top:
+
+- **`CMTATBaseCore`** (level 0, *last schema*) inherits **only the core modules** — ERC-20 base, mint, burn, pause, enforcement, core validation, access control and versioning — with no RuleEngine, cross-chain, snapshot, ERC-2771 or ERC-1363. It adds `forcedBurn` so an admin can still burn from a frozen address without pulling in the heavier `ERC20EnforcementModule`.
+- **`CMTATStandaloneLight`** and **`CMTATUpgradeableLight`** (*first two schemas*) extend `CMTATBaseCore` directly and, as with the ERC-1363 pair, differ only in standalone-vs-proxy wiring.
+
+This is why the Light schema is the shallowest of all variants: it is the one deployment whose base is level 0.
 
 - CMTAT Upgradeable Light
 
@@ -2763,6 +2914,12 @@ Here are the different fields and functions to read and store the related debt i
 
 #### Schema
 
+Both debt variants build on a **RuleEngine-capable** base — not the full standard base — and add debt features plus the snapshot base, but they differ in how the debt data is stored and whether cross-chain is included:
+
+- **`CMTATBaseDebt`** (level 4, *Debt base schema*) inherits `CMTATBaseRuleEngine` (level 3 — core modules, core validation and the RuleEngine) and mixes in the **internal** `DebtModule` (debt terms and credit events stored in the token) plus `CMTATBaseSnapshot`. It deliberately stops below the cross-chain (level 5) and ERC-2771 (level 6) layers, so the Debt variant has **no** `ERC20CrossChain` and **no** meta-transaction support.
+- **`CMTATBaseDebtEngine`** (level 6, *DebtEngine base schema*) instead sits on `CMTATBaseERC20CrossChain` (level 5) and swaps the internal module for the **external** `DebtEngineModule`, so debt data lives in a separate `DebtEngine` contract. Being on the cross-chain base, it keeps `ERC20CrossChain` and the ERC-1404 rule-engine surface; like Debt it omits ERC-2771.
+- For each, `CMTATStandalone…` and `CMTATUpgradeable…` (the first two schemas of each block) extend the base and differ only in standalone-vs-proxy wiring.
+
 ##### Debt
 
 - CMTAT Standalone Debt
@@ -2828,6 +2985,25 @@ The same allowance authorization checks apply to both `approve` and `permit`:
 
 This deployment version is useful when a workflow needs gas-sponsored approvals, signature-based UX, or atomic batching of several token operations.
 
+#### Inheritance
+
+The Permit variant builds on the cross-chain base and adds the two OpenZeppelin mixins that give it its name:
+
+- **`CMTATBaseERC2612`** (level 6, *base schema*) is `abstract` and inherits `CMTATBaseERC20CrossChain` (level 5 — core modules, validation, RuleEngine and ERC-20 cross-chain), then mixes in OpenZeppelin's `ERC20PermitUpgradeable` (`permit`) and `MulticallUpgradeable` (`multicall`). Unlike the standard base it does **not** pull in `ERC2771Module`, to keep the bytecode lean under EIP-170.
+- **`CMTATStandalonePermit`** and **`CMTATUpgradeablePermit`** extend that base and differ only in standalone-vs-proxy wiring.
+
+- CMTAT Base Permit
+
+![surya_inheritance_6_CMTATBaseERC2612.sol](./schema/surya_inheritance/surya_inheritance_6_CMTATBaseERC2612.sol.png)
+
+- CMTAT Standalone Permit
+
+![surya_inheritance_CMTATStandalonePermit.sol](./schema/surya_inheritance/surya_inheritance_CMTATStandalonePermit.sol.png)
+
+- CMTAT Upgradeable Permit
+
+![surya_inheritance_CMTATUpgradeablePermit.sol](./schema/surya_inheritance/surya_inheritance_CMTATUpgradeablePermit.sol.png)
+
 ### Allowlist
 
 The Allowlist deployment version allows to restrict transfer to token holders present inside an allowlist (whitelist) maintained inside the smart contract. 
@@ -2851,6 +3027,11 @@ More information regarding the Ethereum API available in the [Allowlist module d
 
 
 #### Inheritance
+
+The Allowlist variant swaps the RuleEngine branch for an **in-contract whitelist**, which is why it sits at level 3 (parallel to the RuleEngine base) and cannot use a RuleEngine / ERC-1404:
+
+- **`CMTATBaseAllowlist`** (level 3, *base schema*) inherits `CMTATBaseAccessControl` (level 2) and composes `ValidationModuleAllowlist` (the whitelist check that replaces the RuleEngine validation), `ValidationModuleAllowance`, `ERC2771Module` (so it keeps meta-transactions) and `ERC20EnforcementERC7551Module` (so `forcedTransfer` and the ERC-7551 enforcement surface stay available).
+- **`CMTATStandaloneAllowlist`** and **`CMTATUpgradeableAllowlist`** extend that base and differ only in standalone-vs-proxy wiring.
 
 - CMTAT Standalone Allowlist
 
@@ -3015,13 +3196,31 @@ A detailed maintainer feedback is available in [SequentReport-feedback.md](./sec
 
 ### Tools
 
-Reports and summaries for all static analysis and automated review tools ([Aderyn](https://github.com/Cyfrin/aderyn), [Slither](https://github.com/crytic/slither), Mythril, [Nethermind Audit Agent](https://auditagent.nethermind.io), Wake Arena) are collected in [security/AUDIT.md](./security/AUDIT.md).
+Beyond the external human audits above, every CMTAT release is run through static analyzers and AI-assisted review tools. These are **not** a substitute for a formal audit — they surface *candidates* that CMTA maintainers then verify by hand — but they give continuous, per-release coverage between audits. The full reports, per-finding maintainer feedback and dispositions are collected in **[security/AUDIT.md](./security/AUDIT.md)**; the table below summarizes the latest run of each tool.
+
+| Tool | Type | Latest run | Outcome |
+| --- | --- | --- | --- |
+| [Aderyn](https://github.com/Cyfrin/aderyn) (Cyfrin) | Static analyzer (Rust) | v3.3.0 (`aderyn 0.6.5`, 2026-07-30 on rc3) | 2 High + 10 Low, all reviewed — **nothing to fix**; the only accept-and-mitigate item is L-1 centralization (mitigated by governance at deployment). |
+| [Slither](https://github.com/crytic/slither) (Crytic) | Static analyzer (Python) | v3.3.0 (`slither 0.11.5`, 158 results, 2026-07-30 on rc3) | 0 High; every Medium/Low is a false positive or a documented design choice — **nothing to fix**. |
+| [Mythril](https://github.com/Consensys/mythril) | Symbolic execution | v2.5.0 | Last runnable version; on v3.0.0+ the tool hits a fatal `solc` error and cannot complete. |
+| [Nethermind AuditAgent](https://auditagent.nethermind.io) | AI-assisted review | v3.3.0-rc2 (Scan ID 9) | 24 findings (1 High / 4 Med / 3 Low / 14 Info / 2 best-practice) → **12 code fixes**, the rest documented or rejected; the High is a false positive; **no open item**. |
+| [Wake Arena](https://ackee.xyz) (Ackee Blockchain Security) | AI vulnerability analysis | v3.2.0-rc2 (Feb 2026) | Findings triaged with a per-finding maintainer response. |
+
+> **On the AI tools.** The AuditAgent and Wake Arena reports are generated by AI and, by the tools' own notices, must be independently verified. The linked feedback files in [security/AUDIT.md](./security/AUDIT.md) are that verification, performed by CMTA maintainers.
 
 ### Test
 
 A code coverage is available in [index.html](./test/coverage/index.html).
 
 ![coverage](./general/coverage.png)
+
+The coverage run (`npm run-script coverage`) uses the `prague` hardfork rather than
+the `osaka` one used by the test run: solidity-coverage's instrumented bytecode
+exceeds the EIP-7825 per-transaction gas cap on the largest deployment variants.
+This concerns the instrumented build only — the deployed contracts use about a third
+of that cap. See [USAGE.md](./USAGE.md#coverage) for the measured figures.
+
+The full test suite is catalogued per feature module and per deployment version in **[test/Test.md](./test/Test.md)** — a hand-maintained map (module × deployment-version coverage matrix, per-module scenario reference) whose purpose is to make **missing tests easy to find**. It must be updated whenever a test is added, changed or removed.
 
 ## Usage
 
@@ -3091,7 +3290,7 @@ The project is built with [Hardhat](https://v2.hardhat.org) and uses [OpenZeppel
 [Hardhat](https://v2.hardhat.org) is the main development toolchain for this repository and for CMTAT. [Forge (Foundry)](https://www.getfoundry.sh) is also installed and can compile contracts here, but Foundry-specific deployment scripts and Foundry-native tests are maintained in a dedicated repository: [CMTAT-Foundry](https://github.com/CMTA/CMTAT-Foundry).
 
 - hardhat.config.js
-  - Solidity [v0.8.34](https://docs.soliditylang.org/en/v0.8.34/)
+  - Solidity [v0.8.36](https://docs.soliditylang.org/en/v0.8.36/)
   - EVM version: Osaka (Fusaka upgrade)
   - Optimizer: true, 200 runs
 
@@ -3134,7 +3333,7 @@ Alternatively, you can install Hardhat [globally](https://v2.hardhat.org/hardhat
 npm run-script size
 ```
 
-Measured with `solc 0.8.34`, optimizer enabled (200 runs). EVM deployed bytecode limit: **24.576 KiB**.
+Measured with `solc 0.8.36`, optimizer enabled (200 runs). EVM deployed bytecode limit: **24.576 KiB**.
 
 The deployed size is identical between standalone and upgradeable for the same variant; the initcode is larger for standalone contracts since it embeds the full constructor logic rather than a proxy initializer.
 
@@ -3161,6 +3360,10 @@ All variants are within the deployed bytecode limit.
 This section provides an overview of CMTAT-related projects, both official implementations managed by CMTA and community-driven projects. Some community projects may have received feedback from CMTA.
 
 ### Official / CMTA-Managed Implementations
+
+#### [CMTAT-Confidential](https://github.com/CMTA/CMTAT-Confidential)
+
+Confidential version of CMTAT that keeps balances and transfer amounts private using Fully Homomorphic Encryption. It builds on OpenZeppelin's [ERC-7984](https://eips.ethereum.org/EIPS/eip-7984) confidential-token standard and [Zama](https://www.zama.ai/)'s FHEVM (encrypted `euint64` balances, transfers validated through zero-knowledge proofs), while preserving CMTAT's compliance features (pause, freeze, forced transfer). Audited by OpenZeppelin (2026).
 
 #### Solana
 

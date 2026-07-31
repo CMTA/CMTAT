@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MPL-2.0
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.24;
 
 import {DocumentERC1643Module} from "../modules/wrapper/extensions/DocumentERC1643Module.sol";
 

@@ -40,6 +40,18 @@ Minimum RuleEngine target interface in CMTAT:
 > - the **original** ERC-1404, which was only ever published as a [GitHub issue](https://github.com/ethereum/EIPs/issues/1404) and never became a merged EIP — covered by `IERC1404` (`detectTransferRestriction(from, to, value)` + `messageForTransferRestriction(code)`);
 > - its **current rework**, the draft proposal ["Simple Restricted Token" (ethereum/ERCs PR #1701)](https://github.com/ethereum/ERCs/pull/1701), still **open/draft**, which brings ERC-1404 into the canonical format — covered by `IERC1404Extend`, adding the spender-aware `detectTransferRestrictionFrom(spender, from, to, value)` that pairs with CMTAT's `canTransferFrom` / spender-aware paths.
 
+> **Scope — transfers only.** Both `detectTransferRestriction*` methods describe `transfer` /
+> `transferFrom`. CMTAT does **not** support the rework draft's `address(0)` encoding for mint/burn
+> prediction, because its pause rule differs *between entry points of the same operation*
+> (`MINTER_ROLE` mint and `BURNER_ROLE` burn proceed while paused; `crosschainMint`,
+> `crosschainBurn`, `burnFrom` and `burn(uint256)` do not), and the ERC-1404 signature carries no
+> entry-point discriminator. Use `canTransfer` / `canTransferFrom` for mint and burn prediction. See
+> the [ERC-1404 scope note](../README.md#scope-transfers-only-never-mint-or-burn).
+>
+> A RuleEngine still receives mint/burn notifications through `transferred(...)` with the
+> `address(0)` encoding — that is the *enforcement* path and is unaffected by the above. What is
+> not supported is *predicting* a mint or burn through the ERC-1404 read methods.
+
 ## Configuration Lifecycle
 
 RuleEngine is optional and can be zero-address.
@@ -126,12 +138,26 @@ Use deployment summary in [doc/SUMMARY.md](../SUMMARY.md) and deployment tables 
 - cross-chain/operator-driven paths.
 4. Do not rely only on `from == address(0)`/`to == address(0)` unless policy intentionally treats operator mint/burn uniformly.
 5. If targeting ERC-1404 UX, implement `IRuleEngineERC1404` functions consistently with `canTransfer*`.
+6. `messageForTransferRestriction(code)` must return a **non-empty** string for every code the engine can return,
+   and that string must never denote the absence of a restriction (`"No restriction"`, `""`, …) for a non-zero
+   code. The token resolves its own codes (`0`–`6`) and **forwards every other code to the engine verbatim**, so
+   the engine's string is what integrators and user interfaces display. An empty or misleading string therefore
+   surfaces a blocked transfer as if it were permitted — see the ERC-1404 rework draft,
+   `messageForTransferRestriction`. The token does not inspect the forwarded value: the RuleEngine is
+   `DEFAULT_ADMIN_ROLE`-set and trusted, and a length check would guard only the least harmful failure while
+   costing bytecode on variants already close to the EIP-170 limit.
+7. The engine must implement `IRuleEngineERC1404` if the token exposes ERC-1404. `detectTransferRestriction` /
+   `messageForTransferRestriction` on the token forward to the engine unguarded, so an engine without those
+   methods makes both token view functions revert (the enforcement path, which calls `transferred(...)`, is
+   unaffected). See design choice 1 below: the engine type is not validated at set-time.
 
 ## Known Design Choices
 
 1. RuleEngine address is not contract-type enforced at set-time by default (design choice).
 2. Read-only pre-checks are advisory; runtime may still revert on later checks/state changes.
 3. RuleEngine is optional; base validation still applies even when RuleEngine is unset.
+4. The token does not sanitise what the engine returns — neither the restriction code nor the message. Both are
+   forwarded as-is, consistent with the trusted-engine assumption stated above and with design choice 1.
 
 ## Cross-References
 

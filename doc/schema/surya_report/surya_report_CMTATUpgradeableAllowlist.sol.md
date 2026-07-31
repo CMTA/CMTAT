@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./deployment/allowlist/CMTATUpgradeableAllowlist.sol | 937c915adc27f04d34800d12c6800b73ac10bcf9 |
+| ./deployment/allowlist/CMTATUpgradeableAllowlist.sol | 3c5a5ee74c158744094f7b55e186f0b347bb16dc |
 
 
 ### Contracts Description Table

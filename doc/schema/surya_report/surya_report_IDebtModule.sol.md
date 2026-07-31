@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./interfaces/modules/IDebtModule.sol | 44c6150505a435baea79fcaabc3a93b494506072 |
+| ./interfaces/modules/IDebtModule.sol | 7d01e40732e1d1f123097d250793aa87fb2f1e92 |
 
 
 ### Contracts Description Table

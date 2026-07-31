@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MPL-2.0
 
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.24;
 
 /* ==== Module === */
 import {EnforcementModuleInternal} from "../../internal/EnforcementModuleInternal.sol";
@@ -22,7 +22,7 @@ abstract contract EnforcementModule is
 
 
     /* ============ Modifier ============ */
-    /// @dev Modifier to restrict access to the burner functions
+    /// @dev Modifier to restrict access to the address-freeze functions (via `_authorizeFreeze`, ENFORCER_ROLE)
     modifier onlyEnforcer() {
         _authorizeFreeze();
         _;

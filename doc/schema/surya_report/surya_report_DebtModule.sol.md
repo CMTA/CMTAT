@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/wrapper/options/DebtModule.sol | 9736762f32486a96d64571276dfc4f727815ade0 |
+| ./modules/wrapper/options/DebtModule.sol | b7cd155d99fc2b0a9cf1b0086993eb5e3bbe9d47 |
 
 
 ### Contracts Description Table

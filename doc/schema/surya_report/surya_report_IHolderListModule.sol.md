@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./interfaces/modules/IHolderListModule.sol | 0ba1fb830bcc2305cd90ff28c351531ca96ea964 |
+| ./interfaces/modules/IHolderListModule.sol | f32792f0033662341dd5cb260eaac170fc3361ec |
 
 
 ### Contracts Description Table

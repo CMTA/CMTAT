@@ -194,107 +194,7 @@
 149
 150
 151
-152
-153
-154
-155
-156
-157
-158
-159
-160
-161
-162
-163
-164
-165
-166
-167
-168
-169
-170
-171
-172
-173
-174
-175
-176
-177
-178
-179
-180
-181
-182
-183
-184
-185
-186
-187
-188
-189
-190
-191
-192
-193
-194
-195
-196
-197
-198
-199
-200
-201
-202</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+152</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -447,64 +347,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// SPDX-License-Identifier: MPL-2.0
 &nbsp;
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.24;
 &nbsp;
 import {IERC1643CMTAT} from "./draft-IERC1643CMTAT.sol";
 import {IERC1643} from "./draft-IERC1643.sol";
 &nbsp;
 /**
-* The issuer must be able to “deactivate” the smart contract, to prevent execution of transactions on
-* the distributed ledger.
-* Contrary to the “burn” function, the “deactivateContract” function
-* affects all tokens in issuance, and not only some of them. 
-* 
-* a) This function is necessary to allow the issuer to carry out certain corporate actions 
-* (e.g. share splits, reverse splits or mergers), which 
-* require that all existing tokens are either canceled or immobilized and decoupled from the shares
-* (i.e. the tokens no longer represent shares).
-* 
-* b) The “deactivateContract” function can also be used if the issuer decides that it no longer wishes
-* to have its shares issued in the form of ledger-based securities
-* 
-* The “deactivateContract” function does not delete the smart contract’s 
-* storage and code, i.e. tokens are not burned by the function, however it permanently and
-* irreversibly deactivates the smart contract (unless a proxy is used). 
-* 
-*/
-interface ICMTATDeactivate {
-     /**
-     * @notice Emitted when the contract is permanently deactivated.
-     * @param account The address that performed the deactivation.
-     */
-    event Deactivated(address indexed account);
-&nbsp;
-    /**
-     * @notice Error raised when deactivation is attempted after deactivation is already final.
-     */
-    error AlreadyDeactivated();
-&nbsp;
-     /* 
-     * @notice Permanently deactivates the contract.
-     * @dev 
-     * This action is irreversible — once executed, the contract cannot be reactivated.
-     * Requirements:
-     * - The contract MUST be paused before deactivation is allowed.
-     * Emits a {Deactivated} event.
-     * WARNING: Use with caution. This action permanently disables core contract functionality.
-     */
-    function deactivateContract() external;
-&nbsp;
-     /**
-     * @notice Returns whether the contract has been permanently deactivated.
-     * @return isDeactivated A boolean indicating the deactivation status.
-     * @dev Returns `true` if `deactivateContract()` has been successfully called.
-     */
-    function deactivated() external view returns (bool isDeactivated) ;
-}
-&nbsp;
-&nbsp;
-&nbsp;
-/** 
 * @title ICMTATBase - Core Tokenization Metadata Interface as part of CMTAT specification
 * @notice Defines base properties and metadata structure for a tokenized asset.
 * @dev Includes token ID, terms (using IERC1643-compliant document), and a general information field.
@@ -583,6 +431,7 @@ interface ICMTATBase {
 interface ICMTATCreditEvents {
      /**
      * @notice Returns credit events
+     * @return creditEvents_ The current credit-event flags for the token.
      */
     function creditEvents() external view returns(CreditEvents memory creditEvents_);
 &nbsp;
@@ -643,6 +492,7 @@ interface ICMTATDebt {
     }
     /**
      * @notice Returns debt information
+     * @return debtInformation_ The current debt information for the token.
      */
     function debt() external view returns(DebtInformation memory debtInformation_);
 }
@@ -652,7 +502,7 @@ interface ICMTATDebt {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu May 21 2026 10:55:39 GMT+0200 (Central European Summer Time)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Fri Jul 31 2026 15:34:22 GMT+0200 (Central European Summer Time)
 </div>
 </div>
 <script src="../../prettify.js"></script>

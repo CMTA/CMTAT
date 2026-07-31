@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MPL-2.0
 
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.24;
 
 /* ==== OpenZeppelin === */
 import {ERC20PermitUpgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/ERC20PermitUpgradeable.sol";
@@ -35,7 +35,14 @@ abstract contract CMTATBaseERC2612 is CMTATBaseERC20CrossChain, ERC20PermitUpgra
     //////////////////////////////////////////////////////////////*/
     /**
     * @inheritdoc ERC20PermitUpgradeable
-    * @dev Reverts if the contract is paused or if owner/spender is frozen.
+    * @dev Reverts if the contract is paused or if owner/spender is frozen, unless `value`
+    * is zero: a zero-value permit is a gasless revocation and stays available so an owner
+    * can always sever ties with a spender, even while restricted.
+    *
+    * The EIP-712 domain name is fixed at initialization and is **not** updated by
+    * {TokenAttributeModule-setName}. Signers must build the domain from the ERC-5267
+    * {eip712Domain} function (or `DOMAIN_SEPARATOR()`), not from {name}, which may have
+    * been changed since deployment.
     */
     function permit(
         address owner,
@@ -46,13 +53,15 @@ abstract contract CMTATBaseERC2612 is CMTATBaseERC20CrossChain, ERC20PermitUpgra
         bytes32 r,
         bytes32 s
     ) public virtual override(ERC20PermitUpgradeable) {
-        _canAuthorizeAllowanceByModuleAndRevert(owner, spender);
+        _canAuthorizeAllowanceByModuleAndRevert(owner, spender, value);
         ERC20PermitUpgradeable.permit(owner, spender, value, deadline, v, r, s);
     }
 
     /* ============ State functions ============ */
     /**
-    * @dev revert if the contract is in pause state
+    * @dev revert if the contract is in pause state, unless `value` is zero:
+    * setting an allowance to zero is a revocation and stays available while paused
+    * or while the owner/spender is frozen or off the allowlist.
     * @inheritdoc ERC20Upgradeable
     */
     function approve(

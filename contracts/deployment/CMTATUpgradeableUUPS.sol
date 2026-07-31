@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MPL-2.0
 
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.24;
 import {UUPSUpgradeable} from "@openzeppelin/contracts/proxy/utils/UUPSUpgradeable.sol";
 import {CMTATBaseERC2771} from "../modules/6_CMTATBaseERC2771.sol";
 import {ERC2771Module} from "../modules/wrapper/options/ERC2771Module.sol";

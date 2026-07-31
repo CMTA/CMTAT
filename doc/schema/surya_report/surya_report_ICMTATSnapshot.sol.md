@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./mocks/library/snapshot/ICMTATSnapshot.sol | 7c7a082e98eaf433e4d829814376bc0a6fac006b |
+| ./mocks/library/snapshot/ICMTATSnapshot.sol | 05600d5fb1315a776cc06a497a4dc7febdd8e556 |
 
 
 ### Contracts Description Table

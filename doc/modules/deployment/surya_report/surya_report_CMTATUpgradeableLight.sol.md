@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./deployment/light/CMTATUpgradeableLight.sol | [object Promise] |
+| ./deployment/light/CMTATUpgradeableLight.sol | b2bc9fae0c0180f11d4c66de98f16a935a97cad3 |
 
 
 ### Contracts Description Table

@@ -1,4 +1,4 @@
-const { ALLOWLIST_ROLE, ZERO_ADDRESS } = require('../utils')
+const { ALLOWLIST_ROLE, ZERO_ADDRESS, MINTER_ROLE } = require('../utils')
 const { expect } = require('chai')
 
 const REASON_ALLOWLIST_STRING = 'testAllowlist'
@@ -491,6 +491,34 @@ function AllowlistModuleCommon () {
         .withArgs(this.address1.address)
     })
 
+    /*
+     * NM-3 (Nethermind AuditAgent v3.3.0-rc2): delisting a spender must not trap
+     * the holder's existing allowance. Revocation (value == 0) stays available.
+     */
+    it('testCanRevokeAllowanceWhenSpenderIsNotAllowlisted', async function () {
+      const AMOUNT_TO_APPROVE = 10n
+      await this.cmtat
+        .connect(this.admin)
+        .setAddressAllowlist(this.address1, true, reasonAllowlist)
+      await this.cmtat
+        .connect(this.admin)
+        .setAddressAllowlist(this.address2, true, reasonAllowlist)
+      await this.cmtat
+        .connect(this.address1)
+        .approve(this.address2, AMOUNT_TO_APPROVE)
+
+      // Spender falls out of compliance
+      await this.cmtat
+        .connect(this.admin)
+        .setAddressAllowlist(this.address2, false, reasonAllowlist)
+
+      await expect(this.cmtat.connect(this.address1).approve(this.address2, 0))
+        .to.not.be.reverted
+      expect(
+        await this.cmtat.allowance(this.address1, this.address2)
+      ).to.equal(0)
+    })
+
     it('testCannotApproveWhenSpenderIsNotAllowlisted', async function () {
       const AMOUNT_TO_APPROVE = 10n
       await this.cmtat
@@ -549,6 +577,40 @@ function AllowlistModuleCommon () {
       )
         .to.be.revertedWithCustomError(this.cmtat, 'ERC7943CannotReceive')
         .withArgs(this.address3)
+    })
+
+    it('testMinterNotAllowlistedCanStillMint', async function () {
+      // The operator/minter is NOT required to be allowlisted: mint validates the recipient,
+      // not the caller. A minter that is not on the allowlist can still mint to an allowlisted
+      // recipient. (The context beforeEach leaves every address de-allowlisted.)
+      await this.cmtat.connect(this.admin).grantRole(MINTER_ROLE, this.address1)
+      await this.cmtat
+        .connect(this.admin)
+        .setAddressAllowlist(this.address2, true, reasonAllowlist)
+      expect(await this.cmtat.isAllowlisted(this.address1)).to.equal(false)
+
+      await expect(this.cmtat.connect(this.address1).mint(this.address2, 10n)).to
+        .not.be.reverted
+      expect(await this.cmtat.balanceOf(this.address2)).to.equal(10n)
+    })
+
+    it('testMinterNotAllowlistedCanStillBatchMint', async function () {
+      await this.cmtat.connect(this.admin).grantRole(MINTER_ROLE, this.address1)
+      await this.cmtat
+        .connect(this.admin)
+        .setAddressAllowlist(this.address2, true, reasonAllowlist)
+      await this.cmtat
+        .connect(this.admin)
+        .setAddressAllowlist(this.address3, true, reasonAllowlist)
+      expect(await this.cmtat.isAllowlisted(this.address1)).to.equal(false)
+
+      await expect(
+        this.cmtat
+          .connect(this.address1)
+          .batchMint([this.address2.address, this.address3.address], [10n, 20n])
+      ).to.not.be.reverted
+      expect(await this.cmtat.balanceOf(this.address2)).to.equal(10n)
+      expect(await this.cmtat.balanceOf(this.address3)).to.equal(20n)
     })
 
     /* //////////////////////////////////////////////////////////////

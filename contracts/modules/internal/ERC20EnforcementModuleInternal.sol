@@ -1,9 +1,11 @@
 // SPDX-License-Identifier: MPL-2.0
 
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.24;
 
 /* ==== OpenZeppelin === */
 import {ERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
+/* ==== Technical === */
+import {IERC20Allowance} from "../../interfaces/technical/IERC20Allowance.sol";
 /* ==== Tokenization === */
 import {IERC7943FungibleEnforcementEventAndError} from "../../interfaces/tokenization/draft-IERC7943.sol";
 
@@ -32,6 +34,13 @@ abstract contract ERC20EnforcementModuleInternal is ERC20Upgradeable, IERC7943Fu
                             INTERNAL/PRIVATE FUNCTIONS
     //////////////////////////////////////////////////////////////*/
     function _setFrozenTokens(address account, uint256 value) internal virtual returns(bool) {
+        // The zero address holds no balance, so a non-zero frozen amount on it would make
+        // _checkActiveBalance(address(0), value) fail for every value > 0 and revert the common
+        // mint path (mint, batchMint, crosschainMint, the mint leg of burnAndMint).
+        // Same guard as _freezePartialTokens / _unfreezePartialTokens.
+        if (account == address(0)) {
+            revert CMTAT_ERC20EnforcementModule_ZeroAddressNotAllowed();
+        }
         ERC20EnforcementModuleStorage storage $ = _getEnforcementModuleStorage();
         uint256 frozenTokensLocal = $._frozenTokens[account];
         // Unfreeze path
@@ -101,6 +110,13 @@ abstract contract ERC20EnforcementModuleInternal is ERC20Upgradeable, IERC7943Fu
         }
     }
 
+    /**
+    * @dev
+    * Moves tokens through the ERC-20 `_update` primitive directly, without the pause/deactivation
+    * validation applied to holder transfers and standard issuance. This is intentional: forced
+    * transfer/burn is the enforcer's regulatory tool and, per ERC-8343, a named privileged operation
+    * that remains available **after deactivation** (e.g. to sweep a frozen or migrated position).
+    */
     function _forcedTransfer(address from, address to, uint256 value) internal virtual {
         // A self forced transfer moves no token, but _unfreezeTokens would still release the frozen ones
         require(from != to, CMTAT_ERC20EnforcementModule_SelfTransferNotAllowed());
@@ -112,16 +128,14 @@ abstract contract ERC20EnforcementModuleInternal is ERC20Upgradeable, IERC7943Fu
             // See https://ethereum-magicians.org/t/erc-3643-the-t-rex-token-standard/6844/11
             uint256 currentAllowance = allowance(from, to);
             if (currentAllowance > 0 && currentAllowance < type(uint256).max) {
-                if (currentAllowance < value) {
-                     unchecked {
-                        ERC20Upgradeable._approve(from, to, 0, false);
-                     }
-                } else{
-                    unchecked {
-                         ERC20Upgradeable._approve(from, to, currentAllowance - value, false);
-                    }
+                // Amount actually taken from the from->to allowance (capped by the allowance)
+                uint256 spentAllowance = currentAllowance < value ? currentAllowance : value;
+                unchecked {
+                    ERC20Upgradeable._approve(from, to, currentAllowance - spentAllowance, false);
                 }
-              
+                // Emit Spend so the allowance consumption is observable, consistent with
+                // transferFrom / burnFrom. `_approve(..., false)` above still suppresses Approval.
+                emit IERC20Allowance.Spend(from, to, spentAllowance);
             }
             ERC20Upgradeable._transfer(from, to, value);
         }

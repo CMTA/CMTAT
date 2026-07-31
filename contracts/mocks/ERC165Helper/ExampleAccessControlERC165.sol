@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MPL-2.0
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.24;
 
 /// @notice ERC-165 interface for AccessControlUpgradeable 
 interface IAccessControlUpgradeable165 {

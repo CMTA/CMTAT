@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./modules/wrapper/extensions/ValidationModule/ValidationModuleRuleEngine.sol | a19e2c67c3f589d1874f67a4e4b7b6e7d09b7883 |
+| ./modules/wrapper/extensions/ValidationModule/ValidationModuleRuleEngine.sol | c05a0233efc4d0ddd0e3278b58c814834547c2c2 |
 
 
 ### Contracts Description Table
@@ -15,7 +15,7 @@
 |:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
 |     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
 ||||||
-| **ValidationModuleRuleEngine** | Implementation | ValidationModuleCore, ValidationModuleRuleEngineInternal |||
+| **ValidationModuleRuleEngine** | Implementation | ValidationModuleAllowance, ValidationModuleRuleEngineInternal |||
 | └ | setRuleEngine | Public ❗️ | 🛑  | onlyRuleEngineManager |
 | └ | canTransfer | Public ❗️ |   |NO❗️ |
 | └ | canTransferFrom | Public ❗️ |   |NO❗️ |
@@ -25,6 +25,7 @@
 | └ | _canTransferWithRuleEngine | Internal 🔒 |   | |
 | └ | _authorizeRuleEngineManagement | Internal 🔒 | 🛑  | |
 | └ | _transferred | Internal 🔒 | 🛑  | |
+| └ | _callRuleEngineTransferred | Internal 🔒 | 🛑  | |
 
 
 ### Legend

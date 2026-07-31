@@ -43,11 +43,71 @@ Custom changelog tag: `Dependencies`, `Documentation`, `Testing`
   
   - Update changelog
 
-
-
-## 3.3.0 - rc2
+## 3.3.0 - rc3
 
 > **Note:** This version has not been audited.
+
+Main theme: remediation of the **Nethermind AuditAgent v3.3.0-rc2** automated review. Maintainer triage outcome: **12 fixed in code · 8 accepted as design (5 documented) · 4 rejected**; no open item. Full per-finding dispositions in [audit_agent_report_v3.3.0-rc2-feedback.md](./doc/security/tools/nethermind-audit-agent/v3.3.0-rc2/audit_agent_report_v3.3.0-rc2-feedback.md).
+
+### Smart contract
+
+#### Fixed
+
+- **NM-15/17 — missing `address(0)` guard in `_setFrozenTokens`** (`ERC20EnforcementModuleInternal`): an `ERC20ENFORCER_ROLE` holder could freeze tokens on the zero address and brick every mint path. A zero-address guard now rejects it.
+- **NM-3/8 — allowance revocation blocked while paused / frozen**: setting an allowance to `0` is now always permitted. `_canAuthorizeAllowanceByModuleAndRevert` returns early when `value == 0`, so an owner can revoke a spender even while the contract is paused or a party is frozen/delisted.
+- **NM-22 — `setTerms(bytes32,string)` overload erased the terms document name**: the overload now preserves the existing document `name` instead of silently clearing it (`ERC7551Module` / `ExtraInformationModule`).
+- **NM-24 — `forcedTransfer` allowance accounting**: `forcedTransfer` now emits `Spend(from, to, min(currentAllowance, value))` and the `IERC20Allowance.Spend` NatSpec was corrected.
+- **NM-5 — Light minter transfer**: `_minterTransferOverride` now threads `_msgSender()` as the spender argument, aligning the Light variant with the other deployments.
+
+#### Security
+
+- **NM-7/9/11/16/18 — reentrancy on the RuleEngine `transferred` callback**: the `transferred` callback (invoked before balance effects) is now protected by a transient-storage reentrancy guard (OpenZeppelin `ReentrancyGuardTransient`, EIP-1153) on the deployment variants with bytecode headroom. `_callRuleEngineTransferred` is `virtual` and only guards when a RuleEngine is set; size-constrained variants can override, and the limitation is documented. Added a malicious reentrant RuleEngine mock (`RuleEngineReentrantMock`) to cover the attack.
+
+#### Changed
+
+- Raised the Solidity source pragma floor to `^0.8.24` across all contracts, required by the EIP-1153 transient storage used by the new reentrancy guard.
+
+### Testing
+
+#### Added
+
+- Malicious-engine reentrancy tests (`test/common/ValidationModule/RuleEngineReentrancyCommon.js`) plus per-variant wiring.
+- Regression tests for the fixes above: zero-value permit/allowance revocation while paused or with a frozen owner/spender, `setTerms` name preservation, `forcedTransfer` `Spend` event, the Light minter-transfer spender.
+- Coverage tests that a non-allowlisted minter can still mint, a frozen minter can still mint, and that freeze does not block `mint`/`batchMint` (standard + light).
+- **ERC-1643 document tests** (`test/common/DocumentModule/DocumentModuleCommon.js`): event emission on `setDocument` / `removeDocument`, the zero-name case and the missing-document case, run against both the native `DocumentERC1643Module` and the external `DocumentEngineModule` variants.
+- **RuleEngine spender-dispatch tests** (`test/common/ValidationModule/RuleEngineSpenderDispatchCommon.js`, wired for the standalone and proxy variants): assert through CMTAT that `transferFrom` routes to the spender-aware 4-argument `transferred(spender, from, to, value)` and forwards the real spender, while a direct `transfer` routes to the legacy 3-argument overload. Uses a new recording mock, `RuleEngineSpenderRecorderMock`, and kills the `spender != address(0)` dispatch mutant.
+- **`doc/test/Test.md`** — a hand-maintained test catalogue (module × deployment-version matrix, per-module scenario reference) to make missing tests easy to find; its maintenance is now required by `CLAUDE.md` / `AGENTS.md`.
+
+#### Fixed
+
+- **`npm run coverage` no longer fails with `Transaction ran out of gas`** on the largest deployment variants (ERC1363, ERC7551, DebtEngine, HolderList). The Hardhat network defaults to the `osaka` hardfork, which enforces the EIP-7825 per-transaction gas cap of 2\*\*24 (16,777,216 gas); solidity-coverage's instrumented bytecode exceeds it at deployment, and each failed `beforeEach` skipped its whole suite. `hardhat.config.js` now runs the coverage task on `prague` (overridable with `HARDHAT_HARDFORK`) while `npm run test` stays on `osaka`. Deployed contracts are unaffected — they use about a third of the cap (~5.7M gas). Full coverage run: 6108 passing, 0 failing.
+- **Flaky timestamp assertions** in the snapshot scheduling and rescheduling suites (`test/common/SnapshotModuleCommon/`): `CMTAT_SnapshotModule_SnapshotScheduledInThePast` was checked against `(await time.latest()) + 1` read while the reverting call was in flight, which resolved to a different block depending on run speed. The executing block's timestamp is now pinned with `time.setNextBlockTimestamp`.
+
+### Documentation
+
+- Documented the accepted-as-design findings: NM-4 (raw `msg.sender` bridge gate and the `CROSS_CHAIN_ROLE` forwarder constraint), NM-6 (permissionless zero-value `transferred` callbacks in the `IRuleEngine` NatSpec), NM-20 (the ERC20Burn pause note — `burnFrom` / `burn(value)` carry the pause check as cross-chain/third-party operations), NM-21 (`setName` does not update the EIP-712 domain; signers must read `eip712Domain()`), and an allowance-spend-event technical note (NM-24).
+- Expanded `doc/README.md`: ERC-2771 per-deployment support table; split of the ERC-1404 version-support row into base (`detectTransferRestriction`) and reworked-only Extension (`detectTransferRestrictionFrom`); native `DocumentERC1643Module` vs external `DocumentEngineModule`; inheritance schemas for ERC-1363, Light, Debt, DebtEngine, Permit and Allowlist; a per-tool security-tools overview; and a `CMTAT-Confidential` entry under official implementations.
+- Renamed `guideline-new-blockchain.md` → `cmtat-specification-analyse.md` (rescoped to a CMTAT-specification-vs-implementation comparison); porting now points to the external [CMTAT-equivalency-assessment](https://github.com/CMTA/CMTAT-equivalency-assessment) repository. Removed the ERC-1450 links from the Technical Guides.
+- Corrected `holder-list.md` (the gas cost of a transfer between existing holders, and off-chain balance-at-a-block via `eth_call`).
+- **ERC-1404 predictor scope** — `detectTransferRestriction` and `detectTransferRestrictionFrom` describe the holder transfer path (`transfer` / `transferFrom`) only. The `address(0)` encoding of the ERC-1404 rework draft (mint as `from == address(0)`, burn as `to == address(0)`) is **not** supported, because CMTAT's pause rule differs *between entry points of the same operation* — `MINTER_ROLE` mint and `BURNER_ROLE` burn proceed while paused, while `crosschainMint`, `crosschainBurn`, `burnFrom` and `burn(uint256)` do not — and the ERC-1404 signature carries no entry-point discriminator. CMTAT therefore designates no ERC-1404 predictor for supply-changing operations and designates `canTransfer` / `canTransferFrom` instead. Documented in `ValidationModuleERC1404` NatSpec, `doc/README.md`, `doc/technical/ruleengine-integration.md` and `doc/modules/core/Pause/pause.md`.
+- **RuleEngine authoring obligations** (`doc/technical/ruleengine-integration.md`): an engine must return a non-empty `messageForTransferRestriction` string for every code it can return — never one denoting the absence of a restriction for a non-zero code — and must implement `IRuleEngineERC1404` when the token exposes ERC-1404. The token forwards both the code and the message verbatim by design (trusted, `DEFAULT_ADMIN_ROLE`-set engine; bytecode headroom), which is now recorded as an explicit design choice.
+- Documented that `forcedTransfer` / `forcedBurn` intentionally remain available **after deactivation** (ERC-8343 named privileged operations, e.g. to sweep a frozen or migrated position), and corrected the absolute "no operation after deactivation" wording in `doc/README.md` / `doc/technical/stablecoin.md` and in the `0_CMTATBaseCore` / `ERC20EnforcementModuleInternal` NatSpec.
+- Corrected misleading access-control NatSpec: the cross-chain `burn(uint256)` is gated by `onlySelfBurn` (`BURNER_SELF_ROLE`), not the burner role, and `EnforcementModule`'s `onlyEnforcer` gates the address freeze.
+- `doc/README.md`: refreshed the DocumentEngine version table (CMTAT v3.3.0 → DocumentEngine v0.4.0; v3.0.0–v3.2.0 marked as not developed) and added Permit (ERC-2612), Multicall (ERC-6357) and Holder List to the optional-features list.
+- Regenerated the **Surya** schema for rc3 — call graphs, inheritance graphs and reports for all 129 contracts, picking up `ReentrancyGuardTransient` in the deployment-variant inheritance and the two new RuleEngine mocks — and re-synced the per-module report copies under `doc/modules/**` with the canonical set (74 files, two ghosts from the deployment-filenames rename dropped, 13 missing reports added).
+- Documented the coverage hardfork in `doc/USAGE.md` (with `doc/README.md` pointing to it): why the coverage run uses `prague` while the test run uses `osaka`, and the measured deployment gas of the largest variants against the EIP-7825 cap, showing that the cap constrains the instrumented build only and not the deployed contracts.
+- Refreshed the **Slither** and **Aderyn** reports and maintainer feedback against the rc3 source: Slither 158 results (0 High; `calls-loop` rises 28 → 76 purely because the RuleEngine hook was factored into the `virtual` `_callRuleEngineTransferred`, not from any new external call), Aderyn unchanged at 2 High / 10 Low with identical instance counts (3736 → 3826 nSLOC). **Nothing to fix** in either; see [AUDIT.md](./doc/security/AUDIT.md).
+
+### Dependencies
+
+- Update the pinned Solidity compiler from 0.8.34 to [0.8.36](https://docs.soliditylang.org/en/v0.8.36/) in `hardhat.config.js` and `foundry.toml`.
+- Bump the `npm` devDependency to `^12.0.1`.
+
+## 3.3.0 - rc2 - 2026-07-23
+
+> **Note:** This version has not been audited.
+
+Commit: `35d8940b40943828c5ea407dc6b22d559d92e4ae`
 
 ### Smart contract
 
@@ -416,9 +476,21 @@ Commit: `49544f4de1993008acfc9e848d0bf03bd31d8579`
 
 - Update Solidity version to [0.8.34](https://www.soliditylang.org/blog/2026/02/18/solidity-0.8.34-release-announcement) in Hardhat config file.
 
-## 3.1.0 - 20251209
+## 3.1.0 - 2025-12-09
+
+Commit: `9c96c8eed903cb092e37b089316515ecefbd10fe`
 
 > This version is not audited
+
+**Issue**
+
+Known issue for this release
+
+- [Frozen tokens may exceed balance and break active-balance assumptions](https://github.com/CMTA/CMTAT/issues/375) (medium)
+
+- [Operator/Spender Identity Lost in RuleEngine Hooks (burn/mint/cross-chain)](https://github.com/CMTA/CMTAT/issues/376) (low)
+- [Operator/Spender Identity Lost in RuleEngine Hooks (burn/mint/cross-chain)](https://github.com/CMTA/CMTAT/issues/376)(Informational)
+- [setAddressFrozen(address(0)) should be rejected](https://github.com/CMTA/CMTAT/issues/372)
 
 **Fixed**
 
@@ -464,13 +536,26 @@ Commit: `49544f4de1993008acfc9e848d0bf03bd31d8579`
 - Add summary tab for CMTAT framework functionalities to help build CMTAT version for other blockchains
 - Add audit reports made by [Nethermind Audit Agents](https://auditagent.nethermind.io)
 
-
 ## 3.0.0 - 2025-08-28
 
-- Major release audited by [Halborn](https://www.halborn.com)
-- Improved comments and documentation
+Commit: `69eecc9735ce8ada84fd35801888b05747658939`
 
-See changelogs of the rc versions for details.
+Major release audited by [Halborn](https://www.halborn.com)
+
+**Issue** 
+
+Known issues for this release:
+
+- [Misleading NatSpec Comments](https://github.com/CMTA/CMTAT/issues/330)
+- [Incorrect error parameters in _unfreezeTokens](https://github.com/CMTA/CMTAT/issues/329)
+- [CMTATUpgradeableUUPS contract may be not initializable](https://github.com/CMTA/CMTAT/issues/327)
+- [CMTATBaseAllowlist - Redundant State Checks](https://github.com/CMTA/CMTAT/issues/332)
+- [Snpashot update - CEI pattern](https://github.com/CMTA/CMTAT/issues/326)
+- [Operator/Spender Identity Lost in RuleEngine Hooks (burn/mint/cross-chain)](https://github.com/CMTA/CMTAT/issues/376) (low)
+
+Difference with v.3.0.0 rc version:
+- Improved comments and documentation
+- See changelogs of the rc versions for details.
 
 Main changes with the last audited release (v2.3.0):
 

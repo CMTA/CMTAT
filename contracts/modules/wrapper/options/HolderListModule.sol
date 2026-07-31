@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MPL-2.0
 
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.24;
 /* ==== OpenZeppelin === */
 import {ERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 import {EnumerableSet} from "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
@@ -17,8 +17,10 @@ import {IHolderListModule} from "../../../interfaces/modules/IHolderListModule.s
  * transferFrom, mint, burn, forced transfer and cross-chain mint/burn.
  *
  * Gas: the first transfer to a new address writes two slots (EnumerableSet stores the value
- * and its index), and the transfer emptying an account clears them. Transfers between
- * existing holders that leave both balances non-zero cost nothing extra.
+ * and its index), and the transfer emptying an account clears them. A transfer between
+ * existing holders that leaves both balances non-zero performs no storage write to the set
+ * (no add/remove, no event), but still reads balanceOf(from) and balanceOf(to) and does one
+ * EnumerableSet membership-check SLOAD in add(to) — roughly two warm + one cold SLOAD, no SSTORE.
  */
 abstract contract HolderListModule is ERC20Upgradeable, IHolderListModule {
     using EnumerableSet for EnumerableSet.AddressSet;

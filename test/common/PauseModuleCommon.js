@@ -191,6 +191,63 @@ function PauseModuleCommon () {
       }
     })
 
+    /*
+     * NM-3 (Nethermind AuditAgent v3.3.0-rc2): a holder must always be able to
+     * sever ties with a spender. Setting an allowance to zero is a revocation,
+     * never a new grant, so it must stay available while the token is paused —
+     * otherwise the zero-first mitigation documented on `approve` is unusable
+     * exactly when the holder needs it, and a compromised spender can back-run
+     * the unpause.
+     */
+    it('testCanRevokeAllowanceWhenPaused', async function () {
+      if (this.generic) {
+        return
+      }
+      // Arrange: a live allowance, then pause
+      await this.cmtat.connect(this.address1).approve(this.address3, 20)
+      await this.cmtat.connect(this.admin).pause()
+
+      // Act: revoking must be allowed despite the pause
+      await expect(this.cmtat.connect(this.address1).approve(this.address3, 0))
+        .to.not.be.reverted
+
+      // Assert
+      expect(
+        await this.cmtat.allowance(this.address1, this.address3)
+      ).to.equal(0)
+    })
+
+    it('testCannotGrantAllowanceWhenPaused', async function () {
+      if (this.generic) {
+        return
+      }
+      // The carve-out must be limited to revocation: a non-zero grant stays blocked
+      await this.cmtat.connect(this.admin).pause()
+
+      await expect(
+        this.cmtat.connect(this.address1).approve(this.address3, 20)
+      ).to.be.revertedWithCustomError(this.cmtat, 'EnforcedPause')
+
+      expect(
+        await this.cmtat.allowance(this.address1, this.address3)
+      ).to.equal(0)
+    })
+
+    it('testCanRevokeAllowanceWhenDeactivated', async function () {
+      if (this.generic) {
+        return
+      }
+      await this.cmtat.connect(this.address1).approve(this.address3, 20)
+      await this.cmtat.connect(this.admin).pause()
+      await this.cmtat.connect(this.admin).deactivateContract()
+
+      await expect(this.cmtat.connect(this.address1).approve(this.address3, 0))
+        .to.not.be.reverted
+      expect(
+        await this.cmtat.allowance(this.address1, this.address3)
+      ).to.equal(0)
+    })
+
     // reverts if address3 transfers tokens from address1 to address2 when paused
     it('testCannotTransferTokenWhenPausedWithTransferFrom', async function () {
       const AMOUNT_TO_TRANSFER = 10n

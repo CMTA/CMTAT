@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./deployment/debt/CMTATUpgradeableDebt.sol | [object Promise] |
+| ./deployment/debt/CMTATUpgradeableDebt.sol | 585643670c531d434c7a58323f978993a1a309a6 |
 
 
 ### Contracts Description Table

@@ -5,7 +5,7 @@
 
 |  File Name  |  SHA-1 Hash  |
 |-------------|--------------|
-| ./mocks/ERC165Helper/ExampleERC1404ExtendERC165.sol | d35271c80968871582dc590336fd3bf0f6d1a6a8 |
+| ./mocks/ERC165Helper/ExampleERC1404ExtendERC165.sol | 4c8be8a290b24ec179c32ed3ad5ee11124e55778 |
 
 
 ### Contracts Description Table

@@ -106,6 +106,7 @@ Creates (`mints`) a specified amount of tokens and assigns them to an account.
 
 - Increases the total token supply.
 - If the interface `{IERC7551Pause}` is implemented, minting is allowed even when transfers are paused.
+- Only the **recipient** (and the contract's deactivation state) is validated — not the caller. Freezing a `MINTER_ROLE` holder does **not** prevent it from minting; revoke the role to stop a compromised minter. On the Standard version a configured RuleEngine still receives the minter as `spender` and may reject. See [technical/access-control.md](../../../technical/access-control.md#what-freeze-and-pause-block-per-operation).
 
 **Emits**
 
