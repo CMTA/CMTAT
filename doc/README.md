@@ -3214,6 +3214,12 @@ A code coverage is available in [index.html](./test/coverage/index.html).
 
 ![coverage](./general/coverage.png)
 
+The coverage run (`npm run-script coverage`) uses the `prague` hardfork rather than
+the `osaka` one used by the test run: solidity-coverage's instrumented bytecode
+exceeds the EIP-7825 per-transaction gas cap on the largest deployment variants.
+This concerns the instrumented build only — the deployed contracts use about a third
+of that cap. See [USAGE.md](./USAGE.md#coverage) for the measured figures.
+
 The full test suite is catalogued per feature module and per deployment version in **[test/Test.md](./test/Test.md)** — a hand-maintained map (module × deployment-version coverage matrix, per-module scenario reference) whose purpose is to make **missing tests easy to find**. It must be updated whenever a test is added, changed or removed.
 
 ## Usage

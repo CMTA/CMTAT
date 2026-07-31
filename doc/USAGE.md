@@ -224,6 +224,55 @@ Code coverage for Solidity smart-contracts, installed as a hardhat plugin
 npm run-script coverage
 ```
 
+#### Hardfork used by the coverage run
+
+Coverage runs on the **`prague`** hardfork, while `npm run test` runs on **`osaka`**
+(the compiler target set in `hardhat.config.js`). The switch is automatic — the
+config selects the hardfork from the Hardhat task being run — and `HARDHAT_HARDFORK`
+overrides the choice for either run.
+
+The reason is [EIP-7825](https://eips.ethereum.org/EIPS/eip-7825), activated in
+Osaka, which caps a **single transaction at 2\*\*24 = 16,777,216 gas**, deployments
+included. solidity-coverage rewrites every contract before running the suite,
+injecting a storage write for each statement, branch and function so it can record
+what executed. That instrumented bytecode is far larger and costlier to deploy than
+the real thing, and for the largest deployment variants it exceeds the cap, so the
+deploys abort with:
+
+```
+ProviderError: Transaction ran out of gas
+```
+
+Because the failure happens in a `beforeEach` hook, every test behind it is skipped,
+which is why the symptom is a handful of errors plus a sharp drop in the number of
+tests reported as passing. Running coverage on `prague` — the last hardfork before
+the cap — lets solidity-coverage use its own, much higher gas limit.
+
+#### This does not affect deployability on Ethereum
+
+Only the instrumented build exceeds the cap. That build exists solely inside the
+coverage run, is never written to an artifact, and is never deployed. The contracts
+you ship are comfortably below the limit:
+
+| Contract | Deploy gas | Share of the EIP-7825 cap |
+| --- | ---: | ---: |
+| `CMTATStandaloneERC1363` | 5,707,773 | 34.0 % |
+| `CMTATStandaloneHolderList` | 5,709,676 | 34.0 % |
+| `CMTATStandaloneDebtEngine` | 5,699,492 | 34.0 % |
+| `CMTATStandaloneERC7551` | 5,552,282 | 33.1 % |
+| `CMTATStandardStandalone` | 5,402,615 | 32.2 % |
+
+*(measured on the `osaka` hardfork, optimizer enabled with `runs: 200`)*
+
+Two further checks back this up: `npm run test` deploys these same contracts on
+`osaka`, the hardfork that actually enforces the cap, and `contractSizer.strict`
+rejects at compile time any non-mock contract above the EIP-170 runtime limit of
+24 KB — so a build that compiles is already size-legal.
+
+Do keep the cap in mind when composing a new deployment variant: at roughly a third
+of the budget there is ample headroom today, but EIP-7825 is a hard protocol rule
+that a substantially larger variant could approach.
+
 
 
 ### [Slither](https://github.com/crytic/slither)
