@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for interfaces/modules/IHolderListModule.sol</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../prettify.css" />
+    <link rel="stylesheet" href="../../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../../index.html">all files</a> / <a href="index.html">interfaces/modules/</a> IHolderListModule.sol
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>0/0</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>0/0</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>0/0</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>0/0</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line high'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">//SPDX-License-Identifier: MPL-2.0
+&nbsp;
+pragma solidity ^0.8.24;
+&nbsp;
+/*
+* @title Holder List Module Interface
+* @notice Maintain on-chain the list of the addresses holding a non-zero balance
+* @dev The holder set is a view over `balanceOf`: an address belongs to it if and only if
+* its balance is non-zero. {holderCount}, {holderByIndex}, {isHolder}, {holders} and
+* {holdersInRange} follow the naming of the fungible holder-enumeration specification.
+*/
+interface IHolderListModule {
+    /* ============ Errors ============ */
+    /**
+     * @notice A requested index is past the end of the holder set
+     * @dev Raised by {holderByIndex} when `index &gt;= holderCount()`, and by {holdersInRange}
+     * when `toIndex &gt; holderCount()`. The second parameter is always the current holder count,
+     * so a caller that raced a concurrent removal learns the new bound from the revert data.
+     * @param index The index that was requested
+     * @param holderCount The current number of holders, i.e. the exclusive upper bound
+     */
+    error CMTAT_HolderListModule_IndexOutOfBounds(uint256 index, uint256 holderCount);
+    /**
+     * @notice A range is malformed because its lower bound exceeds its upper bound
+     * @dev Distinct from {CMTAT_HolderListModule_IndexOutOfBounds}: the range is not past the
+     * end of the set, it is internally inconsistent, so neither argument is a holder count.
+     * @param fromIndex The requested lower bound, inclusive
+     * @param toIndex The requested upper bound, exclusive
+     */
+    error CMTAT_HolderListModule_InvalidRange(uint256 fromIndex, uint256 toIndex);
+&nbsp;
+    /* ============ Events ============ */
+    /**
+     * @notice Emitted when an address becomes a holder, its balance moving from zero to non-zero
+     * @param holder The address added to the holder list
+     */
+    event HolderAdded(address indexed holder);
+    /**
+     * @notice Emitted when an address stops being a holder, its balance moving from non-zero to zero
+     * @param holder The address removed from the holder list
+     */
+    event HolderRemoved(address indexed holder);
+&nbsp;
+    /* ============ Functions ============ */
+    /**
+     * @notice Returns the number of addresses currently holding a non-zero balance
+     * @return The holder count
+     */
+    function holderCount() external view returns (uint256);
+&nbsp;
+    /**
+     * @notice Returns whether an account currently holds a non-zero balance
+     * @param account The address to check
+     * @return True if the address is a holder, false otherwise
+     */
+    function isHolder(address account) external view returns (bool);
+&nbsp;
+    /**
+     * @notice Returns the holder stored at a given index
+     * @dev Reverts with {CMTAT_HolderListModule_IndexOutOfBounds} if `index &gt;= holderCount()`.
+     * Holders are stored in an unordered set: the index of a given holder is not stable across
+     * state changes. See {holdersInRange} for the implications on pagination.
+     * @param index The position in the holder set, in `[0, holderCount())`
+     * @return The holder address at `index`
+     */
+    function holderByIndex(uint256 index) external view returns (address);
+&nbsp;
+    /**
+     * @notice Returns the whole holder list in a single call
+     * @dev Unbounded: the cost grows with {holderCount} and this call will run out of gas once
+     * the holder list is large enough. It is intended for off-chain `eth_call`. On-chain callers,
+     * and any caller that cannot bound the holder count, MUST use {holdersInRange} instead.
+     * The returned array is ordered as {holderByIndex}: `holders()[i] == holderByIndex(i)` within
+     * a single block, and `holders()` is exactly `holdersInRange(0, holderCount())`.
+     * @return The full list of holder addresses
+     */
+    function holders() external view returns (address[] memory);
+&nbsp;
+    /**
+     * @notice Returns the contiguous window of holders at indices `[fromIndex, toIndex)`
+     * @dev Half-open: `fromIndex` inclusive, `toIndex` exclusive, so the returned length is
+     * exactly `toIndex - fromIndex`. The window is a slice of the sequence {holderByIndex}
+     * enumerates: `holdersInRange(f, t)[i] == holderByIndex(f + i)` within a single block.
+     *
+     * Reverts with {CMTAT_HolderListModule_InvalidRange} if `fromIndex &gt; toIndex`, and with
+     * {CMTAT_HolderListModule_IndexOutOfBounds} if `toIndex &gt; holderCount()`. The malformed-range
+     * check is evaluated first, so an inverted range always yields {CMTAT_HolderListModule_InvalidRange}
+     * regardless of where the bounds fall. `fromIndex == toIndex` returns an empty array without
+     * reverting, including when both equal `holderCount()` — the natural terminating condition of
+     * a paging loop.
+     *
+     * The underlying set is unordered and a removal moves the last holder into the freed slot, so
+     * windows read across several blocks may miss a holder or return one twice. Read the whole set
+     * at a fixed block (`eth_call` at a block number) if a consistent snapshot is required.
+     * @param fromIndex The index of the first holder to return, inclusive
+     * @param toIndex The index one past the last holder to return, exclusive
+     * @return window The holders at indices `fromIndex` through `toIndex - 1`, in enumeration order
+     */
+    function holdersInRange(uint256 fromIndex, uint256 toIndex) external view returns (address[] memory window);
+}
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Fri Jul 31 2026 15:34:22 GMT+0200 (Central European Summer Time)
+</div>
+</div>
+<script src="../../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../../sorter.js"></script>
+</body>
+</html>

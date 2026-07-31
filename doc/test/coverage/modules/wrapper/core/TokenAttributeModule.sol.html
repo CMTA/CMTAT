@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for modules/wrapper/core/TokenAttributeModule.sol</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../../prettify.css" />
+    <link rel="stylesheet" href="../../../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../../../index.html">all files</a> / <a href="index.html">modules/wrapper/core/</a> TokenAttributeModule.sol
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>10/10</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">83.33% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>5/6</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>7/7</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>16/16</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line high'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">98×</span>
+<span class="cline-any cline-yes">50×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6188×</span>
+<span class="cline-any cline-yes">6188×</span>
+<span class="cline-any cline-yes">6188×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">94×</span>
+<span class="cline-any cline-yes">94×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">76×</span>
+<span class="cline-any cline-yes">76×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">26×</span>
+<span class="cline-any cline-yes">26×</span>
+<span class="cline-any cline-yes">26×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">24×</span>
+<span class="cline-any cline-yes">24×</span>
+<span class="cline-any cline-yes">24×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6408×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// SPDX-License-Identifier: MPL-2.0
+&nbsp;
+pragma solidity ^0.8.24;
+&nbsp;
+/* ==== OpenZeppelin === */
+import {Initializable} from "@openzeppelin/contracts/proxy/utils/Initializable.sol";
+/* ==== Tokenization === */
+import {IERC3643ERC20Base} from "../../../interfaces/tokenization/IERC3643Partial.sol";
+&nbsp;
+/**
+ * @title TokenAttribute module
+ * @dev
+ *
+ * Manages the mutable token attributes (name and symbol) independently of the
+ * underlying token standard (ERC-20, ERC-7984, ...).
+ *
+ * The attributes are stored in this module's own ERC-7201 namespaced storage, so
+ * a contract that also inherits a token standard (e.g. `ERC20Upgradeable`) only
+ * has to override that standard's `name()` / `symbol()` to delegate here. This
+ * keeps the metadata management reusable by non ERC-20 (e.g. confidential) tokens.
+ */
+abstract contract TokenAttributeModule is Initializable, IERC3643ERC20Base {
+    /* ============ Events ============ */
+    event Name(string indexed newNameIndexed, string newName);
+    event Symbol(string indexed newSymbolIndexed, string newSymbol);
+&nbsp;
+    /* ============ ERC-7201 ============ */
+    // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.TokenAttributeModule")) - 1)) &amp; ~bytes32(uint256(0xff))
+    bytes32 private constant TokenAttributeModuleStorageLocation = 0xc541cfc06cfa9bb7e38e614bc9457bd7310b58a2a620e4f19164873143c76d00;
+    /* ==== ERC-7201 State Variables === */
+    struct TokenAttributeModuleStorage {
+        // We don't use the underlying token standard's name/symbol because we can not modify them
+        string _name;
+        string _symbol;
+    }
+&nbsp;
+    /* ============ Modifier ============ */
+    modifier onlyTokenAttributeManager() {
+        _authorizeTokenAttributeManagement();
+        _;
+    }
+&nbsp;
+    /* ============  Initializer Function ============ */
+    /**
+     * @dev Initializers: sets the token name and symbol.
+     */
+    function __TokenAttributeModule_init_unchained(
+        string memory name_,
+        string memory symbol_
+    ) internal virtual <span class="missing-if-branch" title="else path not taken" >E</span>onlyInitializing {
+        TokenAttributeModuleStorage storage $ = _getTokenAttributeModuleStorage();
+        $._name = name_;
+        $._symbol = symbol_;
+    }
+&nbsp;
+    /*//////////////////////////////////////////////////////////////
+                            PUBLIC/EXTERNAL FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
+    /* ======== View functions ======= */
+    /**
+     * @notice Returns the name of the token.
+     * @return The token name.
+     */
+    function name() public view virtual returns (string memory) {
+        TokenAttributeModuleStorage storage $ = _getTokenAttributeModuleStorage();
+        return $._name;
+    }
+&nbsp;
+    /**
+     * @notice Returns the symbol of the token, usually a shorter version of the name.
+     * @return The token symbol.
+     */
+    function symbol() public view virtual returns (string memory) {
+        TokenAttributeModuleStorage storage $ = _getTokenAttributeModuleStorage();
+        return $._symbol;
+    }
+&nbsp;
+    /* ======== State functions ======= */
+    /**
+     *  @inheritdoc IERC3643ERC20Base
+     *  @dev
+     *  WARNING - on deployment variants that also support ERC-2612 (`permit`), renaming the token does **not**
+     *  change the EIP-712 domain separator. The domain name is captured at initialization by OpenZeppelin's
+     *  `EIP712Upgradeable` and, per its own documentation, "cannot be changed except through a smart contract
+     *  upgrade"; `DOMAIN_SEPARATOR()` therefore keeps using the original name after {setName}.
+     *
+     *  Existing and future permits remain valid: signers must simply build the EIP-712 domain from the ERC-5267
+     *  {eip712Domain} function (or from `DOMAIN_SEPARATOR()`), which reports the name actually in use — never
+     *  from {name}. A signature produced with the post-rename {name} is rejected with `ERC2612InvalidSigner`.
+     */
+    function setName(string calldata name_) public virtual override(IERC3643ERC20Base) onlyTokenAttributeManager {
+        TokenAttributeModuleStorage storage $ = _getTokenAttributeModuleStorage();
+        $._name = name_;
+        emit Name(name_, name_);
+    }
+&nbsp;
+    /**
+     * @inheritdoc IERC3643ERC20Base
+     */
+    function setSymbol(string calldata symbol_) public virtual override(IERC3643ERC20Base) onlyTokenAttributeManager {
+        TokenAttributeModuleStorage storage $ = _getTokenAttributeModuleStorage();
+        $._symbol = symbol_;
+        emit Symbol(symbol_, symbol_);
+    }
+&nbsp;
+    /*//////////////////////////////////////////////////////////////
+                            INTERNAL/PRIVATE FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
+    /* ============ Access Control ============ */
+    function _authorizeTokenAttributeManagement() internal virtual;
+&nbsp;
+    /* ============ ERC-7201 ============ */
+    function _getTokenAttributeModuleStorage() private pure returns (TokenAttributeModuleStorage storage $) {
+        assembly {
+            $.slot := TokenAttributeModuleStorageLocation
+        }
+    }
+}
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Fri Jul 31 2026 15:34:22 GMT+0200 (Central European Summer Time)
+</div>
+</div>
+<script src="../../../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../../../sorter.js"></script>
+</body>
+</html>

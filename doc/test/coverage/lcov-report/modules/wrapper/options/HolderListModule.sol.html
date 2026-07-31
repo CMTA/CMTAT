@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for modules/wrapper/options/HolderListModule.sol</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../../prettify.css" />
+    <link rel="stylesheet" href="../../../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../../../index.html">all files</a> / <a href="index.html">modules/wrapper/options/</a> HolderListModule.sol
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>23/23</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">92.86% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>13/14</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>7/7</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>26/26</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line high'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">28×</span>
+<span class="cline-any cline-yes">28×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">22×</span>
+<span class="cline-any cline-yes">22×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">22×</span>
+<span class="cline-any cline-yes">18×</span>
+<span class="cline-any cline-yes">18×</span>
+<span class="cline-any cline-yes">18×</span>
+<span class="cline-any cline-yes">16×</span>
+<span class="cline-any cline-yes">16×</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">114×</span>
+<span class="cline-any cline-yes">114×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">114×</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">114×</span>
+<span class="cline-any cline-yes">106×</span>
+<span class="cline-any cline-yes">104×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">202×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// SPDX-License-Identifier: MPL-2.0
+&nbsp;
+pragma solidity ^0.8.24;
+/* ==== OpenZeppelin === */
+import {ERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
+import {EnumerableSet} from "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
+/* ==== Interfaces === */
+import {IHolderListModule} from "../../../interfaces/modules/IHolderListModule.sol";
+&nbsp;
+/**
+ * @title HolderList module
+ * @dev
+ *
+ * Maintains on-chain the set of addresses holding a non-zero balance, with paginated reads.
+ *
+ * The set is kept in sync inside {_update}, so every balance change is covered: transfer,
+ * transferFrom, mint, burn, forced transfer and cross-chain mint/burn.
+ *
+ * Gas: the first transfer to a new address writes two slots (EnumerableSet stores the value
+ * and its index), and the transfer emptying an account clears them. A transfer between
+ * existing holders that leaves both balances non-zero performs no storage write to the set
+ * (no add/remove, no event), but still reads balanceOf(from) and balanceOf(to) and does one
+ * EnumerableSet membership-check SLOAD in add(to) — roughly two warm + one cold SLOAD, no SSTORE.
+ */
+abstract contract HolderListModule is ERC20Upgradeable, IHolderListModule {
+    using EnumerableSet for EnumerableSet.AddressSet;
+&nbsp;
+    /* ============ ERC-7201 ============ */
+    // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.HolderListModule")) - 1)) &amp; ~bytes32(uint256(0xff))
+    bytes32 private constant HolderListModuleStorageLocation = 0x93edd3717dec98b474d42a698cc89715a70e7eaf60a2dff7170cc742b7b8ca00;
+&nbsp;
+    /* ==== ERC-7201 State Variables === */
+    struct HolderListModuleStorage {
+        EnumerableSet.AddressSet _holders;
+    }
+&nbsp;
+    /*//////////////////////////////////////////////////////////////
+                            PUBLIC/EXTERNAL FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
+    /* ============ View functions ============ */
+    /**
+    * @inheritdoc IHolderListModule
+    */
+    function holderCount() public view virtual returns (uint256) {
+        HolderListModuleStorage storage $ = _getHolderListModuleStorage();
+        return $._holders.length();
+    }
+&nbsp;
+    /**
+    * @inheritdoc IHolderListModule
+    */
+    function isHolder(address account) public view virtual returns (bool) {
+        HolderListModuleStorage storage $ = _getHolderListModuleStorage();
+        return $._holders.contains(account);
+    }
+&nbsp;
+    /**
+    * @inheritdoc IHolderListModule
+    * @dev The bound is checked here so that an out-of-range index reverts with
+    * {CMTAT_HolderListModule_IndexOutOfBounds} rather than with the `Panic(0x32)` that
+    * {EnumerableSet-at} raises on an out-of-bounds array access.
+    */
+    function holderByIndex(uint256 index) public view virtual returns (address) {
+        HolderListModuleStorage storage $ = _getHolderListModuleStorage();
+        uint256 holderCountLocal = $._holders.length();
+        require(index &lt; holderCountLocal, CMTAT_HolderListModule_IndexOutOfBounds(index, holderCountLocal));
+        return $._holders.at(index);
+    }
+&nbsp;
+    /**
+    * @inheritdoc IHolderListModule
+    */
+    function holders() public view virtual returns (address[] memory) {
+        HolderListModuleStorage storage $ = _getHolderListModuleStorage();
+        return $._holders.values();
+    }
+&nbsp;
+    /**
+    * @inheritdoc IHolderListModule
+    * @dev The malformed-range check is evaluated before the upper-bound check, so an inverted
+    * range reverts with {CMTAT_HolderListModule_InvalidRange} regardless of where the bounds fall.
+    */
+    function holdersInRange(uint256 fromIndex, uint256 toIndex) public view virtual returns (address[] memory window) {
+        require(fromIndex &lt;= toIndex, CMTAT_HolderListModule_InvalidRange(fromIndex, toIndex));
+        HolderListModuleStorage storage $ = _getHolderListModuleStorage();
+        uint256 holderCountLocal = $._holders.length();
+        require(toIndex &lt;= holderCountLocal, CMTAT_HolderListModule_IndexOutOfBounds(toIndex, holderCountLocal));
+        window = new address[](toIndex - fromIndex);
+        for (uint256 i = 0; i &lt; window.length; ++i) {
+            window[i] = $._holders.at(fromIndex + i);
+        }
+    }
+&nbsp;
+    /*//////////////////////////////////////////////////////////////
+                            INTERNAL/PRIVATE FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
+    /**
+    * @dev Update the holder set after the balances have been written by {ERC20Upgradeable-_update}.
+    * The post-update balance is what decides membership, so the sender is evaluated after it has
+    * been debited and the receiver after it has been credited.
+    */
+    function _update(address from, address to, uint256 value) internal virtual override(ERC20Upgradeable) {
+        super._update(from, to, value);
+        HolderListModuleStorage storage $ = _getHolderListModuleStorage();
+        // address(0) is the mint source and the burn sink, never a holder
+        if (from != address(0) &amp;&amp; balanceOf(from) == 0) {
+            <span class="missing-if-branch" title="else path not taken" >E</span>if ($._holders.remove(from)) {
+                emit HolderRemoved(from);
+            }
+        }
+        // a zero-value transfer to a new address must not make it a holder
+        if (to != address(0) &amp;&amp; balanceOf(to) != 0) {
+            if ($._holders.add(to)) {
+                emit HolderAdded(to);
+            }
+        }
+    }
+&nbsp;
+    /* ============ ERC-7201 ============ */
+    function _getHolderListModuleStorage() private pure returns (HolderListModuleStorage storage $) {
+        assembly {
+            $.slot := HolderListModuleStorageLocation
+        }
+    }
+}
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Fri Jul 31 2026 15:34:22 GMT+0200 (Central European Summer Time)
+</div>
+</div>
+<script src="../../../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../../../sorter.js"></script>
+</body>
+</html>

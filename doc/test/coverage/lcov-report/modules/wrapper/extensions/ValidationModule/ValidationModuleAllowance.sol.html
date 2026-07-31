@@ -22,12 +22,12 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>3/3</span>
+        <span class='fraction'>5/5</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>4/4</span>
+        <span class='fraction'>6/6</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
@@ -37,7 +37,7 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>5/5</span>
+        <span class='fraction'>7/7</span>
       </div>
     </div>
   </div>
@@ -78,7 +78,25 @@
 33
 34
 35
-36</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -104,18 +122,36 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">808×</span>
-<span class="cline-any cline-yes">804×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1150×</span>
+<span class="cline-any cline-yes">128×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1022×</span>
+<span class="cline-any cline-yes">972×</span>
 <span class="cline-any cline-yes">28×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">776×</span>
-<span class="cline-any cline-yes">28×</span>
+<span class="cline-any cline-yes">944×</span>
+<span class="cline-any cline-yes">52×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// SPDX-License-Identifier: MPL-2.0
 &nbsp;
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.24;
 &nbsp;
 /* ==== ValidationModule === */
 import {ValidationModuleCore} from "../../core/ValidationModuleCore.sol";
@@ -130,15 +166,33 @@ abstract contract ValidationModuleAllowance is ValidationModuleCore {
     /**
      * @dev Reverts when allowance authorization cannot be performed.
      *
-     * Requirements:
+     * Requirements (for `value &gt; 0`):
      * - contract must not be paused.
      * - `owner` must be allowed to send (`canSend` returns true).
      * - `spender` must be allowed to send (`canSend` returns true).
+     *
+     * Setting an allowance to zero is a **revocation**, never a new grant: it can only
+     * reduce what a spender may move. It is therefore always authorized, including while
+     * the contract is paused or when `owner`/`spender` is frozen or off the allowlist.
+     * Blocking it would leave a holder unable to sever ties with a compromised or
+     * sanctioned spender for the whole duration of the restriction, and would make the
+     * zero-first allowance mitigation documented on `approve` unusable exactly when it
+     * matters. No value can move while the restriction holds, since `transferFrom` is
+     * gated by the same checks.
+     *
+     * @param owner The account granting (or revoking) the allowance.
+     * @param spender The account being granted (or revoked).
+     * @param value The new allowance value; `0` means revocation.
      */
     function _canAuthorizeAllowanceByModuleAndRevert(
         address owner,
-        address spender
+        address spender,
+        uint256 value
     ) internal view virtual {
+        // A revocation is always allowed
+        if (value == 0) {
+            return;
+        }
         _requireNotPaused();
         if (!_canSend(owner)) {
             revert ERC7943CannotSend(owner);
@@ -154,7 +208,7 @@ abstract contract ValidationModuleAllowance is ValidationModuleCore {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu May 21 2026 10:55:39 GMT+0200 (Central European Summer Time)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Fri Jul 31 2026 15:34:22 GMT+0200 (Central European Summer Time)
 </div>
 </div>
 <script src="../../../../prettify.js"></script>
