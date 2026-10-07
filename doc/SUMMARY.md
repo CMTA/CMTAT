@@ -3,7 +3,7 @@
 - **Standard** (`CMTATStandardStandalone` / `CMTATStandardUpgradeable`) - Core features, no snapshot engine
 - **Snapshot** (`CMTATStandaloneSnapshot` / `CMTATUpgradeableSnapshot`) - Same as standard + SnapshotEngine support
 - **HolderList** (`CMTATStandaloneHolderList` / `CMTATUpgradeableHolderList`) - Same as standard + on-chain holder enumeration (`HolderListModule`)
-- **Light** - Minimal for stablecoins
+- **Light** - Minimal for stablecoins. No `terms`, which the CMTAT framework requires (planned for v3.4.0, see [technical/terms.md](./technical/terms.md))
 - **Allowlist** - Whitelist-based transfers (KYC)
 - **Debt** - Bond-specific fields (maturity, coupon) + SnapshotEngine support
 - **DebtEngine** - Debt with external engine + SnapshotEngine support
@@ -29,7 +29,7 @@
 ```
 Level 0 (independent mixins):
   CMTATBaseCommon  - Core ERC20 + Mint + Burn + ERC20Enforcement (partial freeze) + ExtraInformation (no RBAC, no pause, no address freeze, no transfer validation)
-  CMTATBaseCore    - Core modules only (light variant)
+  CMTATBaseCore    - Core modules only (light variant, no terms)
   CMTATBaseGeneric - Non-ERC20 modules only
   CMTATBaseSnapshot - Pure mixin: ERC20Upgradeable + SnapshotEngineModule (_update hook)
 

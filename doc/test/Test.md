@@ -85,8 +85,9 @@ Proxy module suites, not the variant entry file.
 Notes:
 - **Light** deliberately has the smallest surface: core ERC-20 + address-freeze + pause + core validation. It has
   **no** RuleEngine, partial-freeze, allowlist, document, snapshot, debt, cross-chain, permit or ERC-7551 tests —
-  by design (see [`doc/technical/deployment.md`]). Light additionally has inline `forcedBurn` and ERC-165 tests in
-  `test/deployment/light/*`.
+  by design (see [`doc/technical/deployment.md`]). It also has **no `terms` tests**, because Light has no `terms`, a
+  mandatory CMTAT framework functionality (planned for v3.4.0, see [`doc/technical/terms.md`]). Light additionally
+  has inline `forcedBurn` and ERC-165 tests in `test/deployment/light/*`.
 - The **RuleEngine reentrancy** guard is only present on size-permitting variants (Standard, Snapshot, ERC-7551);
   `RuleEngineReentrancyCommon` is wired into the Standard standalone + proxy suites. See
   [`doc/modules/controllers/validationRuleEngine.md`] for the per-variant table.

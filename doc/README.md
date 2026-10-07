@@ -188,7 +188,7 @@ CMTAT comes with several different deployment versions to meet specific use case
 | Debt/bond                  | CMTAT Debt<br />   | CMTAT Standard is also suitable but this version adds the possibility to put several on-chain information related to debt and bond product |
 | Debt/bond (external debt engine) | CMTAT DebtEngine | Same as CMTAT Debt, but the debt and credit-event data is delegated to an external `DebtEngine` contract instead of being stored in the token. |
 | Shareholder registry / on-chain holder list | CMTAT HolderList | Standard features plus an on-chain, paginated list of the addresses currently holding a non-zero balance (issuer reporting, corporate actions). |
-| Stablecoin (e.g USDC/USDT) | CMTAT Light        | The core features (i.e., minting, burning,address freeze / blacklisting, pause) without additional functions required by equities and debt instruments (e.g., document management, snapshot, partial freeze of balances). |
+| Stablecoin (e.g USDC/USDT) | CMTAT Light        | The core features (i.e., minting, burning,address freeze / blacklisting, pause) without additional functions required by equities and debt instruments (e.g., document management, snapshot, partial freeze of balances).<br />Light does not include `terms`, a mandatory functionality of the CMTAT framework (planned for v3.4.0, see [technical/terms.md](./technical/terms.md)). |
 
 ##### Technical use case (whitelist, upgradeable/proxy)
 
@@ -2634,7 +2634,7 @@ A dedicated Permit deployment version is available: `CMTATStandalonePermit` and 
 |                      | -                                                            | Upgradeable      | [CMTATUpgradeableERC1363](../contracts/deployment/ERC1363/CMTATUpgradeableERC1363.sol) | -                                                            |
 | Permit               | Adds [ERC-2612 Permit](https://eips.ethereum.org/EIPS/eip-2612) + [ERC-6357 Multicall](https://eips.ethereum.org/EIPS/eip-6357) | Standalone       | [CMTATStandalonePermit](../contracts/deployment/permit/CMTATStandalonePermit.sol) | Same as standard version, but without `ERC2771` to keep bytecode lean |
 |                      | -                                                            | Upgradeable      | [CMTATUpgradeablePermit](../contracts/deployment/permit/CMTATUpgradeablePermit.sol) | -                                                            |
-| Light                | Only core modules                                            | Standalone       | [CMTATStandaloneLight](../contracts/deployment/light/CMTATStandaloneLight.sol) | The core features (i.e., minting, burning,address freeze / blacklisting, pause) without additional functions required by equities and debt instruments (e.g., document management, snapshot, partial freeze of balances). |
+| Light                | Only core modules                                            | Standalone       | [CMTATStandaloneLight](../contracts/deployment/light/CMTATStandaloneLight.sol) | The core features (i.e., minting, burning,address freeze / blacklisting, pause) without additional functions required by equities and debt instruments (e.g., document management, snapshot, partial freeze of balances).<br />No `terms` (mandatory in the CMTAT framework). |
 |                      |                                                              | Upgradeable      | [CMTATUpgradeableLight](../contracts/deployment/light/CMTATUpgradeableLight.sol) | -                                                            |
 | Debt                 | Set Debt information and Credit Events                       | Standalone       | [CMTATStandaloneDebt](../contracts/deployment/debt/CMTATStandaloneDebt.sol) | Add the debt support.<br />Contrary to the standard version, it does not include the module `ERC2771Module` and the support of `ERC20CrossChain` |
 |                      |                                                              | Upgradeable      | [CMTATUpgradeableDebt](../contracts/deployment/debt/CMTATUpgradeableDebt.sol) | -                                                            |
@@ -2763,6 +2763,8 @@ So the diagram widens by exactly one mixin compared with the Standard variant: e
 ### Light version
 
 The light version only includes core modules.
+
+> **CMTAT framework:** Light does not include `terms` (reference to legally required documentation), which is a **mandatory** functionality of the CMTAT framework. A Light token is therefore not fully conformant with the framework; use another variant (e.g. Standard) if conformance is required. Adding `terms` to Light is planned for v3.4.0, see [technical/terms.md](./technical/terms.md).
 
 It also includes a function `forcedBurn` to allow the admin to burn a token from a frozen address. This function is not required for deployment versions which include the extension module `ERC20EnforcementModule` because this module contains a function `forcedTransfer` which can be used instead.
 
@@ -3433,8 +3435,11 @@ In the below table, the CMTAT framework required features are mapped to Solidity
 | Unfreeze                                      | `setAddressFrozen` (previously `unfreeze`)                   |
 | Name attribute                                | ERC20 `name` attribute                                       |
 | Ticker symbol attribute                       | ERC20 `symbol` attribute                                     |
-| Token ID attribute                            | `tokenId`                                                    |
 | Reference to legally required documentation   | `terms` (document name, hash and uri with at least the uri)  |
+
+**Token ID:** the token ID (ISIN or other identifier) is **not** a mandatory functionality of the CMTAT framework. It is exposed as an optional attribute (`tokenId`) by `ExtraInformationModule`.
+
+**Light variant:** CMTAT Light does not include `terms`, so it does not cover the mandatory *Reference to legally required documentation* functionality. Adding `terms` to Light is planned for v3.4.0, see [technical/terms.md](./technical/terms.md).
 
 **Freeze** 
 

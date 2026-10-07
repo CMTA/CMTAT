@@ -63,7 +63,7 @@ CMTAT is used in production by major financial institutions including **UBS**, *
 | Equities (Germany / eWpG) | CMTAT ERC-7551 |
 | Debt / Bonds | CMTAT Debt |
 | Debt / Bonds (external debt engine) | CMTAT DebtEngine |
-| Stablecoins | CMTAT Light |
+| Stablecoins | CMTAT Light (no `terms`, which the CMTAT framework requires; planned for v3.4.0, see [terms](./doc/technical/terms.md)) |
 | Allowlist / Whitelist | CMTAT Allowlist or CMTAT Standard with RuleEngine |
 | Permit + Multicall | CMTAT Permit |
 | Payable token / DeFi callbacks | CMTAT ERC-1363 |

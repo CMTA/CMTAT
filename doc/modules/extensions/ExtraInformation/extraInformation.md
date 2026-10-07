@@ -28,6 +28,8 @@ The ExtraInformation Module set the basic properties common to the different CMT
 
 > **Note:** `metaData` / `setMetaData` are **not** part of `ExtraInformationModule`. They are defined in `ERC7551Module` and are only available in the ERC-7551 deployment variant.
 
+> **Light variant:** `ExtraInformationModule` is not included in CMTAT Light, so Light has no `terms`, although `terms` is a **mandatory** functionality of the CMTAT framework. Adding `terms` to Light is planned for v3.4.0, see [technical/terms.md](../../../technical/terms.md).
+
 
 
 ## Schema

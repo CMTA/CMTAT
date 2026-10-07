@@ -81,6 +81,7 @@ From deployment composition, ERC-3643 functionality is not all-or-nothing across
 
 - Light:
   - Reduced surface; intended minimal feature set.
+  - No `terms`, which is mandatory in the CMTAT framework (planned for v3.4.0, see [terms.md](./terms.md)).
 
 - Allowlist / Debt / DebtEngine / Snapshot / ERC-7551 / ERC-1363 / Permit:
   - Inherit different subsets/extensions; ERC-3643-related behavior is preserved where inherited modules remain in the chain.

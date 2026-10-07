@@ -22,8 +22,15 @@ In the below table, the CMTAT framework required features are mapped to Solidity
 | Unfreeze                                      | `setAddressFrozen` (previously `unfreeze`)                   |
 | Name attribute                                | ERC20 `name` attribute                                       |
 | Ticker symbol attribute                       | ERC20 `symbol` attribute                                     |
-| Token ID attribute                            | `tokenId`                                                    |
 | Reference to legally required documentation   | `terms` (document name, hash and uri with at least the uri)  |
+
+**Token ID**
+
+The token ID (ISIN or other identifier) is **not** a mandatory functionality of the CMTAT framework. This implementation exposes it as an optional attribute (`tokenId` / `setTokenId`), provided by `ExtraInformationModule` together with the free-form `information` field. Like the rest of `ExtraInformationModule`, it is not available in the Light variant.
+
+**Light variant**
+
+CMTAT Light does not include `terms`, so it does not cover the mandatory *Reference to legally required documentation* functionality and is not fully conformant with the CMTAT framework. All other mandatory functionalities are available in Light. Adding `terms` to Light is planned for v3.4.0, see [terms.md](./terms.md).
 
 **Freeze** 
 
