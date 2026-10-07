@@ -12,16 +12,16 @@ This document explains how CMTAT integrates an external RuleEngine, including:
 ## Core Contracts And Interfaces
 
 - RuleEngine interfaces:
-  - [IRuleEngine.sol](/home/ryan/Pictures/dev/CMTAT/contracts/interfaces/engine/IRuleEngine.sol)
+  - [IRuleEngine.sol](../../contracts/interfaces/engine/IRuleEngine.sol)
 - RuleEngine storage wiring:
   - `ValidationModuleRuleEngineInternal` (engine slot + setter/getter)
 - RuleEngine extension wrapper:
-  - [ValidationModuleRuleEngine.sol](/home/ryan/Pictures/dev/CMTAT/contracts/modules/wrapper/extensions/ValidationModule/ValidationModuleRuleEngine.sol)
+  - [ValidationModuleRuleEngine.sol](../../contracts/modules/wrapper/extensions/ValidationModule/ValidationModuleRuleEngine.sol)
 - Base integration point:
-  - [3_CMTATBaseRuleEngine.sol](/home/ryan/Pictures/dev/CMTAT/contracts/modules/3_CMTATBaseRuleEngine.sol)
+  - [3_CMTATBaseRuleEngine.sol](../../contracts/modules/3_CMTATBaseRuleEngine.sol)
 - Generic validation flow:
-  - [ValidationModule.sol](/home/ryan/Pictures/dev/CMTAT/contracts/modules/wrapper/controllers/ValidationModule.sol)
-  - [ValidationModuleCore.sol](/home/ryan/Pictures/dev/CMTAT/contracts/modules/wrapper/core/ValidationModuleCore.sol)
+  - [ValidationModule.sol](../../contracts/modules/wrapper/controllers/ValidationModule.sol)
+  - [ValidationModuleCore.sol](../../contracts/modules/wrapper/core/ValidationModuleCore.sol)
 
 ## Interface Requirements
 
@@ -159,7 +159,110 @@ Use deployment summary in [doc/SUMMARY.md](../SUMMARY.md) and deployment tables 
 4. The token does not sanitise what the engine returns — neither the restriction code nor the message. Both are
    forwarded as-is, consistent with the trusted-engine assumption stated above and with design choice 1.
 
+## Breaking Changes By Version
+
+This section lists, for each release, the changes that can break an **existing RuleEngine** or the **RuleEngine
+configuration of an upgraded proxy**: interface, how the token calls the engine, and where the engine address is
+stored. Each release is compared with the previous one in the list. Every item was checked against the code of the
+corresponding git tag. Breaking changes that do not involve the RuleEngine are in
+[breaking-changes.md](./breaking-changes.md) and the [CHANGELOG](../../CHANGELOG.md).
+
+### Summary
+
+| Release | Interface | Token → engine calls | Engine address storage | Breaking for an existing engine? |
+| --- | --- | --- | --- | --- |
+| **v2.3.0** (vs v2.2) | `IEIP1404Wrapper` replaces `IRuleEngine` as the engine type | unchanged (`validateTransfer`, `detectTransferRestriction`, `messageForTransferRestriction`) | unchanged (`ruleEngine` state variable) | **Compile time only**; `RuleEngineSet` event renamed `RuleEngine` |
+| **v3.0.0** (vs v2.3.0) | new `IRuleEngine` (ERC-3643 + ERC-7551 + ERC-1404 extension) | `transferred(...)` hook replaces `validateTransfer` / `operateOnTransfer`; `canTransfer*` views | new ERC-7201 namespace | **Yes, full rewrite**: a v2.x engine does not work with v3.0.0 |
+| **v3.1.0** | unchanged | unchanged | unchanged | **No** |
+| **v3.2.0** | `IRuleEngine` drops `IERC1404Extend`, adds `IERC165`; new `IRuleEngineERC1404` | unchanged signatures; the token reverts directly on a local check failure | unchanged | **Compile time**: ERC-165 required, `IRuleEngineERC1404` for ERC-1404 variants |
+| **v3.3.0** | unchanged (pragma `^0.8.24`) | supply operations now use the **4-arg** `transferred`; reentrancy guard on 3 variants | unchanged | **Yes, behavioural**: mint / burn dispatch and reentrancy |
+
+### v2.3.0 (compared with v2.2)
+
+- **Interface.** The token types the engine as `IEIP1404Wrapper` (`validateTransfer`, `detectTransferRestriction`,
+  `messageForTransferRestriction`) instead of `IRuleEngine`. The rule-management functions of the old `IRuleEngine`
+  (`setRules`, `rules`, `rule`, `ruleLength`) are no longer required by the token and moved to the mocks. The
+  `IERC1404*` interfaces were renamed `IEIP1404*`.
+- **Calls.** Unchanged: `_beforeTokenTransfer` (transfers, mints and burns) requires `validateTransfer(from, to,
+  amount)` to return `true`; the ERC-1404 views are forwarded to the engine.
+- **Configuration.**
+  - `setRuleEngine(IEIP1404Wrapper)` now reverts with `"Same value"` when the address does not change.
+  - The event `RuleEngineSet(IRuleEngine)` is renamed `RuleEngine(IEIP1404Wrapper)`. Indexers listening to the old
+    event must be updated.
+- **Storage.** Unchanged (`ruleEngine` state variable, followed by `__gap`).
+- **Impact.** An existing engine keeps working, since the called selectors are unchanged. Only code compiled against
+  the CMTAT interfaces, and event consumers, must be updated.
+
+### v3.0.0 (compared with v2.3.0, audited)
+
+The RuleEngine integration was redesigned. The intermediate v2.4.0 and v2.5.x releases already introduced part of it:
+v2.4.0 added `operateOnTransfer(from, to, amount) returns (bool)` as a state-changing hook in `_update`, and v2.5.0
+moved the engine address to ERC-7201 storage (`CMTAT.storage.ValidationModuleInternal`).
+
+- **Interface.** `IRuleEngine is IERC1404Extend, IERC7551Compliance, IERC3643IComplianceContract`:
+  - state hooks: `transferred(from, to, value)` (ERC-3643) and `transferred(spender, from, to, value)`
+    (spender-aware). They return nothing and **must revert** to reject an operation;
+  - views: `canTransfer(from, to, value)`, `canTransferFrom(spender, from, to, value)`;
+  - ERC-1404: `detectTransferRestriction`, `detectTransferRestrictionFrom` (new), `messageForTransferRestriction`.
+- **Calls.**
+  - `validateTransfer` and `operateOnTransfer` are no longer called.
+  - On every transfer, mint and burn the token calls `transferred(...)`: the 4-arg overload when a spender is known
+    (`transferFrom`), the 3-arg one otherwise (`transfer`, mint, burn).
+- **Storage.** The engine address moved to a new namespace, `CMTAT.storage.ValidationModuleRuleEngine`
+  (`0x77c8cc89…`). The v2.x slot is no longer read, and there is no upgrade path from a v2.x proxy.
+- **Configuration.** The engine can be passed at deployment (`ICMTATConstructor.Engine.ruleEngine`) or set with
+  `setRuleEngine(IRuleEngine)`, which reverts with `CMTAT_ValidationModule_SameValue()` when unchanged.
+- **Impact.** A v2.x engine is **not compatible**: it lacks `transferred` and `canTransfer*`, and returns a `bool`
+  where v3 expects a revert.
+
+### v3.1.0
+
+- **Interface, calls, storage:** unchanged.
+- **Configuration.** `setRuleEngine` is gated by the internal hook `_authorizeRuleEngineManagement()` instead of a
+  hard-coded `onlyRole(DEFAULT_ADMIN_ROLE)`. The shipped bases still require `DEFAULT_ADMIN_ROLE`, so nothing changes
+  for deployed tokens; only custom bases must now implement the hook.
+- **Impact.** None for an existing engine.
+
+### v3.2.0
+
+- **Interface.**
+  - `IRuleEngine is IERC7551Compliance, IERC3643IComplianceContract, IERC165`: it no longer includes
+    `IERC1404Extend`, and an engine must now implement `supportsInterface` (`RULE_ENGINE_INTERFACE_ID = 0x20c49ce7`).
+  - The ERC-1404 functions moved to the new `IRuleEngineERC1404 is IERC1404Extend, IRuleEngine`. An engine used by a
+    variant that exposes ERC-1404 must implement it (see Authoring Guidelines §7).
+- **Calls.** The signatures and the 3-arg / 4-arg dispatch are unchanged. `_transferred` now reverts directly with
+  the specific CMTAT error when a local check (pause, deactivation, freeze) fails, instead of returning `false`.
+- **Storage.** Unchanged.
+- **Impact.** A deployed v3.0.0 / v3.1.0 engine keeps working at the ABI level. Recompiling it against the v3.2.0
+  interfaces requires `supportsInterface`, plus `IRuleEngineERC1404` where ERC-1404 is exposed.
+
+### v3.3.0
+
+- **Interface.** Unchanged, except that the interfaces now require `pragma ^0.8.24`.
+- **Calls — supply operations now use the 4-arg hook.** The token passes the operator (`_msgSender()`) as `spender`
+  on supply operations, which previously passed `address(0)`:
+
+  | Operation | v3.2.0 | v3.3.0 |
+  | --- | --- | --- |
+  | `transfer` | `transferred(from, to, value)` | unchanged |
+  | `transferFrom` | `transferred(spender, from, to, value)` | unchanged |
+  | `mint` / `batchMint`, `crosschainMint` | `transferred(address(0), to, value)` | `transferred(operator, address(0), to, value)` |
+  | `burn` / `batchBurn`, `burnFrom`, `burn(uint256)`, `crosschainBurn` | `transferred(from, address(0), value)` | `transferred(operator, from, address(0), value)` |
+  | minter `batchTransfer` | `transferred(from, to, value)` | `transferred(operator, from, to, value)` |
+
+  An engine must handle mints and burns in its 4-arg overload, and any spender rule (allowlisted spender, frozen
+  spender, …) now also applies to minters, burners and bridges. See [Spender / Operator Semantics](#spender--operator-semantics).
+- **Calls — reentrancy guard.** On Standard, Snapshot and ERC-7551, `transferred` runs under
+  `ReentrancyGuardTransient` (no persistent storage). An engine that calls back into a guarded token function from
+  `transferred` reverts on these variants.
+- **Storage and configuration.** Unchanged (`CMTAT.storage.ValidationModuleRuleEngine`, `setRuleEngine`,
+  constructor `Engine.ruleEngine`).
+- **Impact.** A v3.2.0 engine keeps working at the ABI level, but its **behaviour** on mint / burn / minter transfers
+  changes. Review the 4-arg path before upgrading the token.
+
 ## Cross-References
+
+- Breaking changes for all modules: [breaking-changes.md](./breaking-changes.md)
 
 - Main RuleEngine section: [doc/README.md](../README.md)
 - ERC-7943 integration: [erc-7943-uRWA-integration.md](./erc-7943-uRWA-integration.md)
