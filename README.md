@@ -265,7 +265,7 @@ Additional resources:
 
 Focused, subsystem-level guides live in [`doc/technical/`](./doc/technical/):
 
-- **Architecture & operations** — [Deployment variants](./doc/technical/deployment.md) · [Lifecycle: pause & deactivation](./doc/technical/lifecycle.md) · [Access control (roles)](./doc/technical/access-control.md)
+- **Architecture & operations** — [Deployment variants](./doc/technical/deployment.md) · [Lifecycle: pause & deactivation](./doc/technical/lifecycle.md) · [Access control (roles)](./doc/technical/access-control.md) · [Breaking changes (v3.0.0 / v3.2.0 → v3.3.0)](./doc/technical/breaking-changes.md)
 - **Standards** — [ERC-3643 implementation](./doc/technical/erc-3643-implementation.md) · [ERC-7551 (eWpG)](./doc/technical/erc7551.md) · [ERC-7943 (uRWA) integration](./doc/technical/erc-7943-uRWA-integration.md) · [Documents (ERC-1643)](./doc/technical/document.md) · [RuleEngine (ERC-1404)](./doc/technical/ruleengine-integration.md)
 - **Features** — [Holder list](./doc/technical/holder-list.md) · [Snapshots](./doc/technical/snapshot.md) · [Debt & credit events](./doc/technical/debt.md) · [Permit & Multicall](./doc/technical/permit-multicall.md) · [Cross-chain bridge integration](./doc/technical/cross-chain-bridge-integration.md) · [Spend allowance event](./doc/technical/allowance-spend-event.md)
 - **Use cases & porting** — [Stablecoins](./doc/technical/stablecoin.md) · [CMTAT specification vs implementation](./doc/technical/cmtat-specification-analyse.md) · [Porting to another blockchain](https://github.com/CMTA/CMTAT-equivalency-assessment)
