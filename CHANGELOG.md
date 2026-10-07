@@ -44,6 +44,67 @@ Custom changelog tag: `Dependencies`, `Documentation`, `Testing`
   
   - Update changelog
 
+## 3.3.0
+
+> **Note:** This version has not been audited. It was reviewed with automated tools (Nethermind AuditAgent, Olympix BugPoCer, Slither, Aderyn) and a Sequent pre-verification review; see [AUDIT.md](./doc/security/AUDIT.md).
+
+Summary of the main changes between **v3.2.0** and **v3.3.0**. Per-item details, tests and documentation are in the release-candidate entries below (`3.3.0 - rc0` to `rc3`).
+
+### Smart contract
+
+#### Breaking change
+
+This section covers the ERC-7201 storage and the external engines. Public API changes are listed under **Changed**.
+
+- **Storage — `name` / `symbol` moved to a new namespace.** They now live in `CMTAT.storage.TokenAttributeModule` (`0xc541cfc06cfa9bb7e38e614bc9457bd7310b58a2a620e4f19164873143c76d00`) instead of `CMTAT.storage.ERC20BaseModule`; `decimals` stays in place. A v3.2.0 (or older) proxy upgraded to v3.3.0 returns empty `name()` / `symbol()` until a one-time `reinitializer` copies the old values into the new slot.
+- **Storage — documents are stored in the token, no longer in an external engine.** In v3.2.0 every variant except Light used `DocumentEngineModule` (engine address in `CMTAT.storage.DocumentEngineModule`, documents held by the external DocumentEngine). In v3.3.0 they use the native `DocumentERC1643Module` (`CMTAT.storage.DocumentERC1643Module`, `0x24fbb1cf6345ced60d5278ef6f68f4f7576fd9068704b4c8f1eec8f0bbd8a200`), and `setDocumentEngine` / `documentEngine` are no longer exposed. On an upgraded v3.2.0 proxy, documents kept by the previous engine are no longer returned and must be registered again with `setDocument` (`DOCUMENT_ROLE`); the old engine address remains unused in storage. `DocumentEngineModule` is still available in the codebase but is not used by any shipped variant.
+- **External engine — DocumentEngine interface (`IERC1643`).** Document names are `bytes32` instead of `string`, `getDocument(bytes32)` returns flat values `(string uri, bytes32 documentHash, uint256 lastModified)` instead of a `Document` struct, and `setDocument` / `removeDocument`, the `DocumentUpdated` / `DocumentRemoved` events and the `ERC1643MissingDocument` / `ERC1643InvalidName` errors are now part of the interface. An engine written for v3.2.0 is not compatible with `DocumentEngineModule` v3.3.0 (use DocumentEngine v0.4.0).
+- **External engine — RuleEngine reentrancy guard.** On the Standard, Snapshot and ERC-7551 variants, the `transferred` callback runs under `ReentrancyGuardTransient` (EIP-1153 transient storage, no persistent slot). A RuleEngine that calls back into a guarded token function from `transferred` now reverts.
+- **External engine — Solidity version.** The engine interfaces (`IRuleEngine`, `ISnapshotEngine`, `IDebtEngine`, `IDocumentEngine`, `IERC1643`) now require `pragma ^0.8.24`; an engine importing them must compile with Solidity 0.8.24 or later.
+
+#### Added
+
+- **New deployment variants:** Permit (`CMTATStandalonePermit` / `CMTATUpgradeablePermit`, ERC-2612 `permit` + ERC-6357 `multicall`), Snapshot (`CMTATStandaloneSnapshot` / `CMTATUpgradeableSnapshot`) and HolderList (`CMTATStandaloneHolderList` / `CMTATUpgradeableHolderList`, on-chain holder enumeration).
+- **New modules:** `TokenAttributeModule` (mutable `name` / `symbol`, reusable by non ERC-20 bases), `HolderListModule`, `DocumentERC1643Module` (native ERC-1643), `ERC20EnforcementERC7551Module` (ERC-7551 `bytes data` enforcement overloads and `getActiveBalanceOf`), `ValidationModuleAllowance` (pause / freeze checks on `approve` and `permit`).
+- **ERC-7551 enforcement in the Standard, ERC-1363 and Allowlist variants**, and SnapshotEngine support restored in the Debt and DebtEngine variants.
+- **ERC-165:** the tokens now advertise ERC-1643 (`0xecfecec8`), ERC-1404 (`0xab84a5c8`) and the spender-aware ERC-1404 extension (`0x78a8de7d`).
+
+#### Changed
+
+- **ERC-7943 aligned with the updated specification** (breaking API): `canTransact` replaced by `canSend` / `canReceive`, `ERC7943CannotTransact` replaced by `ERC7943CannotSend` / `ERC7943CannotReceive`, interface id `0x29388973` → `0x3edbb4c4`.
+- **ERC-1643 API** (breaking API): `bytes32` document names and a flat `getDocument` return, matching the ERC-1643 ABI.
+- **ERC-7551 event:** `Enforcement(...)` replaced by `ForcedTransfer(operator, from, to, value, data)`.
+- **Contract deactivation interface** renamed to the draft ERC-8343 (`IERC8343`); interface id unchanged (`0xe9cd80b0`).
+- **Base hierarchy** renumbered in strict dependency order (levels 0 to 8, new `CMTATBaseDocument` at level 1); `ERC20BaseModule` now handles ERC-20 concerns only.
+- **Operator propagation:** `mint`, `burn`, `burnFrom`, `crosschainMint` and `crosschainBurn` pass `_msgSender()` to the transfer-compliance hook, so spender-aware RuleEngine checks apply to operator-initiated supply operations.
+- Solidity pragma floor raised to `^0.8.24`.
+
+#### Fixed
+
+- `_setFrozenTokens` rejects `address(0)` (it could brick every mint path), and frozen amounts larger than the balance no longer underflow the active-balance readers.
+- Address freeze and partial freeze reject `address(0)`.
+- Setting an allowance to `0` (revocation) is always allowed, even while paused or when a party is frozen.
+- `forcedTransfer(from, from, value)` no longer releases frozen tokens; `forcedTransfer` emits `Spend` for the allowance it consumes.
+- The ERC-7551 `setTerms(bytes32,string)` overload keeps the existing document name.
+- ERC-1404 `detectTransferRestriction` agrees with the transfer path on zero-value transfers.
+- A token using `DocumentEngineModule` re-emits the ERC-1643 events on its own address.
+
+#### Security
+
+- RuleEngine `transferred` callback protected by a transient reentrancy guard on the variants with bytecode headroom (Standard, Snapshot, ERC-7551); documented as a trusted-engine assumption on the others.
+- Upgrade migration required for existing proxies: see **Breaking change** (`name` / `symbol`, documents).
+- `HolderListModule.holders()` is unbounded: on-chain callers must use `holdersInRange`.
+
+### Documentation
+
+- Maintainer feedback for the Nethermind AuditAgent v3.3.0-rc2, Olympix BugPoCer, Sequent, Slither and Aderyn reviews ([AUDIT.md](./doc/security/AUDIT.md)).
+- ERC specification analyses (ERC-1404, ERC-1643, ERC-8343), the test catalogue `doc/test/Test.md`, and technical notes (allowance `Spend` event, deactivation, RuleEngine authoring obligations).
+
+### Dependencies
+
+- OpenZeppelin contracts and contracts-upgradeable `v5.6.1`.
+- Solidity compiler `0.8.36` (Hardhat and Foundry configuration).
+
 ## 3.3.0 - rc3
 
 > **Note:** This version has not been audited.
@@ -428,6 +489,12 @@ Commit: `49544f4de1993008acfc9e848d0bf03bd31d8579`
 
 ### Smart contract
 
+#### Breaking change
+
+- **Storage — DebtEngine address moved to a new namespace.** The engine address left `CMTAT.storage.DebtModule` (it was the trailing `_debtEngine` field of `DebtModuleStorage`) for the new `CMTAT.storage.DebtEngineModule` (`0xcd6e7f8fdfee4389651c62f4d8dd0b8f0f4b97b1582a8419b0c53664203c6d00`), and DebtEngine support moved from the Debt variant to the dedicated DebtEngine variant. A v3.1.0 Debt proxy that used a DebtEngine loses access to it after the upgrade; deploy or upgrade to the DebtEngine variant and call `setDebtEngine` again. The on-chain debt data (`_debt`, `_creditEvents`) stays in place.
+- **External engine — RuleEngine interface split.** `IRuleEngine` no longer extends `IERC1404Extend`; it extends `IERC165` instead, so an engine must implement `supportsInterface`. The ERC-1404 functions moved to the new `IRuleEngineERC1404` (`IERC1404Extend` + `IRuleEngine`), which an engine must implement when the token exposes ERC-1404. The functions called by the token (`transferred`, `canTransfer`, `canTransferFrom`, `detectTransferRestriction*`, `messageForTransferRestriction`) keep their signatures.
+- **External engine — initialization.** DocumentEngine and SnapshotEngine are no longer constructor / `initialize` parameters ([#343](https://github.com/CMTA/CMTAT/issues/343)); set them after deployment with `setDocumentEngine` / `setSnapshotEngine`.
+
 #### Added
 
 - Support of **ERC-7943** ([#337](https://github.com/CMTA/CMTAT/issues/337)):
@@ -493,6 +560,10 @@ Known issue for this release
 - [Operator/Spender Identity Lost in RuleEngine Hooks (burn/mint/cross-chain)](https://github.com/CMTA/CMTAT/issues/376)(Informational)
 - [setAddressFrozen(address(0)) should be rejected](https://github.com/CMTA/CMTAT/issues/372)
 
+**Breaking change**
+
+- None. The storage layout is unchanged: the new `CCIPModule` uses its own namespace (`CMTAT.storage.CCIPModule`), and the terms struct was renamed from `Terms` to `CMTATTerms` with the same fields. The external engine interfaces are unchanged.
+
 **Fixed**
 
 - [Misleading NatSpec Comments](https://github.com/CMTA/CMTAT/issues/330)
@@ -557,6 +628,21 @@ Known issues for this release:
 Difference with v.3.0.0 rc version:
 - Improved comments and documentation
 - See changelogs of the rc versions for details.
+
+**Breaking change**
+
+Compared with the v2.x series. There is no upgrade path from a v2.x proxy to v3.0.0.
+
+- **Storage — ERC-7201 namespaces redesigned.**
+  - Removed: `AuthorizationModule` (AuthorizationEngine), `BaseModule` (`tokenId` / `terms` / `information`), `DocumentModule`, `SnapshotModuleBase` (in-contract snapshots) and `ValidationModuleInternal` (RuleEngine address).
+  - Replaced by new namespaces: `ExtraInformationModule` (`terms` becomes a document: name, uri, hash, last modification), `DocumentEngineModule`, `SnapshotEngineModule`, `ValidationModuleRuleEngine`; new `AllowlistModuleInternal`, `ERC20EnforcementModule` and `ERC7551Module`.
+  - `PauseModule` moved to a new slot (in v2.5.x it shared the `ERC20BaseModule` slot), `ERC20BaseModule` now also stores `name` / `symbol`, and `DebtModuleStorage` was reordered (debt data and credit events before the DebtEngine address).
+- **External engines.**
+  - AuthorizationEngine removed.
+  - RuleEngine: `operateOnTransfer` (ERC-1404 wrapper) replaced by the ERC-3643 `transferred(spender, from, to, value)` callback plus the ERC-7551 / ERC-3643 compliance views and `IERC1404Extend`.
+  - SnapshotEngine introduced: snapshots are no longer computed in the token, and v2.x snapshot history is not carried over.
+  - DocumentEngine (`IERC1643`): `string` document names and a `Document` struct return instead of `bytes32` names and flat values.
+  - DebtEngine: `debt()` / `creditEvents()` return the new `ICMTATDebt` / `ICMTATCreditEvents` structs.
 
 Main changes with the last audited release (v2.3.0):
 
