@@ -13,12 +13,27 @@ import {IERC165} from "@openzeppelin/contracts/utils/introspection/IERC165.sol";
 interface IRuleEngine is IERC7551Compliance, IERC3643IComplianceContract, IERC165 {
     /**
      *  @notice
-     *  Function called whenever tokens are transferred from one wallet to another
+     *  Function called whenever tokens are transferred from one wallet to another, minted or burned,
+     *  when the token knows the account that initiated the operation (`spender`).
      *  @dev
      *  Must revert if the transfer is invalid
      *  Same name as ERC-3643 but with one supplementary argument `spender`
      *  This function can be used to update state variables of the RuleEngine contract
      *  This function can be called ONLY by the token contract bound to the RuleEngine
+     *
+     *  Which overload the token calls (since CMTAT v3.3.0):
+     *  - this 4-argument overload for `transferFrom` (`spender` = approved spender) and for every
+     *    operation initiated by an operator, with the operator as `spender`: mint (`from == address(0)`),
+     *    burn (`to == address(0)`), including `burnFrom`, self-burn and cross-chain mint/burn, and the
+     *    minter `batchTransfer`;
+     *  - the 3-argument ERC-3643 overload `transferred(from, to, value)`, inherited from
+     *    {IERC3643IComplianceContract}, only for a direct `transfer`.
+     *  Up to CMTAT v3.2.0, mint, burn and the minter transfer used the 3-argument overload.
+     *
+     *  Both overloads are part of this interface and MUST enforce the same policy. Route them to a
+     *  single internal function (the 3-argument overload calling it with `spender = address(0)`), so
+     *  that a change in which overload the token calls cannot silently bypass a rule. Any rule on
+     *  `spender` also applies to minters, burners and bridges.
      *
      *  WARNING - zero-value calls are permissionless. ERC-20 requires transfers of `0` to be
      *  treated as normal transfers, and OpenZeppelin's `_spendAllowance` consumes no allowance

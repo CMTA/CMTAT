@@ -97,8 +97,14 @@ This section covers the ERC-7201 storage and the external engines. Public API ch
 - Upgrade migration required for existing proxies: see **Breaking change** (`name` / `symbol`, documents).
 - `HolderListModule.holders()` is unbounded: on-chain callers must use `holdersInRange`.
 
+### Testing
+
+- RuleEngine dispatch tests (`RuleEngineSpenderDispatchCommon.js`, standard and proxy) now pin the 4-argument `transferred` routing, with the operator as `spender`, for `mint`, `batchMint`, `burn`, `batchBurn`, `burnFrom`, self `burn(uint256)`, `crosschainMint`, `crosschainBurn` and the minter `batchTransfer` (9 new tests per suite). The suite header comment and `RuleEngineSpenderRecorderMock` NatSpec, which still described mint / burn on the 3-argument overload, were corrected.
+
 ### Documentation
 
+- Breaking changes: new [doc/technical/breaking-changes.md](./doc/technical/breaking-changes.md) (v3.2.0 → v3.3.0 and v3.0.0 → v3.3.0), a RuleEngine breaking-change section per release in `doc/technical/ruleengine-integration.md`, and an "Upgrading an existing proxy to v3.3.0" section in `doc/technical/upgradeable.md`.
+- RuleEngine overload routing documented where engine authors look first: `IRuleEngine.transferred` NatSpec, the `IRuleEngine` section of `doc/README.md` and `ruleengine-integration.md` (both overloads are mandatory; route them to one internal function).
 - Maintainer feedback for the Nethermind AuditAgent v3.3.0-rc2, Olympix BugPoCer, Sequent, Slither and Aderyn reviews ([AUDIT.md](./doc/security/AUDIT.md)).
 - ERC specification analyses (ERC-1404, ERC-1643, ERC-8343), the test catalogue `doc/test/Test.md`, and technical notes (allowance `Spend` event, deactivation, RuleEngine authoring obligations).
 
@@ -216,7 +222,7 @@ Commit: `35d8940b40943828c5ea407dc6b22d559d92e4ae`
 
 #### Security
 
-- **Upgrade migration required for existing proxies (`name`/`symbol` storage move).** Because `name`/`symbol` were moved to a new ERC-7201 slot (`CMTAT.storage.TokenAttributeModule`), upgrading an **already-deployed** CMTAT proxy from a pre-3.3 layout to this version leaves that new slot empty — `name()` / `symbol()` return empty strings until re-set. Any such upgrade MUST run a one-time `reinitializer` that copies the previous `name` / `symbol` into the new slot. Fresh deployments are unaffected (`decimals` stays in place either way).
+- **Upgrade migration required for existing proxies (`name`/`symbol` storage move).** Because `name`/`symbol` were moved to a new ERC-7201 slot (`CMTAT.storage.TokenAttributeModule`), upgrading an **already-deployed** CMTAT proxy from a pre-3.3 layout to this version leaves that new slot empty — `name()` / `symbol()` return empty strings until re-set. Any such upgrade MUST run a one-time `reinitializer` that copies the previous `name` / `symbol` into the new slot. Fresh deployments are unaffected (`decimals` stays in place either way). Migration procedure: see **3.3.0 → Breaking change** and [doc/technical/breaking-changes.md](./doc/technical/breaking-changes.md).
 -  **`HolderListModule` — the holder set grows without bound and `holders()` is unbounded.** On a token whose transfers are not gated by an allowlist or a rule engine, anyone can inflate `holderCount()` by dusting fresh addresses; the spammer pays the two storage writes, but `holders()` eventually runs out of gas and becomes unusable. It is an off-chain (`eth_call`) getter: on-chain callers, and any caller that cannot bound the holder count, MUST use `holdersInRange(fromIndex, toIndex)` with a bounded window. Deployments expecting a large or adversarial holder set should pair the module with an allowlist.
 - ℹ**`HolderListModule` — `holdersInRange` windows are not a consistent snapshot.** The underlying `EnumerableSet` is unordered and a removal moves the last holder into the freed slot, so windows read across several blocks may miss a holder or return one twice. Read the whole list at a fixed block if a consistent view is required.
 
@@ -407,6 +413,7 @@ Commit: this version has been released with the wrong commit
   - `burnFrom` now preserves and propagates `_msgSender()` through the transfer-compliance hook so spender-aware RuleEngine checks are enforced for allowance-based delegated burns.
   - `crosschainBurn` now follows the same operator propagation model for consistency with `burnFrom`.
   - `mint` and `crosschainMint` now also propagate `_msgSender()` so spender-aware RuleEngine checks apply consistently to operator-initiated mint flows.
+  - Note (added in 3.3.0): this also applies to the minter `batchTransfer`, and it changes which `transferred` overload the RuleEngine receives (4-argument instead of 3-argument). It is a breaking change for external engines; see **3.3.0 → Breaking change**.
 - **ERC-7943 interface update** — breaking changes aligned with the updated ERC-7943 specification:
   - `canTransact(address)` removed; replaced by `canSend(address)` and `canReceive(address)` in `ValidationModule`, implementing the new `IERC7943FungibleSendReceiveCheck` interface. Both currently delegate to the same underlying eligibility check (frozen status + allowlist), but allow future asymmetric access policies.
   - `ERC7943CannotTransact` error removed; replaced by directional errors `ERC7943CannotSend` (emitted when a sender, spender, or burn source is blocked) and `ERC7943CannotReceive` (emitted when a recipient or mint target is blocked), defined in `IERC7943FungibleSendReceiveError`.

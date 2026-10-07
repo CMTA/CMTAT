@@ -28,8 +28,11 @@ This document explains how CMTAT integrates an external RuleEngine, including:
 Minimum RuleEngine target interface in CMTAT:
 
 1. `IRuleEngine`:
-- `transferred(address from, address to, uint256 value)` (ERC-3643-style)
+- `transferred(address from, address to, uint256 value)` (ERC-3643-style, inherited from `IERC3643IComplianceContract`)
 - `transferred(address spender, address from, address to, uint256 value)` (spender-aware extension)
+- **both overloads are mandatory** and must enforce the same policy: since v3.3.0 the token calls the
+  3-argument one only for a direct `transfer`, and the 4-argument one for everything else (see
+  [State-changing token operations](#b-state-changing-token-operations))
 - `canTransfer(from, to, value)` (read-only pre-check)
 - `canTransferFrom(spender, from, to, value)` (spender-aware pre-check)
 
@@ -49,8 +52,10 @@ Minimum RuleEngine target interface in CMTAT:
 > the [ERC-1404 scope note](../README.md#scope-transfers-only-never-mint-or-burn).
 >
 > A RuleEngine still receives mint/burn notifications through `transferred(...)` with the
-> `address(0)` encoding — that is the *enforcement* path and is unaffected by the above. What is
-> not supported is *predicting* a mint or burn through the ERC-1404 read methods.
+> `address(0)` encoding (`from == address(0)` for a mint, `to == address(0)` for a burn). Since
+> v3.3.0 they arrive on the **4-argument** overload, with the operator as `spender`. That is the
+> *enforcement* path and is unaffected by the above. What is not supported is *predicting* a mint
+> or burn through the ERC-1404 read methods.
 
 ## Configuration Lifecycle
 
@@ -93,6 +98,18 @@ Inside `_transferred`:
 - then RuleEngine hook is called if configured:
   - spender-aware hook if `spender != address(0)`,
   - ERC-3643 3-arg hook if `spender == address(0)`.
+
+Overload reached by each operation (v3.3.0):
+
+| Operation | `spender` passed | Overload |
+| --- | --- | --- |
+| `transfer` | `address(0)` | 3-arg |
+| `transferFrom` | approved spender | 4-arg |
+| `mint` / `batchMint`, `crosschainMint` | operator | 4-arg |
+| `burn` / `batchBurn`, `burnFrom`, `burn(uint256)`, `crosschainBurn` | operator | 4-arg |
+| minter `batchTransfer` | operator | 4-arg |
+
+This routing is pinned by `test/common/ValidationModule/RuleEngineSpenderDispatchCommon.js`.
 
 RuleEngine is expected to revert if transfer is invalid.
 
@@ -137,8 +154,13 @@ Use deployment summary in [doc/SUMMARY.md](../SUMMARY.md) and deployment tables 
 - operator burn,
 - cross-chain/operator-driven paths.
 4. Do not rely only on `from == address(0)`/`to == address(0)` unless policy intentionally treats operator mint/burn uniformly.
-5. If targeting ERC-1404 UX, implement `IRuleEngineERC1404` functions consistently with `canTransfer*`.
-6. `messageForTransferRestriction(code)` must return a **non-empty** string for every code the engine can return,
+5. **Route both `transferred` overloads to one internal function**, the 3-argument overload calling it with
+   `spender = address(0)`. Never put a rule in only one overload: which overload the token calls for a given
+   operation is not part of the ABI and changed in v3.3.0 (mint, burn and the minter transfer moved from the
+   3-argument to the 4-argument overload). With a single internal function, such a change cannot silently
+   bypass a rule.
+6. If targeting ERC-1404 UX, implement `IRuleEngineERC1404` functions consistently with `canTransfer*`.
+7. `messageForTransferRestriction(code)` must return a **non-empty** string for every code the engine can return,
    and that string must never denote the absence of a restriction (`"No restriction"`, `""`, …) for a non-zero
    code. The token resolves its own codes (`0`–`6`) and **forwards every other code to the engine verbatim**, so
    the engine's string is what integrators and user interfaces display. An empty or misleading string therefore
@@ -146,7 +168,7 @@ Use deployment summary in [doc/SUMMARY.md](../SUMMARY.md) and deployment tables 
    `messageForTransferRestriction`. The token does not inspect the forwarded value: the RuleEngine is
    `DEFAULT_ADMIN_ROLE`-set and trusted, and a length check would guard only the least harmful failure while
    costing bytecode on variants already close to the EIP-170 limit.
-7. The engine must implement `IRuleEngineERC1404` if the token exposes ERC-1404. `detectTransferRestriction` /
+8. The engine must implement `IRuleEngineERC1404` if the token exposes ERC-1404. `detectTransferRestriction` /
    `messageForTransferRestriction` on the token forward to the engine unguarded, so an engine without those
    methods makes both token view functions revert (the enforcement path, which calls `transferred(...)`, is
    unaffected). See design choice 1 below: the engine type is not validated at set-time.
@@ -229,7 +251,7 @@ moved the engine address to ERC-7201 storage (`CMTAT.storage.ValidationModuleInt
   - `IRuleEngine is IERC7551Compliance, IERC3643IComplianceContract, IERC165`: it no longer includes
     `IERC1404Extend`, and an engine must now implement `supportsInterface` (`RULE_ENGINE_INTERFACE_ID = 0x20c49ce7`).
   - The ERC-1404 functions moved to the new `IRuleEngineERC1404 is IERC1404Extend, IRuleEngine`. An engine used by a
-    variant that exposes ERC-1404 must implement it (see Authoring Guidelines §7).
+    variant that exposes ERC-1404 must implement it (see Authoring Guidelines §8).
 - **Calls.** The signatures and the 3-arg / 4-arg dispatch are unchanged. `_transferred` now reverts directly with
   the specific CMTAT error when a local check (pause, deactivation, freeze) fails, instead of returning `false`.
 - **Storage.** Unchanged.

@@ -1423,6 +1423,18 @@ external view returns (bool isValid);
  public view override returns (bool)
 ```
 
+**Both `transferred` overloads are mandatory** (the 3-argument one is inherited from `IERC3643IComplianceContract`), and the token calls them as follows since v3.3.0:
+
+| Operation | Overload called | `spender` |
+| --- | --- | --- |
+| `transfer` | `transferred(from, to, value)` | — |
+| `transferFrom` | `transferred(spender, from, to, value)` | approved spender |
+| `mint` / `batchMint`, `crosschainMint` | `transferred(spender, from, to, value)` | operator (`from == address(0)`) |
+| `burn` / `batchBurn`, `burnFrom`, `burn(uint256)`, `crosschainBurn` | `transferred(spender, from, to, value)` | operator (`to == address(0)`) |
+| minter `batchTransfer` | `transferred(spender, from, to, value)` | operator |
+
+Up to v3.2.0, mint, burn and the minter transfer used the 3-argument overload. Because both overloads exist on every conforming engine, this change does not revert anything: an engine that enforces a rule only in its 3-argument overload silently stops applying it to mint and burn. A RuleEngine should therefore route both overloads to one internal function. See [RuleEngine breaking changes by version](./technical/ruleengine-integration.md#breaking-changes-by-version).
+
 For RuleEngine implementations, this also applies to mint/burn operator flows:
 - mint path: `from == address(0)`, `spender == operator`
 - burn path: `to == address(0)`, `spender == operator`
