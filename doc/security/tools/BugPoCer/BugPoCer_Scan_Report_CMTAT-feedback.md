@@ -19,35 +19,38 @@
 
 ## Summary table
 
-| # | Sev | Title | Disposition on `dev` |
-|---|-----|-------|----------------------|
-| 4.1.1 | High | Missing Deactivation Guard (forcedBurn/forcedTransfer) | Documented (intentional, option 2) |
-| 4.1.2 | High | Unchecked Overfrozen Balance Underflow | Fixed |
-| 4.2.1 | Med | Overfrozen Balance Transfer DoS | Fixed |
-| 4.2.2 | Med | Unchecked Overfrozen Balance | Fixed |
-| 4.2.3 | Med | Unchecked Frozen Token Cap | Fixed |
-| 4.2.4 | Med | Burn Operator Context Bypass | Fixed |
-| 4.2.5 | Med | Missing Zero Address Validation (batch freeze) | Fixed |
-| 4.2.6 | Med | Incomplete Mint Validation | Fixed |
-| 4.2.7 | Med | Snapshot Hook After State Update | Accepted (design) |
-| 4.3.1 | Low | External Call DoS (snapshot engine) | Accepted (trusted engine) |
-| 4.3.2 | Low | View Validation Mismatch (zero-address) | Acknowledged (view semantics) |
-| 4.3.3 | Low | Incomplete Predicate View (`canTransact`) | Acknowledged (view semantics) |
-| 4.3.4 | Low | Misleading Access-Control Doc — `burn(uint256)` | Fixed (doc) |
-| 4.3.5 | Low | Rule Engine Setter Invariant Mismatch | Addressed (public reverts same-value) |
-| 4.3.6 | Low | Inconsistent Compliance View (zero-to-zero) | Acknowledged (view semantics) |
-| 4.3.7 | Low | Misleading Access-Control Doc — `onlyEnforcer` | Fixed (doc) |
-| 4.3.8 | Low | Zero Address Transfer Validation Mismatch | Acknowledged (view semantics) |
-| 4.3.9 | Low | Misleading Burn Authority Surface | Acknowledged (documented elsewhere) |
-| 4.3.10 | Low | Overfrozen Balance Accounting Corruption | Fixed (dup of 4.1.2) |
-| 4.3.11 | Low | Cross-Interface Event Inconsistency (`setTerms`) | Addressed (both setters emit) |
-| 4.3.12 | Low | Approve Missing Pause Protection (Light) | Fixed |
+Fix commits were located with `git log -S` between the scanned commit `49544f4` (v3.2.0) and HEAD. `6434930` and `f6aceb2` (the 4.1.1 documentation and the 4.3.4 / 4.3.7 NatSpec) were made after the triage commit `8d3029d`, as follow-ups to this feedback.
+
+| # | Sev | Title | Disposition on `dev` | Fix commit |
+|---|-----|-------|----------------------|------------|
+| 4.1.1 | High | Missing Deactivation Guard (forcedBurn/forcedTransfer) | Documented (intentional, option 2) | [`6434930`](https://github.com/CMTA/CMTAT/commit/6434930) |
+| 4.1.2 | High | Unchecked Overfrozen Balance Underflow | Fixed | [`5982e79`](https://github.com/CMTA/CMTAT/commit/5982e79), [`087b127`](https://github.com/CMTA/CMTAT/commit/087b127) |
+| 4.2.1 | Med | Overfrozen Balance Transfer DoS | Fixed | [`5982e79`](https://github.com/CMTA/CMTAT/commit/5982e79), [`087b127`](https://github.com/CMTA/CMTAT/commit/087b127) |
+| 4.2.2 | Med | Unchecked Overfrozen Balance | Fixed | [`5982e79`](https://github.com/CMTA/CMTAT/commit/5982e79), [`087b127`](https://github.com/CMTA/CMTAT/commit/087b127) |
+| 4.2.3 | Med | Unchecked Frozen Token Cap | Fixed | [`5982e79`](https://github.com/CMTA/CMTAT/commit/5982e79), [`087b127`](https://github.com/CMTA/CMTAT/commit/087b127) |
+| 4.2.4 | Med | Burn Operator Context Bypass | Fixed | [`7a7c975`](https://github.com/CMTA/CMTAT/commit/7a7c975) |
+| 4.2.5 | Med | Missing Zero Address Validation (batch freeze) | Fixed | [`a61bdb0`](https://github.com/CMTA/CMTAT/commit/a61bdb0) |
+| 4.2.6 | Med | Incomplete Mint Validation | Fixed | [`087b127`](https://github.com/CMTA/CMTAT/commit/087b127) (recipient check present in v3.2.0 (`49544f4`)) |
+| 4.2.7 | Med | Snapshot Hook After State Update | Accepted (design) | — |
+| 4.3.1 | Low | External Call DoS (snapshot engine) | Accepted (trusted engine) | — |
+| 4.3.2 | Low | View Validation Mismatch (zero-address) | Acknowledged (view semantics) | — |
+| 4.3.3 | Low | Incomplete Predicate View (`canTransact`) | Acknowledged (view semantics) | — |
+| 4.3.4 | Low | Misleading Access-Control Doc — `burn(uint256)` | Fixed (doc) | [`f6aceb2`](https://github.com/CMTA/CMTAT/commit/f6aceb2) |
+| 4.3.5 | Low | Rule Engine Setter Invariant Mismatch | Addressed (public reverts same-value) | — (present in v3.2.0 (`49544f4`)) |
+| 4.3.6 | Low | Inconsistent Compliance View (zero-to-zero) | Acknowledged (view semantics) | — |
+| 4.3.7 | Low | Misleading Access-Control Doc — `onlyEnforcer` | Fixed (doc) | [`f6aceb2`](https://github.com/CMTA/CMTAT/commit/f6aceb2) |
+| 4.3.8 | Low | Zero Address Transfer Validation Mismatch | Acknowledged (view semantics) | — |
+| 4.3.9 | Low | Misleading Burn Authority Surface | Acknowledged (documented elsewhere) | — |
+| 4.3.10 | Low | Overfrozen Balance Accounting Corruption | Fixed (dup of 4.1.2) | [`5982e79`](https://github.com/CMTA/CMTAT/commit/5982e79), [`087b127`](https://github.com/CMTA/CMTAT/commit/087b127) |
+| 4.3.11 | Low | Cross-Interface Event Inconsistency (`setTerms`) | Addressed (both setters emit) | — (present in v3.2.0 (`49544f4`)) |
+| 4.3.12 | Low | Approve Missing Pause Protection (Light) | Fixed | [`96e8012`](https://github.com/CMTA/CMTAT/commit/96e8012) |
 
 ---
 
 ## High
 
 ### 4.1.1 — Missing Deactivation Guard · **Documented (intentional — option 2)**
+**Fix commit:** [`6434930`](https://github.com/CMTA/CMTAT/commit/6434930) — docs (`doc/README.md`, `doc/technical/stablecoin.md`) and NatSpec on `forcedBurn` / `_forcedTransfer`.
 
 **Claim:** After `pause()` → `deactivateContract()`, `forcedBurn` (Light) and `forcedTransfer` still change balances/`totalSupply`, whereas the normal `burn`/`mint` paths revert with `EnforcedDeactivation`.
 
@@ -65,6 +68,7 @@ This is the enforcer's regulatory tool: it must work while transfers are paused,
 The consolidated reference (`doc/technical/lifecycle.md` §"what each state blocks", and the `doc/README.md` burn/mint summary table showing `forcedTransfer` ✔ while deactivated) is consistent with this.
 
 ### 4.1.2 — Unchecked Overfrozen Balance Underflow · **Fixed**
+**Fix commits:** [`5982e79`](https://github.com/CMTA/CMTAT/commit/5982e79) — underflow-safe `_checkActiveBalance` / `_getActiveBalanceOf` (frozen > balance); [`087b127`](https://github.com/CMTA/CMTAT/commit/087b127) — `_setFrozenTokens` rejects `address(0)` (NM-15/17).
 
 **Claim:** `setFrozenTokens` can set `frozenTokens > balance` (and on `address(0)`), so `balance − frozenTokens` underflows in the active-balance readers, bricking transfers/mints.
 
@@ -78,22 +82,26 @@ Over-freezing a real holder is still *possible by design* (absolute setter), but
 ## Medium
 
 ### 4.2.1 / 4.2.2 / 4.2.3 — Overfrozen Transfer DoS / Unchecked Overfrozen Balance / Frozen Token Cap · **Fixed**
+**Fix commits:** [`5982e79`](https://github.com/CMTA/CMTAT/commit/5982e79), [`087b127`](https://github.com/CMTA/CMTAT/commit/087b127) (same as 4.1.2).
 
 All three are the same root cause as 4.1.2 (over-frozen underflow, including the `address(0)` mint-brick). Fixed by the same underflow-safe readers and the `address(0)` guard above. No separate action.
 
 ### 4.2.4 — Burn Operator Context Bypass · **Fixed**
+**Fix commit:** [`7a7c975`](https://github.com/CMTA/CMTAT/commit/7a7c975) — `_burnOverride` / `_mintOverride` in `CMTATBaseCommon` pass `_msgSender()` instead of `address(0)`.
 
 **Claim:** `burnFrom` drops the operator before validation — old `_burnOverride` hardcoded `_checkTransferred(address(0), …)`, so the RuleEngine saw the no-operator `transferred(from,to,value)` hook and spender-specific compliance was skipped.
 
 **Status on `dev`: fixed.** `CMTATBaseCommon._burnOverride` (`0_CMTATBaseCommon.sol:139`) now passes `_checkTransferred(_msgSender(), account, address(0), value)`. On the `burnFrom` path `_msgSender()` is the operator (set at the entry, `ERC20CrossChainModule.sol:92`), so it reaches `ValidationModuleRuleEngine._transferred` with a non-zero spender → the **spender-aware** 4-arg overload runs `canTransferFrom` / spender-frozen checks. (This dispatch is now independently regression-tested — see `RuleEngineSpenderDispatchCommon.js`.)
 
 ### 4.2.5 — Missing Zero Address Validation (batch freeze) · **Fixed**
+**Fix commit:** [`a61bdb0`](https://github.com/CMTA/CMTAT/commit/a61bdb0) — `_addAddressToTheList` reverts `CMTAT_Enforcement_ZeroAddressNotAllowed()`.
 
 **Claim (per PoC):** Freezing `address(0)` bricks every direct `transfer`, because `transfer` passes `address(0)` as the spender sentinel and the frozen-check then rejects it.
 
 **Status on `dev`: fixed.** `address(0)` can no longer be frozen: both single and batch freeze funnel through `EnforcementModuleInternal._addAddressToTheList` (`:38`), which reverts `CMTAT_Enforcement_ZeroAddressNotAllowed()`. Asserted for `setAddressFrozen` **and** `batchSetAddressFrozen` in `EnforcementModuleCommon.js`.
 
 ### 4.2.6 — Incomplete Mint Validation · **Fixed**
+**Fix commit:** [`087b127`](https://github.com/CMTA/CMTAT/commit/087b127) for the `address(0)` mint brick. The recipient-frozen check was already present in v3.2.0 (`49544f4`) (`_canMintBurnByModuleAndRevert`), and was split into the directional `_canMintByModuleAndRevert` in [`f8531f3`](https://github.com/CMTA/CMTAT/commit/f8531f3).
 
 **Claim:** Base `_checkTransferred` validates only the source, ignoring the recipient; and over-freezing the `address(0)` sentinel bricks mints.
 
@@ -112,21 +120,26 @@ The `address(0)`-sentinel brick is independently closed by the `_setFrozenTokens
 ## Low
 
 ### 4.3.4 — Misleading Access-Control Doc, `burn(uint256)` · **Fixed (doc)**
+**Fix commit:** [`f6aceb2`](https://github.com/CMTA/CMTAT/commit/f6aceb2).
 `ERC20CrossChainModule.sol` `burn(uint256)` NatSpec previously said *"Protected by the modifier `onlyBurnerFrom`"* while the function uses `onlySelfBurn`. Corrected to *"Protected by the modifier `onlySelfBurn` (BURNER_SELF_ROLE)."*
 
 ### 4.3.7 — Misleading Access-Control Doc, `onlyEnforcer` · **Fixed (doc)**
+**Fix commit:** [`f6aceb2`](https://github.com/CMTA/CMTAT/commit/f6aceb2).
 `EnforcementModule.sol` previously commented `onlyEnforcer` as *"restrict access to the burner functions"*, but it gates **address-freeze** mutations. Corrected to *"restrict access to the address-freeze functions (via `_authorizeFreeze`, ENFORCER_ROLE)."*
 
 ### 4.3.9 — Misleading Burn Authority Surface · **Acknowledged**
 `ERC20BurnModule`'s `BURNER_ROLE` is not the whole burn surface — cross-chain adds `crosschainBurn` / `burnFrom` / `burn` under `CROSS_CHAIN_ROLE` / `BURNER_FROM_ROLE` / `BURNER_SELF_ROLE`. This is documented in `doc/technical/access-control.md` and the module pages; no code change. (Could add a cross-reference in the `ERC20BurnModule` NatSpec if desired.)
 
 ### 4.3.11 — Cross-Interface Event Inconsistency (`setTerms`) · **Addressed**
+**Fix commit:** none — both `Terms` emits were already present in v3.2.0 (`49544f4`).
 Both setters now emit a `Terms` event: the ICMTAT overload `ExtraInformationModule.setTerms(DocumentInfo)` (`:78`) → `_setTerms` → `emit Terms($._terms)`, and the ERC-7551 overload `ERC7551Module.setTerms(bytes32,string)` (`:56`) → `emit Terms(hash_, uri_)`. The two events have different signatures by virtue of being on two different interfaces (ICMTAT struct event vs ERC-7551 flat event); this is an interface-design consequence, not a missing event. No listener is left without an event.
 
 ### 4.3.12 — Approve Missing Pause Protection (Light) · **Fixed**
+**Fix commit:** [`96e8012`](https://github.com/CMTA/CMTAT/commit/96e8012) — `ValidationModuleAllowance` (pause check on `approve`) added to Light (`CMTATBaseCore`).
 `ValidationModuleAllowance._canAuthorizeAllowanceByModuleAndRevert` (`ValidationModuleAllowance.sol:45`) calls `_requireNotPaused()` for any non-zero `approve`, and Light (`CMTATBaseCore`) inherits it. Zero-value **revocation** is intentionally allowed while paused (NM-3/8). So allowances can no longer be *created/increased* while paused, in Light or the full variants.
 
 ### 4.3.5 — Rule Engine Setter Invariant Mismatch · **Addressed**
+**Fix commit:** none — the same-value revert was already present in v3.2.0 (`49544f4`).
 The public `setRuleEngine` (`ValidationModuleRuleEngine.sol:51`) reverts `CMTAT_ValidationModule_SameValue()` on an unchanged value before writing/emitting, so no misleading same-value `RuleEngine` event is observable through the public API. The internal setter is only reached with a changed value (or once at init). No change.
 
 ### 4.3.2 / 4.3.3 / 4.3.6 / 4.3.8 — View-semantics cluster · **Acknowledged, no code change**
