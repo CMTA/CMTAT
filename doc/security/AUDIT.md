@@ -162,6 +162,49 @@ The report (v3.2.0-rc2, February 10, 2026) identified **6 findings** (0 critical
 
 A detailed feedback and response to each finding is available in [CMTAT-wake-arena-feedback.md](./tools/ackee-wake-arena/CMTAT-wake-arena-feedback.md).
 
+## [BugPoCer](https://www.olympix.security) (Olympix)
+
+Here is the report produced by BugPoCer, an agentic scanner from Olympix that generates a proof-of-concept for each finding:
+
+> **Note: this scan was performed by an AI-powered automated tool, not a formal human-led audit.** The linked
+> feedback file is the independent verification by CMTA maintainers.
+
+| Version | File |
+| ------- | ---- |
+| v3.2.0 (scanned) → triaged on v3.3.0-rc2/rc3 | [BugPoCer_Scan_Report_CMTAT.pdf](./tools/BugPoCer/BugPoCer_Scan_Report_CMTAT.pdf)<br />[BugPoCer_Scan_Report_CMTAT-feedback.md](./tools/BugPoCer/BugPoCer_Scan_Report_CMTAT-feedback.md) |
+
+> BugPoCer Scan Report, prepared by Olympix for CMTA, 17 July 2026. Findings were re-seeded from the 24 June 2026 scan
+> of commit `49544f4`, which is the **v3.2.0** release. The maintainers triaged them against the **v3.3.0-rc2/rc3**
+> source (`dev` @ `8d3029d`). The tool's "True Positive" verdict therefore means *reproducible on v3.2.0*, not
+> *present in v3.3.0*.
+
+The related [PR #387](https://github.com/CMTA/CMTAT/pull/387) was **not merged**, because the project
+did not want to take all of its content; the disposition of each finding is recorded in the feedback file.
+
+The report identified **21 findings** (2 high, 7 medium, 12 low). On v3.3.0-rc2/rc3: **13 already fixed** in code,
+**1 documented** as intended behaviour (4.1.1), **2 doc fixes** (4.3.4, 4.3.7), **5 accepted as design /
+acknowledged**. No item is left open; tightening the advisory view functions (4.3.2/3/6/8) is an optional follow-up.
+
+| # | Title | Severity | Disposition on v3.3.0-rc2/rc3 |
+|---|-------|----------|-------------------------------|
+| 4.1.1 | Missing deactivation guard (`forcedBurn` / `forcedTransfer`) | High | Documented — intentional, survives deactivation per ERC-8343 |
+| 4.1.2 | Unchecked overfrozen balance underflow | High | Fixed |
+| 4.2.1 – 4.2.3 | Overfrozen balance transfer DoS / unchecked overfrozen balance / frozen token cap | Medium | Fixed (same root cause as 4.1.2) |
+| 4.2.4 | Burn operator context bypass | Medium | Fixed |
+| 4.2.5 | Missing zero-address validation (batch freeze) | Medium | Fixed |
+| 4.2.6 | Incomplete mint validation | Medium | Fixed |
+| 4.2.7 | Snapshot hook after state update | Medium | Accepted (design — pre-update values are passed to the engine) |
+| 4.3.1 | External call DoS (snapshot engine) | Low | Accepted (trusted engine) |
+| 4.3.2, 4.3.3, 4.3.6, 4.3.8 | View-function semantics (zero address, `canTransact`) | Low | Acknowledged (advisory views; state-changing paths enforce every guard) |
+| 4.3.4, 4.3.7 | Misleading access-control NatSpec | Low | Fixed (doc) |
+| 4.3.5 | RuleEngine setter invariant mismatch | Low | Addressed (public setter reverts on same value) |
+| 4.3.9 | Misleading burn authority surface | Low | Acknowledged (documented in access-control docs) |
+| 4.3.10 | Overfrozen balance accounting corruption | Low | Fixed (duplicate of 4.1.2) |
+| 4.3.11 | Cross-interface event inconsistency (`setTerms`) | Low | Addressed (both setters emit) |
+| 4.3.12 | `approve` missing pause protection (Light) | Low | Fixed |
+
+A detailed response to each finding is available in [BugPoCer_Scan_Report_CMTAT-feedback.md](./tools/BugPoCer/BugPoCer_Scan_Report_CMTAT-feedback.md).
+
 ## [Sequent](https://www.sequent.inc) (Pre-verification Review)
 
 Here are the reports produced by Sequent:

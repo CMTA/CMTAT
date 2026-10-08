@@ -21,6 +21,8 @@ Unlike `CMTATBaseCommon` (also level 0), `CMTATBaseCore` bundles access control,
 
 `CMTATBaseCommon` is intended to be composed further up the hierarchy (through `CMTATBaseAccessControl` at level 2), where RBAC, enforcement, and extension modules are layered on separately. `CMTATBaseCore` collapses that into one level for the Light case, where only core operations (mint, burn, pause, freeze, `forcedBurn`) are needed.
 
+> **CMTAT framework:** Light does not include `terms` (reference to legally required documentation), which is a **mandatory** functionality of the CMTAT framework. A Light token is therefore not fully conformant with the framework; use another variant (e.g. Standard) if conformance is required. Adding `terms` to Light is planned for v3.4.0, see [technical/terms.md](../../technical/terms.md).
+
 ## Schema
 
 ![CMTATBaseCore](../../schema/plantuml/class/CMTATBaseCore.png)

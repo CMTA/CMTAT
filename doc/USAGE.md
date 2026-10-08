@@ -16,8 +16,8 @@ are the latest ones that we tested:
   - EVM version: Osaka (Fusaka upgrade)
 
 - Package.json
-  - OpenZeppelin Contracts (Node.js module): [v5.6.1](https://github.com/OpenZeppelin/openzeppelin-contracts/releases/tag/v5.6.1) 
-  - OpenZeppelin Contracts Upgradeable (Node.js module): [v5.6.1](https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/releases/tag/v5.6.1)
+  - OpenZeppelin Contracts (Node.js module): [v5.7.0](https://github.com/OpenZeppelin/openzeppelin-contracts/releases/tag/v5.7.0) 
+  - OpenZeppelin Contracts Upgradeable (Node.js module): [v5.7.0](https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/releases/tag/v5.7.0)
 
 
 ### Tools
@@ -37,7 +37,7 @@ are the latest ones that we tested:
 
 Used inside JavaScript Hardhat tests (test helper imports).
 
-OpenZeppelin Contracts Upgradeable (submodule in `lib/openzeppelin-contracts-upgradeable`) [v5.6.1](https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/releases/tag/v5.6.1)
+OpenZeppelin Contracts Upgradeable (submodule in `lib/openzeppelin-contracts-upgradeable`) [v5.7.0](https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/releases/tag/v5.7.0)
 Upgradeable variant of OpenZeppelin Contracts, meant for use in upgradeable contracts.
 The version of the library used is available in the file [USAGE.md](./USAGE.md)
 

@@ -6,16 +6,45 @@ CMTAT supports deployment via proxy contracts, which allows upgrading the contra
 
 | Proxy type | Implementation contract |
 |---|---|
-| Transparent Proxy or Beacon Proxy | `CMTATUpgradeable` |
+| Transparent Proxy or Beacon Proxy | `CMTATStandardUpgradeable` (named `CMTATUpgradeable` up to v3.2.0) and the other `CMTATUpgradeable*` variants |
 | UUPS Proxy | `CMTATUpgradeableUUPS` |
 
 See [OpenZeppelin Upgrades Plugins](https://docs.openzeppelin.com/upgrades-plugins/1.x/) for deployment tooling.
+
+> **Warning — upgrading is risky and not recommended unless it is necessary.** An upgrade replaces the code of a
+> live token that holds investors' balances. A mistake in the storage layout, the target variant, the migration step
+> or the upgrade transaction can corrupt state, lock the token or silently disable a control, and some of these
+> failures do not revert (see below). Upgrade only when there is a concrete need (for example a security fix or a
+> required feature), keep the current version otherwise, and before any upgrade:
+> - read the [breaking changes](./breaking-changes.md) between the deployed and the target version;
+> - validate the storage layout with the OpenZeppelin upgrades plugin (`validateUpgrade`);
+> - rehearse the full upgrade, including any migration, on a fork of the live network;
+> - have the new implementation and any migration code reviewed or audited;
+> - protect the upgrade authority (`ProxyAdmin` owner or, for UUPS, `DEFAULT_ADMIN_ROLE` / `PROXY_UPGRADE_ROLE`)
+>   with a multisig or a timelock.
 
 ## Storage Layout (ERC-7201)
 
 CMTAT implements [ERC-7201](https://eips.ethereum.org/EIPS/eip-7201) for namespaced storage locations. This ensures storage slots are deterministic and do not collide across upgrades or when modules are composed.
 
 Each module stores its state under a fixed `bytes32` slot derived from a namespace string. See [`deployment.md`](./deployment.md) for the full slot table.
+
+## Upgrading an Existing Proxy to v3.3.0
+
+See the warning above: upgrade only if it is necessary. Upgrading a proxy deployed with v3.2.0 or earlier is **not** a drop-in implementation swap. Several changes do not
+revert anything; they silently change what the token returns or which external calls it makes:
+
+| Change | What you see after a plain upgrade | What to do |
+| --- | --- | --- |
+| `name` / `symbol` moved to `CMTAT.storage.TokenAttributeModule` (all variants, including Light) | `name()` / `symbol()` return empty strings; the EIP-712 domain used by `permit` changes | Restore them in the upgrade transaction with a `reinitializer`. An **example** (test mock, **not audited**) is in `contracts/mocks/upgrade/CMTATV33TokenAttributeMigration.sol`, exercised by `test/proxy/general/UpgradeFromV320.test.js`. Its `migrateFromV32()` has no access control and **must be called in the upgrade transaction** (`upgradeAndCall` / `upgradeToAndCall`) |
+| Documents stored in the token instead of an external DocumentEngine (all variants except Light) | Documents of the old engine are no longer returned; `setDocumentEngine` is gone | Export them before the upgrade and register them again with `setDocument` |
+| SnapshotEngine removed from Standard, UUPS, ERC-1363, ERC-7551 and Allowlist | The engine stops receiving transfers; later snapshots are wrong | Upgrade a Standard proxy to the Snapshot variant instead (the engine address is kept); the other variants have no v3.3.0 equivalent with snapshots |
+| RuleEngine receives mint, burn and the minter transfer on the 4-argument `transferred` | A rule enforced only in the engine's 3-argument overload no longer applies to mint and burn | Check the engine before upgrading the token (see [ruleengine-integration.md](./ruleengine-integration.md#breaking-changes-by-version)) |
+
+Full details, the storage tables and the upgrade checklists (from v3.2.0 and from the audited v3.0.0) are in
+[breaking-changes.md](./breaking-changes.md). Validate the layout with the OpenZeppelin upgrades plugin
+(`validateUpgrade`), test the upgrade on a fork, and assert `name()`, `symbol()`, `getAllDocuments()` and
+`snapshotEngine()` afterwards.
 
 ## Initialize Functions
 

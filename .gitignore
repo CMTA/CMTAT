@@ -32,3 +32,7 @@ ERCDRAFT
 #codex
 .codex
 history
+draft
+
+# PDF link conversion output (doc/script/convert_links_for_pdf*.sh)
+README_UPDATE.md

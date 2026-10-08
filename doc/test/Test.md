@@ -85,8 +85,9 @@ Proxy module suites, not the variant entry file.
 Notes:
 - **Light** deliberately has the smallest surface: core ERC-20 + address-freeze + pause + core validation. It has
   **no** RuleEngine, partial-freeze, allowlist, document, snapshot, debt, cross-chain, permit or ERC-7551 tests —
-  by design (see [`doc/technical/deployment.md`]). Light additionally has inline `forcedBurn` and ERC-165 tests in
-  `test/deployment/light/*`.
+  by design (see [`doc/technical/deployment.md`]). It also has **no `terms` tests**, because Light has no `terms`, a
+  mandatory CMTAT framework functionality (planned for v3.4.0, see [`doc/technical/terms.md`]). Light additionally
+  has inline `forcedBurn` and ERC-165 tests in `test/deployment/light/*`.
 - The **RuleEngine reentrancy** guard is only present on size-permitting variants (Standard, Snapshot, ERC-7551);
   `RuleEngineReentrancyCommon` is wired into the Standard standalone + proxy suites. See
   [`doc/modules/controllers/validationRuleEngine.md`] for the per-variant table.
@@ -114,7 +115,7 @@ scenarios list the `context(...)` groups.
 | Validation (RuleEngine) | `ValidationModule/ValidationModuleCommon.js` | 27 | RuleEngine transfer/transferFrom/mint gating, mint/burn frozen, send/receive checks (ERC-1404 + ERC-7943). |
 | Validation setRuleEngine | `ValidationModule/ValidationModuleSetRuleEngineCommon.js` | 6 | `setRuleEngine` access control + same-value revert. |
 | Validation reentrancy | `ValidationModule/RuleEngineReentrancyCommon.js` | 7 | Malicious reentrant RuleEngine cannot drain frozen tokens; guard reverts `ReentrancyGuardReentrantCall`; normal/batch flows unaffected (NM-7/9/11/16/18). |
-| Validation spender dispatch | `ValidationModule/RuleEngineSpenderDispatchCommon.js` | 2 | `transferFrom` routes to the spender-aware 4-arg `transferred(spender,…)` overload and forwards the real spender; a direct `transfer` routes to the legacy 3-arg overload (spender `address(0)`). Uses `RuleEngineSpenderRecorderMock`; kills the `spender != address(0)` dispatch mutant. |
+| Validation spender dispatch | `ValidationModule/RuleEngineSpenderDispatchCommon.js` | 11 | `transferFrom` routes to the spender-aware 4-arg `transferred(spender,…)` overload and forwards the real spender; a direct `transfer` routes to the legacy 3-arg overload (spender `address(0)`). Pins the v3.3.0 routing of every supply path to the 4-arg overload with the operator as spender: `mint`, `batchMint`, `burn`, `batchBurn`, `burnFrom`, self `burn(uint256)`, `crosschainMint`, `crosschainBurn` and the minter `batchTransfer` (up to v3.2.0 they used the 3-arg overload). Uses `RuleEngineSpenderRecorderMock`; kills the `spender != address(0)` dispatch mutant. |
 | Allowlist | `AllowlistModuleCommon.js` | 36 | `setAddressAllowlist`/batch/`enableAllowlist`; allowlisted send/receive; `transferFrom` requires spender **and** from/to allowlisted (`testCannotTransferTokenWhenSpenderIsNotAllowlistWithTransferFrom`); **minter need not be allowlisted to mint** (`testMinterNotAllowlistedCanStillMint`/`…BatchMint`); approve while not allowlisted; revocation carve-out. |
 
 ### Documents, metadata, holder list
@@ -155,6 +156,7 @@ scenarios list the `context(...)` groups.
 | CMTAT integration | `CMTATIntegrationCommon.js` | 4 | End-to-end multi-module flows. |
 | Proxy security | `test/proxy/general/Proxy.test.js` | — | Proxy init / front-running / storage. |
 | Upgrade | `test/proxy/general/Upgrade*.test.js` | — | Transparent + UUPS upgrade paths. |
+| Upgrade from v3.2.0 | `test/proxy/general/UpgradeFromV320.test.js` | 8 | Upgrades a **real v3.2.0** `CMTATUpgradeable` proxy (bytecode in `fixtures/v3.2.0`, compiled from the tag with its own locked dependencies) to v3.3.0. S1: a plain upgrade empties `name` / `symbol`; the example migration mock (`CMTATV33TokenAttributeMigration`, not audited) restores them, clears the legacy slots and cannot run twice; balances, freezes, roles, RuleEngine and terms are preserved. S2: the old DocumentEngine's documents are no longer returned and are re-registered with `setDocument`. S3: Standard v3.3.0 no longer calls the SnapshotEngine; the Snapshot variant keeps it. See `doc/technical/breaking-changes.md`. |
 | RuleEngine stateful | `test/standard/modules/RuleEngineMockStatefulRule.test.js` | — | Stateful holder-tracking rule via `transferred`. |
 
 ## Deployment-specific & cross-cutting test files

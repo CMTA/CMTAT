@@ -5,10 +5,15 @@ skinparam shadowing false
 
 |CMTAT|
 start
-:1. transfer, mint or burn call;
+:1. transfer, mint or burn call\n(forcedTransfer never reaches the RuleEngine);
 if (2. RuleEngine set?\n(RuleEngine != address(0))) then (true)
-  |RuleEngine|
-  :3. transferred(from, to, value)\n(reverts if the transfer is not authorised);
+  if (spender known?\n(every path except a direct transfer)) then (yes)
+    |RuleEngine|
+    :3. transferred(spender, from, to, value)\ntransferFrom, mint, burn, burnFrom,\nbatchTransfer, cross-chain mint / burn\n(reverts if not authorised);
+  else (no: direct transfer)
+    |RuleEngine|
+    :3. transferred(from, to, value)\n(reverts if not authorised);
+  endif
   |CMTAT|
 else (false)
 endif

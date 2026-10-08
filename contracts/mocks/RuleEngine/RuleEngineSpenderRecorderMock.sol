@@ -13,8 +13,10 @@ import {RuleEngineInterfaceId} from "../../library/RuleEngineInterfaceId.sol";
 *
 * CMTAT routes the RuleEngine `transferred` callback through
 * {ValidationModuleRuleEngine-_callRuleEngineTransferred}, which selects the spender-aware
-* 4-argument overload when a spender is present (a `transferFrom`) and the legacy 3-argument
-* overload otherwise (a direct `transfer`, `mint` or `burn`). This mock records the arguments
+* 4-argument overload when a spender is present and the legacy 3-argument overload otherwise.
+* Since v3.3.0 only a direct `transfer` has no spender: `transferFrom`, the supply operations
+* (mint, burn, `burnFrom`, cross-chain mint/burn, with the operator as spender) and the minter
+* `batchTransfer` all take the 4-argument overload. This mock records the arguments
 * seen on the last callback so a test can assert the correct overload was taken - i.e. that the
 * `spender != address(0)` dispatch was not inverted.
 *
