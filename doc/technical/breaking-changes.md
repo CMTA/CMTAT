@@ -56,15 +56,23 @@ values stay at `ERC20BaseModule` slots `+1` / `+2`, but nothing reads them anymo
 After a plain upgrade, `name()` and `symbol()` return empty strings, which breaks wallets, explorers and any EIP-712
 signer (the `permit` domain uses the name).
 
-**Migration.** Read `name()` / `symbol()` before the upgrade, then restore them **in the same transaction** as the
-upgrade:
+**Migration.** Restore the two values **in the same transaction** as the upgrade (`upgradeToAndCall` for UUPS,
+`ProxyAdmin.upgradeAndCall` for Transparent), by calling a `reinitializer(n)` function of the new implementation.
 
-- `upgradeToAndCall` (UUPS) or `ProxyAdmin.upgradeAndCall` (Transparent) with a call to a `reinitializer(n)` function
-  of the new implementation that writes the two values; or
-- `upgradeAndCall` with a call to `setName` / `setSymbol` (`DEFAULT_ADMIN_ROLE`) if the upgrade transaction is sent
-  by an account holding that role.
+A reference implementation is provided in `contracts/mocks/upgrade/`:
 
-The `reinitializer` version `n` must be higher than any version the proxy has already used.
+- `CMTATV33TokenAttributeMigration` reads `name` / `symbol` from their v3.2.0 location (`ERC20BaseModule` slots `+1`
+  / `+2`) and clears those slots. Because the values are read on-chain, the migration takes no argument and cannot be
+  fed wrong values.
+- `CMTATStandardUpgradeableV33MigrationMock` and `CMTATUpgradeableSnapshotV33MigrationMock` add
+  `migrateFromV32()` (`reinitializer(2)`), which writes the values with `__TokenAttributeModule_init_unchained`.
+
+These contracts are mocks: review and adapt them (target variant, reinitializer version) before production use. The
+`reinitializer` version `n` must be higher than any version the proxy has already used. Calling `setName` /
+`setSymbol` after the upgrade also works, but leaves the token with an empty name between the two transactions.
+
+The procedure is tested against a real v3.2.0 proxy in `test/proxy/general/UpgradeFromV320.test.js`, which also
+checks S2 and S3 below.
 
 #### 1.2.2 S2 — documents (all variants except Light)
 
@@ -180,7 +188,8 @@ engine is DocumentEngine v0.4.0.
 5. **If a RuleEngine is set,** check its 4-arg `transferred` path and spender rules against the new mint / burn
    dispatch (E1), and make sure it does not call back into the token (E2).
 6. **Run the OpenZeppelin upgrades validation** (`validateUpgrade`) between the two implementations, and test the
-   upgrade on a fork first.
+   upgrade on a fork first. `test/proxy/general/UpgradeFromV320.test.js` shows the full sequence on a real v3.2.0
+   proxy.
 
 ### 1.5 Public API changes (outside the tag)
 

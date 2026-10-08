@@ -96,10 +96,15 @@ contracts
 │   │   ├── RuleSpenderAuthorized.sol
 │   │   └── RuleTokenHolderTracker.sol
 │   ├── SnapshotEngineMock.sol
-│   └── test
-│       └── proxy
-│           ├── CMTAT_PROXY_TEST.sol
-│           └── CMTAT_PROXY_TEST_UUPS.sol
+│   ├── SnapshotEngineRecorderMock.sol
+│   ├── test
+│   │   └── proxy
+│   │       ├── CMTAT_PROXY_TEST.sol
+│   │       └── CMTAT_PROXY_TEST_UUPS.sol
+│   └── upgrade
+│       ├── CMTATStandardUpgradeableV33MigrationMock.sol
+│       ├── CMTATUpgradeableSnapshotV33MigrationMock.sol
+│       └── CMTATV33TokenAttributeMigration.sol
 └── modules
     ├── 0_CMTATBaseCommon.sol
     ├── 0_CMTATBaseCore.sol
@@ -165,4 +170,4 @@ contracts
         └── security
             └── AccessControlModule.sol
 
-35 directories, 129 files
+36 directories, 133 files

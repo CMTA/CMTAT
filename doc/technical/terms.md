@@ -252,8 +252,9 @@ The reinitializer version `n` must be higher than any version the proxy has alre
 that already ran a `reinitializer(2)` for `name`/`symbol` needs `reinitializer(3)`. Document this, because the
 version cannot be fixed once for every proxy.
 
-The mock also closes a gap: the repository documents the v3.3.0 `name`/`symbol` migration but has no code or test for
-it. Integrators can copy this contract, and the tests use it.
+It can reuse the v3.3.0 `name`/`symbol` migration (`contracts/mocks/upgrade/CMTATV33TokenAttributeMigration.sol`,
+tested in `test/proxy/general/UpgradeFromV320.test.js`) for pre-3.3 sources. Integrators can copy this contract,
+and the tests use it.
 
 An upgrade without the migration leaves `terms()` empty while `tokenId()` / `information()` stay intact. Document
 this next to the existing `name`/`symbol` warning.

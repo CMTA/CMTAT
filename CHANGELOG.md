@@ -99,6 +99,7 @@ This section covers the ERC-7201 storage and the external engines. Public API ch
 
 ### Testing
 
+- **Upgrade test from a real v3.2.0 proxy** (`test/proxy/general/UpgradeFromV320.test.js`, 8 tests). The v3.2.0 `CMTATUpgradeable` and `DocumentEngineMock` bytecode, compiled from the tag with its own locked dependencies, is stored in `test/proxy/general/fixtures/v3.2.0`. It checks that a plain upgrade empties `name` / `symbol`, that the reference migration restores them and clears the legacy slots, that the rest of the state is preserved, that documents of the old DocumentEngine are no longer returned, and that the Standard variant stops calling the SnapshotEngine while the Snapshot variant keeps it. New mocks: `CMTATV33TokenAttributeMigration`, `CMTATStandardUpgradeableV33MigrationMock`, `CMTATUpgradeableSnapshotV33MigrationMock` (`contracts/mocks/upgrade/`) and `SnapshotEngineRecorderMock`.
 - RuleEngine dispatch tests (`RuleEngineSpenderDispatchCommon.js`, standard and proxy) now pin the 4-argument `transferred` routing, with the operator as `spender`, for `mint`, `batchMint`, `burn`, `batchBurn`, `burnFrom`, self `burn(uint256)`, `crosschainMint`, `crosschainBurn` and the minter `batchTransfer` (9 new tests per suite). The suite header comment and `RuleEngineSpenderRecorderMock` NatSpec, which still described mint / burn on the 3-argument overload, were corrected.
 
 ### Documentation

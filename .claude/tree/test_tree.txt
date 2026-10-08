@@ -86,7 +86,12 @@ test
 ├── deploymentUtils.js
 ├── proxy
 │   ├── general
+│   │   ├── fixtures
+│   │   │   └── v3.2.0
+│   │   │       ├── CMTATUpgradeable.json
+│   │   │       └── DocumentEngineMock.json
 │   │   ├── Proxy.test.js
+│   │   ├── UpgradeFromV320.test.js
 │   │   ├── UpgradeProxyCommon.js
 │   │   ├── UpgradeProxy.test.js
 │   │   └── UpgradeProxyUUPS.test.js
@@ -151,4 +156,4 @@ test
 │       └── VersionModule.test.js
 └── utils.js
 
-33 directories, 118 files
+35 directories, 121 files
