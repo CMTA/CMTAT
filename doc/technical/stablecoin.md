@@ -14,6 +14,8 @@ Stablecoins typically need a smaller set of compliance features than equity or d
 
 The Light variant provides exactly these capabilities with no overhead from modules that are irrelevant to most stablecoin designs (document management, snapshots, partial balance freeze, debt fields, or cross-chain bridges). The result is a contract roughly half the size of the Standard variant.
 
+> **CMTAT framework:** Light does not include `terms` (reference to legally required documentation), which is a **mandatory** functionality of the CMTAT framework. A Light token is therefore not fully conformant with the framework; use another variant (e.g. Standard) if conformance is required. Adding `terms` to Light is planned for v3.4.0, see [technical/terms.md](./terms.md).
+
 | Variant | Deployed bytecode |
 |---|---|
 | CMTAT Light | 11.298 KiB |
@@ -94,7 +96,7 @@ The following features are intentionally absent to keep the contract lean:
 |---|---|---|
 | Partial balance freeze | `ERC20EnforcementModule` | No `freezePartialTokens` / `unfreezePartialTokens` / `setFrozenTokens`. Address-level freeze only. |
 | Forced transfer to third party | `ERC20EnforcementModule` | Only `forcedBurn` is available. Cannot move tokens from a frozen account to another address. |
-| On-chain token metadata | `ExtraInformationModule` | No `tokenId`, `terms`, `information` fields. |
+| On-chain token metadata | `ExtraInformationModule` | No `tokenId`, `terms`, `information` fields. **`terms` is mandatory in the CMTAT framework**, so Light is not fully conformant (planned for v3.4.0, see [terms.md](./terms.md)). |
 | On-chain document management | `DocumentERC1643Module` | No ERC-1643 document storage. |
 | Snapshot engine support | `SnapshotEngineModule` | No `setSnapshotEngine` / `operateOnTransfer` hook. |
 | Gasless meta-transactions | `ERC2771Module` | No trusted forwarder / ERC-2771 support. |
@@ -279,6 +281,7 @@ If you need both meta-transactions and permit-style approvals, consider an exter
 | `forcedBurn` (burn from frozen address) | ✓ | — | — |
 | `forcedTransfer` (move tokens to third party) | — | ✓ | ✓ |
 | Partial balance freeze (`freezePartialTokens`) | — | ✓ | ✓ |
+| `terms` (mandatory in the CMTAT framework) | — | ✓ | ✓ |
 | `ExtraInformationModule` (tokenId, terms, info) | — | ✓ | ✓ |
 | `DocumentERC1643Module` (ERC-1643 documents) | — | ✓ | ✓ |
 | ERC-2771 meta-transactions (gasless) | — | ✓ | — |
@@ -294,8 +297,8 @@ If you need both meta-transactions and permit-style approvals, consider an exter
 ## Decision Guide
 
 ```
-Do you need on-chain documents, tokenId/terms, 
-partial freeze, or forcedTransfer?
+Do you need CMTAT framework conformance (terms),
+on-chain documents, tokenId, partial freeze, or forcedTransfer?
     ├── No  → Do you need permit or multicall?
     │             ├── No  → CMTAT Light
     │             └── Yes → CMTAT Permit (no ERC-2771)

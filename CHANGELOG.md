@@ -22,6 +22,7 @@ See [https://semver.org](https://semver.org)
 - `Removed` for now removed features.
 - `Fixed` for any bug fixes.
 - `Security` in case of vulnerabilities.
+- `breaking change`: breaking change regarding storage [ERC-7201](https://eips.ethereum.org/EIPS/eip-7201) namespace , as well as external engine
 
 Reference: [keepachangelog.com/en/1.1.0/](https://keepachangelog.com/en/1.1.0/)
 
@@ -43,9 +44,135 @@ Custom changelog tag: `Dependencies`, `Documentation`, `Testing`
   
   - Update changelog
 
+## 3.3.0
+
+> **Note:** This version has not been audited. It was reviewed with automated tools (Nethermind AuditAgent, Olympix BugPoCer, Slither, Aderyn) and a Sequent pre-verification review; see [AUDIT.md](./doc/security/AUDIT.md).
+
+Summary of the main changes between **v3.2.0** and **v3.3.0**. Per-item details, tests and documentation are in the release-candidate entries below (`3.3.0 - rc0` to `rc4`).
+
+### Smart contract
+
+#### Breaking change
+
+This section covers the ERC-7201 storage and the external engines. Public API changes are listed under **Changed**. Migration steps and per-variant details: [doc/technical/breaking-changes.md](./doc/technical/breaking-changes.md).
+
+- **Storage — `name` / `symbol` moved to a new namespace.** They now live in `CMTAT.storage.TokenAttributeModule` (`0xc541cfc06cfa9bb7e38e614bc9457bd7310b58a2a620e4f19164873143c76d00`) instead of `CMTAT.storage.ERC20BaseModule`; `decimals` stays in place. A v3.2.0 (or older) proxy upgraded to v3.3.0 returns empty `name()` / `symbol()` until a one-time `reinitializer` copies the old values into the new slot.
+- **Storage — documents are stored in the token, no longer in an external engine.** In v3.2.0 every variant except Light used `DocumentEngineModule` (engine address in `CMTAT.storage.DocumentEngineModule`, documents held by the external DocumentEngine). In v3.3.0 they use the native `DocumentERC1643Module` (`CMTAT.storage.DocumentERC1643Module`, `0x24fbb1cf6345ced60d5278ef6f68f4f7576fd9068704b4c8f1eec8f0bbd8a200`), and `setDocumentEngine` / `documentEngine` are no longer exposed. On an upgraded v3.2.0 proxy, documents kept by the previous engine are no longer returned and must be registered again with `setDocument` (`DOCUMENT_ROLE`); the old engine address remains unused in storage. `DocumentEngineModule` is still available in the codebase but is not used by any shipped variant.
+- **Storage / external engine — SnapshotEngine removed from several variants.** In v3.2.0 every variant except Light included `SnapshotEngineModule`. In v3.3.0 only the Snapshot (new), Debt and DebtEngine variants do: Standard, UUPS, ERC-1363, ERC-7551 and Allowlist no longer call the SnapshotEngine. Nothing reverts after an upgrade, but the engine stops receiving transfer callbacks and its snapshots become wrong. A Standard proxy using a SnapshotEngine must be upgraded to the Snapshot variant (the `CMTAT.storage.SnapshotEngineModule` namespace is unchanged, so the engine address is kept); UUPS, ERC-1363, ERC-7551 and Allowlist have no v3.3.0 equivalent with snapshots.
+- **External engine — RuleEngine receives the operator on supply operations.** `mint`, `burn`, minter `batchTransfer`, `burnFrom`, cross-chain `burn`, `crosschainMint` and `crosschainBurn` now pass the operator (`_msgSender()`) as `spender` instead of `address(0)`, so the RuleEngine receives the 4-argument `transferred(spender, from, to, value)` instead of the 3-argument one. Engines must handle mints (`from == address(0)`) and burns (`to == address(0)`) in the 4-argument path, and spender rules now apply to minters, burners and bridges.
+- **External engine — DocumentEngine interface (`IERC1643`).** Document names are `bytes32` instead of `string`, `getDocument(bytes32)` returns flat values `(string uri, bytes32 documentHash, uint256 lastModified)` instead of a `Document` struct, and `setDocument` / `removeDocument`, the `DocumentUpdated` / `DocumentRemoved` events and the `ERC1643MissingDocument` / `ERC1643InvalidName` errors are now part of the interface. An engine written for v3.2.0 is not compatible with `DocumentEngineModule` v3.3.0 (use DocumentEngine v0.4.0).
+- **External engine — RuleEngine reentrancy guard.** On the Standard, Snapshot and ERC-7551 variants, the `transferred` callback runs under `ReentrancyGuardTransient` (EIP-1153 transient storage, no persistent slot). A RuleEngine that calls back into a guarded token function from `transferred` now reverts.
+- **External engine — Solidity version.** The engine interfaces (`IRuleEngine`, `ISnapshotEngine`, `IDebtEngine`, `IDocumentEngine`, `IERC1643`) now require `pragma ^0.8.24`; an engine importing them must compile with Solidity 0.8.24 or later.
+
+#### Added
+
+- **New deployment variants:** Permit (`CMTATStandalonePermit` / `CMTATUpgradeablePermit`, ERC-2612 `permit` + ERC-6357 `multicall`), Snapshot (`CMTATStandaloneSnapshot` / `CMTATUpgradeableSnapshot`) and HolderList (`CMTATStandaloneHolderList` / `CMTATUpgradeableHolderList`, on-chain holder enumeration).
+- **New modules:** `TokenAttributeModule` (mutable `name` / `symbol`, reusable by non ERC-20 bases), `HolderListModule`, `DocumentERC1643Module` (native ERC-1643), `ERC20EnforcementERC7551Module` (ERC-7551 `bytes data` enforcement overloads and `getActiveBalanceOf`), `ValidationModuleAllowance` (pause / freeze checks on `approve` and `permit`).
+- **ERC-7551 enforcement in the Standard, ERC-1363 and Allowlist variants**, and SnapshotEngine support restored in the Debt and DebtEngine variants.
+- **ERC-165:** the tokens now advertise ERC-1643 (`0xecfecec8`), ERC-1404 (`0xab84a5c8`) and the spender-aware ERC-1404 extension (`0x78a8de7d`).
+
+#### Changed
+
+- **ERC-7943 aligned with the updated specification** (breaking API): `canTransact` replaced by `canSend` / `canReceive`, `ERC7943CannotTransact` replaced by `ERC7943CannotSend` / `ERC7943CannotReceive`, interface id `0x29388973` → `0x3edbb4c4`.
+- **ERC-1643 API** (breaking API): `bytes32` document names and a flat `getDocument` return, matching the ERC-1643 ABI.
+- **ERC-7551 event:** `Enforcement(...)` replaced by `ForcedTransfer(operator, from, to, value, data)`.
+- **Contract deactivation interface** renamed to the draft ERC-8343 (`IERC8343`); interface id unchanged (`0xe9cd80b0`).
+- **Base hierarchy** renumbered in strict dependency order (levels 0 to 8, new `CMTATBaseDocument` at level 1); `ERC20BaseModule` now handles ERC-20 concerns only.
+- **Operator propagation:** `mint`, `burn`, `burnFrom`, `crosschainMint` and `crosschainBurn` pass `_msgSender()` to the transfer-compliance hook, so spender-aware RuleEngine checks apply to operator-initiated supply operations.
+- Solidity pragma floor raised to `^0.8.24`.
+
+#### Fixed
+
+- `_setFrozenTokens` rejects `address(0)` (it could brick every mint path), and frozen amounts larger than the balance no longer underflow the active-balance readers.
+- Address freeze and partial freeze reject `address(0)`.
+- Setting an allowance to `0` (revocation) is always allowed, even while paused or when a party is frozen.
+- `forcedTransfer(from, from, value)` no longer releases frozen tokens; `forcedTransfer` emits `Spend` for the allowance it consumes.
+- The ERC-7551 `setTerms(bytes32,string)` overload keeps the existing document name.
+- ERC-1404 `detectTransferRestriction` agrees with the transfer path on zero-value transfers.
+- A token using `DocumentEngineModule` re-emits the ERC-1643 events on its own address.
+
+#### Security
+
+- RuleEngine `transferred` callback protected by a transient reentrancy guard on the variants with bytecode headroom (Standard, Snapshot, ERC-7551); documented as a trusted-engine assumption on the others.
+- Upgrade migration required for existing proxies: see **Breaking change** (`name` / `symbol`, documents).
+- `HolderListModule.holders()` is unbounded: on-chain callers must use `holdersInRange`.
+
+### Testing
+
+- Tests pin the RuleEngine `transferred` routing of every supply path and exercise the upgrade of a real v3.2.0 proxy to v3.3.0 (see `3.3.0 - rc4`). Full suite: 6,134 passing.
+
+### Documentation
+
+- Breaking changes and upgrade path: [doc/technical/breaking-changes.md](./doc/technical/breaking-changes.md), `doc/technical/upgradeable.md`, and a RuleEngine breaking-change section per release in `doc/technical/ruleengine-integration.md`.
+- Maintainer feedback for the Nethermind AuditAgent v3.3.0-rc2, Olympix BugPoCer, Sequent, Slither and Aderyn reviews ([AUDIT.md](./doc/security/AUDIT.md)).
+- ERC specification analyses (ERC-1404, ERC-1643, ERC-8343), the test catalogue `doc/test/Test.md`, and technical notes (allowance `Spend` event, deactivation, RuleEngine authoring obligations).
+
+### Dependencies
+
+- OpenZeppelin contracts and contracts-upgradeable [`v5.7.0`](https://github.com/OpenZeppelin/openzeppelin-contracts/releases/tag/v5.7.0) (no storage or bytecode-size change for CMTAT; see `3.3.0 - rc4`).
+- Solidity compiler `0.8.36` (Hardhat and Foundry configuration).
+
+## 3.3.0 - rc4
+
+> **Note:** This version has not been audited.
+
+Main theme: **no functional change to the token.** This release documents the breaking changes and the upgrade path from v3.2.0, reworks the RuleEngine integration documentation, adds tests that pin the RuleEngine dispatch and the v3.2.0 → v3.3.0 upgrade, and upgrades OpenZeppelin to v5.7.0.
+
+### Smart contract
+
+#### Changed
+
+- **`HolderListModule`** uses `EnumerableSet.pos` instead of `EnumerableSet.at`, deprecated in OpenZeppelin 5.7.0 because its name clashes with a future Solidity keyword. `at` only forwards to `pos`: no behaviour change.
+- **`IRuleEngine.transferred` NatSpec** (comments only): documents which overload the token calls for each operation since v3.3.0 (the 3-argument one is inherited from `IERC3643IComplianceContract`), and that mint, burn and the minter transfer used the 3-argument overload up to v3.2.0.
+- Deployed bytecode size of every deployment variant is unchanged.
+
+#### Added (test mocks only)
+
+- `contracts/mocks/upgrade/`: example `name` / `symbol` migration for proxies upgraded from v3.2.0 (`CMTATV33TokenAttributeMigration`, `CMTATStandardUpgradeableV33MigrationMock`, `CMTATUpgradeableSnapshotV33MigrationMock`). **Not audited and not part of the release**; `migrateFromV32()` has no access control and must be called in the upgrade transaction.
+- `SnapshotEngineRecorderMock`: counts `operateOnTransfer` callbacks.
+
+### Testing
+
+#### Added
+
+- **Upgrade test from a real v3.2.0 proxy** (`test/proxy/general/UpgradeFromV320.test.js`, 8 tests). The v3.2.0 `CMTATUpgradeable` and `DocumentEngineMock` bytecode, compiled from the tag with its own locked dependencies, is stored in `test/proxy/general/fixtures/v3.2.0`. It checks that a plain upgrade empties `name` / `symbol`, that the example migration restores them and clears the legacy slots, that the rest of the state is preserved, that documents of the old DocumentEngine are no longer returned, and that the Standard variant stops calling the SnapshotEngine while the Snapshot variant keeps it. New example mocks (not audited): `CMTATV33TokenAttributeMigration`, `CMTATStandardUpgradeableV33MigrationMock`, `CMTATUpgradeableSnapshotV33MigrationMock` (`contracts/mocks/upgrade/`) and `SnapshotEngineRecorderMock`.
+- RuleEngine dispatch tests (`RuleEngineSpenderDispatchCommon.js`, standard and proxy) now pin the 4-argument `transferred` routing, with the operator as `spender`, for `mint`, `batchMint`, `burn`, `batchBurn`, `burnFrom`, self `burn(uint256)`, `crosschainMint`, `crosschainBurn` and the minter `batchTransfer` (9 new tests per suite). The suite header comment and `RuleEngineSpenderRecorderMock` NatSpec, which still described mint / burn on the 3-argument overload, were corrected.
+
+#### Changed
+
+- The full suite runs 6,134 tests (87 pending), all passing; test counts updated in `README.md`, `doc/README.md`, `CLAUDE.md` and `AGENTS.md`.
+
+### Documentation
+
+#### Added
+
+- [doc/technical/breaking-changes.md](./doc/technical/breaking-changes.md): breaking changes (ERC-7201 storage and external engines) from v3.2.0 and from the audited v3.0.0 to v3.3.0, with migration steps and checklists. It includes two items not listed before: SnapshotEngine removed from the Standard, UUPS, ERC-1363, ERC-7551 and Allowlist variants, and mint / burn reaching the RuleEngine on the 4-argument `transferred`.
+- CHANGELOG: new `breaking change` category, the `3.3.0` summary entry, and **Breaking change** sections for v3.3.0, v3.2.0, v3.1.0 and v3.0.0.
+- `doc/technical/ruleengine-integration.md`: RuleEngine breaking changes per release (v2.3.0, v3.0.0 – v3.3.0).
+- `doc/technical/upgradeable.md`: warning that upgrading a deployed token is risky and not recommended unless necessary, and an "Upgrading an existing proxy to v3.3.0" section.
+- `doc/technical/terms.md`: analysis of why the Light variant has no `terms` (missing since v3.0.0) and plan to add a core `TermsModule` in v3.4.0.
+- Security: [Olympix BugPoCer](./doc/security/tools/BugPoCer) scan report and maintainer feedback (scan of v3.2.0, triaged on v3.3.0-rc2 / rc3, fix commit per finding), added to [AUDIT.md](./doc/security/AUDIT.md) and to the security-tools table of `doc/README.md`.
+
+#### Changed
+
+- RuleEngine overload routing documented where engine authors look first: `IRuleEngine.transferred` NatSpec (which overload is called for each operation), the `IRuleEngine` section of `doc/README.md` and `ruleengine-integration.md` (both overloads are mandatory; route them to one internal function).
+- RuleEngine chapter of `doc/README.md` reworked: per-entrypoint `transferred` dispatch table, `forcedTransfer` bypass, `msg.sender` requirement for the token check, trust and reentrancy invariant for the unguarded variants, `IRuleEngine` interface-id convention, restriction-code reservation, caveats for rules set directly on the token, updated RuleEngine / Rules version table (RuleEngine v3.0.0-rc6, Rules v0.6.0, audit planned) and corrected Rules table. Absolute local links removed from `erc-3643-implementation.md`; RuleEngine flow schema regenerated; test count updated to 6,134.
+- `doc/technical/ruleengine-integration.md` and `doc/modules/controllers/validationRuleEngine.md`: trust model for the variants without reentrancy guard (the RuleEngine, its rules and every contract they call are trusted; stateful rules may write their own storage but must not make state-changing external calls outside the trusted set; a reverting `view` call still blocks transfers), and the token check in the engine must use `msg.sender`.
+- Light variant: every page describing it now states that it has no `terms`, a mandatory CMTAT framework functionality (planned for v3.4.0). `tokenId` is documented as **not** mandatory in the CMTAT framework (`doc/technical/cmtat-specification-analyse.md`, `doc/README.md`).
+- Absolute local links replaced by repository-relative links in `doc/technical/ruleengine-integration.md` and `doc/technical/erc-3643-implementation.md`; RuleEngine flow schema (`engine-ruleengine-base`) regenerated with the 3-argument / 4-argument dispatch.
+- `3.3.0 - rc0` and `rc2` entries: added pointers to the breaking changes (RuleEngine operator propagation, `name` / `symbol` migration).
+
+### Dependencies
+
+- OpenZeppelin contracts and contracts-upgradeable [`v5.7.0`](https://github.com/OpenZeppelin/openzeppelin-contracts/releases/tag/v5.7.0) (npm packages and the `lib/openzeppelin-contracts-upgradeable` submodule, previously `v5.6.1`). Every OpenZeppelin file CMTAT imports was compared with 5.6.1. The only API change used by CMTAT is the deprecation of `EnumerableSet.at` (its name clashes with a future Solidity keyword): `HolderListModule` now calls the equivalent `pos`. The 5.7.0 `EIP712` change (no storage fallback for `name` / `version` longer than 31 bytes) does not apply: CMTAT uses `EIP712Upgradeable` (through `ERC20PermitUpgradeable`), which keeps them in storage and only changed in comments. No change to the OpenZeppelin ERC-7201 storage used by CMTAT, and no change in deployed bytecode size. The remaining compiler warnings `"at" will be promoted to keyword` come from OpenZeppelin's own `EnumerableSet.sol`.
+- `lib/openzeppelin-contracts-upgradeable` submodule moved to `v5.7.0`, with its nested `lib/openzeppelin-contracts` aligned to the pinned commit.
+- Lockfile refresh for Dependabot #400 – #404: `axios` 1.20.0, `ip-address` 10.7.3, `js-yaml` 4.3.2 / 3.15.2, `brace-expansion` 1.1.21. The `npm` devDependency moves to 12.2.0 (bundled `tar` 7.5.22); #392 – #394 were already covered by the `npm` 12 bump of rc3.
+
 ## 3.3.0 - rc3
 
 > **Note:** This version has not been audited.
+>
+> Commit: `658672f190d56d3f61663a7d6d51962b8980df70`
 
 Main theme: remediation of the **Nethermind AuditAgent v3.3.0-rc2** automated review. Maintainer triage outcome: **12 fixed in code · 8 accepted as design (5 documented) · 4 rejected**; no open item. Full per-finding dispositions in [audit_agent_report_v3.3.0-rc2-feedback.md](./doc/security/tools/nethermind-audit-agent/v3.3.0-rc2/audit_agent_report_v3.3.0-rc2-feedback.md).
 
@@ -152,7 +279,7 @@ Commit: `35d8940b40943828c5ea407dc6b22d559d92e4ae`
 
 #### Security
 
-- **Upgrade migration required for existing proxies (`name`/`symbol` storage move).** Because `name`/`symbol` were moved to a new ERC-7201 slot (`CMTAT.storage.TokenAttributeModule`), upgrading an **already-deployed** CMTAT proxy from a pre-3.3 layout to this version leaves that new slot empty — `name()` / `symbol()` return empty strings until re-set. Any such upgrade MUST run a one-time `reinitializer` that copies the previous `name` / `symbol` into the new slot. Fresh deployments are unaffected (`decimals` stays in place either way).
+- **Upgrade migration required for existing proxies (`name`/`symbol` storage move).** Because `name`/`symbol` were moved to a new ERC-7201 slot (`CMTAT.storage.TokenAttributeModule`), upgrading an **already-deployed** CMTAT proxy from a pre-3.3 layout to this version leaves that new slot empty — `name()` / `symbol()` return empty strings until re-set. Any such upgrade MUST run a one-time `reinitializer` that copies the previous `name` / `symbol` into the new slot. Fresh deployments are unaffected (`decimals` stays in place either way). Migration procedure: see **3.3.0 → Breaking change** and [doc/technical/breaking-changes.md](./doc/technical/breaking-changes.md).
 -  **`HolderListModule` — the holder set grows without bound and `holders()` is unbounded.** On a token whose transfers are not gated by an allowlist or a rule engine, anyone can inflate `holderCount()` by dusting fresh addresses; the spammer pays the two storage writes, but `holders()` eventually runs out of gas and becomes unusable. It is an off-chain (`eth_call`) getter: on-chain callers, and any caller that cannot bound the holder count, MUST use `holdersInRange(fromIndex, toIndex)` with a bounded window. Deployments expecting a large or adversarial holder set should pair the module with an allowlist.
 - ℹ**`HolderListModule` — `holdersInRange` windows are not a consistent snapshot.** The underlying `EnumerableSet` is unordered and a removal moves the last holder into the freed slot, so windows read across several blocks may miss a holder or return one twice. Read the whole list at a fixed block if a consistent view is required.
 
@@ -343,6 +470,7 @@ Commit: this version has been released with the wrong commit
   - `burnFrom` now preserves and propagates `_msgSender()` through the transfer-compliance hook so spender-aware RuleEngine checks are enforced for allowance-based delegated burns.
   - `crosschainBurn` now follows the same operator propagation model for consistency with `burnFrom`.
   - `mint` and `crosschainMint` now also propagate `_msgSender()` so spender-aware RuleEngine checks apply consistently to operator-initiated mint flows.
+  - Note (added in 3.3.0): this also applies to the minter `batchTransfer`, and it changes which `transferred` overload the RuleEngine receives (4-argument instead of 3-argument). It is a breaking change for external engines; see **3.3.0 → Breaking change**.
 - **ERC-7943 interface update** — breaking changes aligned with the updated ERC-7943 specification:
   - `canTransact(address)` removed; replaced by `canSend(address)` and `canReceive(address)` in `ValidationModule`, implementing the new `IERC7943FungibleSendReceiveCheck` interface. Both currently delegate to the same underlying eligibility check (frozen status + allowlist), but allow future asymmetric access policies.
   - `ERC7943CannotTransact` error removed; replaced by directional errors `ERC7943CannotSend` (emitted when a sender, spender, or burn source is blocked) and `ERC7943CannotReceive` (emitted when a recipient or mint target is blocked), defined in `IERC7943FungibleSendReceiveError`.
@@ -427,6 +555,12 @@ Commit: `49544f4de1993008acfc9e848d0bf03bd31d8579`
 
 ### Smart contract
 
+#### Breaking change
+
+- **Storage — DebtEngine address moved to a new namespace.** The engine address left `CMTAT.storage.DebtModule` (it was the trailing `_debtEngine` field of `DebtModuleStorage`) for the new `CMTAT.storage.DebtEngineModule` (`0xcd6e7f8fdfee4389651c62f4d8dd0b8f0f4b97b1582a8419b0c53664203c6d00`), and DebtEngine support moved from the Debt variant to the dedicated DebtEngine variant. A v3.1.0 Debt proxy that used a DebtEngine loses access to it after the upgrade; deploy or upgrade to the DebtEngine variant and call `setDebtEngine` again. The on-chain debt data (`_debt`, `_creditEvents`) stays in place.
+- **External engine — RuleEngine interface split.** `IRuleEngine` no longer extends `IERC1404Extend`; it extends `IERC165` instead, so an engine must implement `supportsInterface`. The ERC-1404 functions moved to the new `IRuleEngineERC1404` (`IERC1404Extend` + `IRuleEngine`), which an engine must implement when the token exposes ERC-1404. The functions called by the token (`transferred`, `canTransfer`, `canTransferFrom`, `detectTransferRestriction*`, `messageForTransferRestriction`) keep their signatures.
+- **External engine — initialization.** DocumentEngine and SnapshotEngine are no longer constructor / `initialize` parameters ([#343](https://github.com/CMTA/CMTAT/issues/343)); set them after deployment with `setDocumentEngine` / `setSnapshotEngine`.
+
 #### Added
 
 - Support of **ERC-7943** ([#337](https://github.com/CMTA/CMTAT/issues/337)):
@@ -492,6 +626,10 @@ Known issue for this release
 - [Operator/Spender Identity Lost in RuleEngine Hooks (burn/mint/cross-chain)](https://github.com/CMTA/CMTAT/issues/376)(Informational)
 - [setAddressFrozen(address(0)) should be rejected](https://github.com/CMTA/CMTAT/issues/372)
 
+**Breaking change**
+
+- None. The storage layout is unchanged: the new `CCIPModule` uses its own namespace (`CMTAT.storage.CCIPModule`), and the terms struct was renamed from `Terms` to `CMTATTerms` with the same fields. The external engine interfaces are unchanged.
+
 **Fixed**
 
 - [Misleading NatSpec Comments](https://github.com/CMTA/CMTAT/issues/330)
@@ -556,6 +694,21 @@ Known issues for this release:
 Difference with v.3.0.0 rc version:
 - Improved comments and documentation
 - See changelogs of the rc versions for details.
+
+**Breaking change**
+
+Compared with the v2.x series. There is no upgrade path from a v2.x proxy to v3.0.0.
+
+- **Storage — ERC-7201 namespaces redesigned.**
+  - Removed: `AuthorizationModule` (AuthorizationEngine), `BaseModule` (`tokenId` / `terms` / `information`), `DocumentModule`, `SnapshotModuleBase` (in-contract snapshots) and `ValidationModuleInternal` (RuleEngine address).
+  - Replaced by new namespaces: `ExtraInformationModule` (`terms` becomes a document: name, uri, hash, last modification), `DocumentEngineModule`, `SnapshotEngineModule`, `ValidationModuleRuleEngine`; new `AllowlistModuleInternal`, `ERC20EnforcementModule` and `ERC7551Module`.
+  - `PauseModule` moved to a new slot (in v2.5.x it shared the `ERC20BaseModule` slot), `ERC20BaseModule` now also stores `name` / `symbol`, and `DebtModuleStorage` was reordered (debt data and credit events before the DebtEngine address).
+- **External engines.**
+  - AuthorizationEngine removed.
+  - RuleEngine: `operateOnTransfer` (ERC-1404 wrapper) replaced by the ERC-3643 `transferred(spender, from, to, value)` callback plus the ERC-7551 / ERC-3643 compliance views and `IERC1404Extend`.
+  - SnapshotEngine introduced: snapshots are no longer computed in the token, and v2.x snapshot history is not carried over.
+  - DocumentEngine (`IERC1643`): `string` document names and a `Document` struct return instead of `bytes32` names and flat values.
+  - DebtEngine: `debt()` / `creditEvents()` return the new `ICMTATDebt` / `ICMTATCreditEvents` structs.
 
 Main changes with the last audited release (v2.3.0):
 

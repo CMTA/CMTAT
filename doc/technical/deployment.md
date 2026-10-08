@@ -13,7 +13,7 @@ Deployment contracts are in `contracts/deployment/`. Each feature set comes in b
 | | | Upgradeable | `CMTATUpgradeableERC1363` |
 | **Permit** | Standard + ERC-2612 Permit + ERC-6357 Multicall (no ERC-2771) | Standalone | `CMTATStandalonePermit` |
 | | | Upgradeable | `CMTATUpgradeablePermit` |
-| **Light** | Core modules only (no extensions) | Standalone | `CMTATStandaloneLight` |
+| **Light** | Core modules only (no extensions, no `terms`: not fully CMTAT-framework conformant) | Standalone | `CMTATStandaloneLight` |
 | | | Upgradeable | `CMTATUpgradeableLight` |
 | **Debt** | Standard + DebtModule (no ERC-2771, no ERC20CrossChain) | Standalone | `CMTATStandaloneDebt` |
 | | | Upgradeable | `CMTATUpgradeableDebt` |
@@ -47,6 +47,8 @@ Use `CMTATUpgradeableUUPS` for a UUPS proxy. The upgrade logic is in the impleme
 ## Light Version
 
 Includes only core modules: mint, burn, freeze, pause. No extensions (no documents, no snapshots, no partial freeze). Adds `forcedBurn` so the admin can burn from frozen addresses (since `ERC20EnforcementModule` with `forcedTransfer` is not included).
+
+> **CMTAT framework:** Light does not include `terms` (reference to legally required documentation), which is a **mandatory** functionality of the CMTAT framework. A Light token is therefore not fully conformant with the framework; use another variant (e.g. Standard) if conformance is required. Adding `terms` to Light is planned for v3.4.0, see [technical/terms.md](./terms.md).
 
 ## ERC-1363
 

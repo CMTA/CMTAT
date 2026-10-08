@@ -58,13 +58,13 @@ abstract contract HolderListModule is ERC20Upgradeable, IHolderListModule {
     * @inheritdoc IHolderListModule
     * @dev The bound is checked here so that an out-of-range index reverts with
     * {CMTAT_HolderListModule_IndexOutOfBounds} rather than with the `Panic(0x32)` that
-    * {EnumerableSet-at} raises on an out-of-bounds array access.
+    * {EnumerableSet-pos} raises on an out-of-bounds array access.
     */
     function holderByIndex(uint256 index) public view virtual returns (address) {
         HolderListModuleStorage storage $ = _getHolderListModuleStorage();
         uint256 holderCountLocal = $._holders.length();
         require(index < holderCountLocal, CMTAT_HolderListModule_IndexOutOfBounds(index, holderCountLocal));
-        return $._holders.at(index);
+        return $._holders.pos(index);
     }
 
     /**
@@ -87,7 +87,7 @@ abstract contract HolderListModule is ERC20Upgradeable, IHolderListModule {
         require(toIndex <= holderCountLocal, CMTAT_HolderListModule_IndexOutOfBounds(toIndex, holderCountLocal));
         window = new address[](toIndex - fromIndex);
         for (uint256 i = 0; i < window.length; ++i) {
-            window[i] = $._holders.at(fromIndex + i);
+            window[i] = $._holders.pos(fromIndex + i);
         }
     }
 

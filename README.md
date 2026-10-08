@@ -63,7 +63,7 @@ CMTAT is used in production by major financial institutions including **UBS**, *
 | Equities (Germany / eWpG) | CMTAT ERC-7551 |
 | Debt / Bonds | CMTAT Debt |
 | Debt / Bonds (external debt engine) | CMTAT DebtEngine |
-| Stablecoins | CMTAT Light |
+| Stablecoins | CMTAT Light (no `terms`, which the CMTAT framework requires; planned for v3.4.0, see [terms](./doc/technical/terms.md)) |
 | Allowlist / Whitelist | CMTAT Allowlist or CMTAT Standard with RuleEngine |
 | Permit + Multicall | CMTAT Permit |
 | Payable token / DeFi callbacks | CMTAT ERC-1363 |
@@ -185,7 +185,7 @@ The DvP (Delivery versus Payment) smart contract (DVP.sol) interacts with an Ass
 
 ## Security
 
-CMTAT has been audited by [ABDK](https://abdk.consulting) (v1.0, v2.3.0) and [Halborn](https://www.halborn.com) (v3.0.0), with ~99% test coverage across 5,626 automated tests.
+CMTAT has been audited by [ABDK](https://abdk.consulting) (v1.0, v2.3.0) and [Halborn](https://www.halborn.com) (v3.0.0), with ~99% test coverage across 6,134 automated tests.
 
 > **WARNING — audit status.** Only **v3.0.0** has undergone a formal external security audit (Halborn). The subsequent releases **v3.1.0, v3.2.0 and v3.3.0 have NOT been formally audited**; they have only been reviewed with static analyzers ([Slither](https://github.com/crytic/slither), [Aderyn](https://github.com/Cyfrin/aderyn)) and AI-assisted auditing tools ([Nethermind Audit Agent](https://auditagent.nethermind.io)), which are **not** a substitute for a formal audit. Anyone deploying these versions in production **must perform their own independent security assessment and audit** before relying on them.
 
@@ -265,7 +265,7 @@ Additional resources:
 
 Focused, subsystem-level guides live in [`doc/technical/`](./doc/technical/):
 
-- **Architecture & operations** — [Deployment variants](./doc/technical/deployment.md) · [Lifecycle: pause & deactivation](./doc/technical/lifecycle.md) · [Access control (roles)](./doc/technical/access-control.md)
+- **Architecture & operations** — [Deployment variants](./doc/technical/deployment.md) · [Lifecycle: pause & deactivation](./doc/technical/lifecycle.md) · [Access control (roles)](./doc/technical/access-control.md) · [Breaking changes (v3.0.0 / v3.2.0 → v3.3.0)](./doc/technical/breaking-changes.md)
 - **Standards** — [ERC-3643 implementation](./doc/technical/erc-3643-implementation.md) · [ERC-7551 (eWpG)](./doc/technical/erc7551.md) · [ERC-7943 (uRWA) integration](./doc/technical/erc-7943-uRWA-integration.md) · [Documents (ERC-1643)](./doc/technical/document.md) · [RuleEngine (ERC-1404)](./doc/technical/ruleengine-integration.md)
 - **Features** — [Holder list](./doc/technical/holder-list.md) · [Snapshots](./doc/technical/snapshot.md) · [Debt & credit events](./doc/technical/debt.md) · [Permit & Multicall](./doc/technical/permit-multicall.md) · [Cross-chain bridge integration](./doc/technical/cross-chain-bridge-integration.md) · [Spend allowance event](./doc/technical/allowance-spend-event.md)
 - **Use cases & porting** — [Stablecoins](./doc/technical/stablecoin.md) · [CMTAT specification vs implementation](./doc/technical/cmtat-specification-analyse.md) · [Porting to another blockchain](https://github.com/CMTA/CMTAT-equivalency-assessment)
