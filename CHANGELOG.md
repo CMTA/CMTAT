@@ -112,7 +112,7 @@ This section covers the ERC-7201 storage and the external engines. Public API ch
 
 ### Dependencies
 
-- OpenZeppelin contracts and contracts-upgradeable `v5.6.1`.
+- OpenZeppelin contracts and contracts-upgradeable [`v5.7.0`](https://github.com/OpenZeppelin/openzeppelin-contracts/releases/tag/v5.7.0) (npm packages and the `lib/openzeppelin-contracts-upgradeable` submodule, previously `v5.6.1`). Every OpenZeppelin file CMTAT imports was compared with 5.6.1. The only API change used by CMTAT is the deprecation of `EnumerableSet.at` (its name clashes with a future Solidity keyword): `HolderListModule` now calls the equivalent `pos`. The 5.7.0 `EIP712` change (no storage fallback for `name` / `version` longer than 31 bytes) does not apply: CMTAT uses `EIP712Upgradeable` (through `ERC20PermitUpgradeable`), which keeps them in storage and only changed in comments. No change to the OpenZeppelin ERC-7201 storage used by CMTAT, and no change in deployed bytecode size. The remaining compiler warnings `"at" will be promoted to keyword` come from OpenZeppelin's own `EnumerableSet.sol`.
 - Solidity compiler `0.8.36` (Hardhat and Foundry configuration).
 
 ## 3.3.0 - rc3
