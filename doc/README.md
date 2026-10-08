@@ -2115,7 +2115,7 @@ The following privileged operations are intentionally post-deactivation-enabled:
 - `forcedTransfer` and related privileged enforcement paths (`ERC20EnforcementModule` / `ERC20EnforcementERC7551Module`)
 - `forcedBurn` (Light / `CMTATBaseCore`) — the Light variant's enforcement burn
 
-This is intentional: `forcedTransfer` / `forcedBurn` move tokens through the ERC-20 `_update` primitive directly (the enforcer's regulatory tool), so they bypass the pause/deactivation validation applied to holder transfers and standard issuance. Per [ERC-8343](../ERCSpecification/draft-erc-8343-deactivation.md) a named privileged operation may remain available after deactivation (e.g. to sweep a frozen or migrated position). Because `DEFAULT_ADMIN_ROLE` can hold these roles, it can still move tokens after deactivation — protect that key with a multisig/timelock.
+This is intentional: `forcedTransfer` / `forcedBurn` move tokens through the ERC-20 `_update` primitive directly (the enforcer's regulatory tool), so they bypass the pause/deactivation validation applied to holder transfers and standard issuance. Per [ERC-8343](./ERCSpecification/draft-erc-8343-deactivation.md) a named privileged operation may remain available after deactivation (e.g. to sweep a frozen or migrated position). Because `DEFAULT_ADMIN_ROLE` can hold these roles, it can still move tokens after deactivation — protect that key with a multisig/timelock.
 
 See also [technical/lifecycle.md](./technical/lifecycle.md) for the consolidated pause/deactivation reference (state machine, what each state blocks, ERC-8343).
 
