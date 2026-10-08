@@ -48,7 +48,7 @@ Custom changelog tag: `Dependencies`, `Documentation`, `Testing`
 
 > **Note:** This version has not been audited. It was reviewed with automated tools (Nethermind AuditAgent, Olympix BugPoCer, Slither, Aderyn) and a Sequent pre-verification review; see [AUDIT.md](./doc/security/AUDIT.md).
 
-Summary of the main changes between **v3.2.0** and **v3.3.0**. Per-item details, tests and documentation are in the release-candidate entries below (`3.3.0 - rc0` to `rc3`).
+Summary of the main changes between **v3.2.0** and **v3.3.0**. Per-item details, tests and documentation are in the release-candidate entries below (`3.3.0 - rc0` to `rc4`).
 
 ### Smart contract
 
@@ -99,25 +99,80 @@ This section covers the ERC-7201 storage and the external engines. Public API ch
 
 ### Testing
 
-- **Upgrade test from a real v3.2.0 proxy** (`test/proxy/general/UpgradeFromV320.test.js`, 8 tests). The v3.2.0 `CMTATUpgradeable` and `DocumentEngineMock` bytecode, compiled from the tag with its own locked dependencies, is stored in `test/proxy/general/fixtures/v3.2.0`. It checks that a plain upgrade empties `name` / `symbol`, that the example migration restores them and clears the legacy slots, that the rest of the state is preserved, that documents of the old DocumentEngine are no longer returned, and that the Standard variant stops calling the SnapshotEngine while the Snapshot variant keeps it. New example mocks (not audited): `CMTATV33TokenAttributeMigration`, `CMTATStandardUpgradeableV33MigrationMock`, `CMTATUpgradeableSnapshotV33MigrationMock` (`contracts/mocks/upgrade/`) and `SnapshotEngineRecorderMock`.
-- RuleEngine dispatch tests (`RuleEngineSpenderDispatchCommon.js`, standard and proxy) now pin the 4-argument `transferred` routing, with the operator as `spender`, for `mint`, `batchMint`, `burn`, `batchBurn`, `burnFrom`, self `burn(uint256)`, `crosschainMint`, `crosschainBurn` and the minter `batchTransfer` (9 new tests per suite). The suite header comment and `RuleEngineSpenderRecorderMock` NatSpec, which still described mint / burn on the 3-argument overload, were corrected.
+- Tests pin the RuleEngine `transferred` routing of every supply path and exercise the upgrade of a real v3.2.0 proxy to v3.3.0 (see `3.3.0 - rc4`). Full suite: 6,134 passing.
 
 ### Documentation
 
-- Breaking changes: new [doc/technical/breaking-changes.md](./doc/technical/breaking-changes.md) (v3.2.0 → v3.3.0 and v3.0.0 → v3.3.0), a RuleEngine breaking-change section per release in `doc/technical/ruleengine-integration.md`, and an "Upgrading an existing proxy to v3.3.0" section in `doc/technical/upgradeable.md`.
-- RuleEngine overload routing documented where engine authors look first: `IRuleEngine.transferred` NatSpec, the `IRuleEngine` section of `doc/README.md` and `ruleengine-integration.md` (both overloads are mandatory; route them to one internal function).
-- RuleEngine chapter of `doc/README.md` reworked: per-entrypoint `transferred` dispatch table, `forcedTransfer` bypass, `msg.sender` requirement for the token check, trust and reentrancy invariant for the unguarded variants, `IRuleEngine` interface-id convention, restriction-code reservation, caveats for rules set directly on the token, updated RuleEngine / Rules version table (RuleEngine v3.0.0-rc6, Rules v0.6.0, audit planned) and corrected Rules table. Absolute local links removed from `erc-3643-implementation.md`; RuleEngine flow schema regenerated; test count updated to 6,134.
+- Breaking changes and upgrade path: [doc/technical/breaking-changes.md](./doc/technical/breaking-changes.md), `doc/technical/upgradeable.md`, and a RuleEngine breaking-change section per release in `doc/technical/ruleengine-integration.md`.
 - Maintainer feedback for the Nethermind AuditAgent v3.3.0-rc2, Olympix BugPoCer, Sequent, Slither and Aderyn reviews ([AUDIT.md](./doc/security/AUDIT.md)).
 - ERC specification analyses (ERC-1404, ERC-1643, ERC-8343), the test catalogue `doc/test/Test.md`, and technical notes (allowance `Spend` event, deactivation, RuleEngine authoring obligations).
 
 ### Dependencies
 
-- OpenZeppelin contracts and contracts-upgradeable [`v5.7.0`](https://github.com/OpenZeppelin/openzeppelin-contracts/releases/tag/v5.7.0) (npm packages and the `lib/openzeppelin-contracts-upgradeable` submodule, previously `v5.6.1`). Every OpenZeppelin file CMTAT imports was compared with 5.6.1. The only API change used by CMTAT is the deprecation of `EnumerableSet.at` (its name clashes with a future Solidity keyword): `HolderListModule` now calls the equivalent `pos`. The 5.7.0 `EIP712` change (no storage fallback for `name` / `version` longer than 31 bytes) does not apply: CMTAT uses `EIP712Upgradeable` (through `ERC20PermitUpgradeable`), which keeps them in storage and only changed in comments. No change to the OpenZeppelin ERC-7201 storage used by CMTAT, and no change in deployed bytecode size. The remaining compiler warnings `"at" will be promoted to keyword` come from OpenZeppelin's own `EnumerableSet.sol`.
+- OpenZeppelin contracts and contracts-upgradeable [`v5.7.0`](https://github.com/OpenZeppelin/openzeppelin-contracts/releases/tag/v5.7.0) (no storage or bytecode-size change for CMTAT; see `3.3.0 - rc4`).
 - Solidity compiler `0.8.36` (Hardhat and Foundry configuration).
+
+## 3.3.0 - rc4
+
+> **Note:** This version has not been audited.
+
+Main theme: **no functional change to the token.** This release documents the breaking changes and the upgrade path from v3.2.0, reworks the RuleEngine integration documentation, adds tests that pin the RuleEngine dispatch and the v3.2.0 → v3.3.0 upgrade, and upgrades OpenZeppelin to v5.7.0.
+
+### Smart contract
+
+#### Changed
+
+- **`HolderListModule`** uses `EnumerableSet.pos` instead of `EnumerableSet.at`, deprecated in OpenZeppelin 5.7.0 because its name clashes with a future Solidity keyword. `at` only forwards to `pos`: no behaviour change.
+- **`IRuleEngine.transferred` NatSpec** (comments only): documents which overload the token calls for each operation since v3.3.0, that both overloads are mandatory (the 3-argument one is inherited from `IERC3643IComplianceContract`), that they should be routed to one internal function, and that rules on `spender` also apply to minters, burners and bridges.
+- Deployed bytecode size of every deployment variant is unchanged.
+
+#### Added (test mocks only)
+
+- `contracts/mocks/upgrade/`: example `name` / `symbol` migration for proxies upgraded from v3.2.0 (`CMTATV33TokenAttributeMigration`, `CMTATStandardUpgradeableV33MigrationMock`, `CMTATUpgradeableSnapshotV33MigrationMock`). **Not audited and not part of the release**; `migrateFromV32()` has no access control and must be called in the upgrade transaction.
+- `SnapshotEngineRecorderMock`: counts `operateOnTransfer` callbacks.
+
+### Testing
+
+#### Added
+
+- **Upgrade test from a real v3.2.0 proxy** (`test/proxy/general/UpgradeFromV320.test.js`, 8 tests). The v3.2.0 `CMTATUpgradeable` and `DocumentEngineMock` bytecode, compiled from the tag with its own locked dependencies, is stored in `test/proxy/general/fixtures/v3.2.0`. It checks that a plain upgrade empties `name` / `symbol`, that the example migration restores them and clears the legacy slots, that the rest of the state is preserved, that documents of the old DocumentEngine are no longer returned, and that the Standard variant stops calling the SnapshotEngine while the Snapshot variant keeps it. New example mocks (not audited): `CMTATV33TokenAttributeMigration`, `CMTATStandardUpgradeableV33MigrationMock`, `CMTATUpgradeableSnapshotV33MigrationMock` (`contracts/mocks/upgrade/`) and `SnapshotEngineRecorderMock`.
+- RuleEngine dispatch tests (`RuleEngineSpenderDispatchCommon.js`, standard and proxy) now pin the 4-argument `transferred` routing, with the operator as `spender`, for `mint`, `batchMint`, `burn`, `batchBurn`, `burnFrom`, self `burn(uint256)`, `crosschainMint`, `crosschainBurn` and the minter `batchTransfer` (9 new tests per suite). The suite header comment and `RuleEngineSpenderRecorderMock` NatSpec, which still described mint / burn on the 3-argument overload, were corrected.
+
+#### Changed
+
+- The full suite runs 6,134 tests (87 pending), all passing; test counts updated in `README.md`, `doc/README.md`, `CLAUDE.md` and `AGENTS.md`.
+
+### Documentation
+
+#### Added
+
+- [doc/technical/breaking-changes.md](./doc/technical/breaking-changes.md): breaking changes (ERC-7201 storage and external engines) from v3.2.0 and from the audited v3.0.0 to v3.3.0, with migration steps and checklists. It includes two items not listed before: SnapshotEngine removed from the Standard, UUPS, ERC-1363, ERC-7551 and Allowlist variants, and mint / burn reaching the RuleEngine on the 4-argument `transferred`.
+- CHANGELOG: new `breaking change` category, the `3.3.0` summary entry, and **Breaking change** sections for v3.3.0, v3.2.0, v3.1.0 and v3.0.0.
+- `doc/technical/ruleengine-integration.md`: RuleEngine breaking changes per release (v2.3.0, v3.0.0 – v3.3.0).
+- `doc/technical/upgradeable.md`: warning that upgrading a deployed token is risky and not recommended unless necessary, and an "Upgrading an existing proxy to v3.3.0" section.
+- `doc/technical/terms.md`: analysis of why the Light variant has no `terms` (missing since v3.0.0) and plan to add a core `TermsModule` in v3.4.0.
+- Security: [Olympix BugPoCer](./doc/security/tools/BugPoCer) scan report and maintainer feedback (scan of v3.2.0, triaged on v3.3.0-rc2 / rc3, fix commit per finding), added to [AUDIT.md](./doc/security/AUDIT.md) and to the security-tools table of `doc/README.md`.
+
+#### Changed
+
+- RuleEngine overload routing documented where engine authors look first: `IRuleEngine.transferred` NatSpec, the `IRuleEngine` section of `doc/README.md` and `ruleengine-integration.md` (both overloads are mandatory; route them to one internal function).
+- RuleEngine chapter of `doc/README.md` reworked: per-entrypoint `transferred` dispatch table, `forcedTransfer` bypass, `msg.sender` requirement for the token check, trust and reentrancy invariant for the unguarded variants, `IRuleEngine` interface-id convention, restriction-code reservation, caveats for rules set directly on the token, updated RuleEngine / Rules version table (RuleEngine v3.0.0-rc6, Rules v0.6.0, audit planned) and corrected Rules table. Absolute local links removed from `erc-3643-implementation.md`; RuleEngine flow schema regenerated; test count updated to 6,134.
+- `doc/technical/ruleengine-integration.md` and `doc/modules/controllers/validationRuleEngine.md`: trust model for the variants without reentrancy guard (the RuleEngine, its rules and every contract they call are trusted; stateful rules may write their own storage but must not make state-changing external calls outside the trusted set; a reverting `view` call still blocks transfers), and the token check in the engine must use `msg.sender`.
+- Light variant: every page describing it now states that it has no `terms`, a mandatory CMTAT framework functionality (planned for v3.4.0). `tokenId` is documented as **not** mandatory in the CMTAT framework (`doc/technical/cmtat-specification-analyse.md`, `doc/README.md`).
+- Absolute local links replaced by repository-relative links in `doc/technical/ruleengine-integration.md` and `doc/technical/erc-3643-implementation.md`; RuleEngine flow schema (`engine-ruleengine-base`) regenerated with the 3-argument / 4-argument dispatch.
+- `3.3.0 - rc0` and `rc2` entries: added pointers to the breaking changes (RuleEngine operator propagation, `name` / `symbol` migration).
+
+### Dependencies
+
+- OpenZeppelin contracts and contracts-upgradeable [`v5.7.0`](https://github.com/OpenZeppelin/openzeppelin-contracts/releases/tag/v5.7.0) (npm packages and the `lib/openzeppelin-contracts-upgradeable` submodule, previously `v5.6.1`). Every OpenZeppelin file CMTAT imports was compared with 5.6.1. The only API change used by CMTAT is the deprecation of `EnumerableSet.at` (its name clashes with a future Solidity keyword): `HolderListModule` now calls the equivalent `pos`. The 5.7.0 `EIP712` change (no storage fallback for `name` / `version` longer than 31 bytes) does not apply: CMTAT uses `EIP712Upgradeable` (through `ERC20PermitUpgradeable`), which keeps them in storage and only changed in comments. No change to the OpenZeppelin ERC-7201 storage used by CMTAT, and no change in deployed bytecode size. The remaining compiler warnings `"at" will be promoted to keyword` come from OpenZeppelin's own `EnumerableSet.sol`.
+- `lib/openzeppelin-contracts-upgradeable` submodule moved to `v5.7.0`, with its nested `lib/openzeppelin-contracts` aligned to the pinned commit.
+- Lockfile refresh for Dependabot #400 – #404: `axios` 1.20.0, `ip-address` 10.7.3, `js-yaml` 4.3.2 / 3.15.2, `brace-expansion` 1.1.21. The `npm` devDependency moves to 12.2.0 (bundled `tar` 7.5.22); #392 – #394 were already covered by the `npm` 12 bump of rc3.
 
 ## 3.3.0 - rc3
 
 > **Note:** This version has not been audited.
+>
+> Commit: `658672f190d56d3f61663a7d6d51962b8980df70`
 
 Main theme: remediation of the **Nethermind AuditAgent v3.3.0-rc2** automated review. Maintainer triage outcome: **12 fixed in code · 8 accepted as design (5 documented) · 4 rejected**; no open item. Full per-finding dispositions in [audit_agent_report_v3.3.0-rc2-feedback.md](./doc/security/tools/nethermind-audit-agent/v3.3.0-rc2/audit_agent_report_v3.3.0-rc2-feedback.md).
 
