@@ -152,7 +152,7 @@ RuleEngine support depends on deployment inheritance:
 - RuleEngine-capable variants: Standard, Snapshot, ERC-7551, Debt, DebtEngine, Permit, UUPS, ERC-1363 and HolderList.
   Only **Standard, Snapshot and ERC-7551** wrap the `transferred` callback in a reentrancy guard. On the six others
   (Debt, DebtEngine, Permit, UUPS, ERC-1363 and HolderList), safety rests on the trust model: the RuleEngine, its rules **and every contract they call** are trusted,
-  and a rule's `transferred*` hooks must be `view`, or at least must not perform non-view external calls, so that every outbound call is a `STATICCALL` and cannot re-enter the token. See [validationRuleEngine.md](../modules/controllers/validationRuleEngine.md).
+  and a rule's `transferred*` hooks may update the rule's own storage, but must not make a state-changing external call (`CALL`) to a contract outside the trusted set; external reads (oracle, registry, price feed, token) should be `view` calls, which run as `STATICCALL` and cannot re-enter the token to change its state. Also, `view` does not mean harmless: a called contract that reverts, or a rule that reverts, still blocks the operation and also makes the token's `canTransfer*` / `detectTransferRestriction` views revert, so the contracts a rule calls are trusted for availability as well. See [validationRuleEngine.md](../modules/controllers/validationRuleEngine.md).
 
 Use deployment summary in [doc/SUMMARY.md](../SUMMARY.md) and deployment tables in [doc/README.md](../README.md) to select the correct variant.
 
