@@ -115,6 +115,10 @@ The CMTAT was initially designed for the digitalization of company shares. For S
 
 - Zand: CMTAT v3.0.0 was used by [Zand Trust](https://zandtrust.com/en) (a wholly-owned subsidiary of Zand Bank) to issue a stablecoin representing the UAE Dirham via [Taurus](https://www.taurushq.com)' infrastructure. See the stablecoin [smart contract here](https://etherscan.io/token/0xfc347c996bd66c1d92e2045c80b413ef3fc84a90).
 
+#### Commodities
+
+- In 2026, [Swissgrams](https://swissgrams.com/) (Swissgrams AG, Zug) used CMTAT for the smart contract of its tokenized gold, the SGG token: an ERC-20 token on Ethereum backed by physical gold coins of one troy ounce held with a Swiss vaulting provider.
+
 #### Tokenized market funds
 
 - In 2024, [UBS](https://www.ubs.com/global/en/investment-bank/tokenize.html) launched UBS USD Money Market Investment Fund Token (uMINT), a Money Market investment built on Ethereum distributed ledger technology. The tokenization arrangement for this fund utilizes CMTAT codebase to represent the fund smart contract, which forms part of the fund’s tokenized register of members. See [ubs.com - UBS Asset Management launches its first tokenized investment fund [ubs.com]](https://www.ubs.com/global/en/media/display-page-ndp/en-20241101-first-tokenized-investment-fund.html)
