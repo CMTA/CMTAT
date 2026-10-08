@@ -71,6 +71,12 @@ and are not part of the CMTAT release. They only illustrate the procedure:
 - `CMTATStandardUpgradeableV33MigrationMock` and `CMTATUpgradeableSnapshotV33MigrationMock` add
   `migrateFromV32()` (`reinitializer(2)`), which writes the values with `__TokenAttributeModule_init_unchained`.
 
+> **`migrateFromV32()` must be called in the upgrade transaction** (`ProxyAdmin.upgradeAndCall(proxy, implementation,
+> abi.encodeCall(migrateFromV32, ()))`, or `upgradeToAndCall` for UUPS). It has **no access control**: `reinitializer(2)`
+> only makes it callable once. If the upgrade is done without it, **anyone** can call it afterwards. That call would
+> overwrite a `name` / `symbol` set by the admin in the meantime with the v3.2.0 values, and would use up reinitializer
+> version 2. A migration written for production should either be called the same way or restrict its caller.
+
 Do not deploy them as they are: write the migration for your own target variant and reinitializer version, and have
 it reviewed or audited together with the new implementation. The `reinitializer` version `n` must be higher than any
 version the proxy has already used. Calling `setName` /

@@ -16,6 +16,7 @@ contract CMTATUpgradeableSnapshotV33MigrationMock is CMTATUpgradeableSnapshot, C
     constructor(address forwarderIrrevocable) CMTATUpgradeableSnapshot(forwarderIrrevocable) {}
 
     /// @notice One-time migration of `name` / `symbol` from the v3.2.0 storage layout.
+    /// @dev No access control: MUST be called through `ProxyAdmin.upgradeAndCall` in the upgrade transaction.
     function migrateFromV32() external reinitializer(2) {
         (string memory name_, string memory symbol_) = _takeLegacyTokenAttributes();
         __TokenAttributeModule_init_unchained(name_, symbol_);

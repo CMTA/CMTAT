@@ -15,8 +15,10 @@ pragma solidity ^0.8.24;
 * place in v3.3.0.
 *
 * The values are read on-chain, so the migration takes no argument and cannot be fed wrong values.
-* It must still run in the upgrade transaction (`upgradeToAndCall` / `ProxyAdmin.upgradeAndCall`), so
-* that the token never exposes an empty name. See doc/technical/breaking-changes.md (S1).
+* It must run in the upgrade transaction (`upgradeToAndCall` / `ProxyAdmin.upgradeAndCall`), so that
+* the token never exposes an empty name, and because the `migrateFromV32()` functions of the example
+* mocks have no access control: called later, anyone could run them and overwrite a name set by the
+* admin in the meantime. See doc/technical/breaking-changes.md (S1).
 */
 abstract contract CMTATV33TokenAttributeMigration {
     // keccak256(abi.encode(uint256(keccak256("CMTAT.storage.ERC20BaseModule")) - 1)) & ~bytes32(uint256(0xff))

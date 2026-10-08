@@ -8,7 +8,8 @@ import {CMTATV33TokenAttributeMigration} from "./CMTATV33TokenAttributeMigration
 /**
 * @title `CMTATStandardUpgradeable` with the v3.2.0 -> v3.3.0 `name` / `symbol` migration.
 * @dev EXAMPLE / TESTING ONLY - NOT AUDITED, do not deploy as is. Upgrade target for a v3.2.0 `CMTATUpgradeable` proxy.
-* Call {migrateFromV32} through `ProxyAdmin.upgradeAndCall` in the upgrade transaction.
+* {migrateFromV32} has no access control: it MUST be called through `ProxyAdmin.upgradeAndCall` in the
+* upgrade transaction.
 */
 contract CMTATStandardUpgradeableV33MigrationMock is CMTATStandardUpgradeable, CMTATV33TokenAttributeMigration {
     /// @custom:oz-upgrades-unsafe-allow constructor
