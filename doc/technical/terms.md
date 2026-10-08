@@ -241,7 +241,7 @@ function _migrateLegacyTerms() internal virtual;
 - It needs an internal hook in `TermsModule` to write the stored struct without touching `lastModified`, e.g.
   `_restoreTerms(CMTATTerms memory)`. That hook is also left out of the bytecode when unused.
 
-Ship a **reference upgrade implementation** in `contracts/mocks/upgrade/` (e.g. `CMTATUpgradeableStandardV34MigrationMock`)
+Ship an **example upgrade implementation** (test mock, not audited) in `contracts/mocks/upgrade/` (e.g. `CMTATUpgradeableStandardV34MigrationMock`)
 with a `reinitializer(n)` function that:
 
 - always migrates terms (`_migrateLegacyTerms()`);
@@ -389,7 +389,7 @@ not added to Light. Its slot (`E+0`) does not change.
   `deploymentUpgradeableLight.test.js`.
 - Light-specific tests: role gating with the role chosen in §4.7, initial terms from the constructor/`initialize`,
   `lastModified` set, `Terms` event.
-- **Storage relocation and migration tests** (the key guarantee), using the reference migration mock (§4.2.4):
+- **Storage relocation and migration tests** (the key guarantee), using the example migration mock (§4.2.4):
   1. Deploy a **v3.3.0** `CMTATUpgradeableStandard` (and an ERC-7551) proxy, set tokenId/terms/information, then
      upgrade to v3.4.0 with the migration `reinitializer`. Assert that `terms()` is identical **including the
      original `lastModified`**, `termsHash()` is unchanged, `tokenId()` / `information()` / `name()` / `symbol()`
@@ -431,7 +431,7 @@ not added to Light. Its slot (`E+0`) does not change.
 2. Add `TermsModule` (new namespace), move the code out of `ExtraInformationModule`, rename `_terms` → `_legacyTerms`,
    add `_migrateLegacyTerms` / `_restoreTerms`. Compile. Run the full suite with no behaviour change expected on fresh
    deployments (Light still untouched).
-3. Add the reference migration mock and the relocation tests (§4.9 items 1–5) **before** touching Light.
+3. Add the example migration mock and the relocation tests (§4.9 items 1–5) **before** touching Light.
 4. Add `TermsModule` to `CMTATBaseCore` and the Light deployments and fixtures, with the role and initializer chosen in §4.7.
 5. Light tests, then `Test.md`.
 6. Measure size, update docs and schemas, then the CHANGELOG.

@@ -3,9 +3,9 @@
 pragma solidity ^0.8.24;
 
 /**
-* @title Reference migration of `name` / `symbol` for proxies upgraded from CMTAT v3.2.0 or earlier.
+* @title Example migration of `name` / `symbol` for proxies upgraded from CMTAT v3.2.0 or earlier.
 * @dev
-* TESTING / REFERENCE ONLY - adapt and review before any production use.
+* EXAMPLE / TESTING ONLY - NOT AUDITED. Not part of the CMTAT release; do not deploy as is.
 *
 * In v3.3.0, `name` and `symbol` moved from `CMTAT.storage.ERC20BaseModule` to
 * `CMTAT.storage.TokenAttributeModule`. After a plain upgrade, `name()` / `symbol()` read the new,

@@ -7,7 +7,7 @@ import {CMTATV33TokenAttributeMigration} from "./CMTATV33TokenAttributeMigration
 
 /**
 * @title `CMTATUpgradeableSnapshot` with the v3.2.0 -> v3.3.0 `name` / `symbol` migration.
-* @dev TESTING / REFERENCE ONLY. Upgrade target for a v3.2.0 `CMTATUpgradeable` proxy that uses a
+* @dev EXAMPLE / TESTING ONLY - NOT AUDITED, do not deploy as is. Upgrade target for a v3.2.0 `CMTATUpgradeable` proxy that uses a
 * SnapshotEngine: in v3.3.0 the Standard variant no longer calls the SnapshotEngine, the Snapshot
 * variant does, and it reads the engine address from the unchanged `CMTAT.storage.SnapshotEngineModule`.
 */

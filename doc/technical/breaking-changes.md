@@ -5,6 +5,9 @@ This document details the **breaking changes** between:
 1. **v3.2.0 → v3.3.0** (previous release → current release);
 2. **v3.0.0 → v3.3.0** (last audited release, by Halborn → current release).
 
+> **Upgrading a deployed token is risky and not recommended unless it is necessary.** If you do upgrade, follow the
+> warning and checklist in [upgradeable.md](./upgradeable.md) in addition to this document.
+
 It uses the CHANGELOG definition of the `breaking change` tag: a change to the **ERC-7201 storage namespaces** or to
 the **external engines** (RuleEngine, SnapshotEngine, DocumentEngine, DebtEngine). These are the changes that can
 silently break an **upgraded proxy** or an **existing engine contract**. Public API changes (renamed functions,
@@ -59,7 +62,8 @@ signer (the `permit` domain uses the name).
 **Migration.** Restore the two values **in the same transaction** as the upgrade (`upgradeToAndCall` for UUPS,
 `ProxyAdmin.upgradeAndCall` for Transparent), by calling a `reinitializer(n)` function of the new implementation.
 
-A reference implementation is provided in `contracts/mocks/upgrade/`:
+An **example** is provided in `contracts/mocks/upgrade/`. These contracts are test mocks: they are **not audited**
+and are not part of the CMTAT release. They only illustrate the procedure:
 
 - `CMTATV33TokenAttributeMigration` reads `name` / `symbol` from their v3.2.0 location (`ERC20BaseModule` slots `+1`
   / `+2`) and clears those slots. Because the values are read on-chain, the migration takes no argument and cannot be
@@ -67,12 +71,14 @@ A reference implementation is provided in `contracts/mocks/upgrade/`:
 - `CMTATStandardUpgradeableV33MigrationMock` and `CMTATUpgradeableSnapshotV33MigrationMock` add
   `migrateFromV32()` (`reinitializer(2)`), which writes the values with `__TokenAttributeModule_init_unchained`.
 
-These contracts are mocks: review and adapt them (target variant, reinitializer version) before production use. The
-`reinitializer` version `n` must be higher than any version the proxy has already used. Calling `setName` /
+Do not deploy them as they are: write the migration for your own target variant and reinitializer version, and have
+it reviewed or audited together with the new implementation. The `reinitializer` version `n` must be higher than any
+version the proxy has already used. Calling `setName` /
 `setSymbol` after the upgrade also works, but leaves the token with an empty name between the two transactions.
 
-The procedure is tested against a real v3.2.0 proxy in `test/proxy/general/UpgradeFromV320.test.js`, which also
-checks S2 and S3 below.
+The example is exercised against a real v3.2.0 proxy in `test/proxy/general/UpgradeFromV320.test.js`, which also
+checks S2 and S3 below. Upgrading remains risky: do it only if necessary (see the warning in
+[upgradeable.md](./upgradeable.md)).
 
 #### 1.2.2 S2 — documents (all variants except Light)
 
@@ -189,7 +195,7 @@ engine is DocumentEngine v0.4.0.
    dispatch (E1), and make sure it does not call back into the token (E2).
 6. **Run the OpenZeppelin upgrades validation** (`validateUpgrade`) between the two implementations, and test the
    upgrade on a fork first. `test/proxy/general/UpgradeFromV320.test.js` shows the full sequence on a real v3.2.0
-   proxy.
+   proxy, using example (unaudited) migration mocks.
 
 ### 1.5 Public API changes (outside the tag)
 
