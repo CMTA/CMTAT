@@ -123,7 +123,7 @@ Main theme: **no functional change to the token.** This release documents the br
 #### Changed
 
 - **`HolderListModule`** uses `EnumerableSet.pos` instead of `EnumerableSet.at`, deprecated in OpenZeppelin 5.7.0 because its name clashes with a future Solidity keyword. `at` only forwards to `pos`: no behaviour change.
-- **`IRuleEngine.transferred` NatSpec** (comments only): documents which overload the token calls for each operation since v3.3.0, that both overloads are mandatory (the 3-argument one is inherited from `IERC3643IComplianceContract`), that they should be routed to one internal function, and that rules on `spender` also apply to minters, burners and bridges.
+- **`IRuleEngine.transferred` NatSpec** (comments only): documents which overload the token calls for each operation since v3.3.0 (the 3-argument one is inherited from `IERC3643IComplianceContract`), and that mint, burn and the minter transfer used the 3-argument overload up to v3.2.0.
 - Deployed bytecode size of every deployment variant is unchanged.
 
 #### Added (test mocks only)
@@ -155,7 +155,7 @@ Main theme: **no functional change to the token.** This release documents the br
 
 #### Changed
 
-- RuleEngine overload routing documented where engine authors look first: `IRuleEngine.transferred` NatSpec, the `IRuleEngine` section of `doc/README.md` and `ruleengine-integration.md` (both overloads are mandatory; route them to one internal function).
+- RuleEngine overload routing documented where engine authors look first: `IRuleEngine.transferred` NatSpec (which overload is called for each operation), the `IRuleEngine` section of `doc/README.md` and `ruleengine-integration.md` (both overloads are mandatory; route them to one internal function).
 - RuleEngine chapter of `doc/README.md` reworked: per-entrypoint `transferred` dispatch table, `forcedTransfer` bypass, `msg.sender` requirement for the token check, trust and reentrancy invariant for the unguarded variants, `IRuleEngine` interface-id convention, restriction-code reservation, caveats for rules set directly on the token, updated RuleEngine / Rules version table (RuleEngine v3.0.0-rc6, Rules v0.6.0, audit planned) and corrected Rules table. Absolute local links removed from `erc-3643-implementation.md`; RuleEngine flow schema regenerated; test count updated to 6,134.
 - `doc/technical/ruleengine-integration.md` and `doc/modules/controllers/validationRuleEngine.md`: trust model for the variants without reentrancy guard (the RuleEngine, its rules and every contract they call are trusted; stateful rules may write their own storage but must not make state-changing external calls outside the trusted set; a reverting `view` call still blocks transfers), and the token check in the engine must use `msg.sender`.
 - Light variant: every page describing it now states that it has no `terms`, a mandatory CMTAT framework functionality (planned for v3.4.0). `tokenId` is documented as **not** mandatory in the CMTAT framework (`doc/technical/cmtat-specification-analyse.md`, `doc/README.md`).

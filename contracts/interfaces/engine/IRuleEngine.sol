@@ -30,11 +30,6 @@ interface IRuleEngine is IERC7551Compliance, IERC3643IComplianceContract, IERC16
      *    {IERC3643IComplianceContract}, only for a direct `transfer`.
      *  Up to CMTAT v3.2.0, mint, burn and the minter transfer used the 3-argument overload.
      *
-     *  Both overloads are part of this interface and MUST enforce the same policy. Route them to a
-     *  single internal function (the 3-argument overload calling it with `spender = address(0)`), so
-     *  that a change in which overload the token calls cannot silently bypass a rule. Any rule on
-     *  `spender` also applies to minters, burners and bridges.
-     *
      *  WARNING - zero-value calls are permissionless. ERC-20 requires transfers of `0` to be
      *  treated as normal transfers, and OpenZeppelin's `_spendAllowance` consumes no allowance
      *  when `value == 0`. Any address can therefore call `transferFrom(victim, anyone, 0)` on the
