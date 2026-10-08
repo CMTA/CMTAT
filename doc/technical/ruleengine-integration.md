@@ -105,9 +105,17 @@ Overload reached by each operation (v3.3.0):
 | --- | --- | --- |
 | `transfer` | `address(0)` | 3-arg |
 | `transferFrom` | approved spender | 4-arg |
-| `mint` / `batchMint`, `crosschainMint` | operator | 4-arg |
-| `burn` / `batchBurn`, `burnFrom`, `burn(uint256)`, `crosschainBurn` | operator | 4-arg |
-| minter `batchTransfer` | operator | 4-arg |
+| `mint` / `batchMint`, `crosschainMint`, mint leg of `burnAndMint` | operator (`from == address(0)`) | 4-arg |
+| `burn` / `batchBurn`, `burnFrom`, `burn(uint256)`, `crosschainBurn`, burn leg of `burnAndMint` | operator (`to == address(0)`) | 4-arg |
+| minter `batchTransfer` (minter's own tokens) | minter, **`spender == from`** | 4-arg |
+| `forcedTransfer` (and `forcedBurn` on Light) | — | **not called** |
+
+This is the reference list of the paths that reach the engine; `doc/README.md` and the RuleEngine guide link here.
+Two paths reach the 4-arg overload with `spender == from`: the minter `batchTransfer` and a self-delegated
+`transferFrom(msg.sender, to, value)`. Rules that screen the spender screen the minter a second time on those paths.
+
+`forcedTransfer` moves tokens without calling the engine: stateful rules are not notified and observing rules are not
+consulted. This differs from ERC-3643 T-REX, whose `forcedTransfer` notifies the compliance contract.
 
 This routing is pinned by `test/common/ValidationModule/RuleEngineSpenderDispatchCommon.js`.
 
@@ -141,12 +149,19 @@ RuleEngine support depends on deployment inheritance:
 - RuleEngine-capable variants include chains inheriting `CMTATBaseRuleEngine` (directly or indirectly through higher-level bases).
 - Variants based on allowlist-only paths without RuleEngine module do not expose runtime RuleEngine configuration.
 - Light variant is intentionally reduced and does not provide full RuleEngine feature surface.
+- RuleEngine-capable variants: Standard, Snapshot, ERC-7551, Debt, DebtEngine, Permit, UUPS, ERC-1363 and HolderList.
+  Only **Standard, Snapshot and ERC-7551** wrap the `transferred` callback in a reentrancy guard. On the six others
+  (Debt, DebtEngine, Permit, UUPS, ERC-1363 and HolderList), safety rests on the trust model: the RuleEngine, its rules **and every contract they call** are trusted,
+  and a rule's `transferred*` hooks must be `view`, or at least must not perform non-view external calls, so that every outbound call is a `STATICCALL` and cannot re-enter the token. See [validationRuleEngine.md](../modules/controllers/validationRuleEngine.md).
 
 Use deployment summary in [doc/SUMMARY.md](../SUMMARY.md) and deployment tables in [doc/README.md](../README.md) to select the correct variant.
 
 ## Authoring Guidelines For RuleEngine Implementers
 
-1. Restrict `transferred(...)` to authorized token contracts.
+1. Restrict `transferred(...)` to authorized token contracts, comparing the raw **`msg.sender`** and not an ERC-2771
+   `_msgSender()`: the token never calls the engine through a forwarder, and a forwarder-resolved sender would let the
+   forwarder impersonate the token and drive stateful rules without any token movement. CMTAT's own bridge gate
+   (`onlyTokenBridge`) makes the same choice.
 2. Keep `canTransfer*` and `transferred*` policy-consistent (read-check and state-hook should not diverge unexpectedly).
 3. Handle spender/operator tuples explicitly:
 - classic delegated transfer,

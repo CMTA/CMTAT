@@ -50,6 +50,8 @@ CMTAT wraps the callback in a transient (EIP-1153) reentrancy guard, but **only 
 | `CMTATStandaloneAllowlist`, `CMTATStandaloneLight` (and proxies) | 20 405 / 11 562 | n/a — no RuleEngine |
 
 > **WARNING — variants without the guard.** On the ❌ rows the trust assumption is load-bearing: the RuleEngine is set by `DEFAULT_ADMIN_ROLE`, is **fully trusted**, and **MUST NOT** transfer control to untrusted code during `transferred(...)`. A rule that calls an arbitrary external address — a hook, a callback, a user-supplied contract — breaks that assumption and re-opens the drain described above. If your rule set needs to call untrusted code, deploy a guarded variant.
+>
+> In practice, for a rule author: the RuleEngine, its rules **and every contract they call** (oracle, registry, price feed, token) are part of the trusted set. To stay safe on the unguarded variants, a rule's `transferred*` hooks must be `view`, or at least must not perform non-view external calls, so that every outbound call is a `STATICCALL` and cannot re-enter the token. Every rule in [CMTA/Rules](https://github.com/CMTA/Rules) has this property today.
 
 On guarded variants a reentrant callback reverts the whole transaction with OpenZeppelin's `ReentrancyGuardReentrantCall`. The guard is entered only when a RuleEngine is set (a deployment with no engine pays nothing) and released when the callback returns, so batch operations and `burnAndMint`, which invoke the hook several times in one transaction, are unaffected.
 

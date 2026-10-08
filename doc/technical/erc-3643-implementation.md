@@ -13,7 +13,7 @@ CMTAT implements a substantial ERC-3643-compatible token surface (pause, freeze,
 ## Interface Coverage
 
 Primary CMTAT interface:
-- [IERC3643Partial.sol](/home/ryan/Pictures/dev/CMTAT/contracts/interfaces/tokenization/IERC3643Partial.sol)
+- [IERC3643Partial.sol](../../contracts/interfaces/tokenization/IERC3643Partial.sol)
 
 Implemented ERC-3643-related interface groups in CMTAT:
 - `IERC3643Pause`
@@ -46,30 +46,30 @@ Implemented ERC-3643-related interface groups in CMTAT:
 Core ERC-3643 behavior is split across wrapper modules:
 
 - Pause:
-  - [PauseModule.sol](/home/ryan/Pictures/dev/CMTAT/contracts/modules/wrapper/core/PauseModule.sol)
+  - [PauseModule.sol](../../contracts/modules/wrapper/core/PauseModule.sol)
   - Implements `pause`, `unpause`, `paused`.
 
 - Token metadata updates:
-  - [TokenAttributeModule.sol](/home/ryan/Pictures/dev/CMTAT/contracts/modules/wrapper/core/TokenAttributeModule.sol)
+  - [TokenAttributeModule.sol](../../contracts/modules/wrapper/core/TokenAttributeModule.sol)
   - Implements `setName`, `setSymbol` (moved out of `ERC20BaseModule` into `TokenAttributeModule`, with their own ERC-7201 storage; `ERC20BaseModule` now holds only `decimals`).
 
 - Mint / batch mint / ERC-3643 batch transfer path:
-  - [ERC20MintModule.sol](/home/ryan/Pictures/dev/CMTAT/contracts/modules/wrapper/core/ERC20MintModule.sol)
+  - [ERC20MintModule.sol](../../contracts/modules/wrapper/core/ERC20MintModule.sol)
   - `batchTransfer` is role-gated and mapped to internal minter-transfer flow.
 
 - Burn / batch burn:
-  - [ERC20BurnModule.sol](/home/ryan/Pictures/dev/CMTAT/contracts/modules/wrapper/core/ERC20BurnModule.sol)
+  - [ERC20BurnModule.sol](../../contracts/modules/wrapper/core/ERC20BurnModule.sol)
 
 - Address freeze:
-  - [EnforcementModule.sol](/home/ryan/Pictures/dev/CMTAT/contracts/modules/wrapper/core/EnforcementModule.sol)
+  - [EnforcementModule.sol](../../contracts/modules/wrapper/core/EnforcementModule.sol)
   - Implements `setAddressFrozen`, `batchSetAddressFrozen`, `isFrozen`.
 
 - Partial freeze and forced transfer:
-  - [ERC20EnforcementModule.sol](/home/ryan/Pictures/dev/CMTAT/contracts/modules/wrapper/extensions/ERC20EnforcementModule.sol)
+  - [ERC20EnforcementModule.sol](../../contracts/modules/wrapper/extensions/ERC20EnforcementModule.sol)
   - Implements `freezePartialTokens`, `unfreezePartialTokens`, `forcedTransfer`, `getFrozenTokens`.
 
 - Compliance pre-check surface:
-  - [ValidationModuleCore.sol](/home/ryan/Pictures/dev/CMTAT/contracts/modules/wrapper/core/ValidationModuleCore.sol)
+  - [ValidationModuleCore.sol](../../contracts/modules/wrapper/core/ValidationModuleCore.sol)
   - Implements `canTransfer`; integrates with generic validation path.
 
 ## Deployment Coverage
@@ -121,5 +121,5 @@ If the objective is regulated transfer control without on-chain identity, curren
 ## Cross-References
 
 - ERC-3643 reference: [erc-3643-trex.md](../ERCSpecification/erc-3643-trex.md)
-- CMTAT partial interface: [IERC3643Partial.sol](/home/ryan/Pictures/dev/CMTAT/contracts/interfaces/tokenization/IERC3643Partial.sol)
+- CMTAT partial interface: [IERC3643Partial.sol](../../contracts/interfaces/tokenization/IERC3643Partial.sol)
 - Main README ERC-3643 section: [doc/README.md](../README.md)

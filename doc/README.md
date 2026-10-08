@@ -37,7 +37,7 @@ CMTAT has been built with five main goals:
    - Technicals: [ERC-2771](https://eips.ethereum.org/EIPS/eip-2771) (MetaTx/Gasless), [ERC-7201](https://eips.ethereum.org/EIPS/eip-7201), [ERC-7802](https://eips.ethereum.org/EIPS/eip-7802), [ERC-8303](https://github.com/ethereum/ERCs/pull/1819) (contract version, draft),...
 
 4. Security by undergoing audits from trusted firms like [ADBK](https://abdk.consulting) and [Halborn](https://www.halborn.com), and by implementing a range of industry best practices.
-   - Strong code statements coverage (~99.43%) with 5626 automated tests executed
+   - Strong code statements coverage (~99.43%) with 6134 automated tests executed
    - Run static analyzer ([Aderyn](https://github.com/Cyfrin/aderyn), [Slither](https://github.com/crytic/slither/tree/master)), as well as AI Auditing tools ([Nethermind Audit Agent](https://auditagent.nethermind.io), [Wake Arena](https://ackee.xyz), [BugPoCer](https://www.olympix.security)), before and after the audits
    - RBAC Access Control to clearly separates the different roles and permissions
    
@@ -1335,16 +1335,35 @@ The two interfaces (`IRuleEngine`and `IRuleEngineERC1404`) can be found in [IRul
 
 Warning: 
 
-- The `RuleEngine` has to restrict the access of the function `transferred` to only the `CMTAT token contract`.
+- The `RuleEngine` has to restrict the access of the function `transferred` to only the `CMTAT token contract`. The check must compare the raw **`msg.sender`**, not an ERC-2771 `_msgSender()`: the token never calls the engine through a forwarder, and a forwarder-resolved sender would let the forwarder impersonate the token and drive stateful rules without any token movement. CMTAT applies the same reasoning to its own bridge gate (`onlyTokenBridge` in `ERC20CrossChainModule`).
+- The RuleEngine, its rules and every contract they call are **trusted**. Only Standard, Snapshot and ERC-7551 wrap the `transferred` callback in a reentrancy guard; on Debt, DebtEngine, Permit, UUPS, ERC-1363 and HolderList, a rule's `transferred*` hooks must be `view`, or at least must not perform non-view external calls, so that every outbound call is a `STATICCALL` and cannot re-enter the token. See [validationRuleEngine.md](./modules/controllers/validationRuleEngine.md).
 - To stay flexible, the `ValidationModule` stores the RuleEngine with the the following engine: `IRuleEngine`. If you want to implement the standard ERC-1404, you have to use an engine implementing the interface `IRuleEngineERC1404`.
 
 ##### How it works
 
-Before each transfer (standard transfer/mint/burn), the CMTAT calls the ERC-3643 function `transferred` which is the entrypoint for the RuleEngine.
+Before each transfer, mint and burn, the CMTAT calls the function `transferred` of the RuleEngine, which is the entrypoint for the RuleEngine. Two overloads exist, and both are mandatory:
 
 ```solidity
+// ERC-3643 (IERC3643IComplianceContract)
 function transferred(address from, address to, uint256 value) external;
+// CMTAT spender-aware extension (IRuleEngine)
+function transferred(address spender, address from, address to, uint256 value) external;
 ```
+
+The token calls the 4-argument overload whenever it knows the account that initiated the operation (`spender != address(0)`), and the 3-argument one otherwise. Since v3.3.0 this means:
+
+| CMTAT entrypoint | `spender` | `from` | `to` | Overload |
+| --- | --- | --- | --- | --- |
+| `transfer` | — | holder | recipient | 3-arg |
+| `transferFrom` | approved spender (`_msgSender()`) | holder | recipient | 4-arg |
+| `mint`, `batchMint`, `crosschainMint`, mint leg of `burnAndMint` | operator | `address(0)` | recipient | 4-arg |
+| `burn`, `batchBurn`, `burnFrom`, `burn(uint256)`, `crosschainBurn`, burn leg of `burnAndMint` | operator | holder | `address(0)` | 4-arg |
+| `batchTransfer` (`MINTER_ROLE`, minter's own tokens) | minter | minter | recipient | 4-arg, **`spender == from`** |
+| `forcedTransfer` (and its burn form) | — | — | — | **not called** |
+
+Up to v3.2.0, mint, burn and `batchTransfer` used the 3-argument overload. This table is maintained in [technical/ruleengine-integration.md](./technical/ruleengine-integration.md#b-state-changing-token-operations), which is the reference for every path that reaches the engine.
+
+**`forcedTransfer` bypasses the RuleEngine.** `forcedTransfer` (and `forcedBurn` on Light) moves tokens without calling `transferred` and without notifying the engine. Stateful rules (conditional-transfer approvals, mint quotas) are not updated, and observing rules (maximum balance, whitelists) are not consulted for enforcement moves. This differs from ERC-3643 T-REX, whose `forcedTransfer` notifies the compliance contract.
 
 CMTAT defines the interaction with the RuleEngine inside a specific module, [ValidationModuleRuleEngine](../contracts/modules/wrapper/extensions/ValidationModule/ValidationModuleRuleEngine.sol) and [CMTATBaseRuleEngine](../contracts/modules/3_CMTATBaseRuleEngine.sol).
 
@@ -1356,7 +1375,7 @@ CMTAT defines the interaction with the RuleEngine inside a specific module, [Val
 
 ![checkTransferred](./general/code/checkTransferred.png)
 
-This function `_transferred` is called before each transfer/burn/mint through the internal function `_checkTransferred` defined in [CMTAT_BASE](https://github.com/CMTA/CMTAT/blob/23a1e59f913d079d0c09d32fafbd95ab2d426093/contracts/modules/CMTAT_BASE.sol#L198).
+This function `_transferred` is called before each transfer/burn/mint through the internal function `_checkTransferred` overridden in [3_CMTATBaseRuleEngine.sol](../contracts/modules/3_CMTATBaseRuleEngine.sol).
 
 Here is a schema to show how it works:
 
@@ -1364,9 +1383,9 @@ Here is a schema to show how it works:
 
 > Source: [`schema/plantuml/flow/engine-ruleengine-base.puml`](./schema/plantuml/flow/engine-ruleengine-base.puml).
 
-1. The token holders initiate a transfer transaction on CMTAT contract.
-2. The validation module inside the CMTAT calls the ERC-3643 function `transferred` from the RuleEngine if set with the following parameters inside: `from, to, value`.
-3. The Rule Engine performs the restriction check and revert if the transfer is not authorised.
+1. The token holders (or an operator) initiate a transfer, mint or burn transaction on the CMTAT contract.
+2. The validation module inside the CMTAT calls `transferred` on the RuleEngine, if set: `transferred(from, to, value)` for a direct `transfer`, `transferred(spender, from, to, value)` for every other path (see the table above).
+3. The Rule Engine performs the restriction check and reverts if the operation is not authorised.
 
 ###### TransferFrom - Spender restriction
 
@@ -1445,7 +1464,7 @@ If a RuleEngine restriction is intended to target only classic `transferFrom` sp
 - exclude mint path with `from != address(0)`
 - exclude burn path with `to != address(0)`
 
-The ERC-165 interface id for the `IRuleEngine` interface is `0x20c49ce7`
+The ERC-165 interface id for the `IRuleEngine` interface is `0x20c49ce7`. It is computed over `transferred` (both overloads), `canTransfer` and `canTransferFrom`; `IERC165.supportsInterface` is **excluded**, following the OpenZeppelin convention (including it would give `0x213b5540`). Note that the CMTA RuleEngine's `IRule` id (`0x2497d6cb`) does include `supportsInterface`. See [ExampleRuleEngineERC165.sol](../contracts/mocks/ERC165Helper/ExampleRuleEngineERC165.sol) for the reference computation.
 
 ###### IRuleEngineERC1404
 
@@ -1659,15 +1678,23 @@ interface IERC1404Extend is IERC1404{
 }
 ```
 
+**Restriction codes.** Codes `0`–`6` are answered by the token itself (`REJECTED_CODE_BASE` above). Codes `7`–`12` are reserved for future CMTAT additions and must stay unused by a RuleEngine. Any other code is forwarded to the engine verbatim. The CMTA [Rules](https://github.com/CMTA/Rules) use codes from `21` upwards; the CMTA RuleEngine does not define codes of its own and returns the code of the rule that rejected the operation.
+
 ##### RuleEngine CMTA implementation
 
 CMTA provides an implementation of a [RuleEngine](https://github.com/CMTA/RuleEngine) compatible with CMTAT. This RuleEngine is also compatible with ERC-3643 tokens.
 
-In this implementation, the token holder calls the ERC-20 function `transfer` which triggers a call to the `RuleEngine` (ERC-3643 `transferred`) and the different rules associated. 
+In this implementation, every transfer, mint and burn on the token triggers a call to the `RuleEngine` (`transferred`, with the overload given by the table in [How it works](#how-it-works)), which calls the different rules associated. 
 
 The different rules are not included in the RuleEngine interface and you are free to build a different RuleEngine.
 
 > **Note:** the rules for the CMTAT RuleEngine can now also be set **directly** on CMTAT, without going through the RuleEngine controller. Every rule implements the RuleEngine interface, so a single rule can act as the token's rule engine on its own; the RuleEngine is only needed when several rules must be combined on one token.
+>
+> Caveats:
+>
+> - an **ERC-3643** token always needs the RuleEngine: a bare rule cannot back it, because it does not implement the ERC-3643 compliance hooks `created` / `destroyed`;
+> - `RuleConditionalTransferLightMultiToken` is the opposite: it must be bound **directly** to each token and never added to a RuleEngine;
+> - `setRuleEngine` does not ERC-165-check the address it receives (design choice). On a deployment exposing ERC-1404, a rule or engine that does not implement `IRuleEngineERC1404` makes the token's `detectTransferRestriction` / `messageForTransferRestriction` revert, while transfers keep working. All `CMTA/Rules` rules implement it; a custom rule may not.
 
 ###### Schema
 
@@ -1679,42 +1706,51 @@ The different rules are not included in the RuleEngine interface and you are fre
 
 Here is the list of the different versions available for each CMTAT version.
 
-| CMTAT version           | RuleEngine                                                   |
-| ----------------------- | ------------------------------------------------------------ |
-| CMTAT v3.3.0*           | [RuleEngine v3.0.0-rc4](https://github.com/CMTA/RuleEngine/releases/tag/v3.0.0-rc4) (unaudited) |
-| CMTAT v3.0.+            | [RuleEngine v3.0.0-rc0](https://github.com/CMTA/RuleEngine/releases/tag/v3.0.0-rc0)<br /> (unaudited) |
-| CMTAT 2.5.0 (unaudited) | RuleEngine >= [v2.0.3](https://github.com/CMTA/RuleEngine/releases/tag/v2.0.3) (unaudited) |
-| CMTAT 2.4.0 (unaudited) | RuleEngine >=v2.0.0<br />Last version: [v2.0.2](https://github.com/CMTA/RuleEngine/releases/tag/v2.0.2)(unaudited) |
-| CMTAT 2.3.0             | [RuleEngine v1.0.2](https://github.com/CMTA/RuleEngine/releases/tag/v1.0.2) |
-| CMTAT 2.0 (unaudited)   | [RuleEngine 1.0](https://github.com/CMTA/RuleEngine/releases/tag/1.0) (unaudited) |
-| CMTAT 1.0               | No ruleEngine available                                      |
+Audit status uses three values: **audited** (firm, version, link), **audit planned**, and **unaudited**. A planned audit does not change the security posture of what is deployed today: until the report is published, treat the release as unaudited. Once delivered, the audited tag or commit will be named here, because the on-chain `version()` strings do not distinguish release candidates.
+
+| CMTAT version | RuleEngine | Rules | Notes |
+| --- | --- | --- | --- |
+| CMTAT v3.3.0 | [RuleEngine v3.0.0-rc6](https://github.com/CMTA/RuleEngine/releases/tag/v3.0.0-rc6) (latest release)<br />**audit planned** | [Rules v0.6.0](https://github.com/CMTA/Rules) (latest release)<br />**audit planned** | Mint, burn, `batchTransfer` and cross-chain mint / burn reach the engine on the 4-argument `transferred`, with the operator as `spender` (see [How it works](#how-it-works)). All rules behave as documented in the Rules repository. |
+| CMTAT v3.0.0 – v3.2.0 | RuleEngine ≥ [v3.0.0-rc4](https://github.com/CMTA/RuleEngine/releases/tag/v3.0.0-rc4) (supports CMTAT ≥ v3.0.0)<br />unaudited | Rules v0.6.0, with the limitation in Notes | Mint, burn and `batchTransfer` reach the engine on the 3-argument `transferred`, **without** the operator. Rules keyed on the spender do not apply to these operations: e.g. `RuleMintAllowance` is never debited, and minters / burners are not screened as spenders. |
+| CMTAT 2.5.0 (unaudited) | RuleEngine >= [v2.0.3](https://github.com/CMTA/RuleEngine/releases/tag/v2.0.3) (unaudited) | — | |
+| CMTAT 2.4.0 (unaudited) | RuleEngine >=v2.0.0<br />Last version: [v2.0.2](https://github.com/CMTA/RuleEngine/releases/tag/v2.0.2) (unaudited) | — | |
+| CMTAT 2.3.0 (audited) | [RuleEngine v1.0.2](https://github.com/CMTA/RuleEngine/releases/tag/v1.0.2) (audited by ABDK) | — | |
+| CMTAT 2.0 (unaudited) | [RuleEngine 1.0](https://github.com/CMTA/RuleEngine/releases/tag/1.0) (unaudited) | — | |
+| CMTAT 1.0 | No ruleEngine available | — | |
 
 This contract acts as a controller and can call different contract rules to apply rules on each transfer.
-
-*CMTAT v3.3.0 transmits the minter and burn operators to the RuleEngine through the spender parameter.
 
 ###### Rules
 
 Rules are contracts that apply transfer or issuance restrictions to a CMTAT. Because each rule implements the RuleEngine interface, a rule can be used **directly** as the token's rule engine, or plugged into the CMTAT **[RuleEngine](https://github.com/CMTA/RuleEngine)** when several rules must be combined on a single token. Rules have their own dedicated repository: [github.com/CMTA/Rules](https://github.com/CMTA/Rules).
 
-Here are the list of rules in development:
+Here is the list of rules available in [CMTA/Rules](https://github.com/CMTA/Rules) v0.6.0. The per-rule documentation is in the [Rules repository](https://github.com/CMTA/Rules/tree/main/doc/technical/contracts), which is the reference for each rule's exact semantics.
 
-| Rule                         | Type <br />[ready-only / read-write] | Security Audit planned in the roadmap                        | Description                                                  |
-| ---------------------------- | ------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| RuleWhitelist                | Ready-only                           | ☑                                                            | This rule can be used to restrict transfers from/to only addresses inside a whitelist. |
-| RuleWhitelistWrapper         | Ready-only                           | ☑                                                            | This rule can be used to restrict transfers from/to only addresses inside a group of whitelist rules managed by different operators. |
-| RuleBlacklist                | Ready-only                           | ☑                                                            | This rule can be used to forbid transfer from/to addresses in the blacklist |
-| RuleSanctionList             | Ready-only                           | ☑                                                            | The purpose of this contract is to use the oracle contract from Chainalysis to forbid transfer from/to an address included in a sanctions designation (US, EU, or UN). |
-| RuleConditionalTransferLight | Ready-Write                          | In development                                               | This rule requires that transfers have to be approved before being executed by the token |
-| RuleConditionalTransfer      | Ready-Write                          | <strong><span style="color: #b00020;">&#x2718;</span></strong><br /> (experimental rule) | Same principle as the light version (see above) but with more options such as a time limit for approving a request as well as for carrying out the transfer |
-| RuleMintAllowance            | Read-Write                           | In development                                               | Enforces a per-minter mint quota: an operator sets each minter's maximum mint allowance and every mint deducts from it (regular transfers and burns are unaffected). Useful to cap how much a cross-chain bridge or pool can mint, bounding the blast radius of a compromised minter that could otherwise mint up to `uint256` max. Requires the spender-aware path (CMTAT v3.3.0+) so the minter is passed via `transferred(spender, from, to, value)`. See [RuleMintAllowance.md](https://github.com/CMTA/Rules/blob/main/doc/technical/RuleMintAllowance.md). |
-| RuleMaxTotalSupply           | Read-only                            | In development                                               | Caps issuance: rejects any mint that would push the token's `totalSupply` above a configured maximum. |
-| RuleIdentityRegistry         | Read-only                            | In development                                               | Plugs an [ERC-3643](https://eips.ethereum.org/EIPS/eip-3643) identity registry ([onchain-id](https://www.onchainid.com/)) into the RuleEngine and CMTAT: verifies that the transfer participants are registered and eligible in the ERC-3643 `IdentityRegistry`, adding the ERC-3643-style on-chain identity compliance that CMTAT does not embed natively. |
-| RuleSpenderWhitelist         | Read-only                            | In development                                               | Restricts only the `spender` of a `transferFrom` (delegated transfer) against a whitelist; direct holder-initiated transfers are always allowed. |
-| RuleERC2980                  | Read-only                            | In development                                               | Implements [ERC-2980](https://eips.ethereum.org/EIPS/eip-2980) (Swiss compliance) with a recipient-only whitelist plus a frozen-list. |
-| RuleConditionalTransferLightMultiToken | Read-Write                 | In development                                               | Multi-token variant of `RuleConditionalTransferLight`, scoping approvals by token address. Bound directly to each token rather than shared through a RuleEngine. |
+> **Warning — CMTAT version matters.** Rules that act on the **spender** of a mint or burn (`RuleMintAllowance`, minter screening by `RuleWhitelist` / `RuleWhitelistWrapper` with `checkSpender`, `RuleBlacklist`, `RuleSanctionsList`, `RuleERC2980`) need **CMTAT ≥ v3.3.0**, where mint and burn pass the operator to the engine. On CMTAT v3.0.0 – v3.2.0 these rules still apply to transfers, but not to the mint / burn spender. Two rules are not for CMTAT: `RuleMaxTotalSupplyERC3643` and `RuleChainlinkPoRERC3643` are for ERC-3643 tokens only (with CMTAT they would double-count). See the [Rules compatibility table](https://github.com/CMTA/Rules#compatibility).
 
-> This is a selection; additional community/external rules also exist, e.g. **RuleSelf** (integration of the [Self](https://self.xyz) zero-knowledge identity, community-maintained). See the [Rules repository](https://github.com/CMTA/Rules) for the complete, up-to-date list.
+Audit status: **planned** = part of the security audit planned on the latest Rules release (no rule has had an external audit yet); ✘ = not in the audit scope.
+
+| Rule | Type <br />[read-only / read-write] | Audit status | Description |
+| ---------------------------- | ------------------------------------ | ------------ | ------------------------------------------------------------ |
+| RuleWhitelist                | Read-only                            | planned      | This rule can be used to restrict transfers from/to only addresses inside a whitelist. |
+| RuleWhitelistWrapper         | Read-only                            | planned      | This rule can be used to restrict transfers from/to only addresses inside a group of whitelist rules managed by different operators. |
+| RuleReceiverWhitelist        | Read-only                            | planned      | Restricts only the **receiver** of a transfer or mint against a whitelist. |
+| RuleSpenderWhitelist         | Read-only                            | planned      | Restricts only the `spender` of a `transferFrom` (delegated transfer) against a whitelist; direct holder-initiated transfers are always allowed. |
+| RuleBlacklist                | Read-only                            | planned      | This rule can be used to forbid transfer from/to addresses in the blacklist |
+| RuleSanctionsList            | Read-only                            | planned      | The purpose of this contract is to use the oracle contract from Chainalysis to forbid transfer from/to an address included in a sanctions designation (US, EU, or UN). |
+| RuleERC2980                  | Read-only                            | planned      | Implements [ERC-2980](https://eips.ethereum.org/EIPS/eip-2980) (Swiss compliance) with a recipient-only whitelist plus a frozen-list. |
+| RuleIdentityRegistry         | Read-only                            | planned      | Plugs an [ERC-3643](https://eips.ethereum.org/EIPS/eip-3643) identity registry ([onchain-id](https://www.onchainid.com/)) into the RuleEngine and CMTAT: verifies that the **receiver** is registered and eligible in the ERC-3643 `IdentityRegistry` (sender and spender checks are optional flags; mint is exempt from them), adding the ERC-3643-style on-chain identity compliance that CMTAT does not embed natively. |
+| RuleMaxTotalSupply           | Read-only                            | planned      | Caps issuance: rejects any mint that would push the token's `totalSupply` above a configured maximum. |
+| RuleMaxBalance               | Read-only                            | planned      | Caps the balance of each holder. CMTAT only (not supported on ERC-3643). |
+| RuleChainlinkPoR             | Read-only                            | planned      | Rejects a mint that would exceed the reserves reported by a Chainlink Proof-of-Reserve feed. |
+| RuleMaxTotalSupplyERC3643 / RuleChainlinkPoRERC3643 | Read-only     | planned      | ERC-3643 variants of the two rules above. **ERC-3643 tokens only — do not use with CMTAT.** |
+| RuleConditionalTransferLight | Read-write                           | planned      | This rule requires that transfers have to be approved before being executed by the token |
+| RuleConditionalTransferLightMultiToken | Read-write                 | planned      | Multi-token variant of `RuleConditionalTransferLight`, scoping approvals by token address. **Must be bound directly to each token** (`setRuleEngine(rule)`); adding it to a RuleEngine either reverts every transfer or strands approvals. |
+| RuleMintAllowance            | Read-write                           | planned      | Enforces a per-minter mint quota: an operator sets each minter's maximum mint allowance and every mint deducts from it (regular transfers and burns are unaffected). Useful to cap how much a cross-chain bridge or pool can mint, bounding the blast radius of a compromised minter that could otherwise mint up to `uint256` max. Requires CMTAT ≥ v3.3.0, so that the minter is passed via `transferred(spender, from, to, value)`; inert on v3.0.0 – v3.2.0. See [RuleMintAllowance.md](https://github.com/CMTA/Rules/blob/main/doc/technical/contracts/RuleMintAllowance.md). |
+| IdentityRegistryWhitelist    | — (not a rule)                       | planned      | Not a rule: an ERC-3643 identity-registry implementation that answers from a whitelist instead of reading ONCHAINIDs (the registry queried by `RuleIdentityRegistry`). |
+| RuleConditionalTransfer      | Read-write                           | <strong><span style="color: #b00020;">&#x2718;</span></strong><br />(external, experimental) | Same principle as the light version (see above) but with more options such as a time limit for approving a request as well as for carrying out the transfer. **Not part of CMTA/Rules**: maintained separately in [CMTA/RuleConditionalTransfer](https://github.com/CMTA/RuleConditionalTransfer). |
+
+> Additional community/external rules also exist, e.g. **RuleSelf** (integration of the [Self](https://self.xyz) zero-knowledge identity, community-maintained, not in the audit scope). See the [Rules repository](https://github.com/CMTA/Rules) for the complete, up-to-date list.
 
 #### SnapshotEngine
 
