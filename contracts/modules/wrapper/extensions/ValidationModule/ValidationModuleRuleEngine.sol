@@ -5,6 +5,8 @@ pragma solidity ^0.8.24;
 
 /* ==== Engine === */
 import {IRuleEngine} from "../../../../interfaces/engine/IRuleEngine.sol";
+import {RuleEngineInterfaceId} from "../../../../library/RuleEngineInterfaceId.sol";
+import {IERC165} from "@openzeppelin/contracts/utils/introspection/IERC165.sol";
 /* ==== ValidationModule === */
 import {ValidationModuleAllowance} from "./ValidationModuleAllowance.sol";
 import {ValidationModuleCore} from "../../core/ValidationModuleCore.sol";
@@ -22,6 +24,8 @@ abstract contract ValidationModuleRuleEngine is
     * @notice Reverts if attempting to set the RuleEngine to its current value.
     */
     error CMTAT_ValidationModule_SameValue();
+    error CMTAT_ValidationModule_SelfNotAllowed();
+    error CMTAT_ValidationModule_InvalidEngine();
 
 
     /* ============ Modifier ============ */
@@ -48,7 +52,21 @@ abstract contract ValidationModuleRuleEngine is
     function setRuleEngine(
         IRuleEngine ruleEngine_
     ) public virtual onlyRuleEngineManager {
-         require(address(ruleEngine_) != address(ruleEngine()), CMTAT_ValidationModule_SameValue());
+        require(address(ruleEngine_) != address(ruleEngine()), CMTAT_ValidationModule_SameValue());
+
+        // address(0) means "no RuleEngine" and remains a valid configuration.
+        if (address(ruleEngine_) != address(0)) {
+            require(address(ruleEngine_) != address(this), CMTAT_ValidationModule_SelfNotAllowed());
+            require(address(ruleEngine_).code.length > 0, CMTAT_ValidationModule_InvalidEngine());
+            try IERC165(address(ruleEngine_)).supportsInterface(
+                RuleEngineInterfaceId.RULE_ENGINE_INTERFACE_ID
+            ) returns (bool supported) {
+                require(supported, CMTAT_ValidationModule_InvalidEngine());
+            } catch {
+                revert CMTAT_ValidationModule_InvalidEngine();
+            }
+        }
+
         _setRuleEngine(ruleEngine_);
     }
     /* ============ View functions ============ */

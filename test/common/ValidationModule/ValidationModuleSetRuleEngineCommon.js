@@ -56,6 +56,55 @@ function ValidationModuleSetRuleEngineCommon () {
       )
     })
 
+    it('testCanClearRuleEngineWithZeroAddress', async function () {
+      await this.cmtat
+        .connect(this.admin)
+        .setRuleEngine(this.ruleEngineMock.target)
+
+      await expect(
+        this.cmtat
+          .connect(this.admin)
+          .setRuleEngine(ZERO_ADDRESS)
+      ).to.emit(this.cmtat, 'RuleEngine').withArgs(ZERO_ADDRESS)
+
+      expect(await this.cmtat.ruleEngine()).to.equal(ZERO_ADDRESS)
+    })
+
+    it('testCannotSetRuleEngineToSelf', async function () {
+      await expect(
+        this.cmtat
+          .connect(this.admin)
+          .setRuleEngine(this.cmtat.target)
+      ).to.be.revertedWithCustomError(
+        this.cmtat,
+        'CMTAT_ValidationModule_SelfNotAllowed'
+      )
+    })
+
+    it('testCannotSetRuleEngineToEOA', async function () {
+      await expect(
+        this.cmtat
+          .connect(this.admin)
+          .setRuleEngine(this.address1.address)
+      ).to.be.revertedWithCustomError(
+        this.cmtat,
+        'CMTAT_ValidationModule_InvalidEngine'
+      )
+    })
+
+    it('testCannotSetRuleEngineWithoutInterfaceSupport', async function () {
+      this.nonRuleEngine = await ethers.deployContract('NonRuleEngineMock')
+
+      await expect(
+        this.cmtat
+          .connect(this.admin)
+          .setRuleEngine(this.nonRuleEngine.target)
+      ).to.be.revertedWithCustomError(
+        this.cmtat,
+        'CMTAT_ValidationModule_InvalidEngine'
+      )
+    })
+
     it('testCanNotBeSetByAdminWithTheSameValue', async function () {
       // Act
       await expect(
