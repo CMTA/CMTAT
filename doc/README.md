@@ -135,6 +135,7 @@ The CMTAT was initially designed for the digitalization of company shares. For S
 #### Private DvP settlement
 
 - In 2026, [Seturion](https://group.boerse-stuttgart.com/en/seturion/) successfully achieved private DvP settlement of tokenized assets on a public blockchain stack while keeping all sensitive data confidential using the implementation of [CMTAT on Aztec](https://github.com/CMTA/private-CMTAT-aztec), an Ethereum Layer-2 network that employs zero-knowledge cryptography on protocol level to ensure fully programmable privacy. Read more [here](https://www.linkedin.com/posts/seturion_achieving-private-dvp-settlement-on-public-activity-7424387919538450433-OItI/). 
+- In a proof of concept, [Seturion](https://group.boerse-stuttgart.com/en/seturion/) (Börse Stuttgart Group), the pan-European settlement platform for tokenized assets, through its subsidiary BX Digital, has designed and validated confidential Delivery-versus-Payment (DvP) settlement architectures for tokenized assets using CMTAT on EVM test blockchains. The architecture leverages the Zama Protocol to enable confidential on-chain settlement using tGBP (by BCP Technologies) while preserving regulatory oversight. The demonstration included both Mode A (Cash Confidential DvP) and Mode B (Fully Confidential DvP), showing how regulated institutions can settle tokenized assets while keeping transaction amounts confidential. See the [CMTA announcement](https://cmta.ch/news-articles/cmta-launches-cmtat-confidential-privacy-preserving-security-token-standard-built-on-the-zama-protocol-and-openzeppelin) and the [Zama announcement](https://www.zama.org/post/cmtat-confidential-launches-on-the-zama-protocol).
 
 ### Where CMTAT is mentioned?
 
@@ -1714,8 +1715,8 @@ Audit status uses three values: **audited** (firm, version, link), **audit plann
 
 | CMTAT version | RuleEngine | Rules | Notes |
 | --- | --- | --- | --- |
-| CMTAT v3.3.0 | [RuleEngine v3.0.0-rc6](https://github.com/CMTA/RuleEngine/releases/tag/v3.0.0-rc6) (latest release)<br />**audit planned** | [Rules v0.6.0](https://github.com/CMTA/Rules) (latest release)<br />**audit planned** | Mint, burn, `batchTransfer` and cross-chain mint / burn reach the engine on the 4-argument `transferred`, with the operator as `spender` (see [How it works](#how-it-works)). All rules behave as documented in the Rules repository. |
-| CMTAT v3.0.0 – v3.2.0 | RuleEngine ≥ [v3.0.0-rc4](https://github.com/CMTA/RuleEngine/releases/tag/v3.0.0-rc4) (supports CMTAT ≥ v3.0.0)<br />unaudited | Rules v0.6.0, with the limitation in Notes | Mint, burn and `batchTransfer` reach the engine on the 3-argument `transferred`, **without** the operator. Rules keyed on the spender do not apply to these operations: e.g. `RuleMintAllowance` is never debited, and minters / burners are not screened as spenders. |
+| CMTAT v3.3.0 | [RuleEngine v3.0.0-rc7](https://github.com/CMTA/RuleEngine/releases/tag/v3.0.0-rc7) (latest release)<br />**audit planned** | [Rules v0.7.0](https://github.com/CMTA/Rules/releases/tag/v0.7.0) (latest release)<br />**audit planned** | Mint, burn, `batchTransfer` and cross-chain mint / burn reach the engine on the 4-argument `transferred`, with the operator as `spender` (see [How it works](#how-it-works)). All rules behave as documented in the Rules repository. |
+| CMTAT v3.0.0 – v3.2.0 | RuleEngine ≥ [v3.0.0-rc4](https://github.com/CMTA/RuleEngine/releases/tag/v3.0.0-rc4) (supports CMTAT ≥ v3.0.0)<br />unaudited | [Rules v0.7.0](https://github.com/CMTA/Rules/releases/tag/v0.7.0), with the limitation in Notes | Mint, burn and `batchTransfer` reach the engine on the 3-argument `transferred`, **without** the operator. Rules keyed on the spender do not apply to these operations: e.g. `RuleMintAllowance` is never debited, and minters / burners are not screened as spenders. |
 | CMTAT 2.5.0 (unaudited) | RuleEngine >= [v2.0.3](https://github.com/CMTA/RuleEngine/releases/tag/v2.0.3) (unaudited) | — | |
 | CMTAT 2.4.0 (unaudited) | RuleEngine >=v2.0.0<br />Last version: [v2.0.2](https://github.com/CMTA/RuleEngine/releases/tag/v2.0.2) (unaudited) | — | |
 | CMTAT 2.3.0 (audited) | [RuleEngine v1.0.2](https://github.com/CMTA/RuleEngine/releases/tag/v1.0.2) (audited by ABDK) | — | |
@@ -1728,7 +1729,7 @@ This contract acts as a controller and can call different contract rules to appl
 
 Rules are contracts that apply transfer or issuance restrictions to a CMTAT. Because each rule implements the RuleEngine interface, a rule can be used **directly** as the token's rule engine, or plugged into the CMTAT **[RuleEngine](https://github.com/CMTA/RuleEngine)** when several rules must be combined on a single token. Rules have their own dedicated repository: [github.com/CMTA/Rules](https://github.com/CMTA/Rules).
 
-Here is the list of rules available in [CMTA/Rules](https://github.com/CMTA/Rules) v0.6.0. The per-rule documentation is in the [Rules repository](https://github.com/CMTA/Rules/tree/main/doc/technical/contracts), which is the reference for each rule's exact semantics.
+Here is the list of rules available in [CMTA/Rules](https://github.com/CMTA/Rules) v0.7.0. The per-rule documentation is in the [Rules repository](https://github.com/CMTA/Rules/tree/main/doc/technical/contracts), which is the reference for each rule's exact semantics.
 
 > **Warning — CMTAT version matters.** Rules that act on the **spender** of a mint or burn (`RuleMintAllowance`, minter screening by `RuleWhitelist` / `RuleWhitelistWrapper` with `checkSpender`, `RuleBlacklist`, `RuleSanctionsList`, `RuleERC2980`) need **CMTAT ≥ v3.3.0**, where mint and burn pass the operator to the engine. On CMTAT v3.0.0 – v3.2.0 these rules still apply to transfers, but not to the mint / burn spender. Two rules are not for CMTAT: `RuleMaxTotalSupplyERC3643` and `RuleChainlinkPoRERC3643` are for ERC-3643 tokens only (with CMTAT they would double-count). See the [Rules compatibility table](https://github.com/CMTA/Rules#compatibility).
 
@@ -1745,6 +1746,7 @@ Audit status: **planned** = part of the security audit planned on the latest Rul
 | RuleERC2980                  | Read-only                            | planned      | Implements [ERC-2980](https://eips.ethereum.org/EIPS/eip-2980) (Swiss compliance) with a recipient-only whitelist plus a frozen-list. |
 | RuleIdentityRegistry         | Read-only                            | planned      | Plugs an [ERC-3643](https://eips.ethereum.org/EIPS/eip-3643) identity registry ([onchain-id](https://www.onchainid.com/)) into the RuleEngine and CMTAT: verifies that the **receiver** is registered and eligible in the ERC-3643 `IdentityRegistry` (sender and spender checks are optional flags; mint is exempt from them), adding the ERC-3643-style on-chain identity compliance that CMTAT does not embed natively. |
 | RuleMaxTotalSupply           | Read-only                            | planned      | Caps issuance: rejects any mint that would push the token's `totalSupply` above a configured maximum. |
+| RuleIssuanceCap              | Read-write                           | planned      | Caps cumulative issuance: unlike `RuleMaxTotalSupply`, burns do not restore room under the cap. CMTAT only (not supported on ERC-3643). Added in Rules v0.7.0. |
 | RuleMaxBalance               | Read-only                            | planned      | Caps the balance of each holder. CMTAT only (not supported on ERC-3643). |
 | RuleChainlinkPoR             | Read-only                            | planned      | Rejects a mint that would exceed the reserves reported by a Chainlink Proof-of-Reserve feed. |
 | RuleMaxTotalSupplyERC3643 / RuleChainlinkPoRERC3643 | Read-only     | planned      | ERC-3643 variants of the two rules above. **ERC-3643 tokens only — do not use with CMTAT.** |
@@ -3254,8 +3256,8 @@ Beyond the external human audits above, every CMTAT release is run through stati
 
 | Tool | Type | Latest run | Outcome |
 | --- | --- | --- | --- |
-| [Aderyn](https://github.com/Cyfrin/aderyn) (Cyfrin) | Static analyzer (Rust) | v3.3.0 (`aderyn 0.6.5`, 2026-07-30 on rc3) | 2 High + 10 Low, all reviewed — **nothing to fix**; the only accept-and-mitigate item is L-1 centralization (mitigated by governance at deployment). |
-| [Slither](https://github.com/crytic/slither) (Crytic) | Static analyzer (Python) | v3.3.0 (`slither 0.11.5`, 158 results, 2026-07-30 on rc3) | 0 High; every Medium/Low is a false positive or a documented design choice — **nothing to fix**. |
+| [Aderyn](https://github.com/Cyfrin/aderyn) (Cyfrin) | Static analyzer (Rust) | v3.3.0 (`aderyn 0.6.5`, 2026-11-04) | 2 High + 10 Low, all reviewed — **nothing to fix**; the only accept-and-mitigate item is L-1 centralization (mitigated by governance at deployment). |
+| [Slither](https://github.com/crytic/slither) (Crytic) | Static analyzer (Python) | v3.3.0 (`slither 0.11.5`, 158 results, 2026-11-04) | 0 High; every Medium/Low is a false positive or a documented design choice — **nothing to fix**. |
 | [Mythril](https://github.com/Consensys/mythril) | Symbolic execution | v2.5.0 | Last runnable version; on v3.0.0+ the tool hits a fatal `solc` error and cannot complete. |
 | [Nethermind AuditAgent](https://auditagent.nethermind.io) | AI-assisted review | v3.3.0-rc2 (Scan ID 9) | 24 findings (1 High / 4 Med / 3 Low / 14 Info / 2 best-practice) → **12 code fixes**, the rest documented or rejected; the High is a false positive; **no open item**. |
 | [Wake Arena](https://ackee.xyz) (Ackee Blockchain Security) | AI vulnerability analysis | v3.2.0-rc2 (Feb 2026) | Findings triaged with a per-finding maintainer response. |
@@ -3345,7 +3347,7 @@ The project is built with [Hardhat](https://v2.hardhat.org) and uses [OpenZeppel
 [Hardhat](https://v2.hardhat.org) is the main development toolchain for this repository and for CMTAT. [Forge (Foundry)](https://www.getfoundry.sh) is also installed and can compile contracts here, but Foundry-specific deployment scripts and Foundry-native tests are maintained in a dedicated repository: [CMTAT-Foundry](https://github.com/CMTA/CMTAT-Foundry).
 
 - hardhat.config.js
-  - Solidity [v0.8.36](https://docs.soliditylang.org/en/v0.8.36/)
+  - Solidity [v0.8.38](https://docs.soliditylang.org/en/v0.8.38/)
   - EVM version: Osaka (Fusaka upgrade)
   - Optimizer: true, 200 runs
 
@@ -3388,23 +3390,23 @@ Alternatively, you can install Hardhat [globally](https://v2.hardhat.org/hardhat
 npm run-script size
 ```
 
-Measured with `solc 0.8.36`, optimizer enabled (200 runs). EVM deployed bytecode limit: **24.576 KiB**.
+Measured with `solc 0.8.38`, optimizer enabled (200 runs). EVM deployed bytecode limit: **24.576 KiB**.
 
 The deployed size is identical between standalone and upgradeable for the same variant; the initcode is larger for standalone contracts since it embeds the full constructor logic rather than a proxy initializer.
 
 | Deployment version | Deployed (KiB) | Initcode standalone (KiB) | Initcode upgradeable (KiB) |
 | ------------------ | -------------- | ------------------------- | -------------------------- |
-| CMTAT Standard     | 22.251         | 25.663                    | 22.577                     |
-| CMTAT Snapshot     | 22.075         | 25.487                    | 22.401                     |
-| CMTAT HolderList   | 23.825         | 27.255                    | 24.151                     |
-| CMTAT Light        | 11.278         | 13.055                    | 11.487                     |
-| CMTAT Allowlist    | 19.882         | 23.079                    | 20.208                     |
-| CMTAT Debt         | 23.189         | 26.324                    | 23.398                     |
-| CMTAT DebtEngine   | 23.799         | 26.934                    | 24.008                     |
-| CMTAT ERC-7551     | 22.812         | 26.224                    | 23.138                     |
-| CMTAT ERC-1363     | 23.813         | 27.267                    | 24.139                     |
-| CMTAT Permit       | 23.341         | 26.650                    | 23.550                     |
-| CMTAT UUPS         | 23.552         | —                         | 23.904                     |
+| CMTAT Standard     | 22.569         | 25.981                    | 22.896                     |
+| CMTAT Snapshot     | 22.394         | 25.806                    | 22.720                     |
+| CMTAT HolderList   | 23.953         | 27.383                    | 24.279                     |
+| CMTAT Light        | 11.291         | 13.067                    | 11.500                     |
+| CMTAT Allowlist    | 19.997         | 23.194                    | 20.323                     |
+| CMTAT Debt         | 23.307         | 26.441                    | 23.516                     |
+| CMTAT DebtEngine   | 23.927         | 27.062                    | 24.136                     |
+| CMTAT ERC-7551     | 23.245         | 26.657                    | 23.571                     |
+| CMTAT ERC-1363     | 23.940         | 27.395                    | 24.267                     |
+| CMTAT Permit       | 23.470         | 26.779                    | 23.679                     |
+| CMTAT UUPS         | 23.680         | —                         | 24.032                     |
 
 All variants are within the deployed bytecode limit.
 

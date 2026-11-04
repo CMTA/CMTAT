@@ -12,6 +12,8 @@ Given a version number MAJOR.MINOR.PATCH, increment the:
 2. MINOR version when the new version adds functionality in a backward compatible manner
 3. PATCH version when the new version makes backward compatible bug fixes
 
+**Major versions and audits.** We try to make a new major release only when it is audited by an external firm. The last audited release is v3.0.0, so the changes since then stay in the v3.x line, even when they are breaking: v3.2.0 and v3.3.0 contain storage changes that would otherwise require a major version. These changes are listed under `breaking change` in each release, and a new major version will follow the next external audit.
+
 See [https://semver.org](https://semver.org)
 
 ## Type of changes
@@ -29,7 +31,7 @@ Custom changelog tag
 
 - `breaking change`: breaking change regarding storage [ERC-7201](https://eips.ethereum.org/EIPS/eip-7201) namespace , as well as external engine
 - `Dependencies` (npm package, openzeppelin,...)
-- ``Documentation`
+- `Documentation`
 - `Testing`
 
 ## Checklist
@@ -39,7 +41,7 @@ Custom changelog tag
 - Code: Update the version name in the `Version` core module, variable VERSION
 - Run linter
 
-> npm run-script lint:all:prettier
+> npm run-script lint:all:fmt
 
 - Documentation
   - Perform a code coverage and update the files in the corresponding directory [./doc/general/test/coverage](./doc/general/test/coverage)
@@ -48,9 +50,11 @@ Custom changelog tag
   
   - Update changelog
 
-## 3.3.0
+## 3.3.0 - 2026-11-04
 
 > **Note:** This version has not been audited. It was reviewed with automated tools (Nethermind AuditAgent, Olympix BugPoCer, Slither, Aderyn) and a Sequent pre-verification review; see [AUDIT.md](./doc/security/AUDIT.md).
+
+> **Versioning:** this release contains storage breaking changes but stays in the v3.x line, because a new major release is made only after an external audit (see *Major versions and audits* above).
 
 Summary of the main changes between **v3.2.0** and **v3.3.0**. Per-item details, tests and documentation are in the release-candidate entries below (`3.3.0 - rc0` to `rc4`).
 
@@ -110,15 +114,22 @@ This section covers the ERC-7201 storage and the external engines. Public API ch
 - Breaking changes and upgrade path: [doc/technical/breaking-changes.md](./doc/technical/breaking-changes.md), `doc/technical/upgradeable.md`, and a RuleEngine breaking-change section per release in `doc/technical/ruleengine-integration.md`.
 - Maintainer feedback for the Nethermind AuditAgent v3.3.0-rc2, Olympix BugPoCer, Sequent, Slither and Aderyn reviews ([AUDIT.md](./doc/security/AUDIT.md)).
 - ERC specification analyses (ERC-1404, ERC-1643, ERC-8343), the test catalogue `doc/test/Test.md`, and technical notes (allowance `Spend` event, deactivation, RuleEngine authoring obligations).
+- README: Allowlist / Whitelist feature entry, and the Seturion confidential DvP proof of concept and Swissgrams tokenized gold (SGG) use cases.
+- RuleEngine and Rules compatibility table updated to RuleEngine `v3.0.0-rc7` and Rules `v0.7.0`.
 
 ### Dependencies
 
 - OpenZeppelin contracts and contracts-upgradeable [`v5.7.0`](https://github.com/OpenZeppelin/openzeppelin-contracts/releases/tag/v5.7.0) (no storage or bytecode-size change for CMTAT; see `3.3.0 - rc4`).
-- Solidity compiler `0.8.36` (Hardhat and Foundry configuration).
+- Solidity compiler [`0.8.38`](https://docs.soliditylang.org/en/v0.8.38/) (Hardhat and Foundry configuration), updated from 0.8.36, which has four known compiler bugs; 0.8.38 has none listed. Deployed sizes are unchanged except Debt (11 bytes smaller). Hardhat 2.29.1 reports 0.8.38 as not fully supported yet (stack traces may be affected).
+- `hardhat` moved from `dependencies` to `devDependencies`: nothing in `contracts/` imports it, and installing CMTAT as a package now only pulls OpenZeppelin (`npm audit --omit=dev` reports no vulnerability). The `@fastify/busboy` advisories remain in the development tooling through `hardhat` → `undici` 5.
+- Submodule `lib/RuleEngine` updated to [`v3.0.0-rc7`](https://github.com/CMTA/RuleEngine/releases/tag/v3.0.0-rc7), and new submodule `lib/Rules` at [`v0.7.0`](https://github.com/CMTA/Rules/releases/tag/v0.7.0).
+- Development dependencies: `handlebars` 4.7.10 and `follow-redirects` 1.16.2.
 
 ## 3.3.0 - rc4
 
 > **Note:** This version has not been audited.
+>
+> Commit: `3d9b0e9e7e372d3f6bb6b2fa2752e77874c22098`
 
 Main theme: **no functional change to the token.** This release documents the breaking changes and the upgrade path from v3.2.0, reworks the RuleEngine integration documentation, adds tests that pin the RuleEngine dispatch and the v3.2.0 → v3.3.0 upgrade, and upgrades OpenZeppelin to v5.7.0.
 

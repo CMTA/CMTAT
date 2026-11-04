@@ -2,7 +2,7 @@
 
 > Latest audited release: [v3.0.0](https://github.com/CMTA/CMTAT/releases/tag/v3.0.0)
 >
-> Latest release: [v3.2.0](https://github.com/CMTA/CMTAT/releases/tag/v3.2.0)
+> Latest release: [v3.3.0](https://github.com/CMTA/CMTAT/releases/tag/v3.3.0)
 
 CMTAT is a blockchain-agnostic open-source **security token framework**. This repository provides the Solidity reference implementation for EVM-compatible blockchains such as Ethereum, Optimism, Arbitrum, and Polygon PoS. It is developed and maintained by the [Capital Markets and Technology Association](https://www.cmta.ch/) (CMTA).  
 It provides a modular implementation focused on regulated issuance and lifecycle management (transfer restrictions, enforcement, pause/deactivation, supply controls, documentation, and optional cross-chain features), with multiple deployment variants (standalone and upgradeable) to fit different product and jurisdiction requirements.
@@ -24,6 +24,7 @@ CMTAT extends the standard [ERC-20](https://eips.ethereum.org/EIPS/eip-20) token
 | **Contract Versioning** | Expose the contract's implementation version on-chain as a human-readable SemVer string via `version()` | [ERC-8303](https://github.com/ethereum/ERCs/pull/1819) (draft, not yet merged), [ERC-3643](https://eips.ethereum.org/EIPS/eip-3643) | Core |
 | **Freeze Partial Tokens** | Freeze a specific amount of tokens on an address | [ERC-3643](https://eips.ethereum.org/EIPS/eip-3643), [ERC-7551](https://ethereum-magicians.org/t/erc-7551-crypto-security-token-smart-contract-interface-ewpg-reworked/25477) (eWpG profile), [ERC-7943](https://eips.ethereum.org/EIPS/eip-7943) equivalent (`setFrozenTokens`/`getFrozenTokens`) | Extension |
 | **Transfer Validation** | Plug-in rule engine to restrict transfers by origin, receiver, or amount | [ERC-3643](https://eips.ethereum.org/EIPS/eip-3643), [ERC-7551](https://ethereum-magicians.org/t/erc-7551-crypto-security-token-smart-contract-interface-ewpg-reworked/25477), [ERC-7943](https://eips.ethereum.org/EIPS/eip-7943) | Extension/Option |
+| **Allowlist / Whitelist** | Restrict transfers to approved addresses (e.g., KYC-verified investors), either built into the token with the [CMTAT Allowlist](./doc/modules/options/allowlist/allowlist.md) deployment version, or externally through a [RuleEngine](https://github.com/CMTA/RuleEngine) with a whitelist rule ([`RuleWhitelist`](https://github.com/CMTA/Rules)) | [ERC-7943](https://eips.ethereum.org/EIPS/eip-7943) send/receive checks | Deployment-version specific / Extension |
 | **Snapshots** | Record balances at a specific point in time (e.g., for dividends) | CMTAT SnapshotEngine integration | Extension/Option |
 | **Holder List** | Maintain on-chain the set of addresses holding a non-zero balance (issuer reporting, corporate actions) | [Fungible holder enumeration](./doc/ERCSpecification/draft-erc-token-holder.md) (draft) | Option |
 | **Documents** | Attach legal documents to the token on-chain | [ERC-1643](https://github.com/ethereum/EIPs/issues/1643)-compatible document model | Extension/Option |
@@ -53,6 +54,7 @@ CMTAT is used in production by major financial institutions including **UBS**, *
 - **Tokenized Market Funds**: [UBS uMINT (2024)](https://www.ubs.com/global/en/media/display-page-ndp/en-20241101-first-tokenized-investment-fund.html)
 - **Tokenized Artwork**: [Syz Art tokenization](https://www.syzgroup.com/en/tokenization-syzart).
 - **Private DvP settlement**: [Seturion (2026)](https://group.boerse-stuttgart.com/en/seturion/) (Börse Stuttgart Group) achieved private delivery-vs-payment settlement of tokenized assets on a public blockchain while keeping sensitive data confidential, using [CMTAT on Aztec](https://github.com/CMTA/private-CMTAT-aztec), a zero-knowledge Ethereum Layer-2. [Read more](https://www.linkedin.com/posts/seturion_achieving-private-dvp-settlement-on-public-activity-7424387919538450433-OItI/).
+- **Confidential DvP settlement (proof of concept)**: [Seturion](https://group.boerse-stuttgart.com/en/seturion/) (Börse Stuttgart Group), through its subsidiary BX Digital, validated confidential delivery-vs-payment settlement using CMTAT on EVM test blockchains, with the Zama Protocol and tGBP (BCP Technologies). [Read more](https://cmta.ch/news-articles/cmta-launches-cmtat-confidential-privacy-preserving-security-token-standard-built-on-the-zama-protocol-and-openzeppelin).
 
 ## Supported Financial Instruments
 
@@ -74,21 +76,21 @@ Most products come in a **standalone** (immutable) or **upgradeable** (proxy) va
 
 ## Contract Sizes
 
-Measured with `solc 0.8.34`, optimizer enabled (200 runs). EVM deployed bytecode limit: **24.576 KiB**.
+Measured with `solc 0.8.38`, optimizer enabled (200 runs). EVM deployed bytecode limit: **24.576 KiB**.
 
 | Deployment Version | Deployed (KiB) | Initcode standalone (KiB) | Initcode upgradeable (KiB) |
 |---|---|---|---|
-| CMTAT Standard | 22.251 | 25.663 | 22.577 |
-| CMTAT Snapshot | 22.075 | 25.487 | 22.401 |
-| CMTAT HolderList | 23.825 | 27.255 | 24.151 |
-| CMTAT Light | 11.278 | 13.055 | 11.487 |
-| CMTAT Allowlist | 19.882 | 23.079 | 20.208 |
-| CMTAT Debt | 23.189 | 26.324 | 23.398 |
-| CMTAT DebtEngine | 23.799 | 26.934 | 24.008 |
-| CMTAT ERC-7551 | 22.812 | 26.224 | 23.138 |
-| CMTAT ERC-1363 | 23.813 | 27.267 | 24.139 |
-| CMTAT Permit | 23.341 | 26.650 | 23.550 |
-| CMTAT UUPS | 23.552 | — | 23.904 |
+| CMTAT Standard | 22.569 | 25.981 | 22.896 |
+| CMTAT Snapshot | 22.394 | 25.806 | 22.720 |
+| CMTAT HolderList | 23.953 | 27.383 | 24.279 |
+| CMTAT Light | 11.291 | 13.067 | 11.500 |
+| CMTAT Allowlist | 19.997 | 23.194 | 20.323 |
+| CMTAT Debt | 23.307 | 26.441 | 23.516 |
+| CMTAT DebtEngine | 23.927 | 27.062 | 24.136 |
+| CMTAT ERC-7551 | 23.245 | 26.657 | 23.571 |
+| CMTAT ERC-1363 | 23.940 | 27.395 | 24.267 |
+| CMTAT Permit | 23.470 | 26.779 | 23.679 |
+| CMTAT UUPS | 23.680 | — | 24.032 |
 
 All variants are within the deployed bytecode limit. The deployed size is identical between standalone and upgradeable for the same variant; the initcode is larger for standalone contracts since it includes the full constructor logic rather than an initializer.
 

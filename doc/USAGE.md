@@ -12,7 +12,7 @@ are the latest ones that we tested:
 ### Smart contract
 
 - hardhat.config.js
-  - Solidity [0.8.36](https://docs.soliditylang.org/en/v0.8.36/) (via solc-js)
+  - Solidity [0.8.38](https://docs.soliditylang.org/en/v0.8.38/) (via solc-js)
   - EVM version: Osaka (Fusaka upgrade)
 
 - Package.json
@@ -123,10 +123,10 @@ Please see the Hardhat [documentation](https://hardhat.org/tutorial/testing-cont
 
 We use linters to ensure consistent coding style. If you contribute code, please run this following command: 
 
-Prettier
+Run all the formatters: Prettier for JavaScript and [`forge fmt`](https://getfoundry.sh/forge/formatting) for Solidity.
 
 ```bash
-npm run-script lint:all:prettier
+npm run-script lint:all:fmt
 ```
 
 For JavaScript:
@@ -137,9 +137,11 @@ npm run-script lint:js:fix
 
 For Solidity:
 ```bash
-npm run-script lint:sol  
-npm run-script lint:sol:fix
+npm run-script lint:sol:fmt
+npm run-script lint:sol:fmt:check
 ```
+
+`forge fmt` needs [Foundry](https://getfoundry.sh/); it uses the formatter defaults, as `foundry.toml` has no `[fmt]` section.
 
 ### NodeJS toolchain
 
