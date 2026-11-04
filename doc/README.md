@@ -3346,7 +3346,7 @@ The project is built with [Hardhat](https://v2.hardhat.org) and uses [OpenZeppel
 [Hardhat](https://v2.hardhat.org) is the main development toolchain for this repository and for CMTAT. [Forge (Foundry)](https://www.getfoundry.sh) is also installed and can compile contracts here, but Foundry-specific deployment scripts and Foundry-native tests are maintained in a dedicated repository: [CMTAT-Foundry](https://github.com/CMTA/CMTAT-Foundry).
 
 - hardhat.config.js
-  - Solidity [v0.8.36](https://docs.soliditylang.org/en/v0.8.36/)
+  - Solidity [v0.8.38](https://docs.soliditylang.org/en/v0.8.38/)
   - EVM version: Osaka (Fusaka upgrade)
   - Optimizer: true, 200 runs
 

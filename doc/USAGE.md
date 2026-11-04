@@ -12,7 +12,7 @@ are the latest ones that we tested:
 ### Smart contract
 
 - hardhat.config.js
-  - Solidity [0.8.36](https://docs.soliditylang.org/en/v0.8.36/) (via solc-js)
+  - Solidity [0.8.38](https://docs.soliditylang.org/en/v0.8.38/) (via solc-js)
   - EVM version: Osaka (Fusaka upgrade)
 
 - Package.json

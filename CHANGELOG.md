@@ -29,7 +29,7 @@ Custom changelog tag
 
 - `breaking change`: breaking change regarding storage [ERC-7201](https://eips.ethereum.org/EIPS/eip-7201) namespace , as well as external engine
 - `Dependencies` (npm package, openzeppelin,...)
-- ``Documentation`
+- `Documentation`
 - `Testing`
 
 ## Checklist
@@ -114,12 +114,14 @@ This section covers the ERC-7201 storage and the external engines. Public API ch
 ### Dependencies
 
 - OpenZeppelin contracts and contracts-upgradeable [`v5.7.0`](https://github.com/OpenZeppelin/openzeppelin-contracts/releases/tag/v5.7.0) (no storage or bytecode-size change for CMTAT; see `3.3.0 - rc4`).
-- Solidity compiler `0.8.36` (Hardhat and Foundry configuration).
+- Solidity compiler [`0.8.38`](https://docs.soliditylang.org/en/v0.8.38/) (Hardhat and Foundry configuration), updated from 0.8.36, which has four known compiler bugs; 0.8.38 has none listed. Deployed sizes are unchanged except Debt (11 bytes smaller). Hardhat 2.29.1 reports 0.8.38 as not fully supported yet (stack traces may be affected).
 - `hardhat` moved from `dependencies` to `devDependencies`: nothing in `contracts/` imports it, and installing CMTAT as a package now only pulls OpenZeppelin (`npm audit --omit=dev` reports no vulnerability). The `@fastify/busboy` advisories remain in the development tooling through `hardhat` → `undici` 5.
 
 ## 3.3.0 - rc4
 
 > **Note:** This version has not been audited.
+>
+> Commit: `3d9b0e9e7e372d3f6bb6b2fa2752e77874c22098`
 
 Main theme: **no functional change to the token.** This release documents the breaking changes and the upgrade path from v3.2.0, reworks the RuleEngine integration documentation, adds tests that pin the RuleEngine dispatch and the v3.2.0 → v3.3.0 upgrade, and upgrades OpenZeppelin to v5.7.0.
 
