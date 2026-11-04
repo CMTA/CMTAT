@@ -2,7 +2,7 @@
 
 > Latest audited release: [v3.0.0](https://github.com/CMTA/CMTAT/releases/tag/v3.0.0)
 >
-> Latest release: [v3.2.0](https://github.com/CMTA/CMTAT/releases/tag/v3.2.0)
+> Latest release: [v3.3.0](https://github.com/CMTA/CMTAT/releases/tag/v3.3.0)
 
 CMTAT is a blockchain-agnostic open-source **security token framework**. This repository provides the Solidity reference implementation for EVM-compatible blockchains such as Ethereum, Optimism, Arbitrum, and Polygon PoS. It is developed and maintained by the [Capital Markets and Technology Association](https://www.cmta.ch/) (CMTA).  
 It provides a modular implementation focused on regulated issuance and lifecycle management (transfer restrictions, enforcement, pause/deactivation, supply controls, documentation, and optional cross-chain features), with multiple deployment variants (standalone and upgradeable) to fit different product and jurisdiction requirements.

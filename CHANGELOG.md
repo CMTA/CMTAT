@@ -50,7 +50,7 @@ Custom changelog tag
   
   - Update changelog
 
-## 3.3.0
+## 3.3.0 - 2026-11-04
 
 > **Note:** This version has not been audited. It was reviewed with automated tools (Nethermind AuditAgent, Olympix BugPoCer, Slither, Aderyn) and a Sequent pre-verification review; see [AUDIT.md](./doc/security/AUDIT.md).
 
@@ -114,12 +114,16 @@ This section covers the ERC-7201 storage and the external engines. Public API ch
 - Breaking changes and upgrade path: [doc/technical/breaking-changes.md](./doc/technical/breaking-changes.md), `doc/technical/upgradeable.md`, and a RuleEngine breaking-change section per release in `doc/technical/ruleengine-integration.md`.
 - Maintainer feedback for the Nethermind AuditAgent v3.3.0-rc2, Olympix BugPoCer, Sequent, Slither and Aderyn reviews ([AUDIT.md](./doc/security/AUDIT.md)).
 - ERC specification analyses (ERC-1404, ERC-1643, ERC-8343), the test catalogue `doc/test/Test.md`, and technical notes (allowance `Spend` event, deactivation, RuleEngine authoring obligations).
+- README: Allowlist / Whitelist feature entry, and the Seturion confidential DvP proof of concept and Swissgrams tokenized gold (SGG) use cases.
+- RuleEngine and Rules compatibility table updated to RuleEngine `v3.0.0-rc7` and Rules `v0.7.0`.
 
 ### Dependencies
 
 - OpenZeppelin contracts and contracts-upgradeable [`v5.7.0`](https://github.com/OpenZeppelin/openzeppelin-contracts/releases/tag/v5.7.0) (no storage or bytecode-size change for CMTAT; see `3.3.0 - rc4`).
 - Solidity compiler [`0.8.38`](https://docs.soliditylang.org/en/v0.8.38/) (Hardhat and Foundry configuration), updated from 0.8.36, which has four known compiler bugs; 0.8.38 has none listed. Deployed sizes are unchanged except Debt (11 bytes smaller). Hardhat 2.29.1 reports 0.8.38 as not fully supported yet (stack traces may be affected).
 - `hardhat` moved from `dependencies` to `devDependencies`: nothing in `contracts/` imports it, and installing CMTAT as a package now only pulls OpenZeppelin (`npm audit --omit=dev` reports no vulnerability). The `@fastify/busboy` advisories remain in the development tooling through `hardhat` → `undici` 5.
+- Submodule `lib/RuleEngine` updated to [`v3.0.0-rc7`](https://github.com/CMTA/RuleEngine/releases/tag/v3.0.0-rc7).
+- Development dependencies: `handlebars` 4.7.10 and `follow-redirects` 1.16.2.
 
 ## 3.3.0 - rc4
 
