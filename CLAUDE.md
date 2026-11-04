@@ -130,10 +130,10 @@ per-function facts in another.
 Practical rule: grep the whole `doc/` tree **and** `contracts/`, not a subset.
 
 ```bash
-grep -rn -i "<topic>" doc/ contracts/ --include=*.md --include=*.sol | grep -v doc/hardhat-compilation
+grep -rn -i "<topic>" doc/ contracts/ --include=*.md --include=*.sol | grep -v doc/compilation
 ```
 
-Exclude `doc/hardhat-compilation/` (flattened build artifacts, including vendored OpenZeppelin comments) — matches
+Exclude `doc/compilation/` (flattened build artifacts, including vendored OpenZeppelin comments) — matches
 there are **not** CMTAT statements and must not be quoted as project documentation.
 
 ## Note

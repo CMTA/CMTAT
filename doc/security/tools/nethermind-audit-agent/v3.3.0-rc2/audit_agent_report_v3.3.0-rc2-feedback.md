@@ -516,7 +516,7 @@ role, including `PROXY_UPGRADE_ROLE` on `CMTATUpgradeableUUPS`.
 
 **Verdict — rejected (false premise); the described behaviour is accurate and intentional.** No CMTAT
 documentation claims `AccessControlDefaultAdminRules`. The only occurrences in the repository are inside
-**OpenZeppelin's own source comments** carried into `doc/hardhat-compilation/v3.0.0/flatten/*.sol` (*"We recommend
+**OpenZeppelin's own source comments** carried into `doc/compilation/v3.0.0/flatten/*.sol` (*"We recommend
 using {AccessControlDefaultAdminRules}"*) — an OZ recommendation, not a CMTAT specification. The tool read a
 vendored library comment as a project commitment.
 

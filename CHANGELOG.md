@@ -47,6 +47,7 @@ Custom changelog tag
   - Perform a code coverage and update the files in the corresponding directory [./doc/general/test/coverage](./doc/general/test/coverage)
   - Perform an audit with several audit tools (Aderyn and Slither), update the report in the corresponding directory  [./doc/security/tools](./doc/security/tools)
   - Update surya doc by running the 3 scripts in [./doc/script](./doc/script)
+  - For each new release (not for release candidates), add the Hardhat and Foundry compilation files in [./doc/compilation](./doc/compilation) (see its README)
   
   - Update changelog
 
@@ -116,6 +117,7 @@ This section covers the ERC-7201 storage and the external engines. Public API ch
 - ERC specification analyses (ERC-1404, ERC-1643, ERC-8343), the test catalogue `doc/test/Test.md`, and technical notes (allowance `Spend` event, deactivation, RuleEngine authoring obligations).
 - README: Allowlist / Whitelist feature entry, and the Seturion confidential DvP proof of concept and Swissgrams tokenized gold (SGG) use cases.
 - RuleEngine and Rules compatibility table updated to RuleEngine `v3.0.0-rc7` and Rules `v0.7.0`.
+- `doc/hardhat-compilation` renamed to [doc/compilation](./doc/compilation), with Hardhat and Foundry compilation files and flattened contracts for v3.3.0. Compilation files are now added for each release, not for release candidates.
 
 ### Dependencies
 
