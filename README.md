@@ -54,6 +54,7 @@ CMTAT is used in production by major financial institutions including **UBS**, *
 - **Tokenized Market Funds**: [UBS uMINT (2024)](https://www.ubs.com/global/en/media/display-page-ndp/en-20241101-first-tokenized-investment-fund.html)
 - **Tokenized Artwork**: [Syz Art tokenization](https://www.syzgroup.com/en/tokenization-syzart).
 - **Private DvP settlement**: [Seturion (2026)](https://group.boerse-stuttgart.com/en/seturion/) (Börse Stuttgart Group) achieved private delivery-vs-payment settlement of tokenized assets on a public blockchain while keeping sensitive data confidential, using [CMTAT on Aztec](https://github.com/CMTA/private-CMTAT-aztec), a zero-knowledge Ethereum Layer-2. [Read more](https://www.linkedin.com/posts/seturion_achieving-private-dvp-settlement-on-public-activity-7424387919538450433-OItI/).
+- **Confidential DvP settlement (proof of concept)**: [Seturion](https://group.boerse-stuttgart.com/en/seturion/) (Börse Stuttgart Group), through its subsidiary BX Digital, validated confidential delivery-vs-payment settlement using CMTAT on EVM test blockchains, with the Zama Protocol and tGBP (BCP Technologies). [Read more](https://cmta.ch/news-articles/cmta-launches-cmtat-confidential-privacy-preserving-security-token-standard-built-on-the-zama-protocol-and-openzeppelin).
 
 ## Supported Financial Instruments
 
