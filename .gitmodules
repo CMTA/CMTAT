@@ -7,3 +7,6 @@
 [submodule "lib/RuleEngine"]
 	path = lib/RuleEngine
 	url = https://github.com/CMTA/RuleEngine
+[submodule "lib/Rules"]
+	path = lib/Rules
+	url = https://github.com/CMTA/Rules

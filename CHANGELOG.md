@@ -41,7 +41,7 @@ Custom changelog tag
 - Code: Update the version name in the `Version` core module, variable VERSION
 - Run linter
 
-> npm run-script lint:all:prettier
+> npm run-script lint:all:fmt
 
 - Documentation
   - Perform a code coverage and update the files in the corresponding directory [./doc/general/test/coverage](./doc/general/test/coverage)
