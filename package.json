@@ -101,5 +101,10 @@
     "@openzeppelin/contracts": "5.7.0",
     "@openzeppelin/contracts-upgradeable": "5.7.0",
     "hardhat": "^2.28.5"
+  },
+  "overrides": {
+    "undici": {
+      "@fastify/busboy": "3.2.2"
+    }
   }
 }
