@@ -115,6 +115,7 @@ This section covers the ERC-7201 storage and the external engines. Public API ch
 
 - OpenZeppelin contracts and contracts-upgradeable [`v5.7.0`](https://github.com/OpenZeppelin/openzeppelin-contracts/releases/tag/v5.7.0) (no storage or bytecode-size change for CMTAT; see `3.3.0 - rc4`).
 - Solidity compiler `0.8.36` (Hardhat and Foundry configuration).
+- `hardhat` moved from `dependencies` to `devDependencies`: nothing in `contracts/` imports it, and installing CMTAT as a package now only pulls OpenZeppelin (`npm audit --omit=dev` reports no vulnerability). The `@fastify/busboy` advisories remain in the development tooling through `hardhat` → `undici` 5.
 
 ## 3.3.0 - rc4
 
