@@ -11,7 +11,7 @@ Here are the reports produced by [Aderyn](https://github.com/Cyfrin/aderyn):
 | v3.3.0  | [v3.3.0-aderyn-report.md](./tools/aderyn/v3.3.0-aderyn-report.md)<br />[v3.3.0-aderyn-feedback.md](./tools/aderyn/v3.3.0-aderyn-feedback.md) |
 | v3.0.0  | [v3.0.0-aderyn-report.md](./tools/aderyn/archive/v3.0.0-aderyn-report.md) |
 
-Summary (v3.3.0 — refreshed 2026-07-30 on the rc3 source, `aderyn 0.6.5`, mocks excluded, 101 files / 3826 nSLOC):
+Summary (v3.3.0 — refreshed 2026-11-04, solc 0.8.38, OpenZeppelin 5.7.0, `aderyn 0.6.5`, mocks excluded, 101 files / 3826 nSLOC):
 
 | Category | Tool Severity | Count | CMTAT Maintainer Assessment | Status |
 | ------- | ------------- | ----- | --------------------------- | ------ |
@@ -30,7 +30,7 @@ Here are the reports produced by [Slither](https://github.com/crytic/slither):
 | v3.0.0  | [v3.0.0-slither-report.md](./tools/slither/archive/v3.0.0-slither-report.md) |
 | v2.3.0  | [v2.3.0-slither-report.md](./tools/slither/archive/v2.3.0-slither-report.md) |
 
-Summary (v3.3.0 — refreshed 2026-07-30 on the rc3 source, `slither 0.11.5`, mocks excluded, 158 results):
+Summary (v3.3.0 — refreshed 2026-11-04, solc 0.8.38, OpenZeppelin 5.7.0, `slither 0.11.5`, mocks excluded, 158 results):
 
 | Detector | Tool Severity | Count | CMTAT Maintainer Assessment | Status |
 | ------- | ------------- | ----- | --------------------------- | ------ |
