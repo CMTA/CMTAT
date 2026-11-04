@@ -117,7 +117,7 @@ This section covers the ERC-7201 storage and the external engines. Public API ch
 - ERC specification analyses (ERC-1404, ERC-1643, ERC-8343), the test catalogue `doc/test/Test.md`, and technical notes (allowance `Spend` event, deactivation, RuleEngine authoring obligations).
 - README: Allowlist / Whitelist feature entry, and the Seturion confidential DvP proof of concept and Swissgrams tokenized gold (SGG) use cases.
 - RuleEngine and Rules compatibility table updated to RuleEngine `v3.0.0-rc7` and Rules `v0.7.0`.
-- `doc/hardhat-compilation` renamed to [doc/compilation](./doc/compilation), with Hardhat and Foundry compilation files and flattened contracts for v3.3.0. Compilation files are now added for each release, not for release candidates.
+- `doc/hardhat-compilation` renamed to [doc/compilation](./doc/compilation), with Hardhat and Foundry compilation files and flattened versions of all deployment contracts for v3.3.0. The `flatten` directories are renamed `hardhat-flatten`. Compilation files are now added for each release, not for release candidates.
 
 ### Dependencies
 
