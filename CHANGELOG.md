@@ -12,6 +12,8 @@ Given a version number MAJOR.MINOR.PATCH, increment the:
 2. MINOR version when the new version adds functionality in a backward compatible manner
 3. PATCH version when the new version makes backward compatible bug fixes
 
+**Major versions and audits.** We try to make a new major release only when it is audited by an external firm. The last audited release is v3.0.0, so the changes since then stay in the v3.x line, even when they are breaking: v3.2.0 and v3.3.0 contain storage changes that would otherwise require a major version. These changes are listed under `breaking change` in each release, and a new major version will follow the next external audit.
+
 See [https://semver.org](https://semver.org)
 
 ## Type of changes
@@ -51,6 +53,8 @@ Custom changelog tag
 ## 3.3.0
 
 > **Note:** This version has not been audited. It was reviewed with automated tools (Nethermind AuditAgent, Olympix BugPoCer, Slither, Aderyn) and a Sequent pre-verification review; see [AUDIT.md](./doc/security/AUDIT.md).
+
+> **Versioning:** this release contains storage breaking changes but stays in the v3.x line, because a new major release is made only after an external audit (see *Major versions and audits* above).
 
 Summary of the main changes between **v3.2.0** and **v3.3.0**. Per-item details, tests and documentation are in the release-candidate entries below (`3.3.0 - rc0` to `rc4`).
 
