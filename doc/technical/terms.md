@@ -181,11 +181,9 @@ The change is scheduled for **v3.4.0**, after v3.3.0. Consequences:
 - **v3.3.0 proxies** (and `v3.3.0-rc*` testnet proxies) need a terms-only migration when upgrading to v3.4.0.
 - **Pre-3.3 proxies** upgrading directly to v3.4.0 need both migrations (`name`/`symbol` and terms). The reference
   implementation (§4.2.4) does both in one reinitializer.
-- **Versioning policy.** The CHANGELOG semver section says an *"Incompatible proxy storage change"* requires a
-  **MAJOR** bump. v3.3.0 already broke storage (`name`/`symbol`) in a minor release, so v3.4.0 follows existing
-  practice, but the policy text and the practice disagree. When this ships, either amend the policy (e.g. "storage
-  changes that come with a documented migration path may ship in a MINOR release") or add an explicit note in the
-  v3.4.0 CHANGELOG entry. See decision §4.12.
+- **Versioning policy.** CMTA tries to keep major releases for audited versions, so this storage change ships in
+  v3.4.0 and not in a major release, like the v3.3.0 `name`/`symbol` change. See *Major versions and audits* in the
+  [CHANGELOG](../../CHANGELOG.md).
 
 #### 4.2.3 Layouts
 
