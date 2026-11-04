@@ -18,9 +18,9 @@ The Light variant provides exactly these capabilities with no overhead from modu
 
 | Variant | Deployed bytecode |
 |---|---|
-| CMTAT Light | 11.298 KiB |
-| CMTAT Standard | 22.243 KiB |
-| CMTAT Permit | 23.268 KiB |
+| CMTAT Light | 11.291 KiB |
+| CMTAT Standard | 22.569 KiB |
+| CMTAT Permit | 23.470 KiB |
 
 The 24.576 KiB EVM deployed bytecode limit is not a concern for Light, leaving substantial room for integrators who extend the contract.
 
@@ -290,7 +290,7 @@ If you need both meta-transactions and permit-style approvals, consider an exter
 | ERC-1404 (`restrictedTransferOf`) | — | ✓ | ✓ |
 | ERC-2612 `permit` | — | — | ✓ |
 | ERC-6357 `multicall` | — | — | ✓ |
-| Deployed bytecode | 11.298 KiB | 22.243 KiB | 23.268 KiB |
+| Deployed bytecode | 11.291 KiB | 22.569 KiB | 23.470 KiB |
 
 ---
 

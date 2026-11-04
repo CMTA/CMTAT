@@ -38,16 +38,16 @@ CMTAT wraps the callback in a transient (EIP-1153) reentrancy guard, but **only 
 
 | Deployment variant | Deployed size (bytes) | Reentrancy guard |
 | --- | ---: | :---: |
-| `CMTATStandaloneSnapshot` / `CMTATUpgradeableSnapshot` | 22 859 | ✅ |
-| `CMTATStandardStandalone` / `CMTATStandardUpgradeable` | 23 039 | ✅ |
-| `CMTATStandaloneERC7551` / `CMTATUpgradeableERC7551` | 23 731 | ✅ |
-| `CMTATStandaloneDebt` / `CMTATUpgradeableDebt` | 23 805 | ❌ |
-| `CMTATStandalonePermit` / `CMTATUpgradeablePermit` | 23 961 | ❌ |
-| `CMTATUpgradeableUUPS` | 24 176 | ❌ |
-| `CMTATStandaloneDebtEngine` / `CMTATUpgradeableDebtEngine` | 24 429 | ❌ |
-| `CMTATStandaloneERC1363` / `CMTATUpgradeableERC1363` | 24 443 | ❌ |
-| `CMTATStandaloneHolderList` / `CMTATUpgradeableHolderList` | 24 456 | ❌ |
-| `CMTATStandaloneAllowlist`, `CMTATStandaloneLight` (and proxies) | 20 405 / 11 562 | n/a — no RuleEngine |
+| `CMTATStandaloneSnapshot` / `CMTATUpgradeableSnapshot` | 22 931 | ✅ |
+| `CMTATStandardStandalone` / `CMTATStandardUpgradeable` | 23 111 | ✅ |
+| `CMTATStandaloneERC7551` / `CMTATUpgradeableERC7551` | 23 803 | ✅ |
+| `CMTATStandaloneDebt` / `CMTATUpgradeableDebt` | 23 866 | ❌ |
+| `CMTATStandalonePermit` / `CMTATUpgradeablePermit` | 24 033 | ❌ |
+| `CMTATUpgradeableUUPS` | 24 248 | ❌ |
+| `CMTATStandaloneDebtEngine` / `CMTATUpgradeableDebtEngine` | 24 501 | ❌ |
+| `CMTATStandaloneERC1363` / `CMTATUpgradeableERC1363` | 24 515 | ❌ |
+| `CMTATStandaloneHolderList` / `CMTATUpgradeableHolderList` | 24 528 | ❌ |
+| `CMTATStandaloneAllowlist`, `CMTATStandaloneLight` (and proxies) | 20 477 / 11 562 | n/a — no RuleEngine |
 
 > **WARNING — variants without the guard.** On the ❌ rows the trust assumption is load-bearing: the RuleEngine is set by `DEFAULT_ADMIN_ROLE`, is **fully trusted**, and **MUST NOT** transfer control to untrusted code during `transferred(...)`. A rule that calls an arbitrary external address — a hook, a callback, a user-supplied contract — breaks that assumption and re-opens the drain described above. If your rule set needs to call untrusted code, deploy a guarded variant.
 >

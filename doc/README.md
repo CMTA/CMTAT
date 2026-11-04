@@ -3389,23 +3389,23 @@ Alternatively, you can install Hardhat [globally](https://v2.hardhat.org/hardhat
 npm run-script size
 ```
 
-Measured with `solc 0.8.36`, optimizer enabled (200 runs). EVM deployed bytecode limit: **24.576 KiB**.
+Measured with `solc 0.8.38`, optimizer enabled (200 runs). EVM deployed bytecode limit: **24.576 KiB**.
 
 The deployed size is identical between standalone and upgradeable for the same variant; the initcode is larger for standalone contracts since it embeds the full constructor logic rather than a proxy initializer.
 
 | Deployment version | Deployed (KiB) | Initcode standalone (KiB) | Initcode upgradeable (KiB) |
 | ------------------ | -------------- | ------------------------- | -------------------------- |
-| CMTAT Standard     | 22.251         | 25.663                    | 22.577                     |
-| CMTAT Snapshot     | 22.075         | 25.487                    | 22.401                     |
-| CMTAT HolderList   | 23.825         | 27.255                    | 24.151                     |
-| CMTAT Light        | 11.278         | 13.055                    | 11.487                     |
-| CMTAT Allowlist    | 19.882         | 23.079                    | 20.208                     |
-| CMTAT Debt         | 23.189         | 26.324                    | 23.398                     |
-| CMTAT DebtEngine   | 23.799         | 26.934                    | 24.008                     |
-| CMTAT ERC-7551     | 22.812         | 26.224                    | 23.138                     |
-| CMTAT ERC-1363     | 23.813         | 27.267                    | 24.139                     |
-| CMTAT Permit       | 23.341         | 26.650                    | 23.550                     |
-| CMTAT UUPS         | 23.552         | —                         | 23.904                     |
+| CMTAT Standard     | 22.569         | 25.981                    | 22.896                     |
+| CMTAT Snapshot     | 22.394         | 25.806                    | 22.720                     |
+| CMTAT HolderList   | 23.953         | 27.383                    | 24.279                     |
+| CMTAT Light        | 11.291         | 13.067                    | 11.500                     |
+| CMTAT Allowlist    | 19.997         | 23.194                    | 20.323                     |
+| CMTAT Debt         | 23.307         | 26.441                    | 23.516                     |
+| CMTAT DebtEngine   | 23.927         | 27.062                    | 24.136                     |
+| CMTAT ERC-7551     | 23.245         | 26.657                    | 23.571                     |
+| CMTAT ERC-1363     | 23.940         | 27.395                    | 24.267                     |
+| CMTAT Permit       | 23.470         | 26.779                    | 23.679                     |
+| CMTAT UUPS         | 23.680         | —                         | 24.032                     |
 
 All variants are within the deployed bytecode limit.
 
