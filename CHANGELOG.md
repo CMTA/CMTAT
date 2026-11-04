@@ -122,7 +122,7 @@ This section covers the ERC-7201 storage and the external engines. Public API ch
 - OpenZeppelin contracts and contracts-upgradeable [`v5.7.0`](https://github.com/OpenZeppelin/openzeppelin-contracts/releases/tag/v5.7.0) (no storage or bytecode-size change for CMTAT; see `3.3.0 - rc4`).
 - Solidity compiler [`0.8.38`](https://docs.soliditylang.org/en/v0.8.38/) (Hardhat and Foundry configuration), updated from 0.8.36, which has four known compiler bugs; 0.8.38 has none listed. Deployed sizes are unchanged except Debt (11 bytes smaller). Hardhat 2.29.1 reports 0.8.38 as not fully supported yet (stack traces may be affected).
 - `hardhat` moved from `dependencies` to `devDependencies`: nothing in `contracts/` imports it, and installing CMTAT as a package now only pulls OpenZeppelin (`npm audit --omit=dev` reports no vulnerability). The `@fastify/busboy` advisories remain in the development tooling through `hardhat` → `undici` 5.
-- Submodule `lib/RuleEngine` updated to [`v3.0.0-rc7`](https://github.com/CMTA/RuleEngine/releases/tag/v3.0.0-rc7).
+- Submodule `lib/RuleEngine` updated to [`v3.0.0-rc7`](https://github.com/CMTA/RuleEngine/releases/tag/v3.0.0-rc7), and new submodule `lib/Rules` at [`v0.7.0`](https://github.com/CMTA/Rules/releases/tag/v0.7.0).
 - Development dependencies: `handlebars` 4.7.10 and `follow-redirects` 1.16.2.
 
 ## 3.3.0 - rc4
